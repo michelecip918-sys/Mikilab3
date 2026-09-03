@@ -68,25 +68,25 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#c94f00,#c94f00)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#F26419,#F26419)" }}>
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
-        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
+        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
       </div>
 
       {/* Tab categorie */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="vetrina-tabs">
         {tabs.map((t) => (
           <button key={t.key} data-testid={`vetrina-tab-${t.key}`} onClick={() => setCat(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#c94f00] text-[#121212] border-[#c94f00]" : "bg-[#1e1e1e] text-[#AEB8BF] border-[#2e2e2e]"}`}>
+            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#F26419] text-[#0B0E14] border-[#F26419]" : "bg-[#18202E] text-[#AEB8BF] border-[#26324A]"}`}>
             {t.icon} {catName(t.key)}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>
+        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#F26419]" /></div>
       ) : (
         <div className="grid grid-cols-2 gap-2.5" data-testid="vetrina-grid">
           {items.map((r) => (
@@ -94,7 +94,7 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
               className="relative h-40 rounded-2xl overflow-hidden shadow-md active:scale-97 transition-all text-left group">
               <img src={r.image_url} alt={rLoc(r, "name", lang)} loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 40%,#121212ee)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 40%,#0B0E14ee)" }} />
               <div className="relative h-full flex flex-col justify-end p-2.5">
                 <h3 className="font-display text-[13px] font-bold text-white leading-tight drop-shadow">{rLoc(r, "name", lang)}</h3>
               </div>
@@ -107,19 +107,19 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
       {zoom && (
         <div data-testid="vetrina-lightbox" className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setZoom(null)}>
           <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-          <div className="relative max-w-sm w-full bg-[#1a1a1a] border border-[#2e2e2e] rounded-3xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+          <div className="relative max-w-sm w-full bg-[#1a1a1a] border border-[#26324A] rounded-3xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
             <button data-testid="vetrina-lightbox-close" onClick={() => setZoom(null)} className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
             <img src={zoom.image_url} alt={rLoc(zoom, "name", lang)} className="w-full aspect-square object-cover" />
             <div className="p-4">
               <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
               {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
               <button data-testid="vetrina-share" onClick={() => shareItem(zoom)}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e] border border-[#c94f00]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
-                <Share2 className="w-4 h-4 text-[#c94f00]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#18202E] border border-[#F26419]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                <Share2 className="w-4 h-4 text-[#F26419]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
               </button>
               {onOpenRecipe && (
                 <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
                   <BookOpen className="w-4 h-4" /> {tri("Vedi ricetta completa", "Ganzes Rezept ansehen", "See full recipe", "Ver receta completa", "Voir la recette complète", "دیدن دستور کامل")}
                 </button>
               )}

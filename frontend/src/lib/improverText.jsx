@@ -31,7 +31,7 @@ export function renderProcedureWithImprover(text, onImprover) {
           type="button"
           data-testid="proc-improver-asterisk"
           onClick={onImprover}
-          className="text-[#c94f00] font-bold align-super text-xs ml-0.5 hover:opacity-70 active:scale-90 transition-transform"
+          className="text-[#F26419] font-bold align-super text-xs ml-0.5 hover:opacity-70 active:scale-90 transition-transform"
           aria-label="Miglioratore Naturale MikiLab"
         >
           *

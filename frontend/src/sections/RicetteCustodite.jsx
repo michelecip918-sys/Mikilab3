@@ -691,24 +691,24 @@ export default function RicetteCustodite({ initialId = null }) {
     }
   };
 
-  const inp = "bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00] font-mono-data text-center w-28";
+  const inp = "bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#F26419] font-mono-data text-center w-28";
 
   if (recipe) {
     return (
       <div className="pb-40" data-testid="custodite-detail">
         <button data-testid="custodite-back" onClick={() => setOpenId(null)}
-          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#c94f00] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] text-[#F26419] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4 h-4" /> {L({ it: "Tutte le ricette", de: "Alle Rezepte", en: "All recipes", es: "Todas", fr: "Toutes les recettes" })}
         </button>
 
         <div className="print-area">
-          <div className="rounded-3xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm">
+          <div className="rounded-3xl overflow-hidden border border-[#26324A] dark:border-[#26324A] bg-white dark:bg-[#18202E] shadow-sm">
             <div className="relative h-40">
               <img src={recipe.img} onError={onImgErr} alt="" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-[#3a2415]/80 to-transparent" />
               <button type="button" data-testid={`custodite-fav-detail-${recipe.id}`} aria-pressed={isFav(`custodite:${recipe.id}`)}
                 onClick={() => toggleFav(`custodite:${recipe.id}`)}
-                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#121212]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
+                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#0B0E14]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
                 <Heart className={`w-5 h-5 ${isFav(`custodite:${recipe.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
               </button>
               <div className="absolute bottom-3 left-4 right-4 text-white">
@@ -723,7 +723,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 const h = wa ? wa.pct : 0;
                 if (!(h >= 65 && h <= 85)) return null;
                 return (
-                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#F6D27A,#C8862B)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #F6D27A" }}>
+                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#F6D27A,#E8A838)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #F6D27A" }}>
                     <span className="text-base">🏅</span>
                     <span className="text-[12.5px] font-extrabold">{L({ it: `Capolavoro — Idratazione Perfetta (${h}%)`, de: `Meisterwerk — Perfekte Hydration (${h}%)`, en: `Masterpiece — Perfect Hydration (${h}%)`, es: `Obra maestra — Hidratación perfecta (${h}%)`, fr: `Chef-d'œuvre — Hydratation parfaite (${h}%)` })}</span>
                   </div>
@@ -733,7 +733,7 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Dal mio laboratorio — foto reale di Michele al lavoro */}
-          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] relative">
+          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#26324A] dark:border-[#26324A] relative">
             <img src={`${process.env.PUBLIC_URL || ""}/michele-real-lab.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
             <div className="absolute bottom-3 left-4 right-4 text-white">
@@ -743,7 +743,7 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Arma segreta: Miglioratore Naturale — sistema didascalia (salute & naturalezza) */}
-          <div className="mt-4 bg-[#c94f00] rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
+          <div className="mt-4 bg-[#F26419] rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
             <div className="flex items-start gap-3">
               <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
               <p className="text-sm leading-relaxed">
@@ -773,8 +773,8 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Adatta alle mie dosi */}
-          <div className="mt-4 bg-[#c94f00]/10 border border-[#c94f00]/30 rounded-2xl p-4">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#c94f00] mb-2 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L({ it: "Adatta alle mie dosi", de: "An meine Mengen anpassen", en: "Adapt to my amounts", es: "Adapta a mis dosis", fr: "Adapte à mes quantités" })}</p>
+          <div className="mt-4 bg-[#F26419]/10 border border-[#F26419]/30 rounded-2xl p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L({ it: "Adatta alle mie dosi", de: "An meine Mengen anpassen", en: "Adapt to my amounts", es: "Adapta a mis dosis", fr: "Adapte à mes quantités" })}</p>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{L({ it: "Quanta farina hai?", de: "Wie viel Mehl hast du?", en: "How much flour do you have?", es: "¿Cuánta harina tienes?", fr: "Combien de farine as-tu ?" })}</span>
               <input data-testid="custodite-flour" type="number" inputMode="numeric" value={flour} onChange={(e) => setFlour(e.target.value)} className={inp} />
@@ -782,16 +782,16 @@ export default function RicetteCustodite({ initialId = null }) {
               <div className="flex gap-1.5 ms-auto">
                 {[500, 1000, 2000].map((v) => (
                   <button key={v} data-testid={`custodite-quick-${v}`} onClick={() => setFlour(v)}
-                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Ingredienti ricalcolati */}
-          <div className="mt-4 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] overflow-hidden">
-            <div className="px-4 py-2.5 bg-[#121212] dark:bg-[#181818] flex items-center gap-2 border-b border-[#2e2e2e] dark:border-[#2e2e2e]">
-              <Wheat className="w-4 h-4 text-[#c94f00]" />
+          <div className="mt-4 rounded-2xl border border-[#26324A] dark:border-[#26324A] bg-white dark:bg-[#18202E] overflow-hidden">
+            <div className="px-4 py-2.5 bg-[#0B0E14] dark:bg-[#18202E] flex items-center gap-2 border-b border-[#26324A] dark:border-[#26324A]">
+              <Wheat className="w-4 h-4 text-[#F26419]" />
               <span className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8]">{L({ it: "Ingredienti", de: "Zutaten", en: "Ingredients", es: "Ingredientes", fr: "Ingrédients" })}</span>
             </div>
             <div data-testid="custodite-ingredients">
@@ -799,7 +799,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 <div key={i} className="flex items-center justify-between px-4 py-2.5 border-b last:border-0 border-[#F0E7D6] dark:border-[#2C343C]">
                   <span className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{r.name}</span>
                   <span className="flex items-baseline gap-2">
-                    <span className="font-mono-data font-bold text-[#c94f00] dark:text-[#d8a679]">{r.grams} g</span>
+                    <span className="font-mono-data font-bold text-[#F26419] dark:text-[#d8a679]">{r.grams} g</span>
                     <span className="text-xs text-[#7E8A93]">{r.pct}%</span>
                   </span>
                 </div>
@@ -808,25 +808,25 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Procedimento */}
-          <div className="mt-4 rounded-2xl border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] p-4">
-            <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#c94f00]" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
+          <div className="mt-4 rounded-2xl border border-[#26324A] dark:border-[#26324A] bg-white dark:bg-[#18202E] p-4">
+            <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#F26419]" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line leading-relaxed">{renderProcWithImprover(L(recipe.proc))}</p>
           </div>
 
           {/* Scheda condivisibile con QR */}
-          <div className="mt-4 rounded-2xl border-2 border-dashed border-[#c94f00]/40 bg-[#121212] dark:bg-[#181818] p-4 flex items-center gap-4">
+          <div className="mt-4 rounded-2xl border-2 border-dashed border-[#F26419]/40 bg-[#0B0E14] dark:bg-[#18202E] p-4 flex items-center gap-4">
             {qr && <img data-testid="custodite-qr" src={qr} alt="QR" className="w-24 h-24 rounded-lg bg-white p-1 shrink-0" />}
             <div className="min-w-0">
-              <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#c94f00]" /> {L({ it: "Scheda da condividere", de: "Karte zum Teilen", en: "Shareable card", es: "Ficha para compartir", fr: "Fiche à partager" })}</p>
+              <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#F26419]" /> {L({ it: "Scheda da condividere", de: "Karte zum Teilen", en: "Shareable card", es: "Ficha para compartir", fr: "Fiche à partager" })}</p>
               <p className="text-xs text-[#7E8A93] mt-0.5">{L({ it: "Inquadra il QR per avere ricetta e dosi.", de: "QR scannen für Rezept und Mengen.", en: "Scan the QR for recipe and amounts.", es: "Escanea el QR.", fr: "Scanne le QR pour la recette et les quantités." })}</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-4 no-print">
-          <button data-testid="custodite-share" onClick={doShare} className="flex items-center justify-center gap-2 bg-[#c94f00] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Share2 className="w-5 h-5" /> {L({ it: "Condividi", de: "Teilen", en: "Share", es: "Compartir", fr: "Partager" })}</button>
-          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
-          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
+          <button data-testid="custodite-share" onClick={doShare} className="flex items-center justify-center gap-2 bg-[#F26419] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Share2 className="w-5 h-5" /> {L({ it: "Condividi", de: "Teilen", en: "Share", es: "Compartir", fr: "Partager" })}</button>
+          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
+          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
         </div>
       </div>
     );
@@ -842,7 +842,7 @@ export default function RicetteCustodite({ initialId = null }) {
       <div className="flex flex-wrap gap-2 mt-4 pb-1" data-testid="custodite-filters">
         {CATS.map((c) => (
           <button key={c.id} data-testid={`custodite-cat-${c.id}`} onClick={() => setCat(c.id)}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#c94f00] dark:text-[#a9d2ec] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#F26419] dark:text-[#a9d2ec] border-[#26324A] dark:border-[#26324A]"}`}>
             {L(c.label)}
           </button>
         ))}
@@ -852,7 +852,7 @@ export default function RicetteCustodite({ initialId = null }) {
         {list.map((r) => (
           <div key={r.id} className="relative">
             <button data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
-              className="w-full flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e] shadow-sm active:scale-98 transition-all hover:border-[#c94f00]/50">
+              className="w-full flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#26324A] dark:border-[#26324A] bg-white dark:bg-[#18202E] shadow-sm active:scale-98 transition-all hover:border-[#F26419]/50">
               <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
               <div className="py-2 pe-3 min-w-0">
                 <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>
@@ -862,7 +862,7 @@ export default function RicetteCustodite({ initialId = null }) {
             </button>
             <button type="button" data-testid={`custodite-fav-${r.id}`} aria-pressed={isFav(`custodite:${r.id}`)}
               onClick={() => toggleFav(`custodite:${r.id}`)}
-              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#121212]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
+              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#0B0E14]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
               <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
               {countOf(`custodite:${r.id}`) > 0 && <span data-testid={`custodite-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(`custodite:${r.id}`)}</span>}
             </button>

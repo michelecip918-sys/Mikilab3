@@ -32,7 +32,7 @@ export default function AudioRouteIndicator() {
 
   return createPortal(
     <div data-testid="audio-route-indicator" className="fixed inset-x-0 top-3 z-[400] flex justify-center pointer-events-none px-3">
-      <div className="flex items-center gap-2.5 rounded-2xl bg-[#0d0d0d]/95 backdrop-blur border border-[#3B82F6]/60 px-3.5 py-2.5 shadow-2xl max-w-sm">
+      <div className="flex items-center gap-2.5 rounded-2xl bg-[#0B0E14]/95 backdrop-blur border border-[#3B82F6]/60 px-3.5 py-2.5 shadow-2xl max-w-sm">
         <span className="relative flex w-2.5 h-2.5 shrink-0">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3B82F6] opacity-70" />
           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#3B82F6]" />

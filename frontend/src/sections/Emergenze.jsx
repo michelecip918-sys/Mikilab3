@@ -13,7 +13,7 @@ import { isBluetoothSupported, connectSensor, loadSensors } from "@/lib/bluetoot
 // Gestione Guasti & Celle — vista operativa (tema Oro del Grano).
 // Segnala macchine fuori uso e celle non funzionanti; il ricalcolo (regole offline) genera
 // note automatiche per il turno successivo. Include il riepilogo Basi & Pre-cotti.
-const C = { cream: "#17120B", surf: "#241B10", border: "#6E5320", gold: "#E7B23C", title: "#E7B23C", dark: "#F0E4CC", muted: "#B79B6A", danger: "#E0722E" };
+const C = { cream: "#0B0E14", surf: "#18202E", border: "#26324A", gold: "#E8A838", title: "#E8A838", dark: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 
 export default function Emergenze() {
   const { lang } = useLang();
@@ -104,14 +104,14 @@ export default function Emergenze() {
 
       {/* Autonomia con orari + Consegne del turno */}
       {deadline && (
-        <div data-testid="emg-autonomy" className="flex items-center gap-2 rounded-2xl px-4 py-3 mb-2" style={{ background: "#241B10", border: `2px solid ${C.border}` }}>
+        <div data-testid="emg-autonomy" className="flex items-center gap-2 rounded-2xl px-4 py-3 mb-2" style={{ background: "#18202E", border: `2px solid ${C.border}` }}>
           <Clock className="w-5 h-5 shrink-0" style={{ color: C.gold }} />
           <span className="text-[13px] font-bold" style={{ color: C.title }}>{tri("Autonomia consigliata fino alle", "Autonom empfohlen bis", "Autonomy recommended until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} <span className="font-mono-data" style={{ color: C.dark }}>{fmtHM(deadline, lang)}</span> — {tri("poi inforna i lotti in cella", "dann Chargen backen", "then bake the cell batches", "luego hornea", "puis enfourne", "سپس بپز")}</span>
         </div>
       )}
       <button data-testid="emg-consegne" onClick={() => window.dispatchEvent(new Event("mikilab-consegne"))}
         className="w-full flex items-center justify-center gap-2 rounded-2xl py-3 mb-5 font-extrabold active:scale-98 transition-all" style={{ background: C.dark, color: C.cream }}>
-        <ClipboardList className="w-5 h-5" style={{ color: "#6E5320" }} /> {tri("Consegne del turno (voce)", "Schichtübergabe (Stimme)", "Shift handover (voice)", "Relevo de turno (voz)", "Passation (voix)", "تحویل شیفت (صوتی)")}
+        <ClipboardList className="w-5 h-5" style={{ color: "#26324A" }} /> {tri("Consegne del turno (voce)", "Schichtübergabe (Stimme)", "Shift handover (voice)", "Relevo de turno (voz)", "Passation (voix)", "تحویل شیفت (صوتی)")}
       </button>
 
       {/* Impastatrici / macchine */}
@@ -191,7 +191,7 @@ export default function Emergenze() {
             {bases.map((b, i) => {
               const al = baseAlert(b);
               return (
-                <div key={i} className="rounded-2xl px-3 py-2.5" style={{ background: al ? "#2E2214" : C.surf, border: `2px solid ${al ? C.danger : C.border}` }}>
+                <div key={i} className="rounded-2xl px-3 py-2.5" style={{ background: al ? "#18202E" : C.surf, border: `2px solid ${al ? C.danger : C.border}` }}>
                   <span className="block font-mono-data font-extrabold" style={{ fontSize: "22px", color: al ? C.danger : C.title }}>{b.qty}{b.unit ? ` ${b.unit}` : ""}</span>
                   <span className="block font-bold text-[13px] truncate" style={{ color: C.dark }}>{b.product}</span>
                   <span className="block text-[10px] font-semibold" style={{ color: C.gold }}>{statusLabel(b.kind, tri)}</span>
@@ -217,7 +217,7 @@ export default function Emergenze() {
           <p className="text-[13px]" style={{ color: C.muted }}>{tri("Nessuna nota. Tutto regolare.", "Keine Notizen. Alles ok.", "No notes. All good.", "Sin notas. Todo bien.", "Aucune note.", "یادداشتی نیست.")}</p>
         ) : (
           shift.shift_notes.map((n) => (
-            <div key={n.id} className="rounded-2xl px-4 py-3" style={{ background: "#2E2214", border: `2px solid ${C.danger}` }}>
+            <div key={n.id} className="rounded-2xl px-4 py-3" style={{ background: "#18202E", border: `2px solid ${C.danger}` }}>
               <p className="text-[13.5px] leading-snug font-medium" style={{ color: C.dark }}>{n.text}</p>
               <p className="text-[10px] mt-1 font-semibold" style={{ color: C.danger }}>{fmtTime(n.at)}</p>
             </div>

@@ -41,55 +41,55 @@ export default function GuidaAvatar() {
   ];
 
   return (
-    <div data-testid="guida-avatar" className="rounded-3xl border border-[#2e2e2e] overflow-hidden" style={{ background: "#121212" }}>
-      <div className="p-5" style={{ background: "linear-gradient(135deg,#c94f00,#c94f00)" }}>
-        <div className="flex items-center gap-2 text-[#121212]">
+    <div data-testid="guida-avatar" className="rounded-3xl border border-[#26324A] overflow-hidden" style={{ background: "#0B0E14" }}>
+      <div className="p-5" style={{ background: "linear-gradient(135deg,#F26419,#F26419)" }}>
+        <div className="flex items-center gap-2 text-[#0B0E14]">
           <Sparkles className="w-5 h-5" />
           <h2 className="font-display text-xl font-bold">{L("Guida al Sito", "Website-Guide", "Site Guide", "Guía del Sitio")}</h2>
         </div>
-        <p className="text-[#121212]/85 text-sm mt-1">{L("Michele & Mohammadreza ti spiegano come funziona MikiLab.", "Michele & Mohammadreza erklären dir MikiLab.", "Michele & Mohammadreza explain how MikiLab works.", "Michele & Mohammadreza te explican MikiLab.")}</p>
+        <p className="text-[#0B0E14]/85 text-sm mt-1">{L("Michele & Mohammadreza ti spiegano come funziona MikiLab.", "Michele & Mohammadreza erklären dir MikiLab.", "Michele & Mohammadreza explain how MikiLab works.", "Michele & Mohammadreza te explican MikiLab.")}</p>
       </div>
 
       <div className="p-4">
         <div className="flex gap-2 mb-3">
           {["michele", "mohamed"].map((k) => (
             <button key={k} data-testid={`guida-tab-${k}`} onClick={() => setWho(k)}
-              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-bold transition-all ${who === k ? "bg-[#c94f00] text-[#121212]" : "bg-[#1e1e1e] text-[#c94f00]"}`}>
+              className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-bold transition-all ${who === k ? "bg-[#F26419] text-[#0B0E14]" : "bg-[#18202E] text-[#F26419]"}`}>
               <ChefHat className="w-4 h-4" /> {k === "michele" ? "Michele" : "Mohammadreza"}
             </button>
           ))}
         </div>
 
-        <div data-testid="guida-avatar-intro" className="flex items-start gap-3 rounded-2xl bg-white p-3.5 border border-[#2e2e2e]">
-          <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden border-4 shadow-md" style={{ borderColor: who === "michele" ? "#c94f00" : "#c94f00" }}>
+        <div data-testid="guida-avatar-intro" className="flex items-start gap-3 rounded-2xl bg-white p-3.5 border border-[#26324A]">
+          <div className="w-20 h-20 rounded-full shrink-0 overflow-hidden border-4 shadow-md" style={{ borderColor: who === "michele" ? "#F26419" : "#F26419" }}>
             <img src={who === "michele" ? `${process.env.PUBLIC_URL}/michele-avatar-real.jpg` : `${process.env.PUBLIC_URL}/mohammed-avatar.jpg`} alt={active.name} className="w-full h-full object-cover" />
           </div>
           <div>
-            <p className="font-bold text-[#c94f00]">{active.name} <span className="text-[11px] font-semibold text-[#d4a373]">· {active.role}</span></p>
-            <p className="text-sm text-[#c94f00] mt-0.5 leading-relaxed">{active.intro}</p>
+            <p className="font-bold text-[#F26419]">{active.name} <span className="text-[11px] font-semibold text-[#E8A838]">· {active.role}</span></p>
+            <p className="text-sm text-[#F26419] mt-0.5 leading-relaxed">{active.intro}</p>
           </div>
         </div>
 
         {who === "mohamed" && active.story && (
-          <div data-testid="guida-mohamed-story" className="mt-3 rounded-2xl bg-[#ffffff] border border-[#2e2e2e] p-4">
-            <p className="font-display text-base font-bold text-[#c94f00] mb-1">{L("La nostra storia", "Unsere Geschichte", "Our story", "Nuestra historia")}</p>
-            <p className="text-[13.5px] text-[#c94f00] leading-relaxed">{active.story}</p>
+          <div data-testid="guida-mohamed-story" className="mt-3 rounded-2xl bg-[#ffffff] border border-[#26324A] p-4">
+            <p className="font-display text-base font-bold text-[#F26419] mb-1">{L("La nostra storia", "Unsere Geschichte", "Our story", "Nuestra historia")}</p>
+            <p className="text-[13.5px] text-[#F26419] leading-relaxed">{active.story}</p>
           </div>
         )}
 
         <div className="mt-3 space-y-2">
           {steps.map((s, i) => (
-            <div key={i} className="flex items-start gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#1e1e1e]/60 p-3">
-              <s.Icon className="w-5 h-5 text-[#c94f00] mt-0.5 shrink-0" />
+            <div key={i} className="flex items-start gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#18202E]/60 p-3">
+              <s.Icon className="w-5 h-5 text-[#F26419] mt-0.5 shrink-0" />
               <div>
-                <p className="font-semibold text-sm text-[#c94f00]">{s.t}</p>
-                <p className="text-[13px] text-[#c94f00] leading-snug">{s.d}</p>
+                <p className="font-semibold text-sm text-[#F26419]">{s.t}</p>
+                <p className="text-[13px] text-[#F26419] leading-snug">{s.d}</p>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-3 flex items-center gap-2 text-[12px] text-[#d4a373] justify-center">
+        <div className="mt-3 flex items-center gap-2 text-[12px] text-[#E8A838] justify-center">
           <MessageCircle className="w-3.5 h-3.5" /> {L("Nessun pagamento: guadagni tutto con le sfide.", "Keine Zahlung: alles über Challenges.", "No payment: earn everything through challenges.", "Sin pago: todo con retos.")}
         </div>
       </div>

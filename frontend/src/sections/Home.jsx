@@ -17,13 +17,13 @@ export default function Home({ onNavigate }) {
   const BLOCKS = [
     {
       tab: "maestro", img: "hero-laboratorio.jpg",
-      title: L("Laboratorio Chimico Impasti", "Virtuelle 3D-Backstube", "Laboratorio Chimico Impasti", "Panadería Virtual 3D"),
-      badge: L("Novità · 3D", "Neu · 3D", "New · 3D", "Nuevo · 3D"),
+      title: L("Il Tuo Laboratorio", "Dein Labor", "Your Lab", "Tu Laboratorio"),
+      badge: L("Pro · 3D", "Pro · 3D", "Pro · 3D", "Pro · 3D"),
       desc: L(
-        "Entra nel panificio 3D con Miki e Mohamed: MikiLab Elite Engine, dosi, forni e radio.",
-        "Betritt die 3D-Backstube mit Miki und Mohamed: MikiLab Elite Engine, Mengen, Öfen und Radio.",
-        "Enter the 3D bakery with Miki and Mohamed: MikiLab Elite Engine, doses, ovens and radio.",
-        "Entra en la panadería 3D con Miki y Mohamed: MikiLab Elite Engine, dosis, hornos y radio."),
+        "Elite Engine, banco impasti 3D, dosi dal database, forni, radio e comandi vocali.",
+        "Elite Engine, 3D-Teigbank, Mengen aus der DB, Öfen, Radio und Sprachbefehle.",
+        "Elite Engine, 3D dough bench, DB doses, ovens, radio and voice commands.",
+        "Elite Engine, banco de masas 3D, dosis del DB, hornos, radio y comandos de voz."),
     },
     {
       tab: "ricette", img: "hero-ricette.jpg",
@@ -36,7 +36,7 @@ export default function Home({ onNavigate }) {
         "Recetas exclusivas con cantidades y pasos, listas para seguir."),
     },
     {
-      tab: "imparacon", img: "hero-bakery.jpg",
+      tab: "imparacon", img: "hero-impara.jpg",
       title: L("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"),
       badge: L("Impara", "Lernen", "Learn", "Aprende"),
       desc: L(
@@ -46,14 +46,14 @@ export default function Home({ onNavigate }) {
         "Lecciones, cuestionarios y ejercicios para empezar paso a paso."),
     },
     {
-      tab: "maestro", img: "hero-laboratorio.jpg",
-      title: L("Laboratorio", "Labor", "Lab", "Laboratorio"),
-      badge: L("Pro", "Pro", "Pro", "Pro"),
+      tab: "shop", img: "hero-bakery.jpg",
+      title: L("Centro Formule", "Formelzentrum", "Formula Center", "Centro de Fórmulas"),
+      badge: L("Analisi Farine", "Mehlanalyse", "Flour Analysis", "Análisis de Harinas"),
       desc: L(
-        "Strumenti avanzati per progettare e produrre in autonomia.",
-        "Fortschrittliche Werkzeuge zum eigenständigen Planen und Produzieren.",
-        "Advanced tools to plan and produce on your own.",
-        "Herramientas avanzadas para planificar y producir con autonomía."),
+        "Analisi delle farine (forza W, proteine, assorbimento) e registro test con foto IA.",
+        "Mehlanalyse (W-Kraft, Protein, Aufnahme) und Testregister mit KI-Foto.",
+        "Flour analysis (W strength, protein, absorption) and a test log with AI photo.",
+        "Análisis de harinas (fuerza W, proteína, absorción) y registro de pruebas con foto IA."),
     },
     {
       tab: "community", img: "hero-social.jpg",
@@ -71,8 +71,8 @@ export default function Home({ onNavigate }) {
     <div className="pb-24" data-testid="home">
       {/* Hero */}
       <div className="text-center mb-8">
-        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#d4a373]/40 shadow-lg" />
-        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#d4a373] mt-3">MikiLab</h1>
+        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#E8A838]/40 shadow-lg" />
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#E8A838] mt-3">MikiLab</h1>
         <p className="mt-2 text-[15px] leading-snug text-[#C9D4DC] max-w-sm mx-auto">
           {L(
             "Il laboratorio del fornaio: ricette, guide e strumenti.",
@@ -80,7 +80,7 @@ export default function Home({ onNavigate }) {
             "The baker's workshop: recipes, guides and tools.",
             "El taller del panadero: recetas, guías y herramientas.")}
         </p>
-        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#d4a373]/15 text-[#d4a373] border border-[#d4a373]/40">
+        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#E8A838]/15 text-[#E8A838] border border-[#E8A838]/40">
           {L("100% gratis", "100% kostenlos", "100% free", "100% gratis")}
         </span>
         {/* Badge stato sistema */}
@@ -89,7 +89,7 @@ export default function Home({ onNavigate }) {
             <WifiOff className="w-3 h-3" /> {L("Sistema 100% offline pronto", "System 100% offline bereit", "System 100% offline ready", "Sistema 100% offline listo")}
           </span>
           {user && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#d4a373]/15 text-[#d4a373] border border-[#d4a373]/40">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#E8A838]/15 text-[#E8A838] border border-[#E8A838]/40">
               {L("Account aziendale attivo", "Firmenkonto aktiv", "Company account active", "Cuenta de empresa activa")}
             </span>
           )}
@@ -106,11 +106,11 @@ export default function Home({ onNavigate }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            className="lab-3d-card group block w-full text-start rounded-3xl overflow-hidden bg-[#161616] border border-[#2C2C2C] hover:border-[#d4a373]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
+            className="lab-3d-card group block w-full text-start rounded-3xl overflow-hidden bg-[#121722] border border-[#26324A] hover:border-[#E8A838]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
           >
             <div className="relative h-40">
               <img src={`${PUB}/${b.img}`} alt={b.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0d] via-[#0d0d0d]/45 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B0E14] via-[#0B0E14]/45 to-transparent" />
               <span className="absolute top-3 start-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/45 text-[#e6c79a] border border-[#e6c79a]/30 backdrop-blur-sm">
                 {b.badge}
               </span>
@@ -118,7 +118,7 @@ export default function Home({ onNavigate }) {
             </div>
             <div className="flex items-center gap-3 p-4">
               <p className="flex-1 text-[14px] leading-snug text-[#C9D4DC]">{b.desc}</p>
-              <span className="shrink-0 w-10 h-10 rounded-full bg-[#d4a373]/15 border border-[#d4a373]/40 flex items-center justify-center text-[#d4a373] group-hover:bg-[#d4a373] group-hover:text-white transition-all duration-300">
+              <span className="shrink-0 w-10 h-10 rounded-full bg-[#E8A838]/15 border border-[#E8A838]/40 flex items-center justify-center text-[#E8A838] group-hover:bg-[#E8A838] group-hover:text-white transition-all duration-300">
                 <ChevronRight className="w-5 h-5 rtl:rotate-180" />
               </span>
             </div>

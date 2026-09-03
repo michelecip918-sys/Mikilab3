@@ -51,25 +51,25 @@ export default function ShiftsManager({ store, storeName }) {
   };
   const remove = async (id) => { try { await shiftsApi.remove(id); setShifts((p) => p.filter((x) => x.id !== id)); } catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); } };
 
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#c94f00]";
+  const inp = "w-full bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#F26419]";
   const totalWeek = weekShifts.reduce((a, s) => a + (s.hours || 0), 0);
 
   return (
     <div className="pb-40" data-testid="shifts-manager">
-      <p className="text-xs text-[#7E8A93] mb-3">{tri("Turni del negozio", "Schichten der Filiale", "Shifts for store")}: <b className="text-[#c94f00]">{storeName}</b></p>
+      <p className="text-xs text-[#7E8A93] mb-3">{tri("Turni del negozio", "Schichten der Filiale", "Shifts for store")}: <b className="text-[#F26419]">{storeName}</b></p>
 
       {/* Navigatore settimana */}
-      <div className="flex items-center justify-between bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-2 mb-4">
-        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronLeft className="w-5 h-5 text-[#c94f00]" /></button>
+      <div className="flex items-center justify-between bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-2 mb-4">
+        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0B0E14] dark:hover:bg-[#18202E]"><ChevronLeft className="w-5 h-5 text-[#F26419]" /></button>
         <div className="text-center">
-          <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1"><CalendarClock className="w-4 h-4 text-[#c94f00]" /> {weekLabel}</p>
+          <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1"><CalendarClock className="w-4 h-4 text-[#F26419]" /> {weekLabel}</p>
           <p className="text-[11px] text-[#7E8A93]">{tri("Totale settimana", "Woche gesamt", "Week total")}: <b className="font-mono-data">{totalWeek}h</b></p>
         </div>
-        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#121212] dark:hover:bg-[#181818]"><ChevronRight className="w-5 h-5 text-[#c94f00]" /></button>
+        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0B0E14] dark:hover:bg-[#18202E]"><ChevronRight className="w-5 h-5 text-[#F26419]" /></button>
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#c94f00]" /></div>
+        <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#F26419]" /></div>
       ) : (
         <div className="space-y-2.5" data-testid="shifts-week">
           {days.map((d) => {
@@ -78,21 +78,21 @@ export default function ShiftsManager({ store, storeName }) {
             const dayTot = list.reduce((a, s) => a + (s.hours || 0), 0);
             const isToday = dayIso === iso(new Date());
             return (
-              <div key={dayIso} data-testid={`shift-day-${dayIso}`} className={`rounded-2xl border p-3 ${isToday ? "border-[#c94f00] bg-[#c94f00]/5" : "border-[#2e2e2e] dark:border-[#2e2e2e] bg-white dark:bg-[#1e1e1e]"}`}>
+              <div key={dayIso} data-testid={`shift-day-${dayIso}`} className={`rounded-2xl border p-3 ${isToday ? "border-[#F26419] bg-[#F26419]/5" : "border-[#26324A] dark:border-[#26324A] bg-white dark:bg-[#18202E]"}`}>
                 <div className="flex items-center justify-between mb-1.5">
                   <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] capitalize">{d.toLocaleDateString(loc, { weekday: "long", day: "2-digit", month: "short" })}</p>
                   <div className="flex items-center gap-2">
                     {dayTot > 0 && <span className="text-[11px] font-mono-data text-[#7E8A93]">{dayTot}h</span>}
-                    <button data-testid={`shift-add-${dayIso}`} onClick={() => { setFormDay(dayIso); setForm(blank); }} className="w-7 h-7 rounded-lg bg-[#c94f00] text-white flex items-center justify-center active:scale-90"><Plus className="w-4 h-4" /></button>
+                    <button data-testid={`shift-add-${dayIso}`} onClick={() => { setFormDay(dayIso); setForm(blank); }} className="w-7 h-7 rounded-lg bg-[#F26419] text-white flex items-center justify-center active:scale-90"><Plus className="w-4 h-4" /></button>
                   </div>
                 </div>
 
                 {list.length === 0 && formDay !== dayIso && <p className="text-[12px] text-[#7E8A93]">{tri("Nessun turno", "Keine Schicht", "No shift")}</p>}
 
                 {list.map((s) => (
-                  <div key={s.id} data-testid={`shift-card-${s.id}`} className="flex items-center gap-2 py-1.5 border-t border-[#e4eff8] dark:border-[#2e2e2e] first:border-0">
-                    <div className="flex flex-col items-center justify-center bg-[#c94f00]/15 rounded-lg px-2 py-1 min-w-[74px]">
-                      <span className="font-mono-data text-[12px] font-bold text-[#c94f00]">{s.start}–{s.end}</span>
+                  <div key={s.id} data-testid={`shift-card-${s.id}`} className="flex items-center gap-2 py-1.5 border-t border-[#e4eff8] dark:border-[#26324A] first:border-0">
+                    <div className="flex flex-col items-center justify-center bg-[#F26419]/15 rounded-lg px-2 py-1 min-w-[74px]">
+                      <span className="font-mono-data text-[12px] font-bold text-[#F26419]">{s.start}–{s.end}</span>
                       <span className="text-[10px] text-[#7E8A93]">{s.hours}h</span>
                     </div>
                     <div className="min-w-0 flex-1">
@@ -105,7 +105,7 @@ export default function ShiftsManager({ store, storeName }) {
 
                 {/* Form inline per il giorno */}
                 {formDay === dayIso && (
-                  <div data-testid={`shift-form-${dayIso}`} className="mt-2 bg-[#c94f00]/10 border border-[#c94f00]/30 rounded-2xl shadow-md border border-amber-900/40 p-3 space-y-2">
+                  <div data-testid={`shift-form-${dayIso}`} className="mt-2 bg-[#F26419]/10 border border-[#F26419]/30 rounded-2xl shadow-md border border-amber-900/40 p-3 space-y-2">
                     <input data-testid="shift-employee" value={form.employee} onChange={(e) => setForm({ ...form, employee: e.target.value })} placeholder={tri("Nome dipendente", "Mitarbeitername", "Employee name")} className={inp} />
                     <div className="grid grid-cols-2 gap-2">
                       <input data-testid="shift-role" value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} placeholder={tri("Ruolo (es. Fornaio)", "Rolle (z.B. Bäcker)", "Role (e.g. Baker)")} className={inp} />
@@ -116,8 +116,8 @@ export default function ShiftsManager({ store, storeName }) {
                       <label className="text-[11px] text-[#7E8A93]">{tri("Fine", "Ende", "End")}<input data-testid="shift-end" type="time" value={form.end} onChange={(e) => setForm({ ...form, end: e.target.value })} className={inp + " mt-0.5 font-mono-data"} /></label>
                     </div>
                     <div className="flex gap-2">
-                      <button data-testid="shift-save" onClick={save} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#c94f00] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva turno", "Schicht speichern", "Save shift")}</button>
-                      <button data-testid="shift-cancel" onClick={() => setFormDay(null)} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93]"><X className="w-4 h-4" /></button>
+                      <button data-testid="shift-save" onClick={save} disabled={busy} className="flex-1 flex items-center justify-center gap-1 bg-[#F26419] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">{busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva turno", "Schicht speichern", "Save shift")}</button>
+                      <button data-testid="shift-cancel" onClick={() => setFormDay(null)} className="px-4 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] text-[#7E8A93]"><X className="w-4 h-4" /></button>
                     </div>
                   </div>
                 )}
@@ -129,13 +129,13 @@ export default function ShiftsManager({ store, storeName }) {
 
       {/* Totale ore per persona */}
       {hoursByEmployee.length > 0 && (
-        <div className="mt-5 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4" data-testid="shifts-hours">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-[#c94f00] mb-2 flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Ore per persona (settimana)", "Stunden pro Person (Woche)", "Hours per person (week)")}</p>
+        <div className="mt-5 rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4" data-testid="shifts-hours">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-[#F26419] mb-2 flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Ore per persona (settimana)", "Stunden pro Person (Woche)", "Hours per person (week)")}</p>
           <div className="space-y-1.5">
             {hoursByEmployee.map(([name, h]) => (
               <div key={name} data-testid={`shift-hours-${name}`} className="flex items-center justify-between text-sm">
                 <span className="text-[#2B303B] dark:text-[#e4eff8] font-medium">{name}</span>
-                <span className="font-mono-data font-bold text-[#c94f00]">{Math.round(h * 100) / 100}h</span>
+                <span className="font-mono-data font-bold text-[#F26419]">{Math.round(h * 100) / 100}h</span>
               </div>
             ))}
           </div>

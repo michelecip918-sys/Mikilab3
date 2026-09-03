@@ -37,23 +37,21 @@ export default function BottomNav({ active, onChange }) {
   // 4 sezioni fisse con icone dedicate (immagini su misura).
   const PUB = process.env.PUBLIC_URL;
   const TABS = [
-    { id: "ricette", label: triNav("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro"), img: "nav-ricette.jpg" },
-    { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), img: "nav-imparacon.jpg" },
-    { id: "maestro", label: triNav("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción"), img: "nav-maestro.jpg" },
-    { id: "community", label: "Community", img: "nav-community.jpg" },
-    { id: "guida", label: triNav("Guida · Come Funziona", "Anleitung", "Guide · How it works", "Guía · Cómo funciona"), icon: BookOpenCheck },
+    { id: "ricette", label: triNav("Ricette del Maestro", "Meister-Rezepte", "Master Recipes", "Recetas del Maestro"), Icon: BookOpen },
+    { id: "imparacon", label: triNav("Scienza & Guide", "Wissen & Guides", "Science & Guides", "Ciencia y Guías"), Icon: GraduationCap },
+    { id: "maestro", label: triNav("Schede di Produzione", "Produktionsblätter", "Production Sheets", "Fichas de Producción"), Icon: Wrench },
+    { id: "community", label: "Community", Icon: Users },
+    { id: "guida", label: triNav("Guida · Come Funziona", "Anleitung", "Guide · How it works", "Guía · Cómo funciona"), Icon: BookOpenCheck },
   ];
-  const ROT = [-6, -3, 0, 3, 6]; // leggera rotazione a ventaglio delle pale
 
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 z-50 wood-surface border-t-4 border-[#3e2510] shadow-[0_-6px_22px_rgba(20,10,2,0.55)]"
+      className="fixed bottom-0 inset-x-0 z-50 backdrop-blur-2xl bg-[#0B0E14]/90 border-t border-white/10 shadow-[0_-6px_22px_rgba(0,0,0,0.55)]"
     >
-      <div aria-hidden className="absolute inset-x-0 top-0 h-[3px] bg-gradient-to-b from-[#e7c79a]/70 to-transparent" />
-      <div aria-hidden className="absolute inset-0 bg-[#2b190c]/25" />
-      <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-2" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
-        {TABS.map(({ id, label, img, icon: Icon }, i) => {
+      <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#F26419]/50 to-transparent" />
+      <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-1.5" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
+        {TABS.map(({ id, label, Icon }) => {
           const on = norm === id;
           return (
             <button
@@ -61,39 +59,24 @@ export default function BottomNav({ active, onChange }) {
               data-testid={`nav-tab-${id}`}
               onClick={() => { if (id === "guida") { window.dispatchEvent(new Event("mikilab-open-guida")); return; } if (id === "community") markSocialSeen(); onChange(id); }}
               aria-pressed={on}
-              className="group relative flex flex-col items-center justify-end min-h-[82px] pb-0.5 active:scale-95 transition-transform"
-              style={{ ["--rot"]: `${ROT[i]}deg` }}
+              className="group relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-1.5 active:scale-95 transition-transform"
             >
-              {/* PALA da forno in legno: lama tonda in alto + manico lungo ben visibile */}
               <span
-                className={`relative flex items-center justify-center wood-surface border border-[#3e2510] rounded-t-full rounded-b-[7px] transition-all duration-300 ${
+                className={`relative flex items-center justify-center w-10 h-10 rounded-2xl transition-all duration-300 ${
                   on
-                    ? "w-11 h-11 -translate-y-1 wood-emboss ring-2 ring-[#ffcf7a] shadow-[0_0_16px_rgba(255,180,80,.55)] overflow-hidden peel-shine"
-                    : "w-10 h-10 opacity-90 shadow-[0_3px_6px_rgba(30,15,4,.5)] group-hover:opacity-100 group-hover:-translate-y-0.5"
+                    ? "bg-[#F26419]/18 border border-[#F26419]/50 shadow-[0_0_16px_rgba(242,100,25,0.35)] -translate-y-0.5"
+                    : "border border-transparent group-hover:bg-white/5"
                 }`}
-                style={{ transform: `rotate(var(--rot))` }}
               >
-                <span aria-hidden className="absolute inset-0 rounded-t-full rounded-b-[7px] bg-gradient-to-b from-[#ffe1a8]/25 to-black/10" />
-                {img ? (
-                  <img src={`${PUB}/${img}`} alt={label}
-                    className="relative w-8 h-8 object-contain"
-                    style={{ filter: `sepia(1) saturate(4) hue-rotate(3deg) brightness(${on ? 1.5 : 1.28}) contrast(1.05) drop-shadow(0 0 4px rgba(255,190,90,${on ? 0.85 : 0.45}))`, opacity: 1 }} />
-                ) : Icon ? (
-                  <Icon className="relative w-6 h-6" style={{ color: "#ffcf7a", filter: `drop-shadow(0 0 4px rgba(255,190,90,${on ? 0.85 : 0.55}))` }} strokeWidth={2.2} />
-                ) : null}
+                <Icon className={`w-[22px] h-[22px] transition-colors ${on ? "text-[#F26419]" : "text-[#94A3B8] group-hover:text-[#F7F9FC]"}`} strokeWidth={on ? 2.4 : 2} />
                 {id === "community" && unread > 0 && (
-                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E4572E] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#2b190c]">{unread > 9 ? "9+" : unread}</span>
+                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E63946] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0B0E14]">{unread > 9 ? "9+" : unread}</span>
                 )}
                 {id === "community" && socialNew && unread === 0 && (
-                  <span data-testid="nav-community-newdot" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E4572E] ring-2 ring-[#2b190c]" />
+                  <span data-testid="nav-community-newdot" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E63946] ring-2 ring-[#0B0E14]" />
                 )}
-                {/* manico della pala: lungo e spesso come una vera pala del fornaio */}
-                <span aria-hidden className={`absolute left-1/2 -translate-x-1/2 top-full w-[9px] rounded-b-full wood-surface border-x border-b border-[#3e2510] shadow-[0_2px_4px_rgba(30,15,4,.5)] ${on ? "h-[26px]" : "h-[21px]"}`}>
-                  <span className="absolute inset-y-1.5 left-1/2 -translate-x-1/2 w-px bg-[#3e2510]/50" />
-                </span>
               </span>
-              <span className={`mt-[28px] text-[9px] font-bold leading-[1.05] text-center break-words line-clamp-2 max-w-[76px] transition-colors ${on ? "text-[#ffe6bf]" : "text-[#e7c79a]/85"}`}
-                style={{ textShadow: "0 1px 1px rgba(0,0,0,.6)" }}>
+              <span className={`text-[9px] font-bold leading-[1.05] text-center break-words line-clamp-2 max-w-[76px] transition-colors ${on ? "text-[#F7F9FC]" : "text-[#64748B] group-hover:text-[#94A3B8]"}`}>
                 {label}
               </span>
             </button>

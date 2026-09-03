@@ -99,40 +99,40 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#121212] dark:bg-[#121212]">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#0B0E14] dark:bg-[#0B0E14]">
       <div className="w-full max-w-sm relative" data-testid="auth-screen">
         {onClose && (
           <button data-testid="auth-close" onClick={onClose} aria-label="Chiudi"
-            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93] z-10">
+            className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#7E8A93] z-10">
             <X className="w-5 h-5" />
           </button>
         )}
         <div className="text-center mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#c94f00]/70 shadow-lg mx-auto mb-3" />
+          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-[#F26419]/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{T.title}</h1>
           <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪</p>
         </div>
 
         {mode !== "forgot" && (
-          <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1e1e1e]">
+          <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#18202E]">
             <button type="button" data-testid="auth-tab-login" onClick={() => { setMode("login"); setNeedVerify(false); setInfo(""); }}
-              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#c94f00] text-[#c94f00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
+              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#F26419] text-[#F26419] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.login}
             </button>
             <button type="button" data-testid="auth-tab-register" onClick={() => { setMode("register"); setNeedVerify(false); setInfo(""); }}
-              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "register" ? "bg-white dark:bg-[#c94f00] text-[#c94f00] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
+              className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "register" ? "bg-white dark:bg-[#F26419] text-[#F26419] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.register}
             </button>
           </div>
         )}
 
         {info && (
-          <div data-testid="auth-info" className="mb-4 rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-4 text-center">
-            <Mail className="w-7 h-7 text-[#c94f00] mx-auto mb-1.5" />
+          <div data-testid="auth-info" className="mb-4 rounded-2xl bg-[#F26419]/10 border border-[#F26419]/30 p-4 text-center">
+            <Mail className="w-7 h-7 text-[#F26419] mx-auto mb-1.5" />
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{info}</p>
             {needVerify && (
               <button type="button" data-testid="auth-resend-verify" onClick={resendVerify}
-                className="mt-2 text-xs font-semibold text-[#c94f00] underline">
+                className="mt-2 text-xs font-semibold text-[#F26419] underline">
                 {tri("Invia di nuovo l'email", "E-Mail erneut senden", "Resend email", "Reenviar correo")}
               </button>
             )}
@@ -142,22 +142,22 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         {mode !== "forgot" && (
           <>
             <button data-testid="google-login-btn" onClick={google}
-              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] shadow-sm active:scale-98 transition-all mb-4">
+              className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] shadow-sm active:scale-98 transition-all mb-4">
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5 h-5" />
               {T.google}
             </button>
 
             <div className="flex items-center gap-3 mb-4">
-              <span className="flex-1 h-px bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
+              <span className="flex-1 h-px bg-[#26324A] dark:bg-[#26324A]" />
               <span className="text-xs text-[#7E8A93]">{T.or}</span>
-              <span className="flex-1 h-px bg-[#2e2e2e] dark:bg-[#2e2e2e]" />
+              <span className="flex-1 h-px bg-[#26324A] dark:bg-[#26324A]" />
             </div>
           </>
         )}
 
         {mode === "forgot" && sent ? (
-          <div data-testid="forgot-sent" className="rounded-2xl bg-[#c94f00]/10 border border-[#c94f00]/30 p-5 text-center">
-            <Mail className="w-8 h-8 text-[#c94f00] mx-auto mb-2" />
+          <div data-testid="forgot-sent" className="rounded-2xl bg-[#F26419]/10 border border-[#F26419]/30 p-5 text-center">
+            <Mail className="w-8 h-8 text-[#F26419] mx-auto mb-2" />
             <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{T.sent_msg}</p>
           </div>
         ) : (
@@ -183,7 +183,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           )}
           {mode === "register" && (
             <>
-              <p className={`text-xs -mt-1 ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#c94f00]") : "text-[#7E8A93]"}`}>
+              <p className={`text-xs -mt-1 ${password ? (pwStrong ? "text-[#3E7C59]" : "text-[#F26419]") : "text-[#7E8A93]"}`}>
                 {tri("Min 8 caratteri, con lettere e numeri.", "Min. 8 Zeichen, Buchstaben und Zahlen.", "Min 8 characters, letters and numbers.", "Mín. 8 caracteres, con letras y números.")}
               </p>
               <Field icon={<Lock className="w-4 h-4" />}>
@@ -195,12 +195,12 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           )}
           {mode === "login" && (
             <button type="button" data-testid="auth-forgot-link" onClick={() => { setMode("forgot"); setSent(false); }}
-              className="block w-full text-right text-xs text-[#7E8A93] hover:text-[#c94f00] -mt-1">
+              className="block w-full text-right text-xs text-[#7E8A93] hover:text-[#F26419] -mt-1">
               {T.forgot}
             </button>
           )}
           <button data-testid="auth-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {mode === "login" ? <LogIn className="w-5 h-5" /> : mode === "register" ? <UserPlus className="w-5 h-5" /> : <Mail className="w-5 h-5" />}
             {mode === "login" ? T.login : mode === "register" ? T.register : T.send}
           </button>
@@ -209,12 +209,12 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
 
         {mode === "forgot" ? (
           <button data-testid="auth-switch" onClick={() => { setMode("login"); setSent(false); }}
-            className="w-full text-center text-sm text-[#c94f00] font-medium mt-4">
+            className="w-full text-center text-sm text-[#F26419] font-medium mt-4">
             {T.back}
           </button>
         ) : (
           <button data-testid="auth-switch" onClick={() => setMode(mode === "login" ? "register" : "login")}
-            className="w-full text-center text-sm text-[#c94f00] font-medium mt-4">
+            className="w-full text-center text-sm text-[#F26419] font-medium mt-4">
             {mode === "login" ? T.switch_r : T.switch_l}
           </button>
         )}
@@ -226,8 +226,8 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
 
 function Field({ icon, children }) {
   return (
-    <div className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl px-4 py-3">
-      <span className="text-[#c94f00]">{icon}</span>
+    <div className="flex items-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl px-4 py-3">
+      <span className="text-[#F26419]">{icon}</span>
       {children}
     </div>
   );

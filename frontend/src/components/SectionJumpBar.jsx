@@ -6,14 +6,14 @@ export default function SectionJumpBar({ sections = [], testid = "section-jump-b
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   return (
-    <div data-testid={testid} className="sticky top-0 z-30 -mx-4 px-4 py-2 mb-3 bg-[#121212]/85 backdrop-blur-md border-b border-[#2e2e2e]">
+    <div data-testid={testid} className="sticky top-0 z-30 -mx-4 px-4 py-2 mb-3 bg-[#0B0E14]/85 backdrop-blur-md border-b border-[#26324A]">
       <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
         {sections.map((s) => {
           const Icon = s.Icon;
           return (
             <button key={s.target} data-testid={`jump-${s.target}`} onClick={() => go(s.target)}
-              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] text-[#e4eff8] text-[12.5px] font-bold whitespace-nowrap active:scale-95 hover:border-[#c94f00]/60 transition-all">
-              {Icon && <Icon className="w-3.5 h-3.5 text-[#c94f00]" />}
+              className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#18202E] border border-[#26324A] text-[#e4eff8] text-[12.5px] font-bold whitespace-nowrap active:scale-95 hover:border-[#F26419]/60 transition-all">
+              {Icon && <Icon className="w-3.5 h-3.5 text-[#F26419]" />}
               {s.label}
             </button>
           );

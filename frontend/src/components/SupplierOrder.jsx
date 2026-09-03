@@ -48,8 +48,8 @@ export default function SupplierOrder({ totals }) {
   return (
     <div data-testid="supplier-order" className="space-y-3">
       {/* Lista spesa */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
-        <div className="flex items-center gap-2 mb-2 text-[#c94f00]">
+      <div className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
+        <div className="flex items-center gap-2 mb-2 text-[#F26419]">
           <ShoppingCart className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("shop_list_title")}</h2>
         </div>
@@ -58,10 +58,10 @@ export default function SupplierOrder({ totals }) {
         ) : (
           <div className="space-y-1.5" data-testid="supplier-shopping">
             {Object.entries(totals.flourByType).sort((a, b) => b[1] - a[1]).map(([k, v]) => (
-              <Row key={k} icon={<Wheat className="w-3.5 h-3.5 text-[#c94f00]" />} label={k} value={fmtQty(v)} />
+              <Row key={k} icon={<Wheat className="w-3.5 h-3.5 text-[#F26419]" />} label={k} value={fmtQty(v)} />
             ))}
             {Object.entries(totals.others).map(([f, v]) => (
-              <Row key={f} icon={<Droplets className="w-3.5 h-3.5 text-[#c94f00]" />} label={otherLabel(f, lang)} value={fmtQty(v)} />
+              <Row key={f} icon={<Droplets className="w-3.5 h-3.5 text-[#F26419]" />} label={otherLabel(f, lang)} value={fmtQty(v)} />
             ))}
             {Object.entries(totals.extras).sort((a, b) => b[1] - a[1]).map(([k, v]) => (
               <Row key={k} icon={<ShoppingCart className="w-3.5 h-3.5 text-[#7E8A93]" />} label={k} value={fmtQty(v)} />
@@ -71,42 +71,42 @@ export default function SupplierOrder({ totals }) {
       </div>
 
       {/* Ordine al fornitore */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 no-print">
-        <div className="flex items-center gap-2 mb-2 text-[#c94f00]">
+      <div className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4 no-print">
+        <div className="flex items-center gap-2 mb-2 text-[#F26419]">
           <Store className="w-4 h-4" />
           <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("shop_order_title")}</h2>
         </div>
         <p className="text-sm text-[#7E8A93] mb-3">{t("shop_order_hint")}</p>
         <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{t("shop_supplier")}</label>
         <select data-testid="supplier-select" value={supplierId} onChange={(e) => pickSupplier(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#c94f00]">
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#F26419]">
           {SUPPLIERS.map((s) => <option key={s.id} value={s.id}>{s.flag} {s.name}</option>)}
         </select>
         <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93] mt-3 block">{t("shop_email")}</label>
         <input data-testid="supplier-email" type="email" value={email} placeholder={supplier.email || t("shop_email_ph")}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#c94f00]" />
+          className="mt-1 w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#F26419]" />
         <a href={supplier.web} target="_blank" rel="noopener noreferrer"
-          className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[#c94f00]">
+          className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-[#F26419]">
           <ExternalLink className="w-3 h-3" /> {supplier.web.replace(/^https?:\/\//, "")}
         </a>
         <div className="grid grid-cols-2 gap-2 mt-3">
           <button data-testid="supplier-mail-btn" onClick={sendEmail} disabled={!data}
-            className="bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
             <Mail className="w-4 h-4" /> {t("shop_send_email")}
           </button>
           <button data-testid="supplier-share-btn" onClick={share} disabled={!data}
-            className="bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
             <Share2 className="w-4 h-4" /> {t("shop_share")}
           </button>
         </div>
       </div>
 
       {/* Directory fornitori */}
-      <div className="rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] overflow-hidden no-print">
+      <div className="rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] overflow-hidden no-print">
         <button data-testid="supplier-dir-toggle" onClick={() => setShowDir((v) => !v)}
           className="w-full flex items-center justify-between p-4 text-left">
-          <div className="flex items-center gap-2 text-[#c94f00]">
+          <div className="flex items-center gap-2 text-[#F26419]">
             <Store className="w-4 h-4" />
             <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("shop_dir_title")}</span>
           </div>
@@ -116,18 +116,18 @@ export default function SupplierOrder({ totals }) {
           <div className="px-4 pb-4 space-y-2" data-testid="supplier-directory">
             <p className="text-sm text-[#7E8A93]">{t("shop_dir_hint")}</p>
             {SUPPLIERS.map((s) => (
-              <div key={s.id} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-3">
+              <div key={s.id} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-3">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{s.flag}</span>
                   <span className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8] flex-1 min-w-0 truncate">{s.name}</span>
-                  <span className="text-[9px] font-bold uppercase text-[#c94f00] dark:text-[#8FB0C2] bg-[#c94f00]/15 px-1.5 py-0.5 rounded-full shrink-0">{cats[s.category] || s.category}</span>
+                  <span className="text-[9px] font-bold uppercase text-[#F26419] dark:text-[#8FB0C2] bg-[#F26419]/15 px-1.5 py-0.5 rounded-full shrink-0">{cats[s.category] || s.category}</span>
                 </div>
                 <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1.5 leading-relaxed">{lang === "de" ? s.de : lang === "en" ? s.en : s.it}</p>
                 <div className="flex items-center gap-3 mt-2">
-                  <a href={s.web} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-[#c94f00]">
+                  <a href={s.web} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs font-medium text-[#F26419]">
                     <ExternalLink className="w-3 h-3" /> {t("shop_visit_site")}
                   </a>
-                  <button onClick={() => pickSupplier(s.id)} className="inline-flex items-center gap-1 text-xs font-medium text-[#c94f00]">
+                  <button onClick={() => pickSupplier(s.id)} className="inline-flex items-center gap-1 text-xs font-medium text-[#F26419]">
                     <ShoppingCart className="w-3 h-3" /> {t("shop_use_supplier")}
                   </button>
                 </div>
@@ -144,7 +144,7 @@ function Row({ icon, label, value }) {
   return (
     <div className="flex items-center justify-between text-sm gap-2">
       <span className="flex items-center gap-1.5 text-[#3F4A54] dark:text-[#AEB8BF] min-w-0"><span className="shrink-0">{icon}</span><span className="truncate">{label}</span></span>
-      <span className="font-mono-data font-bold text-[#c94f00] dark:text-[#8FB0C2] shrink-0">{value}</span>
+      <span className="font-mono-data font-bold text-[#F26419] dark:text-[#8FB0C2] shrink-0">{value}</span>
     </div>
   );
 }

@@ -49,10 +49,10 @@ export default function CapoLaboratorio() {
 
   return (
     <div className="pb-24">
-      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#c94f00] to-[#c94f00] p-6 text-white">
+      <div className="relative rounded-3xl overflow-hidden mb-5 bg-gradient-to-br from-[#F26419] to-[#F26419] p-6 text-white">
         <div className="absolute top-0 left-0 right-0 flex h-1.5">
-          <div className="flex-1 bg-[#c94f00]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#c94f00]" />
-          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#c94f00]" /><div className="flex-1 bg-[#c94f00]" />
+          <div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-white" /><div className="flex-1 bg-[#F26419]" />
+          <div className="flex-1 bg-black" /><div className="flex-1 bg-[#F26419]" /><div className="flex-1 bg-[#F26419]" />
         </div>
         <Cog className="w-7 h-7 mb-2" />
         <h1 className="font-display text-2xl font-bold">{mkTri(lang)("Impostazione Macchine", "Maschinen einrichten", "Machine Setup")}</h1>
@@ -64,68 +64,68 @@ export default function CapoLaboratorio() {
         <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5">{t("capo_mixers")}</p>
         <div className="space-y-2" data-testid="capo-mixers">
           {mixers.map((m, i) => (
-            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 space-y-2">
+            <div key={i} className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 space-y-2">
               <div className="flex items-center gap-2">
                 <input data-testid={`capo-mixer-name-${i}`} value={m.name || ""} placeholder={t("capo_mixer_name")}
                   onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))}
-                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" />
+                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]" />
                 <div className="relative w-24 shrink-0">
                   <input data-testid={`capo-mixer-cap-${i}`} type="number" value={m.capacity_kg ?? ""} placeholder={t("capo_mixer_cap")}
                     onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, capacity_kg: e.target.value === "" ? "" : Number(e.target.value) } : x))}
-                    className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 pr-7 text-sm outline-none focus:border-[#c94f00]" />
+                    className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 pr-7 text-sm outline-none focus:border-[#F26419]" />
                   <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">kg</span>
                 </div>
-                <button onClick={() => setMixers((l) => l.filter((_, k) => k !== i))} className="text-[#c94f00] p-1 shrink-0"><X className="w-4 h-4" /></button>
+                <button onClick={() => setMixers((l) => l.filter((_, k) => k !== i))} className="text-[#F26419] p-1 shrink-0"><X className="w-4 h-4" /></button>
               </div>
               <select data-testid={`capo-mixer-type-${i}`} value={m.type || "spirale"}
                 onChange={(e) => setMixers((l) => l.map((x, k) => k === i ? { ...x, type: e.target.value } : x))}
-                className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]">
+                className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]">
                 {["spirale", "braccio", "forcella", "planetaria", "tuffante", "diretta"].map((mt) => (
                   <option key={mt} value={mt}>{t(`mixer_${mt}`)}</option>
                 ))}
               </select>
             </div>
           ))}
-          <button data-testid="capo-mixer-add" onClick={() => setMixers((l) => [...l, { name: "", capacity_kg: "", type: "spirale" }])} className="text-sm font-medium text-[#c94f00]">+ {t("capo_mixer_add")}</button>
+          <button data-testid="capo-mixer-add" onClick={() => setMixers((l) => [...l, { name: "", capacity_kg: "", type: "spirale" }])} className="text-sm font-medium text-[#F26419]">+ {t("capo_mixer_add")}</button>
         </div>
 
         <p className="text-xs font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 mt-4">{t("capo_cells")}</p>
         <div className="space-y-2" data-testid="capo-cells">
           {cells.map((c, i) => (
-            <div key={i} className="bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
+            <div key={i} className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5 space-y-2">
               <div className="flex items-center gap-2">
                 <CellIcon type={c.type} />
                 <input data-testid={`capo-cell-name-${i}`} value={c.name || ""} placeholder={t("capo_cell_name")}
                   onChange={(e) => setCells((l) => l.map((x, k) => k === i ? { ...x, name: e.target.value } : x))}
-                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" />
-                <button onClick={() => setCells((l) => l.filter((_, k) => k !== i))} className="text-[#c94f00] p-1"><X className="w-4 h-4" /></button>
+                  className="flex-1 min-w-0 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]" />
+                <button onClick={() => setCells((l) => l.filter((_, k) => k !== i))} className="text-[#F26419] p-1"><X className="w-4 h-4" /></button>
               </div>
               <div className="flex items-center gap-2">
                 <select data-testid={`capo-cell-type-${i}`} value={c.type || "lievitazione"}
                   onChange={(e) => setCells((l) => l.map((x, k) => k === i ? { ...x, type: e.target.value } : x))}
-                  className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]">
+                  className="flex-1 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]">
                   {CELL_TYPES.map((ct) => <option key={ct} value={ct}>{t(`capo_celltype_${ct}`)}</option>)}
                 </select>
                 <div className="relative w-20 shrink-0">
                   <input data-testid={`capo-cell-temp-${i}`} type="number" value={c.temp_c ?? ""} placeholder="°C"
                     onChange={(e) => setCells((l) => l.map((x, k) => k === i ? { ...x, temp_c: e.target.value === "" ? "" : Number(e.target.value) } : x))}
-                    className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#c94f00]" />
+                    className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 pr-6 text-sm outline-none focus:border-[#F26419]" />
                   <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93]">°</span>
                 </div>
               </div>
               <input data-testid={`capo-cell-contents-${i}`} value={c.contents || ""} placeholder={t("capo_cell_contents")}
                 onChange={(e) => setCells((l) => l.map((x, k) => k === i ? { ...x, contents: e.target.value } : x))}
-                className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-lg p-2 text-sm outline-none focus:border-[#c94f00]" />
+                className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-lg p-2 text-sm outline-none focus:border-[#F26419]" />
             </div>
           ))}
-          <button data-testid="capo-cell-add" onClick={() => setCells((l) => [...l, { name: "", type: "lievitazione", temp_c: "", contents: "" }])} className="text-sm font-medium text-[#c94f00]">+ {t("capo_cell_add")}</button>
+          <button data-testid="capo-cell-add" onClick={() => setCells((l) => [...l, { name: "", type: "lievitazione", temp_c: "", contents: "" }])} className="text-sm font-medium text-[#F26419]">+ {t("capo_cell_add")}</button>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mt-4">
           <LabelInput testid="capo-staff" label={t("capo_staff")} type="number" value={staff} onChange={setStaff} />
           <LabelInput testid="capo-std-temp" label={t("capo_std_temp")} type="number" value={stdTemp} onChange={setStdTemp} unit="°C" />
         </div>
-        <button data-testid="capo-save-config" onClick={saveConfig} className="mt-3 w-full bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+        <button data-testid="capo-save-config" onClick={saveConfig} className="mt-3 w-full bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
           {t("capo_save_config")}
         </button>
       </Section>
@@ -213,33 +213,33 @@ function LabCamera() {
   };
 
   return (
-    <div className="mt-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
+    <div className="mt-4 rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
       <div className="flex items-center gap-2 mb-1">
-        <Video className="w-4 h-4 text-[#c94f00]" />
+        <Video className="w-4 h-4 text-[#F26419]" />
         <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{t("capo_film_title")}</h2>
       </div>
       <p className="text-sm text-[#7E8A93] mb-3">{t("capo_film_hint")}</p>
 
       {!open ? (
         <div className="grid grid-cols-2 gap-2">
-          <button data-testid="capo-film-start" onClick={start} className="bg-[#c94f00] hover:bg-[#d4a373] text-white rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
+          <button data-testid="capo-film-start" onClick={start} className="bg-[#F26419] hover:bg-[#E8A838] text-white rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2">
             <Camera className="w-4 h-4" /> {mkTri(lang)("Filma ora", "Jetzt filmen", "Film now")}
           </button>
-          <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2B303B] dark:text-[#e4eff8]">
-            <ImagePlus className="w-4 h-4 text-[#c94f00]" /> {mkTri(lang)("Allega", "Anhängen", "Attach")}
+          <label data-testid="capo-film-attach" className="cursor-pointer bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-4 py-3 text-sm font-semibold flex items-center justify-center gap-2 text-[#2B303B] dark:text-[#e4eff8]">
+            <ImagePlus className="w-4 h-4 text-[#F26419]" /> {mkTri(lang)("Allega", "Anhängen", "Attach")}
             <input type="file" accept="image/*" className="hidden" onChange={onAttach} />
           </label>
         </div>
       ) : (
         <div>
-          <div className="rounded-2xl overflow-hidden border border-[#2e2e2e] dark:border-[#2e2e2e] bg-black">
+          <div className="rounded-2xl overflow-hidden border border-[#26324A] dark:border-[#26324A] bg-black">
             <video ref={videoRef} data-testid="capo-video" playsInline muted className="w-full max-h-72 object-cover" />
           </div>
           <div className="flex gap-2 mt-2">
-            <button data-testid="capo-film-snap" onClick={snap} disabled={analyzing} className="flex-1 bg-[#c94f00] hover:bg-[#d4a373] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 flex items-center justify-center gap-2">
+            <button data-testid="capo-film-snap" onClick={snap} disabled={analyzing} className="flex-1 bg-[#F26419] hover:bg-[#E8A838] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 flex items-center justify-center gap-2">
               <Camera className="w-4 h-4" /> {analyzing ? t("capo_film_analyzing") : t("capo_film_snap")}
             </button>
-            <button data-testid="capo-film-stop" onClick={stop} className="bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-medium text-[#2B303B] dark:text-[#e4eff8]">
+            <button data-testid="capo-film-stop" onClick={stop} className="bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-medium text-[#2B303B] dark:text-[#e4eff8]">
               {t("capo_film_stop")}
             </button>
           </div>
@@ -247,7 +247,7 @@ function LabCamera() {
       )}
 
       {result && (
-        <div data-testid="capo-film-result" className="markdown-body mt-4 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl p-4 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
+        <div data-testid="capo-film-result" className="markdown-body mt-4 bg-[#e4eff8] dark:bg-[#18202E] rounded-2xl p-4 text-sm leading-relaxed text-[#2B303B] dark:text-[#e4eff8]">
           <ReactMarkdown>{result}</ReactMarkdown>
         </div>
       )}
@@ -257,8 +257,8 @@ function LabCamera() {
 
 function Section({ icon, title, children }) {
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-4 rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4">
-      <div className="flex items-center gap-2 mb-3 text-[#c94f00]">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="mb-4 rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4">
+      <div className="flex items-center gap-2 mb-3 text-[#F26419]">
         {icon}
         <h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{title}</h2>
       </div>
@@ -273,7 +273,7 @@ function LabelInput({ testid, label, type, value, onChange, unit }) {
       <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{label}</label>
       <div className="relative mt-1">
         <input data-testid={testid} type={type} value={value} onChange={(e) => onChange(e.target.value)}
-          className="w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#c94f00]" />
+          className="w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#F26419]" />
         {unit && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-[#7E8A93] pointer-events-none">{unit}</span>}
       </div>
     </div>
@@ -282,6 +282,6 @@ function LabelInput({ testid, label, type, value, onChange, unit }) {
 
 function CellIcon({ type }) {
   if (type === "freezer") return <Snowflake className="w-4 h-4 text-[#5b8fb0] shrink-0" />;
-  if (type === "frigo") return <Wind className="w-4 h-4 text-[#c94f00] shrink-0" />;
-  return <Thermometer className="w-4 h-4 text-[#c94f00] shrink-0" />;
+  if (type === "frigo") return <Wind className="w-4 h-4 text-[#F26419] shrink-0" />;
+  return <Thermometer className="w-4 h-4 text-[#F26419] shrink-0" />;
 }

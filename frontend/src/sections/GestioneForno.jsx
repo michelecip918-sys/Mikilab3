@@ -83,7 +83,7 @@ export default function GestioneForno() {
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
-        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center">
+        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center">
           <Flame className="w-6 h-6 text-white" />
         </div>
         <div>
@@ -96,26 +96,26 @@ export default function GestioneForno() {
         <button
           data-testid="add-oven-profile-btn"
           onClick={() => { setForm(emptyProfile); setEditingId(null); setShowForm(true); }}
-          className="w-full mt-5 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+          className="w-full mt-5 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
         >
           <Plus className="w-5 h-5" /> {t("oven_new")}
         </button>
       )}
 
       {showForm && (
-        <div className="mt-5 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-4 space-y-3">
+        <div className="mt-5 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-4 space-y-3">
           <input
             data-testid="oven-name-input"
             value={form.name} onChange={(e) => set("name", e.target.value)}
             placeholder={t("oven_name_ph")}
-            className="w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#c94f00]"
+            className="w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#F26419]"
           />
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("oven_type")}</label>
             <select
               data-testid="oven-type-select"
               value={form.oven_type} onChange={(e) => set("oven_type", e.target.value)}
-              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#c94f00]"
+              className="mt-1 w-full bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-3 outline-none focus:border-[#F26419]"
             >
               <option value="statico">{t("oven_type_static")}</option>
               <option value="ventilato">{t("oven_type_fan")}</option>
@@ -139,11 +139,11 @@ export default function GestioneForno() {
           </div>
           <div className="flex gap-2 pt-1">
             <button onClick={() => { setShowForm(false); setEditingId(null); }}
-              className="flex-1 bg-[#e4eff8] dark:bg-[#1e1e1e] px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2e2e2e] dark:border-[#2e2e2e] font-medium">
+              className="flex-1 bg-[#e4eff8] dark:bg-[#18202E] px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#26324A] dark:border-[#26324A] font-medium">
               {t("cancel")}
             </button>
             <button data-testid="oven-save-btn" onClick={save}
-              className="flex-1 bg-[#c94f00] hover:bg-[#d4a373] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
+              className="flex-1 bg-[#F26419] hover:bg-[#E8A838] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
               {t("save")}
             </button>
           </div>
@@ -152,17 +152,17 @@ export default function GestioneForno() {
 
       <div className="space-y-3 mt-5">
         {profiles.map((p) => (
-          <div key={p.id} data-testid={`oven-profile-${p.id}`} className="bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl p-5">
+          <div key={p.id} data-testid={`oven-profile-${p.id}`} className="bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl p-5">
             <div className="flex items-start justify-between">
               <div>
                 <h3 className="font-display text-xl font-semibold text-[#2B303B] dark:text-[#e4eff8]">{p.name}</h3>
-                <span data-testid={`oven-type-${p.id}`} className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wide text-[#c94f00] dark:text-[#8FB0C2] bg-[#c94f00]/15 px-2 py-0.5 rounded-full border border-[#c94f00]/30">
+                <span data-testid={`oven-type-${p.id}`} className="inline-block mt-1 text-[10px] font-bold uppercase tracking-wide text-[#F26419] dark:text-[#8FB0C2] bg-[#F26419]/15 px-2 py-0.5 rounded-full border border-[#F26419]/30">
                   {p.oven_type === "ventilato" ? t("oven_type_fan") : t("oven_type_static")}
                 </span>
               </div>
               <div className="flex gap-1.5">
-                <button onClick={() => edit(p)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#c94f00]">✎</button>
-                <button data-testid={`delete-oven-${p.id}`} onClick={() => remove(p.id)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#c94f00]">
+                <button onClick={() => edit(p)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#18202E] flex items-center justify-center text-[#F26419]">✎</button>
+                <button data-testid={`delete-oven-${p.id}`} onClick={() => remove(p.id)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#18202E] flex items-center justify-center text-[#F26419]">
                   <Trash2 className="w-4 h-4" />
                 </button>
               </div>
@@ -184,12 +184,12 @@ export default function GestioneForno() {
 
 function NumRow({ label, k, form, set }) {
   return (
-    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
+    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2">
       <span className="text-sm text-[#7E8A93] flex-1">{label}</span>
       <input
         data-testid={`oven-${k}-input`}
         type="number" value={form[k]} onChange={(e) => set(k, e.target.value)}
-        className="w-16 text-right font-mono-data font-bold text-[#c94f00] dark:text-[#8FB0C2] bg-transparent outline-none"
+        className="w-16 text-right font-mono-data font-bold text-[#F26419] dark:text-[#8FB0C2] bg-transparent outline-none"
       />
     </div>
   );
@@ -236,16 +236,16 @@ function PhaseTimer({ label, temp, minutes, onDone }) {
   const ss = String(left % 60).padStart(2, "0");
 
   return (
-    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border border-[#2e2e2e] dark:border-[#2e2e2e]">
+    <div className="flex items-center gap-2 bg-[#e4eff8] dark:bg-[#18202E] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 border border-[#26324A] dark:border-[#26324A]">
       <div className="flex-1 min-w-0">
         <p className="text-xs font-medium text-[#3F4A54] dark:text-[#AEB8BF] truncate">{label}</p>
         <p className="font-mono-data text-xs text-[#7E8A93]">{temp != null ? `${temp}°C · ` : ""}{minutes} min</p>
       </div>
-      <span data-testid="timer-display" className="font-mono-data font-bold text-lg text-[#c94f00] dark:text-[#8FB0C2] tabular-nums">{mm}:{ss}</span>
-      <button data-testid="timer-toggle" onClick={start} className="w-8 h-8 rounded-lg bg-[#c94f00] text-white flex items-center justify-center">
+      <span data-testid="timer-display" className="font-mono-data font-bold text-lg text-[#F26419] dark:text-[#8FB0C2] tabular-nums">{mm}:{ss}</span>
+      <button data-testid="timer-toggle" onClick={start} className="w-8 h-8 rounded-lg bg-[#F26419] text-white flex items-center justify-center">
         {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
       </button>
-      <button data-testid="timer-reset" onClick={() => { setRunning(false); setLeft(totalSec); }} className="w-8 h-8 rounded-lg bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] flex items-center justify-center text-[#7E8A93]">
+      <button data-testid="timer-reset" onClick={() => { setRunning(false); setLeft(totalSec); }} className="w-8 h-8 rounded-lg bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] flex items-center justify-center text-[#7E8A93]">
         <RotateCcw className="w-4 h-4" />
       </button>
     </div>

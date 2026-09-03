@@ -60,22 +60,22 @@ export default function SfidaLampo() {
   };
 
   return (
-    <div data-testid="sfida-lampo" className="mb-5 rounded-3xl overflow-hidden border border-[#c94f00]/40 bg-[#181818] shadow-lg">
-      <div className="p-5 text-[#121212]" style={{ background: "linear-gradient(135deg,#d4a373,#c94f00 75%)" }}>
+    <div data-testid="sfida-lampo" className="mb-5 rounded-3xl overflow-hidden border border-[#F26419]/40 bg-[#18202E] shadow-lg">
+      <div className="p-5 text-[#0B0E14]" style={{ background: "linear-gradient(135deg,#E8A838,#F26419 75%)" }}>
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1.5"><Flame className="w-4 h-4" /> {L("Sfida Lampo della settimana", "Blitz-Challenge der Woche", "Weekly Flash Challenge", "Reto Relámpago semanal", "Défi Éclair de la semaine", "چالش برق‌آسای هفته")}</p>
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#121212]/15 px-2.5 py-1 text-[11px] font-bold"><Clock className="w-3 h-3" /> {tl.d}g {tl.h}h</span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#0B0E14]/15 px-2.5 py-1 text-[11px] font-bold"><Clock className="w-3 h-3" /> {tl.d}g {tl.h}h</span>
         </div>
         <h2 data-testid="sfida-lampo-theme" className="font-display text-2xl font-extrabold mt-2 leading-tight">{theme?.title || "…"}</h2>
-        {theme?.description && <p className="text-[#121212]/85 text-sm mt-1 leading-snug">{theme.description}</p>}
+        {theme?.description && <p className="text-[#0B0E14]/85 text-sm mt-1 leading-snug">{theme.description}</p>}
         {theme?.tip && (
-          <p className="mt-2 inline-flex items-start gap-1.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
+          <p className="mt-2 inline-flex items-start gap-1.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#0B0E14]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
         )}
       </div>
 
       <div className="p-4 space-y-3">
         <div className="flex items-center justify-between text-[12px] text-[#AEB8BF]">
-          <span className="inline-flex items-center gap-1.5"><Users className="w-4 h-4 text-[#c94f00]" /> {data?.participants || 0} {L("fornai in gara", "Bäcker dabei", "bakers competing", "panaderos compitiendo", "boulangers en lice", "نانوا در رقابت")}</span>
+          <span className="inline-flex items-center gap-1.5"><Users className="w-4 h-4 text-[#F26419]" /> {data?.participants || 0} {L("fornai in gara", "Bäcker dabei", "bakers competing", "panaderos compitiendo", "boulangers en lice", "نانوا در رقابت")}</span>
         </div>
 
         <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" data-testid="sfida-lampo-file" onChange={onFile} />
@@ -85,22 +85,22 @@ export default function SfidaLampo() {
           </div>
         ) : (
           <button data-testid="sfida-lampo-join" disabled={busy} onClick={() => (user ? fileRef.current?.click() : (setAuthOpen && setAuthOpen(true)))}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#c94f00] text-[#121212] font-bold py-3.5 active:scale-98 transition-all disabled:opacity-60">
+            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#F26419] text-[#0B0E14] font-bold py-3.5 active:scale-98 transition-all disabled:opacity-60">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />} {L("Partecipa con una foto", "Mit Foto teilnehmen", "Join with a photo", "Participa con una foto", "Participe avec une photo", "با یک عکس شرکت کن")}
           </button>
         )}
 
         {/* Classifica dei fornai */}
         <div data-testid="sfida-lampo-leaderboard">
-          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#c94f00] flex items-center gap-1.5 mb-2 mt-1"><Trophy className="w-4 h-4" /> {L("Classifica dei fornai", "Bäcker-Rangliste", "Bakers leaderboard", "Clasificación de panaderos", "Classement des boulangers", "جدول نانواها")}</p>
+          <p className="text-[11px] font-extrabold uppercase tracking-wider text-[#F26419] flex items-center gap-1.5 mb-2 mt-1"><Trophy className="w-4 h-4" /> {L("Classifica dei fornai", "Bäcker-Rangliste", "Bakers leaderboard", "Clasificación de panaderos", "Classement des boulangers", "جدول نانواها")}</p>
           {entries.length === 0 ? (
             <p className="text-[13px] text-[#AEB8BF] py-2">{L("Ancora nessuno in gara: sii il primo! 🔥", "Noch niemand dabei: sei der Erste! 🔥", "No one competing yet: be the first! 🔥", "Nadie compite aún: ¡sé el primero! 🔥", "Personne encore : sois le premier ! 🔥", "هنوز کسی نیست: اولین باش! 🔥")}</p>
           ) : (
             <div className="space-y-2">
               {entries.map((e) => (
-                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#121212] border border-[#2e2e2e] p-2">
-                  <span className="w-7 text-center text-lg font-extrabold text-[#c94f00] shrink-0">{medal(e.rank)}</span>
-                  {e.image_url ? <img src={e.image_url} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" /> : <div className="w-12 h-12 rounded-lg bg-[#c94f00]/15 shrink-0" />}
+                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0B0E14] border border-[#26324A] p-2">
+                  <span className="w-7 text-center text-lg font-extrabold text-[#F26419] shrink-0">{medal(e.rank)}</span>
+                  {e.image_url ? <img src={e.image_url} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" /> : <div className="w-12 h-12 rounded-lg bg-[#F26419]/15 shrink-0" />}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-bold text-white truncate">{e.author_name}</p>
                     <p className="text-[11px] text-[#AEB8BF] inline-flex items-center gap-1"><Heart className="w-3 h-3 text-[#ff3b5c]" /> {e.like_count} {e.like_count === 1 ? L("voto", "Stimme", "vote", "voto", "vote", "رأی") : L("voti", "Stimmen", "votes", "votos", "votes", "رأی")}</p>

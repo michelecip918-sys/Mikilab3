@@ -68,21 +68,21 @@ export default function CalcolatoreSequenze({ onBack }) {
     return { v1, v2, puntata, appretto, seq, pauses, speedLabel: rhythm };
   }, [dough, mixer, rhythm, lang]);
 
-  const card = "rounded-2xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4";
-  const inp = "w-full bg-white dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#c94f00] dark:text-[#e4eff8] focus:border-[#c94f00] text-sm";
-  const lbl = "text-[12px] font-semibold text-[#c94f00] dark:text-[#AEB8BF] mb-1";
+  const card = "rounded-2xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4";
+  const inp = "w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#F26419] dark:text-[#e4eff8] focus:border-[#F26419] text-sm";
+  const lbl = "text-[12px] font-semibold text-[#F26419] dark:text-[#AEB8BF] mb-1";
 
   return (
     <div className="pb-8" data-testid="calc-sequenze">
-      {onBack && <button data-testid="seq-back" onClick={onBack} className="flex items-center gap-1 text-[#c94f00] font-medium mb-4">
+      {onBack && <button data-testid="seq-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4">
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
       </button>}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5"
-        style={{ background: "linear-gradient(135deg,#c94f00 0%,#c94f00 60%,#c94f00 100%)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-5"
+        style={{ background: "linear-gradient(135deg,#F26419 0%,#F26419 60%,#F26419 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><SlidersHorizontal className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Metodo & Sequenze IA", "Methode & Abläufe (KI)", "Method & Sequences (AI)", "Método y Secuencias (IA)")}</h1>
-        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
+        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 mb-4">
@@ -103,33 +103,33 @@ export default function CalcolatoreSequenze({ onBack }) {
       </div>
 
       {machines.length > 0 && (
-        <div data-testid="seq-machines" className="mb-4 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/12 border border-[#c94f00]/40 p-3 text-[12px] text-[#c94f00] dark:text-[#c94f00]">
+        <div data-testid="seq-machines" className="mb-4 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/12 border border-[#F26419]/40 p-3 text-[12px] text-[#F26419] dark:text-[#F26419]">
           🛠️ {L("Parco Macchine attivo", "Maschinenpark aktiv", "Machine Park active", "Maquinaria activa")}: {machines.join(", ")}. {L("Con spezzatrici/linee automatiche i ritmi si accorciano.", "Mit Teilern/Automatiklinien verkürzen sich die Rhythmen.", "With dividers/automatic lines the rhythm shortens.", "Con divisoras/líneas los ritmos se acortan.")}
         </div>
       )}
 
       <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#c94f00] flex items-center justify-center gap-1"><Zap className="w-3.5 h-3.5" />{L("1ª velocità", "1. Gang", "1st speed", "1ª vel.")}</p><p data-testid="seq-v1" className="font-display text-2xl font-bold text-[#c94f00] mt-1">{plan.v1}′</p></div>
-        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#c94f00] flex items-center justify-center gap-1"><Zap className="w-3.5 h-3.5" />{L("2ª velocità", "2. Gang", "2nd speed", "2ª vel.")}</p><p data-testid="seq-v2" className="font-display text-2xl font-bold text-[#c94f00] mt-1">{plan.v2}′</p></div>
-        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#c94f00] flex items-center justify-center gap-1"><Snail className="w-3.5 h-3.5" />{L("Puntata", "Stockgare", "Bulk", "Fermentación")}</p><p className="font-display text-lg font-bold text-[#c94f00] mt-1">{fmtMin(plan.puntata)}</p></div>
-        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#c94f00] flex items-center justify-center gap-1"><Clock className="w-3.5 h-3.5" />{L("Appretto", "Stückgare", "Final proof", "Fermentación final")}</p><p className="font-display text-lg font-bold text-[#c94f00] mt-1">{fmtMin(plan.appretto)}</p></div>
+        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#F26419] flex items-center justify-center gap-1"><Zap className="w-3.5 h-3.5" />{L("1ª velocità", "1. Gang", "1st speed", "1ª vel.")}</p><p data-testid="seq-v1" className="font-display text-2xl font-bold text-[#F26419] mt-1">{plan.v1}′</p></div>
+        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#F26419] flex items-center justify-center gap-1"><Zap className="w-3.5 h-3.5" />{L("2ª velocità", "2. Gang", "2nd speed", "2ª vel.")}</p><p data-testid="seq-v2" className="font-display text-2xl font-bold text-[#F26419] mt-1">{plan.v2}′</p></div>
+        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#F26419] flex items-center justify-center gap-1"><Snail className="w-3.5 h-3.5" />{L("Puntata", "Stockgare", "Bulk", "Fermentación")}</p><p className="font-display text-lg font-bold text-[#F26419] mt-1">{fmtMin(plan.puntata)}</p></div>
+        <div className={`${card} text-center`}><p className="text-[11px] font-semibold text-[#F26419] flex items-center justify-center gap-1"><Clock className="w-3.5 h-3.5" />{L("Appretto", "Stückgare", "Final proof", "Fermentación final")}</p><p className="font-display text-lg font-bold text-[#F26419] mt-1">{fmtMin(plan.appretto)}</p></div>
       </div>
 
       <div data-testid="seq-sequence" className={card}>
-        <p className="font-display text-base font-bold text-[#c94f00] flex items-center gap-2 mb-3"><ListOrdered className="w-4.5 h-4.5" />{L("Sequenza delle lavorazioni", "Arbeitsabfolge", "Work sequence", "Secuencia de trabajo")}</p>
+        <p className="font-display text-base font-bold text-[#F26419] flex items-center gap-2 mb-3"><ListOrdered className="w-4.5 h-4.5" />{L("Sequenza delle lavorazioni", "Arbeitsabfolge", "Work sequence", "Secuencia de trabajo")}</p>
         <ol className="space-y-2">
           {plan.seq.map((s, i) => (
             <li key={i} data-testid={`seq-step-${i}`} className="flex items-start gap-2.5 text-sm text-[#3F4A54] dark:text-[#AEB8BF]">
-              <span className="shrink-0 w-6 h-6 rounded-full bg-[#c94f00] text-white font-bold text-[12px] flex items-center justify-center">{i + 1}</span>
+              <span className="shrink-0 w-6 h-6 rounded-full bg-[#F26419] text-white font-bold text-[12px] flex items-center justify-center">{i + 1}</span>
               <span className="leading-snug pt-0.5">{s}</span>
             </li>
           ))}
         </ol>
-        <div className="mt-4 pt-3 border-t border-[#2e2e2e] dark:border-[#2e2e2e] space-y-1.5">
+        <div className="mt-4 pt-3 border-t border-[#26324A] dark:border-[#26324A] space-y-1.5">
           {plan.pauses.map((p, i) => (
             <div key={i} className="flex items-center justify-between text-[13px]">
-              <span className="text-[#c94f00] dark:text-[#AEB8BF]">{p.label}</span>
-              <span className="font-mono-data font-bold text-[#c94f00]">{p.v}</span>
+              <span className="text-[#F26419] dark:text-[#AEB8BF]">{p.label}</span>
+              <span className="font-mono-data font-bold text-[#F26419]">{p.v}</span>
             </div>
           ))}
         </div>

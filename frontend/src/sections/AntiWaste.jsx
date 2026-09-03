@@ -24,12 +24,12 @@ export default function AntiWaste() {
   const recovered = Math.round(outKg * r.sell * 100) / 100;
   const wasted = Math.round(q * (Number(cost) || 0) * 100) / 100;
   const gain = Math.round((recovered - wasted) * 100) / 100;
-  const inp = "w-full bg-[#121212] dark:bg-[#181818] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-[#c94f00] flex items-center justify-center"><Recycle className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-[#F26419] flex items-center justify-center"><Recycle className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Anti-Spreco", "Anti-Verschwendung", "Anti-Waste")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Trasforma gli esuberi in nuovo margine", "Reste in neue Marge verwandeln", "Turn leftovers into new margin")}</p>
@@ -47,17 +47,17 @@ export default function AntiWaste() {
           <input data-testid="aw-cost" type="number" value={cost} onChange={(e) => setCost(e.target.value)} className={inp + " mt-1"} /></label>
       </div>
 
-      <p className="text-xs font-bold uppercase tracking-wide text-[#c94f00] mb-2">{tri("Ricetta di recupero", "Verwertungsrezept", "Recovery recipe")}</p>
+      <p className="text-xs font-bold uppercase tracking-wide text-[#F26419] mb-2">{tri("Ricetta di recupero", "Verwertungsrezept", "Recovery recipe")}</p>
       <div className="grid grid-cols-2 gap-2 mb-4">
         {RECIPES.map((x) => (
           <button key={x.id} data-testid={`aw-rec-${x.id}`} onClick={() => setRec(x.id)}
-            className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border text-left ${rec === x.id ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-white dark:bg-[#1e1e1e] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2e2e2e] dark:border-[#2e2e2e]"}`}>
+            className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold border text-left ${rec === x.id ? "bg-[#F26419] text-white border-[#F26419]" : "bg-white dark:bg-[#18202E] text-[#3F4A54] dark:text-[#AEB8BF] border-[#26324A] dark:border-[#26324A]"}`}>
             {x.label}
           </button>
         ))}
       </div>
 
-      <div data-testid="aw-result" className="rounded-3xl bg-gradient-to-br from-[#c94f00] to-[#374f31] text-white p-6 shadow-lg">
+      <div data-testid="aw-result" className="rounded-3xl bg-gradient-to-br from-[#F26419] to-[#374f31] text-white p-6 shadow-lg">
         <div className="grid grid-cols-2 gap-y-2 text-sm">
           {source && <><span className="text-white/80">{tri("Ricetta esubero", "Rest-Rezept", "Leftover recipe")}</span><span data-testid="aw-source-name" className="text-right font-mono-data font-bold">{source.name}</span></>}
           <span className="text-white/80">{tri("Prodotto recuperato", "Gewonnenes Produkt", "Recovered product")}</span><span className="text-right font-mono-data">{outKg} kg</span>

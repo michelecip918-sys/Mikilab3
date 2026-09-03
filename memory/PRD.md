@@ -3563,3 +3563,15 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - **Verificato**: build OK; UI resa; anon scan-flour → 401 (ramo login); utente loggato → supera auth e raggiunge la vision AI (500 solo con immagine finta 1x1). `require_pro` = solo login (accesso PRO gratis per tutti).
 - **Modalita Cuffie native**: gia COMPLETA nel codice — plugin Capacitor `@mikilab/bluetooth-audio` (Android Java + iOS Swift: listDevices/connect/startSco/stopSco/requestPermissions) collegato via `lib/nativeAudio.js`; BraccioLab `onHeadset` lo usa se nativo, altrimenti fallback web hands-free. NON testabile in preview web: richiede build Capacitor su dispositivo fisico + auricolare BT (task device/offline).
 - **NB credenziali**: la password admin in test_credentials.md (admin@mikilab.de / Test1234!) e OBSOLETA (login 401); account esistente ma password sconosciuta. Da rigenerare via reset password quando serve.
+
+## v-lab.4 (2026-06) — Home: rimosso doppione Laboratorio + scenari pulsanti
+- Home BLOCKS: eliminato il secondo blocco "Laboratorio" (era duplicato di tab maestro). Ora 5 pulsanti DISTINTI con immagini diverse: Il Tuo Laboratorio (hero-laboratorio), Ricette (hero-ricette), Scienza & Guide (hero-impara), **Centro Formule** (hero-bakery, nuovo → tab shop), Community (hero-social).
+- Verificato screenshot 390px: 1 solo home-block-maestro, home-block-shop presente, 5 blocchi totali, nessun errore.
+- Deploy NON rilanciato (per non consumare crediti senza ok utente). Modifica attiva solo in preview finche non si pubblica.
+
+## v-lab.5 (2026-06) — REDESIGN globale "Cinematic Obsidian & Copper 3D"
+- design_agent → /app/design_guidelines.json ("Cinematic Obsidian & Copper Glow 3D Laboratory"). Scelta utente: immersivo 3D + glassmorphism, look nuovo, avatar Miki/Mohamed mantenuti.
+- **Remap colori globale sicuro** (solo hex letterali) su tutto frontend/src: warm artisan → obsidian/rame. Accenti #d4a373→#E8A838 (oro), #c94f00→#F26419 (rame/ember); sfondi marroni → #0B0E14/#121722/#18202E; testi crema → #F7F9FC/#E2E8F0/#94A3B8; bordi → #26324A; alert → #E63946.
+- **index.css**: .lab-3d-card ora frosted glass (backdrop-blur 16px, bordo white/8, sheen, hover glow rame); .app-warm-bg → obsidian + bagliore rame/oro; :root e body aggiornati via remap.
+- **BottomNav** riscritta: da "pale di legno" a glass obsidian con icone lucide (BookOpen/GraduationCap/Wrench/Users/BookOpenCheck), stato attivo ember, badge community. **Header**: pulsante Accedi ember gradient, selettore lingua glass (rimossi wood-surface/wood-emboss).
+- Verificato build OK; screenshot 390px Home/Lab/Ricette/Centro Formule/header/nav: coerente, leggibile, 0 overflow. Deploy NON lanciato (attesa ok utente per non consumare crediti).

@@ -3,13 +3,13 @@ export default function SectionHero({ image, title, subtitle, testid, position =
   const BASE = process.env.PUBLIC_URL || "";
   return (
     <div data-testid={testid} className="relative mb-4 pt-2">
-      <div className="relative rounded-t-[70px] rounded-b-[22px] p-2 shadow-xl" style={{ background: "linear-gradient(160deg,#d4a373,#c94f00 55%,#c94f00)" }}>
+      <div className="relative rounded-t-[70px] rounded-b-[22px] p-2 shadow-xl" style={{ background: "linear-gradient(160deg,#E8A838,#F26419 55%,#F26419)" }}>
         <div className="relative rounded-t-[62px] rounded-b-[16px] overflow-hidden bg-[#2B303B] grain-overlay">
           <img src={`${BASE}/${image}`} alt={title} className="w-full h-40 object-cover" style={{ objectPosition: position }} loading="eager"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div aria-hidden className="absolute inset-0 pointer-events-none"
             style={{ background: "radial-gradient(120% 60% at 50% 8%, rgba(255,226,170,.30), transparent 55%)" }} />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#141414] via-[#141414]/70 to-transparent px-4 pt-16 pb-3">
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#121722] via-[#121722]/70 to-transparent px-4 pt-16 pb-3">
             <h1 className="font-display text-2xl font-bold text-white leading-tight" style={{ textShadow: "0 2px 8px rgba(0,0,0,.85)" }}>{title}</h1>
             {subtitle && <p className="text-white/90 text-[13px] leading-snug mt-0.5" style={{ textShadow: "0 1px 5px rgba(0,0,0,.9)" }}>{subtitle}</p>}
           </div>

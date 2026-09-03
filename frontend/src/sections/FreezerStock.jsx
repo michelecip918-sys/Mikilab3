@@ -33,7 +33,7 @@ export default function FreezerStock() {
 
   return (
     <div data-testid="freezer-stock" className="pb-4">
-      <div className="rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#374f31] text-white p-5 mb-4">
+      <div className="rounded-2xl bg-gradient-to-br from-[#F26419] to-[#374f31] text-white p-5 mb-4">
         <h1 className="font-display text-2xl font-bold flex items-center gap-2"><Snowflake className="w-6 h-6" /> {de ? "Freezer-Bestand" : lang === "en" ? "Freezer stock" : "Giacenze Freezer"}</h1>
         <p className="text-white/85 text-sm mt-1">
           {de ? "Setze Menge und Mindestmenge. Sinkt etwas darunter, bekommst du eine E-Mail an dein Konto." : lang === "en" ? "Set quantity and minimum. If something drops below, you get an email to your account." : "Imposta quantità e scorta minima. Se qualcosa scende sotto, ricevi una email al tuo account."}
@@ -41,9 +41,9 @@ export default function FreezerStock() {
       </div>
 
       {low.length > 0 && (
-        <div data-testid="freezer-low-warning" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00]/10 border border-[#c94f00]/30 p-3 flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 text-[#c94f00] shrink-0 mt-0.5" />
-          <p className="text-sm text-[#c94f00] dark:text-[#8FB0C2]">
+        <div data-testid="freezer-low-warning" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419]/10 border border-[#F26419]/30 p-3 flex items-start gap-2">
+          <AlertTriangle className="w-4 h-4 text-[#F26419] shrink-0 mt-0.5" />
+          <p className="text-sm text-[#F26419] dark:text-[#8FB0C2]">
             {de ? "Unter Mindestmenge: " : lang === "en" ? "Below minimum: " : "Sotto la soglia: "}<b>{low.map((x) => x.name).join(", ")}</b>
           </p>
         </div>
@@ -51,25 +51,25 @@ export default function FreezerStock() {
 
       <div className="space-y-2">
         {items.map((it, i) => (
-          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 p-2.5">
+          <div key={i} data-testid={`freezer-row-${i}`} className="flex items-center gap-2 bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 p-2.5">
             <input value={it.name} onChange={(e) => set(i, { name: e.target.value })} placeholder={de ? "Produkt" : lang === "en" ? "Product" : "Prodotto"}
               className="flex-1 min-w-0 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
             <div className="flex items-center gap-1">
               <input type="number" value={it.qty} onChange={(e) => set(i, { qty: e.target.value })} title={de ? "Bestand" : lang === "en" ? "Stock" : "Scorta"}
-                className="w-16 text-center font-mono-data text-sm bg-[#e4eff8] dark:bg-[#1e1e1e] rounded-lg py-1.5 outline-none" />
+                className="w-16 text-center font-mono-data text-sm bg-[#e4eff8] dark:bg-[#18202E] rounded-lg py-1.5 outline-none" />
               <span className="text-[10px] text-[#7E8A93]">/</span>
               <input type="number" value={it.min_qty} onChange={(e) => set(i, { min_qty: e.target.value })} title={de ? "Min." : "Min."}
-                className="w-16 text-center font-mono-data text-sm bg-[#c94f00]/15 rounded-lg py-1.5 outline-none" />
+                className="w-16 text-center font-mono-data text-sm bg-[#F26419]/15 rounded-lg py-1.5 outline-none" />
             </div>
-            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#1e1e1e] flex items-center justify-center text-[#c94f00] shrink-0"><Trash2 className="w-4 h-4" /></button>
+            <button onClick={() => remove(i)} className="w-8 h-8 rounded-lg bg-[#e4eff8] dark:bg-[#18202E] flex items-center justify-center text-[#F26419] shrink-0"><Trash2 className="w-4 h-4" /></button>
           </div>
         ))}
       </div>
 
-      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#2e2e2e] dark:border-[#2e2e2e] text-[#7E8A93] rounded-2xl shadow-md border border-amber-900/40 py-2.5 active:scale-98">
+      <button data-testid="freezer-add" onClick={add} className="mt-3 w-full flex items-center justify-center gap-2 border-2 border-dashed border-[#26324A] dark:border-[#26324A] text-[#7E8A93] rounded-2xl shadow-md border border-amber-900/40 py-2.5 active:scale-98">
         <Plus className="w-4 h-4" /> {de ? "Produkt hinzufügen" : lang === "en" ? "Add product" : "Aggiungi prodotto"}
       </button>
-      <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#c94f00] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">
+      <button data-testid="freezer-save" onClick={save} disabled={saving} className="mt-3 w-full flex items-center justify-center gap-2 bg-[#F26419] disabled:opacity-50 text-white font-semibold rounded-2xl py-3 active:scale-98">
         <Save className="w-5 h-5" /> {de ? "Speichern" : lang === "en" ? "Save" : "Salva"}
       </button>
     </div>

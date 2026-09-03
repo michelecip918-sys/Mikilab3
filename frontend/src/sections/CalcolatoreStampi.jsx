@@ -12,9 +12,9 @@ export default function CalcolatoreStampi({ onBack }) {
   const { lang } = useLang();
   const L = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const num = (v) => Math.round(v).toLocaleString(lang === "en" ? "en" : "it");
-  const inp = "w-full bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#c94f00] dark:text-[#e4eff8] focus:border-[#c94f00] font-mono-data";
-  const lbl = "text-[12px] font-semibold text-[#c94f00] dark:text-[#AEB8BF] mb-1";
-  const card = "rounded-2xl bg-[#121212] dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] p-4 shadow-sm";
+  const inp = "w-full bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#F26419] dark:text-[#e4eff8] focus:border-[#F26419] font-mono-data";
+  const lbl = "text-[12px] font-semibold text-[#F26419] dark:text-[#AEB8BF] mb-1";
+  const card = "rounded-2xl bg-[#0B0E14] dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] p-4 shadow-sm";
 
   const [mode, setMode] = useState("pirottini");
   // Pirottini
@@ -33,16 +33,16 @@ export default function CalcolatoreStampi({ onBack }) {
 
   return (
     <div className="pb-8" data-testid="calc-stampi">
-      {onBack && <button data-testid="stampi-back" onClick={onBack} className="flex items-center gap-1 text-[#c94f00] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#121212] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#c94f00,#c94f00 60%,#c94f00)" }}>
+      {onBack && <button data-testid="stampi-back" onClick={onBack} className="flex items-center gap-1 text-[#F26419] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0B0E14] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#F26419,#F26419 60%,#F26419)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Cookie className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Stampi & Pirottini", "Formen-Rechner", "Pan & Mould Calculator", "Calculadora de Moldes")}</h1>
-        <p className="text-[#121212]/85 text-sm mt-2 leading-snug">{L("Quanto impasto serve per i pirottini del panettone o per la tua teglia.", "Wie viel Teig für Panettone-Formen oder dein Blech.", "How much dough for panettone moulds or your pan.", "Cuánta masa para moldes de panettone o tu bandeja.")}</p>
+        <p className="text-[#0B0E14]/85 text-sm mt-2 leading-snug">{L("Quanto impasto serve per i pirottini del panettone o per la tua teglia.", "Wie viel Teig für Panettone-Formen oder dein Blech.", "How much dough for panettone moulds or your pan.", "Cuánta masa para moldes de panettone o tu bandeja.")}</p>
       </div>
 
-      <div className="flex gap-1.5 bg-[#1e1e1e] p-1.5 rounded-2xl mb-5 border border-[#2e2e2e]">
+      <div className="flex gap-1.5 bg-[#18202E] p-1.5 rounded-2xl mb-5 border border-[#26324A]">
         {[["pirottini", L("Pirottini", "Formen", "Moulds", "Moldes"), Cookie], ["teglia", L("Teglia / Tortiera", "Blech / Form", "Pan / Tin", "Bandeja")], ].map(([id, label]) => (
-          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold transition-all ${mode === id ? "bg-[#c94f00] text-[#121212] shadow" : "text-[#c94f00]"}`}>{label}</button>
+          <button key={id} data-testid={`stampi-tab-${id}`} onClick={() => setMode(id)} className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold transition-all ${mode === id ? "bg-[#F26419] text-[#0B0E14] shadow" : "text-[#F26419]"}`}>{label}</button>
         ))}
       </div>
 
@@ -55,17 +55,17 @@ export default function CalcolatoreStampi({ onBack }) {
               </select></div>
             <div><p className={lbl}>{L("Numero di pezzi", "Stückzahl", "Number of pieces", "Nº de piezas")}</p><input data-testid="stampi-pezzi" type="number" value={pezzi} onChange={(e) => setPezzi(e.target.value)} className={inp} /></div>
           </div>
-          <div data-testid="stampi-pirottini-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#1e1e1e] border border-[#2e2e2e] p-4 text-center">
-            <p className="text-[11px] font-semibold text-[#c94f00]">{L("Impasto totale necessario", "Benötigter Teig gesamt", "Total dough needed", "Masa total necesaria")}</p>
-            <p className="font-display text-3xl font-bold text-[#c94f00] mt-1">{num(totImpasto)} g</p>
-            <p className="text-[12px] text-[#c94f00] mt-1">{num(PIROTTINI[size])} g {L("per pirottino", "pro Form", "per mould", "por molde")} ({L("include la testa che lievita oltre il bordo", "inkl. Überstand", "includes rise over the rim", "incluye la cúpula")})</p>
+          <div data-testid="stampi-pirottini-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#e4eff8] dark:bg-[#18202E] border border-[#26324A] p-4 text-center">
+            <p className="text-[11px] font-semibold text-[#F26419]">{L("Impasto totale necessario", "Benötigter Teig gesamt", "Total dough needed", "Masa total necesaria")}</p>
+            <p className="font-display text-3xl font-bold text-[#F26419] mt-1">{num(totImpasto)} g</p>
+            <p className="text-[12px] text-[#F26419] mt-1">{num(PIROTTINI[size])} g {L("per pirottino", "pro Form", "per mould", "por molde")} ({L("include la testa che lievita oltre il bordo", "inkl. Überstand", "includes rise over the rim", "incluye la cúpula")})</p>
           </div>
         </div>
       ) : (
         <div className={card}>
           <div className="flex gap-1.5 mb-3">
             {[["rect", L("Rettangolare", "Rechteckig", "Rectangular", "Rectangular"), Square], ["round", L("Tonda", "Rund", "Round", "Redonda"), Circle]].map(([id, label, Icon]) => (
-              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold border transition-all ${shape === id ? "bg-[#c94f00] text-[#121212] border-transparent" : "bg-white dark:bg-[#1e1e1e] text-[#c94f00] border-[#2e2e2e]"}`}><Icon className="w-4 h-4" /> {label}</button>
+              <button key={id} data-testid={`stampi-shape-${id}`} onClick={() => setShape(id)} className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[13px] font-bold border transition-all ${shape === id ? "bg-[#F26419] text-[#0B0E14] border-transparent" : "bg-white dark:bg-[#18202E] text-[#F26419] border-[#26324A]"}`}><Icon className="w-4 h-4" /> {label}</button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-3 mb-3">
@@ -83,9 +83,9 @@ export default function CalcolatoreStampi({ onBack }) {
               <option value="pane">{L("Pane / pagnotta", "Brot", "Bread / loaf", "Pan")}</option>
             </select></div>
           <div data-testid="stampi-teglia-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] p-4 text-center">
-            <p className="text-[11px] font-semibold text-[#c94f00]">{L("Impasto consigliato", "Empfohlener Teig", "Recommended dough", "Masa recomendada")}</p>
-            <p className="font-display text-3xl font-bold text-[#c94f00] mt-1">{num(teglia.dough)} g</p>
-            <p className="text-[12px] text-[#c94f00] mt-1">{L("Superficie", "Fläche", "Area", "Superficie")}: {num(teglia.area)} cm²</p>
+            <p className="text-[11px] font-semibold text-[#F26419]">{L("Impasto consigliato", "Empfohlener Teig", "Recommended dough", "Masa recomendada")}</p>
+            <p className="font-display text-3xl font-bold text-[#F26419] mt-1">{num(teglia.dough)} g</p>
+            <p className="text-[12px] text-[#F26419] mt-1">{L("Superficie", "Fläche", "Area", "Superficie")}: {num(teglia.area)} cm²</p>
           </div>
         </div>
       )}

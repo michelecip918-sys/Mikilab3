@@ -1,214 +1,213 @@
 {
   "project_identity": {
-    "name": "MikiLab",
-    "description": "Cohesive, reusable 'clean & ordered' visual design system for MikiLab — a free gamified home-baker & professional bakery PWA (React + Tailwind).",
-    "design_archetype": "Warm Artisan Bakery Modern Minimalist (Deep Dark + Warm Wood + Vibrant Orange Accent)",
-    "primary_viewport": "Mobile-first PWA (~430px width, fluidly scaling to desktop grid)",
-    "i18n_support": {
-      "languages": ["IT", "DE", "EN", "ES", "FR", "FA"],
+    "name": "MikiLab PWA",
+    "tagline": "Hand-free Gamified Artisan Bakery Operations & Learning Platform",
+    "description": "Complete redesign blueprint for MikiLab — a mobile-first PWA for artisan bakers by Michele. Features 3D immersive frosted glassmorphism, real lab photography, high-precision dough metrics, AI vision diagnosis, and 3D voice avatars (Miki & Mohamed).",
+    "archetype": "Cinematic Obsidian & Copper Glow 3D Laboratory (Deep Midnight Obsidian + Frosted Crystal Glass + Copper Ember Accent)",
+    "viewport_bounds": "390px - 430px optimal mobile viewport with fluid scaling to max-w-6xl desktop layout",
+    "i18n": {
+      "supported_languages": ["IT", "DE", "EN", "ES", "FR", "FA"],
       "default": "IT",
       "rtl_languages": ["FA"],
-      "rtl_protocol": "Use Tailwind logical properties (ms-*, me-*, ps-*, pe-*, start-*, end-*) and dir='rtl' wrapper attributes to ensure clean Persian layout."
-    },
-    "monetization": "100% Free app (No paywalls or premium gates)"
+      "rtl_font": "Vazirmatn",
+      "rtl_protocol": "Use logical Tailwind classes (ms-*, me-*, ps-*, pe-*, start-*, end-*) and dir='rtl' HTML wrapper for Persian alignment."
+    }
   },
   "color_system": {
-    "backgrounds": {
-      "app_bg": "#121212",
-      "surface_base": "#181716",
-      "surface_elevated": "#22201D",
-      "surface_card": "#1E1C1A",
-      "surface_card_hover": "#282522",
-      "overlay_scrim": "rgba(18, 18, 18, 0.75)"
+    "css_variable_tokens": {
+      "root_dark": {
+        "--bg-app": "#0B0E14",
+        "--bg-surface-base": "#121722",
+        "--bg-surface-elevated": "#18202E",
+        "--bg-surface-glass": "rgba(255, 255, 255, 0.04)",
+        "--bg-glass-border": "rgba(255, 255, 255, 0.10)",
+        "--bg-glass-highlight": "rgba(255, 255, 255, 0.18)",
+        "--primary-ember": "#F26419",
+        "--primary-ember-hover": "#FF7B2D",
+        "--primary-ember-glow": "rgba(242, 100, 25, 0.35)",
+        "--accent-gold": "#E8A838",
+        "--accent-gold-glow": "rgba(232, 168, 56, 0.25)",
+        "--accent-teal": "#2A9D8F",
+        "--accent-red": "#E63946",
+        "--text-primary": "#F7F9FC",
+        "--text-secondary": "#94A3B8",
+        "--text-muted": "#64748B",
+        "--text-ember": "#FF8C42"
+      }
     },
-    "accents": {
-      "primary_orange": "#FF6B00",
-      "primary_orange_hover": "#FF8533",
-      "primary_orange_glow": "rgba(255, 107, 0, 0.25)",
-      "warm_wood": "#A66E38",
-      "warm_wood_light": "#C48B52",
-      "amber_accent": "#D97706",
-      "flour_white": "#F7F5F0"
+    "palette_definitions": {
+      "midnight_obsidian": "#0B0E14",
+      "slate_navy_surface": "#121722",
+      "glass_card_bg": "rgba(18, 23, 34, 0.70)",
+      "copper_ember": "#F26419",
+      "copper_glow": "rgba(242, 100, 25, 0.30)",
+      "wheat_gold": "#E8A838",
+      "flour_white": "#F7F9FC",
+      "sage_green": "#2A9D8F",
+      "alarm_crimson": "#E63946"
     },
-    "text": {
-      "primary": "#F7F5F0",
-      "secondary": "#B0A89E",
-      "muted": "#787166",
-      "inverse": "#121212",
-      "orange_highlight": "#FF8533"
+    "gradients": {
+      "hero_dark_scrim": "linear-gradient(180deg, rgba(11,14,20,0.10) 0%, rgba(11,14,20,0.85) 70%, #0B0E14 100%)",
+      "ember_button_gradient": "linear-gradient(135deg, #F26419 0%, #D94E00 100%)",
+      "gold_radial_glow": "radial-gradient(circle at 50% 0%, rgba(232,168,56,0.18) 0%, transparent 70%)",
+      "glass_border_gradient": "linear-gradient(135deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.03) 100%)",
+      "card_inner_sheen": "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%)"
+    }
+  },
+  "glassmorphism_3d_engine": {
+    "recipe": "backdrop-blur-xl bg-[#121722]/75 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.40)] rounded-2xl relative overflow-hidden",
+    "backdrop_blur_scale": {
+      "modal_overlay": "backdrop-blur-2xl bg-[#0B0E14]/85",
+      "hero_card": "backdrop-blur-xl bg-[#121722]/70",
+      "compact_chip": "backdrop-blur-md bg-white/10"
     },
-    "borders_and_dividers": {
-      "border_subtle": "rgba(247, 245, 240, 0.08)",
-      "border_medium": "rgba(247, 245, 240, 0.15)",
-      "border_wood": "rgba(166, 110, 56, 0.3)",
-      "border_orange": "rgba(255, 107, 0, 0.4)"
+    "elevation_z_index": {
+      "base_content": "z-0",
+      "cards_and_cards_3d": "z-10",
+      "floating_action_buttons": "z-40",
+      "bottom_nav": "z-50",
+      "header_fixed": "z-50",
+      "modals_and_elite_engine": "z-60",
+      "pin_lock_screen": "z-[100]"
     },
-    "surfaces_and_effects": {
-      "glassmorphism": "backdrop-blur-xl bg-[#181716]/80 border border-white/10 shadow-2xl",
-      "nav_glass": "backdrop-blur-xl bg-[#121212]/90 border-t border-white/10",
-      "hero_gradient_mask": "bg-gradient-to-t from-[#121212] via-[#121212]/60 to-transparent",
-      "card_gradient_overlay": "bg-gradient-to-t from-[#181716] via-[#181716]/50 to-transparent"
+    "hover_3d_transform": {
+      "card_tilt": "hover:-translate-y-1 hover:rotate-1 hover:border-[#F26419]/50 hover:shadow-[0_12px_40px_rgba(242,100,25,0.22)] transition-all duration-300 ease-out",
+      "press_feedback": "active:scale-95 transition-transform duration-150"
     }
   },
   "typography": {
-    "font_families": {
-      "headings": "'Fraunces', 'Playfair Display', serif",
-      "body": "'Plus Jakarta Sans', 'Inter', sans-serif",
-      "mono_metrics": "'JetBrains Mono', 'Fira Code', monospace",
-      "persian": "'Vazirmatn', 'Tahoma', sans-serif"
+    "fonts": {
+      "headings": "'Playfair Display', Georgia, serif",
+      "body": "'Manrope', system-ui, sans-serif",
+      "mono_data": "'JetBrains Mono', monospace",
+      "persian_rtl": "'Vazirmatn', sans-serif"
     },
     "scale": {
-      "h1_hero": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight",
-      "h2_section": "text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight leading-snug",
-      "h3_card": "text-lg sm:text-xl font-semibold leading-snug",
-      "body_large": "text-base font-normal leading-relaxed",
-      "body_standard": "text-sm font-normal leading-normal",
-      "caption_micro": "text-xs font-medium tracking-wider uppercase text-[#B0A89E]"
-    },
-    "rules": {
-      "headings_contrast": "Always pairing Fraunces/Playfair for section titles with warm orange accent badges",
-      "text_transform": "Use tracking-widest uppercase for section overlines (e.g., LAB MIKILAB • 100% GRATIS)",
-      "rtl_alignment": "Text automatically aligns right under dir='rtl', with start-aligned icons"
+      "hero_title": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight",
+      "section_heading": "text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F9FC]",
+      "card_title": "text-lg sm:text-xl font-bold text-[#F7F9FC]",
+      "body_text": "text-sm sm:text-base text-[#94A3B8] leading-relaxed",
+      "badge_overline": "text-xs font-bold uppercase tracking-wider text-[#E8A838]",
+      "mono_metric": "font-mono text-base font-semibold text-[#F26419]"
     }
   },
+  "avatar_preservation_and_alignment": {
+    "brand_avatars": {
+      "miki": {
+        "file": "/michele-avatar.jpg",
+        "alt": "Miki Avatar - Master Baker",
+        "role": "Master Baker AI & Voice Companion",
+        "badge_style": "border-2 border-[#F26419] shadow-[0_0_12px_rgba(242,100,25,0.5)] rounded-full"
+      },
+      "mohamed": {
+        "file": "/mohammed-avatar.jpg",
+        "alt": "Mohamed Avatar - Assistant Baker",
+        "role": "Lab Assistant & Production Ops",
+        "badge_style": "border-2 border-[#2A9D8F] shadow-[0_0_12px_rgba(42,157,143,0.5)] rounded-full"
+      }
+    },
+    "rules": [
+      "Keep both avatars in their original photo/style identity.",
+      "Wrap avatars in frosted glass halo containers with active audio status rings when speaking.",
+      "Ensure consistent 48px / 64px sizing across all header, chat, and lab screens."
+    ]
+  },
   "spacing_and_layout": {
-    "containers": "max-w-md mx-auto px-4 sm:px-6 lg:max-w-5xl lg:px-8",
-    "mobile_viewport_target": "430px optimal width (iPhone / Android standard)",
-    "padding_system": {
-      "card_internal": "p-5 sm:p-6",
-      "section_spacing": "py-6 space-y-6",
-      "bento_gap": "gap-4 sm:gap-6"
+    "mobile_pwa_container": "w-full max-w-[430px] mx-auto px-4 pb-24 pt-16 min-h-screen relative",
+    "desktop_grid_wrapper": "lg:max-w-6xl lg:mx-auto lg:px-8",
+    "padding": {
+      "card_padding": "p-5 sm:p-6",
+      "section_gap": "space-y-6 sm:space-y-8"
     },
     "home_bento_grid": {
-      "layout_mode": "Tetris-Bento Hybrid for 5 Main Hub Sections",
-      "grid_columns": "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
-      "section_spans": {
-        "ricette": "col-span-1 md:col-span-2 row-span-1",
-        "laboratorio": "col-span-1 md:col-span-1 row-span-2",
-        "accademia": "col-span-1 md:col-span-1 row-span-1",
-        "guide": "col-span-1 md:col-span-1 row-span-1",
-        "community": "col-span-1 md:col-span-2 row-span-1"
+      "mobile": "grid grid-cols-1 gap-4",
+      "desktop": "grid grid-cols-12 gap-6",
+      "spans": {
+        "hero_braccio": "lg:col-span-8 lg:row-span-2",
+        "ricette_hub": "lg:col-span-4 lg:row-span-1",
+        "farine_hub": "lg:col-span-4 lg:row-span-1",
+        "accademia_hub": "lg:col-span-6 lg:row-span-1",
+        "community_hub": "lg:col-span-6 lg:row-span-1"
       }
     }
   },
   "component_guidelines": {
-    "home_page_hub_cards": {
-      "structure": "5 prominent feature cards with high-quality warm bakery background photography, dark linear gradient masks, subtle wood-grain hover glow, and clear multi-language CTAs.",
-      "sections": [
-        {
-          "id": "ricette",
-          "title_it": "Ricette & Formule",
-          "subtitle_it": "Esplora pane, pizza, grandi lievitati e impasti con calcolatori dosi automatici",
-          "badge": "Oltre 100 Ricette",
-          "color": "#FF6B00",
-          "testid": "home-card-ricette"
-        },
-        {
-          "id": "laboratorio",
-          "title_it": "Laboratorio AI & Timer",
-          "subtitle_it": "Pianificazione rinfreschi, diagnosi foto/audio e calcolo gradi acqua",
-          "badge": "Strumenti AI Pro",
-          "color": "#A66E38",
-          "testid": "home-card-laboratorio"
-        },
-        {
-          "id": "accademia",
-          "title_it": "Accademia & Quiz",
-          "subtitle_it": "Lezioni interattive, calcolo W farina e sfide di panificazione",
-          "badge": "Impara Gratis",
-          "color": "#D97706",
-          "testid": "home-card-accademia"
-        },
-        {
-          "id": "guide",
-          "title_it": "Guide & Metodi",
-          "subtitle_it": "Lievito Madre, Licoli, Biga, Poolish e SOS Impasto in 1-Click",
-          "badge": "Passo Passo",
-          "color": "#C48B52",
-          "testid": "home-card-guide"
-        },
-        {
-          "id": "community",
-          "title_it": "Community & Mappa",
-          "subtitle_it": "Condividi le tue infornate, trova fornai vicini a te e accumula punti",
-          "badge": "Fornaio Social",
-          "color": "#FF8533",
-          "testid": "home-card-community"
-        }
-      ],
-      "styling": "relative overflow-hidden rounded-2xl border border-white/10 bg-[#1E1C1A] hover:border-[#FF6B00]/50 transition-all duration-300 shadow-xl group cursor-pointer"
+    "global_header": {
+      "style": "fixed top-0 left-0 right-0 h-14 backdrop-blur-xl bg-[#0B0E14]/80 border-b border-white/10 z-50 flex items-center justify-between px-4",
+      "elements": [
+        "MikiLab Logo emblem with ember glow",
+        "Live Digital Clock (hh:mm:ss in JetBrains Mono)",
+        "Language Pills (IT, DE, EN, ES, FR, FA) with #F26419 active highlight",
+        "PIN Sign-In / Lock Badge"
+      ]
     },
-    "bottom_navigation": {
-      "style": "Fixed bottom bar, glassmorphism backdrop (#121212/90 + backdrop-blur-md), border-t border-white/10, z-50",
+    "bottom_nav": {
+      "style": "fixed bottom-0 left-0 right-0 h-16 backdrop-blur-2xl bg-[#0B0E14]/90 border-t border-white/10 z-50 flex items-center justify-around px-2",
       "items": [
-        { "id": "home", "label": "Home", "icon": "HomeIcon", "testid": "nav-item-home" },
-        { "id": "ricette", "label": "Ricette", "icon": "BookOpenIcon", "testid": "nav-item-ricette" },
-        { "id": "lab", "label": "Laboratorio", "icon": "BeakerIcon", "testid": "nav-item-lab" },
-        { "id": "accademia", "label": "Accademia", "icon": "AcademicCapIcon", "testid": "nav-item-accademia" },
-        { "id": "community", "label": "Community", "icon": "UserGroupIcon", "testid": "nav-item-community" }
+        { "id": "home", "label": "Home", "icon": "HomeIcon", "testid": "bottom-nav-home" },
+        { "id": "lab", "label": "Laboratorio", "icon": "BeakerIcon", "testid": "bottom-nav-lab" },
+        { "id": "ricette", "label": "Ricette", "icon": "BookOpenIcon", "testid": "bottom-nav-ricette" },
+        { "id": "farine", "label": "Farine", "icon": "ScaleIcon", "testid": "bottom-nav-farine" },
+        { "id": "accademia", "label": "Accademia", "icon": "AcademicCapIcon", "testid": "bottom-nav-accademia" }
       ],
-      "active_state": "text-[#FF6B00] bg-[#FF6B00]/10 rounded-xl px-3 py-1 font-semibold",
-      "inactive_state": "text-[#B0A89E] hover:text-[#F7F5F0] transition-colors"
+      "active_state": "text-[#F26419] bg-[#F26419]/15 rounded-xl px-3 py-1.5 font-bold flex flex-col items-center text-xs"
     },
-    "pwa_share_install": {
-      "card_style": "rounded-2xl border border-[#A66E38]/40 bg-gradient-to-br from-[#1E1C1A] via-[#242220] to-[#1E1C1A] p-6 shadow-2xl relative overflow-hidden",
-      "features": [
-        "Installa MikiLab come PWA nativa per usarla offline durante le impastate",
-        "100% Gratuita per sempre — Nessun abbonamento, nessuna pubblicità invasiva",
-        "Pulsante rapido Condividi App + Generatore QR Code"
-      ],
-      "buttons": {
-        "install": {
-          "label": "Installa App Gratis",
-          "style": "bg-[#FF6B00] hover:bg-[#FF8533] text-white font-bold px-6 py-3 rounded-xl shadow-lg shadow-[#FF6B00]/25 transition-all duration-200 active:scale-95",
-          "testid": "pwa-install-button"
-        },
-        "share": {
-          "label": "Condividi MikiLab",
-          "style": "bg-[#2A2724] hover:bg-[#332E2B] text-[#F7F5F0] border border-white/10 font-medium px-5 py-3 rounded-xl transition-all duration-200 active:scale-95",
-          "testid": "pwa-share-button"
-        }
-      }
+    "floating_action_buttons": {
+      "radio_player": "fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-[#18202E] border border-white/20 text-[#E8A838] flex items-center justify-center shadow-lg hover:scale-110 transition-transform",
+      "voice_assistant": "fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-r from-[#F26419] to-[#D94E00] text-white flex items-center justify-center shadow-[0_0_20px_rgba(242,100,25,0.5)] hover:scale-110 transition-transform"
     },
-    "guided_weighing_scale": {
-      "display": "Font mono high-contrast, glowing digital display (#FF6B00 text on dark surface #121212), animated weight change, audio voice confirmation feedback toggle.",
-      "status_indicators": "Bluetooth connect status badge (Connected / Disconnected / Tare)"
+    "elite_engine_overlay": {
+      "description": "Full-screen 3D laboratory modal containing 4 interactive rooms (Impasti, Forni, Pasticceria, Guida) + live DB doses calculator + radio player.",
+      "modal_style": "fixed inset-0 z-60 backdrop-blur-2xl bg-[#0B0E14]/95 overflow-y-auto p-4 sm:p-8 space-y-6"
     },
-    "language_selector": {
-      "style": "Pill switcher with flags / ISO codes (IT, DE, EN, ES, FR, FA), active language highlighted in #FF6B00 badge.",
-      "testid": "header-language-selector"
+    "flour_analysis_center": {
+      "cards": "Parameter cards for W (strength), Protein %, Water Absorption %, P/L ratio, Ash, Falling Number.",
+      "test_log": "AI photo scan test log for flour bags with auto OCR parameter extraction."
     }
   },
+  "page_by_page_architecture": {
+    "home_hub": "Hero banner with Miki & Mohamed avatars, quick status overview, and 5 Bento cards (Laboratorio, Ricette, Farine, Accademia, Community).",
+    "laboratorio_braccio": "Default operative screen showing quick commands (Today's Recipes, Failures, Dough SOS), Banco Impasti, Headset mode toggle, and launcher for Elite Engine 4 Rooms.",
+    "ricette": "Category recipe grid (Pane, Pizza, Focacce, Viennoiserie, Basi) with real food photos, filter chips, search bar, and batch calculator.",
+    "farine": "Flour Analysis Center with parameter dial gauges, W rating curves, and AI scan log.",
+    "accademia": "Interactive lessons, flour quizzes, encyclopedia, news feed, and challenges.",
+    "community": "Bakers social feed, infornate photos, leaderboards, and interactive map.",
+    "diagnosi_and_maestro": "AI vision camera diagnosis for dough defects and real-time audio/text chat with Maestro AI."
+  },
+  "media_and_assets": {
+    "local_lab_photos": [
+      "/michele-lab-pro.jpg",
+      "/hero-laboratorio.jpg",
+      "/hero-ricette.jpg",
+      "/hero-impara.jpg",
+      "/hero-bakery.jpg",
+      "/hero-social.jpg"
+    ],
+    "external_curated_photos": [
+      "https://images.pexels.com/photos/28354523/pexels-photo-28354523.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "https://images.pexels.com/photos/20400379/pexels-photo-20400379.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+    ]
+  },
   "motion_and_interactions": {
-    "hover_effects": "Subtle 2px lift (-translate-y-0.5), glowing border transition, subtle scale up of card background image (scale-105).",
-    "active_press": "active:scale-95 transition-transform duration-100",
-    "entrance_animations": "Staggered fade-in-up using Framer Motion (delayChildren: 0.1, staggerChildren: 0.05).",
-    "reduced_motion": "respect prefers-reduced-motion by replacing smooth translation with instant opacity transitions"
+    "framer_motion_presets": {
+      "stagger_container": "{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08 } } }",
+      "card_fade_up": "{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20 } } }"
+    },
+    "accessibility_motion": "Wrap animations in prefers-reduced-motion check."
   },
   "accessibility_and_rtl": {
-    "contrast_ratio": "Minimum 4.5:1 for normal text, 3:1 for large display headers and buttons",
-    "rtl_rules": "Under RTL (FA), margin-left becomes margin-right, flex-row order flips logically, text aligns right natively",
-    "focus_states": "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#FF6B00] focus-visible:ring-offset-2 focus-visible:ring-offset-[#121212]",
-    "testing_attributes": "All buttons, tabs, input cards, and interactive blocks MUST include data-testid='...' in kebab-case."
-  },
-  "media_assets": {
-    "hero_bakery": "https://images.unsplash.com/photo-1627308595181-fa2b6f5f04e9?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "kneading_dough": "https://images.unsplash.com/photo-1649675602947-81a41c1ba4af?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "flour_dust_bread": "https://images.unsplash.com/photo-1627308593341-d886acdc06a2?crop=entropy&cs=srgb&fm=jpg&q=85",
-    "wood_texture": "https://images.unsplash.com/photo-1583651981363-9dbe542f4df8?crop=entropy&cs=srgb&fm=jpg&q=85"
+    "data_testid_rule": "ALL interactive buttons, cards, links, tabs, inputs MUST have data-testid in kebab-case (e.g., data-testid='bracciolab-quick-sos').",
+    "contrast_wcag": "All body text must achieve minimum 4.5:1 contrast against dark background. Use #F7F9FC or #94A3B8."
   },
   "instructions_to_main_agent": [
-    "1. Maintain the warm bakery mood (deep dark #121212, warm wood accents #A66E38, vibrant warm orange #FF6B00).",
-    "2. Make the layout clean, spacious, and modern with generous internal card padding and clear typographic hierarchy.",
-    "3. Apply this design system across the whole app, starting with the 5-section Home Hub, Bottom Nav, and PWA Share & Install banner.",
-    "4. Ensure 100% free messaging (no paywalls).",
-    "5. Ensure full multi-language RTL compliance when FA (Persian) is active.",
-    "6. Keep all interactive elements equipped with explicit data-testid attributes."
+    "Apply this dark obsidian 3D glassmorphism theme across all MikiLab components.",
+    "Never break existing state or i18n logic.",
+    "Ensure Miki (/michele-avatar.jpg) and Mohamed (/mohammed-avatar.jpg) remain visually aligned in their brand roles.",
+    "Ensure all buttons have explicit data-testid attributes."
   ],
   "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Do NOT use pure black #000000 or harsh neon colors. Tint darks to warm dark (#121212, #181716).",
-    "Never hide header or bottom nav behind missing borders or zero backdrop-blur.",
-    "Ensure contrast ratios meet WCAG AA specifications across all buttons and inputs.",
-    "Include data-testid on all interactive buttons, cards, links, tabs, and form components."
+    "Avoid standard flat designs; embrace frosted glass layer depth and glow accents.",
+    "Ensure layout is mobile-first (390px-430px) with responsive desktop grid scaling.",
+    "Keep full functionality intact while elevating visual quality."
   ]
 }

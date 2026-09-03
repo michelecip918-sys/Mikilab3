@@ -12,21 +12,21 @@ export default function ProfileSelect() {
 
   const Card = ({ id, Icon, title, desc, points }) => (
     <button data-testid={`profile-select-${id}`} onClick={() => chooseProfile(id)}
-      className="w-full text-left rounded-3xl p-5 bg-[#1e1e1e] border-2 border-[#c94f00]/50 hover:border-[#c94f00] active:scale-98 transition-all">
+      className="w-full text-left rounded-3xl p-5 bg-[#18202E] border-2 border-[#F26419]/50 hover:border-[#F26419] active:scale-98 transition-all">
       <div className="flex items-center gap-3 mb-2">
-        <span className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#c94f00] to-[#c94f00] flex items-center justify-center shrink-0">
+        <span className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#F26419] to-[#F26419] flex items-center justify-center shrink-0">
           <Icon className="w-8 h-8 text-white" />
         </span>
         <div className="min-w-0 flex-1">
           <p className="font-display text-xl font-extrabold text-white leading-tight">{title}</p>
           <p className="text-[12.5px] text-[#AEB8BF] leading-snug">{desc}</p>
         </div>
-        <ChevronRight className="w-6 h-6 text-[#c94f00] shrink-0" />
+        <ChevronRight className="w-6 h-6 text-[#F26419] shrink-0" />
       </div>
       <ul className="mt-2 space-y-1">
         {points.map((p, i) => (
           <li key={i} className="flex items-start gap-2 text-[13px] text-[#e4eff8] leading-snug">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#c94f00] mt-1.5 shrink-0" /> {p}
+            <span className="w-1.5 h-1.5 rounded-full bg-[#F26419] mt-1.5 shrink-0" /> {p}
           </li>
         ))}
       </ul>
@@ -34,11 +34,11 @@ export default function ProfileSelect() {
   );
 
   return (
-    <div data-testid="profile-select" className="fixed inset-0 z-[9999] bg-[#121212] overflow-y-auto">
+    <div data-testid="profile-select" className="fixed inset-0 z-[9999] bg-[#0B0E14] overflow-y-auto">
       <div className="max-w-md mx-auto px-5 py-10">
         {profile && (
           <button data-testid="profile-select-close" onClick={() => chooseProfile(profile)}
-            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#1e1e1e] border border-[#2e2e2e] flex items-center justify-center text-white active:scale-95">
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-[#18202E] border border-[#26324A] flex items-center justify-center text-white active:scale-95">
             <X className="w-5 h-5" />
           </button>
         )}

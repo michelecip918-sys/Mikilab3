@@ -38,9 +38,9 @@ export default function ToolsDirectory({ onOpenTool }) {
     if (!tl) return null;
     return (
       <button key={id} data-testid={`lab-tool-${id}`} onClick={() => onOpenTool && onOpenTool(id)}
-        className="flex items-center gap-4 text-left w-full rounded-2xl bg-[#1e1e1e] border border-[#2C2C2C] hover:border-[#c94f00]/60 min-h-[76px] px-4 py-3.5 active:scale-[0.98] transition-all">
-        <span className="w-16 h-16 rounded-2xl bg-[#c94f00]/12 border border-[#c94f00]/30 flex items-center justify-center shrink-0">
-          <tl.Icon className="w-8 h-8 text-[#c94f00]" />
+        className="flex items-center gap-4 text-left w-full rounded-2xl bg-[#18202E] border border-[#26324A] hover:border-[#F26419]/60 min-h-[76px] px-4 py-3.5 active:scale-[0.98] transition-all">
+        <span className="w-16 h-16 rounded-2xl bg-[#F26419]/12 border border-[#F26419]/30 flex items-center justify-center shrink-0">
+          <tl.Icon className="w-8 h-8 text-[#F26419]" />
         </span>
         <span className="text-lg sm:text-xl font-bold text-white leading-snug">{name(tl)}</span>
         <ChevronRight className="w-5 h-5 text-[#7E8A93] shrink-0 ms-auto rtl:rotate-180" />
@@ -53,12 +53,12 @@ export default function ToolsDirectory({ onOpenTool }) {
       {/* Griglia strumenti rapidi (2 colonne) */}
       {!s && QUICK.length > 0 && (
         <div className="mb-4" data-testid="lab-quick-grid">
-          <p className="text-[13px] font-bold uppercase tracking-wide text-[#c94f00] mb-2">{tri("Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
+          <p className="text-[13px] font-bold uppercase tracking-wide text-[#F26419] mb-2">{tri("Strumenti rapidi", "Schnellzugriff", "Quick tools", "Herramientas rápidas")}</p>
           <div className="grid grid-cols-2 gap-2.5">
             {QUICK.map((tl) => (
               <button key={tl.id} data-testid={`lab-quick-${tl.id}`} onClick={() => onOpenTool && onOpenTool(tl.id)}
-                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#c94f00]/18 to-[#1e1e1e] border border-[#c94f00]/40 hover:border-[#c94f00] min-h-[128px] p-3.5 active:scale-[0.97] transition-all">
-                <span className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#c94f00] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
+                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#F26419]/18 to-[#18202E] border border-[#F26419]/40 hover:border-[#F26419] min-h-[128px] p-3.5 active:scale-[0.97] transition-all">
+                <span className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#F26419] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
                 <span className="text-[15px] font-bold text-white leading-tight">{name(tl)}</span>
                 <span className="text-[11.5px] text-[#AEB8BF] leading-snug">{QUICK_DESC[tl.id]}</span>
               </button>
@@ -72,7 +72,7 @@ export default function ToolsDirectory({ onOpenTool }) {
         <Search className="w-4 h-4 text-[#7E8A93] absolute start-3 top-1/2 -translate-y-1/2" />
         <input data-testid="tools-dir-search" value={q} onChange={(e) => setQ(e.target.value)}
           placeholder={tri("Cerca uno strumento…", "Werkzeug suchen…", "Search a tool…", "Buscar herramienta…", "Chercher un outil…", "جستجوی ابزار…")}
-          className="w-full bg-[#161616] border border-[#2C2C2C] rounded-2xl shadow-md border border-amber-900/40 py-3 ps-10 pe-9 text-base text-white outline-none focus:border-[#c94f00]" />
+          className="w-full bg-[#121722] border border-[#26324A] rounded-2xl shadow-md border border-amber-900/40 py-3 ps-10 pe-9 text-base text-white outline-none focus:border-[#F26419]" />
         {q && <button data-testid="tools-dir-search-clear" onClick={() => setQ("")} className="absolute end-2.5 top-1/2 -translate-y-1/2 text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>}
       </div>
 

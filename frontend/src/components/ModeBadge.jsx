@@ -13,7 +13,7 @@ export default function ModeBadge() {
     : mkTri(lang)("Passione", "Passion", "Passion", "Pasión", "Passion", "علاقه");
   return (
     <button data-testid="mode-badge" onClick={() => window.dispatchEvent(new Event("mikilab-open-menu"))}
-      className={`fixed top-1.5 left-1/2 -translate-x-1/2 z-[45] inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-extrabold uppercase tracking-wide shadow-md border active:scale-95 transition-all ${pro ? "bg-[#c94f00] text-white border-[#c94f00]" : "bg-[#161616]/90 backdrop-blur text-[#c94f00] border-[#c94f00]/55"}`}>
+      className={`fixed top-1.5 left-1/2 -translate-x-1/2 z-[45] inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-extrabold uppercase tracking-wide shadow-md border active:scale-95 transition-all ${pro ? "bg-[#F26419] text-white border-[#F26419]" : "bg-[#121722]/90 backdrop-blur text-[#F26419] border-[#F26419]/55"}`}>
       {pro ? <Crown className="w-3 h-3" /> : <Heart className="w-3 h-3" />}
       {label}
     </button>

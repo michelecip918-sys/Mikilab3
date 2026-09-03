@@ -119,9 +119,9 @@ export default function VoiceAssistant({ onNavigate }) {
     <>
       {open && (
         <div className="fixed inset-x-0 bottom-24 z-40 px-4 flex justify-center pointer-events-none">
-          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#1e1e1e] border border-[#2e2e2e] dark:border-[#2e2e2e] rounded-2xl shadow-xl p-4">
+          <div data-testid="voice-panel" className="pointer-events-auto w-full max-w-xl bg-white dark:bg-[#18202E] border border-[#26324A] dark:border-[#26324A] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xs font-bold uppercase tracking-wide text-[#c94f00] flex-1">
+              <span className="text-xs font-bold uppercase tracking-wide text-[#F26419] flex-1">
                 {state === "listening" ? t("voice_listening") : state === "thinking" ? t("voice_thinking") : t("voice_tap")}
               </span>
               <button data-testid="voice-close" onClick={stop} className="text-[#7E8A93] p-1"><X className="w-4 h-4" /></button>
@@ -143,13 +143,13 @@ export default function VoiceAssistant({ onNavigate }) {
           onClick={state === "listening" ? stop : start}
           aria-label={t("voice_tap")}
           className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-            state === "listening" ? "bg-[#c94f00] animate-pulse" : "bg-[#c94f00] hover:bg-[#d4a373]"
+            state === "listening" ? "bg-[#F26419] animate-pulse" : "bg-[#F26419] hover:bg-[#E8A838]"
           }`}
         >
-          {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#c94f00] opacity-60 animate-ping" />}
+          {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#F26419] opacity-60 animate-ping" />}
           {state === "thinking" ? <Loader2 className="w-6 h-6 text-white animate-spin relative" /> : <Mic className="w-6 h-6 text-white relative" />}
         </button>
-        <span className="text-[9px] font-bold text-[#c94f00] bg-[#121212]/90 dark:bg-[#121212]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
+        <span className="text-[9px] font-bold text-[#F26419] bg-[#0B0E14]/90 dark:bg-[#0B0E14]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
       </div>
     </>
   );
