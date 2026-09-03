@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
-import { FlaskConical, Microscope, Wheat, Droplets, Gauge, Layers, TestTube2, Plus, Trash2, ClipboardList, BookOpen, GraduationCap } from "lucide-react";
+import { FlaskConical, Microscope, Wheat, Droplets, Gauge, Layers, TestTube2, Plus, Trash2, ClipboardList, BookOpen, GraduationCap, Camera, Loader2, Sparkles } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
+import { API } from "@/lib/api";
+import DualPhotoButtons from "@/components/DualPhotoButtons";
+import { toast } from "sonner";
 import AvatarBubbles from "@/components/AvatarBubbles";
 
 const PUB = process.env.PUBLIC_URL || "";
@@ -45,9 +49,11 @@ function useFlourParams(tri) {
 const TESTS_KEY = "mikilab_flour_tests";
 
 function TestRegistry() {
-  const { tri } = useLang();
+  const { lang, tri } = useLang();
+  const { user, setAuthOpen } = useAuth();
   const [tests, setTests] = useState([]);
   const [form, setForm] = useState({ name: "", w: "", protein: "", hydration: "", note: "" });
+  const [scanning, setScanning] = useState(false);
 
   useEffect(() => {
     try { setTests(JSON.parse(localStorage.getItem(TESTS_KEY) || "[]")); } catch { /* */ }
@@ -66,6 +72,49 @@ function TestRegistry() {
   };
 
   const remove = (id) => persist(tests.filter((t) => t.id !== id));
+
+  // Fotografa il sacco: l'IA legge W/proteine/tipo/assorbimento e compila il form.
+  const onScanPhoto = (file) => {
+    if (!file) return;
+    setScanning(true);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = async () => {
+        const max = 1400; let w = img.width, h = img.height;
+        if (w > h && w > max) { h = Math.round(h * max / w); w = max; }
+        else if (h > max) { w = Math.round(w * max / h); h = max; }
+        const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+        cv.getContext("2d").drawImage(img, 0, 0, w, h);
+        const b64 = cv.toDataURL("image/jpeg", 0.85);
+        try {
+          const res = await fetch(`${API}/maestro/scan-flour`, {
+            method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
+            body: JSON.stringify({ image_base64: b64, lang }),
+          });
+          if (res.status === 401 || res.status === 403) {
+            setAuthOpen && setAuthOpen(true);
+            toast.info(tri("Accedi per usare l'analisi IA della farina.", "Melde dich an, um die KI-Mehlanalyse zu nutzen.", "Sign in to use AI flour analysis.", "Inicia sesión para usar el análisis IA de harina."));
+            return;
+          }
+          if (!res.ok) { const e = await res.json().catch(() => ({})); throw new Error(e.detail || ""); }
+          const r = await res.json();
+          setForm({
+            name: r.product_name || r.brand || r.flour_type || "",
+            w: r.w_index != null ? String(r.w_index) : "",
+            protein: r.protein_percent != null ? String(r.protein_percent) : "",
+            hydration: r.absorption_percent != null ? String(r.absorption_percent) : "",
+            note: [r.flour_type, r.grain, r.ideal_use].filter(Boolean).join(" · "),
+          });
+          toast.success(tri("Etichetta letta! Controlla e registra il test.", "Etikett gelesen! Prüfen und speichern.", "Label read! Review and save the test.", "¡Etiqueta leída! Revisa y guarda."));
+        } catch (err) {
+          toast.error(err?.message || tri("Non sono riuscito a leggere l'etichetta.", "Etikett konnte nicht gelesen werden.", "Couldn't read the label.", "No pude leer la etiqueta."));
+        } finally { setScanning(false); }
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  };
 
   const field = (key, ph, type = "text") => (
     <input
@@ -86,8 +135,24 @@ function TestRegistry() {
         </span>
         <div>
           <h3 className="font-display text-xl font-bold text-[#f5efe6]">{tri("Registro Test Farine", "Mehl-Testregister", "Flour Test Log", "Registro de Pruebas de Harina")}</h3>
-          <p className="text-[12px] text-[#c9b79a]">{tri("Annota le tue analisi sul campo", "Notiere deine Feldanalysen", "Record your field analyses", "Anota tus análisis de campo")}</p>
+          <p className="text-[12px] text-[#c9b79a]">{tri("Fotografa il sacco o annota a mano", "Fotografiere den Sack oder notiere", "Photograph the bag or note by hand", "Fotografía el saco o anota a mano")}</p>
         </div>
+      </div>
+
+      {/* Analisi IA della foto del sacco */}
+      <div data-testid="flour-scan-block" className="mb-4 rounded-2xl bg-[#161009] border border-[#d4a373]/30 p-4">
+        <div className="flex items-center gap-2 mb-2 text-[#d4a373]">
+          <Sparkles className="w-4 h-4" />
+          <p className="text-[12px] font-bold uppercase tracking-wide">{tri("Analisi IA della farina", "KI-Mehlanalyse", "AI flour analysis", "Análisis IA de harina")}</p>
+        </div>
+        <p className="text-[12px] text-[#c9b79a] leading-snug mb-3">{tri("Fotografa l'etichetta o la scheda tecnica: leggo forza W, proteine, tipo e assorbimento e compilo il test.", "Fotografiere Etikett/Datenblatt: ich lese W, Protein, Typ und Wasseraufnahme und fülle den Test aus.", "Photograph the label or tech sheet: I read W, protein, type and absorption and fill in the test.", "Fotografía la etiqueta o ficha: leo W, proteína, tipo y absorción y relleno la prueba.")}</p>
+        {scanning ? (
+          <div data-testid="flour-scan-loading" className="inline-flex items-center gap-2 rounded-2xl bg-[#d4a373] text-[#0f0a05] font-semibold px-5 py-3 opacity-80">
+            <Loader2 className="w-5 h-5 animate-spin" /> {tri("Sto leggendo l'etichetta…", "Ich lese das Etikett…", "Reading the label…", "Leyendo la etiqueta…")}
+          </div>
+        ) : (
+          <DualPhotoButtons onFile={onScanPhoto} testid="flour-scan" />
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-2.5 mb-3">
