@@ -18,16 +18,18 @@ const DEFS = [
   { id: "frigo", name: "Frigorifero", kind: "thermal", base: 4, min: 2, max: 6, unit: "°C" },
 ];
 
-const thermalStatus = (d, temp) => {
-  const alarm = temp > d.max;
+const thermalStatus = (d, temp, min, max) => {
+  const alarm = temp > max;
   if (d.hot) {
     if (alarm) return { status: "Surriscaldato", color: "#E63946", alarm: true };
-    if (temp < d.min) return { status: "In riscaldamento", color: "#f59e0b", alarm: false };
+    if (temp < min) return { status: "In riscaldamento", color: "#f59e0b", alarm: false };
     return { status: "In temperatura", color: "#10b981", alarm: false };
   }
   if (alarm) return { status: "Allarme caldo", color: "#E63946", alarm: true };
-  return { status: temp < d.min ? "Molto fredda" : "OK", color: temp < d.min ? "#f59e0b" : "#10b981", alarm: false };
+  return { status: temp < min ? "Molto fredda" : "OK", color: temp < min ? "#f59e0b" : "#10b981", alarm: false };
 };
+
+const lsGet = (k, fb) => { try { return JSON.parse(localStorage.getItem(k) || "null") ?? fb; } catch { return fb; } };
 
 const Ctx = createContext(null);
 export const useMachines = () => useContext(Ctx);
@@ -36,15 +38,22 @@ export function MachinesProvider({ children }) {
   const [manual, setManual] = useState({ impastatrice: 0 });
   const [temps, setTemps] = useState(() => Object.fromEntries(DEFS.filter((d) => d.kind === "thermal").map((d) => [d.id, d.base])));
   const [faults, setFaults] = useState({});
+  const [ranges, setRanges] = useState(() => lsGet("mikilab_sensor_ranges", {}));
+  const [history, setHistory] = useState(() => lsGet("mikilab_alarm_history", []));
   const faultsRef = useRef(faults); faultsRef.current = faults;
+  const rangesRef = useRef(ranges); rangesRef.current = ranges;
   const prevAlarm = useRef({});
+
+  useEffect(() => { try { localStorage.setItem("mikilab_sensor_ranges", JSON.stringify(ranges)); } catch { /* */ } }, [ranges]);
+  useEffect(() => { try { localStorage.setItem("mikilab_alarm_history", JSON.stringify(history)); } catch { /* */ } }, [history]);
 
   useEffect(() => {
     const iv = setInterval(() => {
       setTemps((prev) => {
         const next = { ...prev };
         DEFS.filter((d) => d.kind === "thermal").forEach((d) => {
-          const target = faultsRef.current[d.id] ? (d.hot ? d.max + 25 : d.max + 6) : d.base;
+          const eMax = rangesRef.current[d.id]?.max ?? d.max;
+          const target = faultsRef.current[d.id] ? (d.hot ? eMax + 25 : eMax + 6) : d.base;
           const noise = (Math.random() - 0.5) * (d.hot ? 2 : 0.3);
           next[d.id] = Math.round((prev[d.id] + (target - prev[d.id]) * 0.35 + noise) * 10) / 10;
         });
@@ -56,14 +65,24 @@ export function MachinesProvider({ children }) {
 
   const thermal = DEFS.filter((d) => d.kind === "thermal").map((d) => {
     const temp = temps[d.id];
-    const s = thermalStatus(d, temp);
-    return { id: d.id, name: d.name, temp, unit: d.unit, min: d.min, max: d.max, ...s };
+    const min = ranges[d.id]?.min ?? d.min;
+    const max = ranges[d.id]?.max ?? d.max;
+    const s = thermalStatus(d, temp, min, max);
+    return { id: d.id, name: d.name, temp, unit: d.unit, min, max, ...s };
   });
 
-  // Allarme termico in cuffia (una volta per transizione)
+  // Allarme termico in cuffia + storico allarmi (inizio/fine/picco)
   useEffect(() => {
     thermal.forEach((t) => {
-      if (t.alarm && !prevAlarm.current[t.id]) speak(`Allarme termico: ${t.name}. Temperatura ${Math.round(t.temp)} gradi.`);
+      const was = prevAlarm.current[t.id];
+      if (t.alarm && !was) {
+        speak(`Allarme termico: ${t.name}. Temperatura ${Math.round(t.temp)} gradi.`);
+        setHistory((h) => [{ id: t.id, name: t.name, start: Date.now(), end: null, peak: t.temp }, ...h].slice(0, 50));
+      } else if (!t.alarm && was) {
+        setHistory((h) => { const i = h.findIndex((x) => x.id === t.id && !x.end); if (i < 0) return h; const nx = [...h]; nx[i] = { ...nx[i], end: Date.now() }; return nx; });
+      } else if (t.alarm && was) {
+        setHistory((h) => { const i = h.findIndex((x) => x.id === t.id && !x.end); if (i < 0 || t.temp <= h[i].peak) return h; const nx = [...h]; nx[i] = { ...nx[i], peak: t.temp }; return nx; });
+      }
       prevAlarm.current[t.id] = t.alarm;
     });
   });
@@ -77,6 +96,8 @@ export function MachinesProvider({ children }) {
   const cycle = useCallback((id) => setManual((p) => { const d = DEFS.find((x) => x.id === id); if (!d || d.kind !== "manual") return p; return { ...p, [id]: ((p[id] ?? 0) + 1) % d.states.length }; }), []);
   const simulateFault = useCallback((id) => setFaults((f) => ({ ...f, [id]: true })), []);
   const clearFault = useCallback((id) => setFaults((f) => ({ ...f, [id]: false })), []);
+  const setRange = useCallback((id, min, max) => setRanges((r) => ({ ...r, [id]: { min: Number(min), max: Number(max) } })), []);
+  const clearHistory = useCallback(() => setHistory([]), []);
 
-  return <Ctx.Provider value={{ machines, toolsRow, thermal, faults, cycle, simulateFault, clearFault }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ machines, toolsRow, thermal, faults, ranges, history, cycle, simulateFault, clearFault, setRange, clearHistory }}>{children}</Ctx.Provider>;
 }
