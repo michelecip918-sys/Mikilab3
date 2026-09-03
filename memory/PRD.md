@@ -3795,3 +3795,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Voice Core (tool)**: aggiunta Modalità PRO tasti grandi (testid pro-toggle, persistita) + allarme visivo fine ciclo (lampeggio rosso + badge "Ciclo terminato" + "Ho capito"/dismiss) + lista Strumenti Laboratorio.
 - **Brot Sommelier Pro**: due sotto-schede — "Food Pairing Pro" (abbinamenti) e "Analisi Sensoriale" (scheda Crosta/Mollica&Alveolatura/Aroma/Acidità/Persistenza per ogni pane). Statico.
 - Verificato via screenshot: Chef Mode pulito con timer+strumenti, Sommelier sensoriale ok, PRO/allarme ok. Timer sincronizzati tra Chef Mode e Voice Core (stesso contesto globale). Nessun cambio di identità visiva.
+
+## Elite v3.0.7 (2026-06) — Allarme nel Landing, Strumenti reali, Stability check
+- **Allarme fine ciclo nel Chef Mode (BraccioLab)**: la riga impastatrice terminata lampeggia (bordo rosso + glow) con badge "Ciclo terminato" e pulsante "Ho capito" (dismiss dal contesto globale). testid: braccio-mixer-alert-{id}, braccio-mixer-dismiss-{id}.
+- **Strumenti Laboratorio reali**: nuovo hook condiviso `lib/labTools.js` (persistito localStorage + evento di sync). I 3 strumenti (Spirale 50kg, Forno Rotativo, Armadio Fermo-Lievitazione) sono cliccabili e ciclano stato reale (es. Forno: Spento→In temperatura→Pronto) con dot colorato. Usati sia in BraccioLab sia in VoiceCore (sincronizzati). testid: braccio-labtool-{id}, labtool-{id}.
+- **Controllo stabilità globale (testing agent, iteration_169)**: 100% dei 12 scenari passati (timer/persistenza/allarme/strumenti/Smart Planner leveling+import/Voice Core PRO/Sommelier toggle/Scienza/regressione tab). Nessun crash, nessuna schermata bianca, nessun bug di navigazione.
+- **Bug fix**: risolto `<button>` annidato in RecipeList.jsx (preferito ora è span role=button → 0 errori hydration). Pulito labTools (dispatch fuori dall'updater, no doppioni StrictMode). Griglia Team Balance resa leggibile/scrollabile su mobile.

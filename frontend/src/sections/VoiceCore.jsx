@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2, BellRing, Maximize2, Wrench } from "lucide-react";
 import { useMixers } from "@/audio/MixerTimersContext";
+import { useLabTools } from "@/lib/labTools";
 
 const fmt = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
@@ -26,14 +27,11 @@ const sayRemaining = (m) => {
   speakPhrase(m.running ? `${m.name}: mancano ${t}.` : (s > 0 ? `${m.name} è in pausa, restano ${t}.` : `${m.name} è ferma.`));
 };
 
-const LAB_TOOLS = [
-  { name: "Impastatrice Spirale 50kg", status: "Pronta", color: "text-emerald-400" },
-  { name: "Forno Rotativo a Carrello", status: "In temperatura", color: "text-teal-300" },
-  { name: "Armadio Fermo-Lievitazione", status: "Attivo", color: "text-emerald-400" },
-];
+const LAB_TOOLS = null;
 
 export default function VoiceCore() {
   const { list, start, stop, reset, setMinutes, add, remove, dismiss } = useMixers();
+  const { list: labTools, cycle: cycleTool } = useLabTools();
   const [listening, setListening] = useState(false);
   const [supported, setSupported] = useState(true);
   const [transcript, setTranscript] = useState("");
@@ -226,11 +224,13 @@ export default function VoiceCore() {
           <Wrench className="w-4 h-4" /> Strumenti Laboratorio
         </h3>
         <div className="space-y-2">
-          {LAB_TOOLS.map((tool) => (
-            <div key={tool.name} className="flex items-center justify-between bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm">
+          {labTools.map((tool) => (
+            <button key={tool.id} data-testid={`labtool-${tool.id}`} onClick={() => cycleTool(tool.id)} className="w-full flex items-center justify-between bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-left active:scale-98 transition-all hover:border-slate-700">
               <span className="text-slate-200">{tool.name}</span>
-              <span className={`font-semibold ${tool.color}`}>{tool.status}</span>
-            </div>
+              <span className="flex items-center gap-1.5 font-semibold" style={{ color: tool.color }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: tool.color }} /> {tool.status}
+              </span>
+            </button>
           ))}
         </div>
       </div>

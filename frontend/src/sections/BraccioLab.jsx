@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat, Hand, Mic, Timer, Play, Square, Wrench } from "lucide-react";
+import { ChefHat, LifeBuoy, SlidersHorizontal, AlertTriangle, Zap, PackageCheck, ClipboardList, Clock, Headphones, PlusCircle, Wheat, Hand, Mic, Timer, Play, Square, Wrench, BellRing } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -7,6 +7,7 @@ import { useShift, setWorkMode, hasActiveAlerts, autonomyDeadline, fmtHM } from 
 import { isHeadsetRoutingAvailable, connectHeadset, startHeadsetSco } from "@/lib/nativeAudio";
 import Avatar3D from "@/components/Avatar3D";
 import { useMixers } from "@/audio/MixerTimersContext";
+import { useLabTools } from "@/lib/labTools";
 import MikiLabEliteEngine from "@/sections/MikiLabEliteEngine";
 import { Cpu } from "lucide-react";
 import { useAuth } from "@/auth/AuthContext";
@@ -16,11 +17,6 @@ import { operatorApi } from "@/lib/api";
 // Hands-free: ascolto continuo (tasto ORECCHIO in basso). Avatar 3D vocale al centro.
 const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", goldSoft: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 const fmtSec = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
-const LAB_TOOLS = [
-  { n: "Impastatrice Spirale 50kg", s: "Pronta" },
-  { n: "Forno Rotativo a Carrello", s: "In temperatura" },
-  { n: "Armadio Fermo-Lievitazione", s: "Attivo" },
-];
 
 export default function BraccioLab({ onOpenTool, onGestione }) {
   const { lang } = useLang();
@@ -63,7 +59,8 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
   }, []);
 
   const consegne = () => window.dispatchEvent(new Event("mikilab-consegne"));
-  const { list: mixers, start: startMixer, stop: stopMixer } = useMixers();
+  const { list: mixers, start: startMixer, stop: stopMixer, dismiss: dismissMixer } = useMixers();
+  const { list: labTools, cycle: cycleTool } = useLabTools();
   const [eliteOpen, setEliteOpen] = useState(false);
   const [hsBusy, setHsBusy] = useState(false);
   const onHeadset = async () => {
@@ -170,13 +167,24 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
         </p>
         <div className="space-y-2" data-testid="braccio-mixers">
           {mixers.map((m) => (
-            <div key={m.id} data-testid={`braccio-mixer-${m.id}`} className="flex items-center gap-3 rounded-2xl px-3 py-2.5" style={{ background: D.surf, border: `1.5px solid ${m.running ? D.gold : D.border}` }}>
-              <Timer className="w-5 h-5 shrink-0" style={{ color: m.running ? D.gold : D.muted }} />
+            <div key={m.id} data-testid={`braccio-mixer-${m.id}`} className={`flex items-center gap-3 rounded-2xl px-3 py-2.5 ${m.alerting ? "animate-pulse" : ""}`} style={{ background: D.surf, border: `1.5px solid ${m.alerting ? D.danger : (m.running ? D.gold : D.border)}`, boxShadow: m.alerting ? `0 0 16px rgba(230,57,70,.5)` : "none" }}>
+              <Timer className="w-5 h-5 shrink-0" style={{ color: m.alerting ? D.danger : (m.running ? D.gold : D.muted) }} />
               <div className="flex-1 min-w-0">
-                <span className="block text-[12px] font-bold leading-tight" style={{ color: D.text }}>{m.name}</span>
-                <span data-testid={`braccio-mixer-time-${m.id}`} className="block font-mono text-[18px] font-black leading-tight" style={{ color: m.running ? D.gold : (m.remaining > 0 ? D.text : D.muted) }}>{fmtSec(m.remaining)}</span>
+                <span className="flex items-center gap-1.5 text-[12px] font-bold leading-tight" style={{ color: D.text }}>
+                  {m.name}
+                  {m.alerting && (
+                    <span data-testid={`braccio-mixer-alert-${m.id}`} className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded-full" style={{ color: D.danger, background: "rgba(230,57,70,.15)", border: `1px solid ${D.danger}` }}>
+                      <BellRing className="w-2.5 h-2.5" /> {tri("Ciclo terminato", "Zyklus beendet", "Cycle done", "Ciclo terminado", "Cycle terminé", "چرخه پایان")}
+                    </span>
+                  )}
+                </span>
+                <span data-testid={`braccio-mixer-time-${m.id}`} className="block font-mono text-[18px] font-black leading-tight" style={{ color: m.alerting ? D.danger : (m.running ? D.gold : (m.remaining > 0 ? D.text : D.muted)) }}>{fmtSec(m.remaining)}</span>
               </div>
-              {!m.running ? (
+              {m.alerting ? (
+                <button data-testid={`braccio-mixer-dismiss-${m.id}`} onClick={() => dismissMixer(m.id)} className="w-9 h-9 rounded-lg flex items-center justify-center active:scale-95 transition-all" style={{ background: D.danger, color: "#fff" }} title="Ho capito">
+                  <BellRing className="w-4 h-4" />
+                </button>
+              ) : !m.running ? (
                 <button data-testid={`braccio-mixer-start-${m.id}`} onClick={() => startMixer(m.id)} className="w-9 h-9 rounded-lg flex items-center justify-center active:scale-95 transition-all" style={{ background: D.gold, color: D.bg }} title="Avvia">
                   <Play className="w-4 h-4" />
                 </button>
@@ -193,11 +201,14 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           <Wrench className="w-3.5 h-3.5" /> {tri("Strumenti Laboratorio", "Laborgeräte", "Lab tools", "Herramientas de laboratorio", "Outils du laboratoire", "ابزارهای آزمایشگاه")}
         </p>
         <div className="space-y-2" data-testid="braccio-labtools">
-          {LAB_TOOLS.map((tool) => (
-            <div key={tool.n} className="flex items-center justify-between rounded-2xl px-3 py-2.5" style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
-              <span className="text-[12px] font-bold" style={{ color: D.text }}>{tool.n}</span>
-              <span className="text-[11px] font-extrabold" style={{ color: D.gold }}>{tool.s}</span>
-            </div>
+          {labTools.map((tool) => (
+            <button key={tool.id} data-testid={`braccio-labtool-${tool.id}`} onClick={() => cycleTool(tool.id)}
+              className="w-full flex items-center justify-between rounded-2xl px-3 py-2.5 text-left active:scale-98 transition-all" style={{ background: D.surf, border: `1.5px solid ${D.border}` }}>
+              <span className="text-[12px] font-bold" style={{ color: D.text }}>{tool.name}</span>
+              <span className="flex items-center gap-1.5 text-[11px] font-extrabold" style={{ color: tool.color }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: tool.color }} /> {tool.status}
+              </span>
+            </button>
           ))}
         </div>
 

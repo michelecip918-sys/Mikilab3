@@ -1,0 +1,38 @@
+{
+  "summary": "Frontend-only stability/regression test (mobile 390x844, PIN bypass via localStorage) on the new features: Chef Mode (BraccioLab) mixer timers + lab tools, persistent global timers, end-of-cycle alarm, Smart Planner Team Balance, Voice Core PRO, Brot Sommelier toggles, Modulo Scienza, plus navigation regression stress. ALL 12 requested scenarios PASSED. No blank screens, no crashes, no page errors, no unexpected redirects. Only minor design/i18n observations and one React DOM nesting warning found.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "RecipeList (My Recipes)", "issue": "React console error: nested <button> inside <button> (recipe-fav-* rendered inside recipe-row-*) -> 'In HTML, <button> cannot be a descendant of <button>. This will cause a hydration error.' RecipeList.jsx lines ~289 and ~323. Functional today but invalid DOM/a11y and hydration risk.", "selector": "[data-testid^='recipe-row-'] [data-testid^='recipe-fav-']", "priority": "MEDIUM"},
+      {"component": "Floating widgets (Radio / TTS speaker / avatar FAB)", "issue": "Fixed bottom-left/bottom-right FABs overlap page content just above the bottom nav: they cover part of 'Modalità Cuffie' button in Chef Mode, the sommelier mode toggles and the 'Bilanciamento Settimanale' numbers in Smart Planner. Clicks still land (verified) but content is visually obstructed.", "selector": "braccio-headset / sommelier-mode-* / balance-report", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Team Balance -> Importa dal Piano Settimana (guest)", "issue": "No crash: weeklyApi.get() returns 401 for guest and a toast 'Piano non disponibile (accedi per salvarlo)' is shown. Correct graceful handling; noting many 401 console 'Failed to load resource' entries in guest mode as noise only.", "affected_selectors": ["team-import-plan"]}
+    ],
+    "design_issues": [
+      {"screen": "Smart Planner · Team Balance (mobile 390px)", "issues": ["7-column day grid is too narrow on mobile: the number inputs (team-day-0..6) render their values clipped/invisible and the state label 'RIPOSO' wraps to 'RIPOS O'. Consider 2 rows or horizontal scroll on small screens."]},
+      {"screen": "Smart Planner / Brot Sommelier", "issues": ["Copy is hard-coded in Italian while the rest of the app follows the language selector (EN active during test) - i18n gap, not a crash."]},
+      {"screen": "Voice Core", "issues": ["With mic permission denied (headless) the status still reads 'In ascolto… pronuncia un comando' while the mic icon is shown crossed-out - status text should reflect the denied/failed mic state."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix nested button in RecipeList (make the favourite control a non-button element or move it outside the row button) to remove the React DOM nesting/hydration error.",
+    "Optional: make Team Balance day inputs readable on mobile (<=390px) - values currently clipped.",
+    "Optional: add i18n (tri) strings to SmartPlannerStressZero.jsx and BrotSommelier.jsx.",
+    "Optional: reposition floating Radio/TTS/avatar FABs or add bottom padding so they don't overlap in-page controls."
+  ],
+  "critical_code_review_comments": [
+    "labTools.js: window.dispatchEvent is called inside the setSt updater function (a reducer body). React may invoke updaters twice in StrictMode/dev, causing a redundant event + re-read; move the localStorage write + dispatch into a useEffect or outside the updater. No user-visible bug observed (cycling verified working and persisted).",
+    "MixerTimersContext.jsx: relies on a 1s force-render tick; correct and verified persistent across tab switches. Alerting flag is persisted to localStorage, so a stale 'alerting:true' can survive a reload until dismissed - acceptable but worth noting.",
+    "GuidaMikiLab overlay is a full-screen portal at z-[320] that covers the bottom nav; the user must press guida-close (exists and works) before switching tabs. Not a bug, but automated tests must close it first."
+  ],
+  "updated_files": [],
+  "success_rate": { "backend": "not tested", "frontend": "100% of the 12 requested scenarios passed" },
+  "seed_data_creation": "localStorage only: mikilab_pin_unlocked/mikilab_pin_enabled (PIN bypass), mikilab_mixers_v1 (endsAt+2.5s for alarm test), mikilab_planner_week=[520,180,300,300,420,600,0], mikilab_pending_tool=planner/voicecore",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "PIN 1985 / bypass via localStorage; no login needed (guest mode used)",
+  "context_for_next_testing_agent": "Verified PASS: (1) Chef Mode braccio-lab shows braccio-mixers (m1,m2) + braccio-labtools, braccio-quick absent; (2) braccio-mixer-start-m1 decrements 08:00->07:57 in 3s and shows stop button; (3) timers persist across tab switch (07:57 -> 07:50 after ~7s away, delta 7s); stop freezes countdown; (4) alarm: seeding mikilab_mixers_v1 with endsAt=+2.5s shows braccio-mixer-alert-m1 + dismiss after ~3s, dismiss clears it; (5) lab tools cycle Spento->In temperatura->Pronto and persist; (6) Smart Planner via mikilab_pending_tool=planner + nav-tab-maestro: balance-level levels [520,180,300,300,420,600,0] -> [387x6, 0] matching balance-avg=387, team-import-plan shows graceful toast; (7) Voice Core: pro-toggle 'PRO: OFF'->'PRO: ON', mic btn responds, mixers + lab-tools present; (8) Brot Sommelier: sommelier-mode-sensoriale/pairing swap sommelier-sensoriale-<id> / sommelier-detail-<id> without leaving the page (no navigation bug); (9) academy-tab-scienza -> modulo-scienza OK; (10) tab stress (ricette/community/imparacon/maestro x9) - no blank screens, no duplicate braccio-lab, no leftover tool panels, 0 pageerrors. NOTE: the deep-link tool did NOT auto-close this session (old useBackClose quirk not reproduced). Quick Guide (nav-tab-guida) opens a fullscreen overlay that blocks the bottom nav - always click guida-close before further nav in scripts.",
+  "rca_of_the_issue": "No functional defect reproduced. The only code-level error is the invalid nested <button> markup in RecipeList (favourite button inside the recipe row button), which React reports as a hydration-breaking DOM nesting error."
+}

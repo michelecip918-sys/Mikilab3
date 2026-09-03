@@ -128,7 +128,8 @@ export default function SmartPlannerStressZero() {
         </button>
 
         <div className="p-5 bg-slate-950 rounded-2xl border border-slate-800 space-y-4">
-          <div className="grid grid-cols-7 gap-2">
+          <div className="overflow-x-auto -mx-1 px-1">
+          <div className="grid grid-cols-7 gap-2 min-w-[430px]">
             {GIORNI.map((g, i) => {
               const st = stato(nums[i]);
               return (
@@ -141,10 +142,11 @@ export default function SmartPlannerStressZero() {
                     onChange={(e) => setDay(i, e.target.value)}
                     className={`w-full bg-slate-900 border rounded-lg p-2 text-center font-mono text-sm font-bold ${STATE_STYLE[st]}`}
                   />
-                  <span data-testid={`team-state-${i}`} className={`text-[9px] font-bold uppercase ${STATE_STYLE[st].split(" ")[0]}`}>{STATE_LABEL[st]}</span>
+                  <span data-testid={`team-state-${i}`} className={`text-[9px] font-bold uppercase whitespace-nowrap ${STATE_STYLE[st].split(" ")[0]}`}>{STATE_LABEL[st]}</span>
                 </div>
               );
             })}
+          </div>
           </div>
 
           <div className="flex items-center gap-3">
