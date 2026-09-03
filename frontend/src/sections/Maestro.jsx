@@ -63,6 +63,7 @@ import AngoloRecupero from "@/sections/AngoloRecupero";
 import SaporiCasa from "@/sections/SaporiCasa";
 import TrovaFarina from "@/sections/TrovaFarina";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
+import VoiceCore from "@/sections/VoiceCore";
 import EsuberoZero from "@/sections/EsuberoZero";
 import SmartWeatherBaker from "@/sections/SmartWeatherBaker";
 import SimulatoreForno from "@/sections/SimulatoreForno";
@@ -181,6 +182,7 @@ export default function Maestro() {
         {tool === "spesa" && <ShoppingList />}
         {tool === "turni" && <ShiftRoles />}
         {tool === "planner" && <SmartPlannerStressZero />}
+        {tool === "voicecore" && <VoiceCore />}
         {tool === "scarti" && <RegistroScarti />}
         {tool === "ricettadelgiorno" && <RicettaDelGiorno />}
         {tool === "emergenze" && <Emergenze />}

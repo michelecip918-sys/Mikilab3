@@ -3777,3 +3777,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - Il sistema Mani-Libere / comandi vocali RESTA (nessuna rimozione). Migliorata SOLO la pulizia del testo letto in `lib/voice.js` (`cleanForSpeech`): rimuove asterischi/markdown/backtick/emoji, caratteri speciali (`=^{}<>[]\/@$%&+`), codici tipo "XX 122"/"ERR12", e converte i gradi in linguaggio naturale (24°C → "24 gradi"). I numeri validi (litri/pezzi/percentuali) restano.
 - Instradati attraverso `cleanForSpeech` i due punti che leggevano testo grezzo: `ManiSporche.jsx` (speak) e `MikiLabEliteEngine.jsx` (speakVoice). AcademyCoach/HandsFreeMode/playTTS già lo usavano.
 - Verificato con unit test: "Temperatura 26° e idratazione 75%, versa 122 litri a 24°C" → "Temperatura 26 gradi e idratazione 75, versa 122 litri a 24 gradi".
+
+## Elite v3.0.4 (2026-06) — Voice Core + Impastatrici a timer reale
+- Nuovo `VoiceCore.jsx` (tool Chef Mode `voicecore`): schermata dedicata cyber-industrial con grande microfono tap-to-talk (Web Speech API it-IT, pulse "in ascolto", stato "Comando ricevuto: …", comandi vocali "avvia"/"ferma"), barra stato Cuffie/Microfono + Sensori.
+- **Monitoraggio Impastatrici**: timer REALI e interattivi per ciclo impasto (minuti impostabili, Avvia/Ferma/Reset, countdown mm:ss live via tick 1s, aggiungi/rimuovi impastatrice, annuncio vocale breve a fine ciclo via cleanForSpeech). I comandi rapidi/Mani-Libere esistenti restano invariati.
+- Agganciato: import+render in `Maestro.jsx`, catalogo TOOLS in `PianoProduzioneAI.jsx` (cat coldchain, icona Mic).
+- Verificato via screenshot: schermata renderizza, countdown reale decrescente (08:00→07:58), start/stop ok. Sfondo/hero lab invariati (scope solo avatar).

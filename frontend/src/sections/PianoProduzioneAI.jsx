@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth, Warehouse } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth, Warehouse, Mic } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
@@ -181,6 +181,7 @@ export const TOOLS = [
   { id: "settimana", Icon: CalendarDays, cat: "coldchain", kind: "gestisci", it: "Programma Settimana", de: "Wochenplan", en: "Weekly Plan", es: "Programa Semanal" },
   { id: "turni", Icon: Users, cat: "coldchain", kind: "gestisci", it: "Turni di Lavoro", de: "Arbeitsschichten", en: "Work shifts", es: "Turnos de trabajo" },
   { id: "planner", Icon: CalendarClock, cat: "coldchain", kind: "gestisci", it: "Smart Planner Stress-Zero", de: "Smart Planner Stress-Null", en: "Smart Planner Stress-Zero", es: "Smart Planner Estrés-Cero" },
+  { id: "voicecore", Icon: Mic, cat: "coldchain", kind: "gestisci", it: "Voice Core", de: "Voice Core", en: "Voice Core", es: "Voice Core" },
   { id: "scarti", Icon: Recycle, cat: "coldchain", kind: "gestisci", it: "Registro Scarti", de: "Ausschuss-Register", en: "Waste Log", es: "Registro de Mermas" },
   { id: "capo", Icon: Building2, cat: "coldchain", kind: "gestisci", it: "Controllo Celle & Impastatrici", de: "Kammern & Kneter", en: "Cells & Mixers", es: "Cámaras y Amasadoras" },
   { id: "freezer", Icon: Snowflake, cat: "coldchain", kind: "gestisci", it: "Giacenze Freezer", de: "Gefrier-Bestand", en: "Freezer Stock", es: "Stock Congelador" },
