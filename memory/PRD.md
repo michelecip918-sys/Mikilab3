@@ -3708,3 +3708,13 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Sintesi vocale all'apertura**: alla apertura dell'Elite Engine il Capo sente "Benvenuto Comandante. Plancia MikiLab pronta…".
 - NOTA: la schermata PIN e il menu a 4 sezioni degli script v34/v35 NON sono stati replicati (PIN 1985 già globale; la navigazione app — Home, Modalità Chef, Diagnosi, Ricette, Consegne — esiste già altrove).
 - Verifica: backend curl (crate CRUD + item + driver) + screenshot Capo (crea cesta, tasto "+ 4x Baguette" → chip nella cesta persistito). Compilazione pulita. Dati test ripuliti.
+
+## v43 (2026-06) — v36.0 Master Elite: Menu interno "plancia unica" a 4 sezioni
+- **Menu interno Elite** (`elite-section-menu`, solo Capo/visitatore non bloccato): 4 sezioni a tasti grandi che commutano il contenuto senza uscire dall'Elite.
+  - `elite-section-laboratorio` → esperienza operativa completa (scena 3D, reparti, dosi/forno, funzioni, Ceste). Default.
+  - `elite-section-diagnosi` → `elite-panel-diagnosi`: panoramica STATO sottosistemi (Scanner Farina, Bluetooth, Mani in Pasta, SOS Impasto, Diagnosi Foto/Suono, Forni). NB: pannello di panoramica/stato, non controlli cablati.
+  - `elite-section-ricette` → `elite-panel-ricette`: elenco **ricette reali** dal DB (`dbRecipes`).
+  - `elite-section-consegne` → `elite-panel-consegne`: gestione consegne reale (aggiungi/stato/elimina, fattorino da elenco) accessibile ovunque.
+- Operatori bloccati: nessun menu, restano nella vista operativa del loro reparto (invariato).
+- Verifica: screenshot Capo (switch tra le 4 sezioni, scena nascosta fuori da Laboratorio e ripristinata al ritorno). Compilazione pulita.
+- NOTA: la schermata PIN dello script v36 non è stata replicata (PIN 1985 già globale).

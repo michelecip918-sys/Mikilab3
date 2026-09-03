@@ -53,6 +53,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const [newStore, setNewStore] = useState('');
   const [crateDriver, setCrateDriver] = useState(DRIVERS[0]);
   const [targetCrateId, setTargetCrateId] = useState('');
+  const [eliteSection, setEliteSection] = useState('laboratorio');
   const isAfterCutoff = new Date().getHours() >= 18;
   const [holiday, setHoliday] = useState(false);
   const [alarmUnattended, setAlarmUnattended] = useState(false); // allarme forno incustodito
@@ -125,7 +126,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     fetch(`${API}/api/deliveries`, { credentials: 'include' }).then(r => r.ok ? r.json() : {}).then(d => setDeliveries(d.deliveries || [])).catch(() => {});
   };
   useEffect(() => { if (open && API) loadDepartments(); /* eslint-disable-next-line */ }, [open]);
-  useEffect(() => { if (open && API && activeTab === 'pizzeria') loadDeliveries(); /* eslint-disable-next-line */ }, [open, activeTab]);
+  useEffect(() => { if (open && API && (activeTab === 'pizzeria' || eliteSection === 'consegne')) loadDeliveries(); /* eslint-disable-next-line */ }, [open, activeTab, eliteSection]);
 
   const createDept = async () => {
     const id = newDeptId.trim(); const title = newDeptTitle.trim();
@@ -490,6 +491,84 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
           </div>
         </div>
 
+        {/* MENU INTERNO ELITE — 4 sezioni (plancia unica, solo Capo/visitatore non bloccato) */}
+        {!isLocked && (
+          <div data-testid="elite-section-menu" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px', marginBottom: '14px' }}>
+            {[
+              { id: 'laboratorio', label: `🍞 ${_pick('Laboratorio & Ceste', 'Labor & Körbe', 'Lab & Crates', 'Lab y Cestas', 'Labo & Paniers', 'کارگاه')}` },
+              { id: 'diagnosi', label: `🩺 ${_pick('Diagnosi & Forni', 'Diagnose', 'Diagnostics', 'Diagnóstico', 'Diagnostic', 'عیب‌یابی')}` },
+              { id: 'ricette', label: `📖 ${_pick('Ricette', 'Rezepte', 'Recipes', 'Recetas', 'Recettes', 'دستورها')}` },
+              { id: 'consegne', label: `🚚 ${_pick('Consegne', 'Lieferung', 'Deliveries', 'Entregas', 'Livraisons', 'تحویل')}` }
+            ].map(s => (
+              <button key={s.id} data-testid={`elite-section-${s.id}`} onClick={() => setEliteSection(s.id)} style={{ padding: '10px 4px', borderRadius: '12px', border: `2px solid ${eliteSection === s.id ? currentRoom.color : 'rgba(255,255,255,0.12)'}`, backgroundColor: eliteSection === s.id ? currentRoom.color : 'rgba(255,255,255,0.05)', color: eliteSection === s.id ? '#000' : '#DDD', fontWeight: 800, fontSize: '0.62rem', cursor: 'pointer', lineHeight: 1.2 }}>
+                {s.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        {/* SEZIONE DIAGNOSI & FORNI (panoramica stato sottosistemi) */}
+        {!isLocked && eliteSection === 'diagnosi' && (
+          <div data-testid="elite-panel-diagnosi" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', marginBottom: '16px' }}>
+            {[['🌾 Scanner Farina', 'Pronto'], ['📶 Bluetooth', 'Connessi'], ['✋ Mani in Pasta (Voce)', 'Attivo'], ['🩺 SOS Impasto', 'Standby'], ['📷 Diagnosi Foto', 'Attivo'], ['🔊 Diagnosi Suono', 'Attivo'], ['🔥 Forni', 'Operativi']].map(([t, st], i) => (
+              <div key={i} data-testid={`elite-diag-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: `1px solid ${currentRoom.color}44`, borderRadius: '10px', padding: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontSize: '0.74rem', fontWeight: 700, color: '#EEE' }}>{t}</span>
+                <span style={{ fontSize: '0.6rem', backgroundColor: st === 'Standby' ? 'rgba(230,162,60,0.2)' : `${currentRoom.color}33`, color: st === 'Standby' ? '#E6A23C' : currentRoom.color, padding: '3px 6px', borderRadius: '6px', fontWeight: 700 }}>{st}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* SEZIONE RICETTE & SAPORI (ricette reali dal DB) */}
+        {!isLocked && eliteSection === 'ricette' && (
+          <div data-testid="elite-panel-ricette" style={{ marginBottom: '16px' }}>
+            <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>📖 {_pick('Ricette Custodite', 'Rezepte', 'Saved Recipes', 'Recetas', 'Recettes', 'دستورها')} ({dbRecipes.length})</div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '8px', maxHeight: '260px', overflowY: 'auto' }}>
+              {dbRecipes.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick('Nessuna ricetta caricata.', 'Keine Rezepte.', 'No recipes loaded.', 'Sin recetas.', 'Aucune recette.', 'دستوری نیست.')}</div>}
+              {dbRecipes.map((r, i) => (
+                <div key={r.id || i} data-testid={`elite-recipe-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.05)', border: `1px solid ${currentRoom.color}44`, borderRadius: '10px', padding: '10px' }}>
+                  <div style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EEE' }}>{r.name || r.title || 'Ricetta'}</div>
+                  {(r.hydration || r.idratazione) && <div style={{ fontSize: '0.64rem', color: currentRoom.color, marginTop: '2px' }}>💧 {r.hydration || r.idratazione}%</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SEZIONE CONSEGNE (elenco viaggi + fattorino) */}
+        {!isLocked && eliteSection === 'consegne' && (
+          <div data-testid="elite-panel-consegne" style={{ marginBottom: '16px', backgroundColor: 'rgba(0,0,0,0.5)', border: `1px solid ${currentRoom.color}`, borderRadius: '12px', padding: '12px' }}>
+            <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>🚚 {_pick('Gestione Consegne (Lieferung)', 'Lieferungen', 'Deliveries', 'Entregas', 'Livraisons', 'تحویل‌ها')}</div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '8px' }}>
+              {deliveries.length === 0 && <div style={{ fontSize: '0.72rem', color: '#AAA' }}>{_pick('Nessuna consegna in coda.', 'Keine Lieferungen.', 'No deliveries queued.', 'Sin entregas.', 'Aucune livraison.', 'تحویلی نیست.')}</div>}
+              {deliveries.map((del, i) => (
+                <div key={del.id} data-testid={`elite-cons-delivery-${i}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.12)', borderRadius: '8px', padding: '8px' }}>
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#EEE' }}>{del.client}</span>
+                    {del.driver && <span style={{ display: 'block', fontSize: '0.64rem', color: currentRoom.color }}>🛵 {del.driver}{del.time ? ` · ${del.time}` : ''}</span>}
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <select value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700 }}>
+                      <option value="in consegna">{_pick('In consegna', 'Unterwegs', 'Out', 'En reparto', 'En livraison', 'در حال')}</option>
+                      <option value="consegnato">{_pick('Consegnato', 'Geliefert', 'Delivered', 'Entregado', 'Livré', 'تحویل شد')}</option>
+                    </select>
+                    <button onClick={() => deleteDelivery(del.id)} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              <input data-testid="elite-cons-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick('Cliente', 'Kunde', 'Client', 'Cliente', 'Client', 'مشتری')} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+              <select data-testid="elite-cons-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
+                <option value="">{_pick('Fattorino', 'Fahrer', 'Driver', 'Repartidor', 'Livreur', 'پیک')}</option>
+                {DRIVERS.map(d => <option key={d} value={d}>{d}</option>)}
+              </select>
+              <button data-testid="elite-cons-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
+            </div>
+          </div>
+        )}
+
+        {(isLocked || eliteSection === 'laboratorio') && (<>
         {/* Vista Ospite (sola lettura) */}
         {readOnly && (
           <div data-testid="elite-guest-badge" style={{ backgroundColor: 'rgba(0,0,0,0.6)', border: '1px solid #8FB0C2', borderRadius: '12px', padding: '10px', marginBottom: '16px', textAlign: 'center', color: '#8FB0C2', fontWeight: 700, fontSize: '0.8rem' }}>
@@ -900,6 +979,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             </>
           )}
         </div>
+        </>)}
 
         {/* FOOTER LEGALE & COPYRIGHT */}
         <div style={{
