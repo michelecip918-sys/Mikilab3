@@ -3871,3 +3871,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Manuale B2B** esteso con indice completo Moduli 1-58 (testid manuale-mod-N).
 - Verificato in preview: splash, trio, bacheca, talk-miki (chat+tab), lab-live, training, launcher nascosto in lab, ModuleParams nelle 5 schede. ZERO errori console, zero duplicati. sw CACHE_NAME=mikilab-v15.
 - STATO: v14 CONSOLIDATA E DEFINITIVA — non aggiungere altri moduli/sezioni.
+
+## v14 CONCLUSIVA (2026-06) — Modulo 64 Multi-Chief + Co-Pilota + ascolto continuo (64 moduli)
+- **Modulo 64 MULTI-CHIEF** (`components/MultiChief.jsx`, in CapoLaboratorio): profilo Capo dinamico (nome, tono, priorità in localStorage `mikilab_chief`), "Cambia Capo" e "Briefing passaggio consegne" con report vocale (TTS) + visivo generato dai dati laboratorio.
+- **Selettore Co-Pilota** in TalkWithMiki [Trio | Miki | Mohamed | Bake Mix]: in modalità Solo l'assistente risponde nella persona scelta (hint persona nel prompt), avatar/voce coerenti. **Badge INTERCOM LIVE** + animazione **Dynamic Handoff** al cambio co-pilota.
+- **Ascolto continuo** (senza parole chiave): toggle in TalkWithMiki con SpeechRecognition continuous + auto-restart, invio automatico delle frasi.
+- **Rinominato robot ufficiale in "Bake Mix"** (era Big Mix AI) in tutti i testi visibili; chiavi interne `bigmix` invariate.
+- Manuale B2B esteso a **Indice Moduli 1-64** (59 Audio Snapshot, 60 Smart Scale Sync, 61 Stress Index, 62 Recipe Scaling, 63 Squad Check-In, 64 Multi-Chief).
+- Verificato preview: copilot selector, intercom live, handoff, multi-chief + briefing, focus glow su Neural Load Radar. ZERO errori console. sw CACHE_NAME=mikilab-v16.

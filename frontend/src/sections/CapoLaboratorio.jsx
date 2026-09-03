@@ -8,6 +8,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { fireHighFive } from "@/components/HighFive";
 import ModuleParams from "@/components/ModuleParams";
+import MultiChief from "@/components/MultiChief";
 
 const CELL_TYPES = ["frigo", "freezer", "lievitazione", "lievitazione_frigo"];
 
@@ -61,6 +62,7 @@ export default function CapoLaboratorio() {
       </div>
 
       <ModuleParams screen="capo" />
+      <MultiChief />
 
       {/* Attrezzature e celle */}
       <Section icon={<Cog className="w-4 h-4" />} title={t("capo_equip_title")}>

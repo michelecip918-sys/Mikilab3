@@ -8,7 +8,9 @@ const CHICCHE = {
   51: "Startup Splash Screen (glitch neon)", 52: "La Bacheca di Miki (messaggio del Capo)",
   53: "Cyber-Industrial Kit (font Space-Tech)", 54: "Synchronized Success Sound",
   55: "Dynamic Focus Animation (glow critico)", 56: "Miki's Handshake (aptica sincronizzata)",
-  57: "Mohamed's Lab Live View", 58: "Big Mix AI · Interactive Training",
+  57: "Mohamed's Lab Live View", 58: "Bake Mix · Interactive Training",
+  59: "Audio Snapshot", 60: "Smart Scale Sync", 61: "Stress Index",
+  62: "Recipe Scaling", 63: "Squad Check-In", 64: "Multi-Chief Executive Architecture",
 };
 
 // Manuale d'Uso + Hardware consigliato per il laboratorio MikiLab (pagina dedicata).
@@ -192,10 +194,10 @@ export default function ManualePage() {
 
       {/* Indice completo dei 58 moduli */}
       <section className="space-y-3">
-        <h2 className="text-sm font-bold text-teal-400 uppercase tracking-wide flex items-center gap-2 font-cyber"><Cpu className="w-4 h-4" /> Indice Moduli 1-58</h2>
-        <p className="text-[12px] text-slate-500 leading-snug">Tutti i moduli Cyber-Industrial integrati nelle schede operative (1-50) e le chicche di esperienza (51-58).</p>
+        <h2 className="text-sm font-bold text-teal-400 uppercase tracking-wide flex items-center gap-2 font-cyber"><Cpu className="w-4 h-4" /> Indice Moduli 1-64</h2>
+        <p className="text-[12px] text-slate-500 leading-snug">Tutti i moduli Cyber-Industrial integrati nelle schede operative (1-50) e le chicche di esperienza + executive (51-64).</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-          {Array.from({ length: 58 }, (_, i) => i + 1).map((n) => {
+          {Array.from({ length: 64 }, (_, i) => i + 1).map((n) => {
             const name = MODULES[n]?.name || CHICCHE[n] || "—";
             return (
               <div key={n} data-testid={`manuale-mod-${n}`} className="flex items-center gap-2 rounded-lg bg-slate-900/70 border border-slate-800 px-2.5 py-1.5">

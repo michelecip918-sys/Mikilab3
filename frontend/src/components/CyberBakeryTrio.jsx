@@ -3,7 +3,7 @@ import { X, ChevronLeft, ChevronRight, Volume2, Square, Sparkles } from "lucide-
 import { playTTS, stopTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 
-// CYBER-BAKERY TRIO: Miki (Capo), Mohamed (braccio destro), Big Mix AI (robot).
+// CYBER-BAKERY TRIO: Miki (Capo), Mohamed (braccio destro), Bake Mix (robot).
 // Banner interattivo: clic su un personaggio → micro-guida a step con lettura vocale hands-free.
 const TRIO = [
   {
@@ -25,8 +25,8 @@ const TRIO = [
     ],
   },
   {
-    id: "bigmix", name: "Big Mix AI", role: "Assistente Robot", img: "avatar_bigmix.jpg", accent: "#6EA8FE",
-    intro: "Sono Big Mix AI. Ti accompagno a mani libere: comandi vocali, previsioni e allarmi termici in tempo reale.",
+    id: "bigmix", name: "Bake Mix", role: "Assistente Robot", img: "avatar_bigmix.jpg", accent: "#6EA8FE",
+    intro: "Sono Bake Mix. Ti accompagno a mani libere: comandi vocali, previsioni e allarmi termici in tempo reale.",
     steps: [
       { t: "Comandi vocali", d: "Dì «Miki, quanto manca» o «avvia forno»: rispondo a voce, chiaro e pulito." },
       { t: "AI predittiva", d: "Anticipo idratazione, maturazione del lievito e clima delle celle." },

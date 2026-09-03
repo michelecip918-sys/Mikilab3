@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
-import { MessageCircle, Send, X, Mic, Volume2, Square, Loader2, Sparkles, Truck, GraduationCap } from "lucide-react";
+import { MessageCircle, Send, X, Mic, Volume2, Square, Loader2, Sparkles, Truck, GraduationCap, ArrowLeftRight } from "lucide-react";
 import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { playTTS, stopTTS } from "@/lib/tts";
@@ -39,9 +39,20 @@ export default function TalkWithMiki({ tab }) {
   const [listening, setListening] = useState(false);
   const [opIdx, setOpIdx] = useState(0);
   const [trainIdx, setTrainIdx] = useState(0);
+  const [copilot, setCopilot] = useState(() => localStorage.getItem("mikilab_copilot") || "trio");
+  const [handoff, setHandoff] = useState(false);
+  const [continuous, setContinuous] = useState(false);
   const listRef = useRef(null);
   const hapticRef = useRef(null);
+  const recRef = useRef(null);
+  const contRef = useRef(false);
   const sessionId = useRef(sid());
+
+  const pickCopilot = (c) => {
+    setCopilot(c); try { localStorage.setItem("mikilab_copilot", c); } catch { /* */ }
+    setHandoff(true); setTimeout(() => setHandoff(false), 900);
+    if (c !== "chat") setView("chat");
+  };
 
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [messages, open, view]);
   useEffect(() => { if (view !== "mohamed") return; const t = setInterval(() => setOpIdx((i) => (i + 1) % LAB_OPS.length), 2600); return () => clearInterval(t); }, [view]);
@@ -71,13 +82,19 @@ export default function TalkWithMiki({ tab }) {
     const msg = (text ?? input).trim();
     if (!msg || busy) return;
     setInput("");
-    setMessages((m) => [...m, { who: "user", content: msg }, { who: "miki", content: "" }]);
+    const replyWho = copilot === "trio" ? "miki" : copilot;
+    const HINT = {
+      mohamed: "[Rispondi in prima persona come Mohamed, il braccio destro persiano del laboratorio] ",
+      bigmix: "[Rispondi in prima persona come Bake Mix, l'assistente robot di MikiLab] ",
+      miki: "", trio: "",
+    };
+    setMessages((m) => [...m, { who: "user", content: msg }, { who: replyWho, content: "" }]);
     setBusy(true);
-    const support = detectSupport(msg);
+    const support = copilot === "trio" ? detectSupport(msg) : null;
     try {
       const res = await fetch(`${API}/miki/chat`, {
         method: "POST", headers: { "Content-Type": "application/json" }, credentials: "include",
-        body: JSON.stringify({ session_id: sessionId.current, message: msg, lang }),
+        body: JSON.stringify({ session_id: sessionId.current, message: (HINT[copilot] || "") + msg, lang }),
       });
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
@@ -91,7 +108,7 @@ export default function TalkWithMiki({ tab }) {
           const line = part.replace(/^data: ?/, "").trim();
           if (!line) continue;
           let obj; try { obj = JSON.parse(line); } catch { continue; }
-          if (obj.d) { full += obj.d; setMessages((m) => { const c = [...m]; c[c.length - 1] = { who: "miki", content: full }; return c; }); }
+          if (obj.d) { full += obj.d; setMessages((m) => { const c = [...m]; c[c.length - 1] = { who: replyWho, content: full }; return c; }); }
         }
       }
       speak(full);
@@ -102,8 +119,29 @@ export default function TalkWithMiki({ tab }) {
         setMessages((m) => [...m, note]);
       }
     } catch {
-      setMessages((m) => { const c = [...m]; c[c.length - 1] = { who: "miki", content: "Ops, riprova tra poco." }; return c; });
+      setMessages((m) => { const c = [...m]; c[c.length - 1] = { who: replyWho, content: "Ops, riprova tra poco." }; return c; });
     } finally { setBusy(false); }
+  };
+
+  // Ascolto continuo naturale (mod. 63/64): nessuna parola chiave, basta parlare
+  const toggleContinuous = () => {
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) { return; }
+    if (continuous) {
+      contRef.current = false; setContinuous(false);
+      try { recRef.current && recRef.current.stop(); } catch { /* */ }
+      return;
+    }
+    contRef.current = true; setContinuous(true);
+    const rec = new SR();
+    rec.lang = lang === "de" ? "de-DE" : lang === "en" ? "en-US" : "it-IT";
+    rec.continuous = true; rec.interimResults = false;
+    rec.onresult = (e) => { const t = e.results[e.results.length - 1][0].transcript.trim(); if (t) send(t); };
+    rec.onend = () => { if (contRef.current) { try { rec.start(); } catch { /* */ } } else setListening(false); };
+    rec.onstart = () => setListening(true);
+    rec.onerror = () => { if (!contRef.current) setListening(false); };
+    recRef.current = rec;
+    try { rec.start(); } catch { /* */ }
   };
 
   const startVoice = () => {
@@ -145,12 +183,20 @@ export default function TalkWithMiki({ tab }) {
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "Miki" : v === "mohamed" ? "Mohamed" : "Big Mix"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "Miki" : v === "mohamed" ? "Mohamed" : "Bake Mix"}</span>
                 </button>
               );
             })}
-            <button data-testid="talk-miki-close" onClick={() => { stopSpeak(); setOpen(false); }} className="ms-auto w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center"><X className="w-4 h-4" /></button>
+            <span data-testid="intercom-live" className="ms-auto flex items-center gap-1 text-[9px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-2 py-0.5"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> INTERCOM LIVE</span>
+            <button data-testid="talk-miki-close" onClick={() => { stopSpeak(); setOpen(false); }} className="w-8 h-8 rounded-full bg-slate-800 text-slate-300 flex items-center justify-center"><X className="w-4 h-4" /></button>
           </div>
+
+          {/* Dynamic Handoff animation */}
+          {handoff && (
+            <div data-testid="dynamic-handoff" className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/70 pointer-events-none">
+              <div className="splash-glitch font-cyber text-lg font-black text-[#3E9C93] flex items-center gap-2"><ArrowLeftRight className="w-5 h-5" /> HANDOFF</div>
+            </div>
+          )}
 
           {/* VISTA CHAT MIKI */}
           {view === "chat" && (
@@ -178,6 +224,16 @@ export default function TalkWithMiki({ tab }) {
                 ))}
               </div>
               <div className="p-3 border-t border-slate-800 space-y-2">
+                {/* Selettore Co-Pilota */}
+                <div data-testid="copilot-selector" className="flex items-center gap-1">
+                  {[["trio", "Trio"], ["miki", "Miki"], ["mohamed", "Mohamed"], ["bigmix", "Bake Mix"]].map(([id, lbl]) => (
+                    <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
+                      className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
+                  ))}
+                </div>
+                <button data-testid="talk-continuous" onClick={toggleContinuous} className={`w-full inline-flex items-center justify-center gap-1.5 text-[11px] font-bold py-1.5 rounded-lg border ${continuous ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/50" : "text-slate-400 border-slate-700"}`}>
+                  <Mic className="w-3.5 h-3.5" /> {continuous ? "Ascolto continuo attivo · parla pure" : "Attiva ascolto continuo (senza parole chiave)"}
+                </button>
                 {speaking && (
                   <button data-testid="talk-stop-voice" onClick={stopSpeak} className="w-full inline-flex items-center justify-center gap-1.5 bg-slate-800 text-slate-300 text-xs font-bold py-1.5 rounded-lg"><Square className="w-3.5 h-3.5" /> Ferma la voce di Miki</button>
                 )}
@@ -211,7 +267,7 @@ export default function TalkWithMiki({ tab }) {
           {/* VISTA BIG MIX AI · INTERACTIVE TRAINING (mod. 58) */}
           {view === "bigmix" && (
             <div data-testid="bigmix-training" className="flex-1 overflow-y-auto p-4 text-center">
-              <img src={AV("avatar_bigmix.jpg")} alt="Big Mix AI" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
+              <img src={AV("avatar_bigmix.jpg")} alt="Bake Mix" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
               <p className="mt-3 text-sm font-bold text-[#6EA8FE] flex items-center justify-center gap-1.5"><GraduationCap className="w-4 h-4" /> Training comandi Hands-Free</p>
               <p className="text-[12px] text-slate-400 mt-1">Passo {trainIdx + 1} di {TRAIN_CMDS.length}</p>
               <div className="mt-4 rounded-2xl bg-slate-950 border border-[#6EA8FE]/30 p-4">
