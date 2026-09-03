@@ -3851,3 +3851,9 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Sfondi cyber-industrial teal/scuro**: rigenerati e SOSTITUITI bg-home/lab/ricette/accademia/community/farine.jpg con texture astratte teal/blueprint (niente più foto reali di persone/robot). Anche la card PRO·3D in Home ora usa lo sfondo lab stilizzato.
 - Struttura mantenuta pulita e operativa sui 15 moduli, nessuna aggiunta estranea.
 - NB PRODUZIONE: per far apparire i nuovi sfondi/immagini su mikilab.de serve REDEPLOY + bump CACHE_NAME in sw.js (il service worker cachea gli asset statici).
+
+## v-fork4 (2026-06) — Report automatico serale + snellimento menu + redeploy v13
+- **Report automatico serale**: nuovo componente `components/AutoReport.jsx` (montato in App.js dentro i provider, nessuna UI) che ogni 60s controlla l'orario di chiusura e, una volta al giorno, archivia il report su /api/reports (mixers attivi, allarmi, carico settimana). Impostazioni in ReportGiornata: toggle `report-auto-toggle` + orario `report-auto-time` (default 21:00, persistiti in localStorage mikilab_autoreport_enabled/time/last). Richiede accesso (401 → skip silenzioso).
+- **Snellimento visivo menu secondari**: ToolsDirectory (Chef Mode) reso più compatto — righe min-h 76→58px con icone 64→40px e testo lg→15px; quick card min-h 128→104px, icone e testo ridotti. Solo visivo, nessuna rimozione di strumenti.
+- **Service worker v13**: CACHE_NAME mikilab-v12 → mikilab-v13 per invalidare la cache degli asset statici (nuovi sfondi/foto hardware) in produzione.
+- Redeploy dispatchato (job in coda) per pubblicare tutto su mikilab.de.

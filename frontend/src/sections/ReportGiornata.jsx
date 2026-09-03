@@ -15,6 +15,10 @@ export default function ReportGiornata() {
   const [saving, setSaving] = useState(false);
   const [pastReports, setPastReports] = useState([]);
   const [loadingHist, setLoadingHist] = useState(true);
+  const [autoOn, setAutoOn] = useState(() => (localStorage.getItem("mikilab_autoreport_enabled") ?? "1") === "1");
+  const [autoTime, setAutoTime] = useState(() => localStorage.getItem("mikilab_autoreport_time") || "21:00");
+  const toggleAuto = () => { const v = !autoOn; setAutoOn(v); try { localStorage.setItem("mikilab_autoreport_enabled", v ? "1" : "0"); } catch { /* */ } };
+  const changeAutoTime = (t) => { setAutoTime(t); try { localStorage.setItem("mikilab_autoreport_time", t); } catch { /* */ } };
 
   const active = mixers.filter((m) => m.running).length;
   const alarmsToday = history.length;
@@ -62,6 +66,22 @@ export default function ReportGiornata() {
             {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} Salva
           </button>
           <button data-testid="report-share" onClick={share} className="inline-flex items-center gap-1.5 px-3 py-2 bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold rounded-lg active:scale-95 transition-all"><Share2 className="w-4 h-4" /> Condividi</button>
+        </div>
+      </div>
+
+      {/* Salvataggio automatico serale */}
+      <div data-testid="report-auto" className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-sm font-bold text-slate-100">Salvataggio automatico serale</p>
+          <p className="text-[11.5px] text-slate-400 leading-snug">Alla chiusura archivia da solo il report del giorno (una volta al giorno). Serve l'accesso.</p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <input data-testid="report-auto-time" type="time" value={autoTime} onChange={(e) => changeAutoTime(e.target.value)} disabled={!autoOn}
+            className="bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-teal-300 font-mono font-bold text-sm disabled:opacity-40" />
+          <button data-testid="report-auto-toggle" onClick={toggleAuto} role="switch" aria-checked={autoOn}
+            className={`relative w-12 h-7 rounded-full transition-colors ${autoOn ? "bg-teal-500" : "bg-slate-700"}`}>
+            <span className={`absolute top-1 w-5 h-5 rounded-full bg-white transition-all ${autoOn ? "left-6" : "left-1"}`} />
+          </button>
         </div>
       </div>
 

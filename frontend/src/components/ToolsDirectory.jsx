@@ -38,12 +38,12 @@ export default function ToolsDirectory({ onOpenTool }) {
     if (!tl) return null;
     return (
       <button key={id} data-testid={`lab-tool-${id}`} onClick={() => onOpenTool && onOpenTool(id)}
-        className="flex items-center gap-4 text-left w-full rounded-2xl bg-[#1B2A38] border border-[#2A3B49] hover:border-[#3E9C93]/60 min-h-[76px] px-4 py-3.5 active:scale-[0.98] transition-all">
-        <span className="w-16 h-16 rounded-2xl bg-[#3E9C93]/12 border border-[#3E9C93]/30 flex items-center justify-center shrink-0">
-          <tl.Icon className="w-8 h-8 text-[#3E9C93]" />
+        className="flex items-center gap-3 text-left w-full rounded-xl bg-[#1B2A38] border border-[#2A3B49] hover:border-[#3E9C93]/60 min-h-[58px] px-3 py-2.5 active:scale-[0.98] transition-all">
+        <span className="w-10 h-10 rounded-xl bg-[#3E9C93]/12 border border-[#3E9C93]/30 flex items-center justify-center shrink-0">
+          <tl.Icon className="w-5 h-5 text-[#3E9C93]" />
         </span>
-        <span className="text-lg sm:text-xl font-bold text-white leading-snug">{name(tl)}</span>
-        <ChevronRight className="w-5 h-5 text-[#7E8A93] shrink-0 ms-auto rtl:rotate-180" />
+        <span className="text-[15px] font-semibold text-white leading-snug">{name(tl)}</span>
+        <ChevronRight className="w-4 h-4 text-[#7E8A93] shrink-0 ms-auto rtl:rotate-180" />
       </button>
     );
   };
@@ -57,10 +57,10 @@ export default function ToolsDirectory({ onOpenTool }) {
           <div className="grid grid-cols-2 gap-2.5">
             {QUICK.map((tl) => (
               <button key={tl.id} data-testid={`lab-quick-${tl.id}`} onClick={() => onOpenTool && onOpenTool(tl.id)}
-                className="flex flex-col items-start gap-2 text-left rounded-2xl bg-gradient-to-br from-[#3E9C93]/18 to-[#1B2A38] border border-[#3E9C93]/40 hover:border-[#3E9C93] min-h-[128px] p-3.5 active:scale-[0.97] transition-all">
-                <span className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] flex items-center justify-center shrink-0"><tl.Icon className="w-6 h-6 text-white" /></span>
-                <span className="text-[15px] font-bold text-white leading-tight">{name(tl)}</span>
-                <span className="text-[11.5px] text-[#AEB8BF] leading-snug">{QUICK_DESC[tl.id]}</span>
+                className="flex flex-col items-start gap-1.5 text-left rounded-xl bg-gradient-to-br from-[#3E9C93]/16 to-[#1B2A38] border border-[#3E9C93]/35 hover:border-[#3E9C93] min-h-[104px] p-3 active:scale-[0.97] transition-all">
+                <span className="w-9 h-9 rounded-xl bg-[#3E9C93] flex items-center justify-center shrink-0"><tl.Icon className="w-5 h-5 text-white" /></span>
+                <span className="text-[13.5px] font-bold text-white leading-tight">{name(tl)}</span>
+                <span className="text-[11px] text-[#AEB8BF] leading-snug">{QUICK_DESC[tl.id]}</span>
               </button>
             ))}
           </div>

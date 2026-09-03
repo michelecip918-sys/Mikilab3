@@ -43,6 +43,7 @@ import { TimerProvider } from "@/audio/TimerContext";
 import { SoundFXProvider } from "@/audio/SoundFXContext";
 import { MixerTimersProvider } from "@/audio/MixerTimersContext";
 import { MachinesProvider } from "@/audio/MachinesContext";
+import AutoReport from "@/components/AutoReport";
 import ambient from "@/lib/ambientMusic";
 import { api, greetingsApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -295,6 +296,7 @@ function App() {
       {tab !== "maestro" && <RadioFornaio />}
       <GuidaMikiLab />
       <ShiftScheduler />
+      <AutoReport />
       <AudioRouteIndicator />
       {/* WhatsApp FAB globale rimosso: WhatsApp ora SOLO in Corsi e Il Tuo Laboratorio */}
       {!resetToken && showIntro && <IntroGuide />}
