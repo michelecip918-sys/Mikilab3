@@ -224,6 +224,10 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     } catch (e) { loadCrates(); }
   };
   const openTool = (name) => { setActiveTool(name); speakVoice(`Avvio diagnostica: ${name}.`); };
+  const guidedProduction = () => {
+    const steps = ["Passo uno: pesare 10 chilogrammi di farina T500.", "Passo due: aggiungere 6 litri e mezzo di acqua a 22 gradi.", "Passo tre: impastare per 8 minuti in prima velocità.", "Passo quattro: puntata di 30 minuti, poi formatura."];
+    steps.forEach((s, i) => setTimeout(() => speakVoice(s), i * 3800));
+  };
   const loadRecurring = async (crate) => {
     const items = ['5x Baguette', '5x Croissant'];
     setCrates(prev => prev.map(c => c.id === crate.id ? { ...c, items: [...(c.items || []), ...items] } : c));
@@ -643,6 +647,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               </div>
               <button data-testid="elite-announce-status" onClick={announceStatus} style={{ backgroundColor: 'rgba(62,156,147,0.15)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '10px', padding: '8px 12px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
                 📢 {_pick("Annuncia Stato", "Status ansagen", "Announce Status", "Anunciar estado", "Annoncer l'état", "اعلام وضعیت")}
+              </button>
+              <button data-testid="elite-guided-voice" onClick={guidedProduction} style={{ backgroundColor: 'rgba(230,162,60,0.15)', color: '#E6A23C', border: '1px solid #E6A23C', borderRadius: '10px', padding: '8px 12px', fontSize: '0.72rem', fontWeight: 700, cursor: 'pointer' }}>
+                🎧 {_pick("Produzione Guidata Vocale", "Sprachgeführte Produktion", "Guided Voice Production", "Producción guiada por voz", "Production guidée vocale", "تولید صوتی راهنما")}
               </button>
             </div>
             <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px', flexWrap: 'wrap' }}>

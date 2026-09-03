@@ -3731,3 +3731,8 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Ceste Ricorrenti**: pulsante `elite-crate-recurring-<i>` ricarica la cesta con il set abituale (5x Baguette, 5x Croissant) via API, con annuncio vocale.
 - SALTATO (cosmetico/duplicato): i toggle Cuffie/Microfono dello script — il sistema mani-libere + Web Radio con auto-ducking esiste già in BraccioLab/RadioFornaio.
 - Verifica: screenshot Capo end-to-end — Ricorrente→(2 pz)→Sposta in Consegna→sezione Consegne→✅ Consegnato→comparsa nello Storico. Compilazione pulita. Dati test ripuliti.
+
+## v46 (2026-06) — Produzione Guidata Vocale
+- **Produzione Guidata Vocale**: pulsante `elite-guided-voice` nel Pannello Capo → legge a voce una sequenza di passi (farina T500, acqua 22°, impasto 8 min, puntata) con ritardi progressivi (hands-free reale via speakVoice/TTS).
+- Verifica: screenshot Capo (pulsante presente e cliccabile). Compilazione pulita.
+- RESTA dallo script "Capo/Braccio" (prossima sessione): ruolo Capo(Testa)/Panettiere(Braccio) dentro l'Elite; widget Silos industriali (fill %) e Cella Freezer (stock+deficit) con dati reali dal server; produzione guidata step-by-step per l'operatore nella sua vista bloccata.
