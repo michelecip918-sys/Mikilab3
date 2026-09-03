@@ -3616,3 +3616,17 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Palette stanze aggiornata a teal/slate (via colori nuovi).
 - DEFERRED (crediti/scope): 6 avatar con divisa diversa per reparto (ora stesso avatar), alternanza logo/avatar 1-1 estesa, Guide Capo/Operai separate, scheduling turni completo. Master recipes gia editabili solo da admin/Capo.
 - Build OK, verificato 390px. Deploy non lanciato. Target emtra.be non configurabile da codice.
+
+## v-lab.12 (2026-06) — v13 Supreme: auto-duck radio (palette teal confermata)
+- Palette: NON alterata (resta teal/blu-ardesia per scelta utente, nonostante lo spec citi caldo terroso).
+- **Auto-duck radio**: tts.js emette eventi mikilab-tts-start/end (API + voce nativa + stopTTS); RadioFornaio ascolta e abbassa il volume a ~0.08 mentre parla il Co-Pilot, ripristinandolo a fine avviso (nessuno stop dello stream → riprende dov era).
+- Gia fatti in precedenza: 6 reparti Elite Engine, solo avatar Michele (Mohammadreza rimosso dall UI, resta voce secondaria), master recipes admin-only.
+- Build OK.
+- DA COSTRUIRE (grandi feature dello spec v13, ognuna backend+frontend, da confermare/prioritizzare):
+  1. Modalità Ferie remota + clonazione cicli settimanali.
+  2. Escalation allarme critico >2min → bypass scudo + notifica push prioritaria al Capo.
+  3. Delega temporanea: link sicuro monouso (es. 8h) per sostituti non registrati.
+  4. Scheduler grande pulizia settimanale in tempi morti + rilevazione stanchezza squadra.
+  5. Setup iniziale: scansione macchinari con fotocamera + autocalibrazione sensori.
+  6. Divise avatar diverse per reparto (6 immagini) + alternanza logo/avatar 1-1 estesa.
+  7. titlePurge: rimuovere titoli/sottotitoli residui (serve indicare le schermate specifiche).

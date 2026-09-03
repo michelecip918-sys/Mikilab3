@@ -128,6 +128,18 @@ export default function RadioFornaio() {
     if (audioRef.current) audioRef.current.volume = volume;
   }, [volume]);
 
+  // Auto-duck: quando il Co-Pilot (TTS) parla, abbassa la radio e la ripristina a fine avviso.
+  useEffect(() => {
+    const duck = () => { const a = audioRef.current; if (a) a.volume = Math.min(0.08, volume); };
+    const restore = () => { const a = audioRef.current; if (a) a.volume = volume; };
+    window.addEventListener("mikilab-tts-start", duck);
+    window.addEventListener("mikilab-tts-end", restore);
+    return () => {
+      window.removeEventListener("mikilab-tts-start", duck);
+      window.removeEventListener("mikilab-tts-end", restore);
+    };
+  }, [volume]);
+
   const stop = () => {
     const a = audioRef.current;
     if (a) { a.pause(); a.removeAttribute("src"); a.load(); }

@@ -73,9 +73,14 @@ export function shortenForSpeech(text, maxChars = 180, maxSentences = 2) {
 }
 
 let _audio = null;
+let _ttsActive = false;
+function ttsSignalStart() { if (_ttsActive) return; _ttsActive = true; try { window.dispatchEvent(new Event("mikilab-tts-start")); } catch { /* */ } }
+function ttsSignalEnd() { if (!_ttsActive) return; _ttsActive = false; try { window.dispatchEvent(new Event("mikilab-tts-end")); } catch { /* */ } }
+
 export function stopTTS() {
   try { if (_audio) { _audio.pause(); _audio.src = ""; _audio = null; } } catch { /* */ }
   try { window.speechSynthesis.cancel(); } catch { /* */ }
+  ttsSignalEnd();
 }
 
 // Voce nativa del dispositivo (fallback): lingua dell'app + timbro sempre maschile.
@@ -88,11 +93,11 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
     // Timbro maschile: Michele più profondo, Momi maschile ma leggermente più chiaro.
     if (voice === "michele" || voice === "lab") { u.pitch = 0.85; u.rate = 1.06; }
     else { u.pitch = 0.92; u.rate = 0.98; }
-    u.onstart = () => { if (onStart) onStart(); };
-    u.onend = () => { if (onEnded) onEnded(); };
-    u.onerror = () => { if (onEnded) onEnded(); };
+    u.onstart = () => { ttsSignalStart(); if (onStart) onStart(); };
+    u.onend = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
+    u.onerror = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
     window.speechSynthesis.speak(u);
-  } catch { if (onEnded) onEnded(); }
+  } catch { ttsSignalEnd(); if (onEnded) onEnded(); }
 }
 
 // voice: "michele" (Lab, onyx) | "momy" (Momi, echo)
@@ -118,9 +123,9 @@ export function playTTS(text, { lang = "it", voice = "momy", onStart, onEnded } 
       const url = URL.createObjectURL(blob);
       const a = new Audio(url);
       _audio = a;
-      a.onplay = () => { started = true; if (onStart) onStart(); };
-      a.onended = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (onEnded) onEnded(); };
-      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, lang, voice, onStart, onEnded); else if (onEnded) onEnded(); };
+      a.onplay = () => { started = true; ttsSignalStart(); if (onStart) onStart(); };
+      a.onended = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; ttsSignalEnd(); if (onEnded) onEnded(); };
+      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, lang, voice, onStart, onEnded); else { ttsSignalEnd(); if (onEnded) onEnded(); } };
       a.play().catch(() => { if (!started) nativeSpeak(clean, lang, voice, onStart, onEnded); });
     })
     .catch(() => nativeSpeak(clean, lang, voice, onStart, onEnded));
