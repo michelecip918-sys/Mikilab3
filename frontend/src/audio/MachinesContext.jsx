@@ -30,6 +30,7 @@ const thermalStatus = (d, temp, min, max) => {
 };
 
 const lsGet = (k, fb) => { try { return JSON.parse(localStorage.getItem(k) || "null") ?? fb; } catch { return fb; } };
+const API = process.env.REACT_APP_BACKEND_URL;
 
 const Ctx = createContext(null);
 export const useMachines = () => useContext(Ctx);
@@ -42,7 +43,34 @@ export function MachinesProvider({ children }) {
   const [history, setHistory] = useState(() => lsGet("mikilab_alarm_history", []));
   const faultsRef = useRef(faults); faultsRef.current = faults;
   const rangesRef = useRef(ranges); rangesRef.current = ranges;
+  const realRef = useRef({});
   const prevAlarm = useRef({});
+  const histRef = useRef(history); histRef.current = history;
+  const histLoaded = useRef(false);
+
+  // Carica storico allarmi dal backend all'avvio (fallback: localStorage)
+  useEffect(() => {
+    fetch(`${API}/api/alarms`).then((r) => r.json()).then((d) => {
+      if (Array.isArray(d.items) && d.items.length) setHistory(d.items);
+    }).catch(() => {}).finally(() => { histLoaded.current = true; });
+  }, []);
+
+  // Sincronizza storico allarmi sul backend quando cambia (dopo il primo load)
+  useEffect(() => {
+    if (!histLoaded.current) return;
+    const t = setTimeout(() => {
+      fetch(`${API}/api/alarms`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: history }) }).catch(() => {});
+    }, 800);
+    return () => clearTimeout(t);
+  }, [history]);
+
+  // Polling letture sensori reali (device IoT che spinge su /api/sensors/reading)
+  useEffect(() => {
+    const poll = () => fetch(`${API}/api/sensors/latest`).then((r) => r.json()).then((d) => { realRef.current = d.readings || {}; }).catch(() => {});
+    poll();
+    const iv = setInterval(poll, 5000);
+    return () => clearInterval(iv);
+  }, []);
 
   useEffect(() => { try { localStorage.setItem("mikilab_sensor_ranges", JSON.stringify(ranges)); } catch { /* */ } }, [ranges]);
   useEffect(() => { try { localStorage.setItem("mikilab_alarm_history", JSON.stringify(history)); } catch { /* */ } }, [history]);
@@ -52,6 +80,8 @@ export function MachinesProvider({ children }) {
       setTemps((prev) => {
         const next = { ...prev };
         DEFS.filter((d) => d.kind === "thermal").forEach((d) => {
+          const real = realRef.current[d.id];
+          if (real && typeof real.temp === "number") { next[d.id] = real.temp; return; } // sonda reale: usa valore vero
           const eMax = rangesRef.current[d.id]?.max ?? d.max;
           const target = faultsRef.current[d.id] ? (d.hot ? eMax + 25 : eMax + 6) : d.base;
           const noise = (Math.random() - 0.5) * (d.hot ? 2 : 0.3);

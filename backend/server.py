@@ -8297,6 +8297,45 @@ async def day_close_pdf(closure_id: str, lang: str = "it", user: dict = Depends(
     return Response(content=pdf, media_type="application/pdf",
                     headers={"Content-Disposition": f'inline; filename="{fname}"'})
 
+# ---- IoT Thermal Guard: sensori reali + storico allarmi (globale, device-friendly) ----
+class SensorReading(BaseModel):
+    id: str
+    temp: float
+    unit: Optional[str] = "°C"
+
+@api_router.post("/sensors/reading")
+async def push_sensor_reading(body: SensorReading):
+    """Endpoint per sonde IoT reali (Milesight/Efento/PT100...): spinge una lettura."""
+    await db.sensor_state.update_one(
+        {"_key": "mikilab_sensors"},
+        {"$set": {f"readings.{body.id}": {"temp": body.temp, "unit": body.unit or "°C", "at": datetime.now(timezone.utc).isoformat()}}},
+        upsert=True,
+    )
+    return {"ok": True}
+
+@api_router.get("/sensors/latest")
+async def get_sensors_latest():
+    doc = await db.sensor_state.find_one({"_key": "mikilab_sensors"}, {"_id": 0})
+    return {"readings": (doc or {}).get("readings", {})}
+
+@api_router.get("/alarms")
+async def get_alarms():
+    doc = await db.alarm_log.find_one({"_key": "mikilab_alarms"}, {"_id": 0})
+    return {"items": (doc or {}).get("items", [])}
+
+@api_router.put("/alarms")
+async def put_alarms(body: dict):
+    items = body.get("items", [])
+    if not isinstance(items, list):
+        items = []
+    await db.alarm_log.update_one(
+        {"_key": "mikilab_alarms"},
+        {"$set": {"items": items[:100], "updated_at": datetime.now(timezone.utc).isoformat()}},
+        upsert=True,
+    )
+    return {"ok": True, "count": len(items[:100])}
+
+
 
 
 app.include_router(api_router)

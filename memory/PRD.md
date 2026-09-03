@@ -3815,3 +3815,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Zero-Night dalle ricette di oggi**: pulsante "Calcola dalle ricette di oggi" (testid zn-from-recipes) → legge weeklyApi.get(), filtra gli item del giorno corrente (JS getDay→lun..dom), scarica le ricette dalle collection (panetteria/pizzeria/pasticceria) e prende il MAX di (bulk_fermentation_hours + proofing_hours) come ore di lievitazione, impostando il calcolo a ritroso. Richiede login + piano salvato + ricette con tempi impostati; altrimenti toast d'errore (nessun crash).
 - **Storico Allarmi**: MachinesContext registra ogni allarme termico (inizio/fine/durata/picco) in localStorage (mikilab_alarm_history, max 50). ThermalGuard mostra la sezione "Storico Allarmi" (testid alarm-history, alarm-history-row) con orario, picco °, durata o "in corso" + Svuota.
 - Verificato via screenshot: soglia cella max=2 → ALLARME CALDO + riga nello storico; pulsante calcolo presente (toast corretto se non loggato). Grafica invariata. Sensori restano MOCKED (simulati).
+
+## Elite v3.1.0 (2026-06) — Sensori reali via endpoint + Storico allarmi su backend
+- **Backend (server.py, globale device-friendly)**: POST /api/sensors/reading {id,temp,unit} (le sonde IoT reali spingono le letture), GET /api/sensors/latest {readings}, GET /api/alarms {items}, PUT /api/alarms {items} (max 100). Collezioni: sensor_state, alarm_log.
+- **Sensori reali**: MachinesContext fa polling GET /api/sensors/latest ogni 5s; se esiste una lettura reale per un sensore la usa (niente simulazione), altrimenti simula. Verificato: POST forno=152 → UI mostra 152°C "In riscaldamento".
+- **Storico allarmi persistente**: MachinesContext carica lo storico da /api/alarms all'avvio (fallback localStorage) e lo sincronizza (PUT, debounce 800ms) ad ogni cambiamento → resta anche cambiando dispositivo. clearHistory svuota anche il backend.
+- **DEFERRED - Notifica Push ad app chiusa**: richiede Web Push (service worker push + chiavi VAPID) o provider push; non implementata (serve setup chiavi). Proposta all'utente.
+- Test: endpoint verificati via curl (200) + screenshot (lettura reale forno riflessa in UI).
