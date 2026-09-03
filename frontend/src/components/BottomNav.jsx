@@ -57,7 +57,7 @@ export default function BottomNav({ active, onChange }) {
             <button
               key={id}
               data-testid={`nav-tab-${id}`}
-              onClick={() => { if (id === "guida") { window.dispatchEvent(new Event("mikilab-open-guida")); return; } if (id === "community") markSocialSeen(); onChange(id); }}
+              onClick={() => { if (id === "guida") { onChange("home"); return; } if (id === "community") markSocialSeen(); onChange(id); }}
               aria-pressed={on}
               className="group relative flex flex-col items-center justify-center gap-1 min-h-[60px] py-1.5 active:scale-95 transition-transform"
             >

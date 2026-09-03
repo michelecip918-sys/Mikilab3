@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Warehouse, Plus, Trash2, Wheat, Package, ChevronDown, ChevronUp, Camera, ClipboardList, History, Copy } from "lucide-react";
+import ModuleParams from "@/components/ModuleParams";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -84,6 +85,7 @@ export default function Magazzino() {
 
   return (
     <div data-testid="magazzino" className="min-h-[70vh] rounded-3xl p-5 pb-28" style={{ background: D.bg, color: D.text, border: `1px solid ${D.border}` }}>
+      <ModuleParams screen="ingredienti" />
       <div className="flex items-center gap-2 mb-1">
         <Warehouse className="w-6 h-6" style={{ color: D.gold }} />
         <h1 className="font-display font-extrabold leading-tight" style={{ fontSize: "clamp(24px,6vw,34px)", color: D.text }}>{tri("Magazzino & Freezer di MikiLab", "MikiLab-Lager & Freezer", "MikiLab Warehouse & Freezer", "Almacén & Freezer de MikiLab", "Stock & Congélateur MikiLab", "انبار و فریزر میکی‌لب")}</h1>

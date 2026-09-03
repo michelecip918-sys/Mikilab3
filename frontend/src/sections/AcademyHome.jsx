@@ -6,6 +6,7 @@ import { FLOURS, CALC_RECIPES } from "@/data/academy";
 import Beginners from "@/sections/Beginners";
 import ModuloScienza from "@/sections/ModuloScienza";
 import BrotSommelier from "@/sections/BrotSommelier";
+import CyberBakeryTrio from "@/components/CyberBakeryTrio";
 import { mkTri } from "@/i18n/triMaps";
 import { playTTS, stopTTS } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
@@ -73,6 +74,9 @@ export default function AcademyHome({ onNavigate }) {
           <Volume2 className="w-4 h-4" /> {momiSpeaking ? tri("Momi sta parlando…", "Momi spricht…", "Momi is speaking…", "Momi está hablando…", "Momi parle…", "مومی صحبت می‌کند…") : tri("Ascolta con Momi", "Mit Momi anhören", "Listen with Momi", "Escuchar con Momi", "Écouter avec Momi", "با مومی گوش کن")}
         </button>
       </div>
+
+      {/* Cyber-Bakery Trio: mini-guide interattive con i personaggi */}
+      <div className="mb-5"><CyberBakeryTrio /></div>
 
       {/* Percorso guidato in 3 passi */}
       <div data-testid="academy-path" className="mb-5">

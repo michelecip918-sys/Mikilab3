@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Mic, MicOff, Timer, Play, Square, RotateCcw, Headphones, Activity, Plus, Trash2, BellRing, Maximize2, Wrench } from "lucide-react";
+import ModuleParams from "@/components/ModuleParams";
 import { useMixers } from "@/audio/MixerTimersContext";
 import { useMachines } from "@/audio/MachinesContext";
 
@@ -101,6 +102,7 @@ export default function VoiceCore() {
 
   return (
     <div data-testid="voice-core" className="space-y-6">
+      <ModuleParams screen="intercom" />
       <div className="flex items-center justify-between bg-slate-900/80 border border-slate-800 rounded-2xl px-4 py-3 gap-3">
         <div className="flex items-center gap-2 text-xs font-mono text-teal-300">
           <span className="w-2 h-2 rounded-full bg-teal-400 shadow-[0_0_8px_#2dd4bf]" /> Sensori OK

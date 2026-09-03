@@ -3857,3 +3857,17 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Snellimento visivo menu secondari**: ToolsDirectory (Chef Mode) reso più compatto — righe min-h 76→58px con icone 64→40px e testo lg→15px; quick card min-h 128→104px, icone e testo ridotti. Solo visivo, nessuna rimozione di strumenti.
 - **Service worker v13**: CACHE_NAME mikilab-v12 → mikilab-v13 per invalidare la cache degli asset statici (nuovi sfondi/foto hardware) in produzione.
 - Redeploy dispatchato (job in coda) per pubblicare tutto su mikilab.de.
+
+## v14 — CONSOLIDAMENTO DEFINITIVO (2026-06)
+- **Guida separata rimossa**: GuidaMikiLab non più montata (App.js), pulsante SiteMenu rimosso, tab bottom "Guida Rapida" ora porta alla Home. Intro navigazione snella in Home (`home-intro`).
+- **Cyber-Bakery Trio** (`components/CyberBakeryTrio.jsx`) in Home + Impara: Miki (Capo, tatuaggio REALE braccio sx da foto asset), Mohamed (persiano, da foto reale del ragazzo col cappello), Big Mix AI (robot). Clic → mini-guida a step con TTS. File avatar in /public/avatar_{miki,mohamed,bigmix}.jpg.
+- **Manuale B2B** in ManualePage: prontuario macchinari (Rheon, presse, forni, impastatrici, celle, silos, teglie/utensili) con funzione/quando/comando vocale + moduli collegati.
+- **50 MODULI CYBER-INDUSTRIAL** integrati come PARAMETRI live nelle schede ESISTENTI (nessuna pagina doppia): `data/cyberModules.js` (registro 50) + `components/ModuleParams.jsx`, innestati in MachinePark (parco, 16 mod), SmartPlannerStressZero (planner, 14), CapoLaboratorio (capo, 6), VoiceCore (intercom, 7), Magazzino (ingredienti, 7). Tutti i 50 coperti, zero duplicati.
+- sw.js CACHE_NAME → mikilab-v14. Compilazione pulita, zero errori console. Architettura CONSOLIDATA E DEFINITIVA: non aggiungere altri moduli/sezioni.
+
+## v14 FINALE (2026-06) — Talk with Miki + chicche 51-58 (58 moduli totali)
+- **Talk with Miki** (`components/TalkWithMiki.jsx`): assistente conversazionale AI, visibile SOLO in Home + Impara (nascosto in Laboratorio/altrove). Chat testo + voce (SpeechRecognition), risposte in prima persona come Miki via nuovo endpoint backend `POST /api/miki/chat` (MIKI_SYSTEM, Claude via Emergent key, streaming SSE). Personaggi di supporto Mohamed/Big Mix suggeriti per keyword.
+- **Chicche 51-58**: 51 Splash glitch (`SplashScreen.jsx`), 52 Bacheca di Miki (`BachecaMiki.jsx` + backend `/api/board` GET/POST), 53 Cyber Kit font Orbitron/Rajdhani (`.font-cyber`), 54 Success sound (`lib/successSound.js`), 55 Focus glow parametro critico Plancia (`.module-focus` in ModuleParams capo), 56 Miki's Handshake (aptica navigator.vibrate sync con TTS), 57 Mohamed's Lab Live View (micro-animazione LIVE), 58 Big Mix AI Interactive Training (allenamento comandi hands-free con TTS).
+- **Manuale B2B** esteso con indice completo Moduli 1-58 (testid manuale-mod-N).
+- Verificato in preview: splash, trio, bacheca, talk-miki (chat+tab), lab-live, training, launcher nascosto in lab, ModuleParams nelle 5 schede. ZERO errori console, zero duplicati. sw CACHE_NAME=mikilab-v15.
+- STATO: v14 CONSOLIDATA E DEFINITIVA — non aggiungere altri moduli/sezioni.

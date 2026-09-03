@@ -7,6 +7,7 @@ import { API, labConfigApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { fireHighFive } from "@/components/HighFive";
+import ModuleParams from "@/components/ModuleParams";
 
 const CELL_TYPES = ["frigo", "freezer", "lievitazione", "lievitazione_frigo"];
 
@@ -58,6 +59,8 @@ export default function CapoLaboratorio() {
         <h1 className="font-display text-2xl font-bold">{mkTri(lang)("Impostazione Macchine", "Maschinen einrichten", "Machine Setup")}</h1>
         <p className="text-white/85 text-sm mt-1">{mkTri(lang)("Impastatrici, celle e squadra — usati dalla pianificazione IA", "Kneter, Gärzellen und Team — für die KI-Planung", "Mixers, cells and team — used by AI planning")}</p>
       </div>
+
+      <ModuleParams screen="capo" />
 
       {/* Attrezzature e celle */}
       <Section icon={<Cog className="w-4 h-4" />} title={t("capo_equip_title")}>

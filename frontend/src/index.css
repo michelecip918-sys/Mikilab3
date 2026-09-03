@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,6 +10,31 @@
 body { -webkit-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; }
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; -ms-user-select: text; user-select: text; }
 img { -webkit-user-drag: none; user-drag: none; }
+
+/* Cyber-Industrial Kit (mod. 53): font Space-Tech ad alto contrasto per gli elementi cyber */
+.font-cyber { font-family: 'Orbitron', 'Rajdhani', 'JetBrains Mono', monospace; letter-spacing: .04em; }
+.font-tech { font-family: 'Rajdhani', 'Manrope', sans-serif; letter-spacing: .02em; }
+
+/* Dynamic Focus Animation (mod. 55): glow teal lampeggiante sul parametro critico */
+@keyframes focusGlowTeal {
+  0%,100% { box-shadow: 0 0 0 1px rgba(62,156,147,.5), 0 0 6px rgba(62,156,147,.25); }
+  50% { box-shadow: 0 0 0 2px rgba(62,156,147,.95), 0 0 22px rgba(62,156,147,.7); }
+}
+.module-focus { animation: focusGlowTeal 1.15s ease-in-out infinite; border-color: rgba(62,156,147,.8) !important; }
+
+/* Startup Splash (mod. 51): glitch neon del trio/logo all'avvio */
+@keyframes cyberGlitch {
+  0% { transform: translate(0,0); clip-path: inset(0 0 0 0); }
+  20% { transform: translate(-2px,1px); }
+  40% { transform: translate(2px,-1px); clip-path: inset(8% 0 6% 0); }
+  60% { transform: translate(-1px,0); clip-path: inset(0 0 0 0); }
+  80% { transform: translate(1px,1px); clip-path: inset(4% 0 10% 0); }
+  100% { transform: translate(0,0); }
+}
+@keyframes splashFade { 0%{opacity:0;} 12%{opacity:1;} 82%{opacity:1;} 100%{opacity:0;} }
+.splash-glitch { animation: cyberGlitch .35s steps(2) infinite; }
+.splash-wrap { animation: splashFade 2.2s ease-in-out forwards; }
+
 
 /* Menu hamburger: glow caldo "grano" pulsante (no neon) */
 @keyframes menuAttnGlow {

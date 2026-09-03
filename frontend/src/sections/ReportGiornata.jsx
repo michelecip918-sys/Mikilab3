@@ -3,6 +3,7 @@ import { ClipboardList, Flame, ShieldAlert, Package, Share2, Save, History, Load
 import { useMixers } from "@/audio/MixerTimersContext";
 import { useMachines } from "@/audio/MachinesContext";
 import { reportsApi } from "@/lib/api";
+import { playSuccessChime } from "@/lib/successSound";
 import { toast } from "sonner";
 
 const fmtClock = (ts) => new Date(ts).toLocaleTimeString("it-IT", { hour: "2-digit", minute: "2-digit" });
@@ -42,6 +43,7 @@ export default function ReportGiornata() {
         mixers_active: active, alarms_count: alarmsToday, week_load: carico, alarms,
       });
       toast.success("Report salvato sul server. Ora puoi confrontarlo con gli altri giorni.");
+      playSuccessChime();
       await loadHistory();
     } catch (e) {
       if (e?.response?.status === 401) toast.error("Accedi per salvare i report sul server.");

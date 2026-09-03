@@ -2,6 +2,14 @@ import { BookOpen, Cpu, Thermometer, Radio, Headphones, Zap, ExternalLink, Wrenc
 import { useState } from "react";
 import { playTTS, stopTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
+import { MODULES } from "@/data/cyberModules";
+
+const CHICCHE = {
+  51: "Startup Splash Screen (glitch neon)", 52: "La Bacheca di Miki (messaggio del Capo)",
+  53: "Cyber-Industrial Kit (font Space-Tech)", 54: "Synchronized Success Sound",
+  55: "Dynamic Focus Animation (glow critico)", 56: "Miki's Handshake (aptica sincronizzata)",
+  57: "Mohamed's Lab Live View", 58: "Big Mix AI · Interactive Training",
+};
 
 // Manuale d'Uso + Hardware consigliato per il laboratorio MikiLab (pagina dedicata).
 // Stile cyber-industrial teal/oro. Contenuto in italiano (mondo operativo del laboratorio).
@@ -55,6 +63,30 @@ const HARDWARE = [
     url: "https://www.jabra.com",
     color: "#3E9C93",
   },
+];
+
+const MACHINERY = [
+  { group: "Estrusione Rheon (Cornetti & Ripieni)", color: "#3E9C93", items: [
+    { name: "Rheon Encrusting / Estrusore", fn: "Dosaggio pasta/ripieno e formatura continua", when: "Produzione ripieni e cornetti in serie", voice: "«Miki, rapporto ripieno» · «Miki, sincronizza otturatore»", mods: "31 Dough/Filling Ratio · 32 Shutter Speed Sync · 33 Multi-Feeder Guard · 34 PMU Recall · 35 Thermal Friction Index" },
+  ]},
+  { group: "Presse & Formatrici", color: "#5E8CA8", items: [
+    { name: "Pressa Idraulica / Formatrice", fn: "Calibrazione pressione e spessore con controllo elasticità pasta", when: "Formatura teglie, pizza in teglia, basi", voice: "«Miki, calibra pressa» · «Miki, controlla elasticità»", mods: "36 Hydraulic Press Pressure & Thickness" },
+  ]},
+  { group: "Forni Industriali (Multi-Deck & Rotativi)", color: "#C2612E", items: [
+    { name: "Forno Rotativo a Carrello / Multi-Deck", fn: "Bilanciamento flusso aria e vapore, gestione carichi", when: "Infornate multiple, cotture simultanee", voice: "«Miki, bilancia aria» · «Miki, recupera vapore»", mods: "37 Airflow Hydro-Balance · 47 Steam Recovery · 50 Multi-Deck Load Balancing AI" },
+  ]},
+  { group: "Impastatrici & Spezzatrici", color: "#E0A458", items: [
+    { name: "Impastatrice Spirale 50kg", fn: "Controllo coppia amperometrica e indice di stress", when: "Impasti ad alta idratazione, carichi pesanti", voice: "«Miki, coppia impasto» · «Miki, stress macchina»", mods: "38 Amperometric Torque · 19 Equipment Stress Index" },
+    { name: "Spezzatrice Volumetrica", fn: "Divisione a pistone e usura pistoni", when: "Pezzatura pagnotte e panini", voice: "«Miki, usura pistone»", mods: "39 Volumetric Divider & Piston Wear" },
+  ]},
+  { group: "Celle & Silos", color: "#6EA8FE", items: [
+    { name: "Celle Frigo / Lievitazione / Freezer", fn: "Clima dinamico e recupero catena del freddo", when: "Fermolievitazione, blocco notturno, scorte", voice: "«Miki, clima cella» · «Miki, recupero freddo»", mods: "40 Dynamic Climate Proofer · 10 Cold Chain Auto-Recovery" },
+    { name: "Silos Farina Industriali", fn: "Telemetria livello e flusso farina", when: "Rifornimento e controllo scorte materie prime", voice: "«Miki, livello silos»", mods: "18 Digital Silo Telemetry" },
+  ]},
+  { group: "Teglie, Stampi & Utensili", color: "#A78BFA", items: [
+    { name: "Teglie / Stampi / Pale da forno", fn: "Tracciamento cicli, pulizia e sanificazione", when: "Rotazione utensili e igiene attrezzatura", voice: "«Miki, inventario teglie»", mods: "46 Dynamic Tray/Mold/Oven Tool Inventory" },
+    { name: "Carrelli & Rack", fn: "Mappatura, parcheggio e buffer carrelli", when: "Logistica interna, sformata a onde", voice: "«Miki, dove parcheggio»", mods: "42 Rack & Trolley Buffer · 43 Multi-Oven Unloading Wave" },
+  ]},
 ];
 
 export default function ManualePage() {
@@ -131,6 +163,47 @@ export default function ManualePage() {
               </div>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Operatività B2B — prontuario macchinari (uso Capo) */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-bold text-teal-400 uppercase tracking-wide flex items-center gap-2"><Wrench className="w-4 h-4" /> Operatività B2B · Prontuario Macchinari <span className="text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/40 rounded px-1.5 py-0.5">CAPO</span></h2>
+        <p className="text-[12px] text-slate-500 leading-snug">Per ogni macchinario: quale funzione usare, quando attivarla e il comando vocale hands-free. Tra parentesi i moduli Cyber-Industrial collegati.</p>
+        <div className="space-y-3">
+          {MACHINERY.map((g) => (
+            <div key={g.group} data-testid={`b2b-group-${g.group.slice(0, 6)}`} className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4">
+              <p className="text-[12px] font-bold uppercase tracking-wide mb-2" style={{ color: g.color }}>{g.group}</p>
+              <div className="space-y-2.5">
+                {g.items.map((m) => (
+                  <div key={m.name} className="bg-slate-950 border border-slate-800 rounded-xl p-3">
+                    <p className="text-sm font-bold text-slate-100">{m.name}</p>
+                    <p className="text-[12px] text-slate-400 mt-1"><b className="text-slate-300">Funzione:</b> {m.fn}</p>
+                    <p className="text-[12px] text-slate-400"><b className="text-slate-300">Quando:</b> {m.when}</p>
+                    <p className="text-[12px] mt-1 flex items-start gap-1.5" style={{ color: g.color }}><Mic className="w-3.5 h-3.5 shrink-0 mt-0.5" /> {m.voice}</p>
+                    <p className="text-[10.5px] text-slate-600 mt-1.5 border-t border-slate-800 pt-1.5">Moduli: {m.mods}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Indice completo dei 58 moduli */}
+      <section className="space-y-3">
+        <h2 className="text-sm font-bold text-teal-400 uppercase tracking-wide flex items-center gap-2 font-cyber"><Cpu className="w-4 h-4" /> Indice Moduli 1-58</h2>
+        <p className="text-[12px] text-slate-500 leading-snug">Tutti i moduli Cyber-Industrial integrati nelle schede operative (1-50) e le chicche di esperienza (51-58).</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+          {Array.from({ length: 58 }, (_, i) => i + 1).map((n) => {
+            const name = MODULES[n]?.name || CHICCHE[n] || "—";
+            return (
+              <div key={n} data-testid={`manuale-mod-${n}`} className="flex items-center gap-2 rounded-lg bg-slate-900/70 border border-slate-800 px-2.5 py-1.5">
+                <span className="font-cyber text-[9px] font-bold w-6 h-6 rounded-md bg-teal-500/15 text-teal-300 border border-teal-500/40 flex items-center justify-center shrink-0">{n}</span>
+                <span className="text-[11.5px] text-slate-300 leading-tight truncate" title={name}>{name}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 

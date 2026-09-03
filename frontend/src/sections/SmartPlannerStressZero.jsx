@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Moon, Users, Scale, CalendarDays, Wand2 } from "lucide-react";
+import ModuleParams from "@/components/ModuleParams";
 import { weeklyApi } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -72,6 +73,7 @@ export default function SmartPlannerStressZero() {
 
   return (
     <div data-testid="smart-planner" className="bg-slate-900/80 p-6 rounded-2xl border border-indigo-500/30 space-y-6">
+      <ModuleParams screen="planner" />
       <div className="flex items-start gap-3">
         <span className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-500/40 flex items-center justify-center shrink-0">
           <Moon className="w-6 h-6 text-indigo-400" />

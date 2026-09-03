@@ -63,3 +63,9 @@ Master plan dalla direttiva tassativa dell'utente. Stato: ✅ fatto · 🔲 da f
 - **FASE 3 (automazioni lab)**: miglioratore 0,3% auto, smistamento celle non ridondante, notifica email soglia freezer.
 - **FASE 4**: PayPal (a sblocco account) + eventuale lingua EN.
 - **FASE 5**: E-commerce Shop + Academy "Coming Soon".
+
+## v14 — CYBER-BAKERY TRIO (avatar) — RIFERIMENTI FISSI
+- **Miki (Il Capo)**: magro, capelli rasati stile militare, orecchino, t-shirt scura con logo MikiLab, TATUAGGIO REALE blackwork sul braccio SINISTRO (riferimento foto reale asset image-1.jpeg → 9gnsih4z_image-1.jpeg). NON inventare tatuaggi. File: /public/avatar_miki.jpg
+- **Mohamed (braccio destro)**: ragazzo PERSIANO/iraniano, tratti mediorientali autentici, capelli e barba curati, divisa con logo MikiLab. File: /public/avatar_mohamed.jpg
+- **Big Mix AI**: robot panettiere futurista, neon teal/amber, cappello da panettiere olografico, visualizzatore audio sul petto. File: /public/avatar_bigmix.jpg
+- Componente: components/CyberBakeryTrio.jsx (banner interattivo Home + Impara, clic → mini-guida a step + TTS).

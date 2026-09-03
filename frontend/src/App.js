@@ -19,7 +19,7 @@ import MikilaWisdom from "@/components/MikilaWisdom";
 import RadioFornaio from "@/components/RadioFornaio";
 import VoiceCommand from "@/components/VoiceCommand";
 import ModeBadge from "@/components/ModeBadge"; // eslint-disable-line no-unused-vars
-import GuidaMikiLab from "@/sections/GuidaMikiLab";
+import GuidaMikiLab from "@/sections/GuidaMikiLab";  // deprecato: non più montato (guida ora in Home)
 import ShiftScheduler from "@/components/ShiftScheduler";
 import AudioRouteIndicator from "@/components/AudioRouteIndicator";
 import IntroGuide from "@/components/IntroGuide";
@@ -44,6 +44,8 @@ import { SoundFXProvider } from "@/audio/SoundFXContext";
 import { MixerTimersProvider } from "@/audio/MixerTimersContext";
 import { MachinesProvider } from "@/audio/MachinesContext";
 import AutoReport from "@/components/AutoReport";
+import SplashScreen from "@/components/SplashScreen";
+import TalkWithMiki from "@/components/TalkWithMiki";
 import ambient from "@/lib/ambientMusic";
 import { api, greetingsApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -238,6 +240,7 @@ function App() {
     <SoundFXProvider>
     <MixerTimersProvider>
     <MachinesProvider>
+    <SplashScreen />
     <div className="App min-h-screen app-warm-bg">
       {/* Sfondo scenografico per sezione (fornaio + AI), toni calmi + velo scuro per leggibilità */}
       <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-cover bg-center bg-no-repeat"
@@ -294,9 +297,9 @@ function App() {
       <BottomNav active={tab} onChange={navigate} />
       {tab !== "home" && <VoiceCommand />}
       {tab !== "maestro" && <RadioFornaio />}
-      <GuidaMikiLab />
       <ShiftScheduler />
       <AutoReport />
+      <TalkWithMiki tab={tab} />
       <AudioRouteIndicator />
       {/* WhatsApp FAB globale rimosso: WhatsApp ora SOLO in Corsi e Il Tuo Laboratorio */}
       {!resetToken && showIntro && <IntroGuide />}

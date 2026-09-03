@@ -4,6 +4,8 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { useAuth } from "@/auth/AuthContext";
 import ShareInstall from "@/components/ShareInstall";
+import CyberBakeryTrio from "@/components/CyberBakeryTrio";
+import BachecaMiki from "@/components/BachecaMiki";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -106,6 +108,24 @@ export default function Home({ onNavigate }) {
           )}
         </div>
       </div>
+
+      {/* Intro navigazione snella (sostituisce la vecchia Guida separata) */}
+      <div data-testid="home-intro" className="mb-5 rounded-3xl border border-[#3E9C93]/25 bg-[#14212C] p-4">
+        <p className="font-display text-sm font-bold text-[#3E9C93] uppercase tracking-wide mb-1.5">{L("Come muoverti", "Navigation", "How to navigate", "Cómo moverte")}</p>
+        <p className="text-[13px] leading-relaxed text-[#C9D4DC]">
+          {L(
+            "Tocca Modalità Chef per il laboratorio operativo, Le Mie Ricette per dosi e passaggi, Scienza & Guide per imparare, Centro Formule per le farine e Community per confrontarti. Tutto funziona anche offline, a mani libere con la voce.",
+            "Tippe auf Chef-Modus für das Labor, Meine Rezepte für Mengen, Wissen & Guides zum Lernen, Formelzentrum für Mehle und Community zum Austausch. Alles offline und freihändig per Stimme.",
+            "Tap Chef Mode for the lab, My Recipes for doses, Science & Guides to learn, Formula Center for flours and Community to connect. Everything works offline, hands-free by voice.",
+            "Toca Modo Chef para el laboratorio, Mis Recetas para dosis, Ciencia y Guías para aprender, Centro de Fórmulas para harinas y Community. Todo funciona offline y manos libres por voz.")}
+        </p>
+      </div>
+
+      {/* Cyber-Bakery Trio: banner interattivo con mini-guide */}
+      <div className="mb-4"><CyberBakeryTrio /></div>
+
+      {/* La Bacheca di Miki: messaggio quotidiano del Capo */}
+      <div className="mb-6"><BachecaMiki /></div>
 
       {/* 5 sezioni */}
       <div className="space-y-4">

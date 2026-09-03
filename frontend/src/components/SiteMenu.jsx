@@ -220,11 +220,6 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-white/20"><Trophy className="w-4 h-4" /></span>
               <span className="font-display text-sm font-semibold">{tri("Motore Sfide", "Challenges", "Challenges", "Desafíos")}</span>
             </button>
-            <button data-testid="site-menu-guida" onClick={() => { setOpen(false); window.dispatchEvent(new Event("mikilab-open-guida")); }}
-              className="flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#3E9C93]/40 active:scale-98 hover:border-[#3E9C93]/70 transition-all">
-              <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#3E9C93]/15"><BookOpenCheck className="w-4 h-4 text-[#3E9C93]" /></span>
-              <span className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tri("Guida MikiLab", "MikiLab-Anleitung", "MikiLab Guide", "Guía MikiLab")}</span>
-            </button>
             <button data-testid="site-menu-manuale" onClick={() => goTool("manuale")}
               className="flex items-center gap-3 text-left px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#E0A106]/40 active:scale-98 hover:border-[#E0A106]/70 transition-all">
               <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-[#E0A106]/15"><BookOpen className="w-4 h-4 text-[#E0A106]" /></span>

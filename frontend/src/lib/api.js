@@ -217,6 +217,11 @@ export const bakeAlongApi = {
   like: (id) => api.post(`/community/posts/${id}/like`).then((r) => r.data),
 };
 
+export const boardApi = {
+  get: () => api.get(`/board`).then((r) => r.data).catch(() => ({ message: "" })),
+  set: (message) => api.post(`/board`, { message }).then((r) => r.data),
+};
+
 export const reportsApi = {
   list: () => api.get(`/reports`).then((r) => r.data.items || []).catch(() => []),
   save: (data) => api.post(`/reports`, data).then((r) => r.data),

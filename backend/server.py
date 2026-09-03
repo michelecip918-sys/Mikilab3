@@ -2478,6 +2478,25 @@ MOHAMMED_LANG = {
     "en": " Always answer in English. Translate the fixed out-of-scope reply accordingly.",
 }
 
+# --- Miki (Il Capo): assistente conversazionale del sito, parla in PRIMA PERSONA ---
+MIKI_SYSTEM = (
+    "Sei MIKI, il Capo e fondatore di MikiLab: panettiere magro, capelli rasati stile militare, con un tatuaggio sul braccio sinistro. "
+    "Parla SEMPRE in PRIMA PERSONA come Miki, con tono diretto, caloroso e concreto, da vero collega di laboratorio. "
+    "SCOPO: accogli chiunque visiti MikiLab e spiega in modo semplice come il software aiuta i panettieri: ricette testate, Smart Planner, "
+    "produzione Zero-Night, Thermal Guard IoT, Parco Macchine con timer, Team OS e comandi vocali hands-free. Rispondi a qualsiasi domanda "
+    "sul laboratorio, sull'organizzazione del forno e su come usare le sezioni del sito (Home, Modalità Chef, Ricette, Scienza & Guide, Community). "
+    "LA SQUADRA: se la domanda riguarda OPERAZIONI pratiche di laboratorio (pulizia, carrelli, infornata, impasti) puoi dire che 'Mohamed, il mio "
+    "braccio destro' segue quelle operazioni. Se riguarda TECNOLOGIA, IA, sensori o comandi vocali, puoi dire che 'Big Mix AI, il nostro assistente robot' "
+    "aiuta su quello. Resta comunque tu a rispondere. "
+    "NON parlare di HACCP, allergeni o etichettatura. "
+    "FORMATO: risposte brevi e pratiche, usa elenchi puntati quando servono passaggi. Non essere prolisso."
+)
+MIKI_LANG = {
+    "it": " Rispondi SEMPRE in italiano.",
+    "de": " Antworte IMMER auf Deutsch.",
+    "en": " Always answer in English.",
+}
+
 
 async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, message: str, lang: str = "it"):
     chat = LlmChat(
@@ -2525,6 +2544,17 @@ async def mohammed_chat(payload: ChatRequest):
 async def mohammed_history(session_id: str):
     docs = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(500)
     return docs
+
+
+@api_router.post("/miki/chat")
+async def miki_chat(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        _lab_assistant_stream(MIKI_SYSTEM, MIKI_LANG, payload.session_id, payload.message, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -5531,6 +5561,31 @@ async def save_day_report(body: DayReportSave, user: dict = Depends(current_user
 async def list_day_reports(limit: int = 90, user: dict = Depends(current_user)):
     docs = await db.day_reports.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("date", -1).to_list(limit)
     return {"items": docs}
+
+
+# --- Bacheca di Miki: messaggio vocale/testuale quotidiano del Capo per il team (globale) ---
+class BoardPost(BaseModel):
+    message: str
+
+
+@api_router.get("/board")
+async def get_board():
+    doc = await db.board.find_one({}, {"_id": 0}, sort=[("created_at", -1)])
+    return doc or {"message": "", "date": "", "author": ""}
+
+
+@api_router.post("/board")
+async def set_board(body: BoardPost, user: dict = Depends(current_user)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "message": body.message.strip()[:400],
+        "author": user.get("operator_name") or user.get("email") or "Capo",
+        "date": now_iso()[:10],
+        "created_at": now_iso(),
+    }
+    await db.board.insert_one(dict(doc))
+    doc.pop("_id", None)
+    return {"ok": True, **doc}
 
 
 # ---------------------------------------------------------------------------

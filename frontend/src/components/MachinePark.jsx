@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Cog, Check, Bookmark, Plus, X } from "lucide-react";
+import ModuleParams from "@/components/ModuleParams";
 import { MACHINE_CATEGORIES, getActiveMachineIds, setActiveMachineIds, BUILTIN_PRESETS, getUserPresets, saveUserPreset, deleteUserPreset, presetLabel } from "@/lib/machines";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -30,6 +31,7 @@ export default function MachinePark() {
 
   return (
     <div data-testid="machine-park" className="pb-4">
+      <ModuleParams screen="parco" />
       <div className="rounded-3xl bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-5 mb-4 shadow-lg">
         <Cog className="w-7 h-7 mb-2" />
         <h2 className="font-display text-xl font-bold">{tri("Parco Macchine", "Maschinenpark", "Machine Park")}</h2>
