@@ -12,7 +12,7 @@ const T = {
     sections: [
       { h: "Scopo del sito", b: "Questo sito è un'applicazione di supporto al lavoro artigianale (organizzazione della produzione, ricette, promemoria). Non è un negozio online e non vende prodotti né servizi." },
       { h: "Dati personali (Datenschutz)", b: "Vengono trattati solo i dati minimi necessari all'accesso: email e nome forniti al momento della registrazione, usati esclusivamente per identificare l'utente e salvare le sue ricette personali. Non vendiamo né cediamo i dati a terzi. Al login viene usato un cookie tecnico di sessione (necessario per restare connessi)." },
-      { h: "Contenuti e ricette", b: "Le ricette e i contenuti riflettono l'esperienza personale dell'autore e sono forniti a scopo informativo. L'utente è responsabile dell'uso in ambito professionale (norme igieniche, HACCP, sicurezza)." },
+      { h: "Contenuti e ricette", b: "Le ricette e i contenuti riflettono l'esperienza personale dell'autore e sono forniti a scopo informativo. L'utente è responsabile dell'uso in ambito professionale (norme igieniche e di sicurezza)." },
       { h: "Cancellazione dati", b: "Puoi richiedere in qualsiasi momento la cancellazione del tuo account e delle tue ricette personali contattando il gestore del sito." },
       { h: "Contatto", b: "Per qualsiasi richiesta relativa a privacy e dati: noreply@mikilab.de" },
     ],
@@ -24,7 +24,7 @@ const T = {
     sections: [
       { h: "Zweck der Seite", b: "Diese Seite ist eine Anwendung zur Unterstützung der handwerklichen Arbeit (Produktionsplanung, Rezepte, Erinnerungen). Es ist kein Online-Shop und verkauft weder Produkte noch Dienstleistungen." },
       { h: "Datenschutz", b: "Es werden nur die für den Zugang nötigen Mindestdaten verarbeitet: bei der Registrierung angegebene E-Mail und Name, ausschließlich zur Identifizierung und zum Speichern der persönlichen Rezepte. Wir verkaufen oder geben keine Daten an Dritte weiter. Beim Login wird ein technisches Session-Cookie verwendet (erforderlich, um angemeldet zu bleiben)." },
-      { h: "Inhalte und Rezepte", b: "Rezepte und Inhalte spiegeln die persönliche Erfahrung des Autors wider und dienen der Information. Für die professionelle Nutzung (Hygiene, HACCP, Sicherheit) ist der Nutzer verantwortlich." },
+      { h: "Inhalte und Rezepte", b: "Rezepte und Inhalte spiegeln die persönliche Erfahrung des Autors wider und dienen der Information. Für die professionelle Nutzung (Hygiene und Sicherheit) ist der Nutzer verantwortlich." },
       { h: "Löschung der Daten", b: "Du kannst jederzeit die Löschung deines Kontos und deiner persönlichen Rezepte beim Betreiber anfordern." },
       { h: "Kontakt", b: "Für Anfragen zu Datenschutz und Daten: noreply@mikilab.de" },
     ],
@@ -36,7 +36,7 @@ const T = {
     sections: [
       { h: "Purpose of the site", b: "This site is an application that supports artisan work (production planning, recipes, reminders). It is not an online shop and does not sell products or services." },
       { h: "Personal data (privacy)", b: "Only the minimum data needed to log in is processed: the email and name provided at registration, used solely to identify the user and save their personal recipes. We do not sell or share data with third parties. A technical session cookie is used at login (required to stay signed in)." },
-      { h: "Content and recipes", b: "Recipes and content reflect the author's personal experience and are provided for information. The user is responsible for professional use (hygiene, HACCP, safety)." },
+      { h: "Content and recipes", b: "Recipes and content reflect the author's personal experience and are provided for information. The user is responsible for professional use (hygiene and safety)." },
       { h: "Data deletion", b: "You can request deletion of your account and your personal recipes at any time by contacting the site operator." },
       { h: "Contact", b: "For any request regarding privacy and data: noreply@mikilab.de" },
     ],

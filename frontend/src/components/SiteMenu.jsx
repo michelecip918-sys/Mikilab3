@@ -271,7 +271,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               )}
               {pinMsg && <p data-testid="site-menu-pin-msg" className="text-[11px] text-[#22a06b] font-semibold mt-1.5 px-0.5">{pinMsg}</p>}
             </div>
-            {/* Interruttore modalità: Pro (tutto) / Passione (senza HACCP e B2B) */}
+            {/* Interruttore modalità: Pro (tutto) / Passione (senza B2B) */}
             <div data-testid="site-menu-mode" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#3E9C93]/40 p-2.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5">{tri("Modalità", "Modus", "Mode", "Modo")}</p>
               <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#0E1620]">
@@ -288,7 +288,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
               <p className="text-[11px] text-[#7E8A93] leading-snug mt-1.5 px-0.5">
                 {passion
                   ? tri("Vedi solo Ricette, calcolatori base e Academy.", "Nur Rezepte, Basisrechner und Academy.", "Only recipes, basic calculators and Academy.", "Solo recetas, calculadoras básicas y Academy.")
-                  : tri("Vedi tutto: HACCP, business e strumenti avanzati.", "Alles sichtbar: HACCP, Business und Profi-Tools.", "Everything visible: HACCP, business and advanced tools.", "Todo visible: HACCP, negocio y herramientas avanzadas.")}
+                  : tri("Vedi tutto: business e strumenti avanzati.", "Alles sichtbar: Business und Profi-Tools.", "Everything visible: business and advanced tools.", "Todo visible: negocio y herramientas avanzadas.")}
               </p>
             </div>
             {user?.role === "admin" && (

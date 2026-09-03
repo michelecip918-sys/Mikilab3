@@ -3592,3 +3592,10 @@ Richiesta utente: "Il Tuo Laboratorio" deve essere SOLO strumenti di lavoro (nie
 - Card della Home aggiornate agli stessi scenari futuristici (BLOCKS img → bg-lab/ricette/accademia/farine/community.jpg) per coerenza.
 - Sfondi piu visibili (velo alleggerito da v-lab.7). Verificato build OK, screenshot 390px. Deploy non lanciato.
 - ATTESA: utente invierà "quello che manca al sito".
+
+## v-lab.9 (2026-06) — Definitive Sync 4.0.1: identita cyber + logo + purge HACCP
+- **Nuovo logo ufficiale** high-tech (emblema ML + circuiti + wordmark MIKILAB, palette teal/oro) generato e applicato a: logo.png, logo-256, logo-emblem, icon-192, icon-512, apple-touch-icon, favicon-32 (resize PIL).
+- **Avatar Miki cyber-commander** (volto+tatuaggio reali, uniforme MikiLab teal) e **Mohammed cyber-support** (con cuffie): rigenerati con riferimento alle foto reali. Sovrascritte TUTTE le varianti file: michele-avatar/-real-lab/-avatar-real/-avatar-full/-avatar-talk.jpg e mohammed-avatar.jpg → avatar ricorrente coerente in header, lab (Avatar3D), chat, guide.
+- **HACCP PURGATO** (user-facing): DayClose/SiteMenu/LegalPage/siteInventory/toolGuide → "Registro di Produzione"/"Produktions-Register", rimosse diciture HACCP; eliminato file morto HaccpLog.jsx; commento labHubs neutralizzato. ("dispute/arguments" dello spec: nessuna sezione reale, solo falsi positivi).
+- Pulsanti: le CTA principali restano teal ad alto contrasto (Sign in, Open Elite Engine, Registra) su palette calma.
+- PDF funzioni rigenerato (sync). Build OK, verificato 390px. Deploy non lanciato. Target "emtra.be" NON configurabile da codice (dominio da pannello); produzione = mikilab.de.

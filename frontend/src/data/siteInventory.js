@@ -20,7 +20,7 @@ App per fornai, gratuita al 100%. 6 lingue (IT, DE, EN, ES, FR, FA). Tema scuro 
 - Panificazione: Generatore Ricette, Fermentazione Predittiva, Smart Weather-Baker, Conversione Farine, Scanner Farina, Vapore e Forno, Adatta Forno, Temperatura Acqua, Idratazione, Metodo e Sequenze IA, Digital Twin, Stampi e Pirottini, Bilancia Smart, Pesata Guidata, Esubero Zero-Sprechi, Angolo del Recupero, Costo Energia Forno, Time-Lapse Raddoppio, Termostato e Clima
 - Pizzeria e Pasticceria: laboratori dedicati
 - Mani in Pasta: comando vocale, Convertitore Lieviti, Timer Multi-Impasto, Registro Lievito Madre, SOS Impasto, Ricetta di Cantiere in PDF, Banca del Lievito
-- Gestione: Controllo Celle e Impastatrici, Giacenze Freezer, Punti Vendita, Chiusura Giornata HACCP, Costi e Margine, Anti-Spreco, Parco Macchine, Diagnosi Foto, Diagnosi Suono, Diario Impasti, Checklist, Shelf-Life, Registro HACCP, Magazzino, Tracciabilita lotti
+- Gestione: Controllo Celle e Impastatrici, Giacenze Freezer, Punti Vendita, Chiusura Giornata, Costi e Margine, Anti-Spreco, Parco Macchine, Diagnosi Foto, Diagnosi Suono, Diario Impasti, Checklist, Shelf-Life, Registro di Produzione, Magazzino, Tracciabilita lotti
 
 ## 4. Impara (Academy)
 - Percorso a livelli per principianti e Bake-Along passo passo
@@ -68,7 +68,7 @@ A 100% free app for bakers. 6 languages (IT, DE, EN, ES, FR, FA). Dark black and
 - Baking: Recipe Generator, Predictive Fermentation, Smart Weather-Baker, Flour Conversion, Flour Scanner, Steam and Oven, Adapt Oven, Water Temperature, Hydration, AI Method and Sequences, Digital Twin, Molds and Cases, Smart Scale, Guided Weighing, Zero-Waste, Recovery Corner, Oven Energy Cost, Doubling Time-Lapse, Thermostat and Climate
 - Pizzeria and Pastry: dedicated labs
 - Hands-on: voice command, Yeast Converter, Multi-Dough Timer, Sourdough Log, Dough SOS, Site Recipe PDF, Yeast Bank
-- Management: Cells and Mixers, Freezer Stock, Sales Points, Day Closing HACCP, Cost and Margin, Anti-Waste, Machines, Photo Diagnosis, Sound Diagnosis, Dough Log, Checklists, Shelf-Life, HACCP register, Warehouse, Batch traceability
+- Management: Cells and Mixers, Freezer Stock, Sales Points, Day Closing, Cost and Margin, Anti-Waste, Machines, Photo Diagnosis, Sound Diagnosis, Dough Log, Checklists, Shelf-Life, production register, Warehouse, Batch traceability
 
 ## 4. Learn (Academy)
 - Level path for beginners and step-by-step Bake-Along

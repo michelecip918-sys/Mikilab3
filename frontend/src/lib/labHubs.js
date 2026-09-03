@@ -19,7 +19,7 @@ export const LAB_HUBS = [
   },
 ];
 
-// Strumenti Pro-only anche fuori dal Laboratorio (menu, ecc.): B2B / HACCP / complessi.
+// Strumenti Pro-only anche fuori dal Laboratorio (menu, ecc.): B2B / avanzati / complessi.
 export const PRO_ONLY_TOOLS = new Set([
   "macchine", "simforno", "adatta", "capo", "energia",
   "foodcost", "freezer", "shelf", "esuberozero", "spreco", "check", "sessioni", "mydata",

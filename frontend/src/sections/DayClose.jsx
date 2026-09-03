@@ -153,7 +153,7 @@ export default function DayClose() {
       setCelebrate(true);
       setLastId((res.closure && res.closure.id) || null);
       addXP(3);
-      toast.success(tri(`Giornata chiusa · ${res.haccp_created} voci nel Registro HACCP ✅`, `Tag abgeschlossen · ${res.haccp_created} HACCP-Einträge ✅`));
+      toast.success(tri(`Giornata chiusa · ${res.haccp_created} voci nel Registro di Produzione ✅`, `Tag abgeschlossen · ${res.haccp_created} Produktions-Einträge ✅`));
     } catch { toast.error(tri("Errore durante la chiusura", "Fehler beim Abschluss")); }
     setSaving(false);
   };
@@ -271,7 +271,7 @@ export default function DayClose() {
       </div>
       <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-3">
         {step === 1 ? tri("1 · Tracciabilità & Lotti", "1 · Rückverfolgbarkeit & Chargen")
-          : step === 2 ? tri("2 · Registro Sanitario & HACCP", "2 · Hygiene- & HACCP-Register")
+          : step === 2 ? tri("2 · Registro di Produzione", "2 · Produktions-Register")
           : tri("3 · Chiusura & Archiviazione", "3 · Abschluss & Archivierung")}
       </p>
 
@@ -434,7 +434,7 @@ export default function DayClose() {
             </ul>
             <div className="mt-3 flex items-start gap-2 bg-[#3E9C93]/12 border border-[#3E9C93]/30 rounded-2xl shadow-md border border-amber-900/40 p-2.5">
               <ShieldCheck className="w-4 h-4 text-[#3E9C93] dark:text-[#a9d2ec] shrink-0 mt-0.5" />
-              <p className="text-[12px] text-[#3E9C93] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro HACCP.", "Bei Bestätigung werden die Daten archiviert und automatisch ins HACCP-Register übernommen.")}</p>
+              <p className="text-[12px] text-[#3E9C93] dark:text-[#8FB0C2]">{tri("Alla conferma i dati vengono archiviati e sincronizzati automaticamente nel Registro di Produzione.", "Bei Bestätigung werden die Daten archiviert und automatisch ins Produktions-Register übernommen.")}</p>
             </div>
           </Card>
 
@@ -484,7 +484,7 @@ export default function DayClose() {
             </motion.h2>
             <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
               className="mt-1 text-white/85 text-sm text-center max-w-xs">
-              {tri("Registro HACCP aggiornato e magazzino scalato. Buon riposo!", "HACCP-Register aktualisiert und Lager gebucht. Gute Erholung!")}
+              {tri("Registro di Produzione aggiornato e magazzino scalato. Buon riposo!", "Produktions-Register aktualisiert und Lager gebucht. Gute Erholung!")}
             </motion.p>
             <div className="mt-6 flex flex-col items-center gap-2.5" onClick={(e) => e.stopPropagation()}>
               {lastId && (
@@ -509,7 +509,7 @@ function Header({ tri }) {
     <div className="flex items-center gap-3 mb-4">
       <div className="w-11 h-11 rounded-2xl bg-[#3E9C93] flex items-center justify-center"><CalendarCheck className="w-6 h-6 text-white" /></div>
       <div>
-        <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Chiusura Turno & Registro HACCP", "Schichtabschluss & HACCP-Register")}</h1>
+        <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Chiusura Turno & Registro di Produzione", "Schichtabschluss & Produktions-Register")}</h1>
         <p className="text-sm text-[#7E8A93]">{tri("Tracciabilità, registro sanitario e archiviazione in 3 passi", "Rückverfolgbarkeit, Hygiene und Archivierung in 3 Schritten")}</p>
       </div>
     </div>

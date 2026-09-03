@@ -22,7 +22,7 @@ export const TOOL_GUIDE = {
   suono: { it: "Diagnosi dal suono: valuta la cottura dal 'canto' della crosta.", de: "Klang-Diagnose: beurteilt die Backung am 'Singen' der Kruste.", en: "Sound diagnosis: judges the bake from the crust's 'song'." },
   sessioni: { it: "Diario impasti: salva sessioni, note e risultati nel tempo.", de: "Teig-Tagebuch: speichert Sessions, Notizen und Ergebnisse.", en: "Dough log: saves sessions, notes and results over time." },
   lotti: { it: "Tracciabilità lotti con QR: risali a ingredienti e date.", de: "Chargenrückverfolgung mit QR: Zutaten und Daten nachvollziehen.", en: "Batch traceability with QR: trace ingredients and dates." },
-  haccp: { it: "Registro HACCP: temperature, pulizie e controlli a norma.", de: "HACCP-Register: Temperaturen, Reinigung und Kontrollen normgerecht.", en: "HACCP log: temperatures, cleaning and compliant checks." },
+  haccp: { it: "Registro di Produzione: temperature, pulizie e controlli a norma.", de: "Produktions-Register: Temperaturen, Reinigung und Kontrollen normgerecht.", en: "Production log: temperatures, cleaning and compliant checks." },
   check: { it: "Checklist di apertura e chiusura del laboratorio.", de: "Checklisten für das Öffnen und Schließen des Labors.", en: "Opening and closing checklists for the lab." },
   shelf: { it: "Shelf-life: stima la durata e la scadenza dei prodotti.", de: "Shelf-Life: schätzt Haltbarkeit und Ablaufdatum.", en: "Shelf-life: estimates product durability and best-before." },
   spreco: { it: "Anti-spreco: recupera invenduto e riduci gli scarti.", de: "Anti-Verschwendung: verwertet Unverkauftes und reduziert Abfall.", en: "Anti-waste: recover unsold goods and cut waste." },
