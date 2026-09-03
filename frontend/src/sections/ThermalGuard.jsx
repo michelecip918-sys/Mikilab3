@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Moon, Thermometer, ShieldAlert, Snowflake, Flame, Activity, TriangleAlert, RotateCcw, CalendarClock, History, Trash2 } from "lucide-react";
+import { Moon, Thermometer, ShieldAlert, Snowflake, Flame, Activity, RotateCcw, CalendarClock, History, Trash2, Smartphone, Keyboard } from "lucide-react";
 import { useMachines } from "@/audio/MachinesContext";
 import { useMixers } from "@/audio/MixerTimersContext";
 import { weeklyApi, recipesApi } from "@/lib/api";
@@ -15,7 +15,7 @@ const fmtClock = (ts) => new Date(ts).toLocaleTimeString("it-IT", { hour: "2-dig
 const fmtDur = (a, b) => { const s = Math.max(0, Math.round(((b || Date.now()) - a) / 1000)); const m = Math.floor(s / 60); return m > 0 ? `${m}m ${s % 60}s` : `${s}s`; };
 
 export default function ThermalGuard() {
-  const { thermal, faults, ranges, history, simulateFault, clearFault, setRange, clearHistory } = useMachines();
+  const { thermal, faults, ranges, history, simulateFault, clearFault, setRange, setManualTemp, clearManualTemp, clearHistory } = useMachines();
   const { list: mixers } = useMixers();
   const [close, setClose] = useState("20:00");
   const [finish, setFinish] = useState("06:00");
@@ -99,14 +99,22 @@ export default function ThermalGuard() {
             <ShieldAlert className="w-3 h-3" /> Attiva notifiche push
           </button>
         </div>
+        <div data-testid="hybrid-hint" className="flex items-start gap-2 p-3 rounded-xl bg-teal-950/30 border border-teal-800/40 text-[11.5px] text-slate-300 leading-snug">
+          <Smartphone className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+          <span>Modalità ibrida: con sonde fisiche i valori arrivano da soli. Senza sensori, inserisci la temperatura <b>a mano</b> qui sotto, oppure invia le letture da <b>smartphone/tablet in rete locale</b> (POST a <code className="text-teal-300">/api/sensors/reading</code> con l'id cella). Il badge mostra la sorgente di ogni cella.</span>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {thermal.map((t) => {
             const Icon = ICON[t.id] || Thermometer;
+            const srcStyle = t.source === "sensore" ? "bg-emerald-500/15 text-emerald-300 border-emerald-500/40"
+              : t.source === "manuale" ? "bg-amber-500/15 text-amber-300 border-amber-500/40"
+              : "bg-slate-700/40 text-slate-400 border-slate-600/50";
+            const srcLabel = t.source === "sensore" ? "Sensore" : t.source === "manuale" ? "Manuale" : "Demo";
             return (
               <div key={t.id} data-testid={`sensor-${t.id}`} className={`p-4 rounded-xl border bg-slate-950 ${t.alarm ? "border-rose-500 animate-pulse shadow-[0_0_16px_rgba(230,57,70,.4)]" : "border-slate-800"}`}>
                 <div className="flex items-center justify-between">
                   <span className="flex items-center gap-2 text-sm font-bold text-slate-100"><Icon className="w-4 h-4" style={{ color: t.color }} /> {t.name}</span>
-                  {t.alarm && <TriangleAlert className="w-4 h-4 text-rose-400" />}
+                  <span data-testid={`sensor-source-${t.id}`} className={`text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded border ${srcStyle}`}>{srcLabel}</span>
                 </div>
                 <div className="flex items-end justify-between mt-2">
                   <span data-testid={`sensor-temp-${t.id}`} className="font-mono text-3xl font-black" style={{ color: t.color }}>{t.temp}{t.unit}</span>
@@ -119,6 +127,15 @@ export default function ThermalGuard() {
                   <span className="text-slate-600">/</span>
                   <input data-testid={`sensor-max-${t.id}`} type="number" value={t.max} onChange={(e) => setRange(t.id, t.min, e.target.value)} className="w-14 bg-slate-900 border border-slate-700 rounded p-1 text-center text-slate-300 font-mono text-[11px]" title="max" />
                   <span className="text-[9px] text-slate-500">{t.unit}</span>
+                </div>
+                {/* Inserimento manuale (in assenza di sonde) */}
+                <div className="flex items-center gap-1.5 mt-2">
+                  <span className="text-[9px] text-slate-500 uppercase flex items-center gap-1"><Keyboard className="w-3 h-3" /> Manuale</span>
+                  <input data-testid={`sensor-manual-${t.id}`} type="number" placeholder="—" value={t.source === "manuale" ? t.temp : ""} onChange={(e) => setManualTemp(t.id, e.target.value)} className="w-16 bg-slate-900 border border-amber-700/50 rounded p-1 text-center text-amber-200 font-mono text-[11px]" title="Temperatura manuale" />
+                  <span className="text-[9px] text-slate-500">{t.unit}</span>
+                  {t.source === "manuale" && (
+                    <button data-testid={`sensor-auto-${t.id}`} onClick={() => clearManualTemp(t.id)} className="ml-auto text-[10px] font-bold text-teal-300 border border-teal-500/30 rounded px-2 py-0.5 hover:text-teal-200">Torna auto</button>
+                  )}
                 </div>
                 {faults[t.id] ? (
                   <button data-testid={`sensor-clear-${t.id}`} onClick={() => clearFault(t.id)} className="mt-2 w-full py-1.5 rounded-lg text-[11px] font-bold bg-teal-600 hover:bg-teal-500 text-white inline-flex items-center justify-center gap-1"><RotateCcw className="w-3 h-3" /> Ripristina sonda</button>

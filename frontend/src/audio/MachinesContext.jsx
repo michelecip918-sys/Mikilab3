@@ -40,9 +40,11 @@ export function MachinesProvider({ children }) {
   const [temps, setTemps] = useState(() => Object.fromEntries(DEFS.filter((d) => d.kind === "thermal").map((d) => [d.id, d.base])));
   const [faults, setFaults] = useState({});
   const [ranges, setRanges] = useState(() => lsGet("mikilab_sensor_ranges", {}));
+  const [manualTemps, setManualTemps] = useState(() => lsGet("mikilab_manual_temps", {}));
   const [history, setHistory] = useState(() => lsGet("mikilab_alarm_history", []));
   const faultsRef = useRef(faults); faultsRef.current = faults;
   const rangesRef = useRef(ranges); rangesRef.current = ranges;
+  const manualTempsRef = useRef(manualTemps); manualTempsRef.current = manualTemps;
   const realRef = useRef({});
   const prevAlarm = useRef({});
   const histRef = useRef(history); histRef.current = history;
@@ -73,6 +75,7 @@ export function MachinesProvider({ children }) {
   }, []);
 
   useEffect(() => { try { localStorage.setItem("mikilab_sensor_ranges", JSON.stringify(ranges)); } catch { /* */ } }, [ranges]);
+  useEffect(() => { try { localStorage.setItem("mikilab_manual_temps", JSON.stringify(manualTemps)); } catch { /* */ } }, [manualTemps]);
   useEffect(() => { try { localStorage.setItem("mikilab_alarm_history", JSON.stringify(history)); } catch { /* */ } }, [history]);
 
   useEffect(() => {
@@ -81,7 +84,9 @@ export function MachinesProvider({ children }) {
         const next = { ...prev };
         DEFS.filter((d) => d.kind === "thermal").forEach((d) => {
           const real = realRef.current[d.id];
-          if (real && typeof real.temp === "number") { next[d.id] = real.temp; return; } // sonda reale: usa valore vero
+          if (real && typeof real.temp === "number") { next[d.id] = real.temp; return; } // sonda reale/da rete: usa valore vero
+          const man = manualTempsRef.current[d.id];
+          if (typeof man === "number") { next[d.id] = man; return; } // inserimento manuale: valore fisso, niente deriva
           const eMax = rangesRef.current[d.id]?.max ?? d.max;
           const target = faultsRef.current[d.id] ? (d.hot ? eMax + 25 : eMax + 6) : d.base;
           const noise = (Math.random() - 0.5) * (d.hot ? 2 : 0.3);
@@ -97,8 +102,11 @@ export function MachinesProvider({ children }) {
     const temp = temps[d.id];
     const min = ranges[d.id]?.min ?? d.min;
     const max = ranges[d.id]?.max ?? d.max;
+    const real = realRef.current[d.id];
+    const source = (real && typeof real.temp === "number") ? "sensore"
+      : (typeof manualTemps[d.id] === "number") ? "manuale" : "demo";
     const s = thermalStatus(d, temp, min, max);
-    return { id: d.id, name: d.name, temp, unit: d.unit, min, max, ...s };
+    return { id: d.id, name: d.name, temp, unit: d.unit, min, max, source, ...s };
   });
 
   // Allarme termico in cuffia + storico allarmi (inizio/fine/picco)
@@ -127,7 +135,9 @@ export function MachinesProvider({ children }) {
   const simulateFault = useCallback((id) => setFaults((f) => ({ ...f, [id]: true })), []);
   const clearFault = useCallback((id) => setFaults((f) => ({ ...f, [id]: false })), []);
   const setRange = useCallback((id, min, max) => setRanges((r) => ({ ...r, [id]: { min: Number(min), max: Number(max) } })), []);
+  const setManualTemp = useCallback((id, val) => setManualTemps((m) => ({ ...m, [id]: val === "" || val == null ? undefined : Number(val) })), []);
+  const clearManualTemp = useCallback((id) => setManualTemps((m) => { const n = { ...m }; delete n[id]; return n; }), []);
   const clearHistory = useCallback(() => setHistory([]), []);
 
-  return <Ctx.Provider value={{ machines, toolsRow, thermal, faults, ranges, history, cycle, simulateFault, clearFault, setRange, clearHistory }}>{children}</Ctx.Provider>;
+  return <Ctx.Provider value={{ machines, toolsRow, thermal, faults, ranges, history, cycle, simulateFault, clearFault, setRange, setManualTemp, clearManualTemp, clearHistory }}>{children}</Ctx.Provider>;
 }
