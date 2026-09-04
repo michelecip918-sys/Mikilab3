@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
+import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
 import { TimerProvider } from "@/audio/TimerContext";
@@ -23,19 +24,29 @@ import MagazzinoManager from "@/components/MagazzinoManager";
 import DocsDownload from "@/components/DocsDownload";
 import ConfermaImpastata from "@/components/ConfermaImpastata";
 import LabBriefing from "@/components/LabBriefing";
+import CyberBakeryTrio from "@/components/CyberBakeryTrio";
+import AutoReport from "@/components/AutoReport";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import AuthScreen from "@/components/AuthScreen";
+import ResetPassword from "@/components/ResetPassword";
+import { User } from "lucide-react";
 
 // Viste principali
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
+import Community from "@/sections/Community";
 
 export default function App() {
-  useLang();
+  const { lang } = useLang();
+  const { user, authOpen, setAuthOpen } = useAuth();
 
   const [activeMode, setActiveMode] = useState("floor");
   const [currentView, setCurrentView] = useState("dashboard");
   const [locked, setLocked] = useState(() => pinIsLocked());
   const [legalOpen, setLegalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("login");
+  const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
 
   useEffect(() => {
     const onLock = () => { pinLockNow(); setLocked(true); };
@@ -43,9 +54,22 @@ export default function App() {
     return () => window.removeEventListener("mikilab-lock", onLock);
   }, []);
 
-  if (locked) {
+  useEffect(() => {
+    const h = (e) => { setAuthMode((e && e.detail && e.detail.mode) || "login"); setAuthOpen(true); };
+    window.addEventListener("mikilab-open-auth", h);
+    return () => window.removeEventListener("mikilab-open-auth", h);
+  }, [setAuthOpen]);
+
+  useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
+
+  if (locked && !resetToken) {
     return <PinLock onUnlock={() => setLocked(false)} />;
   }
+
+  const navigate = (tab) => {
+    if (tab === "community") { setActiveMode("lab"); setCurrentView("community"); }
+    else if (tab === "ricette") setCurrentView("ricette");
+  };
 
   return (
     <ProfileProvider>
@@ -64,14 +88,12 @@ export default function App() {
 
         <div className="relative z-10 flex flex-col min-h-screen">
 
-          {/* HEADER CON LOGO FUTURISTICO "ML" */}
+          {/* HEADER CON NUOVO LOGO EMBLEMA */}
           <header className="border-b border-[#1e293b] bg-[#0b0f19]/80 backdrop-blur-xl px-4 py-3 sticky top-0 z-50">
             <div className="max-w-4xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14b8a6] to-[#0f172a] p-[1px] shadow-lg shadow-[#14b8a6]/20">
-                  <div className="w-full h-full bg-[#030712] rounded-[11px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-r from-[#14b8a6] to-[#38bdf8] tracking-wider text-base">
-                    ML
-                  </div>
+                <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#14b8a6]/40 shadow-lg shadow-[#14b8a6]/20 bg-[#030712]">
+                  <img src={`${process.env.PUBLIC_URL}/logo-neo.jpg`} alt="MikiLab" className="w-full h-full object-cover" />
                 </div>
                 <div>
                   <h1 className="text-sm font-black tracking-wider text-white uppercase flex items-center gap-2">
@@ -82,36 +104,30 @@ export default function App() {
               </div>
               <div className="flex items-center gap-2 text-xs">
                 <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#94A3B8]">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Cuffie BT & Voice Attivi
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Cuffie BT & Voice
                 </span>
+                <button
+                  data-testid="account-btn"
+                  onClick={() => { setAuthMode("login"); setAuthOpen(true); }}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#14b8a6]/10 border border-[#14b8a6]/30 text-[#14b8a6] font-bold hover:bg-[#14b8a6]/20 active:scale-95 transition-all"
+                >
+                  <User className="w-3.5 h-3.5" />
+                  {user ? (user.email ? user.email.split("@")[0].slice(0, 10) : "Account") : "Accedi"}
+                </button>
               </div>
             </div>
           </header>
 
-          {/* SELETTORE MODALITÀ PULITO */}
+          {/* SELETTORE MODALITÀ */}
           <div className="bg-[#0b0f19]/90 border-b border-[#1e293b] px-4 py-2.5 sticky top-[65px] z-40 backdrop-blur-md">
             <div className="max-w-4xl mx-auto flex items-center justify-center gap-3">
               <div className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] w-full max-w-md">
-                <button
-                  data-testid="mode-lab-btn"
-                  onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); }}
-                  className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
-                    activeMode === 'lab'
-                      ? 'bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20'
-                      : 'text-[#94A3B8] hover:text-white'
-                  }`}
-                >
+                <button data-testid="mode-lab-btn" onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); }}
+                  className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${activeMode === 'lab' ? 'bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20' : 'text-[#94A3B8] hover:text-white'}`}>
                   🛡️ Lab Control
                 </button>
-                <button
-                  data-testid="mode-floor-btn"
-                  onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }}
-                  className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
-                    activeMode === 'floor'
-                      ? 'bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20'
-                      : 'text-[#94A3B8] hover:text-white'
-                  }`}
-                >
+                <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }}
+                  className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${activeMode === 'floor' ? 'bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20' : 'text-[#94A3B8] hover:text-white'}`}>
                   ⚡ Floor Mode
                 </button>
               </div>
@@ -120,6 +136,7 @@ export default function App() {
 
           {/* CORPO PRINCIPALE */}
           <main className="flex-1 max-w-4xl w-full mx-auto p-4 pb-32">
+            <ErrorBoundary resetKey={`${activeMode}-${currentView}`} lang={lang}>
 
             {activeMode === 'lab' ? (
               /* ================= LAB CONTROL (Michele) ================= */
@@ -131,8 +148,8 @@ export default function App() {
                     <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2"><span>🛡️</span> Lab Control</h2>
                     <p className="text-xs text-[#94A3B8] mt-1">Plancia amministrativa master con briefing vocale scorte e gestione logistica.</p>
                   </div>
-                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-3 py-2 rounded-xl">
-                    <div className="w-8 h-8 rounded-full bg-[#14b8a6]/20 border border-[#14b8a6] flex items-center justify-center text-xs font-bold text-[#14b8a6]">M</div>
+                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-2.5 py-1.5 rounded-xl">
+                    <img src={`${process.env.PUBLIC_URL}/avatar_miki.jpg`} alt="Michele" className="w-9 h-9 rounded-full object-cover object-top border border-[#14b8a6]" />
                     <div className="hidden sm:block">
                       <p className="text-[11px] font-bold text-white">Michele</p>
                       <p className="text-[9px] text-[#14b8a6]">Master Admin</p>
@@ -140,33 +157,35 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                   <button data-testid="lab-nav-ricette" onClick={() => setCurrentView("ricette")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">🥖</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Master Ricettario</h3>
                     <p className="text-[11px] text-[#94A3B8] mt-1">Ricette protette e conferma impastata.</p>
                   </button>
-
                   <button data-testid="lab-nav-magazzino" onClick={() => setCurrentView("magazzino")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">📦</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Magazzino & Scorte</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Giacenze, soglie e giorni di autonomia.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Giacenze, soglie e autonomia.</p>
                   </button>
-
                   <button data-testid="lab-nav-planner" onClick={() => setCurrentView("planner")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">🗓️</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Smart Planner</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Piano settimanale con validazione vocale.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Piano con validazione vocale.</p>
                   </button>
-
+                  <button data-testid="lab-nav-community" onClick={() => setCurrentView("community")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
+                    <div className="text-xl mb-2">💬</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Community</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Feed e scambio tra fornai.</p>
+                  </button>
                   <button data-testid="lab-nav-iot" onClick={() => setCurrentView("maestro")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">⚙️</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Sistemi IoT</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Auto-setup periferiche, sensori e forni.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Auto-setup periferiche e forni.</p>
                   </button>
                 </div>
 
-                {currentView === "dashboard" && <DocsDownload />}
+                {currentView === "dashboard" && <><CyberBakeryTrio /><DocsDownload /></>}
                 {currentView === "ricette" && (
                   <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4">
                     <Ricette isMasterView={true} />
@@ -178,6 +197,9 @@ export default function App() {
                 )}
                 {currentView === "planner" && (
                   <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>
+                )}
+                {currentView === "community" && (
+                  <div data-testid="community-view" className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Community onNavigate={navigate} /></div>
                 )}
                 {currentView === "maestro" && (
                   <div className="space-y-4">
@@ -195,14 +217,16 @@ export default function App() {
                     <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2"><span>⚡</span> Floor Mode</h2>
                     <p className="text-xs text-[#94A3B8] mt-1">Plancia operativa di produzione, timer globali e comandi vocali per il team.</p>
                   </div>
-                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-3 py-2 rounded-xl">
-                    <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500 flex items-center justify-center text-xs font-bold text-amber-400">MR</div>
+                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-2.5 py-1.5 rounded-xl">
+                    <img src={`${process.env.PUBLIC_URL}/avatar_mohamed.jpg`} alt="Mohamed Reza" className="w-9 h-9 rounded-full object-cover object-top border border-amber-500" />
                     <div className="hidden sm:block">
                       <p className="text-[11px] font-bold text-white">Mohamed Reza</p>
                       <p className="text-[9px] text-amber-400">Capo Turno / Floor</p>
                     </div>
                   </div>
                 </div>
+
+                <CyberBakeryTrio />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
@@ -211,11 +235,8 @@ export default function App() {
                       <h3 className="font-bold text-sm text-white">Timer Forni & Celle</h3>
                       <p className="text-xs text-[#94A3B8] mt-1">Monitoraggio cicli di cottura e lievitazione in tempo reale.</p>
                     </div>
-                    <button onClick={() => toast.success("Timer sincronizzati con successo.")} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg">
-                      Gestisci Timer
-                    </button>
+                    <button onClick={() => toast.success("Timer sincronizzati con successo.")} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg">Gestisci Timer</button>
                   </div>
-
                   <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
                     <div>
                       <div className="text-2xl mb-2">🎙️</div>
@@ -236,6 +257,7 @@ export default function App() {
               </div>
             )}
 
+            </ErrorBoundary>
           </main>
 
           {/* FOOTER */}
@@ -257,10 +279,21 @@ export default function App() {
           </div>
         )}
 
+        {authOpen && !user && (
+          <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto">
+            <AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} />
+          </div>
+        )}
+
+        {resetToken && (
+          <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />
+        )}
+
         <Toaster position="top-center" richColors />
         <RadioFornaio />
         <ShiftScheduler />
         <TalkWithMiki />
+        <AutoReport />
         <AudioRouteIndicator />
 
       </div>

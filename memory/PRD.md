@@ -3916,3 +3916,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Ordini Automatici** (components/OrdineRiacquisto.jsx): quando ci sono materie sotto soglia, genera un ordine precompilato (qta suggerita = 2x soglia) con Copia negli appunti e Invia via email (mailto). In Magazzino.
 - **PDF anche in Floor Mode**: DocsDownload aggiunto alla plancia del team (oltre a Lab Control).
 - Testato iter173: frontend 100% (tutte e 4 le funzioni), nessun bug bloccante, nessun dato di test lasciato.
+
+## v-fork+4 (2026-06) — Ripristini richiesti (A/B/C/D) + nuova identita visiva
+- **A** AutoReport (Report Fine Giornata, background) e ErrorBoundary (anti-crash attorno alle viste) rimontati.
+- **B** Community ripristinata come 5a card in Lab Control (lab-nav-community -> community-view), avvolta nello stile cyber.
+- **C** Login/Account ripristinato (AuthScreen + ResetPassword + pulsante account-btn nell'header + gestione ?reset=), SENZA PaywallGate.
+- **D** Nuova identita: logo emblema neon /logo-neo.jpg nell'header; NUOVI avatar stilizzati (Miki/Michele, Mohamed, Bake Mix robot) generati via Nano Banana e salvati su public (avatar_miki/mohamed/bigmix.jpg); scenario Cyber-Bakery Trio (umani + robot) rimontato in Lab dashboard e Floor Mode. Nessuna foto reale (solo avatar stilizzati).
+- Testato iter174: frontend 100% (6/6 gruppi), zero crash, zero errori console non-401, immagini caricate (naturalWidth>0).
+NB: Restano NON ripristinati di proposito: Home, Academy/Impara, Diagnosi, Shop, Enterprise, PaywallGate, BottomNav, SiteMenu, SplashScreen, banner PWA/offline, IntroGuide, PublicBatch, Sfide.
