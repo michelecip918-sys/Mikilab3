@@ -2097,6 +2097,36 @@ async def get_consumption(user: Optional[dict] = Depends(optional_user)):
     return await db.lab_consumption_log.find({}, {"_id": 0}).sort("at", -1).to_list(100)
 
 
+@api_router.get("/lab/warehouse/stats")
+async def warehouse_stats(user: Optional[dict] = Depends(optional_user)):
+    # Autonomia reale: consumo medio giornaliero per materia (ultimi 14 giorni) + giorni residui.
+    WINDOW = 14
+    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
+    logs = await db.lab_consumption_log.find({}, {"_id": 0}).to_list(3000)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=WINDOW)
+    by_name: dict = {}
+    for lg in logs:
+        try:
+            at = datetime.fromisoformat(str(lg.get("at")).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if at.tzinfo is None:
+            at = at.replace(tzinfo=timezone.utc)
+        if at < cutoff:
+            continue
+        nm = (lg.get("name") or "").lower().strip()
+        by_name[nm] = by_name.get(nm, 0) + float(lg.get("kg", 0) or 0)
+    items = []
+    for s in stock:
+        nm = (s.get("name") or "").lower().strip()
+        used = by_name.get(nm, 0)
+        daily = round(used / WINDOW, 3) if used > 0 else 0
+        q = float(s.get("quantity_kg", 0) or 0)
+        days_left = int(q / daily) if daily > 0 else None
+        items.append({"id": s.get("id"), "name": s.get("name"), "daily_kg": daily, "days_left": days_left})
+    return {"items": items, "window_days": WINDOW}
+
+
 class LabelScan(BaseModel):
     image_base64: str
     lang: Optional[str] = "it"

@@ -21,6 +21,8 @@ import LegalPage from "@/sections/LegalPage";
 import PeripheralSetup from "@/components/PeripheralSetup";
 import MagazzinoManager from "@/components/MagazzinoManager";
 import DocsDownload from "@/components/DocsDownload";
+import ConfermaImpastata from "@/components/ConfermaImpastata";
+import LabBriefing from "@/components/LabBriefing";
 
 // Viste principali
 import Ricette from "@/sections/Ricette";
@@ -30,7 +32,6 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 export default function App() {
   useLang();
 
-  // MODALITÀ DI LAVORO: Lab Control vs Floor Mode (Mohamed Reza)
   const [activeMode, setActiveMode] = useState("floor");
   const [currentView, setCurrentView] = useState("dashboard");
   const [locked, setLocked] = useState(() => pinIsLocked());
@@ -55,7 +56,7 @@ export default function App() {
     <MachinesProvider>
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
 
-        {/* SFONDO OLOGRAFICO CYBER-INDUSTRIAL (Laboratorio Chimico & Panificazione High-Tech) */}
+        {/* SFONDO OLOGRAFICO CYBER-INDUSTRIAL */}
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)] opacity-95">
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem]" />
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/10 blur-[120px] rounded-full" />
@@ -63,12 +64,10 @@ export default function App() {
 
         <div className="relative z-10 flex flex-col min-h-screen">
 
-          {/* HEADER CON LOGO FUTURISTICO "ML" FUSIONE CHIMICA */}
+          {/* HEADER CON LOGO FUTURISTICO "ML" */}
           <header className="border-b border-[#1e293b] bg-[#0b0f19]/80 backdrop-blur-xl px-4 py-3 sticky top-0 z-50">
             <div className="max-w-4xl mx-auto flex items-center justify-between">
-
               <div className="flex items-center gap-3">
-                {/* Logo ML High-Tech Olografico */}
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14b8a6] to-[#0f172a] p-[1px] shadow-lg shadow-[#14b8a6]/20">
                   <div className="w-full h-full bg-[#030712] rounded-[11px] flex items-center justify-center font-black text-transparent bg-clip-text bg-gradient-to-r from-[#14b8a6] to-[#38bdf8] tracking-wider text-base">
                     ML
@@ -81,18 +80,15 @@ export default function App() {
                   <p className="text-[10px] text-[#94A3B8]">Laboratorio Panificazione Avanzata</p>
                 </div>
               </div>
-
-              {/* STATO SISTEMA & BLUETOOTH */}
               <div className="flex items-center gap-2 text-xs">
                 <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#94A3B8]">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Cuffie BT & Voice Attivi
                 </span>
               </div>
-
             </div>
           </header>
 
-          {/* BARRA DI SEPARAZIONE RUOLI (LAB CONTROL VS MOHAMED REZA) */}
+          {/* SELETTORE MODALITÀ PULITO */}
           <div className="bg-[#0b0f19]/90 border-b border-[#1e293b] px-4 py-2.5 sticky top-[65px] z-40 backdrop-blur-md">
             <div className="max-w-4xl mx-auto flex items-center justify-center gap-3">
               <div className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] w-full max-w-md">
@@ -116,7 +112,7 @@ export default function App() {
                       : 'text-[#94A3B8] hover:text-white'
                   }`}
                 >
-                  ⚡ Floor Mode // Mohamed Reza
+                  ⚡ Floor Mode
                 </button>
               </div>
             </div>
@@ -126,29 +122,35 @@ export default function App() {
           <main className="flex-1 max-w-4xl w-full mx-auto p-4 pb-32">
 
             {activeMode === 'lab' ? (
-              /* ================= LAB CONTROL ================= */
+              /* ================= LAB CONTROL (Michele) ================= */
               <div className="space-y-6 animate-fadeIn" data-testid="lab-control-view">
-                <div className="p-5 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl relative overflow-hidden">
+                <LabBriefing />
+                <div className="p-5 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl relative overflow-hidden flex items-center justify-between">
                   <div className="absolute top-0 right-0 w-48 h-48 bg-[#14b8a6]/10 rounded-full blur-3xl pointer-events-none" />
-                  <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2">
-                    <span>🛡️</span> Plancia Amministrativa Master
-                  </h2>
-                  <p className="text-xs text-[#94A3B8] mt-1">
-                    Gestione protetta ricette (Pane di Matera), logistica magazzino e configurazione nodi IoT in laboratorio.
-                  </p>
+                  <div>
+                    <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2"><span>🛡️</span> Lab Control</h2>
+                    <p className="text-xs text-[#94A3B8] mt-1">Plancia amministrativa master con briefing vocale scorte e gestione logistica.</p>
+                  </div>
+                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-3 py-2 rounded-xl">
+                    <div className="w-8 h-8 rounded-full bg-[#14b8a6]/20 border border-[#14b8a6] flex items-center justify-center text-xs font-bold text-[#14b8a6]">M</div>
+                    <div className="hidden sm:block">
+                      <p className="text-[11px] font-bold text-white">Michele</p>
+                      <p className="text-[9px] text-[#14b8a6]">Master Admin</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <button data-testid="lab-nav-ricette" onClick={() => setCurrentView("ricette")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">🥖</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Master Ricettario</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Ricette esclusive protette e impasti.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Ricette protette e conferma impastata.</p>
                   </button>
 
                   <button data-testid="lab-nav-magazzino" onClick={() => setCurrentView("magazzino")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">📦</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Magazzino & Scorte</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Controllo ceste, farine e carichi.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Giacenze, soglie e giorni di autonomia.</p>
                   </button>
 
                   <button data-testid="lab-nav-planner" onClick={() => setCurrentView("planner")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
@@ -160,12 +162,17 @@ export default function App() {
                   <button data-testid="lab-nav-iot" onClick={() => setCurrentView("maestro")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">⚙️</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Sistemi IoT</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Sensori termici e forni in rete.</p>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Auto-setup periferiche, sensori e forni.</p>
                   </button>
                 </div>
 
                 {currentView === "dashboard" && <DocsDownload />}
-                {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Ricette isMasterView={true} /></div>}
+                {currentView === "ricette" && (
+                  <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4">
+                    <Ricette isMasterView={true} />
+                    <ConfermaImpastata />
+                  </div>
+                )}
                 {currentView === "magazzino" && (
                   <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>
                 )}
@@ -180,16 +187,21 @@ export default function App() {
                 )}
               </div>
             ) : (
-              /* ================= FLOOR MODE - MOHAMED REZA ================= */
+              /* ================= FLOOR MODE (Mohamed Reza) ================= */
               <div className="space-y-6 animate-fadeIn" data-testid="floor-mode-view">
-                <div className="p-5 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl relative overflow-hidden">
+                <div className="p-5 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl relative overflow-hidden flex items-center justify-between">
                   <div className="absolute top-0 right-0 w-48 h-48 bg-[#14b8a6]/10 rounded-full blur-3xl pointer-events-none" />
-                  <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2">
-                    <span>⚡</span> Plancia Operativa // Mohamed Reza
-                  </h2>
-                  <p className="text-xs text-[#94A3B8] mt-1">
-                    Controllo turni, timer globali e comandi vocali avanzati per il team di laboratorio.
-                  </p>
+                  <div>
+                    <h2 className="text-base font-extrabold text-[#14b8a6] flex items-center gap-2"><span>⚡</span> Floor Mode</h2>
+                    <p className="text-xs text-[#94A3B8] mt-1">Plancia operativa di produzione, timer globali e comandi vocali per il team.</p>
+                  </div>
+                  <div className="flex items-center gap-3 bg-[#030712]/80 border border-[#1e293b] px-3 py-2 rounded-xl">
+                    <div className="w-8 h-8 rounded-full bg-amber-500/20 border border-amber-500 flex items-center justify-center text-xs font-bold text-amber-400">MR</div>
+                    <div className="hidden sm:block">
+                      <p className="text-[11px] font-bold text-white">Mohamed Reza</p>
+                      <p className="text-[9px] text-amber-400">Capo Turno / Floor</p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

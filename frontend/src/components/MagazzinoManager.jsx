@@ -12,6 +12,7 @@ const EMPTY = { name: "", kind: "farina", force_w: "", quantity_kg: "", unit: "k
 
 export default function MagazzinoManager() {
   const [items, setItems] = useState([]);
+  const [stats, setStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState(EMPTY);
@@ -19,8 +20,14 @@ export default function MagazzinoManager() {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const data = await warehouseApi.list();
+      const [data, st] = await Promise.all([
+        warehouseApi.list(),
+        warehouseApi.stats().catch(() => ({ items: [] })),
+      ]);
       setItems(Array.isArray(data) ? data : []);
+      const map = {};
+      (st.items || []).forEach((s) => { map[s.id] = s; });
+      setStats(map);
     } catch {
       toast.error("Impossibile caricare il magazzino");
     } finally {
@@ -29,6 +36,13 @@ export default function MagazzinoManager() {
   }, []);
 
   useEffect(() => { load(); }, [load]);
+
+  // Ricarica quando un'impastata confermata scarica le scorte (evento globale).
+  useEffect(() => {
+    const h = () => load();
+    window.addEventListener("mikilab-warehouse-changed", h);
+    return () => window.removeEventListener("mikilab-warehouse-changed", h);
+  }, [load]);
 
   const low = items.filter((i) => Number(i.min_kg) > 0 && Number(i.quantity_kg) <= Number(i.min_kg));
 
@@ -136,6 +150,9 @@ export default function MagazzinoManager() {
                   <div className="text-[11px] text-[#94A3B8] mt-0.5">
                     <strong className={isLow ? "text-rose-300" : "text-[#14b8a6]"}>{it.quantity_kg} {it.unit || "kg"}</strong>
                     {Number(it.min_kg) > 0 && <span className="text-[#64748B]"> · soglia {it.min_kg} {it.unit || "kg"}</span>}
+                    {stats[it.id] && stats[it.id].days_left != null && (
+                      <span className="text-[#64748B]"> · ~<strong className="text-[#38bdf8]">{stats[it.id].days_left}g</strong> autonomia</span>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-1">

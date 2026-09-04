@@ -3902,3 +3902,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Smart Planner in plancia**: nuova card Lab Control (lab-nav-planner) che apre SmartPlannerStressZero con validazione voce/manuale gia collegata. Griglia card Lab Control ora grid-cols-2 sm:grid-cols-4.
 - **DocsDownload** (components/DocsDownload.jsx): pannello nella dashboard Lab Control con download del PDF nella lingua corrente + link a tutte le 6 lingue.
 - Testato iter171: backend 100% (11/11), frontend 100%, nessun bug bloccante, nessun dato di test lasciato.
+
+## v-fork+2 (2026-06) — Nuovo look (avatar) + idee scorte REALI sul backend
+- **Reskin App.js**: header olografico "ML", pulsanti modalita puliti, avatar Michele (M, Lab Control) e Mohamed Reza (MR, Floor Mode). Tutte le funzioni precedenti mantenute e integrate.
+- **Conferma Impastata -> scarico automatico REALE** (components/ConfermaImpastata.jsx): chiama POST /api/lab/warehouse/consume (62% farina + 4% lievito del peso impasto), aggiorna il magazzino ed emette evento mikilab-warehouse-changed. Le materie non tracciate (reason not_found) NON generano falsi avvisi; solo le insufficienze reali (missing) avvisano. Annuncio TTS.
+- **Autonomia scorte REALE**: nuovo endpoint GET /api/lab/warehouse/stats (consumo medio giornaliero su 14gg dal lab_consumption_log + days_left). MagazzinoManager mostra "~N g autonomia" per materia e si ricarica sull'evento di scarico.
+- **Briefing vocale scorte REALE** (components/LabBriefing.jsx): all'ingresso in Lab Control annuncia una volta per sessione (toast + TTS) le materie vicine/sotto soglia, con dati veri dal backend.
+- Testato iter172: backend 100% (17/17), frontend 95% -> unico difetto (falso avviso lievito) corretto e verificato via curl. Nessun dato di test lasciato.

@@ -1,0 +1,44 @@
+{
+  "summary": "Iteration 172: tested the 3 NEW real backend-connected features (Conferma Impastata -> /consume, Magazzino autonomy via /warehouse/stats, Lab voice briefing) plus the new dual-mode shell, docs PDFs, planner validation and IoT setup. Backend: 17/17 pytest cases pass (warehouse CRUD, consume decrement/shortfall/clamp, stats daily_kg+days_left, consumption log, 6 PDFs, TTS). Frontend (1920x800 + 390x844): PIN 1985 unlock OK; Floor Mode default with MR/Mohamed Reza + Timer/Voice/Ricettario; Lab Control shows M/Michele, DocsDownload and 4 nav cards; Conferma Impastata really decremented Farina 100 -> 87.6 kg (verified via GET); Magazzino shows '87.6 kg . soglia 20 kg . ~49g autonomia'; adding Semola 5/10 raised magazzino-low-alert + 'Bassa' badge; +/- persisted (5->6->5); delete worked; Briefing toast 'Briefing Scorte: Semola vicine alla soglia critica.' fired on lab entry; PeripheralSetup 'Configura tutto' updated tiles (Mic/Camera/Sensori ATTIVO, Bluetooth N/D) without crash; planner invalid input resets to 0 with no NaN. All test warehouse items deleted (GET /api/lab/warehouse now returns 0 items).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "GET /api/auth/me, GET /api/favorites/sync", "issue": "Still called on load and return 401 (login flow intentionally removed) -> repeated console errors on every page load; consider skipping these calls when no session exists"}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ConfermaImpastata", "issue": "With only 'Farina' in stock (the documented seed), the flow always shows the WARNING toast 'Impastata confermata ma scorte insufficienti: Lievito' instead of the expected success toast, because the fixed 4% 'Lievito' line has no matching stock item and there is no kind-fallback for 'ingrediente'. Flour is still correctly decremented. Suggest skipping/ignoring not_found ingredient lines or auto-creating/seeding 'Lievito'.", "selector": "[data-testid=conferma-impastata-btn]", "priority": "MEDIUM"},
+      {"component": "SmartPlannerStressZero", "issue": "planner-volume / team-day-* are input[type=number], so non-numeric text cannot be typed at all (browser blocks it); the '0-reset on blur' guard works for empty/'-' input and no NaN appears. Not a defect, just noting the spec scenario is unreachable.", "selector": "[data-testid=planner-volume]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Lab Control (mobile 390x844)", "issues": ["team-day-* number inputs are too narrow: values are clipped ('18(' instead of '180') by the native spinner", "Only ~4 of the 7 weekday columns are visible; horizontal overflow is not visually hinted"]},
+      {"screen": "Toasts (desktop 1920x800)", "issues": ["Top-center sonner toast overlays the sticky mode selector (mode-lab-btn / mode-floor-btn), briefly blocking mode switching"]},
+      {"screen": "DocsDownload", "issues": ["docs-download-current resolves to the EN PDF in a browser with en locale while the whole UI copy is Italian; consider defaulting lang to 'it'"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter172_warehouse_real.py",
+    "/app/test_reports/pytest/iter172.xml"
+  ],
+  "action_items": [
+    "Decide handling for the missing 'Lievito' stock line in ConfermaImpastata so the success toast appears when only flour is stocked (or auto-seed a Lievito item)",
+    "Avoid /api/auth/me and /api/favorites/sync calls (401 noise) when no session exists",
+    "Widen team-day inputs / add overflow hint on mobile; default UI language to 'it' for docs link"
+  ],
+  "critical_code_review_comments": [
+    "consume_warehouse fuzzy match (substring both ways + largest-flour fallback) can hit the wrong item when several similar names exist (e.g. 'Farina' vs 'Farina 0'); prefer explicit item ids from the caller",
+    "/api/lab/warehouse/stats matches consumption logs by lowercase name, so renaming an item silently loses its autonomy history",
+    "All /api/lab/warehouse endpoints accept optional_user, i.e. they are effectively public writable/deletable - acceptable for the PIN-only kiosk but worth noting",
+    "App.js LabBriefing uses a module-level 'announced' flag; correct for once-per-session but not resettable in tests/HMR"
+  ],
+  "updated_files": ["/app/backend/tests/test_iter172_warehouse_real.py"],
+  "success_rate": {"backend": "100%", "frontend": "95%"},
+  "seed_data_creation": "Created and then deleted: Farina (100kg/min20), Semola (5kg/min10) and TEST_* pytest items. GET /api/lab/warehouse verified empty after cleanup (consumption log entries remain by design).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "App PIN 1985 (no /app/memory/test_credentials.md needed; login flow removed)",
+  "context_for_next_testing_agent": "Warehouse is empty; seed items via POST /api/lab/warehouse before UI magazzino/briefing tests. The lab_consumption_log still holds entries from this run, so /stats will report non-zero daily_kg for names 'farina'/'semola'/'test_*'. Briefing fires once per page load only. Planner inputs are type=number so use keyboard typing, not fill(), for invalid-input tests. Magazzino 'Bassa' badge renders uppercase ('BASSA') in inner_text.",
+  "rca_of_the_issue": "Warning-toast issue: ConfermaImpastata always sends a fixed 'Lievito' line (4% of dough); consume_warehouse returns a not_found shortfall for it when no matching item exists, and the component treats any shortfall as insufficient stock, so the success path is unreachable unless a 'Lievito' item is stocked."
+}
