@@ -461,7 +461,7 @@ async def root():
 
 
 EMERGENT_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
-SESSION_DAYS = 7
+SESSION_DAYS = 3650  # sessione permanente (~10 anni): chi si registra resta dentro, gratis, senza riloggarsi
 # Email PROPRIETARIO: sempre admin (accesso completo a tutto), a prescindere dall'ordine di registrazione.
 OWNER_EMAILS = {"michelecip918@gmail.com", "admin@mikilab.de"}
 
