@@ -34,16 +34,38 @@ export default function MamoAssistant() {
   useEffect(() => { guidingRef.current = guiding; }, [guiding]);
 
   const load = useCallback(async () => {
+    // Ruolo dell'operatore (Mohamed): mostra solo i task della sua postazione.
+    const role = (() => { try { return (localStorage.getItem("mikilab_role") || "").toLowerCase(); } catch { return ""; } })();
+    const roleKeywords = (r) => {
+      if (/impast|knead/.test(r)) return ["impast", "knead", "mixing", "amasad", "pétriss", "puntatura", "bulk", "stockgare", "pointage", "reposo en bloque"];
+      if (/forna|forno|bak/.test(r)) return ["cottur", "bak", "cocc", "cuisson", "forno", "oven", "ofen", "sforn"];
+      if (/pizza|teglie/.test(r)) return ["pizza", "teglie", "formatur", "shaping", "façonn", "form"];
+      if (/pasticc|dolc|abbatt|raffred/.test(r)) return ["dolc", "pasticc", "abbatt", "raffred", "laminaz", "sfogliat", "lievitaz", "proof", "fermentaz", "façonn"];
+      if (/fermentaz|lievit|laugen/.test(r)) return ["lievitaz", "ferment", "proof", "gare", "apprêt", "laugen"];
+      if (/consegn|lieferung/.test(r)) return ["consegn", "lieferung", "deliver", "pronto", "ready", "livraison"];
+      return []; // ruoli generali (apprendista, banconista…) → vede tutto
+    };
+    const filterByRole = (steps) => {
+      const kw = roleKeywords(role);
+      if (!kw.length) return steps;
+      const f = steps.filter((s) => kw.some((k) => s.toLowerCase().includes(k)));
+      return f.length ? f : steps; // se nessun task del ruolo, mostra tutto (fallback)
+    };
     try {
       const d = await floorPlanApi.get();
+      try { localStorage.setItem("mikilab_floorplan_cache", JSON.stringify(d || null)); } catch { /* */ }
       setDoc(d || null);
-      const st = parsePlanSteps(d && d.plan);
-      setSteps(st);
+      setSteps(filterByRole(parsePlanSteps(d && d.plan)));
       setIdx(0);
       setDone(false);
     } catch {
-      setDoc(null);
-      setSteps([]);
+      // OFFLINE: usa l'ultima coda salvata in locale
+      let cached = null;
+      try { cached = JSON.parse(localStorage.getItem("mikilab_floorplan_cache") || "null"); } catch { /* */ }
+      setDoc(cached || null);
+      setSteps(cached ? filterByRole(parsePlanSteps(cached.plan)) : []);
+      setIdx(0);
+      setDone(false);
     }
   }, []);
 

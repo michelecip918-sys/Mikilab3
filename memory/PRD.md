@@ -4052,3 +4052,8 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - Blocco2: IntroLanding pulsanti Registrati/Inizia/Installa (intro-register-btn apre AuthScreen register via early-return in App, disponibile su ogni schermata).
 - Blocco5: MohamedFloor ora ha selezione RUOLO/postazione (reparti Panetteria/Pizzeria/Pasticceria/Generale dai reparti Elite Engine) -> badge ruolo + mic -> MamoAssistant legge i task del ruolo dalla coda del Capo. Rimosso Elite Engine dal Capo (no duplicati): tolti card lab-nav-elite, modal, state showElite, import.
 - TTS: playTTS default lang = lingua app (setTTSAppLang aggiornato da LanguageContext) + traduzione backend -> testo e voce sempre stessa lingua. Verificato DE.
+
+## v-BLK6+ (2026-06) — Task per ruolo, BakemixAI hardware/Bluetooth, offline base
+- MamoAssistant: filtra i passi per RUOLO (mikilab_role) con keyword multi-lingua per fase; fallback mostra tutto. Cache offline del floor-plan in localStorage (mikilab_floorplan_cache) usata quando la rete non risponde.
+- BakemixHardware.jsx (in BakemixGuide): Web Bluetooth requestDevice per Bilancia/Termostato/Sensore/Forno; stato online/offline; report consumi al Capo (MOCK stima kWh); spiegazione vocale (voice bakemix).
+- Offline: coda/piano + service worker asset. TODO: ricette complete via IndexedDB; agganciare report consumi ai dati reali dei sensori BT.

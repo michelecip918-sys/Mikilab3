@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Volume2, BookOpen, ShieldCheck, Mic, ClipboardList, LifeBuoy } from "lucide-react";
 import DocsDownload from "@/components/DocsDownload";
+import BakemixHardware from "@/components/BakemixHardware";
 import { playTTS, stopTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -56,6 +57,7 @@ export default function BakemixGuide() {
         </div>
       </motion.div>
 
+      <BakemixHardware />
       <DocsDownload />
     </div>
   );
