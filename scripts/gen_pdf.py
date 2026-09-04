@@ -154,6 +154,32 @@ tm.setStyle(TableStyle([("BACKGROUND",(0,0),(-1,0),TEAL),("TEXTCOLOR",(0,0),(-1,
 S.append(tm)
 S.append(Spacer(1,8))
 S.append(HRFlowable(color=GOLD, thickness=1, spaceBefore=6, spaceAfter=6))
+
+# 7. Schermate reali del sito (manuale illustrato)
+from reportlab.platypus import Image as RLImage
+IMGDIR = "/root/.emergent/automation_output/20260904_025840"
+SHOTS = [
+ ("doc_home.jpeg","Home - navigazione, Cyber-Bakery Trio e Bacheca di Miki"),
+ ("doc_talk.jpeg","Talk with Miki - assistente AI, Co-Pilota, Intercom Live, ascolto continuo"),
+ ("doc_plancia.jpeg","Plancia Capo - Reporting AI, glow sul parametro critico, Multi-Chief (Modulo 64)"),
+ ("doc_parco.jpeg","Parco Macchine - Telemetria IoT, Moduli 31-50 con parametri live"),
+ ("doc_manuale.jpeg","Manuale & Operativita B2B - uso in laboratorio e comandi vocali"),
+]
+S.append(PageBreak())
+S.append(Paragraph("7. Schermate reali del sito (manuale illustrato)", H2))
+IMGW = 74*mm
+pairs = [SHOTS[i:i+2] for i in range(0, len(SHOTS), 2)]
+for pair in pairs:
+    cells=[]; caps=[]
+    for fn,cap in pair:
+        p=os.path.join(IMGDIR,fn)
+        if os.path.exists(p):
+            cells.append(RLImage(p, width=IMGW, height=IMGW*900/430)); caps.append(Paragraph(cap, SMALL))
+    if not cells: continue
+    row=Table([cells], colWidths=[IMGW+6*mm]*len(cells)); row.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),("LEFTPADDING",(0,0),(-1,-1),2),("RIGHTPADDING",(0,0),(-1,-1),6)]))
+    caprow=Table([caps], colWidths=[IMGW+6*mm]*len(caps)); caprow.setStyle(TableStyle([("VALIGN",(0,0),(-1,-1),"TOP"),("LEFTPADDING",(0,0),(-1,-1),2)]))
+    S.append(row); S.append(caprow); S.append(Spacer(1,8))
+
 S.append(Paragraph("MikiLab v14 - Il laboratorio connesso di Michele. Documento generato automaticamente dal codice sorgente.", SMALL))
 
 doc.build(S)
