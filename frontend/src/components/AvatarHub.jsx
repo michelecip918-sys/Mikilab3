@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, LogIn } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
@@ -8,7 +8,7 @@ import LangSelector from "@/components/LangSelector";
 const PUB = process.env.PUBLIC_URL;
 
 // Schermata 2 — HUB: i 3 avatar a tutta pagina, scorrevoli con un dito (senza bordi, come carte).
-export default function AvatarHub({ onSelect }) {
+export default function AvatarHub({ onSelect, onLogin, isLoggedIn = false }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const scroller = useRef(null);
@@ -37,7 +37,15 @@ export default function AvatarHub({ onSelect }) {
       {/* header lingua */}
       <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between p-4">
         <span className="font-black tracking-[0.2em] text-sm uppercase text-white/90">MIKILAB</span>
-        <LangSelector testid="hub-lang" />
+        <div className="flex items-center gap-2">
+          {!isLoggedIn && onLogin && (
+            <button data-testid="hub-login-btn" onClick={onLogin}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14b8a6]/15 border border-[#14b8a6]/50 text-[#14b8a6] font-bold text-xs active:scale-95 transition-all">
+              <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}
+            </button>
+          )}
+          <LangSelector testid="hub-lang" />
+        </div>
       </div>
 
       {/* carte scorrevoli a tutta pagina */}

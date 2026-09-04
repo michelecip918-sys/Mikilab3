@@ -165,3 +165,8 @@
 - BakemixHardware: report consumi ora da DATI BLUETOOTH REALI (GATT battery_level 0x2A19 + environmental temperature 0x2A6E). Stima energetica dalla temperatura reale; fallback chiaro se nessun dispositivo collegato. Multilingua.
 - Sfondi immersivi per sezione (App.js): bg-capo.jpg (sala comandi), bg-mohamed.jpg (laboratorio operativo, con tint colore per postazione via evento mikilab-role-changed), bg-bakemix.jpg (olografico). Immagini generate, salvate in public/, opacità 30% + overlay scuro per leggibilità.
 - Direttiva ruoli fissi + flusso "Zero Click" registrata in DIRETTIVA_GLOBALE.md (implementazione flusso ancora DA FARE).
+
+## 2026-06 — Flusso "Zero Click" + logo sulla maglia
+- Zero Click (App.js): utente di RITORNO (admin gate già sbloccato + intro già vista, oppure sessione fatta) salta la schermata "Inizia" e va dritto all'hub. Flag `mikilab_seen_intro` impostato su Start e al login. Prima volta invariata (admin gate → intro una sola volta).
+- AvatarHub: aggiunto pulsante "Accedi/Sign in" in alto a destra (solo se non loggato) → apre il login. Props onLogin/isLoggedIn da App.js.
+- Avatar MikiLab (Capo): sostituito il testo "MikiLab" sulla maglia con l'emblema circolare del logo (editing immagine, volto/posa/tatuaggio/sfondo invariati). Backup originale in /app/memory/avatar_miki_original_backup.jpg.

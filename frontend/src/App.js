@@ -78,7 +78,15 @@ export default function App() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const capoDept = useDept();
   const setCapoDept = setDept;
-  const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
+  const [screen, setScreen] = useState(() => {
+    try {
+      const unlocked = localStorage.getItem("mikilab_admin_unlocked") === "1";
+      if (!unlocked) return "admin";
+      // Utente di ritorno (gate già sbloccato) → salta la schermata "Inizia", vai all'hub.
+      const seenIntro = localStorage.getItem("mikilab_seen_intro") === "1";
+      return seenIntro ? "hub" : "intro";
+    } catch { return "admin"; }
+  });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
@@ -107,12 +115,12 @@ export default function App() {
     window.addEventListener("mikilab-open-auth", h);
     return () => window.removeEventListener("mikilab-open-auth", h);
   }, [setAuthOpen]);
-  useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
+  useEffect(() => { if (user) { setAuthOpen(false); try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } } }, [user, setAuthOpen]);
 
   if (authOpen && !user && !resetToken) return <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
   if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
-  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} onRegister={() => { setAuthMode("register"); setAuthOpen(true); }} />;
-  if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} />;
+  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => { try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } setScreen("hub"); }} onRegister={() => { setAuthMode("register"); setAuthOpen(true); }} />;
+  if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} isLoggedIn={!!user} onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} />;
   if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
 
   const activeAvatar = (SECTIONS.find((s) => s.id === section) || SECTIONS[1]).avatar;
