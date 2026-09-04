@@ -4,21 +4,26 @@ import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { COLORED_RECIPES } from "@/lib/coloredRecipes";
 import { mkTri } from "@/i18n/triMaps";
+import { useDept, matchDept } from "@/lib/dept";
 
 const NEW_COLOR = COLORED_RECIPES;
 
 // Vetrina "Novità dal MikiLab": evidenzia le ricette colorate naturalmente.
 export const NovitaColorate = () => {
   const { lang } = useLang();
+  const dept = useDept();
   const tri = (i, d, e, s) => mkTri(lang)(i, d, e, s);
   const rn = (r) => (lang === "de" ? (r.name_de || r.name) : lang === "en" ? (r.name_en || r.name) : lang === "es" ? (r.name_es || r.name_en || r.name) : r.name);
-  const [items, setItems] = useState([]);
+  const [all, setAll] = useState([]);
 
   useEffect(() => {
     recipesApi.list("mikilab").then((rs) => {
-      setItems((rs || []).filter((r) => NEW_COLOR.includes(r.name) && r.image_url));
+      setAll((rs || []).filter((r) => NEW_COLOR.includes(r.name) && r.image_url));
     }).catch(() => {});
   }, []);
+
+  // Coerenza col reparto attivo (globale): mostra solo le novità del reparto scelto.
+  const items = all.filter((r) => matchDept(r, dept, { autoDeduce: true }));
 
   if (!items.length) return null;
 

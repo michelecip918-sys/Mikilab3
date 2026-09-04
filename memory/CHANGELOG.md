@@ -148,3 +148,8 @@
 - Backend `server.py`: campo `department` su `Recipe/RecipeCreate/RecipeUpdate` e `WarehouseItem`.
 - Testing: backend 4/4 PASS; frontend verificato (conteggi panificazione 71 / pizzeria 35 / pasticceria 42 / tutti 148, banner, reattività, magazzino filtro+localizzazione).
 - Nota: falso positivo del tester (ricetta "non visibile") dovuto alla ricerca del nome IT con UI in EN (i nomi ricetta sono auto-tradotti) — comportamento corretto.
+
+## 2026-06 — Vetrine promo coerenti col reparto
+- `SaporeDelGiorno.jsx`: ogni "sapore del giorno" ha un reparto; la rotazione giornaliera pesca solo dal reparto attivo (es. Pizzeria → Pizza in teglia). Con "Tutti" resta l'elenco completo.
+- `NovitaColorate.jsx`: la vetrina "Novità dal MikiLab" filtra le ricette colorate per reparto attivo (deduzione automatica) e si nasconde se il reparto non ha novità.
+- Verificato via screenshot: in Pizzeria → Sapore del Giorno = "Pan Pizza", vetrina Novità nascosta.
