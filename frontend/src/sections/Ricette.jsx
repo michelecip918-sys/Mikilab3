@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Compass } from "lucide-react";
+import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
 import AvatarBubbles from "@/components/AvatarBubbles";
 import SectionHero from "@/components/SectionHero";
@@ -8,7 +8,7 @@ import GuidaMetodi from "@/sections/Enciclopedia";
 import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
 import SaporiCasa from "@/sections/SaporiCasa";
-import ScopriMikiLab from "@/sections/ScopriMikiLab";
+// (Rimosso "Scopri MikiLab" / "Guida al Sito" su richiesta)
 import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import VetrinaFocacce from "@/components/VetrinaFocacce";
@@ -50,7 +50,6 @@ export default function Ricette() {
   }, []);
 
   if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><Glossario /></div></Sub>;
-  if (view === "scopri") return <Sub onBack={() => setView("main")}><ScopriMikiLab /></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce onOpenRecipe={(id) => { setView("main"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 80); }} /></Sub>;
@@ -141,7 +140,6 @@ export default function Ricette() {
 
       {coll === "mikilab" && (
         <div data-testid="ricette-utils" className="grid grid-cols-2 gap-2.5 mb-4">
-          <UtilBtn testid="ricette-scopri-btn" Icon={Compass} label={tri("Scopri MikiLab", "Entdecke MikiLab", "Discover MikiLab", "Descubre MikiLab", "Découvre MikiLab")} onClick={() => setView("scopri")} />
           <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
           <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
           <UtilBtn testid="ricette-backup-btn" Icon={Download} label={tri("Backup Ricette", "Rezept-Backup", "Recipe Backup", "Copia de Recetas", "Sauvegarde Recettes")} onClick={() => setBackupOpen(true)} />
