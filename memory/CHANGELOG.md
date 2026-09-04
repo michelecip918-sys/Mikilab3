@@ -153,3 +153,9 @@
 - `SaporeDelGiorno.jsx`: ogni "sapore del giorno" ha un reparto; la rotazione giornaliera pesca solo dal reparto attivo (es. Pizzeria → Pizza in teglia). Con "Tutti" resta l'elenco completo.
 - `NovitaColorate.jsx`: la vetrina "Novità dal MikiLab" filtra le ricette colorate per reparto attivo (deduzione automatica) e si nasconde se il reparto non ha novità.
 - Verificato via screenshot: in Pizzeria → Sapore del Giorno = "Pan Pizza", vetrina Novità nascosta.
+
+## 2026-06 — Interfaccia Ricette MikiLab consolidata
+- Header UNICO con foto nuova (generata, cyber-bakery lab, salvata in public/mikilab-ricette-hero.jpg): unite "Ricette del MikiLab" + "Scopri MikiLab" in una sola sezione; rimosso il testo lungo "Ciao Capo".
+- Tutti i bottoni portati in ALTO in una barra compatta 3×2: Sapori di Casa, Ricette Custodite, Vetrina Focacce, Enciclopedia del Pane, Tabelle & Farine, Backup Ricette.
+- Rimossi come richiesto: la barra "salta a" (SectionJumpBar) e il banner "In vetrina · Pane di Matera IGP".
+- `RecipeList` ora accetta `hideHero` (l'hero interno è nascosto: c'è un solo header). Verificato via screenshot mobile.

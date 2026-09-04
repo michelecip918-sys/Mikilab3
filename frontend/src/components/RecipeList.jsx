@@ -29,7 +29,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader, deptScoped = false }) {
+export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader, deptScoped = false, hideHero = false }) {
   const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -203,6 +203,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
   return (
     <div className="pb-28">
+      {!hideHero && (
       <div className="relative rounded-3xl overflow-hidden mb-5 h-40">
         <img src={heroImage} alt="" className="w-full h-full object-cover" style={heroPosition ? { objectPosition: heroPosition } : undefined} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#1E1B18]/85 via-[#1E1B18]/30 to-transparent" />
@@ -222,6 +223,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           {heroSubtitle ? <p className="text-white/85 text-sm mt-1">{heroSubtitle}</p> : null}
         </div>
       </div>
+      )}
 
       {extraHeader ? (
         <div className="mb-5 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
