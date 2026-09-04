@@ -3961,3 +3961,16 @@ RIMANE: registrazione email/Google al primo avvio collegata al Capo + PIN scelto
 - components/PinSetup.jsx montato nella scheda 'Sistemi IoT' della plancia Capo: il Capo imposta il PIN a 4 cifre per l'accesso Produzione (Floor). Usa setPin/getPin di lib/pinLock.js (persistito localStorage 'mikilab_pin', default 1985). Lo sblocco iniziale (unlockWith) confronta col PIN impostato.
 - Registrazione EMAIL già disponibile via AuthScreen (account-btn). 
 RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed — da fare col passaggio integration_expert) collegata al profilo Capo; assistente 'Mamo' per l'operaio; FASE 3 restyle card ricette + traduzioni complete.
+
+## v-CAPO-LOGIN (2026-06) — Login Google del Capo + gating Lab Control
+- **Obiettivo**: il Capo accede via Google o Email/password per gestire la "MikiLab Control · Lab Control"; il team resta in "Produzione · Floor" tramite PIN.
+- **Scelta utente**: chiunque fa login (Google o email) diventa Capo (nessuna allowlist email). Mantenuti ENTRAMBI i metodi (Google + Email/password). Il PIN serve al Capo per far eseguire al team il piano di produzione.
+- **Auth già presente** (invariata): AuthContext gestisce il fragment `#session_id=` → `POST /api/auth/google/session` (Emergent-managed Google Auth); AuthScreen con Google + email/password + reset password. Backend `/api/auth/login|register|google/session|me|logout` con cookie `session_token` httpOnly.
+- **NUOVO gating (App.js)**: la modalità "🛡️ Capo · Lab Control" è ora bloccata dietro il login.
+  - Se NON loggato: il pulsante mostra un lucchetto e, al tap, apre lo schermo di login; dietro compare `CapoGate` (data-testid `capo-gate`) con CTA "Accedi come Capo" (`capo-gate-login`) e "Vai a Produzione · Floor" (`capo-gate-floor`).
+  - Se loggato: `lab-control-view` renderizzata normalmente (Master Ricettario, Magazzino, Smart Planner, Ordini Extra, Sistemi IoT).
+  - "⚡ Produzione · Floor" resta SEMPRE libera (operatori via PIN + OperatoreSelect).
+- **Header account** (`account-btn`): se loggato mostra nome/ScudoCapo e apre un menu (`account-menu`) con dati Capo + `logout-btn` ("Esci dall'account Capo"). Il logout riporta a Floor con toast "Sei uscito. Sessione Capo chiusa."
+- **Testato** (self-test, viewport 390 + 1920): gate visibile senza login ✓; login email/password (admin@mikilab.de) → Lab Control ✓; menu account + logout → torna a Floor ✓; pulsante Google presente ✓; backend login curl → user role=admin ✓.
+- **PROSSIMI TASK (dal riepilogo utente)**: P0 Assistente Mamo (voce guida operatore step-by-step nel Floor), P1 Restyle Card Ricette (cyber, mantenendo le foto reali), P2 Traduzioni complete (it/de/en/es/fr/fa).
+
