@@ -1,9 +1,9 @@
 {
   "short_name": "MikiLab",
-  "name": "MikiLab — Ricette di pane artigianale 100% gratis",
-  "description": "MikiLab è 100% gratis: ricette col metodo di Michele (farro, lievito madre, poolish, biga), piano di produzione con l'IA e diagnosi dell'impasto da foto. In IT/DE/EN/ES/FR.",
+  "name": "MikiLab — Laboratorio del panettiere",
+  "description": "MikiLab: il laboratorio digitale del panettiere professionista. Ricette, produzione con l'IA e assistente vocale, a mani libere. In IT/DE/EN/ES/FR/FA.",
   "lang": "it",
-  "categories": ["food", "productivity", "lifestyle"],
+  "categories": ["food", "productivity", "business"],
   "icons": [
     {
       "src": "favicon-32.png",
@@ -26,6 +26,6 @@
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
-  "theme_color": "#3d2b1f",
-  "background_color": "#2a1c12"
+  "theme_color": "#030712",
+  "background_color": "#030712"
 }

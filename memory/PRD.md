@@ -4031,3 +4031,10 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - **Punto 4**: Bakemix conversazionale "umano" — risponde su collegamento bilance/termostati/sensori/cuffie e tutto il sito; manuale PDF stampabile in tutte le lingue.
 - Sfondi futuristici diversi per ogni sezione; avatar hub eventualmente in cerchi (mockup 1) con "bolle" azioni.
 
+
+## v-PWA-INSTALL (2026-06) — Accesso facile + Installa App
+- **Accesso facile**: `POST /auth/register` già con `verify_enabled=False` → auto-login immediato (cookie `session_token` httpOnly, 30 giorni). Nessuna verifica email obbligatoria. `AuthScreen.submit` fa `setUser(r.user)` dopo register. Nessuna modifica necessaria: l'accesso è immediato dopo la registrazione via email.
+- **Installa App (PWA)**: `components/InstallApp.jsx` — cattura `beforeinstallprompt` (Android/desktop → prompt nativo); su iOS/fallback mostra modale istruzioni "Aggiungi a Home". Nasconde se già in standalone. Aggiunto: `variant="hero"` sull'IntroLanding (sotto "Inizia", testid `install-app-btn`) e `variant="chip"` nell'header (`install-app-chip`). Modale `install-help`.
+- PWA infra già presente (sw.js, icon-192/512, apple-touch-icon, manifest linkato, SW registrato in index.html). Aggiornati `manifest.json` (name/description MikiLab, theme_color/background_color `#030712`, categories food/productivity/business) e `<meta theme-color>` a `#030712` per coerenza col tema scuro.
+- Testato: intro mostra "Install App"; click → prompt nativo (Android) o modale istruzioni (iOS/desktop senza prompt). Verificato a schermo.
+

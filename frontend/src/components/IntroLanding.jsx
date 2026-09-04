@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
+import InstallApp from "@/components/InstallApp";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -63,6 +64,8 @@ export default function IntroLanding({ onStart }) {
           className="pointer-events-auto mt-9 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 hover:shadow-[#14b8a6]/50 transition-all">
           {tri("Inizia", "Los geht's", "Start", "Empezar", "Commencer", "شروع")} <ArrowRight className="w-5 h-5" />
         </motion.button>
+
+        <InstallApp variant="hero" />
 
         <p className="mt-6 text-[11px] text-[#64748B]">{tri("100% offline · pronto in laboratorio", "100% offline · einsatzbereit", "100% offline · lab-ready", "100% sin conexión · listo", "100% hors ligne · prêt", "۱۰۰٪ آفلاین · آماده")}</p>
       </div>

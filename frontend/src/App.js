@@ -38,6 +38,7 @@ import IntroLanding from "@/components/IntroLanding";
 import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
+import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
 
@@ -129,6 +130,7 @@ export default function App() {
               </div>
               <div className="flex items-center gap-2 text-xs relative">
                 <LangSelector testid="header-lang" />
+                <InstallApp variant="chip" />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all" title="Cambia operatore">
                   {operator && <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#14b8a6]/50" />}
                   <span className="font-bold hidden sm:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>
