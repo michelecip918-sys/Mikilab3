@@ -4057,3 +4057,6 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - MamoAssistant: filtra i passi per RUOLO (mikilab_role) con keyword multi-lingua per fase; fallback mostra tutto. Cache offline del floor-plan in localStorage (mikilab_floorplan_cache) usata quando la rete non risponde.
 - BakemixHardware.jsx (in BakemixGuide): Web Bluetooth requestDevice per Bilancia/Termostato/Sensore/Forno; stato online/offline; report consumi al Capo (MOCK stima kWh); spiegazione vocale (voice bakemix).
 - Offline: coda/piano + service worker asset. TODO: ricette complete via IndexedDB; agganciare report consumi ai dati reali dei sensori BT.
+
+## v-CAPO-SIMPLIFY (2026-06)
+- Rimossa dal Capo la sezione tecnica "Sistemi IoT" (PeripheralSetup + Maestro). La card ora e "PIN Produzione" (solo PinSetup, currentView pinsetup). Tutta la parte collegamenti Bluetooth/bilance/sensori/termostati e gestita da BakemixAI (BakemixHardware). Home Capo = 6 card: Ordine&Piano, Ricette, Magazzino, Planner, Ordini Extra, PIN Produzione.

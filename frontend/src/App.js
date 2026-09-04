@@ -197,7 +197,7 @@ export default function App() {
                       <LabCard testid="lab-nav-magazzino" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände, Schwellen und Reichweite.", "Stock levels, thresholds and autonomy.", "Existencias, umbrales y autonomía.", "Stocks, seuils et autonomie.", "موجودی، آستانه‌ها و خودکفایی.")} onClick={() => setCurrentView("magazzino")} />
                       <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
                       <LabCard testid="lab-nav-ordini" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan al instante.", "L'IA régénère le plan à l'instant.", "هوش مصنوعی برنامه را فوری بازسازی می‌کند.")} onClick={() => setCurrentView("ordini")} accent />
-                      <LabCard testid="lab-nav-iot" icon="⚙️" title={tri("Sistemi IoT", "IoT-Systeme", "IoT Systems", "Sistemas IoT", "Systèmes IoT", "سیستم‌های IoT")} sub={tri("Auto-setup periferiche e forni.", "Auto-Setup für Peripherie und Öfen.", "Auto-setup for peripherals and ovens.", "Auto-configuración de periféricos y hornos.", "Auto-configuration des périphériques et fours.", "پیکربندی خودکار تجهیزات و فرها.")} onClick={() => setCurrentView("maestro")} />
+                      <LabCard testid="lab-nav-pin" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN für die Produktion festlegen.", "Set the team PIN for production.", "Fija el PIN del equipo.", "Définis le PIN de l'équipe.", "پین تیم را تنظیم کن.")} onClick={() => setCurrentView("pinsetup")} />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
                     {currentView === "ordine-capo" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdineCapo /></div>}
@@ -205,7 +205,7 @@ export default function App() {
                     {currentView === "magazzino" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>}
                     {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}
                     {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
-                    {currentView === "maestro" && <div className="space-y-4"><PeripheralSetup /><PinSetup /><div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Maestro /></div></div>}
+                    {currentView === "pinsetup" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PinSetup /></div>}
                   </div>
                   )
                 ) : (
