@@ -3928,6 +3928,51 @@ def _clean_for_tts(text: str) -> str:
 
 _eleven_cooldown_until = 0.0  # se ElevenLabs fallisce (quota/crediti), salta per un po' → fallback istantaneo
 
+# --- Traduzione PRIMA della sintesi vocale: l'audio deve essere DAVVERO nella lingua scelta ---
+_TTS_TR_CACHE_DIR = "/tmp/mikilab_tts_tr"
+try:
+    os.makedirs(_TTS_TR_CACHE_DIR, exist_ok=True)
+except Exception:
+    pass
+_TR_LANG_NAMES = {"it": "Italian", "de": "German", "en": "English", "es": "Spanish", "fr": "French", "fa": "Persian (Farsi)"}
+
+
+async def _translate_for_tts(text: str, lang: str) -> str:
+    """Traduce il testo nella lingua richiesta prima del TTS, così l'audio è realmente in quella
+    lingua (non italiano con accento). Cache su disco per abbattere costo e latenza."""
+    code = (lang or "it").lower().split("-")[0][:2]
+    if not text or code == "it" or code not in _TR_LANG_NAMES or not EMERGENT_LLM_KEY:
+        return text
+    ck = _hashlib.sha256(f"tr|{code}|{text}".encode()).hexdigest()
+    cpath = os.path.join(_TTS_TR_CACHE_DIR, ck + ".txt")
+    try:
+        if os.path.exists(cpath):
+            with open(cpath, "r", encoding="utf-8") as f:
+                return f.read()
+    except Exception:
+        pass
+    target = _TR_LANG_NAMES[code]
+    try:
+        sysmsg = (f"You are a professional translator for a bakery production app. Translate the user's text into {target}. "
+                  f"If it is already in {target}, return it unchanged. Keep numbers, times, units and proper names (Michele, Mohamed, Bakemix, MikiLab). "
+                  f"Return ONLY the translated text, with no quotes and no explanations.")
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        out = ""
+        async for ev in chat.stream_message(UserMessage(text=text)):
+            if isinstance(ev, TextDelta):
+                out += ev.content or ""
+        out = (out or "").strip()
+        if out:
+            try:
+                with open(cpath, "w", encoding="utf-8") as f:
+                    f.write(out)
+            except Exception:
+                pass
+            return out
+    except Exception as e:
+        logger.warning("TTS translate fallita (%s)", str(e)[:120])
+    return text
+
 
 @api_router.post("/tts/speak")
 async def tts_speak(payload: TTSReq):
@@ -3937,6 +3982,8 @@ async def tts_speak(payload: TTSReq):
     text = _clean_for_tts(payload.text)[:2000]
     if not text:
         raise HTTPException(status_code=400, detail="Testo vuoto")
+    # Traduci nella lingua scelta PRIMA di sintetizzare (audio davvero tradotto, non solo accento).
+    text = _clean_for_tts(await _translate_for_tts(text, payload.lang))[:2000]
     vkey = (payload.voice or "michele").lower()
 
     if _eleven_client and time.time() >= _eleven_cooldown_until:

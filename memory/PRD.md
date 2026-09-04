@@ -3988,3 +3988,26 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - **Testato** iteration_177: backend 100% (10/10 pytest floor-plan + ordini-extra AI), frontend 100% (flusso Capo→Ordini Extra→Send to Team→Floor→Mamo step-nav, gating login/logout, card ricette+dettaglio, 0 errori console, no overflow 390/1920). Post-fix: `parsePlanSteps` ora filtra i titoli (5 passi puliti invece di 30). Test file: `/app/backend/tests/test_iter177_floorplan.py`.
 - Note minori NON risolte (fuori scope): `/api/favorites/sync` → 401 rumoroso in console per utenti anonimi (pre-esistente); schermata Auth usa un teal più chiaro non allineato al tema cyber (cosmetico).
 
+
+## v-REDESIGN-HUB (2026-06) — Ingresso futuristico, hub avatar, sezioni semplificate, audio tradotto
+### Flusso d'ingresso (nuovo)
+- **AdminGate** (`components/AdminGate.jsx`): PIN admin personale **1985** sulla primissima pagina (blocca l'intero sito). Key `mikilab_admin_pin` (default 1985), sblocco persistente `mikilab_admin_unlocked`. Separato dal PIN di produzione.
+- **IntroLanding** (`components/IntroLanding.jsx`): logo, tagline "Dove la farina incontra il futuro" + descrizione professionale + pulsante **Inizia**. Selettore lingue in alto a dx.
+- **AvatarHub** (`components/AvatarHub.jsx`): 3 avatar a tutta pagina, scorrevoli con un dito (scroll-snap), senza bordi (tipo carte): **Michele**=Capo (`hub-card-lab`), **Mohamed**=Produzione (`hub-card-floor`), **Bakemix**=AI (`hub-card-guida`). Frecce desktop + dots.
+- App.js: stato `screen` = admin|intro|hub|pin|app. `handleHubSelect`: lab→login Capo; floor→PIN produzione (pinIsLocked)→app; guida→app. Logo header = `hub-home-btn` torna all'hub. Rimossa la vecchia OperatoreSelect come gate forzato (operatore ora opzionale via chip).
+### Avatar reali (sostituiti ovunque)
+- `avatar_miki.jpg`=Michele (foto reale), `avatar_mohamed.jpg`=Mohamed (foto reale), `avatar_bigmix.jpg`=**Bakemix** robot (generato: robot steampunk con cupola di vetro e impasto luminoso, targa "BAKEMIX AI"). Sfondo hub: `hub-bg.jpg` (panettieri reali + robot).
+### Sezioni semplificate
+- **Mohamed** (`components/MohamedFloor.jsx`): SOLO il suo avatar come grande pulsante microfono (`mohamed-mic-btn`); al tocco rivela l'Assistente Mamo (guida vocale del piano del Capo). Rimossi timer/ricettario da questa sezione.
+- **Bakemix** (`components/BakemixGuide.jsx`): guida a capitoli (5) che spiega tutto il sito, con "Ascolta" (TTS) e navigazione, + manuale PDF (DocsDownload). Rimossa la vecchia GuidaSOS (niente doppioni).
+- **Ricette MikiLab**: rimossi vecchi avatar (AvatarBubbles) e didascalie; aggiunta `ricette-capo-note` (frase professionale al nuovo Capo).
+### Lingue (IT/DE/EN/ES/FR/FA)
+- `components/LangSelector.jsx` nell'header (`header-lang-*`), su intro (`intro-lang-*`) e hub (`hub-lang-*`). Tutte le nuove etichette tradotte via `mkTri` nelle 6 lingue.
+### FIX AUDIO (importante) — traduzione prima della sintesi
+- `backend/server.py` `_translate_for_tts(text, lang)` + wiring in `POST /api/tts/speak`: il testo viene **tradotto nella lingua scelta** (claude-sonnet-4-6) PRIMA del TTS (ElevenLabs multilingue/OpenAI). Cache su disco `/tmp/mikilab_tts_tr`. Ora l'audio è davvero nella lingua scelta (non italiano con accento). `lang='it'` → passthrough (nessuna cache).
+### Test — iteration_178
+- Backend 9/9 pass (TTS DE/EN/FR producono testo NON italiano in cache; it passthrough; empty→400; login Capo 200; floor-plan pubblico 200; ricette 200; no _id leak). File: `/app/backend/tests/test_iter178_tts_translate.py`.
+- Frontend: flusso completo OK (admin 1985 + errore PIN, intro→hub, 3 carte + scroll/frecce/dots, login Capo + lab-control, account/logout, Mohamed PIN + mic-only→Mamo, Bakemix 5 capitoli + PDF senza GuidaSOS duplicata, 6 lingue incl. FA/RTL, ricette-capo-note + card).
+- Bug HIGH risolto: selettore lingue intro non cliccabile → z-index/pointer-events corretti (verificato: IT→"Inizia"). Gate PIN produzione reso coerente anche su `mode-floor-btn`. Rimossi import morti (GuidaSOS, AvatarBubbles).
+- Nota: cache traduzione su filesystem `/tmp` (ok preview, si perde al restart pod).
+

@@ -30,8 +30,9 @@ import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
 import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
-import GuidaSOS from "@/components/GuidaSOS";
 import MamoAssistant from "@/components/MamoAssistant";
+import MohamedFloor from "@/components/MohamedFloor";
+import BakemixGuide from "@/components/BakemixGuide";
 import IntroLanding from "@/components/IntroLanding";
 import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
@@ -97,11 +98,10 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
-  if (locked && !resetToken && screen === "pin") return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
   if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
   if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} />;
   if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} />;
-  if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => setScreen("app")} />;
+  if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
 
   const activeAvatar = (SECTIONS.find((s) => s.id === section) || SECTIONS[1]).avatar;
 
@@ -181,7 +181,7 @@ export default function App() {
               <div className="space-y-5 animate-fadeIn" data-testid="section-control">
                 <div className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] max-w-md mx-auto">
                   <button data-testid="mode-lab-btn" onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all inline-flex items-center justify-center gap-1.5 ${activeMode === "lab" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{!user && <Lock className="w-3 h-3" />}🛡️ {tri("Capo · Lab Control", "Chef · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "کاپو · کنترل")}</button>
-                  <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeMode === "floor" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>⚡ {tri("Produzione · Floor", "Produktion · Floor", "Production · Floor", "Producción · Floor", "Production · Floor", "تولید · Floor")}</button>
+                  <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); if (pinIsLocked()) setScreen("pin"); }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeMode === "floor" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>⚡ {tri("Produzione · Floor", "Produktion · Floor", "Production · Floor", "Producción · Floor", "Production · Floor", "تولید · Floor")}</button>
                 </div>
 
                 {activeMode === "lab" ? (
@@ -208,20 +208,7 @@ export default function App() {
                   )
                 ) : (
                   <div className="space-y-5" data-testid="floor-mode-view">
-                    <SectionHead avatar="avatar_mohamed.jpg" title={tri("Produzione · Floor Mode", "Produktion · Floor Mode", "Production · Floor Mode", "Producción · Floor Mode", "Production · Floor Mode", "تولید · حالت کف کار")} sub={tri("Timer, voce a mani libere e ricettario di turno.", "Timer, Freihand-Stimme und Schicht-Rezepte.", "Timers, hands-free voice and shift recipe book.", "Temporizadores, voz manos libres y recetario de turno.", "Minuteurs, voix mains libres et recettes du service.", "تایمر، صدای بدون دست و دستورهای شیفت.")} roleName="Mohamed Reza" roleTag={tri("Capo Turno", "Schichtleiter", "Shift Lead", "Jefe de Turno", "Chef d'équipe", "سرشیفت")} amber />
-                    <MamoAssistant />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
-                        <div><div className="text-2xl mb-2">⏱️</div><h3 className="font-bold text-sm text-white">{tri("Timer Forni & Celle", "Timer Öfen & Zellen", "Ovens & Cells Timer", "Temporizador Hornos y Cámaras", "Minuteur Fours & Chambres", "تایمر فرها و سردخانه‌ها")}</h3><p className="text-xs text-[#94A3B8] mt-1">{tri("Cicli di cottura e lievitazione in tempo reale.", "Back- und Gärzyklen in Echtzeit.", "Baking and proofing cycles in real time.", "Ciclos de cocción y fermentación en tiempo real.", "Cycles de cuisson et de pousse en temps réel.", "چرخه‌های پخت و تخمیر در زمان واقعی.")}</p></div>
-                        <button onClick={() => toast.success(tri("Timer sincronizzati con successo.", "Timer erfolgreich synchronisiert.", "Timers synced successfully.", "Temporizadores sincronizados.", "Minuteurs synchronisés.", "تایمرها همگام شدند."))} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg">{tri("Gestisci Timer", "Timer verwalten", "Manage Timers", "Gestionar Temporizadores", "Gérer les Minuteurs", "مدیریت تایمرها")}</button>
-                      </div>
-                      <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
-                        <div><div className="text-2xl mb-2">🎙️</div><h3 className="font-bold text-sm text-white">{tri("Voice Core Attivo", "Voice Core aktiv", "Voice Core Active", "Voice Core Activo", "Voice Core Actif", "هسته صوتی فعال")}</h3><p className="text-xs text-[#94A3B8] mt-1">{tri("Comandi vocali a mani libere via cuffie.", "Freihand-Sprachbefehle über Headset.", "Hands-free voice commands via headset.", "Comandos de voz manos libres por auriculares.", "Commandes vocales mains libres via casque.", "دستورهای صوتی بدون دست با هدست.")}</p></div>
-                        <div className="mt-4 text-[11px] text-[#64748B]">{tri("Assistente voce globale attivo in basso a destra.", "Globaler Sprachassistent unten rechts aktiv.", "Global voice assistant active bottom-right.", "Asistente de voz global abajo a la derecha.", "Assistant vocal global actif en bas à droite.", "دستیار صوتی سراسری پایین‌راست فعال است.")}</div>
-                      </div>
-                    </div>
-                    <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><h3 className="text-sm font-bold text-white mb-2">{tri("Ricettario Operativo Turno", "Betriebs-Rezepte der Schicht", "Shift Operational Recipes", "Recetario Operativo de Turno", "Recettes Opérationnelles du Service", "دستورهای عملیاتی شیفت")}</h3><Ricette isFloorMode={true} /></div>
-                    <DocsDownload />
+                    <MohamedFloor />
                   </div>
                 )}
               </div>
@@ -231,7 +218,7 @@ export default function App() {
             {section === "guida" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-guida">
                 <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="Bake Mix" roleTag="AI Assistant" />
-                <GuidaSOS />
+                <BakemixGuide />
               </div>
             )}
 

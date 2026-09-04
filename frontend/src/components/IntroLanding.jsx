@@ -22,11 +22,11 @@ export default function IntroLanding({ onStart }) {
       </div>
 
       {/* lingua in alto a destra */}
-      <div className="relative z-10 flex justify-end p-4">
+      <div className="relative z-30 flex justify-end p-4">
         <LangSelector testid="intro-lang" />
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 -mt-10 text-center">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
         <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
           className="w-24 h-24 rounded-3xl overflow-hidden border border-[#14b8a6]/40 shadow-2xl shadow-[#14b8a6]/25 bg-[#030712] mb-5">
           <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
@@ -60,7 +60,7 @@ export default function IntroLanding({ onStart }) {
 
         <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}
           data-testid="intro-start-btn" onClick={onStart}
-          className="mt-9 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 hover:shadow-[#14b8a6]/50 transition-all">
+          className="pointer-events-auto mt-9 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 hover:shadow-[#14b8a6]/50 transition-all">
           {tri("Inizia", "Los geht's", "Start", "Empezar", "Commencer", "شروع")} <ArrowRight className="w-5 h-5" />
         </motion.button>
 

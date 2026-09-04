@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import AvatarBubbles from "@/components/AvatarBubbles";
 import SectionHero from "@/components/SectionHero";
 import { NovitaColorate } from "@/components/NovitaColorate";
 import GuidaMetodi from "@/sections/Enciclopedia";

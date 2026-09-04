@@ -1,0 +1,30 @@
+{
+  "summary": "Iteration 178 regression of the new entry flow (Admin gate -> Intro -> Avatar Hub -> Capo/Mohamed/Bakemix), 6-language selector, recipes cleanup and backend TTS pre-synthesis translation. Backend: 9/9 pytest checks pass (TTS translate DE/EN/FR produce non-Italian cache text, it passes through with NO cache file, empty text -> 400, Capo login 200, public floor-plan 200, recipes 200, no raw _id leaks). Frontend: full flow works end-to-end (admin gate 1985 + wrong-PIN error + localStorage flag, intro -> hub, 3 hub cards, arrows/dots + horizontal scroll, Capo login gating + lab-control-view with all 5 LabCards, account menu/logout -> Floor, hub-home-btn, Mohamed PIN gate + minimal mic-only screen revealing MamoAssistant, Bakemix 5 chapters + listen + PDF block with no duplicated GuidaSOS, header lang menu with all 6 languages incl. FA/RTL, ricette-capo-note present and avatar bubbles removed, recipe rows open detail dialog). ONE HIGH bug: the language selector on the INTRO page is not clickable (overlay). One minor security gap: production PIN can be bypassed via the Floor mode toggle.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "IntroLanding", "issue": "intro-lang-btn is completely unclickable: the centered content wrapper (div.relative.z-10.flex-1... with class '-mt-10') is stacked over the language row and intercepts pointer events (elementFromPoint at the button center returns that div). Playwright normal click times out and even force-click does not open intro-lang-menu, on both desktop 1920x1080 and mobile 390x844. The required intro language selection is therefore non-functional.", "selector": "[data-testid=\"intro-lang-btn\"]", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter178_tts_translate.py", "/app/test_reports/pytest/iter178.xml"],
+  "action_items": [
+    "Fix IntroLanding stacking: give the language row a higher z-index (e.g. z-30) and/or add pointer-events-none to the decorative/centered wrapper (or drop '-mt-10' and use justify-center on a container that does not overlap the header row) so intro-lang-btn is clickable.",
+    "Decide on production-PIN policy: with a fresh localStorage a user can enter via Bakemix (open) or after Capo logout and then press mode-floor-btn to reach mohamed-floor WITHOUT the production PIN. Only the hub-card-floor path calls pinIsLocked(). Gate the Floor mode toggle too if the PIN is meant to protect production."
+  ],
+  "critical_code_review_comments": [
+    "App.js: dead PIN branch — line 102 `if (locked && !resetToken && screen === 'pin')` is immediately followed by the same condition at line 106; the first branch's `setLocked(false)` path is redundant/unreachable-ish. Simplify to one PinLock render.",
+    "App.js still imports GuidaSOS and AvatarBubbles-era components that are no longer rendered in the guida section — remove unused imports to avoid confusion (lint currently passes but the import is dead code).",
+    "Production PIN check is done only inside handleHubSelect; move the guard into the Floor render path so every entry point (hub card, mode-floor-btn, logout fallback) is protected consistently.",
+    "_translate_for_tts caches translations on the local filesystem (/tmp) — acceptable for preview, but note the cache is lost on pod restart and is not shared across replicas."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter178_tts_translate.py"],
+  "success_rate": {"backend": "100%", "frontend": "92%"},
+  "seed_data_creation": "None (used existing admin@mikilab.de and existing floor-plan/recipes data)",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "Admin gate PIN 1985; Capo admin@mikilab.de / Mikilab2026!; production PIN bypass localStorage mikilab_pin_unlocked='1'",
+  "context_for_next_testing_agent": "Backend TTS translation verified via /tmp/mikilab_tts_tr cache (DE: 'Hallo Chef, bereite dreissig Baguettes vor.', EN, FR present; no file for lang=it). Reusable pytest: /app/backend/tests/test_iter178_tts_translate.py. Frontend flow bypass: localStorage.setItem('mikilab_admin_unlocked','1') skips the admin gate, mikilab_pin_unlocked='1' skips the production PIN. Only open frontend defect: intro-page language button overlay.",
+  "rca_of_the_issue": "IntroLanding renders the language row as a normal flow child, then a sibling `flex-1 ... -mt-10` container. The negative top margin pulls the (same z-index, later in DOM order) content box over the language row, so hit-testing resolves to the content div and the button never receives clicks. Reproduce: clear localStorage, unlock admin gate, click [data-testid='intro-lang-btn'] -> Playwright reports '<div ... -mt-10> intercepts pointer events'."
+}
