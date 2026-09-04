@@ -38,6 +38,7 @@ import IntroLanding from "@/components/IntroLanding";
 import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
+import { useDept, setDept } from "@/lib/dept";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
@@ -75,8 +76,8 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [capoDept, setCapoDeptState] = useState(() => { try { return localStorage.getItem("mikilab_capo_dept") || "panificazione"; } catch { return "panificazione"; } });
-  const setCapoDept = (d) => { try { localStorage.setItem("mikilab_capo_dept", d); } catch { /* */ } setCapoDeptState(d); };
+  const capoDept = useDept();
+  const setCapoDept = setDept;
   const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });

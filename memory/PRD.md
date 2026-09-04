@@ -4063,3 +4063,15 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 
 ## v-CAPO-DEPT (2026-06)
 - Console Capo: selettore reparto (capo-dept-switch) Panificazione/Pizzeria/Pasticceria/Tutti, persistito in mikilab_capo_dept. OrdineCapo usa il reparto per il prodotto di default (pizzeria->pizza, pasticceria->croissant). Consente capo di solo-pizzeria o solo-pasticceria. TODO: filtrare ricette/piano per reparto scelto.
+
+---
+## Aggiornamento 2026-06 — Filtro Reparto GLOBALE (COMPLETATO ✅)
+Il Capo sceglie un reparto (Panificazione/Pizzeria/Pasticceria/Tutti) dal `capo-dept-switch`: la scelta è GLOBALE (lib/dept.js) e filtra Ricette, Magazzino e il picker del Piano. Ricette: deduzione automatica + override manuale dal form. Magazzino: tag reparto per materia (materie condivise sempre visibili) + componente localizzato in tutte le lingue.
+Backend: campo `department` su Recipe e WarehouseItem.
+
+### Backlog prioritizzato (ordine utente)
+- **P1 — Ricette Offline (IndexedDB)**: cache dell'intero ricettario per accesso 100% offline.
+- **P1 — PIN unico Mohamed modificabile dal Capo**: verificare `PinSetup`/`Production PIN` (PIN unico globale, modificabile solo dal Capo).
+- **P2 — Categorizzazione "Mie ricette" nel Master**: assicurare che le ricette personali del Capo compaiano/siano categorizzate nel Master Ricettario.
+- **P2 — Report Consumi reali via Bluetooth (BakemixAI)**: sostituire i dati mock con letture reali dai sensori.
+- **Trasversale** — Traduzione COMPLETA di ogni sezione + revisione grafica/accessibilità (es. blocco "DOCUMENTO ECOSISTEMA (PDF)" ancora in IT; promo "Sapore del giorno"/"Novità" non ancora dept-scoped).

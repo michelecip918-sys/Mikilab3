@@ -26,7 +26,7 @@ const HOUR_FIELDS = new Set(["bulk_fermentation_hours", "proofing_hours"]);
 const emptyCost = standardCosting();
 
 const empty = {
-  name: "", real_name: "", menu_category: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
+  name: "", real_name: "", menu_category: "", department: "", flour_type: "", origin: "", dough_category: "", water_temp_c: "", preferment_type: "lm", flour_grams: "", water_grams: "",
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
@@ -151,7 +151,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     if (!form.name.trim()) return;
     if (saving) return;
     const payload = {
-      name: form.name.trim(), real_name: (form.real_name || "").trim() || null, menu_category: form.menu_category || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
+      name: form.name.trim(), real_name: (form.real_name || "").trim() || null, menu_category: form.menu_category || null, department: form.department || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
       method_type: form.method_type || null,
@@ -244,6 +244,21 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               <option value="viennoiserie">🥐 {mkTri(lang)("Cornetti & Viennoiserie", "Croissants & Viennoiserie", "Croissants & Viennoiserie", "Cruasanes y Viennoiserie", "Croissants & Viennoiserie")}</option>
               <option value="focacce">🫓 {mkTri(lang)("Focacce & Lievitati salati", "Focaccia & Herzhaftes", "Focaccia & Savoury", "Focaccias y Salados", "Focaccias & Salés")}</option>
               <option value="snack">🥨 {mkTri(lang)("Snack & Sfizi", "Snacks", "Snacks", "Snacks", "Snacks")}</option>
+            </select>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}</label>
+            <select
+              data-testid="recipe-department-select"
+              value={form.department || ""}
+              onChange={(e) => set("department", e.target.value)}
+              className="mt-1 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] focus:border-[#3E9C93] focus:ring-2 focus:ring-[#3E9C93]/20 rounded-2xl shadow-md border border-amber-900/40 p-3 text-base outline-none"
+            >
+              <option value="">{mkTri(lang)("Automatico (dal nome/categoria)", "Automatisch (aus Name/Kategorie)", "Automatic (from name/category)", "Automático (por nombre/categoría)", "Automatique (nom/catégorie)", "خودکار")}</option>
+              <option value="panificazione">🍞 {mkTri(lang)("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")}</option>
+              <option value="pizzeria">🍕 Pizzeria</option>
+              <option value="pasticceria">🥐 {mkTri(lang)("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")}</option>
             </select>
           </div>
 
@@ -700,6 +715,7 @@ function normalize(r) {
   out.origin = r.origin || "";
   out.dough_category = r.dough_category || "";
   out.menu_category = r.menu_category || "";
+  out.department = r.department || "";
   out.water_temp_c = r.water_temp_c ?? "";
   const rc = r.costing || {};
   const has = (v) => v !== "" && v != null;

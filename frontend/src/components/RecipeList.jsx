@@ -20,6 +20,7 @@ import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
 import { renderProcedureWithImprover } from "@/lib/improverText";
 import { useFavRecipes } from "@/lib/favorites";
+import { useDept, matchDept, deptLabel, deptIcon, setDept } from "@/lib/dept";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
 import { isColored } from "@/lib/coloredRecipes";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -28,7 +29,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader }) {
+export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader, deptScoped = false }) {
   const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [baseFilter, setBaseFilter] = useState("all");
   const [favFilter, setFavFilter] = useState(false);
   const { favs, toggle: toggleFav, countOf } = useFavRecipes();
+  const activeDept = useDept();
   const [openCats, setOpenCats] = useState(() => { try { return JSON.parse(localStorage.getItem(`mikilab_open_cats_${collectionName}`) || "{}"); } catch { return {}; } });
   useEffect(() => { try { localStorage.setItem(`mikilab_open_cats_${collectionName}`, JSON.stringify(openCats)); } catch { /* */ } }, [openCats, collectionName]);
   const [folderCovers, setFolderCovers] = useState({});
@@ -275,6 +277,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         const q = query.trim().toLowerCase();
         const matches = (r) => {
           if (favFilter && !favs.has(r.id)) return false;
+          if (deptScoped && !matchDept(r, activeDept, { autoDeduce: true })) return false;
           if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
           if (baseFilter === "colorati") { if (!isColored(r.name)) return false; }
           else if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
@@ -358,6 +361,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
         return (
           <div>
+            {/* Banner reparto attivo (filtro globale del Capo) */}
+            {deptScoped && activeDept && activeDept !== "tutti" && (
+              <div data-testid="recipe-dept-banner" className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-[#14b8a6]/40 bg-[#14b8a6]/10 px-3 py-2">
+                <span className="text-xs font-bold text-[#14b8a6] flex items-center gap-1.5">
+                  <span>{deptIcon(activeDept)}</span>
+                  {triM("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, triM)}
+                </span>
+                <button data-testid="recipe-dept-showall" onClick={() => setDept("tutti")}
+                  className="text-[11px] font-bold text-[#94A3B8] hover:text-white underline decoration-dotted">
+                  {triM("Mostra tutti i reparti", "Alle Bereiche zeigen", "Show all departments", "Mostrar todos", "Tout afficher", "نمایش همه")}
+                </button>
+              </div>
+            )}
             {/* Barra di ricerca */}
             <div className="relative mb-3">
               <Search className="w-4 h-4 text-[#7E8A93] absolute left-3 top-1/2 -translate-y-1/2" />

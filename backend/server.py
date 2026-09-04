@@ -146,6 +146,7 @@ class Recipe(BaseModel):
     notes_fa: Optional[str] = None
     procedure_fa: Optional[str] = None
     menu_category: Optional[str] = None  # basi | pane | panini | panettoni
+    department: Optional[str] = None  # reparto manuale: panificazione | pizzeria | pasticceria (None = deduzione automatica)
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     biga: Optional[dict] = None  # Vorteig/Biga: {flour_g, water_g, yeast_g, hours, hours_de, hours_en}
@@ -207,6 +208,7 @@ class RecipeCreate(BaseModel):
     notes_fa: Optional[str] = None
     procedure_fa: Optional[str] = None
     menu_category: Optional[str] = None
+    department: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -242,6 +244,7 @@ class RecipeUpdate(BaseModel):
     real_name_es: Optional[str] = None
     real_name_fr: Optional[str] = None
     menu_category: Optional[str] = None
+    department: Optional[str] = None
     extra_ingredients: Optional[List[dict]] = None
     work_phases: Optional[List[dict]] = None
     costing: Optional[dict] = None
@@ -2199,6 +2202,7 @@ class WarehouseItem(BaseModel):
     quantity_kg: float = 0
     unit: Optional[str] = "kg"
     min_kg: float = 0             # soglia di allarme scorta minima (0 = disattivata)
+    department: Optional[str] = None  # reparto: panificazione | pizzeria | pasticceria (None = tutti)
     lot: Optional[str] = ""
     expiry: Optional[str] = ""
     updated_at: Optional[str] = None

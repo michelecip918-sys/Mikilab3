@@ -137,3 +137,14 @@
 - Accenti bandiera con colori VERI (index.css .it-de-ribbon): Italia verde(#009246)-bianco-rosso(#CE2B37) + Germania nero-rosso(#DD0000)-oro/giallo(#FFCE00). Ora presenti giallo e rosso vero. Ribbon usato in header/slogan/footer/varie sezioni.
 - Post Community ufficiale di Michele: foto braccio/tatuaggio (/michele-real-lab.jpg) + buongiorno trilingue (text/text_de/text_en), autore "Michele — MikiLab", pinned. Inserito in community_posts; render localizzato da Community.jsx.
 - Verifica: screenshot Home (ribbon colori bandiera visibili, branding OK); post confermato via API (image_url + text_de/text_en).
+
+## 2026-06 — Filtro per Reparto GLOBALE (Panificazione / Pizzeria / Pasticceria)
+- Nuovo `frontend/src/lib/dept.js`: stato reparto GLOBALE (localStorage `mikilab_capo_dept` + evento `mikilab-dept-changed`), hook `useDept()`, `recipeDept()` (deduzione automatica da categoria/nome), `matchDept()`, `deptLabel()/deptIcon()`.
+- `App.js`: il selettore `capo-dept-switch` ora usa lo stato globale (dispatch evento) → tutte le sezioni si aggiornano live.
+- Ricette (`RecipeList.jsx` + `Ricette.jsx`): prop `deptScoped`, filtro per reparto con deduzione automatica + banner "Reparto attivo" e pulsante "Mostra tutti i reparti".
+- Override manuale reparto nel form ricetta (`RecipeDialog.jsx`, `recipe-department-select`) → salvato in `Recipe.department`.
+- Magazzino (`MagazzinoManager.jsx`): campo reparto per materia (`magazzino-dept`) + filtro (le materie senza reparto sono condivise/sempre visibili) + banner. COMPONENTE ORA LOCALIZZATO (it/de/en/es/fr/fa).
+- Piano (`CategoryRecipePicker.jsx`): il picker ricette è filtrato per reparto attivo (fallback all'elenco completo se vuoto).
+- Backend `server.py`: campo `department` su `Recipe/RecipeCreate/RecipeUpdate` e `WarehouseItem`.
+- Testing: backend 4/4 PASS; frontend verificato (conteggi panificazione 71 / pizzeria 35 / pasticceria 42 / tutti 148, banner, reattività, magazzino filtro+localizzazione).
+- Nota: falso positivo del tester (ricetta "non visibile") dovuto alla ricerca del nome IT con UI in EN (i nomi ricetta sono auto-tradotti) — comportamento corretto.

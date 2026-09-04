@@ -159,6 +159,7 @@ export default function Ricette() {
       <div data-testid="ricette-list">
       <RecipeList
         collectionName="mikilab"
+        deptScoped={true}
         heroImage={`${process.env.PUBLIC_URL}/michele-avatar-full.jpg`}
         heroPosition="50% 15%"
         heroTitle={tri("Scopri MikiLab e le sue Ricette", "Entdecke MikiLab & seine Rezepte", "Discover MikiLab & its Recipes", "Descubre MikiLab y sus Recetas", "Découvre MikiLab et ses Recettes")}

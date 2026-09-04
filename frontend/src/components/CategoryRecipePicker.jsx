@@ -5,6 +5,7 @@ import { recipeTitle } from "@/lib/loc";
 import { useLang } from "@/i18n/LanguageContext";
 import { getFavs } from "@/lib/favorites";
 import { getRecents, pushRecents } from "@/lib/recentRecipes";
+import { useDept, matchDept } from "@/lib/dept";
 import { ChevronDown, ChevronLeft, X, Search, Check, ChefHat, Plus, Heart, Clock } from "lucide-react";
 
 // Foto categorie (stile MikiLab, fondo scuro + luce arancione).
@@ -30,7 +31,15 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
   const [picked, setPicked] = useState(() => new Map());
   const [favIds, setFavIds] = useState(() => new Set());
   const [recentIds, setRecentIds] = useState([]);
-  const list = recipes || [];
+  const activeDept = useDept();
+  // Filtro reparto globale (Capo): mostra solo le ricette del reparto attivo.
+  // Se il reparto non ha ricette, ricade sull'elenco completo (mai vuoto).
+  const list = useMemo(() => {
+    const all = recipes || [];
+    if (!activeDept || activeDept === "tutti") return all;
+    const scoped = all.filter((r) => matchDept(r, activeDept, { autoDeduce: true }));
+    return scoped.length ? scoped : all;
+  }, [recipes, activeDept]);
   const inPlan = useMemo(() => new Set(selectedIds), [selectedIds]);
 
   useEffect(() => {
