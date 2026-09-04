@@ -32,7 +32,6 @@ import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
 import MamoAssistant from "@/components/MamoAssistant";
 import OrdineCapo from "@/components/OrdineCapo";
-import MikiLabEliteEngine from "@/sections/MikiLabEliteEngine";
 import MohamedFloor from "@/components/MohamedFloor";
 import BakemixGuide from "@/components/BakemixGuide";
 import IntroLanding from "@/components/IntroLanding";
@@ -76,7 +75,6 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [showElite, setShowElite] = useState(false);
   const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
@@ -102,8 +100,9 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
+  if (authOpen && !user && !resetToken) return <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
   if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
-  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} />;
+  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} onRegister={() => { setAuthMode("register"); setAuthOpen(true); }} />;
   if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} />;
   if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
 
@@ -194,7 +193,6 @@ export default function App() {
                     <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="MikiLab" roleTag="Master Admin" />
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                       <LabCard testid="lab-nav-ordine" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso a Mohamed.", "Auftrag diktieren, Rückwärtsplan an Mohamed.", "Dictate the order, backwards plan to Mohamed.", "Dicta el pedido, plan a Mohamed.", "Dicte la commande, plan à Mohamed.", "سفارش را بگو، برنامه به محمد.")} onClick={() => setCurrentView("ordine-capo")} accent />
-                      <LabCard testid="lab-nav-elite" icon="🎛️" title={tri("Elite Engine", "Elite Engine", "Elite Engine", "Elite Engine", "Elite Engine", "موتور نخبه")} sub={tri("Pannello comandi completo del laboratorio.", "Komplettes Steuerpult der Backstube.", "Full lab command panel.", "Panel de mando completo del obrador.", "Panneau de commande complet du labo.", "پنل کامل فرمان آزمایشگاه.")} onClick={() => setShowElite(true)} />
                       <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />
                       <LabCard testid="lab-nav-magazzino" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände, Schwellen und Reichweite.", "Stock levels, thresholds and autonomy.", "Existencias, umbrales y autonomía.", "Stocks, seuils et autonomie.", "موجودی، آستانه‌ها و خودکفایی.")} onClick={() => setCurrentView("magazzino")} />
                       <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
@@ -243,7 +241,6 @@ export default function App() {
         {authOpen && !user && <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>}
         {resetToken && <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
-        {showElite && <MikiLabEliteEngine open={showElite} onClose={() => setShowElite(false)} isCapo={true} />}
 
         <Toaster position="top-center" richColors />
         <RadioFornaio />

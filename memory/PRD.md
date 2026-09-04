@@ -4047,3 +4047,8 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - Sessione permanente: SESSION_DAYS=3650 (cookie ~10 anni), registrazione gratuita e persistente.
 - Verificato a schermo: admin->hub diretto, Michele->login->Capo Console (6 card, no toggle), nav 3 avatar.
 - TODO prossimi: sfondi futuristici diversi per sezione; punto 3 Mohamed coordinatore (pause/conferme); BakemixAI conversazionale.
+
+## v-BLK2-5 (2026-06)
+- Blocco2: IntroLanding pulsanti Registrati/Inizia/Installa (intro-register-btn apre AuthScreen register via early-return in App, disponibile su ogni schermata).
+- Blocco5: MohamedFloor ora ha selezione RUOLO/postazione (reparti Panetteria/Pizzeria/Pasticceria/Generale dai reparti Elite Engine) -> badge ruolo + mic -> MamoAssistant legge i task del ruolo dalla coda del Capo. Rimosso Elite Engine dal Capo (no duplicati): tolti card lab-nav-elite, modal, state showElite, import.
+- TTS: playTTS default lang = lingua app (setTTSAppLang aggiornato da LanguageContext) + traduzione backend -> testo e voce sempre stessa lingua. Verificato DE.

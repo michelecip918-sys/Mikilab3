@@ -8,7 +8,7 @@ import InstallApp from "@/components/InstallApp";
 const PUB = process.env.PUBLIC_URL;
 
 // Schermata 1 — SOLO home: logo, frase del sito, pulsante "Inizia".
-export default function IntroLanding({ onStart }) {
+export default function IntroLanding({ onStart, onRegister }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
 
@@ -66,13 +66,19 @@ export default function IntroLanding({ onStart }) {
           )}
         </motion.p>
 
-        <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}
-          data-testid="intro-start-btn" onClick={onStart}
-          className="pointer-events-auto mt-9 inline-flex items-center gap-2 px-9 py-4 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 hover:shadow-[#14b8a6]/50 transition-all">
-          {tri("Inizia", "Los geht's", "Start", "Empezar", "Commencer", "شروع")} <ArrowRight className="w-5 h-5" />
-        </motion.button>
-
-        <InstallApp variant="hero" />
+        <div className="pointer-events-auto mt-8 flex flex-col items-center gap-3 w-full max-w-[260px]">
+          <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}
+            data-testid="intro-register-btn" onClick={onRegister}
+            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 transition-all">
+            {tri("Registrati", "Registrieren", "Sign up", "Regístrate", "S'inscrire", "ثبت‌نام")}
+          </motion.button>
+          <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.58, duration: 0.5 }}
+            data-testid="intro-start-btn" onClick={onStart}
+            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#0b0f19] border border-[#14b8a6]/40 text-[#14b8a6] font-bold text-base hover:border-[#14b8a6] active:scale-95 transition-all">
+            {tri("Inizia", "Los geht's", "Start", "Empezar", "Commencer", "شروع")} <ArrowRight className="w-5 h-5" />
+          </motion.button>
+          <InstallApp variant="hero" />
+        </div>
 
         <p className="mt-6 text-[11px] text-[#64748B]">{tri("100% offline · pronto in laboratorio", "100% offline · einsatzbereit", "100% offline · lab-ready", "100% sin conexión · listo", "100% hors ligne · prêt", "۱۰۰٪ آفلاین · آماده")}</p>
       </div>
