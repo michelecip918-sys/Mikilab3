@@ -29,6 +29,7 @@ import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
 import OrdiniExtra from "@/components/OrdiniExtra";
+import PinSetup from "@/components/PinSetup";
 import GuidaSOS from "@/components/GuidaSOS";
 import { User, BookOpen, LayoutGrid, LifeBuoy } from "lucide-react";
 
@@ -169,7 +170,7 @@ export default function App() {
                     {currentView === "magazzino" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>}
                     {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}
                     {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
-                    {currentView === "maestro" && <div className="space-y-4"><PeripheralSetup /><div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Maestro /></div></div>}
+                    {currentView === "maestro" && <div className="space-y-4"><PeripheralSetup /><PinSetup /><div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Maestro /></div></div>}
                   </div>
                 ) : (
                   <div className="space-y-5" data-testid="floor-mode-view">

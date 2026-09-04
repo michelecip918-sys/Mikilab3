@@ -3956,3 +3956,8 @@ RIMANE DA FARE (fasi successive):
 - FIX LOW: OrdiniExtra ora ripulisce il markdown del piano AI prima di mostrarlo.
 - Testato iter176: frontend 92% (tutti i flussi passano; il bug PIN HIGH ora corretto). Backend Ordini Extra verificato via curl.
 RIMANE: registrazione email/Google al primo avvio collegata al Capo + PIN scelto dal Capo; assistente 'Mamo' dedicato all'operaio; FASE 3 restyle card ricette + traduzioni complete.
+
+## v-fork+9 (2026-06) — PIN scelto dal Capo
+- components/PinSetup.jsx montato nella scheda 'Sistemi IoT' della plancia Capo: il Capo imposta il PIN a 4 cifre per l'accesso Produzione (Floor). Usa setPin/getPin di lib/pinLock.js (persistito localStorage 'mikilab_pin', default 1985). Lo sblocco iniziale (unlockWith) confronta col PIN impostato.
+- Registrazione EMAIL già disponibile via AuthScreen (account-btn). 
+RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed — da fare col passaggio integration_expert) collegata al profilo Capo; assistente 'Mamo' per l'operaio; FASE 3 restyle card ricette + traduzioni complete.
