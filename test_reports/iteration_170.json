@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only testing of the new dual-mode MikiLab shell (PIN 1985) at 390x844 and 1920x800. All 5 requested flows PASS: PinLock unlock with 1985, default Floor Mode view with its 3 sections, mode-lab-btn -> lab-control-view with the 3 lab nav cards, lab-nav-iot -> PeripheralSetup panel + Maestro tools, 'Configura tutto' peripheral auto-setup (no JS error, tiles update, toast 'Periferiche configurate: 3/4 attive'), and mode-floor-btn returns to floor-mode-view. No page errors (pageerror) captured during the whole run. Issues found are cosmetic/i18n plus one real mobile layout bug in the PIN keypad.",
+  "backend_issues": { "critical": [], "minor": [] },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PinLock.jsx", "issue": "Keypad grid uses 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' so at 390px width the 10 keys render as a single stacked column (key 1 at y=104, key 2 at y=180, each 260px wide); keys 0 and delete fall below the fold and require scrolling on a mobile/hands-free device. Should be grid-cols-3 at all breakpoints.", "selector": "[data-testid=\"pin-key-1\"]", "priority": "HIGH"},
+      {"component": "RadioFornaio floating button", "issue": "Fixed 'Radio' FAB (bottom-left) overlaps the 'Impostazioni IoT' card title/description text on mobile (390px) - text partially hidden behind the button.", "selector": "[data-testid=\"lab-nav-iot\"]", "priority": "MEDIUM"}
+    ],
+    "integration_issues": [
+      {"flow": "Unauthenticated session network calls", "issue": "Repeated 401 responses on GET /api/auth/me and /api/favorites/sync fill the console with 'Failed to load resource: 401' (7+ occurrences per page load). Functionally harmless (no user signed in) but should be guarded/silenced.", "affected_selectors": []},
+      {"flow": "Smart Planner voice/manual validation (OPTIONAL)", "issue": "NOT VERIFIABLE via UI: after opening Lab Control > Impostazioni IoT (Maestro), no 'Smart Planner' entry is rendered anywhere in the DOM, so [data-testid=\"smart-planner\"] / planner-volume / team-day-0 could not be reached. validateBatchQty behaviour therefore remains untested end-to-end.", "affected_selectors": ["[data-testid=\"smart-planner\"]", "[data-testid=\"planner-volume\"]", "[data-testid=\"team-day-0\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Global (PinLock, Maestro, Ricette)", "issues": ["UI renders in ENGLISH by default (\"Enter the security PIN\", \"Your lab assistant\", \"MikiLab Recipes\", \"These are MY recipes...\") while the product spec calls for an Italian UI; language selector in header shows EN. Consider defaulting lang to IT."]},
+      {"screen": "Lab Control - Auto-Setup Periferiche (desktop 1920)", "issues": ["Helper paragraph and tile status text at 9-10px are very small/low-contrast (#64748B on #0f172a) on a 1920px viewport."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "PinLock: change keypad grid to grid-cols-3 (remove sm:grid-cols-2 / lg:grid-cols-3) so the keypad is a proper 3x4 pad on mobile.",
+    "Prevent the RadioFornaio FAB from overlapping card content on mobile (add bottom padding / raise z-index-safe spacing).",
+    "Silence or guard the unauthenticated 401 calls to /api/auth/me and /api/favorites/sync.",
+    "Expose the Smart Planner tool in the new dual-mode shell (or confirm it is intentionally out of scope) so validateBatchQty can be regression-tested.",
+    "Consider defaulting UI language to Italian per product spec."
+  ],
+  "critical_code_review_comments": [
+    "peripherals.js checkIoT() swallows all failures into status 'error' - distinguish network failure vs non-200 for better diagnostics; also no timeout on the fetch, so a hung /api/sensors/latest keeps the button in 'Rilevamento...' indefinitely.",
+    "PeripheralSetup.run() has no catch: autoSetupPeripherals never throws today, but a future throw would leave no user-facing error (only finally resets busy).",
+    "App.js imports useAuth but never uses it beyond import (dead import in the streamlined shell) - verified lint clean, but worth removing."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only request)", "frontend": "100% of the 5 requested flows passed; 2 UI bugs + 1 optional flow unreachable"},
+  "seed_data_creation": "none",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "App PIN 1985 (works)",
+  "context_for_next_testing_agent": "PIN 1985 unlocks (pin-key-1/9/8/5, auto-submit). Default view = floor-mode-view. Peripheral auto-setup toast is a sonner toast that appears within ~1s and auto-dismisses in ~4s - assert it early (do not wait 7s or you will miss it). In headless Chromium mic+camera resolve 'ok', bluetooth 'unavailable' (N/D), IoT 'ok (2)' => toast reads 3/4. Smart Planner is not rendered in the current Maestro view.",
+  "rca_of_the_issue": "PinLock mobile bug root cause: responsive grid classes 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' make the keypad 1-column below the sm breakpoint (640px), so on phones the pad is a tall vertical list. Reproduce: viewport 390x844 -> load app -> measure bounding boxes of pin-key-1 and pin-key-2 (different rows, 260px wide each)."
+}

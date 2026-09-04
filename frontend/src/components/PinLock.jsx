@@ -43,7 +43,7 @@ export default function PinLock({ onUnlock }) {
         {err ? tri("PIN errato. Riprova.", "Falscher PIN.", "Wrong PIN. Try again.", "PIN incorrecto.", "Code incorrect.", "پین اشتباه.") : ""}
       </p>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full max-w-[260px]">
+      <div className="grid grid-cols-3 gap-3 w-full max-w-[260px]">
         {keys.map((k, i) => k === "" ? <span key={i} /> : k === "del" ? (
           <button key={i} data-testid="pin-del" onClick={del} className="h-16 rounded-2xl flex items-center justify-center active:scale-95 transition-all"
             style={{ background: "#1B2A38", border: "2px solid #2A3B49", color: "#5E8CA8" }}><Delete className="w-6 h-6" /></button>

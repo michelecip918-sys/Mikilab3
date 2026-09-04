@@ -5,6 +5,15 @@ import { cleanForSpeech } from "@/lib/voice";
 const API = process.env.REACT_APP_BACKEND_URL;
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
 
+// Normalizza qualunque codice lingua (it, de-DE, EN_us…) nel BCP-47 nativo corretto per la
+// sintesi vocale. Le lingue non mappate ricadono su un codice regionale sensato (es. pt → pt-PT)
+// invece di forzare sempre l'italiano: così le lingue straniere non vengono più lette a caso.
+export function toBCP47(lang) {
+  const base = String(lang || "").toLowerCase().split(/[-_]/)[0];
+  if (!base) return "it-IT";
+  return SR_LANG[base] || `${base}-${base.toUpperCase()}`;
+}
+
 let _voices = [];
 function loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []; } catch { _voices = []; } }
 loadVoices();
@@ -25,7 +34,7 @@ const FEMALE_HINTS = ["female", "femme", "weiblich", "mujer", "donna", "femmin",
 // Sceglie una voce del dispositivo MASCHILE nella lingua dell'app; voce distinta per Momi.
 function pickVoice(lang, persona) {
   if (!_voices.length) loadVoices();
-  const code = (SR_LANG[lang] || "it-IT").slice(0, 2);
+  const code = toBCP47(lang).slice(0, 2);
   let cands = _voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(code));
   if (!cands.length) cands = _voices;
   if (!cands.length) return null;
@@ -87,7 +96,7 @@ export function stopTTS() {
 function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   try {
     const u = new SpeechSynthesisUtterance(clean);
-    u.lang = SR_LANG[lang] || "it-IT";
+    u.lang = toBCP47(lang);
     const v = pickVoice(lang, voice);
     if (v) u.voice = v;
     // Timbro sempre MASCHILE anche se il dispositivo ha solo voci femminili: pitch basso per persona.

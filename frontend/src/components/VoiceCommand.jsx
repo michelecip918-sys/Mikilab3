@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { TOOLS } from "@/sections/PianoProduzioneAI";
 import { api, labConfigApi } from "@/lib/api";
-import { playTTS, stopTTS, isTTSMuted, setTTSMuted, getLastTTS } from "@/lib/tts";
+import { playTTS, stopTTS, isTTSMuted, setTTSMuted, getLastTTS, toBCP47 } from "@/lib/tts";
 import SpeakingAvatar from "@/components/SpeakingAvatar";
 import { fetchWeeklyItems, todayKey, tomorrowKey, itemsForDay, summarizeDay } from "@/lib/weeklyPlan";
 import { getCached as shiftGet, setWorkMode, setBatchStatus, addBase, toggleMachineDown, setColdDown, addNote, statusLabel, machineDownNote, coldDownNote, handoverSummary, logFault } from "@/lib/shiftState";
@@ -14,7 +14,6 @@ import { routeVoice } from "@/lib/nativeAudio";
 import { getOperators } from "@/lib/brigata";
 
 const norm = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
 const WAKE = ["comandante lab", "comandante", "ehi lab", "hey lab", "e lab", "ei lab", "lab", "لب", "ok lab", "commander lab"];
 
 const TOOL_ALIASES = {
@@ -520,7 +519,7 @@ export default function VoiceCommand({ onOpenTool }) {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
     const rec = new SR();
-    rec.lang = SR_LANG[lang] || "it-IT"; rec.continuous = true; rec.interimResults = true; rec._stop = false;
+    rec.lang = toBCP47(lang); rec.continuous = true; rec.interimResults = true; rec._stop = false;
     rec.onresult = (e) => {
       const last = e.results[e.results.length - 1]; if (!last || !last.isFinal) return;
       const tr = norm(last[0].transcript);
@@ -560,7 +559,7 @@ export default function VoiceCommand({ onOpenTool }) {
     if (listening) { try { recRef.current && recRef.current.stop(); } catch { /* */ } return; }
     stopTTS(); setSpeaking(false); // barge-in: zittisci l'avatar
     beep();
-    const rec = new SR(); rec.lang = SR_LANG[lang] || "it-IT"; rec.interimResults = false; rec.maxAlternatives = 1;
+    const rec = new SR(); rec.lang = toBCP47(lang); rec.interimResults = false; rec.maxAlternatives = 1;
     rec.onstart = () => setListening(true);
     rec.onerror = (e) => { setListening(false); if (e && e.error === "not-allowed") toast.error(tri("Permesso microfono negato.", "Mikrofon verweigert.", "Mic denied.", "Micrófono denegado.", "Micro refusé.", "میکروفون رد شد.")); };
     rec.onend = () => setListening(false);

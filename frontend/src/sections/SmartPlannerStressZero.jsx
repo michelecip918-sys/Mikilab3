@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Moon, Users, Scale, CalendarDays, Wand2 } from "lucide-react";
 import ModuleParams from "@/components/ModuleParams";
 import { weeklyApi } from "@/lib/api";
+import { validateBatchQty } from "@/lib/voiceValidate";
 import { toast } from "sonner";
 
 const GIORNI = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
@@ -33,6 +34,10 @@ export default function SmartPlannerStressZero() {
   const giorniSopra = nums.map((v, i) => ({ v, i })).filter((d) => stato(d.v) === "sopra").map((d) => GIORNI[d.i]);
   const giorniSotto = nums.map((v, i) => ({ v, i })).filter((d) => stato(d.v) === "sotto").map((d) => GIORNI[d.i]);
   const setDay = (i, val) => setWeek((w) => w.map((x, j) => (j === i ? val : x)));
+  // Validazione sintattica (voce o manuale) prima di consolidare il valore nell'array del piano:
+  // impedisce che comandi vocali fraintesi o input errati rompano i dati (NaN, negativi, fuori scala).
+  const commitDay = (i, val) => { const v = validateBatchQty(val); if (v !== null) setDay(i, v); else setDay(i, 0); };
+  const commitVolume = (val) => { const v = validateBatchQty(val); if (v !== null) setVolume(v); else setVolume(0); };
   const levelLoads = () => {
     // Sposta l'eccesso dai giorni sovraccarichi verso quelli scarichi: livella i giorni lavorativi.
     setWeek((w) => w.map((v) => ((Number(v) || 0) > 0 ? livellato : 0)));
@@ -103,6 +108,7 @@ export default function SmartPlannerStressZero() {
               type="number"
               value={volume}
               onChange={(e) => setVolume(e.target.value)}
+              onBlur={(e) => commitVolume(e.target.value)}
               className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-indigo-300 mt-1 font-mono text-center text-xl font-bold"
             />
           </div>
@@ -160,6 +166,7 @@ export default function SmartPlannerStressZero() {
                     type="number"
                     value={week[i]}
                     onChange={(e) => setDay(i, e.target.value)}
+                    onBlur={(e) => commitDay(i, e.target.value)}
                     className={`w-full bg-slate-900 border rounded-lg p-2 text-center font-mono text-sm font-bold ${STATE_STYLE[st]}`}
                   />
                   <span data-testid={`team-state-${i}`} className={`text-[9px] font-bold uppercase whitespace-nowrap ${STATE_STYLE[st].split(" ")[0]}`}>{STATE_LABEL[st]}</span>

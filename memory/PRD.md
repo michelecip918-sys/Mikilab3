@@ -3885,3 +3885,11 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Zero-Bug/Fallback**: TalkWithMiki ascolto continuo con FALLBACK automatico su perdita cuffia Bluetooth/microfono o rete (stop + messaggio, si continua a tastiera); warm-up voci speechSynthesis per latenza minima di avvio TTS; RadioFornaio Auto-Duck BLINDATO (ripristino fluido a rampa al 100% + rete di sicurezza anti-stuck ogni 3s); guard anti-doppioni TTS (_ttsActive) + cleanup listener negli effetti.
 - IntroGuide statica già disattivata (showIntro=false); guida affidata solo agli avatar dinamici.
 - sw CACHE_NAME=mikilab-v17. Compilazione pulita, zero errori console.
+
+## v-fork (2026-06) — Validazione Planner, PDF DE, codici voce, auto-setup periferiche + shell Lab/Floor
+- **App.js = shell doppia modalità** (canonico, fornito dall'utente): Lab Control [Michele] vs Floor Mode [Team]. Lab Control ha 3 card (Master Ricettario, Logistica & Magazzino, Impostazioni IoT). Floor Mode: Timer, Voice Core, Ricettario di produzione. NB: questa shell snella NON monta piu Home, Impara/Academy, Diagnosi, Community, Shop, Enterprise, BottomNav ne il modale di login (rimossi di proposito nel codice fornito).
+- **Auto-Setup Periferiche** (lib/peripherals.js + components/PeripheralSetup.jsx): un tocco su "Configura tutto" richiede permessi microfono/telecamera, verifica Bluetooth e interroga GET /api/sensors/latest, mostrando badge per ogni periferica. Montato in Lab Control -> Impostazioni IoT. Fetch IoT con timeout 6s. Testato iter170: 5/5 flussi PASS, toast "3/4 attive", 0 errori JS.
+- **Validazione vocale/manuale Planner** (SmartPlannerStressZero): validateBatchQty (lib/voiceValidate.js) collegata onBlur a Volume e ai 7 input giornalieri -> input non validi -> 0 (niente NaN/negativi nell'array). Raggiungibile via Maestro tool "planner".
+- **Codici lingua TTS**: nuovo helper toBCP47() in lib/tts.js usato in nativeSpeak/pickVoice e in VoiceCommand (SpeechRecognition wake + singolo). Le lingue non mappate ottengono un codice regionale corretto (es. pt->pt-PT) invece di ricadere sempre su it-IT.
+- **PDF tedesco**: scripts/gen_pdf_de.py -> /app/frontend/public/MikiLab_v14_Ecosystem_Document_DE.pdf (203KB, stesse schermate reali).
+- **Fix**: PinLock keypad ora grid-cols-3 su tutti i breakpoint (era 1 colonna su mobile <640px).

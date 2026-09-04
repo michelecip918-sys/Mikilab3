@@ -1,41 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import "@/App.css";
-import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/Header";
-import BottomNav from "@/components/BottomNav";
+import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
-import ProfileSelect from "@/profile/ProfileSelect";
-import Home from "@/sections/Home";
-import Ricette from "@/sections/Ricette";
-import Maestro from "@/sections/Maestro";
-import AcademyHome from "@/sections/AcademyHome";
-import Community from "@/sections/Community";
-import PhotoDiagnosi from "@/sections/PhotoDiagnosi";
-import Shop from "@/sections/Shop";
-import EnterpriseHub from "@/sections/EnterpriseHub";
-import PaywallGate from "@/components/PaywallGate";
-import MikilaWisdom from "@/components/MikilaWisdom";
-import RadioFornaio from "@/components/RadioFornaio";
-import VoiceCommand from "@/components/VoiceCommand";
-import ModeBadge from "@/components/ModeBadge"; // eslint-disable-line no-unused-vars
-import GuidaMikiLab from "@/sections/GuidaMikiLab";  // deprecato: non più montato (guida ora in Home)
-import ShiftScheduler from "@/components/ShiftScheduler";
-import AudioRouteIndicator from "@/components/AudioRouteIndicator";
-import IntroGuide from "@/components/IntroGuide";
-import SiteMenu from "@/components/SiteMenu";
-import { getProfile } from "@/components/Onboarding";
-import InstallBanner from "@/components/InstallBanner";
-import OfflineBanner from "@/components/OfflineBanner";
-import NewsletterPopup from "@/components/NewsletterPopup";
-import AuthScreen from "@/components/AuthScreen";
-import ResetPassword from "@/components/ResetPassword";
-import PublicBatch from "@/sections/PublicBatch";
-import { consumeBack } from "@/lib/backNav";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import Maintenance from "@/components/Maintenance";
-import LegalPage from "@/sections/LegalPage";
-import Sfide from "@/components/Sfide";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { AmbientProvider } from "@/audio/AmbientContext";
@@ -43,195 +9,42 @@ import { TimerProvider } from "@/audio/TimerContext";
 import { SoundFXProvider } from "@/audio/SoundFXContext";
 import { MixerTimersProvider } from "@/audio/MixerTimersContext";
 import { MachinesProvider } from "@/audio/MachinesContext";
-import AutoReport from "@/components/AutoReport";
-import SplashScreen from "@/components/SplashScreen";
-import TalkWithMiki from "@/components/TalkWithMiki";
-import ambient from "@/lib/ambientMusic";
-import { api, greetingsApi } from "@/lib/api";
-import { toast } from "sonner";
-import { mkTri } from "@/i18n/triMaps";
-import { hydrateFavs } from "@/lib/favorites";
-import { hydrateCombos } from "@/lib/combos";
+
+// Componenti essenziali e puliti
+import Header from "@/components/Header";
 import PinLock from "@/components/PinLock";
 import { isLocked as pinIsLocked, lockNow as pinLockNow } from "@/lib/pinLock";
+import VoiceCommand from "@/components/VoiceCommand";
+import RadioFornaio from "@/components/RadioFornaio";
+import ShiftScheduler from "@/components/ShiftScheduler";
+import TalkWithMiki from "@/components/TalkWithMiki";
+import AudioRouteIndicator from "@/components/AudioRouteIndicator";
+import LegalPage from "@/sections/LegalPage";
+import PeripheralSetup from "@/components/PeripheralSetup";
 
-function App() {
-  const { lang, t } = useLang();
-  const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const [tab, setTab] = useState(() => (new URLSearchParams(window.location.search).get("academy") ? "shop" : "home"));
-  useState(() => {
-    // Ingresso diretto: niente più schermata di domande. Semino un profilo di default completo.
-    if (!getProfile()) {
-      try {
-        localStorage.setItem("mikilab_onboarding", JSON.stringify({
-          labName: "", type: "panificio",
-          equip: ["impastatrice", "forno_rotativo", "forno_statico", "cella", "abbattitore"],
-          focus: "pane", done: true, at: new Date().toISOString(),
-        }));
-      } catch { /* */ }
-    }
-    return true;
-  });
-  const [showIntro] = useState(() => false);
-  const tabRef = useRef("home");
-  const { user, authOpen, setAuthOpen } = useAuth();
-  const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
-  const [legalOpen, setLegalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState("login");
-  const [sfideOpen, setSfideOpen] = useState(false);
-  const publicBatch = new URLSearchParams(window.location.search).get("lotto");
+// Viste principali pulite
+import Ricette from "@/sections/Ricette";
+import Maestro from "@/sections/Maestro";
+
+export default function App() {
+  useLang();
+
+  // STATO PRINCIPALE: Doppia modalità rigida e pulita (Lab Control vs Floor Mode)
+  const [activeMode, setActiveMode] = useState("floor"); // Di default sul campo per il team
+  const [currentView, setCurrentView] = useState("dashboard"); // dashboard, ricette, magazzino, maestro
   const [locked, setLocked] = useState(() => pinIsLocked());
+  const [legalOpen, setLegalOpen] = useState(false);
+
+  // Sblocco PIN di sicurezza
   useEffect(() => {
     const onLock = () => { pinLockNow(); setLocked(true); };
     window.addEventListener("mikilab-lock", onLock);
     return () => window.removeEventListener("mikilab-lock", onLock);
   }, []);
 
-  // Apertura del Motore Sfide da qualunque punto (PaywallGate, Home, ecc.)
-  useEffect(() => {
-    const h = () => setSfideOpen(true);
-    window.addEventListener("mikilab-go-challenges", h);
-    return () => window.removeEventListener("mikilab-go-challenges", h);
-  }, []);
-
-  // Apertura login/registrazione con modalità scelta (es. CTA "Crea account gratis")
-  useEffect(() => {
-    const h = (e) => { setAuthMode((e && e.detail && e.detail.mode) || "login"); setAuthOpen(true); };
-    window.addEventListener("mikilab-open-auth", h);
-    return () => window.removeEventListener("mikilab-open-auth", h);
-  }, [setAuthOpen]);
-
-  // Gestione tasto Indietro: sincronizza i tab con la history del browser.
-  const navigate = useCallback((next) => {
-    if (next === tabRef.current) { window.dispatchEvent(new CustomEvent("mikilab-nav-retap", { detail: { tab: next } })); return; }
-    tabRef.current = next;
-    window.history.pushState({ tab: next }, "");
-    setTab(next);
-  }, []);
-
-  useEffect(() => {
-    window.history.replaceState({ tab: "home" }, "");
-    const onPop = (e) => {
-      try {
-        if (consumeBack()) return; // chiude prima le viste profonde aperte
-      } catch (err) {
-        // eslint-disable-next-line no-console
-        console.error("back-nav close error:", err);
-      }
-      const next = (e.state && e.state.tab) || "home";
-      tabRef.current = next;
-      setTab(next);
-    };
-    window.addEventListener("popstate", onPop);
-    return () => window.removeEventListener("popstate", onPop);
-  }, []);
-
-  // Navigazione da assistente/avatar cliccabile
-  useEffect(() => {
-    const h = (e) => { const tab = e && e.detail && e.detail.tab; if (tab) navigate(tab); };
-    window.addEventListener("mikilab-goto", h);
-    return () => window.removeEventListener("mikilab-goto", h);
-  }, [navigate]);
-
-  // Tracking arrivi da locandina/QR (?ref=flyer o ?utm_source=flyer): conta una volta per sessione.
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const ref = (p.get("ref") || p.get("utm_source") || "").trim().toLowerCase().slice(0, 20);
-    if (!ref) return;
-    const key = `mikilab_ref_${ref}`;
-    if (sessionStorage.getItem(key)) return;
-    sessionStorage.setItem(key, "1");
-    api.post("/social/click", { channel: ref }).catch(() => {});
-  }, []);
-
-
-  // chiudi il modale login appena l'utente è autenticato
-  useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
-
-  // Idrata i preferiti dell'account al bootstrap/login → categoria "Preferite" disponibile ovunque.
-  useEffect(() => { hydrateFavs(); }, [user]);
-
-  // Idrata le combinazioni salvate dell'account al bootstrap/login.
-  useEffect(() => { hydrateCombos(); }, [user]);
-  useEffect(() => { if (user) greetingsApi.check().catch(() => {}); }, [user]);
-
-  // Ritorno da Stripe: conferma acquisto ricetta / abbonamento e pulisce l'URL.
-  useEffect(() => {
-    const p = new URLSearchParams(window.location.search);
-    const clean = () => { const u = new URL(window.location.href); ["recipe", "sub", "session_id", "bundle", "trial"].forEach((k) => u.searchParams.delete(k)); window.history.replaceState({ tab: "home" }, "", u.toString()); };
-    if (p.get("bundle") === "success" && p.get("session_id")) {
-      api.get(`/recipes/bundle/checkout/status/${p.get("session_id")}?lang=${lang}`).then((r) => {
-        if (r?.data?.paid) {
-          toast.success(tri("Pacchetto sbloccato! Ti abbiamo inviato il PDF via email 📧🥖", "Paket freigeschaltet! Wir haben dir das PDF per E-Mail geschickt 📧🥖", "Pack unlocked! We've emailed you the PDF 📧🥖"));
-          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
-          setTab("ricette");
-        }
-        clean();
-      }).catch(clean);
-    } else if (p.get("bundle") === "cancel") { clean(); }
-    else if (p.get("recipe") === "success" && p.get("session_id")) {
-      Promise.resolve(null).then((r) => {
-        if (r?.paid) {
-          toast.success(tri("Ricetta sbloccata! Buon lavoro 👨‍🍳", "Rezept freigeschaltet! 👨‍🍳", "Recipe unlocked! 👨‍🍳"));
-          // Sblocco IMMEDIATO: avvisa le liste ricette / Piano IA di ricaricare (niente reload manuale).
-          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
-          setTab("ricette");
-        }
-        clean();
-      }).catch(clean);
-    } else if (p.get("recipe") === "cancel") { clean(); }
-    else if (p.get("sub") === "success") {
-      Promise.resolve().then(() => toast.success(tri("Abbonamento attivo! Grazie 🙏", "Abo aktiv! Danke 🙏", "Subscription active! Thank you 🙏"))).finally(clean);
-    } else if (p.get("sub") === "cancel") { clean(); }
-    else if (p.get("trial") === "success" && p.get("session_id")) {
-      Promise.resolve(null).then((r) => {
-        if (r?.activated) {
-          toast.success(tri("Prova di 7 giorni attivata! Nessun addebito automatico 🎉", "7-Tage-Test aktiviert! Keine automatische Belastung 🎉", "7-day trial activated! No automatic charge 🎉"));
-          window.dispatchEvent(new CustomEvent("mikilab-entitlements-updated"));
-        }
-        clean();
-      }).catch(clean);
-    } else if (p.get("trial") === "cancel") { clean(); }
-    else if (p.get("ricetta")) {
-      setTab("ricette");
-      const u = new URL(window.location.href); u.searchParams.delete("ricetta");
-      window.history.replaceState({ tab: "ricette" }, "", u.toString());
-      toast.success(tri("Ecco le ricette di MikiLab 🥖", "Hier sind die MikiLab-Rezepte 🥖", "Here are the MikiLab recipes 🥖"));
-    }
-    else if (p.get("prodotto")) {
-      // Deep-link da QR etichetta: apri il tab Ricette; RecipeList aprirà la scheda prodotto.
-      setTab("ricette");
-    }
-  }, []); // eslint-disable-line
-
-  // Notifica "nuovi contenuti": avvisa se sono state aggiunte nuove ricette dall'ultima visita.
-  useEffect(() => {
-    const API = process.env.REACT_APP_BACKEND_URL;
-    if (!API) return;
-    fetch(`${API}/api/recipes?collection_name=mikilab`).then((r) => r.json()).then((list) => {
-      if (!Array.isArray(list)) return;
-      const count = list.length;
-      const prev = parseInt(localStorage.getItem("mikilab_recipe_count") || "0", 10);
-      if (prev > 0 && count > prev) {
-        const n = count - prev;
-        toast.success(tri(`${n} nuove ricette disponibili nel ricettario!`, `${n} neue Rezepte im Rezeptbuch verfügbar!`, `${n} new recipes available in the recipe book!`), { icon: "🥖", duration: 6000 });
-      }
-      localStorage.setItem("mikilab_recipe_count", String(count));
-    }).catch(() => {});
-  }, []); // eslint-disable-line
-
-
-  useEffect(() => { ambient.setSection(tab); }, [tab]);
-
-  // Scroll iniziale in cima ad ogni cambio sezione (fix richiesto: la pagina si apre sempre dall'alto).
-  useEffect(() => {
-    try { window.scrollTo({ top: 0, left: 0, behavior: "auto" }); }
-    catch { window.scrollTo(0, 0); }
-  }, [tab]);
-
-  // Pagina pubblica del lotto (QR): nessun login, nessuna navigazione.
-  if (publicBatch) return <PublicBatch id={publicBatch} />;
-  if (locked && !resetToken && !publicBatch) return <PinLock onUnlock={() => setLocked(false)} />;
+  if (locked) {
+    return <PinLock onUnlock={() => setLocked(false)} />;
+  }
 
   return (
     <ProfileProvider>
@@ -240,108 +53,208 @@ function App() {
     <SoundFXProvider>
     <MixerTimersProvider>
     <MachinesProvider>
-    <SplashScreen />
-    <div className="App min-h-screen app-warm-bg">
-      {/* Sfondo scenografico per sezione (fornaio + AI), toni calmi + velo scuro per leggibilità */}
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${process.env.PUBLIC_URL}/${
-          tab === "maestro" ? "bg-lab.jpg" :
-          tab === "ricette" ? "bg-ricette.jpg" :
-          tab === "shop" ? "bg-farine.jpg" :
-          (tab === "imparacon" || tab === "impara" || tab === "news" || tab === "enciclopedia") ? "bg-accademia.jpg" :
-          tab === "community" ? "bg-community.jpg" :
-          (tab === "diagnosi" || tab === "enterprise") ? "bg-lab.jpg" :
-          "bg-home.jpg"})`, opacity: 0.85 }} />
-      <div aria-hidden className="fixed inset-0 z-0 pointer-events-none"
-        style={{ background: "linear-gradient(180deg, rgba(14,22,32,0.42) 0%, rgba(14,22,32,0.58) 45%, rgba(14,22,32,0.80) 100%)" }} />
-      <div className="relative z-10">
-      <Header />
-      <SiteMenu onNavigate={navigate} onOpenSfide={() => setSfideOpen(true)} tab={tab} />
-      <OfflineBanner />
-      <InstallBanner />
-      {false && <NewsletterPopup />}
-      <main className="max-w-xl mx-auto px-4 pt-4 pb-64">
-        <ErrorBoundary resetKey={tab} lang={lang}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={tab}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
-          >
-            {tab !== "home" && tab !== "maestro" && <MikilaWisdom section={tab} />}
-            {tab === "home" && <Home onNavigate={navigate} />}
-            {tab === "ricette" && <Ricette />}
-            {tab === "maestro" && <Maestro />}
-            {tab === "imparacon" && <AcademyHome onNavigate={navigate} />}
-            {["impara", "news", "enciclopedia"].includes(tab) && <AcademyHome key={tab} onNavigate={navigate} />}
-            {tab === "diagnosi" && <PaywallGate feature="diagnosi" sectionName={tri("Diagnosi", "Diagnose", "Diagnosis")}><PhotoDiagnosi /></PaywallGate>}
-            {tab === "community" && <Community onNavigate={navigate} />}
-            {tab === "enterprise" && <PaywallGate feature="enterprise" sectionName="Enterprise"><EnterpriseHub /></PaywallGate>}
-            {tab === "shop" && <Shop onNavigate={setTab} />}
-          </motion.div>
-        </AnimatePresence>
-        </ErrorBoundary>
+      <div className="min-h-screen bg-[#090D12] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#090D12]">
 
-        <footer data-testid="page-footer" className="mt-10 pt-5 border-t border-[#2A3B49]">
-          <p className="text-center text-[11px] text-[#94A3B8]">MikiLab · mikilab.de — powered by BakeMix AI · {tri("100% gratis", "100% kostenlos", "100% free", "100% gratis")}</p>
-          <p className="text-center text-[10px] text-[#64748B] mt-1 max-w-sm mx-auto" data-testid="footer-legal">© {new Date().getFullYear()} MikiLab — {tri("ideato e diretto da Michele (Il Comandante). Tutti i diritti riservati.", "konzipiert und geleitet von Michele (Der Kommandant). Alle Rechte vorbehalten.", "conceived and directed by Michele (The Commander). All rights reserved.", "ideado y dirigido por Michele (El Comandante). Todos los derechos reservados.")}</p>
-          <div className="flex items-center justify-center gap-4 mt-2">
-            <button data-testid="footer-impressum" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Impressum</button>
-            <button data-testid="footer-datenschutz" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">Datenschutz</button>
-            <button data-testid="footer-contatti" onClick={() => setLegalOpen(true)} className="text-[11px] font-semibold text-[#3E9C93] hover:underline">{tri("Contatti", "Kontakt", "Contact")}</button>
+        {/* SFONDO CYBER-INDUSTRIAL SCURO */}
+        <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_center,#111827_0%,#030712_100%)] opacity-95" />
+
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Header />
+
+          {/* BARRA SUPERIORE DI SEPARAZIONE RUOLI: LAB CONTROL vs FLOOR MODE */}
+          <div className="bg-[#111827] border-b border-[#1F2937] px-4 py-3 sticky top-0 z-40 backdrop-blur-md bg-opacity-90">
+            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+
+              {/* SWITCH RUOLO */}
+              <div className="flex items-center gap-2 bg-[#030712] p-1 rounded-xl border border-[#1F2937] w-full sm:w-auto">
+                <button
+                  data-testid="mode-lab-btn"
+                  onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); }}
+                  className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    activeMode === 'lab'
+                      ? 'bg-[#14b8a6] text-[#030712] shadow-lg shadow-[#14b8a6]/20'
+                      : 'text-[#94A3B8] hover:text-white'
+                  }`}
+                >
+                  🛡️ Lab Control [Michele]
+                </button>
+                <button
+                  data-testid="mode-floor-btn"
+                  onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }}
+                  className={`flex-1 sm:flex-none px-4 py-2 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+                    activeMode === 'floor'
+                      ? 'bg-[#14b8a6] text-[#030712] shadow-lg shadow-[#14b8a6]/20'
+                      : 'text-[#94A3B8] hover:text-white'
+                  }`}
+                >
+                  ⚡ Floor Mode [Team]
+                </button>
+              </div>
+
+              {/* STATO BLUETOOTH & VOCE */}
+              <div className="flex items-center gap-3 text-xs text-[#94A3B8]">
+                <span className="flex items-center gap-1 bg-[#1F2937] px-2.5 py-1 rounded-md border border-[#374151]">
+                  🎧 Cuffie: <strong className="text-[#14b8a6]">Attive (BT)</strong>
+                </span>
+                <span className="flex items-center gap-1 bg-[#1F2937] px-2.5 py-1 rounded-md border border-[#374151]">
+                  🎙️ Voice Core: <strong className="text-[#14b8a6]">Nativo</strong>
+                </span>
+              </div>
+            </div>
           </div>
-        </footer>
-      </main>
-      <BottomNav active={tab} onChange={navigate} />
-      {tab !== "home" && <VoiceCommand />}
-      {tab !== "maestro" && <RadioFornaio />}
-      <ShiftScheduler />
-      <AutoReport />
-      <TalkWithMiki tab={tab} />
-      <AudioRouteIndicator />
-      {/* WhatsApp FAB globale rimosso: WhatsApp ora SOLO in Corsi e Il Tuo Laboratorio */}
-      {!resetToken && showIntro && <IntroGuide />}
-      {/* Onboarding a domande rimosso: ingresso diretto (profilo di default seminato) */}
 
-      <AnimatePresence>
-        {authOpen && !user && (
-          <motion.div
-            data-testid="auth-modal"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] bg-[#f0f6fb] dark:bg-[#0E1620] overflow-auto"
-          >
-            <AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} />
-          </motion.div>
-        )}
-      </AnimatePresence>
+          {/* AREA DI LAVORO PRINCIPALE */}
+          <main className="flex-1 max-w-4xl w-full mx-auto p-4 pb-32">
 
-      {legalOpen && (
-        <div data-testid="legal-overlay" className="fixed inset-0 z-[80] bg-[#f0f6fb] dark:bg-[#0E1620] overflow-auto">
-          <div className="max-w-xl mx-auto px-4 py-5">
-            <button data-testid="legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#3E9C93]">← {tri("Chiudi", "Schließen", "Close")}</button>
-            <LegalPage />
-          </div>
+            {activeMode === 'lab' ? (
+              /* ==========================================================
+                 LAB CONTROL (MICHELE) - Amministrazione, Ricette Master & Magazzino
+                 ========================================================== */
+              <div className="space-y-6" data-testid="lab-control-view">
+                <div className="p-5 rounded-2xl bg-[#111827] border border-[#1F2937] shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#14b8a6]/5 rounded-full blur-2xl pointer-events-none" />
+                  <h1 className="text-lg font-extrabold text-[#14b8a6] flex items-center gap-2">
+                    <span>🛡️</span> Plancia Amministrativa Master
+                  </h1>
+                  <p className="text-xs text-[#94A3B8] mt-1">
+                    Controllo totale delle ricette protette (Pane di Matera), gestione magazzino materie prime e configurazione flussi di produzione.
+                  </p>
+                </div>
+
+                {/* MODULI RAPIDI LAB */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <button
+                    data-testid="lab-nav-ricette"
+                    onClick={() => setCurrentView("ricette")}
+                    className="p-4 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] text-left transition-all group"
+                  >
+                    <div className="text-xl mb-2">🥖</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Master Ricettario</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Gestisci e sblocca ricette personali protette.</p>
+                  </button>
+
+                  <button
+                    data-testid="lab-nav-magazzino"
+                    onClick={() => setCurrentView("magazzino")}
+                    className="p-4 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] text-left transition-all group"
+                  >
+                    <div className="text-xl mb-2">📦</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Logistica & Magazzino</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Carico/scarico ceste, farine e scorte.</p>
+                  </button>
+
+                  <button
+                    data-testid="lab-nav-iot"
+                    onClick={() => setCurrentView("maestro")}
+                    className="p-4 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] text-left transition-all group"
+                  >
+                    <div className="text-xl mb-2">⚙️</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Impostazioni IoT</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Sensori termici e forni in rete locale.</p>
+                  </button>
+                </div>
+
+                {/* VISUALIZZATORE VISTA ATTIVA IN LAB */}
+                {currentView === "ricette" && <div className="bg-[#111827] p-4 rounded-xl border border-[#1F2937]"><Ricette isMasterView={true} /></div>}
+                {currentView === "magazzino" && (
+                  <div className="bg-[#111827] p-5 rounded-xl border border-[#1F2937] space-y-3">
+                    <h3 className="text-sm font-bold text-[#14b8a6]">Gestione Rapida Magazzino & Ceste</h3>
+                    <p className="text-xs text-[#94A3B8]">Registra i carichi in entrata e controlla le scorte disponibili per la produzione giornaliera.</p>
+                    <div className="flex gap-2 pt-2">
+                      <button onClick={() => toast.success("Carico magazzino aggiornato con successo!")} className="px-4 py-2 bg-[#14b8a6] text-[#030712] text-xs font-bold rounded-lg">Registra Carico</button>
+                      <button onClick={() => toast.info("Verifica ceste completata.")} className="px-4 py-2 bg-[#1F2937] text-white text-xs font-bold rounded-lg border border-[#374151]">Verifica Ceste</button>
+                    </div>
+                  </div>
+                )}
+                {currentView === "maestro" && (
+                  <div className="space-y-4">
+                    {/* AUTO-SETUP PERIFERICHE (microfono, telecamera, sensori IoT) */}
+                    <PeripheralSetup />
+                    <div className="bg-[#111827] p-4 rounded-xl border border-[#1F2937]"><Maestro /></div>
+                  </div>
+                )}
+
+              </div>
+            ) : (
+              /* ==========================================================
+                 FLOOR MODE (TEAM) - Operatività ultra-veloce, Timer e Voice
+                 ========================================================== */
+              <div className="space-y-6" data-testid="floor-mode-view">
+                <div className="p-5 rounded-2xl bg-[#111827] border border-[#1F2937] shadow-xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#14b8a6]/5 rounded-full blur-2xl pointer-events-none" />
+                  <h1 className="text-lg font-extrabold text-[#14b8a6] flex items-center gap-2">
+                    <span>⚡</span> Floor Mode // Operatività Laboratorio
+                  </h1>
+                  <p className="text-xs text-[#94A3B8] mt-1">
+                    Plancia di produzione per il team. Gestione timer globali, comandi vocali a mani libere e inserimento rapido ceste.
+                  </p>
+                </div>
+
+                {/* PULSANTI OPERATIVI GIGANTI PER IL TEAM */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="text-2xl mb-2">⏱️</div>
+                      <h3 className="font-bold text-sm text-white">Timer Globali & Forni</h3>
+                      <p className="text-xs text-[#94A3B8] mt-1">Monitora i tempi di cottura e lievitazione attivi in tempo reale.</p>
+                    </div>
+                    <button onClick={() => toast.success("Timer sincronizzato con le celle.")} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg shadow-md">
+                      Gestisci Timer
+                    </button>
+                  </div>
+
+                  <div className="p-5 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="text-2xl mb-2">🎙️</div>
+                      <h3 className="font-bold text-sm text-white">Voice Core Attivo</h3>
+                      <p className="text-xs text-[#94A3B8] mt-1">Usa i comandi vocali in cuffia Bluetooth senza toccare lo schermo.</p>
+                    </div>
+                    <div className="mt-4"><VoiceCommand /></div>
+                  </div>
+                </div>
+
+                {/* ACCESSO RAPIDO RICETTE DI PRODUZIONE STANDARD */}
+                <div className="bg-[#111827] p-5 rounded-xl border border-[#1F2937]">
+                  <h3 className="text-sm font-bold text-white mb-2">Ricettario di Produzione</h3>
+                  <p className="text-xs text-[#94A3B8] mb-4">Consulta le lavorazioni giornaliere autorizzate per il turno.</p>
+                  <Ricette isFloorMode={true} />
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* FOOTER PULITO */}
+          <footer className="mt-auto border-t border-[#1F2937] py-6 px-4 bg-[#030712]">
+            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
+              <p>MikiLab · mikilab.de — Cyber-Industrial OS · 100% Sicuro</p>
+              <div className="flex items-center gap-4">
+                <button onClick={() => setLegalOpen(true)} className="hover:text-[#14b8a6] transition-colors">Impressum</button>
+                <button onClick={() => setLegalOpen(true)} className="hover:text-[#14b8a6] transition-colors">Datenschutz</button>
+                <button onClick={() => setLegalOpen(true)} className="hover:text-[#14b8a6] transition-colors">Contatti</button>
+              </div>
+            </div>
+          </footer>
+
         </div>
-      )}
 
-      <Toaster position="top-center" richColors />
-      <Sfide open={sfideOpen} onClose={() => setSfideOpen(false)} />
-      {resetToken && (
-        <ResetPassword
-          token={resetToken}
-          onDone={() => {
-            setResetToken(null);
-            const u = new URL(window.location.href);
-            u.searchParams.delete("reset");
-            window.history.replaceState(null, "", u.pathname + u.search);
-            setAuthOpen(true);
-          }}
-        />
-      )}
+        {/* MODALI DI SISTEMA */}
+        {legalOpen && (
+          <div className="fixed inset-0 z-50 bg-[#030712] overflow-auto p-4">
+            <div className="max-w-xl mx-auto py-5">
+              <button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#14b8a6]">← Chiudi</button>
+              <LegalPage />
+            </div>
+          </div>
+        )}
+
+        <Toaster position="top-center" richColors />
+        <RadioFornaio />
+        <ShiftScheduler />
+        <TalkWithMiki />
+        <AudioRouteIndicator />
+
       </div>
-    </div>
     </MachinesProvider>
     </MixerTimersProvider>
     </SoundFXProvider>
@@ -349,19 +262,4 @@ function App() {
     </AmbientProvider>
     </ProfileProvider>
   );
-}
-
-export default function AppGate() {
-  // --- Modalità manutenzione / Coming Soon ---
-  // Attiva con REACT_APP_MAINTENANCE=true. Accesso riservato al proprietario con ?preview=mikilab2026 (salvato in localStorage).
-  if (process.env.REACT_APP_MAINTENANCE === "true") {
-    try {
-      const qp = new URLSearchParams(window.location.search);
-      if (qp.get("preview") === "mikilab2026") localStorage.setItem("mk_preview", "1");
-    } catch { /* */ }
-    let bypass = false;
-    try { bypass = localStorage.getItem("mk_preview") === "1"; } catch { /* */ }
-    if (!bypass) return <Maintenance />;
-  }
-  return <App />;
 }
