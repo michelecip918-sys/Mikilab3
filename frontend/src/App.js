@@ -32,6 +32,10 @@ import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
 import GuidaSOS from "@/components/GuidaSOS";
 import MamoAssistant from "@/components/MamoAssistant";
+import IntroLanding from "@/components/IntroLanding";
+import AvatarHub from "@/components/AvatarHub";
+import AdminGate from "@/components/AdminGate";
+import LangSelector from "@/components/LangSelector";
 import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
 
@@ -68,10 +72,18 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
+
+  // Selezione dall'hub avatar → apre la sezione giusta (Capo=login, Mohamed=PIN produzione, Bakemix=libero).
+  const handleHubSelect = (kind) => {
+    if (kind === "lab") { setSection("control"); setActiveMode("lab"); setCurrentView("dashboard"); setScreen("app"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }
+    else if (kind === "floor") { setSection("control"); setActiveMode("floor"); setCurrentView("dashboard"); if (pinIsLocked()) setScreen("pin"); else setScreen("app"); }
+    else { setSection("guida"); setScreen("app"); }
+  };
 
   useEffect(() => {
     const onLock = () => { pinLockNow(); setLocked(true); };
@@ -85,8 +97,11 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
-  if (locked && !resetToken) return <PinLock onUnlock={() => setLocked(false)} />;
-  if (!operator && !resetToken) return <OperatoreSelect onSelect={setOperator} />;
+  if (locked && !resetToken && screen === "pin") return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
+  if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
+  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} />;
+  if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} />;
+  if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => setScreen("app")} />;
 
   const activeAvatar = (SECTIONS.find((s) => s.id === section) || SECTIONS[1]).avatar;
 
@@ -103,15 +118,16 @@ export default function App() {
           <header className="border-b border-[#1e293b] bg-[#0b0f19]/80 backdrop-blur-xl px-4 py-3 sticky top-0 z-50">
             <div className="max-w-4xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#14b8a6]/40 shadow-lg shadow-[#14b8a6]/20 bg-[#030712]">
+                <button data-testid="hub-home-btn" onClick={() => setScreen("hub")} title="Hub" className="w-11 h-11 rounded-xl overflow-hidden border border-[#14b8a6]/40 shadow-lg shadow-[#14b8a6]/20 bg-[#030712] active:scale-95 transition-all">
                   <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
-                </div>
-                <div>
-                  <h1 className="text-sm font-black tracking-wider text-white uppercase flex items-center gap-2">MikiLab <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/30">Cyber OS</span></h1>
-                  <p className="text-[10px] text-[#94A3B8]">Laboratorio Panificazione Avanzata</p>
+                </button>
+                <div className="min-w-0">
+                  <h1 className="text-sm font-black tracking-wider text-white uppercase flex items-center gap-2 whitespace-nowrap">MikiLab <span className="hidden sm:inline text-[10px] px-2 py-0.5 rounded-full bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/30">Cyber OS</span></h1>
+                  <p className="hidden sm:block text-[10px] text-[#94A3B8]">Laboratorio Panificazione Avanzata</p>
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs relative">
+                <LangSelector testid="header-lang" />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all" title="Cambia operatore">
                   {operator && <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#14b8a6]/50" />}
                   <span className="font-bold hidden sm:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>

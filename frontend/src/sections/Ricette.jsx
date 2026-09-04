@@ -80,7 +80,18 @@ export default function Ricette() {
       <SectionHero testid="ricette-title" image="hero-ricette.jpg" position="50% 30%"
         title={mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
         subtitle={mkTri(lang)("Ricette artigianali spiegate passo dopo passo, con il mio metodo", "Handwerkliche Rezepte, Schritt für Schritt nach meiner Methode", "Artisan recipes explained step by step, with my method", "Recetas artesanales explicadas paso a paso, con mi método", "Recettes artisanales expliquées pas à pas, avec ma méthode", "دستورهای دست‌ساز، گام‌به‌گام با روش من")} />
-      <AvatarBubbles variant="ricette" />
+      <div data-testid="ricette-capo-note" className="mb-4 mt-2 rounded-2xl bg-[#0b0f19] border border-[#14b8a6]/30 p-4">
+        <p className="text-sm text-[#cbd5e1] leading-relaxed">
+          {tri(
+            "Ciao Capo! Oltre alle tue ricette personali, qui hai l'intero ricettario professionale di MikiLab: usalo, scala le dosi e adattalo alla tua produzione.",
+            "Hallo Chef! Neben deinen eigenen Rezepten steht dir hier das komplette professionelle MikiLab-Rezeptbuch zur Verfügung: nutze es, skaliere die Mengen und passe es an deine Produktion an.",
+            "Hi Capo! Besides your own recipes, here you have the full professional MikiLab recipe book: use it, scale the doses and adapt it to your production.",
+            "¡Hola Capo! Además de tus recetas personales, aquí tienes todo el recetario profesional de MikiLab: úsalo, escala las dosis y adáptalo a tu producción.",
+            "Salut Capo ! En plus de tes propres recettes, tu disposes ici de tout le recettaire professionnel MikiLab : utilise-le, adapte les quantités et ta production.",
+            "سلام کاپو! علاوه بر دستورهای شخصی‌ات، کل کتاب دستور حرفه‌ای میکی‌لب اینجاست: از آن استفاده کن، مقادیر را تنظیم و با تولیدت هماهنگ کن."
+          )}
+        </p>
+      </div>
       {coll === "mikilab" && (
         <SectionJumpBar testid="ricette-jump" sections={[
           { target: "ricette-tradizione", label: tri("Tradizione", "Tradition", "Tradition", "Tradición", "Tradition"), Icon: UtensilsCrossed },

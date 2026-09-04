@@ -1,213 +1,122 @@
 {
-  "project_identity": {
-    "name": "MikiLab PWA",
-    "tagline": "Hand-free Gamified Artisan Bakery Operations & Learning Platform",
-    "description": "Complete redesign blueprint for MikiLab — a mobile-first PWA for artisan bakers by Michele. Features 3D immersive frosted glassmorphism, real lab photography, high-precision dough metrics, AI vision diagnosis, and 3D voice avatars (Miki & Mohamed).",
-    "archetype": "Cinematic Obsidian & Copper Glow 3D Laboratory (Deep Midnight Obsidian + Frosted Crystal Glass + Copper Ember Accent)",
-    "viewport_bounds": "390px - 430px optimal mobile viewport with fluid scaling to max-w-6xl desktop layout",
-    "i18n": {
-      "supported_languages": ["IT", "DE", "EN", "ES", "FR", "FA"],
-      "default": "IT",
-      "rtl_languages": ["FA"],
-      "rtl_font": "Vazirmatn",
-      "rtl_protocol": "Use logical Tailwind classes (ms-*, me-*, ps-*, pe-*, start-*, end-*) and dir='rtl' HTML wrapper for Persian alignment."
+  "design_system": {
+    "theme": "Dark Cosmic Cyber-Industrial",
+    "emotional_archetype": "ARCHETYPE 7: ELECTRIC & NEON (Cyber-Industrial Artisan Bakery)",
+    "target_context": "One-Page Gamified Operational App / Cyber-Industrial Artisan Bakery Dashboard",
+    "vibe": "Futuristic, cosmic, high-contrast, tactile command center mixing real master bakers and VR/visor cyber-robots.",
+    "color_palette": {
+      "background_deep": "#030712",
+      "background_surface": "#0b0f19",
+      "background_card": "#111827",
+      "border_slate": "#1e293b",
+      "teal_accent": "#14b8a6",
+      "teal_glow": "rgba(20, 184, 166, 0.4)",
+      "amber_accent": "#f59e0b",
+      "amber_glow": "rgba(245, 158, 11, 0.4)",
+      "cyan_robot": "#06b6d4",
+      "cyan_glow": "rgba(6, 182, 212, 0.4)",
+      "text_primary": "#f8fafc",
+      "text_secondary": "#94a3b8",
+      "text_muted": "#64748b"
+    },
+    "typography": {
+      "heading_font": "Outfit, sans-serif",
+      "body_font": "Inter, sans-serif",
+      "mono_font": "JetBrains Mono, monospace",
+      "h1_hero": "text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight",
+      "h2_section": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
+      "h3_card": "text-lg sm:text-xl font-semibold",
+      "body_text": "text-sm sm:text-base leading-relaxed"
     }
   },
-  "color_system": {
-    "css_variable_tokens": {
-      "root_dark": {
-        "--bg-app": "#0B0E14",
-        "--bg-surface-base": "#121722",
-        "--bg-surface-elevated": "#18202E",
-        "--bg-surface-glass": "rgba(255, 255, 255, 0.04)",
-        "--bg-glass-border": "rgba(255, 255, 255, 0.10)",
-        "--bg-glass-highlight": "rgba(255, 255, 255, 0.18)",
-        "--primary-ember": "#F26419",
-        "--primary-ember-hover": "#FF7B2D",
-        "--primary-ember-glow": "rgba(242, 100, 25, 0.35)",
-        "--accent-gold": "#E8A838",
-        "--accent-gold-glow": "rgba(232, 168, 56, 0.25)",
-        "--accent-teal": "#2A9D8F",
-        "--accent-red": "#E63946",
-        "--text-primary": "#F7F9FC",
-        "--text-secondary": "#94A3B8",
-        "--text-muted": "#64748B",
-        "--text-ember": "#FF8C42"
-      }
-    },
-    "palette_definitions": {
-      "midnight_obsidian": "#0B0E14",
-      "slate_navy_surface": "#121722",
-      "glass_card_bg": "rgba(18, 23, 34, 0.70)",
-      "copper_ember": "#F26419",
-      "copper_glow": "rgba(242, 100, 25, 0.30)",
-      "wheat_gold": "#E8A838",
-      "flour_white": "#F7F9FC",
-      "sage_green": "#2A9D8F",
-      "alarm_crimson": "#E63946"
-    },
-    "gradients": {
-      "hero_dark_scrim": "linear-gradient(180deg, rgba(11,14,20,0.10) 0%, rgba(11,14,20,0.85) 70%, #0B0E14 100%)",
-      "ember_button_gradient": "linear-gradient(135deg, #F26419 0%, #D94E00 100%)",
-      "gold_radial_glow": "radial-gradient(circle at 50% 0%, rgba(232,168,56,0.18) 0%, transparent 70%)",
-      "glass_border_gradient": "linear-gradient(135deg, rgba(255,255,255,0.20) 0%, rgba(255,255,255,0.03) 100%)",
-      "card_inner_sheen": "linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 50%)"
-    }
-  },
-  "glassmorphism_3d_engine": {
-    "recipe": "backdrop-blur-xl bg-[#121722]/75 border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.40)] rounded-2xl relative overflow-hidden",
-    "backdrop_blur_scale": {
-      "modal_overlay": "backdrop-blur-2xl bg-[#0B0E14]/85",
-      "hero_card": "backdrop-blur-xl bg-[#121722]/70",
-      "compact_chip": "backdrop-blur-md bg-white/10"
-    },
-    "elevation_z_index": {
-      "base_content": "z-0",
-      "cards_and_cards_3d": "z-10",
-      "floating_action_buttons": "z-40",
-      "bottom_nav": "z-50",
-      "header_fixed": "z-50",
-      "modals_and_elite_engine": "z-60",
-      "pin_lock_screen": "z-[100]"
-    },
-    "hover_3d_transform": {
-      "card_tilt": "hover:-translate-y-1 hover:rotate-1 hover:border-[#F26419]/50 hover:shadow-[0_12px_40px_rgba(242,100,25,0.22)] transition-all duration-300 ease-out",
-      "press_feedback": "active:scale-95 transition-transform duration-150"
-    }
-  },
-  "typography": {
-    "fonts": {
-      "headings": "'Playfair Display', Georgia, serif",
-      "body": "'Manrope', system-ui, sans-serif",
-      "mono_data": "'JetBrains Mono', monospace",
-      "persian_rtl": "'Vazirmatn', sans-serif"
-    },
-    "scale": {
-      "hero_title": "text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight",
-      "section_heading": "text-2xl sm:text-3xl font-bold tracking-tight text-[#F7F9FC]",
-      "card_title": "text-lg sm:text-xl font-bold text-[#F7F9FC]",
-      "body_text": "text-sm sm:text-base text-[#94A3B8] leading-relaxed",
-      "badge_overline": "text-xs font-bold uppercase tracking-wider text-[#E8A838]",
-      "mono_metric": "font-mono text-base font-semibold text-[#F26419]"
-    }
-  },
-  "avatar_preservation_and_alignment": {
-    "brand_avatars": {
-      "miki": {
-        "file": "/michele-avatar.jpg",
-        "alt": "Miki Avatar - Master Baker",
-        "role": "Master Baker AI & Voice Companion",
-        "badge_style": "border-2 border-[#F26419] shadow-[0_0_12px_rgba(242,100,25,0.5)] rounded-full"
-      },
-      "mohamed": {
-        "file": "/mohammed-avatar.jpg",
-        "alt": "Mohamed Avatar - Assistant Baker",
-        "role": "Lab Assistant & Production Ops",
-        "badge_style": "border-2 border-[#2A9D8F] shadow-[0_0_12px_rgba(42,157,143,0.5)] rounded-full"
-      }
-    },
-    "rules": [
-      "Keep both avatars in their original photo/style identity.",
-      "Wrap avatars in frosted glass halo containers with active audio status rings when speaking.",
-      "Ensure consistent 48px / 64px sizing across all header, chat, and lab screens."
-    ]
-  },
-  "spacing_and_layout": {
-    "mobile_pwa_container": "w-full max-w-[430px] mx-auto px-4 pb-24 pt-16 min-h-screen relative",
-    "desktop_grid_wrapper": "lg:max-w-6xl lg:mx-auto lg:px-8",
-    "padding": {
-      "card_padding": "p-5 sm:p-6",
-      "section_gap": "space-y-6 sm:space-y-8"
-    },
-    "home_bento_grid": {
-      "mobile": "grid grid-cols-1 gap-4",
-      "desktop": "grid grid-cols-12 gap-6",
-      "spans": {
-        "hero_braccio": "lg:col-span-8 lg:row-span-2",
-        "ricette_hub": "lg:col-span-4 lg:row-span-1",
-        "farine_hub": "lg:col-span-4 lg:row-span-1",
-        "accademia_hub": "lg:col-span-6 lg:row-span-1",
-        "community_hub": "lg:col-span-6 lg:row-span-1"
-      }
-    }
-  },
-  "component_guidelines": {
-    "global_header": {
-      "style": "fixed top-0 left-0 right-0 h-14 backdrop-blur-xl bg-[#0B0E14]/80 border-b border-white/10 z-50 flex items-center justify-between px-4",
-      "elements": [
-        "MikiLab Logo emblem with ember glow",
-        "Live Digital Clock (hh:mm:ss in JetBrains Mono)",
-        "Language Pills (IT, DE, EN, ES, FR, FA) with #F26419 active highlight",
-        "PIN Sign-In / Lock Badge"
+  "architecture_and_hub_structure": {
+    "page_layout": "Single-Page Operational Hub with 3 Avatar Portals (Planets) + 3 dedicated slide/overlay interactive sections",
+    "header": {
+      "style": "Glassmorphism sticky header with backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 z-50",
+      "components": [
+        "MikiLab Neon Cyber Logo",
+        "6-Language Selector Dropdown (IT / DE / EN / ES / FR / FA) with flags & local names",
+        "Offline/Online PWA Status Indicator",
+        "Quick SOS Emergency Dough Trigger"
       ]
     },
-    "bottom_nav": {
-      "style": "fixed bottom-0 left-0 right-0 h-16 backdrop-blur-2xl bg-[#0B0E14]/90 border-t border-white/10 z-50 flex items-center justify-around px-2",
-      "items": [
-        { "id": "home", "label": "Home", "icon": "HomeIcon", "testid": "bottom-nav-home" },
-        { "id": "lab", "label": "Laboratorio", "icon": "BeakerIcon", "testid": "bottom-nav-lab" },
-        { "id": "ricette", "label": "Ricette", "icon": "BookOpenIcon", "testid": "bottom-nav-ricette" },
-        { "id": "farine", "label": "Farine", "icon": "ScaleIcon", "testid": "bottom-nav-farine" },
-        { "id": "accademia", "label": "Accademia", "icon": "AcademicCapIcon", "testid": "bottom-nav-accademia" }
-      ],
-      "active_state": "text-[#F26419] bg-[#F26419]/15 rounded-xl px-3 py-1.5 font-bold flex flex-col items-center text-xs"
-    },
-    "floating_action_buttons": {
-      "radio_player": "fixed bottom-20 right-4 z-40 w-12 h-12 rounded-full bg-[#18202E] border border-white/20 text-[#E8A838] flex items-center justify-center shadow-lg hover:scale-110 transition-transform",
-      "voice_assistant": "fixed bottom-20 left-4 z-40 w-12 h-12 rounded-full bg-gradient-to-r from-[#F26419] to-[#D94E00] text-white flex items-center justify-center shadow-[0_0_20px_rgba(242,100,25,0.5)] hover:scale-110 transition-transform"
-    },
-    "elite_engine_overlay": {
-      "description": "Full-screen 3D laboratory modal containing 4 interactive rooms (Impasti, Forni, Pasticceria, Guida) + live DB doses calculator + radio player.",
-      "modal_style": "fixed inset-0 z-60 backdrop-blur-2xl bg-[#0B0E14]/95 overflow-y-auto p-4 sm:p-8 space-y-6"
-    },
-    "flour_analysis_center": {
-      "cards": "Parameter cards for W (strength), Protein %, Water Absorption %, P/L ratio, Ash, Falling Number.",
-      "test_log": "AI photo scan test log for flour bags with auto OCR parameter extraction."
+    "home_hub_planets": {
+      "concept": "Three large glowing circular avatar portals with floating/orbiting action bubbles on a dark cosmic starfield background",
+      "avatar_1_michele": {
+        "name": "Michele",
+        "role": "CAPO (Full Production Control)",
+        "color": "Teal Neon (#14b8a6)",
+        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/sdey0a5h_image-1%20%2837%29.jpeg",
+        "local_fallback": "/recipes/michele-avatar.jpg",
+        "bubbles": ["Ricette Master", "Piano Settimanale", "Dough Control", "Magazzino & Lotti", "Ordini Extra"]
+      },
+      "avatar_2_mohamed": {
+        "name": "Mohamed",
+        "role": "PRODUCTION (Hands-Free Voice)",
+        "color": "Amber Warm Glow (#f59e0b)",
+        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/exaatn5e_image-1%20%2856%29.jpeg",
+        "local_fallback": "/avatar_mohamed.jpg",
+        "bubbles": ["Guida Vocale Hands-Free", "Start Impasto Hands-Free", "Ascolto Comandi Bilingue", "Timer & Temp Acqua Vocale"]
+      },
+      "avatar_3_bakemix": {
+        "name": "Bakemix",
+        "role": "AI ROBOT GUIDE & SITE MIND",
+        "color": "Cyan Cyber (#06b6d4)",
+        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l4ttjgnj_image-1%20%2845%29.jpeg",
+        "local_fallback": "/avatar_bigmix.jpg",
+        "bubbles": ["Film Guidato MikiLab", "Download PDF Inventario", "Architettura Sistema & Esempi", "Assistenza SOS Impasti"]
+      }
     }
   },
-  "page_by_page_architecture": {
-    "home_hub": "Hero banner with Miki & Mohamed avatars, quick status overview, and 5 Bento cards (Laboratorio, Ricette, Farine, Accademia, Community).",
-    "laboratorio_braccio": "Default operative screen showing quick commands (Today's Recipes, Failures, Dough SOS), Banco Impasti, Headset mode toggle, and launcher for Elite Engine 4 Rooms.",
-    "ricette": "Category recipe grid (Pane, Pizza, Focacce, Viennoiserie, Basi) with real food photos, filter chips, search bar, and batch calculator.",
-    "farine": "Flour Analysis Center with parameter dial gauges, W rating curves, and AI scan log.",
-    "accademia": "Interactive lessons, flour quizzes, encyclopedia, news feed, and challenges.",
-    "community": "Bakers social feed, infornate photos, leaderboards, and interactive map.",
-    "diagnosi_and_maestro": "AI vision camera diagnosis for dough defects and real-time audio/text chat with Maestro AI."
+  "sections_breakdown": {
+    "section_1_capo": {
+      "title": "Capo Laboratorio - Scaletta Logica Produzione",
+      "vibe": "Logical Ladder with big tactile cards and high visual feedback for fast bakery shift operations.",
+      "layout_components": [
+        "Interactive Production Summary Banner (Active Batch, Dough Temp, Shift Progress)",
+        "Logical Ladder Steps: Step 1 (Weekly Plan / Piano Settimanale), Step 2 (Recipes & Doses / Ricette), Step 3 (Dough Twin & Fermentation Control), Step 4 (Warehouse Stock & Batches), Step 5 (Extra Orders & Sales Points)",
+        "Big Touch Buttons with data-testid attributes for testing"
+      ]
+    },
+    "section_2_mohamed": {
+      "title": "Mohamed - Production Hands-Free Command Center",
+      "vibe": "Ultra-minimalist, zero-friction hands-free operational surface. Single giant interactive microphone avatar button.",
+      "layout_components": [
+        "Giant Glowing Mic Avatar Button with soundwave ripples and state ring (Idle / Listening / Speaking)",
+        "Real-time voice transcript & audio feedback visualizer",
+        "Quick Voice Shortcut Chips (e.g. 'Avvia Impasto Baguette', 'Temperatura Acqua 18°C', 'Timer 12 Minuti')"
+      ]
+    },
+    "section_3_bakemix": {
+      "title": "Bakemix - AI Mind & Guided System Explainer",
+      "vibe": "Interactive cinematic guide player where Bakemix acts as the site mind, presenting step-by-step documentation, PDFs, and system walkthroughs.",
+      "layout_components": [
+        "Cinematic Guide Player with interactive chapter steps (Intro, Capo System, Hands-Free Voice, Offline Sync, Document PDF Export)",
+        "Live System Diagnostics & Document Viewer (Download Inventory PDF / Functional Spec)",
+        "Interactive Q&A AI Assistant Box"
+      ]
+    }
   },
-  "media_and_assets": {
-    "local_lab_photos": [
-      "/michele-lab-pro.jpg",
-      "/hero-laboratorio.jpg",
-      "/hero-ricette.jpg",
-      "/hero-impara.jpg",
-      "/hero-bakery.jpg",
-      "/hero-social.jpg"
-    ],
-    "external_curated_photos": [
-      "https://images.pexels.com/photos/28354523/pexels-photo-28354523.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-      "https://images.pexels.com/photos/20400379/pexels-photo-20400379.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-    ]
+  "image_urls": {
+    "michele_capo_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/sdey0a5h_image-1%20%2837%29.jpeg",
+    "mohamed_production_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/exaatn5e_image-1%20%2856%29.jpeg",
+    "bakemix_robot_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l4ttjgnj_image-1%20%2845%29.jpeg",
+    "bakery_hero_bg": "/bg-lab.jpg",
+    "focaccia_ref": "/recipes/foc_barese.jpg",
+    "panettone_ref": "/recipes/pan_classico.jpg"
   },
   "motion_and_interactions": {
-    "framer_motion_presets": {
-      "stagger_container": "{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08 } } }",
-      "card_fade_up": "{ hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20 } } }"
-    },
-    "accessibility_motion": "Wrap animations in prefers-reduced-motion check."
+    "orbit_animation": "Framer motion continuous rotation and pulse for floating action bubbles around avatar planets",
+    "card_hover": "Hover scale 1.02 with glowing border highlight transition ease-out 0.2s",
+    "mic_pulse": "Expanding concentric ring pulse when voice assistant is active",
+    "prefers_reduced_motion": "Supported via CSS media query and Framer Motion reducedMotion prop"
   },
-  "accessibility_and_rtl": {
-    "data_testid_rule": "ALL interactive buttons, cards, links, tabs, inputs MUST have data-testid in kebab-case (e.g., data-testid='bracciolab-quick-sos').",
-    "contrast_wcag": "All body text must achieve minimum 4.5:1 contrast against dark background. Use #F7F9FC or #94A3B8."
-  },
-  "instructions_to_main_agent": [
-    "Apply this dark obsidian 3D glassmorphism theme across all MikiLab components.",
-    "Never break existing state or i18n logic.",
-    "Ensure Miki (/michele-avatar.jpg) and Mohamed (/mohammed-avatar.jpg) remain visually aligned in their brand roles.",
-    "Ensure all buttons have explicit data-testid attributes."
-  ],
   "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Avoid standard flat designs; embrace frosted glass layer depth and glow accents.",
-    "Ensure layout is mobile-first (390px-430px) with responsive desktop grid scaling.",
-    "Keep full functionality intact while elevating visual quality."
-  ]
+    "Ensure dark cosmic aesthetic (#030712) with cyan/teal/amber neon accents.",
+    "Do not duplicate legacy headers or duplicate section wrappers.",
+    "All interactive elements must have clear data-testid attributes (e.g. data-testid='lang-selector-select', data-testid='capo-recipe-ladder-button').",
+    "Use glassmorphism with backdrop blur for headers and modals, avoiding total transparent backgrounds.",
+    "Ensure clean 6-language switcher support (IT, DE, EN, ES, FR, FA) with RTL adjustments for FA if active."
+  ],
+  "instructions_to_main_agent": "Use this blueprint to build/update the CyberBakeryTrio home hub and its 3 section views in App.js and components. Maintain offline-first capability and ensure mobile viewport (390px) and desktop layouts are fluid, high-contrast, and responsive."
 }
