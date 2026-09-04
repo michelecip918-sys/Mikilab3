@@ -3754,7 +3754,9 @@ _eleven_client = ElevenLabs(api_key=_ELEVEN_KEY) if _ELEVEN_KEY else None
 # Momi (tutor) — voce dedicata; Michele/Lab (fondatore) — voce maschile italiana profonda
 MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "ErXwobaYiN019PkySvjV")
 MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
-_VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID}
+MOHAMED_VOICE_ID = os.environ.get("MOHAMED_VOICE_ID", "ErXwobaYiN019PkySvjV")
+BAKEMIX_VOICE_ID = os.environ.get("BAKEMIX_VOICE_ID", "TxGEqnHWrfWFTfGW9XjX")
+_VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID, "mohamed": MOHAMED_VOICE_ID, "bakemix": BAKEMIX_VOICE_ID}
 
 
 def _voice_settings(voice: str) -> VoiceSettings:
@@ -3798,7 +3800,7 @@ def tts_generate(payload: TTSReq):
 # ---- OpenAI TTS (voce MASCHILE: onyx/echo) — chiave OpenAI personalizzata o Universal Key ----
 import hashlib as _hashlib
 _TTS_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("EMERGENT_LLM_KEY")
-_OAI_VOICE = {"michele": "onyx", "lab": "onyx", "momy": "echo", "momi": "echo"}
+_OAI_VOICE = {"michele": "onyx", "lab": "onyx", "momy": "echo", "momi": "echo", "mohamed": "echo", "bakemix": "fable"}
 _TTS_CACHE_DIR = "/tmp/mikilab_tts"
 try:
     os.makedirs(_TTS_CACHE_DIR, exist_ok=True)

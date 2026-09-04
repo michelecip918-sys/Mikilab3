@@ -61,11 +61,12 @@ export default function TalkWithMiki({ tab }) {
   // Visibile solo in Home e Impara; sparisce nella dashboard Laboratorio e altrove
   if (!["home", "imparacon"].includes(tab)) return null;
 
-  const speak = (text) => {
+  const speak = (text, who) => {
     const clean = cleanForSpeech(text || "");
     if (!clean) return;
+    const voice = who === "mohamed" ? "mohamed" : who === "bigmix" ? "bakemix" : "michele";
     playTTS(clean, {
-      lang,
+      lang, voice,
       onStart: () => { setSpeaking(true); hapticRef.current = startHaptic(); },
       onEnded: () => { setSpeaking(false); stopHaptic(hapticRef.current); },
     });
@@ -112,7 +113,7 @@ export default function TalkWithMiki({ tab }) {
           if (obj.d) { full += obj.d; setMessages((m) => { const c = [...m]; c[c.length - 1] = { who: replyWho, content: full }; return c; }); }
         }
       }
-      speak(full);
+      speak(full, replyWho);
       if (support) {
         const note = support === "mohamed"
           ? { who: "mohamed", content: "Ci penso io in laboratorio: tocca «Lab Live» per vedermi all'opera." }
@@ -271,7 +272,7 @@ export default function TalkWithMiki({ tab }) {
                 </div>
               </div>
               <p className="text-[12px] text-slate-400 mt-3">Mohamed esegue le operazioni reali del laboratorio: pulizia, gestione carrelli e infornata sincronizzata.</p>
-              <button data-testid="mohamed-narrate" onClick={() => speak(`${LAB_OPS[opIdx].t}. ${LAB_OPS[opIdx].d}`)} className="mt-2 inline-flex items-center gap-1.5 bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#3E9C93] px-3 py-1.5 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Racconta l'operazione</button>
+              <button data-testid="mohamed-narrate" onClick={() => speak(`${LAB_OPS[opIdx].t}. ${LAB_OPS[opIdx].d}`, "mohamed")} className="mt-2 inline-flex items-center gap-1.5 bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#3E9C93] px-3 py-1.5 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Racconta l'operazione</button>
             </div>
           )}
 
@@ -286,8 +287,8 @@ export default function TalkWithMiki({ tab }) {
                 <p className="text-lg font-bold text-white mt-1">“{TRAIN_CMDS[trainIdx].cmd}”</p>
               </div>
               <div className="flex items-center justify-center gap-2 mt-4">
-                <button data-testid="bigmix-say" onClick={() => speak(`Ripeti dopo di me. ${TRAIN_CMDS[trainIdx].cmd}`)} className="inline-flex items-center gap-1.5 bg-slate-800 text-slate-200 px-3 py-2 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Ascolta</button>
-                <button data-testid="bigmix-next" onClick={() => { speak(TRAIN_CMDS[trainIdx].fb); setTrainIdx((i) => (i + 1) % TRAIN_CMDS.length); }} className="inline-flex items-center gap-1.5 bg-[#6EA8FE] text-slate-900 px-3 py-2 rounded-full text-xs font-bold"><Sparkles className="w-3.5 h-3.5" /> Ho provato</button>
+                <button data-testid="bigmix-say" onClick={() => speak(`Ripeti dopo di me. ${TRAIN_CMDS[trainIdx].cmd}`, "bigmix")} className="inline-flex items-center gap-1.5 bg-slate-800 text-slate-200 px-3 py-2 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Ascolta</button>
+                <button data-testid="bigmix-next" onClick={() => { speak(TRAIN_CMDS[trainIdx].fb, "bigmix"); setTrainIdx((i) => (i + 1) % TRAIN_CMDS.length); }} className="inline-flex items-center gap-1.5 bg-[#6EA8FE] text-slate-900 px-3 py-2 rounded-full text-xs font-bold"><Sparkles className="w-3.5 h-3.5" /> Ho provato</button>
               </div>
             </div>
           )}

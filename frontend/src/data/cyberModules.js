@@ -52,12 +52,18 @@ export const MODULES = {
   48: { name: "Hands-Free Quick Maintenance", v: "pronto", u: "" },
   49: { name: "Downtime Root-Cause Logging", v: 3, u: "" },
   50: { name: "Multi-Deck Load Balancing AI", v: "bilanciato", u: "" },
+  59: { name: "Audio Snapshot", v: "pronto", u: "" },
+  60: { name: "Smart Scale Sync", v: "OK", u: "" },
+  61: { name: "Stress Index", v: 34, u: "%", live: true },
+  62: { name: "Recipe Scaling", v: 1, u: "x" },
+  63: { name: "Squad Check-In", v: 4, u: "/4" },
+  64: { name: "Multi-Chief Executive", v: "attivo", u: "" },
 };
 
 export const SCREEN_MODULES = {
-  parco: { title: "Telemetria IoT · Moduli 31-50", accent: "#3E9C93", ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 19, 47, 50, 46, 42, 43, 8] },
-  planner: { title: "Produzione, Energia & Logistica AI", accent: "#E0A458", ids: [2, 3, 4, 11, 15, 16, 1, 9, 10, 40, 13, 41, 44, 45] },
-  capo: { title: "Plancia Capo · Reporting AI", accent: "#6EA8FE", ids: [5, 6, 25, 20, 30, 49] },
-  intercom: { title: "Intercom, Audio & Collaborazione", accent: "#A78BFA", ids: [7, 14, 26, 27, 28, 29, 48] },
-  ingredienti: { title: "Schede Ingredienti & Onboarding", accent: "#8F9B5E", ids: [12, 18, 17, 21, 22, 23, 24] },
+  parco: { title: "Telemetria IoT · Moduli 31-50", accent: "#3E9C93", ids: [31, 32, 33, 34, 35, 36, 37, 38, 39, 19, 47, 50, 46, 42, 43, 8, 61] },
+  planner: { title: "Produzione, Energia & Logistica AI", accent: "#E0A458", ids: [2, 3, 4, 11, 15, 16, 1, 9, 10, 40, 13, 41, 44, 45, 62] },
+  capo: { title: "Plancia Capo · Reporting AI", accent: "#6EA8FE", ids: [5, 6, 25, 20, 30, 49, 63, 64] },
+  intercom: { title: "Intercom, Audio & Collaborazione", accent: "#A78BFA", ids: [7, 14, 26, 27, 28, 29, 48, 59] },
+  ingredienti: { title: "Schede Ingredienti & Onboarding", accent: "#8F9B5E", ids: [12, 18, 17, 21, 22, 23, 24, 60] },
 };

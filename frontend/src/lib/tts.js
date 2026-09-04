@@ -19,7 +19,7 @@ const MALE_HINTS = {
   fr: ["thomas", "henri", "paul", "nicolas", "male", "masculin", "français male"],
   fa: ["farid", "reza", "dariush", "male", "مرد"],
 };
-const FEMALE_HINTS = ["female", "femme", "weiblich", "mujer", "donna", "femmin", "masculin", "samantha", "alice", "elsa", "paola", "federica", "karen", "zira", "lucia", "aria", "victoria", "amelie", "amélie", "anna", "monica", "mónica", "paulina", "sara", "laura", "helena", "catherine", "fiona", "moira", "tessa", "veena", "yuna", "google.*female"]
+const FEMALE_HINTS = ["female", "femme", "weiblich", "mujer", "donna", "femmin", "masculin", "samantha", "alice", "elsa", "paola", "federica", "karen", "zira", "lucia", "aria", "victoria", "amelie", "amélie", "anna", "monica", "mónica", "paulina", "sara", "laura", "helena", "catherine", "fiona", "moira", "tessa", "veena", "yuna", "carla", "google italiano", "google.*female"]
   .filter((h) => h !== "masculin");
 
 // Sceglie una voce del dispositivo MASCHILE nella lingua dell'app; voce distinta per Momi.
@@ -90,9 +90,11 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
     u.lang = SR_LANG[lang] || "it-IT";
     const v = pickVoice(lang, voice);
     if (v) u.voice = v;
-    // Timbro maschile: Michele più profondo, Momi maschile ma leggermente più chiaro.
-    if (voice === "michele" || voice === "lab") { u.pitch = 0.85; u.rate = 1.06; }
-    else { u.pitch = 0.92; u.rate = 0.98; }
+    // Timbro sempre MASCHILE anche se il dispositivo ha solo voci femminili: pitch basso per persona.
+    if (voice === "michele" || voice === "lab") { u.pitch = 0.7; u.rate = 1.0; }
+    else if (voice === "mohamed") { u.pitch = 0.76; u.rate = 0.98; }
+    else if (voice === "bakemix") { u.pitch = 0.82; u.rate = 1.04; }
+    else { u.pitch = 0.75; u.rate = 1.0; }
     u.onstart = () => { ttsSignalStart(); if (onStart) onStart(); };
     u.onend = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
     u.onerror = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
@@ -101,7 +103,7 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
 }
 
 // voice: "michele" (Lab, onyx) | "momy" (Momi, echo)
-export function playTTS(text, { lang = "it", voice = "momy", onStart, onEnded } = {}) {
+export function playTTS(text, { lang = "it", voice = "michele", onStart, onEnded } = {}) {
   stopTTS();
   const full = cleanForSpeech(text);
   if (!full) { if (onEnded) onEnded(); return; }
