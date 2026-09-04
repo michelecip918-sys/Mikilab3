@@ -31,6 +31,7 @@ import OperatoreSelect from "@/components/OperatoreSelect";
 import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
 import MamoAssistant from "@/components/MamoAssistant";
+import OrdineCapo from "@/components/OrdineCapo";
 import MohamedFloor from "@/components/MohamedFloor";
 import BakemixGuide from "@/components/BakemixGuide";
 import IntroLanding from "@/components/IntroLanding";
@@ -191,7 +192,8 @@ export default function App() {
                   <div className="space-y-5" data-testid="lab-control-view">
                     <LabBriefing />
                     <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="Michele" roleTag="Master Admin" />
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                      <LabCard testid="lab-nav-ordine" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso a Mohamed.", "Auftrag diktieren, Rückwärtsplan an Mohamed.", "Dictate the order, backwards plan to Mohamed.", "Dicta el pedido, plan a Mohamed.", "Dicte la commande, plan à Mohamed.", "سفارش را بگو، برنامه به محمد.")} onClick={() => setCurrentView("ordine-capo")} accent />
                       <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />
                       <LabCard testid="lab-nav-magazzino" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände, Schwellen und Reichweite.", "Stock levels, thresholds and autonomy.", "Existencias, umbrales y autonomía.", "Stocks, seuils et autonomie.", "موجودی، آستانه‌ها و خودکفایی.")} onClick={() => setCurrentView("magazzino")} />
                       <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
@@ -199,6 +201,7 @@ export default function App() {
                       <LabCard testid="lab-nav-iot" icon="⚙️" title={tri("Sistemi IoT", "IoT-Systeme", "IoT Systems", "Sistemas IoT", "Systèmes IoT", "سیستم‌های IoT")} sub={tri("Auto-setup periferiche e forni.", "Auto-Setup für Peripherie und Öfen.", "Auto-setup for peripherals and ovens.", "Auto-configuración de periféricos y hornos.", "Auto-configuration des périphériques et fours.", "پیکربندی خودکار تجهیزات و فرها.")} onClick={() => setCurrentView("maestro")} />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
+                    {currentView === "ordine-capo" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdineCapo /></div>}
                     {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4"><Ricette isMasterView={true} /></div>}
                     {currentView === "magazzino" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>}
                     {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}

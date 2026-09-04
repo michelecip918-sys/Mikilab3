@@ -43,6 +43,7 @@ export const ovenApi = {
 export const planApi = {
   get: () => api.get(`/production-plan`).then((r) => r.data),
   save: (data) => api.put(`/production-plan`, data).then((r) => r.data),
+  order: (body) => api.post(`/lab/plan-order`, body).then((r) => r.data),
 };
 
 export const weeklyApi = {
@@ -69,6 +70,9 @@ export const floorPlanApi = {
   push: (body) => api.put(`/lab/floor-plan`, body).then((r) => r.data),
   clear: () => api.delete(`/lab/floor-plan`).then((r) => r.data),
 };
+
+// Motore MikiLab: ordine del Capo → pianificazione a ritroso delle fasi tecniche.
+// (planApi.order aggiunto sopra alla dichiarazione esistente di planApi)
 
 
 export const favApi = {

@@ -4011,3 +4011,23 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - Bug HIGH risolto: selettore lingue intro non cliccabile → z-index/pointer-events corretti (verificato: IT→"Inizia"). Gate PIN produzione reso coerente anche su `mode-floor-btn`. Rimossi import morti (GuidaSOS, AvatarBubbles).
 - Nota: cache traduzione su filesystem `/tmp` (ok preview, si perde al restart pod).
 
+
+## v-MOTORE-MIKILAB (2026-06) — Ordine Capo → piano a ritroso → Mohamed + fix vari
+### Fix concreti richiesti da Michele
+- **Stop audio all'apertura**: rimossa la voce automatica di `LabBriefing` (partiva a ogni ingresso in Lab Control). Resta solo il toast visivo.
+- **Sfondo pagina 1**: intro ora usa `public/intro-bg.png` (mockup futuristico fornito: schermo curvo, panettieri + robot, "mikilab.de"), con overlay per leggibilità.
+- **Rinomina** (ovunque visibile): "Bake Mix"→**Bakemix**, persona "Miki"→**Michele**, brand sempre **MikiLab** (App.js SectionHead + TalkWithMiki labels/greeting/persona).
+- **Capo più pulito**: rimossa `ConfermaImpastata` (azione operativa del team) dalla vista Ricette del Capo.
+### Motore MikiLab (NON tocca il gestionale B2B/CEST — lo riorganizza/affianca)
+- **Backend** `POST /api/lab/plan-order` (Capo auth, `server.py` ~1793): riceve ordine strutturato {product, quantity, deadline HH:MM, day_offset} OPPURE `command` libero (NLP via claude-sonnet-4-6 → `_extract_order`). Calcola **a ritroso** dalle fasi tecniche standard `_PROCESS_TIMES` (impasto→puntatura→formatura→lievitazione→cottura; varianti per baguette/pane/focaccia/pizza/croissant/brioche/panettone + default). Ritorna `steps[]` con orari, `plan` (testo) e `title`. Etichette fasi localizzate in 6 lingue (`_PHASE_LABELS`).
+- **Frontend** `components/OrdineCapo.jsx`: form (comando libero NLP + prodotto/quantità/ora/giorno) → `planApi.order` → mostra scaletta oraria → **"Invia a Mohamed"** = `floorPlanApi.push` (riusa la pipeline esistente) → Mohamed (MamoAssistant) legge/coordina a voce. LabCard `lab-nav-ordine` (currentView `ordine-capo`); grid Capo passata a 6 colonne su lg.
+- `planApi.order` aggiunto al `planApi` esistente in `lib/api.js` (non toccati production-plan/weekly-plan).
+### Test
+- Backend curl OK: ordine strutturato (300 baguette → start 03:05, consegna 06:00, 175 min) e NLP EN ("120 focaccia by 11:30" → estratto e schedulato in inglese). Audio TTS IT→DE già tradotto (v precedente).
+- Frontend screenshot OK: login Capo → lab-nav-ordine → calcola → risultato a step → Invia a Mohamed (toast). Intro bg futuristico visibile. Nomi corretti.
+- NON eseguito testing_agent completo questo giro (verifiche dirette per superficie). 
+### Prossimi blocchi (concordati con Michele)
+- **Punto 3**: Mohamed coordinatore vocale avanzato — conferma/esegui/aspetta/**pausa** per fase, avvisi errori, gestione team (impastatore→apprendista). Base già in MamoAssistant (next/prev/repeat/stop).
+- **Punto 4**: Bakemix conversazionale "umano" — risponde su collegamento bilance/termostati/sensori/cuffie e tutto il sito; manuale PDF stampabile in tutte le lingue.
+- Sfondi futuristici diversi per ogni sezione; avatar hub eventualmente in cerchi (mockup 1) con "bolle" azioni.
+

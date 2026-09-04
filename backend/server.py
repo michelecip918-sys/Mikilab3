@@ -1792,6 +1792,141 @@ async def delete_floor_plan(user: dict = Depends(current_user)):
 
 
 # ---------------------------------------------------------------------------
+# MOTORE MIKILAB — Ordine del Capo → pianificazione A RITROSO (da maestro panettiere)
+# Il Capo detta prodotto/quantità/ora consegna; calcoliamo a ritroso le fasi tecniche
+# (impasto → puntatura → formatura → lievitazione → cottura) con tempi standard,
+# poi la scaletta oraria va a Mohamed (floor-plan) che la coordina a voce.
+# NB: NON tocca il gestionale B2B esistente; lo affianca/riorganizza.
+# ---------------------------------------------------------------------------
+from datetime import datetime as _dt, timedelta as _td
+
+# Tempi tecnici standard (minuti) per tipo di prodotto — editabili in futuro dal Capo.
+_PROCESS_TIMES = {
+    "baguette":  [("impasto", 15), ("puntatura", 45), ("formatura", 15), ("lievitazione", 75), ("cottura", 25)],
+    "pane":      [("impasto", 20), ("puntatura", 90), ("formatura", 15), ("lievitazione", 120), ("cottura", 45)],
+    "focaccia":  [("impasto", 15), ("puntatura", 60), ("formatura", 15), ("lievitazione", 45), ("cottura", 20)],
+    "pizza":     [("impasto", 15), ("puntatura", 120), ("formatura", 10), ("lievitazione", 240), ("cottura", 8)],
+    "croissant": [("impasto", 20), ("riposo", 30), ("sfogliatura", 45), ("formatura", 20), ("lievitazione", 120), ("cottura", 20)],
+    "brioche":   [("impasto", 20), ("puntatura", 60), ("formatura", 20), ("lievitazione", 120), ("cottura", 22)],
+    "panettone": [("impasto", 40), ("lievitazione", 720), ("formatura", 20), ("lievitazione", 300), ("cottura", 50)],
+    "default":   [("impasto", 20), ("puntatura", 60), ("formatura", 15), ("lievitazione", 90), ("cottura", 30)],
+}
+_PHASE_LABELS = {
+    "it": {"impasto": "Impasto", "puntatura": "Puntatura", "formatura": "Formatura", "lievitazione": "Lievitazione", "cottura": "Cottura", "riposo": "Riposo", "sfogliatura": "Sfogliatura", "consegna": "Pronto / Consegna", "ordine": "Ordine"},
+    "de": {"impasto": "Kneten", "puntatura": "Stockgare", "formatura": "Formen", "lievitazione": "Stückgare", "cottura": "Backen", "riposo": "Ruhe", "sfogliatura": "Tourieren", "consegna": "Fertig / Lieferung", "ordine": "Auftrag"},
+    "en": {"impasto": "Mixing", "puntatura": "Bulk proof", "formatura": "Shaping", "lievitazione": "Final proof", "cottura": "Baking", "riposo": "Rest", "sfogliatura": "Lamination", "consegna": "Ready / Delivery", "ordine": "Order"},
+    "es": {"impasto": "Amasado", "puntatura": "Reposo en bloque", "formatura": "Formado", "lievitazione": "Fermentación", "cottura": "Cocción", "riposo": "Reposo", "sfogliatura": "Laminado", "consegna": "Listo / Entrega", "ordine": "Pedido"},
+    "fr": {"impasto": "Pétrissage", "puntatura": "Pointage", "formatura": "Façonnage", "lievitazione": "Apprêt", "cottura": "Cuisson", "riposo": "Repos", "sfogliatura": "Tourage", "consegna": "Prêt / Livraison", "ordine": "Commande"},
+    "fa": {"impasto": "خمیرگیری", "puntatura": "تخمیر اولیه", "formatura": "شکل‌دهی", "lievitazione": "تخمیر نهایی", "cottura": "پخت", "riposo": "استراحت", "sfogliatura": "ورقه‌کردن", "consegna": "آماده / تحویل", "ordine": "سفارش"},
+}
+
+
+def _match_product(name: str):
+    n = (name or "").lower()
+    for key in _PROCESS_TIMES:
+        if key != "default" and key in n:
+            return key
+    if "baguette" in n or "filon" in n:
+        return "baguette"
+    return "default"
+
+
+class PlanOrderReq(BaseModel):
+    product: Optional[str] = None
+    quantity: Optional[int] = None
+    deadline: Optional[str] = None   # "HH:MM"
+    day_offset: int = 0              # 0 = oggi, 1 = domani
+    command: Optional[str] = None    # testo libero: "300 baguette per domani alle 6"
+    lang: str = "it"
+
+
+async def _extract_order(command: str, lang: str) -> dict:
+    """Estrae {product, quantity, deadline HH:MM, day_offset} dal comando libero del Capo (NLP)."""
+    if not command or not EMERGENT_LLM_KEY:
+        return {}
+    try:
+        sysmsg = ("Extract a bakery production order from the user's message. Respond ONLY with compact JSON: "
+                  '{"product": string, "quantity": integer, "deadline": "HH:MM" (24h), "day_offset": 0 for today or 1 for tomorrow}. '
+                  "If a field is missing use null. No text, only JSON.")
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=200)
+        out = ""
+        async for ev in chat.stream_message(UserMessage(text=command)):
+            if isinstance(ev, TextDelta):
+                out += ev.content or ""
+        import re as _re, json as _json
+        m = _re.search(r"\{.*\}", out, _re.S)
+        return _json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logger.warning("extract_order fallita (%s)", str(e)[:120])
+        return {}
+
+
+@api_router.post("/lab/plan-order")
+async def plan_order(payload: PlanOrderReq, user: dict = Depends(current_user)):
+    product = payload.product
+    quantity = payload.quantity
+    deadline = payload.deadline
+    day_offset = payload.day_offset or 0
+    # NLP dal comando libero, se i campi non sono già strutturati
+    if payload.command and not (product and quantity and deadline):
+        ex = await _extract_order(payload.command, payload.lang)
+        product = product or ex.get("product")
+        quantity = quantity or ex.get("quantity")
+        deadline = deadline or ex.get("deadline")
+        if ex.get("day_offset") in (0, 1):
+            day_offset = ex.get("day_offset")
+    if not product or not deadline:
+        raise HTTPException(status_code=400, detail="Servono almeno prodotto e ora di consegna.")
+    try:
+        hh, mm = [int(x) for x in str(deadline).replace(".", ":").split(":")[:2]]
+    except Exception:
+        raise HTTPException(status_code=400, detail="Ora di consegna non valida (usa HH:MM).")
+
+    key = _match_product(product)
+    phases = _PROCESS_TIMES[key]
+    lang = payload.lang if payload.lang in _PHASE_LABELS else "it"
+    labels = _PHASE_LABELS[lang]
+    qty = quantity or 0
+
+    # deadline = fine cottura. Calcolo a ritroso.
+    base = _dt(2000, 1, 1) + _td(days=day_offset, hours=hh, minutes=mm)
+    total = sum(p[1] for p in phases)
+    start = base - _td(minutes=total)
+
+    steps = []
+    t = start
+    for (pkey, mins) in phases:
+        steps.append({
+            "phase": pkey,
+            "label": labels.get(pkey, pkey),
+            "minutes": mins,
+            "clock": t.strftime("%H:%M"),
+            "day": (t - _dt(2000, 1, 1)).days,
+        })
+        t = t + _td(minutes=mins)
+    # riga finale consegna
+    steps.append({"phase": "consegna", "label": labels["consegna"], "minutes": 0, "clock": base.strftime("%H:%M"), "day": (base - _dt(2000, 1, 1)).days})
+
+    prod_label = product.strip().capitalize()
+    qty_str = f"{qty} " if qty else ""
+    title = f"{labels['ordine']}: {qty_str}{prod_label}"
+    lines = [f"⏱️ {title}"]
+    for s in steps:
+        pref = ("(-1g) " if s["day"] < day_offset else "")
+        dur = f" ({s['minutes']} min)" if s["minutes"] else ""
+        lines.append(f"{pref}{s['clock']} — {s['label']}{dur} — {qty_str}{prod_label}")
+    plan_text = "\n".join(lines)
+
+    return {
+        "product": prod_label, "product_key": key, "quantity": qty,
+        "deadline": base.strftime("%H:%M"), "day_offset": day_offset,
+        "total_minutes": total, "start": start.strftime("%H:%M"),
+        "steps": steps, "plan": plan_text, "title": title, "lang": lang,
+    }
+
+
+
+# ---------------------------------------------------------------------------
 # Mappa dei Fornai — pin opt-in (nome + città + bio + posizione approssimata)
 # ---------------------------------------------------------------------------
 def _norm_link(v: str) -> str:
