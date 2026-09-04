@@ -24,18 +24,17 @@ import MagazzinoManager from "@/components/MagazzinoManager";
 import DocsDownload from "@/components/DocsDownload";
 import ConfermaImpastata from "@/components/ConfermaImpastata";
 import LabBriefing from "@/components/LabBriefing";
-import CyberBakeryTrio from "@/components/CyberBakeryTrio";
 import AutoReport from "@/components/AutoReport";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
+import OperatoreSelect from "@/components/OperatoreSelect";
 import { User } from "lucide-react";
 
 // Viste principali
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
-import Community from "@/sections/Community";
 
 export default function App() {
   const { lang } = useLang();
@@ -47,6 +46,9 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
+  const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
+  const [showOperator, setShowOperator] = useState(false);
+  const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
 
   useEffect(() => {
     const onLock = () => { pinLockNow(); setLocked(true); };
@@ -66,10 +68,9 @@ export default function App() {
     return <PinLock onUnlock={() => setLocked(false)} />;
   }
 
-  const navigate = (tab) => {
-    if (tab === "community") { setActiveMode("lab"); setCurrentView("community"); }
-    else if (tab === "ricette") setCurrentView("ricette");
-  };
+  if (!operator && !resetToken) {
+    return <OperatoreSelect onSelect={setOperator} />;
+  }
 
   return (
     <ProfileProvider>
@@ -103,9 +104,15 @@ export default function App() {
                 </div>
               </div>
               <div className="flex items-center gap-2 text-xs">
-                <span className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#94A3B8]">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" /> Cuffie BT & Voice
-                </span>
+                <button
+                  data-testid="operatore-chip"
+                  onClick={() => setShowOperator(true)}
+                  className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all"
+                  title="Cambia operatore"
+                >
+                  {operator && <img src={`${process.env.PUBLIC_URL}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#14b8a6]/50" />}
+                  <span className="font-bold hidden sm:inline">{operator ? operator.name : "Operatore"}</span>
+                </button>
                 <button
                   data-testid="account-btn"
                   onClick={() => { setAuthMode("login"); setAuthOpen(true); }}
@@ -157,7 +164,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <button data-testid="lab-nav-ricette" onClick={() => setCurrentView("ricette")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">🥖</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Master Ricettario</h3>
@@ -173,11 +180,6 @@ export default function App() {
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Smart Planner</h3>
                     <p className="text-[11px] text-[#94A3B8] mt-1">Piano con validazione vocale.</p>
                   </button>
-                  <button data-testid="lab-nav-community" onClick={() => setCurrentView("community")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
-                    <div className="text-xl mb-2">💬</div>
-                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Community</h3>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">Feed e scambio tra fornai.</p>
-                  </button>
                   <button data-testid="lab-nav-iot" onClick={() => setCurrentView("maestro")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">⚙️</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Sistemi IoT</h3>
@@ -185,7 +187,7 @@ export default function App() {
                   </button>
                 </div>
 
-                {currentView === "dashboard" && <><CyberBakeryTrio /><DocsDownload /></>}
+                {currentView === "dashboard" && <DocsDownload />}
                 {currentView === "ricette" && (
                   <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4">
                     <Ricette isMasterView={true} />
@@ -197,9 +199,6 @@ export default function App() {
                 )}
                 {currentView === "planner" && (
                   <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>
-                )}
-                {currentView === "community" && (
-                  <div data-testid="community-view" className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><Community onNavigate={navigate} /></div>
                 )}
                 {currentView === "maestro" && (
                   <div className="space-y-4">
@@ -225,8 +224,6 @@ export default function App() {
                     </div>
                   </div>
                 </div>
-
-                <CyberBakeryTrio />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
@@ -287,6 +284,10 @@ export default function App() {
 
         {resetToken && (
           <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />
+        )}
+
+        {showOperator && (
+          <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />
         )}
 
         <Toaster position="top-center" richColors />

@@ -3924,3 +3924,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **D** Nuova identita: logo emblema neon /logo-neo.jpg nell'header; NUOVI avatar stilizzati (Miki/Michele, Mohamed, Bake Mix robot) generati via Nano Banana e salvati su public (avatar_miki/mohamed/bigmix.jpg); scenario Cyber-Bakery Trio (umani + robot) rimontato in Lab dashboard e Floor Mode. Nessuna foto reale (solo avatar stilizzati).
 - Testato iter174: frontend 100% (6/6 gruppi), zero crash, zero errori console non-401, immagini caricate (naturalWidth>0).
 NB: Restano NON ripristinati di proposito: Home, Academy/Impara, Diagnosi, Shop, Enterprise, PaywallGate, BottomNav, SiteMenu, SplashScreen, banner PWA/offline, IntroGuide, PublicBatch, Sfide.
+
+## v-fork+5 (2026-06) — Plancia operativa pulita + accesso/sicurezza
+- **Selezione Operatore** (components/OperatoreSelect.jsx): gate dopo lo sblocco PIN che chiede "Chi è in laboratorio?" (Michele=Capo/Lab, Mohamed Reza=Capo Turno/Floor) con avatar; persistito in localStorage 'mikilab_operator'; chip nell'header per cambiarlo. NB: NON è stato usato il vecchio ProfileSelect (Pro/Passion) perché sblocca Academy/Quiz/Community, in contrasto con la richiesta.
+- **Sicurezza/accesso mantenuti**: PIN lock (1985), AuthScreen (Accedi/Registrati via account-btn), ResetPassword (?reset=). Nessun PaywallGate.
+- **Plancia ripulita**: rimossi dalla plancia Community (card+vista) e il banner Cyber-Bakery Trio. Restano SOLO le 4 aree operative: Master Ricettario, Magazzino & Scorte, Smart Planner, Sistemi IoT. Mantenuti logo + avatar (Michele/Mohamed) nelle intestazioni e DocsDownload.
+- Confermato che restano fuori: Home, Academy/Impara, Diagnosi, Shop, Enterprise, Paywall, Sfide/Quiz, Scopri MikiLab, Guida al Sito.
+- Testato iter175: frontend 100% (PIN, gate operatore, chip, plancia a 4 card senza Community/Trio, Auth/Reset ok, viste operative senza crash).
