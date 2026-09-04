@@ -16,6 +16,13 @@ export const uploadApi = {
   },
 };
 
+// PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Mohamed.
+export const productionPinApi = {
+  status: () => api.get(`/production-pin/status`).then((r) => r.data),
+  set: (pin) => api.put(`/production-pin`, { pin }).then((r) => r.data),
+  verify: (pin) => api.post(`/production-pin/verify`, { pin }).then((r) => r.data),
+};
+
 export const recipesApi = {
   // Resiliente + OFFLINE-READY: online salva una copia locale; offline (errore di rete)
   // restituisce l'ultima copia salvata così le ricette restano consultabili senza Wi-Fi.

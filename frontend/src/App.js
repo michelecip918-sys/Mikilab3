@@ -82,6 +82,12 @@ export default function App() {
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
+  const [floorRole, setFloorRole] = useState(() => { try { return localStorage.getItem("mikilab_role") || ""; } catch { return ""; } });
+  useEffect(() => {
+    const h = (e) => { try { setFloorRole((e && e.detail && e.detail.role != null) ? e.detail.role : (localStorage.getItem("mikilab_role") || "")); } catch { setFloorRole(""); } };
+    window.addEventListener("mikilab-role-changed", h);
+    return () => window.removeEventListener("mikilab-role-changed", h);
+  }, []);
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
 
   // Selezione dall'hub avatar → apre la sezione giusta (Capo=login, Mohamed=PIN produzione, Bakemix=libero).
@@ -111,10 +117,26 @@ export default function App() {
 
   const activeAvatar = (SECTIONS.find((s) => s.id === section) || SECTIONS[1]).avatar;
 
+  // Sfondo tematico per sezione (Capo=sala comandi, Mohamed=laboratorio, BakemixAI=olografico).
+  const bgTheme = section === "guida" ? "bakemix" : (section === "control" && activeMode === "floor") ? "mohamed" : "capo";
+  const roleTint = (() => {
+    const r = (floorRole || "").toLowerCase();
+    if (/pizza|forno pizze|sfornate|consegne/.test(r)) return "#3E9C93";        // Pizzeria
+    if (/pasticc|gelat|bilanci|abbattitore|raffredda/.test(r)) return "#7FB0A6"; // Pasticceria
+    if (/apprendista|bancon|aiuto/.test(r)) return "#f59e0b";                    // Generale
+    return "#5E8CA8";                                                            // Panetteria
+  })();
+
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
-        <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)] opacity-95">
+        <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
+          {/* Sfondo immersivo tematico della sezione attiva */}
+          <img key={bgTheme} src={`${PUB}/bg-${bgTheme}.jpg`} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.3 }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/75 via-[#030712]/85 to-[#030712]/95" />
+          {bgTheme === "mohamed" && (
+            <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}26, transparent 60%)` }} />
+          )}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem]" />
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/10 blur-[120px] rounded-full" />
         </div>

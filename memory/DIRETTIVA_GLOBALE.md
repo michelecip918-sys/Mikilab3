@@ -69,3 +69,18 @@ Master plan dalla direttiva tassativa dell'utente. Stato: ✅ fatto · 🔲 da f
 - **Mohamed (braccio destro)**: ragazzo PERSIANO/iraniano, tratti mediorientali autentici, capelli e barba curati, divisa con logo MikiLab. File: /public/avatar_mohamed.jpg
 - **Big Mix AI**: robot panettiere futurista, neon teal/amber, cappello da panettiere olografico, visualizzatore audio sul petto. File: /public/avatar_bigmix.jpg
 - Componente: components/CyberBakeryTrio.jsx (banner interattivo Home + Impara, clic → mini-guida a step + TTS).
+
+## 2026-06 — RUOLI FISSI & FLUSSO "ZERO CLICK" (direttiva utente, VINCOLANTE)
+### Ruoli fissi (mai mischiare le funzioni)
+- **Mikilab** = ESCLUSIVAMENTE il Capo/Amministratore. Unico che può registrarsi, fare login diretto, inserire dati di produzione (foto/email/manuale) e generare i PIN per gli operai. Avatar animato e interattivo. Pannello di controllo GESTIONALE.
+- **Mohamed** = ESCLUSIVAMENTE Capo Reparto/Coordinatore di Produzione VOCALE. NON genera piani da zero: prende i piani di Mikilab e smista le direttive AUDIO agli operai in base al PIN inserito e alla postazione scelta (Impasto, Forno, Banco a Mano). Operatività VOCALE separata dal gestionale.
+- **BakemixAI** = ESCLUSIVAMENTE assistente virtuale universale per info tecniche, dati e spiegazioni del sito/strumenti tramite comandi vocali.
+
+### Regola di flusso — Zero Click superflui
+- Al RITORNO il sistema riconosce l'utente e mostra SOLO il tasto "Accedi" (niente registrazioni doppie, niente schermata "Inizia").
+- L'operaio inserisce SOLO il PIN per attivare la cuffia e partire con Mohamed, senza toccare altro.
+
+### Divieto assoluto
+- L'IA non deve MAI mischiare le funzioni dei tre ruoli.
+- Non inventare mai altri nomi di persona (es. "Michele") nell'UI (eccezione: nome profilo account).
+- Tenere RIGOROSAMENTE separati il pannello gestionale di Mikilab e l'operatività vocale di Mohamed.

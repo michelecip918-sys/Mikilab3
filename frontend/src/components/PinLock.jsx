@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Lock, Delete } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { unlockWith } from "@/lib/pinLock";
+import { verifyPin } from "@/lib/pinLock";
 
 // Schermata di blocco: 4 cifre + tastierino. Copre tutto finché non si sblocca.
 export default function PinLock({ onUnlock }) {
@@ -11,8 +11,8 @@ export default function PinLock({ onUnlock }) {
   const [pin, setPin] = useState("");
   const [err, setErr] = useState(false);
 
-  const submit = (val) => {
-    if (unlockWith(val)) onUnlock();
+  const submit = async (val) => {
+    if (await verifyPin(val)) onUnlock();
     else { setErr(true); setPin(""); try { navigator.vibrate && navigator.vibrate(120); } catch { /* */ } }
   };
   const press = (d) => {

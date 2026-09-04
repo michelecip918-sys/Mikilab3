@@ -159,3 +159,9 @@
 - Tutti i bottoni portati in ALTO in una barra compatta 3×2: Sapori di Casa, Ricette Custodite, Vetrina Focacce, Enciclopedia del Pane, Tabelle & Farine, Backup Ricette.
 - Rimossi come richiesto: la barra "salta a" (SectionJumpBar) e il banner "In vetrina · Pane di Matera IGP".
 - `RecipeList` ora accetta `hideHero` (l'hero interno è nascosto: c'è un solo header). Verificato via screenshot mobile.
+
+## 2026-06 — PIN unico globale + Report Bluetooth reale + Sfondi tematici per sezione
+- PIN Produzione UNICO (backend): `GET/PUT/POST /api/production-pin*`, salvato hashato (bcrypt), PUT solo admin (require_admin), verify con rate-limit 8/5min, fallback default 1985 se non impostato. PinSetup (Capo) ora scrive sul server; PinLock verifica sul server con fallback offline (cache locale). PinSetup localizzato. Testato via curl (set solo admin, verify aggiornato, 401 senza auth).
+- BakemixHardware: report consumi ora da DATI BLUETOOTH REALI (GATT battery_level 0x2A19 + environmental temperature 0x2A6E). Stima energetica dalla temperatura reale; fallback chiaro se nessun dispositivo collegato. Multilingua.
+- Sfondi immersivi per sezione (App.js): bg-capo.jpg (sala comandi), bg-mohamed.jpg (laboratorio operativo, con tint colore per postazione via evento mikilab-role-changed), bg-bakemix.jpg (olografico). Immagini generate, salvate in public/, opacità 30% + overlay scuro per leggibilità.
+- Direttiva ruoli fissi + flusso "Zero Click" registrata in DIRETTIVA_GLOBALE.md (implementazione flusso ancora DA FARE).

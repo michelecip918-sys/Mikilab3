@@ -40,5 +40,36 @@ export function unlockWith(p) {
 }
 export function lockNow() { try { localStorage.setItem(K_UN, "0"); } catch { /* */ } }
 
+// --- PIN UNICO GLOBALE (backend) ---
+// Il Capo imposta il PIN sul server; tutti i dispositivi verificano lì.
+// Offline: fallback all'ultimo PIN valido salvato in cache su questo dispositivo.
+export async function verifyPin(p) {
+  const v = String(p).replace(/\D/g, "").slice(0, 4);
+  if (v.length !== 4) return false;
+  try {
+    const { productionPinApi } = await import("@/lib/api");
+    const res = await productionPinApi.verify(v);
+    if (res && res.ok) {
+      try { localStorage.setItem(K_PIN, v); localStorage.setItem(K_UN, "1"); localStorage.setItem(K_SET, "1"); } catch { /* */ }
+      return true;
+    }
+    return false;
+  } catch {
+    // Server irraggiungibile (offline): confronto con l'ultimo PIN valido in cache.
+    if (v === getPin()) { try { localStorage.setItem(K_UN, "1"); } catch { /* */ } return true; }
+    return false;
+  }
+}
+
+// Il Capo (admin) aggiorna il PIN unico sul server. Lancia in caso di errore (es. 403 non admin).
+export async function setPinRemote(p) {
+  const v = String(p).replace(/\D/g, "").slice(0, 4);
+  if (v.length !== 4) throw new Error("pin_invalid");
+  const { productionPinApi } = await import("@/lib/api");
+  await productionPinApi.set(v);
+  try { localStorage.setItem(K_PIN, v); localStorage.setItem(K_EN, "1"); localStorage.setItem(K_SET, "1"); } catch { /* */ }
+  return true;
+}
+
 // Bloccato all'avvio se il PIN è attivo e non è ancora stato sbloccato su questo dispositivo.
 export function isLocked() { ensurePinDefault(); return isPinEnabled() && !isUnlocked(); }

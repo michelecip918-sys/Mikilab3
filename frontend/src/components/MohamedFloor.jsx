@@ -22,8 +22,8 @@ export default function MohamedFloor() {
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [active, setActive] = useState(false);
 
-  const pick = (r) => { try { localStorage.setItem(ROLE_KEY, r); } catch { /* */ } setRole(r); };
-  const changeRole = () => { setActive(false); setRole(""); try { localStorage.removeItem(ROLE_KEY); } catch { /* */ } };
+  const pick = (r) => { try { localStorage.setItem(ROLE_KEY, r); } catch { /* */ } setRole(r); try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: r } })); } catch { /* */ } };
+  const changeRole = () => { setActive(false); setRole(""); try { localStorage.removeItem(ROLE_KEY); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: "" } })); } catch { /* */ } };
 
   // 1) Nessun ruolo → scelta postazione
   if (!role) {

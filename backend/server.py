@@ -6309,6 +6309,58 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
 
 
 # ---------------------------------------------------------------------------
+# PIN Produzione (UNICO, globale) — impostato SOLO dal Capo (admin), usato da
+# tutti i dispositivi per sbloccare il Floor Mode di Mohamed. Salvato hashato.
+# ---------------------------------------------------------------------------
+class ProductionPinSet(BaseModel):
+    pin: str
+
+
+class ProductionPinVerify(BaseModel):
+    pin: str
+
+
+def _norm_pin(p) -> Optional[str]:
+    p = re.sub(r"\D", "", str(p or ""))
+    return p if len(p) == 4 else None
+
+
+@api_router.get("/production-pin/status")
+async def production_pin_status():
+    doc = await db.app_meta.find_one({"_key": "production_pin"}, {"_id": 0})
+    return {"is_set": bool(doc and doc.get("hash")), "updated_at": (doc or {}).get("updated_at")}
+
+
+@api_router.put("/production-pin")
+async def production_pin_set(body: ProductionPinSet, admin: dict = Depends(require_admin)):
+    p = _norm_pin(body.pin)
+    if not p:
+        raise HTTPException(status_code=400, detail="Il PIN deve avere 4 cifre")
+    await db.app_meta.update_one(
+        {"_key": "production_pin"},
+        {"$set": {"_key": "production_pin", "hash": _hash_pw(p), "updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True, "updated_at": now_iso()}
+
+
+@api_router.post("/production-pin/verify")
+async def production_pin_verify(body: ProductionPinVerify, request: Request):
+    # Brute-force: max 8 tentativi / 5 minuti per IP.
+    ok_rate = await _rate_limit("pin_verify", _client_ip(request), 8, 300)
+    if not ok_rate:
+        raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
+    p = _norm_pin(body.pin)
+    doc = await db.app_meta.find_one({"_key": "production_pin"}, {"_id": 0})
+    if doc and doc.get("hash"):
+        ok = bool(p) and _check_pw(p, doc["hash"])
+    else:
+        ok = (p == "1985")  # retro-compat: nessun PIN impostato → default storico
+    return {"ok": bool(ok)}
+
+
+
+# ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
 # ---------------------------------------------------------------------------
 COMMUNITY_CATEGORIES = {"consiglio", "foto", "ricetta", "domanda", "idea", "evento", "traguardo", "auguri", "pane", "pizza", "dolci", "sos"}

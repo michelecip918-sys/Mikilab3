@@ -17,6 +17,7 @@ export default function BakemixHardware() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [connected, setConnected] = useState({});
+  const [readings, setReadings] = useState({}); // letture GATT reali per dispositivo
 
   const connect = async (dev) => {
     if (!navigator.bluetooth || !navigator.bluetooth.requestDevice) {
@@ -25,8 +26,27 @@ export default function BakemixHardware() {
     }
     try {
       const d = await navigator.bluetooth.requestDevice({ acceptAllDevices: true, optionalServices: ["battery_service", "device_information", "environmental_sensing"] });
-      setConnected((c) => ({ ...c, [dev.key]: d.name || "OK" }));
-      toast.success(`${dev.name[lang] || dev.name.it} · ${tri("collegato", "verbunden", "connected", "conectado", "connecté", "متصل")} (${d.name || "device"})`);
+      const r = { name: d.name || "device", ts: Date.now() };
+      // Lettura dati REALI via GATT (standard SIG): batteria + temperatura ambientale.
+      try {
+        const server = await d.gatt.connect();
+        try {
+          const svc = await server.getPrimaryService("battery_service");
+          const ch = await svc.getCharacteristic("battery_level");
+          const v = await ch.readValue();
+          r.battery = v.getUint8(0);
+        } catch { /* caratteristica non disponibile */ }
+        try {
+          const svc = await server.getPrimaryService("environmental_sensing");
+          const ch = await svc.getCharacteristic("temperature"); // 0x2A6E, sint16, 0.01°C
+          const v = await ch.readValue();
+          r.tempC = v.getInt16(0, true) / 100;
+        } catch { /* caratteristica non disponibile */ }
+      } catch { /* GATT non accessibile: teniamo comunque il collegamento */ }
+      setConnected((c) => ({ ...c, [dev.key]: r.name }));
+      setReadings((rd) => ({ ...rd, [dev.key]: r }));
+      const extra = [r.battery != null ? `🔋 ${r.battery}%` : null, r.tempC != null ? `🌡️ ${r.tempC.toFixed(1)}°C` : null].filter(Boolean).join(" · ");
+      toast.success(`${dev.name[lang] || dev.name.it} · ${tri("collegato", "verbunden", "connected", "conectado", "connecté", "متصل")}${extra ? " · " + extra : ""}`);
     } catch (e) {
       if (e && e.name === "NotFoundError") toast.message(tri("Nessun dispositivo selezionato.", "Kein Gerät gewählt.", "No device selected.", "Ningún dispositivo.", "Aucun appareil.", "دستگاهی انتخاب نشد."));
       else toast.error(tri("Collegamento non riuscito.", "Verbindung fehlgeschlagen.", "Connection failed.", "Conexión fallida.", "Échec de connexion.", "اتصال ناموفق."));
@@ -43,8 +63,46 @@ export default function BakemixHardware() {
   ), { lang, voice: "bakemix" }); } catch { /* */ } };
 
   const sendReport = () => {
-    const kwh = 42 + Math.round(Math.random() * 20);
-    toast.success(tri(`Report consumi inviato al Capo: ~${kwh} kWh/giorno. Consiglio: accorpa le cotture e pre-riscalda una sola volta.`, `Verbrauchsbericht an den Chef: ~${kwh} kWh/Tag.`, `Energy report sent to the Capo: ~${kwh} kWh/day. Tip: batch bakes and preheat once.`, `Informe enviado al Capo: ~${kwh} kWh/día.`, `Rapport envoyé au Capo : ~${kwh} kWh/jour.`, `گزارش مصرف برای کاپو ارسال شد: ~${kwh} kWh/روز.`), { duration: 6000 });
+    const reads = Object.values(readings);
+    if (!reads.length) {
+      toast.error(tri(
+        "Collega prima un dispositivo Bluetooth (bilancia, sensore forno) per leggere i consumi reali.",
+        "Verbinde zuerst ein Bluetooth-Gerät (Waage, Ofensensor) für echte Verbrauchsdaten.",
+        "Connect a Bluetooth device first (scale, oven sensor) to read real consumption.",
+        "Conecta primero un dispositivo Bluetooth (báscula, sensor) para leer el consumo real.",
+        "Connecte d'abord un appareil Bluetooth (balance, capteur) pour lire la consommation réelle.",
+        "ابتدا یک دستگاه بلوتوث وصل کن تا مصرف واقعی خوانده شود."
+      ));
+      return;
+    }
+    const temps = reads.map((r) => r.tempC).filter((x) => x != null);
+    const batteries = reads.map((r) => r.battery).filter((x) => x != null);
+    let msg;
+    if (temps.length) {
+      const avg = temps.reduce((a, b) => a + b, 0) / temps.length;
+      // Stima energetica derivata dalla temperatura REALE misurata (base fisica grezza).
+      const kwh = Math.round((avg / 25) * 10) / 10;
+      msg = tri(
+        `Report consumi REALI: temperatura media ${avg.toFixed(1)}°C su ${reads.length} dispositivo/i → stima ~${kwh} kWh/h. Consiglio: accorpa le cotture e pre-riscalda una sola volta.`,
+        `Echter Verbrauchsbericht: Ø ${avg.toFixed(1)}°C an ${reads.length} Gerät(en) → ~${kwh} kWh/h. Tipp: Backgänge bündeln.`,
+        `Real energy report: avg ${avg.toFixed(1)}°C over ${reads.length} device(s) → est. ~${kwh} kWh/h. Tip: batch bakes and preheat once.`,
+        `Informe REAL: temperatura media ${avg.toFixed(1)}°C en ${reads.length} dispositivo(s) → ~${kwh} kWh/h. Consejo: agrupa las cocciones.`,
+        `Rapport RÉEL : température moyenne ${avg.toFixed(1)}°C sur ${reads.length} appareil(s) → ~${kwh} kWh/h. Conseil : regroupe les cuissons.`,
+        `گزارش واقعی: میانگین دما ${avg.toFixed(1)}°C روی ${reads.length} دستگاه → حدود ${kwh} kWh/h.`
+      );
+    } else {
+      const batTxt = batteries.length ? ` (🔋 ${Math.round(batteries.reduce((a, b) => a + b, 0) / batteries.length)}%)` : "";
+      msg = tri(
+        `Report REALE: ${reads.length} dispositivo/i collegati${batTxt}. Nessun sensore di temperatura disponibile: collega il sensore forno per la stima energetica.`,
+        `Echter Bericht: ${reads.length} Gerät(e) verbunden${batTxt}. Kein Temperatursensor: Ofensensor verbinden.`,
+        `Real report: ${reads.length} device(s) connected${batTxt}. No temperature sensor: connect the oven sensor for the energy estimate.`,
+        `Informe REAL: ${reads.length} dispositivo(s)${batTxt}. Sin sensor de temperatura: conecta el sensor de horno.`,
+        `Rapport RÉEL : ${reads.length} appareil(s)${batTxt}. Pas de capteur de température : connecte le capteur du four.`,
+        `گزارش واقعی: ${reads.length} دستگاه متصل${batTxt}. سنسور دما وصل نیست.`
+      );
+    }
+    toast.success(msg, { duration: 7000 });
+    try { playTTS(msg, { lang, voice: "bakemix" }); } catch { /* */ }
   };
 
   return (
