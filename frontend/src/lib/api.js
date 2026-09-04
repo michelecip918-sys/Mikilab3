@@ -56,6 +56,7 @@ export const warehouseApi = {
   remove: (id) => api.delete(`/lab/warehouse/${id}`).then((r) => r.data),
   consume: (items) => api.post(`/lab/warehouse/consume`, { items }).then((r) => r.data),
   stats: () => api.get(`/lab/warehouse/stats`).then((r) => r.data),
+  consumption: () => api.get(`/lab/warehouse/consumption`).then((r) => r.data),
 };
 
 

@@ -3,6 +3,8 @@ import { Package, Plus, Trash2, AlertTriangle, Minus, Loader2, RefreshCw } from 
 import { toast } from "sonner";
 import { warehouseApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
+import ConsumiChart from "@/components/ConsumiChart";
+import OrdineRiacquisto from "@/components/OrdineRiacquisto";
 
 const KINDS = [
   { v: "farina", label: "Farina" },
@@ -117,6 +119,8 @@ export default function MagazzinoManager() {
         </div>
       )}
 
+      {low.length > 0 && <OrdineRiacquisto lowItems={low} />}
+
       {/* Form di carico rapido */}
       <form onSubmit={submit} className="grid grid-cols-2 sm:grid-cols-6 gap-2 p-3 rounded-xl bg-[#030712] border border-[#1F2937]">
         <input data-testid="magazzino-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Nome (es. Farina 0)" className="col-span-2 sm:col-span-2 bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#14b8a6] outline-none" />
@@ -165,6 +169,7 @@ export default function MagazzinoManager() {
           })}
         </div>
       )}
+      <ConsumiChart />
       <p className="text-[10px] text-[#64748B]">I pulsanti +/- regolano la giacenza di 1 unità; imposta una soglia per attivare l'allarme vocale di scorta minima.</p>
     </div>
   );

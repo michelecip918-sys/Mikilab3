@@ -3909,3 +3909,10 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Autonomia scorte REALE**: nuovo endpoint GET /api/lab/warehouse/stats (consumo medio giornaliero su 14gg dal lab_consumption_log + days_left). MagazzinoManager mostra "~N g autonomia" per materia e si ricarica sull'evento di scarico.
 - **Briefing vocale scorte REALE** (components/LabBriefing.jsx): all'ingresso in Lab Control annuncia una volta per sessione (toast + TTS) le materie vicine/sotto soglia, con dati veri dal backend.
 - Testato iter172: backend 100% (17/17), frontend 95% -> unico difetto (falso avviso lievito) corretto e verificato via curl. Nessun dato di test lasciato.
+
+## v-fork+3 (2026-06) — Ordini automatici, grafico consumi, impastata da ricetta, PDF in Floor
+- **Impastata da Ricetta (REALE)**: ConfermaImpastata ora ha un menu ricette (recipesApi mikilab+personal); in modalita ricetta scarica flour_grams/sourdough_grams/salt_grams x impastate; modalita manuale 62%farina+4%lievito. Ignora le materie non tracciate (nessun falso avviso). Verificato: farina 100->99 + riga /consumption.
+- **Storico Grafico consumi** (components/ConsumiChart.jsx, recharts): barre consumo farine ultimi 14 giorni da /lab/warehouse/consumption + totale periodo. In Magazzino.
+- **Ordini Automatici** (components/OrdineRiacquisto.jsx): quando ci sono materie sotto soglia, genera un ordine precompilato (qta suggerita = 2x soglia) con Copia negli appunti e Invia via email (mailto). In Magazzino.
+- **PDF anche in Floor Mode**: DocsDownload aggiunto alla plancia del team (oltre a Lab Control).
+- Testato iter173: frontend 100% (tutte e 4 le funzioni), nessun bug bloccante, nessun dato di test lasciato.

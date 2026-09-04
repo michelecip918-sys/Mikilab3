@@ -231,6 +231,8 @@ export default function App() {
                   <p className="text-xs text-[#94A3B8] mb-4">Lavorazioni e impasti autorizzati per la produzione giornaliera.</p>
                   <Ricette isFloorMode={true} />
                 </div>
+
+                <DocsDownload />
               </div>
             )}
 

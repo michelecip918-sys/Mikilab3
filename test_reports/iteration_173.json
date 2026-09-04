@@ -1,0 +1,25 @@
+{
+  "summary": "Frontend-only validation of the 4 NEW MikiLab features (PIN 1985). ALL PASSED on desktop 1920x800 and mobile 390x844. (1) DocsDownload now renders inside floor-mode-view with docs-download-current ('Scarica (English)') and all 6 links docs-link-it/de/en/es/fr/fa pointing to /MikiLab_v14_Ecosystem_Document_XX.pdf. (2) ConfermaImpastata in Lab Control > lab-nav-ricette: dropdown has 150 options, first 'Manuale (peso impasto)' + 149 real API recipes; Manuale shows conferma-impastata-kg with preview 'Farina 12.4kg · Lievito 0.8kg' (62%/4% of 20kg); selecting 'Anima Integrale' swaps to conferma-impastata-batches and preview 'Farina Integrale 900 + 630 100 (Dinkel) 1kg · Lievito 0.2kg · Sale 0.02kg'; conferma-impastata-btn produced SUCCESS toast 'Impasto confermato (Anima Integrale): magazzino scaricato in automatico.' (no false 'insufficienti' despite Lievito/Sale not_found) and GET /api/lab/warehouse confirmed Farina 100 -> 99 kg with a new /consumption log row. (3) consumi-chart renders recharts BarChart with 14 bar rectangles + 'Totale farine consumate nel periodo: 72.6 kg', no crash. (4) After adding low item Semola (5kg / soglia 30kg), ordine-riacquisto appeared; toggle expanded ordine-riacquisto-text 'Semola: 55 kg (giacenza attuale 5 kg)' (target 2x soglia), copy button present, ordine-riacquisto-email href starts with 'mailto:'. Regressions OK: '~36g autonomia' shown, magazzino-low-alert + 'BASSA' badge, +/- (5->6->5) and delete all work. Cleanup done: Semola and Farina deleted, warehouse empty, ordine-riacquisto disappears when no low items.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Magazzino (mobile 390px)", "issues": ["Helper text under the item list ('...anti +/- regolano la giacenza di 1 unita...') is horizontally clipped/overlapped by the ConsumiChart card - left part of the sentence is cut off and very low contrast. Cosmetic only."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": ["Optional: fix clipped/low-contrast helper text under the magazzino item list on mobile (390px)."],
+  "critical_code_review_comments": [
+    "ConfermaImpastata recipe mode relies on backend fuzzy substring match (find(): nl in stock name or stock name in nl). Recipe flour 'Farina Integrale 900 + 630 100 (Dinkel)' matched the generic stocked 'Farina' item, so a specific flour can be silently deducted from an unrelated stock line. Acceptable for now but worth an explicit flour-mapping later.",
+    "ConsumiChart/OrdineRiacquisto have no error UI: warehouseApi.consumption() failure falls back to empty state ('consumi-empty'), silently hiding API errors."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100%"},
+  "seed_data_creation": "Seeded warehouse item Farina (100kg, min 20) via API and Semola (5kg, min 30) via UI; both deleted at the end - GET /api/lab/warehouse now returns [].",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "App PIN 1985",
+  "context_for_next_testing_agent": "All 4 new features verified working. Warehouse is now EMPTY (needs re-seeding for magazzino tests). Consumption log retains historical rows so consumi-chart shows data (72.6 kg / last 14 days). Row testids are id-based: magazzino-item-{id}, magazzino-inc/dec/del-{id} (not magazzino-row-*). Console shows expected 401s for /api/auth/me and /api/favorites/sync when not logged in - not a bug.",
+  "rca_of_the_issue": "N/A - no functional defects found."
+}
