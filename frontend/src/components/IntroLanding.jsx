@@ -15,8 +15,8 @@ export default function IntroLanding({ onStart }) {
     <div data-testid="intro-landing" className="relative min-h-screen overflow-hidden bg-[#030712] text-white flex flex-col">
       {/* sfondo futuristico */}
       <div className="absolute inset-0 z-0">
-        <img src={`${PUB}/hub-bg.jpg`} alt="" className="w-full h-full object-cover opacity-25" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_72%)]" />
+        <img src={`${PUB}/intro-bg.png`} alt="" className="w-full h-full object-cover opacity-55" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/80 via-[#030712]/35 to-[#030712]/90" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b18_1px,transparent_1px),linear-gradient(to_bottom,#1e293b18_1px,transparent_1px)] bg-[size:3.5rem_3.5rem]" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[280px] bg-[#14b8a6]/15 blur-[130px] rounded-full" />
       </div>

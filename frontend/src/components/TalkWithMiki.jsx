@@ -87,7 +87,7 @@ export default function TalkWithMiki({ tab }) {
     const replyWho = copilot === "trio" ? "miki" : copilot;
     const HINT = {
       mohamed: "[Rispondi in prima persona come Mohamed, il braccio destro persiano del laboratorio] ",
-      bigmix: "[Rispondi in prima persona come Bake Mix, l'assistente robot di MikiLab] ",
+      bigmix: "[Rispondi in prima persona come Bakemix, l'assistente robot di MikiLab] ",
       miki: "", trio: "",
     };
     setMessages((m) => [...m, { who: "user", content: msg }, { who: replyWho, content: "" }]);
@@ -194,7 +194,7 @@ export default function TalkWithMiki({ tab }) {
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "Miki" : v === "mohamed" ? "Mohamed" : "Bake Mix"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "Michele" : v === "mohamed" ? "Mohamed" : "Bakemix"}</span>
                 </button>
               );
             })}
@@ -215,8 +215,8 @@ export default function TalkWithMiki({ tab }) {
               <div ref={listRef} className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[240px]">
                 {messages.length === 0 && (
                   <div className="text-center py-6">
-                    <img src={AV("avatar_miki.jpg")} alt="Miki" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-[#E0A106]/60" />
-                    <p className="mt-3 text-sm text-slate-200 font-bold">Ciao, sono Miki 👋</p>
+                    <img src={AV("avatar_miki.jpg")} alt="Michele" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-[#E0A106]/60" />
+                    <p className="mt-3 text-sm text-slate-200 font-bold">Ciao, sono Michele 👋</p>
                     <p className="text-[12px] text-slate-400 px-4 mt-1">Chiedimi come MikiLab aiuta i panettieri, o qualsiasi cosa sul laboratorio. Parla o scrivi.</p>
                     <div className="flex flex-wrap gap-1.5 justify-center mt-3 px-2">
                       {["Come mi aiuta MikiLab?", "Come funziona la Modalità Chef?", "Cos'è il Thermal Guard?"].map((s, i) => (
@@ -237,7 +237,7 @@ export default function TalkWithMiki({ tab }) {
               <div className="p-3 border-t border-slate-800 space-y-2">
                 {/* Selettore Co-Pilota */}
                 <div data-testid="copilot-selector" className="flex items-center gap-1">
-                  {[["trio", "Trio"], ["miki", "Miki"], ["mohamed", "Mohamed"], ["bigmix", "Bake Mix"]].map(([id, lbl]) => (
+                  {[["trio", "Trio"], ["miki", "Michele"], ["mohamed", "Mohamed"], ["bigmix", "Bakemix"]].map(([id, lbl]) => (
                     <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
                       className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
                   ))}
@@ -279,7 +279,7 @@ export default function TalkWithMiki({ tab }) {
           {/* VISTA BIG MIX AI · INTERACTIVE TRAINING (mod. 58) */}
           {view === "bigmix" && (
             <div data-testid="bigmix-training" className="flex-1 overflow-y-auto p-4 text-center">
-              <img src={AV("avatar_bigmix.jpg")} alt="Bake Mix" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
+              <img src={AV("avatar_bigmix.jpg")} alt="Bakemix" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
               <p className="mt-3 text-sm font-bold text-[#6EA8FE] flex items-center justify-center gap-1.5"><GraduationCap className="w-4 h-4" /> Training comandi Hands-Free</p>
               <p className="text-[12px] text-slate-400 mt-1">Passo {trainIdx + 1} di {TRAIN_CMDS.length}</p>
               <div className="mt-4 rounded-2xl bg-slate-950 border border-[#6EA8FE]/30 p-4">

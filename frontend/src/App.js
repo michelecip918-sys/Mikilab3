@@ -199,7 +199,7 @@ export default function App() {
                       <LabCard testid="lab-nav-iot" icon="⚙️" title={tri("Sistemi IoT", "IoT-Systeme", "IoT Systems", "Sistemas IoT", "Systèmes IoT", "سیستم‌های IoT")} sub={tri("Auto-setup periferiche e forni.", "Auto-Setup für Peripherie und Öfen.", "Auto-setup for peripherals and ovens.", "Auto-configuración de periféricos y hornos.", "Auto-configuration des périphériques et fours.", "پیکربندی خودکار تجهیزات و فرها.")} onClick={() => setCurrentView("maestro")} />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
-                    {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4"><Ricette isMasterView={true} /><ConfermaImpastata /></div>}
+                    {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4"><Ricette isMasterView={true} /></div>}
                     {currentView === "magazzino" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>}
                     {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}
                     {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
@@ -217,7 +217,7 @@ export default function App() {
             {/* SEZIONE 3 — GUIDA, SOS & AI */}
             {section === "guida" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-guida">
-                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="Bake Mix" roleTag="AI Assistant" />
+                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="Bakemix" roleTag="AI Assistant" />
                 <BakemixGuide />
               </div>
             )}

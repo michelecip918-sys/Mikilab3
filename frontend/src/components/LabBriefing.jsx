@@ -23,7 +23,6 @@ export default function LabBriefing() {
         if (low.length === 0) return;
         const names = low.map((i) => i.name).join(", ");
         toast.warning(`Briefing Scorte: ${names} vicine alla soglia critica.`, { duration: 7000 });
-        try { playTTS(`Briefing scorte. Attenzione: ${names} vicine alla soglia critica. Valuta il riordino.`); } catch { /* */ }
       } catch {
         /* silenzioso: il briefing è opzionale */
       }
