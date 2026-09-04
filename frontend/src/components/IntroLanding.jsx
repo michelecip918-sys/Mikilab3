@@ -16,8 +16,8 @@ export default function IntroLanding({ onStart }) {
     <div data-testid="intro-landing" className="relative min-h-screen overflow-hidden bg-[#030712] text-white flex flex-col">
       {/* sfondo futuristico */}
       <div className="absolute inset-0 z-0">
-        <img src={`${PUB}/intro-bg.png`} alt="" className="w-full h-full object-cover opacity-55" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/80 via-[#030712]/35 to-[#030712]/90" />
+        <img src={`${PUB}/intro-team.jpg`} alt="" className="w-full h-full object-cover opacity-60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/75 via-[#030712]/40 to-[#030712]/95" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b18_1px,transparent_1px),linear-gradient(to_bottom,#1e293b18_1px,transparent_1px)] bg-[size:3.5rem_3.5rem]" />
         <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[280px] bg-[#14b8a6]/15 blur-[130px] rounded-full" />
       </div>
@@ -29,8 +29,15 @@ export default function IntroLanding({ onStart }) {
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
         <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
-          className="w-24 h-24 rounded-3xl overflow-hidden border border-[#14b8a6]/40 shadow-2xl shadow-[#14b8a6]/25 bg-[#030712] mb-5">
-          <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
+          className="flex items-end justify-center gap-3 mb-5">
+          {[{ img: "avatar_miki.jpg", c: "#14b8a6", n: "MikiLab" }, { img: "avatar_mohamed.jpg", c: "#f59e0b", n: "Mohamed" }, { img: "avatar_bigmix.jpg", c: "#06b6d4", n: "BakemixAI" }].map((a, i) => (
+            <div key={a.n} className="flex flex-col items-center gap-1.5">
+              <div className={`rounded-full overflow-hidden bg-[#030712] shadow-xl ${i === 0 ? "w-24 h-24" : "w-18 h-18"}`} style={{ width: i === 0 ? 92 : 72, height: i === 0 ? 92 : 72, border: `3px solid ${a.c}`, boxShadow: `0 0 22px ${a.c}66` }}>
+                <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              </div>
+              <span className="text-[10px] font-bold" style={{ color: a.c }}>{a.n}</span>
+            </div>
+          ))}
         </motion.div>
 
         <motion.h1 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15, duration: 0.5 }}
