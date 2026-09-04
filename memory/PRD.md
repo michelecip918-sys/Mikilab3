@@ -4038,3 +4038,12 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - PWA infra già presente (sw.js, icon-192/512, apple-touch-icon, manifest linkato, SW registrato in index.html). Aggiornati `manifest.json` (name/description MikiLab, theme_color/background_color `#030712`, categories food/productivity/business) e `<meta theme-color>` a `#030712` per coerenza col tema scuro.
 - Testato: intro mostra "Install App"; click → prompt nativo (Android) o modale istruzioni (iOS/desktop senza prompt). Verificato a schermo.
 
+
+## v-RESTRUCTURE (2026-06) — 2 interfacce (hub 3 avatar + menu), no intro, BakemixAI
+- Flusso: AdminGate(1985) -> DRITTO al hub 3 avatar (rimosso lo step Intro/"Inizia" dal flusso). Login/registrazione email dentro la sezione Michele.
+- Menu (nav) = 3 avatar: nav-capo(Michele->control/lab), nav-mohamed(->control/floor, PIN), nav-bakemix(->guida). SECTIONS ridefinito {id,kind,avatar}; nav usa handleHubSelect.
+- Ogni avatar SOLO la sua sezione: rimosso il toggle interno mode-lab/mode-floor; sezione "ricette" standalone non piu raggiungibile (ricette vivono in Capo Master Ricettario).
+- Rinomina Bakemix -> BakemixAI (AvatarHub card, BakemixGuide header, SectionHead guida).
+- Sessione permanente: SESSION_DAYS=3650 (cookie ~10 anni), registrazione gratuita e persistente.
+- Verificato a schermo: admin->hub diretto, Michele->login->Capo Console (6 card, no toggle), nav 3 avatar.
+- TODO prossimi: sfondi futuristici diversi per sezione; punto 3 Mohamed coordinatore (pause/conferme); BakemixAI conversazionale.

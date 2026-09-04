@@ -194,7 +194,7 @@ export default function TalkWithMiki({ tab }) {
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "Michele" : v === "mohamed" ? "Mohamed" : "Bakemix"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mohamed" ? "Mohamed" : "BakemixAI"}</span>
                 </button>
               );
             })}
@@ -215,8 +215,8 @@ export default function TalkWithMiki({ tab }) {
               <div ref={listRef} className="flex-1 overflow-y-auto p-3 space-y-2 min-h-[240px]">
                 {messages.length === 0 && (
                   <div className="text-center py-6">
-                    <img src={AV("avatar_miki.jpg")} alt="Michele" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-[#E0A106]/60" />
-                    <p className="mt-3 text-sm text-slate-200 font-bold">Ciao, sono Michele 👋</p>
+                    <img src={AV("avatar_miki.jpg")} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-[#E0A106]/60" />
+                    <p className="mt-3 text-sm text-slate-200 font-bold">Ciao, sono MikiLab 👋</p>
                     <p className="text-[12px] text-slate-400 px-4 mt-1">Chiedimi come MikiLab aiuta i panettieri, o qualsiasi cosa sul laboratorio. Parla o scrivi.</p>
                     <div className="flex flex-wrap gap-1.5 justify-center mt-3 px-2">
                       {["Come mi aiuta MikiLab?", "Come funziona la Modalità Chef?", "Cos'è il Thermal Guard?"].map((s, i) => (
@@ -237,7 +237,7 @@ export default function TalkWithMiki({ tab }) {
               <div className="p-3 border-t border-slate-800 space-y-2">
                 {/* Selettore Co-Pilota */}
                 <div data-testid="copilot-selector" className="flex items-center gap-1">
-                  {[["trio", "Trio"], ["miki", "Michele"], ["mohamed", "Mohamed"], ["bigmix", "Bakemix"]].map(([id, lbl]) => (
+                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mohamed", "Mohamed"], ["bigmix", "BakemixAI"]].map(([id, lbl]) => (
                     <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
                       className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
                   ))}

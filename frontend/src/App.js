@@ -48,9 +48,9 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 const PUB = process.env.PUBLIC_URL;
 const SECTIONS = [
-  { id: "ricette", label: "Ricette", Icon: BookOpen, avatar: "avatar_miki.jpg" },
-  { id: "control", label: "MikiLab Control", Icon: LayoutGrid, avatar: "avatar_miki.jpg" },
-  { id: "guida", label: "Guida & SOS", Icon: LifeBuoy, avatar: "avatar_bigmix.jpg" },
+  { id: "capo", kind: "lab", avatar: "avatar_miki.jpg" },
+  { id: "mohamed", kind: "floor", avatar: "avatar_mohamed.jpg" },
+  { id: "bakemix", kind: "guida", avatar: "avatar_bigmix.jpg" },
 ];
 
 function LabCard({ testid, icon, title, sub, onClick, accent }) {
@@ -75,7 +75,7 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
+  const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "hub" : "admin"; } catch { return "admin"; } });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
@@ -100,7 +100,7 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) setAuthOpen(false); }, [user, setAuthOpen]);
 
-  if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
+  if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("hub")} />;
   if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => setScreen("hub")} />;
   if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} />;
   if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
@@ -156,12 +156,13 @@ export default function App() {
           <div className="bg-[#0b0f19]/90 border-b border-[#1e293b] px-4 py-2 sticky top-[65px] z-40 backdrop-blur-md">
             <div className="max-w-4xl mx-auto flex items-center gap-2">
               {SECTIONS.map((s) => {
-                const active = section === s.id;
+                const active = s.kind === "guida" ? section === "guida" : section === "control" && activeMode === (s.kind === "lab" ? "lab" : "floor");
+                const label = s.id === "capo" ? "MikiLab" : s.id === "mohamed" ? "Mohamed" : "BakemixAI";
                 return (
-                  <button key={s.id} data-testid={`nav-${s.id}`} onClick={() => setSection(s.id)}
+                  <button key={s.id} data-testid={`nav-${s.id}`} onClick={() => handleHubSelect(s.kind)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all ${active ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20" : "text-[#94A3B8] hover:text-white"}`}>
                     <img src={`${PUB}/${s.avatar}`} alt="" className={`w-6 h-6 rounded-full object-cover object-top border ${active ? "border-[#030712]" : "border-[#334155]"}`} />
-                    <span className="hidden sm:inline">{s.id === "ricette" ? tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها") : s.id === "control" ? tri("MikiLab Control", "MikiLab Control", "MikiLab Control", "MikiLab Control", "MikiLab Control", "کنترل میکی‌لب") : tri("Guida & SOS", "Hilfe & SOS", "Guide & SOS", "Guía & SOS", "Guide & SOS", "راهنما و SOS")}</span>
+                    <span className="hidden sm:inline">{label}</span>
                   </button>
                 );
               })}
@@ -174,7 +175,7 @@ export default function App() {
             {/* SEZIONE 1 — RICETTE */}
             {section === "ricette" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-ricette">
-                <SectionHead avatar="avatar_miki.jpg" title={tri("Ricette di MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas de MikiLab", "Recettes de MikiLab", "دستورهای میکی‌لب")} sub={tri("Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab.", "Chef-Konsole: Fotos und Kernrezepte, koordiniert von der MikiLab-KI.", "Capo's console: photos and core recipes, coordinated by MikiLab AI.", "Consola del Capo: fotos y recetas esenciales, coordinadas por la IA MikiLab.", "Console du Capo : photos et recettes clés, coordonnées par l'IA MikiLab.", "کنسول کاپو: عکس‌ها و دستورهای اصلی، هماهنگ با هوش مصنوعی.")} roleName="Michele" roleTag="Capo" />
+                <SectionHead avatar="avatar_miki.jpg" title={tri("Ricette di MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas de MikiLab", "Recettes de MikiLab", "دستورهای میکی‌لب")} sub={tri("Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab.", "Chef-Konsole: Fotos und Kernrezepte, koordiniert von der MikiLab-KI.", "Capo's console: photos and core recipes, coordinated by MikiLab AI.", "Consola del Capo: fotos y recetas esenciales, coordinadas por la IA MikiLab.", "Console du Capo : photos et recettes clés, coordonnées par l'IA MikiLab.", "کنسول کاپو: عکس‌ها و دستورهای اصلی، هماهنگ با هوش مصنوعی.")} roleName="MikiLab" roleTag="Capo" />
                 <Ricette />
               </div>
             )}
@@ -182,18 +183,13 @@ export default function App() {
             {/* SEZIONE 2 — MIKILAB CONTROL */}
             {section === "control" && (
               <div className="space-y-5 animate-fadeIn" data-testid="section-control">
-                <div className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] max-w-md mx-auto">
-                  <button data-testid="mode-lab-btn" onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all inline-flex items-center justify-center gap-1.5 ${activeMode === "lab" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{!user && <Lock className="w-3 h-3" />}🛡️ {tri("Capo · Lab Control", "Chef · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "کاپو · کنترل")}</button>
-                  <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); if (pinIsLocked()) setScreen("pin"); }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeMode === "floor" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>⚡ {tri("Produzione · Floor", "Produktion · Floor", "Production · Floor", "Producción · Floor", "Production · Floor", "تولید · Floor")}</button>
-                </div>
-
                 {activeMode === "lab" ? (
                   !user ? (
                     <CapoGate onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} onFloor={() => setActiveMode("floor")} tri={tri} />
                   ) : (
                   <div className="space-y-5" data-testid="lab-control-view">
                     <LabBriefing />
-                    <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="Michele" roleTag="Master Admin" />
+                    <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="MikiLab" roleTag="Master Admin" />
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                       <LabCard testid="lab-nav-ordine" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso a Mohamed.", "Auftrag diktieren, Rückwärtsplan an Mohamed.", "Dictate the order, backwards plan to Mohamed.", "Dicta el pedido, plan a Mohamed.", "Dicte la commande, plan à Mohamed.", "سفارش را بگو، برنامه به محمد.")} onClick={() => setCurrentView("ordine-capo")} accent />
                       <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />
@@ -222,7 +218,7 @@ export default function App() {
             {/* SEZIONE 3 — GUIDA, SOS & AI */}
             {section === "guida" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-guida">
-                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="Bakemix" roleTag="AI Assistant" />
+                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="BakemixAI" roleTag="AI Assistant" />
                 <BakemixGuide />
               </div>
             )}
