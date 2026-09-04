@@ -3974,3 +3974,17 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 - **Testato** (self-test, viewport 390 + 1920): gate visibile senza login ✓; login email/password (admin@mikilab.de) → Lab Control ✓; menu account + logout → torna a Floor ✓; pulsante Google presente ✓; backend login curl → user role=admin ✓.
 - **PROSSIMI TASK (dal riepilogo utente)**: P0 Assistente Mamo (voce guida operatore step-by-step nel Floor), P1 Restyle Card Ricette (cyber, mantenendo le foto reali), P2 Traduzioni complete (it/de/en/es/fr/fa).
 
+
+## v-MAMO+CARDS+I18N (2026-06) — Assistente Mamo, restyle card ricette, traduzioni
+### 1) Assistente Mamo (guida vocale a mani libere nel Floor Mode)
+- Il Capo genera il piano in **Ordini Extra** (Lab Control) e lo **INVIA AL TEAM** con il pulsante `ordini-extra-send-team`.
+- Backend: documento singolo condiviso `db.floor_plan` (`_key:'active'`). `GET /api/lab/floor-plan` PUBBLICO (il Floor legge senza login, operatori con PIN); `PUT`/`DELETE` richiedono `current_user` (Capo). Modello `FloorPlanPush{plan,title,lang}` → salva anche `pushed_by`,`pushed_at`. `lang` non valido → 'it'.
+- Frontend: `components/MamoAssistant.jsx` nel Floor Mode (App.js). Legge `floorPlanApi.get()`, `lib/planSteps.js` `parsePlanSteps()` spezza il piano in passi (scarta titoli/intestazioni MAIUSCOLE/emoji, tiene le righe azionabili con orari/quantità). Guida passo-passo: TTS voce "mohamed" legge ogni passo; comandi vocali continui (SpeechRecognition) «avanti/indietro/ripeti/stop» in 6 lingue + pulsanti `mamo-next/mamo-prev/mamo-repeat/mamo-listen/mamo-start-guide/mamo-stop-guide`. Barra progresso + contatore passo. Stato vuoto se il Capo non ha ancora inviato. Ricarica su evento `mikilab-floor-plan-updated`.
+- API client: `floorPlanApi {get,push,clear}` in `lib/api.js`.
+### 2) Restyle card ricette (cyber-industrial, foto reali mantenute)
+- `components/RecipeList.jsx` Card: sfondo `#0b0f19`, bordo `#1e293b` → hover teal `#14b8a6` con glow; **angoli cyber (brackets)** teal; overlay griglia+gradiente+scanline sulla foto; foto reale con `group-hover:scale-105`; titolo bianco bold→teal in hover, `real_name` teal, `flour_type` uppercase slate. Badge/lock/preferito ristilizzati sul tema scuro. Nessun overflow a 390/1920.
+### 3) Traduzioni complete (it/de/en/es/fr/fa)
+- App.js internazionalizzato con `mkTri` (nav, header/account menu, CapoGate, mode toggle, SectionHead, Floor Mode, LabCards). `OrdiniExtra.jsx` e `MamoAssistant.jsx` interamente in 6 lingue. FR/FA con fallback via `triMaps`.
+- **Testato** iteration_177: backend 100% (10/10 pytest floor-plan + ordini-extra AI), frontend 100% (flusso Capo→Ordini Extra→Send to Team→Floor→Mamo step-nav, gating login/logout, card ricette+dettaglio, 0 errori console, no overflow 390/1920). Post-fix: `parsePlanSteps` ora filtra i titoli (5 passi puliti invece di 30). Test file: `/app/backend/tests/test_iter177_floorplan.py`.
+- Note minori NON risolte (fuori scope): `/api/favorites/sync` → 401 rumoroso in console per utenti anonimi (pre-esistente); schermata Auth usa un teal più chiaro non allineato al tema cyber (cosmetico).
+

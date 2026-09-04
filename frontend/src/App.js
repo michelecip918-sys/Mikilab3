@@ -31,6 +31,8 @@ import OperatoreSelect from "@/components/OperatoreSelect";
 import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
 import GuidaSOS from "@/components/GuidaSOS";
+import MamoAssistant from "@/components/MamoAssistant";
+import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
@@ -55,7 +57,8 @@ function LabCard({ testid, icon, title, sub, onClick, accent }) {
 }
 
 export default function App() {
-  useLang();
+  const { lang } = useLang();
+  const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user, authOpen, setAuthOpen, logout } = useAuth();
 
   const [section, setSection] = useState("control");
@@ -111,18 +114,18 @@ export default function App() {
               <div className="flex items-center gap-2 text-xs relative">
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all" title="Cambia operatore">
                   {operator && <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#14b8a6]/50" />}
-                  <span className="font-bold hidden sm:inline">{operator ? operator.name : "Operatore"}</span>
+                  <span className="font-bold hidden sm:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>
                 </button>
                 <button data-testid="account-btn" onClick={() => { if (user) { setShowAccountMenu((v) => !v); } else { setAuthMode("login"); setAuthOpen(true); } }} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold active:scale-95 transition-all border ${user ? "bg-[#14b8a6]/15 border-[#14b8a6]/50 text-[#14b8a6]" : "bg-[#14b8a6]/10 border-[#14b8a6]/30 text-[#14b8a6] hover:bg-[#14b8a6]/20"}`}>
-                  {user ? <ShieldCheck className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : "Accedi"}
+                  {user ? <ShieldCheck className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}
                 </button>
                 {user && showAccountMenu && (
                   <div data-testid="account-menu" className="absolute right-0 top-11 w-56 rounded-xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl p-3 z-[80]">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#14b8a6] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> CAPO · MASTER ADMIN</div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#14b8a6] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
                     {user.email && <p className="text-[10px] text-[#94A3B8] truncate mb-2">{user.email}</p>}
-                    <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); setActiveMode("floor"); toast.success("Sei uscito. Sessione Capo chiusa."); }} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
-                      <LogOut className="w-3.5 h-3.5" /> Esci dall'account Capo
+                    <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); setActiveMode("floor"); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet. Chef-Sitzung beendet.", "Signed out. Capo session closed.", "Has salido. Sesión Capo cerrada.", "Déconnecté. Session Capo fermée.", "خارج شدی. جلسه کاپو بسته شد.")); }} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
+                      <LogOut className="w-3.5 h-3.5" /> {tri("Esci dall'account Capo", "Chef-Konto verlassen", "Sign out of Capo account", "Salir de la cuenta Capo", "Quitter le compte Capo", "خروج از حساب کاپو")}
                     </button>
                   </div>
                 )}
@@ -139,7 +142,7 @@ export default function App() {
                   <button key={s.id} data-testid={`nav-${s.id}`} onClick={() => setSection(s.id)}
                     className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all ${active ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20" : "text-[#94A3B8] hover:text-white"}`}>
                     <img src={`${PUB}/${s.avatar}`} alt="" className={`w-6 h-6 rounded-full object-cover object-top border ${active ? "border-[#030712]" : "border-[#334155]"}`} />
-                    <span className="hidden sm:inline">{s.label}</span>
+                    <span className="hidden sm:inline">{s.id === "ricette" ? tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها") : s.id === "control" ? tri("MikiLab Control", "MikiLab Control", "MikiLab Control", "MikiLab Control", "MikiLab Control", "کنترل میکی‌لب") : tri("Guida & SOS", "Hilfe & SOS", "Guide & SOS", "Guía & SOS", "Guide & SOS", "راهنما و SOS")}</span>
                   </button>
                 );
               })}
@@ -152,7 +155,7 @@ export default function App() {
             {/* SEZIONE 1 — RICETTE */}
             {section === "ricette" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-ricette">
-                <SectionHead avatar="avatar_miki.jpg" title="Ricette di MikiLab" sub="Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab." roleName="Michele" roleTag="Capo" />
+                <SectionHead avatar="avatar_miki.jpg" title={tri("Ricette di MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas de MikiLab", "Recettes de MikiLab", "دستورهای میکی‌لب")} sub={tri("Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab.", "Chef-Konsole: Fotos und Kernrezepte, koordiniert von der MikiLab-KI.", "Capo's console: photos and core recipes, coordinated by MikiLab AI.", "Consola del Capo: fotos y recetas esenciales, coordinadas por la IA MikiLab.", "Console du Capo : photos et recettes clés, coordonnées par l'IA MikiLab.", "کنسول کاپو: عکس‌ها و دستورهای اصلی، هماهنگ با هوش مصنوعی.")} roleName="Michele" roleTag="Capo" />
                 <Ricette />
               </div>
             )}
@@ -161,23 +164,23 @@ export default function App() {
             {section === "control" && (
               <div className="space-y-5 animate-fadeIn" data-testid="section-control">
                 <div className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] max-w-md mx-auto">
-                  <button data-testid="mode-lab-btn" onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all inline-flex items-center justify-center gap-1.5 ${activeMode === "lab" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{!user && <Lock className="w-3 h-3" />}🛡️ Capo · Lab Control</button>
-                  <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeMode === "floor" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>⚡ Produzione · Floor</button>
+                  <button data-testid="mode-lab-btn" onClick={() => { setActiveMode("lab"); setCurrentView("dashboard"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all inline-flex items-center justify-center gap-1.5 ${activeMode === "lab" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{!user && <Lock className="w-3 h-3" />}🛡️ {tri("Capo · Lab Control", "Chef · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "Capo · Lab Control", "کاپو · کنترل")}</button>
+                  <button data-testid="mode-floor-btn" onClick={() => { setActiveMode("floor"); setCurrentView("dashboard"); }} className={`flex-1 py-2 px-4 rounded-lg text-xs font-bold transition-all ${activeMode === "floor" ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>⚡ {tri("Produzione · Floor", "Produktion · Floor", "Production · Floor", "Producción · Floor", "Production · Floor", "تولید · Floor")}</button>
                 </div>
 
                 {activeMode === "lab" ? (
                   !user ? (
-                    <CapoGate onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} onFloor={() => setActiveMode("floor")} />
+                    <CapoGate onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} onFloor={() => setActiveMode("floor")} tri={tri} />
                   ) : (
                   <div className="space-y-5" data-testid="lab-control-view">
                     <LabBriefing />
-                    <SectionHead avatar="avatar_miki.jpg" title="Plancia Capo" sub="Ricettario, piano, produzione e Ordini Extra con AI." roleName="Michele" roleTag="Master Admin" />
+                    <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="Michele" roleTag="Master Admin" />
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                      <LabCard testid="lab-nav-ricette" icon="🥖" title="Master Ricettario" sub="Ricette protette e conferma impastata." onClick={() => setCurrentView("ricette")} />
-                      <LabCard testid="lab-nav-magazzino" icon="📦" title="Magazzino & Scorte" sub="Giacenze, soglie e autonomia." onClick={() => setCurrentView("magazzino")} />
-                      <LabCard testid="lab-nav-planner" icon="🗓️" title="Smart Planner" sub="Piano con validazione vocale." onClick={() => setCurrentView("planner")} />
-                      <LabCard testid="lab-nav-ordini" icon="⚡" title="Ordini Extra" sub="AI rigenera il piano all'istante." onClick={() => setCurrentView("ordini")} accent />
-                      <LabCard testid="lab-nav-iot" icon="⚙️" title="Sistemi IoT" sub="Auto-setup periferiche e forni." onClick={() => setCurrentView("maestro")} />
+                      <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />
+                      <LabCard testid="lab-nav-magazzino" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände, Schwellen und Reichweite.", "Stock levels, thresholds and autonomy.", "Existencias, umbrales y autonomía.", "Stocks, seuils et autonomie.", "موجودی، آستانه‌ها و خودکفایی.")} onClick={() => setCurrentView("magazzino")} />
+                      <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
+                      <LabCard testid="lab-nav-ordini" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan al instante.", "L'IA régénère le plan à l'instant.", "هوش مصنوعی برنامه را فوری بازسازی می‌کند.")} onClick={() => setCurrentView("ordini")} accent />
+                      <LabCard testid="lab-nav-iot" icon="⚙️" title={tri("Sistemi IoT", "IoT-Systeme", "IoT Systems", "Sistemas IoT", "Systèmes IoT", "سیستم‌های IoT")} sub={tri("Auto-setup periferiche e forni.", "Auto-Setup für Peripherie und Öfen.", "Auto-setup for peripherals and ovens.", "Auto-configuración de periféricos y hornos.", "Auto-configuration des périphériques et fours.", "پیکربندی خودکار تجهیزات و فرها.")} onClick={() => setCurrentView("maestro")} />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
                     {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4"><Ricette isMasterView={true} /><ConfermaImpastata /></div>}
@@ -189,18 +192,19 @@ export default function App() {
                   )
                 ) : (
                   <div className="space-y-5" data-testid="floor-mode-view">
-                    <SectionHead avatar="avatar_mohamed.jpg" title="Produzione · Floor Mode" sub="Timer, voce a mani libere e ricettario di turno." roleName="Mohamed Reza" roleTag="Capo Turno" amber />
+                    <SectionHead avatar="avatar_mohamed.jpg" title={tri("Produzione · Floor Mode", "Produktion · Floor Mode", "Production · Floor Mode", "Producción · Floor Mode", "Production · Floor Mode", "تولید · حالت کف کار")} sub={tri("Timer, voce a mani libere e ricettario di turno.", "Timer, Freihand-Stimme und Schicht-Rezepte.", "Timers, hands-free voice and shift recipe book.", "Temporizadores, voz manos libres y recetario de turno.", "Minuteurs, voix mains libres et recettes du service.", "تایمر، صدای بدون دست و دستورهای شیفت.")} roleName="Mohamed Reza" roleTag={tri("Capo Turno", "Schichtleiter", "Shift Lead", "Jefe de Turno", "Chef d'équipe", "سرشیفت")} amber />
+                    <MamoAssistant />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
-                        <div><div className="text-2xl mb-2">⏱️</div><h3 className="font-bold text-sm text-white">Timer Forni & Celle</h3><p className="text-xs text-[#94A3B8] mt-1">Cicli di cottura e lievitazione in tempo reale.</p></div>
-                        <button onClick={() => toast.success("Timer sincronizzati con successo.")} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg">Gestisci Timer</button>
+                        <div><div className="text-2xl mb-2">⏱️</div><h3 className="font-bold text-sm text-white">{tri("Timer Forni & Celle", "Timer Öfen & Zellen", "Ovens & Cells Timer", "Temporizador Hornos y Cámaras", "Minuteur Fours & Chambres", "تایمر فرها و سردخانه‌ها")}</h3><p className="text-xs text-[#94A3B8] mt-1">{tri("Cicli di cottura e lievitazione in tempo reale.", "Back- und Gärzyklen in Echtzeit.", "Baking and proofing cycles in real time.", "Ciclos de cocción y fermentación en tiempo real.", "Cycles de cuisson et de pousse en temps réel.", "چرخه‌های پخت و تخمیر در زمان واقعی.")}</p></div>
+                        <button onClick={() => toast.success(tri("Timer sincronizzati con successo.", "Timer erfolgreich synchronisiert.", "Timers synced successfully.", "Temporizadores sincronizados.", "Minuteurs synchronisés.", "تایمرها همگام شدند."))} className="mt-4 w-full py-2.5 bg-[#14b8a6] text-[#030712] font-bold text-xs rounded-lg">{tri("Gestisci Timer", "Timer verwalten", "Manage Timers", "Gestionar Temporizadores", "Gérer les Minuteurs", "مدیریت تایمرها")}</button>
                       </div>
                       <div className="p-5 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex flex-col justify-between">
-                        <div><div className="text-2xl mb-2">🎙️</div><h3 className="font-bold text-sm text-white">Voice Core Attivo</h3><p className="text-xs text-[#94A3B8] mt-1">Comandi vocali a mani libere via cuffie.</p></div>
-                        <div className="mt-4 text-[11px] text-[#64748B]">Assistente voce globale attivo in basso a destra.</div>
+                        <div><div className="text-2xl mb-2">🎙️</div><h3 className="font-bold text-sm text-white">{tri("Voice Core Attivo", "Voice Core aktiv", "Voice Core Active", "Voice Core Activo", "Voice Core Actif", "هسته صوتی فعال")}</h3><p className="text-xs text-[#94A3B8] mt-1">{tri("Comandi vocali a mani libere via cuffie.", "Freihand-Sprachbefehle über Headset.", "Hands-free voice commands via headset.", "Comandos de voz manos libres por auriculares.", "Commandes vocales mains libres via casque.", "دستورهای صوتی بدون دست با هدست.")}</p></div>
+                        <div className="mt-4 text-[11px] text-[#64748B]">{tri("Assistente voce globale attivo in basso a destra.", "Globaler Sprachassistent unten rechts aktiv.", "Global voice assistant active bottom-right.", "Asistente de voz global abajo a la derecha.", "Assistant vocal global actif en bas à droite.", "دستیار صوتی سراسری پایین‌راست فعال است.")}</div>
                       </div>
                     </div>
-                    <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><h3 className="text-sm font-bold text-white mb-2">Ricettario Operativo Turno</h3><Ricette isFloorMode={true} /></div>
+                    <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><h3 className="text-sm font-bold text-white mb-2">{tri("Ricettario Operativo Turno", "Betriebs-Rezepte der Schicht", "Shift Operational Recipes", "Recetario Operativo de Turno", "Recettes Opérationnelles du Service", "دستورهای عملیاتی شیفت")}</h3><Ricette isFloorMode={true} /></div>
                     <DocsDownload />
                   </div>
                 )}
@@ -210,7 +214,7 @@ export default function App() {
             {/* SEZIONE 3 — GUIDA, SOS & AI */}
             {section === "guida" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-guida">
-                <SectionHead avatar="avatar_bigmix.jpg" title="Guida, SOS & AI Assistant" sub="Tutto sul laboratorio, le impostazioni e come usare il sito." roleName="Bake Mix" roleTag="AI Assistant" />
+                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="Bake Mix" roleTag="AI Assistant" />
                 <GuidaSOS />
               </div>
             )}
@@ -245,7 +249,7 @@ export default function App() {
   );
 }
 
-function CapoGate({ onLogin, onFloor }) {
+function CapoGate({ onLogin, onFloor, tri }) {
   return (
     <div data-testid="capo-gate" className="relative overflow-hidden rounded-2xl bg-[#0b0f19] border border-[#14b8a6]/30 shadow-2xl p-6 sm:p-8 text-center animate-fadeIn">
       <div className="absolute -top-10 -right-10 w-48 h-48 bg-[#14b8a6]/10 rounded-full blur-3xl pointer-events-none" />
@@ -253,17 +257,21 @@ function CapoGate({ onLogin, onFloor }) {
         <div className="w-16 h-16 mx-auto rounded-2xl bg-[#030712] border border-[#14b8a6]/40 flex items-center justify-center mb-4 shadow-lg shadow-[#14b8a6]/20">
           <ShieldCheck className="w-8 h-8 text-[#14b8a6]" />
         </div>
-        <h2 className="text-lg font-extrabold text-white">Accesso Capo riservato</h2>
+        <h2 className="text-lg font-extrabold text-white">{tri("Accesso Capo riservato", "Chef-Zugang reserviert", "Capo access reserved", "Acceso Capo reservado", "Accès Capo réservé", "دسترسی کاپو محفوظ است")}</h2>
         <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">
-          La <span className="text-[#14b8a6] font-bold">Lab Control</span> è la plancia del Capo: ricettario protetto, piano di produzione, magazzino e Ordini Extra con l'AI.
-          Accedi con Google o email per gestire il laboratorio; il team resta in <span className="text-white font-semibold">Produzione · Floor</span> con il PIN.
+          {tri("La ", "Die ", "The ", "El ", "Le ", "")}<span className="text-[#14b8a6] font-bold">Lab Control</span>{tri(" è la plancia del Capo: ricettario protetto, piano di produzione, magazzino e Ordini Extra con l'AI. Accedi con Google o email per gestire il laboratorio; il team resta in Produzione · Floor con il PIN.",
+            " ist die Chef-Konsole: geschützte Rezepte, Produktionsplan, Lager und Extra-Aufträge mit KI. Melde dich mit Google oder E-Mail an; das Team bleibt in Produktion · Floor mit PIN.",
+            " is the Capo's console: protected recipes, production plan, warehouse and AI Extra Orders. Sign in with Google or email to run the lab; the team stays in Production · Floor with the PIN.",
+            " es la consola del Capo: recetas protegidas, plan de producción, almacén y Pedidos Extra con IA. Accede con Google o email; el equipo usa Producción · Floor con el PIN.",
+            " est la console du Capo : recettes protégées, plan de production, entrepôt et Commandes Extra avec l'IA. Connecte-toi avec Google ou e-mail ; l'équipe reste en Production · Floor avec le PIN.",
+            " کنسول کاپو است: دستورهای محافظت‌شده، برنامه تولید، انبار و سفارش‌های اضافه با هوش مصنوعی. با گوگل یا ایمیل وارد شو؛ تیم با PIN در بخش تولید می‌ماند.")}
         </p>
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
           <button data-testid="capo-gate-login" onClick={onLogin} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-sm shadow-md shadow-[#14b8a6]/30 active:scale-95 transition-all">
-            <ShieldCheck className="w-4 h-4" /> Accedi come Capo
+            <ShieldCheck className="w-4 h-4" /> {tri("Accedi come Capo", "Als Chef anmelden", "Sign in as Capo", "Acceder como Capo", "Se connecter comme Capo", "ورود به‌عنوان کاپو")}
           </button>
           <button data-testid="capo-gate-floor" onClick={onFloor} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] font-bold text-sm hover:text-white hover:border-[#14b8a6]/40 active:scale-95 transition-all">
-            ⚡ Vai a Produzione · Floor
+            ⚡ {tri("Vai a Produzione · Floor", "Zu Produktion · Floor", "Go to Production · Floor", "Ir a Producción · Floor", "Aller à Production · Floor", "برو به تولید · Floor")}
           </button>
         </div>
       </div>

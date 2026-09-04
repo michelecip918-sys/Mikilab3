@@ -63,6 +63,13 @@ export const ordiniApi = {
   regenerate: (body) => api.post(`/lab/ordini-extra`, body).then((r) => r.data),
 };
 
+// Piano del Team (Assistente Mamo): il Capo INVIA il piano, il Floor lo legge (senza login).
+export const floorPlanApi = {
+  get: () => api.get(`/lab/floor-plan`).then((r) => r.data),
+  push: (body) => api.put(`/lab/floor-plan`, body).then((r) => r.data),
+  clear: () => api.delete(`/lab/floor-plan`).then((r) => r.data),
+};
+
 
 export const favApi = {
   list: () => api.get(`/favorites`).then((r) => r.data),

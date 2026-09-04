@@ -1756,6 +1756,42 @@ async def delete_capo_last_plan(user: dict = Depends(current_user)):
 
 
 # ---------------------------------------------------------------------------
+# Piano del Team (Assistente Mamo) — il Capo INVIA il piano al team di produzione.
+# Documento singolo condiviso ("active"): il Floor lo legge SENZA login (gli operatori
+# usano il PIN), il Capo lo scrive/aggiorna da autenticato.
+# ---------------------------------------------------------------------------
+class FloorPlanPush(BaseModel):
+    plan: str
+    title: Optional[str] = None
+    lang: Optional[str] = "it"
+
+
+@api_router.get("/lab/floor-plan")
+async def get_floor_plan():
+    doc = await db.floor_plan.find_one({"_key": "active"}, {"_id": 0, "_key": 0})
+    return doc  # null se il Capo non ha ancora inviato nulla
+
+
+@api_router.put("/lab/floor-plan")
+async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(current_user)):
+    doc = {
+        "plan": payload.plan,
+        "title": (payload.title or "").strip(),
+        "lang": payload.lang if payload.lang in ("it", "de", "en", "es", "fr", "fa") else "it",
+        "pushed_by": user.get("name") or (user.get("email") or "Capo").split("@")[0],
+        "pushed_at": now_iso(),
+    }
+    await db.floor_plan.update_one({"_key": "active"}, {"$set": {**doc, "_key": "active"}}, upsert=True)
+    return doc
+
+
+@api_router.delete("/lab/floor-plan")
+async def delete_floor_plan(user: dict = Depends(current_user)):
+    await db.floor_plan.delete_one({"_key": "active"})
+    return {"success": True}
+
+
+# ---------------------------------------------------------------------------
 # Mappa dei Fornai — pin opt-in (nome + città + bio + posizione approssimata)
 # ---------------------------------------------------------------------------
 def _norm_link(v: str) -> str:

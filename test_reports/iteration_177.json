@@ -1,0 +1,39 @@
+{
+  "summary": "Tested the 3 new features (Assistente Mamo floor-plan flow, restyled recipe cards, translations) + Capo login gating regression. Backend: 10/10 pytest assertions passed for GET/PUT/DELETE /api/lab/floor-plan (public GET returns null when empty, 401 without auth on PUT/DELETE, singleton upsert, invalid lang -> 'it', 422 on missing plan, no _id/_key leakage) plus POST /api/lab/ordini-extra AI regeneration (returns a real plan, ~10s). Frontend: complete Capo -> Ordini Extra -> AI plan -> 'Send to the Team' -> Floor Mode -> Mamo step navigation flow works end-to-end; Capo gate + login + account menu + logout regression works; recipe list/cards/detail work with real photos and no overflow at 390px or 1920px; no raw i18n keys and no JS/page errors.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/favorites/sync", "issue": "Called while anonymous and returns 401 on every page load, producing repeated console 'Failed to load resource: 401' noise. Gate the call behind an authenticated user (same for the /api/auth/me bootstrap check, which is expected but could be silenced)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Floor Mode · Mamo Assistant", "issues": ["parsePlanSteps() turns EVERY non-empty line into a 'step': the pushed AI plan produced 30 steps where step 1 is the title '🥖 DAILY PRODUCTION PLAN — UPDATED' and other steps are section headers ('URGENT PRIORITIES: ...'). Operators are asked to press 'Done' on non-actionable headings. Consider filtering title/section lines (e.g. ALL-CAPS headers, lines ending with ':', emoji-only headers) or grouping them as section labels."]},
+      {"screen": "Auth screen (Sign in)", "issues": ["Uses a lighter teal (#2f9e8f-ish) card/buttons instead of the cyber-industrial #14b8a6 / #030712 palette used everywhere else — visually inconsistent with the rest of the app (pre-existing, cosmetic)."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter177_floorplan.py",
+    "/app/test_reports/pytest/iter177.xml"
+  ],
+  "action_items": [
+    "Optional: improve parsePlanSteps() so plan titles/section headers are not counted as executable steps in Mamo (30 steps for one daily plan is a lot for a hands-free operator).",
+    "Optional: don't call /api/favorites/sync when there is no logged-in user (removes recurring 401s in the console)."
+  ],
+  "critical_code_review_comments": [
+    "/app/backend/server.py is 8971 lines — it should be split into routers/modules (auth, lab, community, academy, admin...). It is now a real maintenance/merge-conflict risk.",
+    "/app/frontend/src/components/RecipeList.jsx is 1353 lines — split the restyled Card and the detail dialog into separate components.",
+    "CORS is configured with allow_credentials=False and allow_origins from CORS_ORIGINS defaulting to '*'. It works today only because the frontend and API share the ingress host; if any cross-origin client is ever added, the session cookie will be dropped silently.",
+    "GET /api/lab/floor-plan is intentionally public (needed by the PIN-gated Floor). It returns the raw plan text with no rate limiting — acceptable for this product, but note the plan is world-readable to anyone who knows the URL."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter177_floorplan.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Floor plan singleton (db.floor_plan _key=active) currently holds a real AI-generated plan pushed by admin during the test ('20 focacce by 11:00 | 15 baguettes by 13:00', pushed_by Michele, lang=en, 30 steps). Left in place so Mamo is demoable; DELETE /api/lab/floor-plan as admin clears it. No other data created.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (verified working). PIN bypass: localStorage mikilab_pin_unlocked='1' + mikilab_operator JSON — both work.",
+  "context_for_next_testing_agent": "Run backend floor-plan tests with `pytest tests/test_iter177_floorplan.py -n 0` (pytest.ini forces xdist loadscope; the class is order-dependent so -n 0 is required). Frontend testids verified: nav-ricette / nav-control / nav-guida (dynamic nav-<section>), mode-lab-btn, mode-floor-btn, capo-gate(+ -login/-floor), auth-email/auth-password/auth-submit, lab-control-view, lab-nav-ordini, ordini-extra-input/-btn/-plan/-send-team, floor-mode-view, mamo-assistant/-current-step/-step-text/-next/-prev/-repeat/-listen/-start-guide/-pushed-by, account-btn/account-menu/logout-btn. Bottom nav uses nav-tab-<id>. NOTE: opening a recipe detail leaves a radix dialog overlay that intercepts clicks — press Escape before navigating in scripts. AI regeneration took ~10-15s, not 30s. Auth verified: bcrypt $2b$12$ hash, httpOnly+secure+samesite=lax session_token cookie, login_attempts collection used for brute-force tracking.",
+  "rca_of_the_issue": "No defects found in the new features. The only functional observation is that Mamo's step splitter (parsePlanSteps) is line-based and therefore promotes markdown/plain-text headings to steps; root cause is the absence of a heading filter in /app/frontend/src/lib/planSteps.js."
+}

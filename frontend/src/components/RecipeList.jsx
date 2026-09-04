@@ -293,31 +293,38 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="relative overflow-hidden text-left bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-sm active:scale-[0.98] hover:border-[#3E9C93]/60 transition-all flex flex-col"
+            className="group relative overflow-hidden text-left bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-lg active:scale-[0.98] hover:border-[#14b8a6]/70 hover:shadow-[0_0_24px_-6px_rgba(20,184,166,0.35)] transition-all flex flex-col"
           >
+            {/* angoli cyber (brackets) */}
+            <span aria-hidden className="pointer-events-none absolute top-1.5 left-1.5 z-30 w-3.5 h-3.5 border-t-2 border-l-2 border-[#14b8a6]/40 group-hover:border-[#14b8a6] transition-colors" />
+            <span aria-hidden className="pointer-events-none absolute bottom-1.5 right-1.5 z-30 w-3.5 h-3.5 border-b-2 border-r-2 border-[#14b8a6]/40 group-hover:border-[#14b8a6] transition-colors" />
             {/* strisciolina tricolore del Paese d'origine */}
             {countryColors(r.origin) && (
-              <div aria-hidden className="absolute top-0 left-0 right-0 z-10 flex h-1.5">
+              <div aria-hidden className="absolute top-0 left-0 right-0 z-20 flex h-1">
                 {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
               </div>
             )}
-            {/* foto vetrina */}
-            <div className="relative w-full aspect-[4/3] bg-[#e4eff8] dark:bg-[#1B2A38]">
-              <div className="absolute inset-0 flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#1B2A38]/40" /></div>
+            {/* foto vetrina (reale) */}
+            <div className="relative w-full aspect-[4/3] bg-[#030712] overflow-hidden">
+              <div className="absolute inset-0 flex items-center justify-center"><ChefHat className="w-9 h-9 text-[#1e293b]" /></div>
               {r.image_url && (
-                <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover" />
+                <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               )}
+              {/* overlay cyber: griglia + gradiente + scanline teal */}
+              <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-[linear-gradient(to_right,#14b8a611_1px,transparent_1px),linear-gradient(to_bottom,#14b8a611_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] opacity-30" />
+              <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/10 to-transparent" />
+              <div aria-hidden className="absolute left-0 right-0 top-0 z-[3] h-px bg-gradient-to-r from-transparent via-[#14b8a6]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               {r.origin && flagEmoji(r.origin) && (
-                <span title={countryName(r.origin)} className="absolute top-2.5 right-2 text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
+                <span title={countryName(r.origin)} className="absolute top-2.5 right-2 z-[4] text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
               )}
               {isColored(r.name) && (
-                <span data-testid={`recipe-new-badge-${r.id}`} className="absolute top-2 left-2 z-10 text-[9px] font-extrabold uppercase tracking-wide text-white px-2 py-0.5 rounded-full shadow bg-gradient-to-r from-[#feda75] via-[#d62976] to-[#4f5bd5]">
+                <span data-testid={`recipe-new-badge-${r.id}`} className="absolute top-2 left-2 z-[4] text-[9px] font-extrabold uppercase tracking-wider text-[#030712] px-2 py-0.5 rounded shadow bg-[#14b8a6]">
                   {triM("Novità", "Neu", "New")}
                 </span>
               )}
               {r.locked && (
-                <span className="absolute bottom-2 right-2 bg-white/90 dark:bg-[#1B2A38]/90 rounded-full p-1.5 shadow">
-                  <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#3E9C93]" />
+                <span className="absolute bottom-2 right-2 z-[4] bg-[#030712]/85 border border-[#14b8a6]/40 rounded-md p-1.5 shadow">
+                  <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#14b8a6]" />
                 </span>
               )}
               <span
@@ -327,24 +334,24 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 aria-pressed={favs.has(r.id)}
                 onClick={(e) => { e.stopPropagation(); toggleFav(r.id); }}
                 onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); e.stopPropagation(); toggleFav(r.id); } }}
-                className="absolute bottom-2 left-2 z-20 inline-flex items-center gap-1 bg-white/90 dark:bg-[#0E1620]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform cursor-pointer"
+                className="absolute bottom-2 left-2 z-[5] inline-flex items-center gap-1 bg-[#030712]/85 border border-[#1e293b] rounded-md pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform cursor-pointer"
                 title={favs.has(r.id) ? triM("Rimuovi dai preferiti", "Aus Favoriten entfernen", "Remove from favourites") : triM("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}
               >
-                <Heart className={`w-4 h-4 transition-colors ${favs.has(r.id) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+                <Heart className={`w-4 h-4 transition-colors ${favs.has(r.id) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#64748B]"}`} />
                 {countOf(r.id) > 0 && <span data-testid={`recipe-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(r.id)}</span>}
               </span>
             </div>
             {/* testo */}
-            <div className="p-3 min-w-0 flex-1">
-              <h3 className="font-display text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight line-clamp-2">
-                {(() => { const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "#3E9C93"; return (
+            <div className="p-3 min-w-0 flex-1 border-t border-[#1e293b]">
+              <h3 className="font-display text-sm font-bold text-white leading-tight line-clamp-2 group-hover:text-[#14b8a6] transition-colors">
+                {(() => { const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "#14b8a6"; return (
                   <span data-testid={`recipe-cat-icon-${r.id}`} title={t(c.label)}
                     className="inline-flex items-center justify-center w-5 h-5 rounded-md mr-1.5 text-[11px] align-middle shrink-0"
                     style={{ background: col + "26", boxShadow: `inset 0 0 0 1px ${col}` }} aria-hidden>{c.icon}</span>
                 ); })()}{rLoc(r, "name", lang)}
               </h3>
-              {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-medium text-[#3E9C93] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
-              {rLoc(r, "flour_type", lang) ? <p className="text-[10px] text-[#7E8A93] truncate mt-0.5">{(mkTri(lang)("Farina: ", "Mehl: ", "Flour: ", "Harina: "))}{rLoc(r, "flour_type", lang)}</p> : null}
+              {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-semibold text-[#14b8a6] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
+              {rLoc(r, "flour_type", lang) ? <p className="text-[10px] uppercase tracking-wider text-[#64748B] truncate mt-0.5">{(mkTri(lang)("Farina: ", "Mehl: ", "Flour: ", "Harina: "))}{rLoc(r, "flour_type", lang)}</p> : null}
             </div>
           </motion.button>
         );
