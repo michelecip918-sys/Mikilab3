@@ -39,7 +39,7 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 const PUB = process.env.PUBLIC_URL;
 const SECTIONS = [
-  { id: "ricette", label: "Ricette", Icon: BookOpen, avatar: "avatar_mohamed.jpg" },
+  { id: "ricette", label: "Ricette", Icon: BookOpen, avatar: "avatar_miki.jpg" },
   { id: "control", label: "MikiLab Control", Icon: LayoutGrid, avatar: "avatar_miki.jpg" },
   { id: "guida", label: "Guida & SOS", Icon: LifeBuoy, avatar: "avatar_bigmix.jpg" },
 ];
@@ -141,7 +141,7 @@ export default function App() {
             {/* SEZIONE 1 — RICETTE */}
             {section === "ricette" && (
               <div className="space-y-4 animate-fadeIn" data-testid="section-ricette">
-                <SectionHead avatar="avatar_mohamed.jpg" title="Ricette di MikiLab" sub="Consultazione visiva rapida: foto e ricette essenziali." />
+                <SectionHead avatar="avatar_miki.jpg" title="Ricette di MikiLab" sub="Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab." roleName="Michele" roleTag="Capo" />
                 <Ricette />
               </div>
             )}
