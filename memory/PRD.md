@@ -3893,3 +3893,12 @@ Direttiva utente confermata (mega-script v31.0), implementata SENZA sostituire l
 - **Codici lingua TTS**: nuovo helper toBCP47() in lib/tts.js usato in nativeSpeak/pickVoice e in VoiceCommand (SpeechRecognition wake + singolo). Le lingue non mappate ottengono un codice regionale corretto (es. pt->pt-PT) invece di ricadere sempre su it-IT.
 - **PDF tedesco**: scripts/gen_pdf_de.py -> /app/frontend/public/MikiLab_v14_Ecosystem_Document_DE.pdf (203KB, stesse schermate reali).
 - **Fix**: PinLock keypad ora grid-cols-3 su tutti i breakpoint (era 1 colonna su mobile <640px).
+
+## v-fork+1 (2026-06) — PDF multilingua, Magazzino reale, Planner in plancia
+- **PDF in tutte le lingue del sito** (it, de, en, es, fr, fa): generatore consolidato scripts/gen_pdf_all.py -> public/MikiLab_v14_Ecosystem_Document_{IT,DE,EN,ES,FR,FA}.pdf + copia legacy senza suffisso. Persiano (fa) reso RTL con font FreeSans + arabic_reshaper/python-bidi (aggiunti a requirements.txt); tabelle hw/mac in fa riusano le descrizioni EN. Testato: 6/6 PDF -> 200 + payload 
+## v-fork+1 (2026-06) — PDF multilingua, Magazzino reale, Planner in plancia
+- **PDF in tutte le lingue del sito** (it, de, en, es, fr, fa): generatore consolidato scripts/gen_pdf_all.py -> public/MikiLab_v14_Ecosystem_Document_{IT,DE,EN,ES,FR,FA}.pdf + copia legacy senza suffisso. Persiano (fa) reso RTL con font FreeSans + arabic_reshaper/python-bidi (aggiunti a requirements.txt); tabelle hw/mac in fa riusano le descrizioni EN. Testato: 6/6 PDF -> 200 + payload PDF valido.
+- **Magazzino reale** (components/MagazzinoManager.jsx) su backend esistente /api/lab/warehouse: carico rapido (nome/tipo/qta/unita), regolazione +/- della giacenza, eliminazione, e ALLARME scorta minima con nuovo campo backend min_kg (WarehouseItem) -> badge Bassa + banner + toast + annuncio TTS. Sostituisce i placeholder toast. warehouseApi aggiunto in lib/api.js.
+- **Smart Planner in plancia**: nuova card Lab Control (lab-nav-planner) che apre SmartPlannerStressZero con validazione voce/manuale gia collegata. Griglia card Lab Control ora grid-cols-2 sm:grid-cols-4.
+- **DocsDownload** (components/DocsDownload.jsx): pannello nella dashboard Lab Control con download del PDF nella lingua corrente + link a tutte le 6 lingue.
+- Testato iter171: backend 100% (11/11), frontend 100%, nessun bug bloccante, nessun dato di test lasciato.

@@ -1,0 +1,41 @@
+{
+  "summary": "Iteration 171: validated the NEW Lab Control features on the public URL — real Magazzino CRUD with low-stock alarm, multi-language Ecosystem PDF links, Smart Planner card + numeric input validation, and Floor Mode regression. Backend: 11/11 pytest assertions passed (GET/POST/DELETE /api/lab/warehouse incl. min_kg persistence, upsert update, 422 validation, and 200 + %PDF payload for all 6 language PDFs). Frontend (1920x900 + 390x844): PIN 1985 unlock, mode-lab-btn -> lab-control-view with all 4 nav cards + docs-download, docs-download-current and all 6 docs-link-<lang> hrefs correct, Magazzino add (Farina 00, qty 5 / soglia 10) showed magazzino-low-alert + red 'Bassa' badge + 'Scorte sotto soglia' warning toast, 6x inc -> 11kg cleared the Bassa badge, dec -> 10kg re-armed it and persisted across magazzino-refresh, del removed the item (warehouse verified empty afterwards, no test data left). Planner validation: non-numeric -> 0, 99999 -> 0 with 'Quantita troppo alta' toast, -50 -> 0, team-day-0 99999 -> 0, valid values (120 / 42) retained, no crash/NaN. mode-floor-btn returned to floor-mode-view. No blocking bugs found.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/favorites/sync", "issue": "Returns 401 on every guest page load (console error noise). Consider skipping the call when no session exists."},
+      {"endpoint": "/api/auth/me", "issue": "401 for guests is expected but logged as a console error; harmless."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Smart Planner @390x844 (team-day inputs)", "issues": ["3-digit day values are visually clipped inside the narrow day cells (e.g. '180'/'300' render as '18(' / '30('); reduce font-size or widen cells on mobile", "Only ~4 of the 7 day cells are visible without horizontal scroll; no visible scroll affordance"]},
+      {"screen": "PinLock", "issues": ["Prompt text is English ('Enter the security PIN') in an otherwise Italian UI — minor i18n inconsistency"]},
+      {"screen": "Lab Control docs panel", "issues": ["Default active language resolved to EN so docs-download-current points to the EN PDF; correct per lang context but worth confirming the intended default is IT"]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter171_warehouse_docs.py",
+    "/app/test_reports/pytest/pytest_results.xml"
+  ],
+  "action_items": [
+    "Optional: suppress guest 401 call to /api/favorites/sync to clean console errors",
+    "Optional: fix mobile clipping of 3-digit values in team-day-N inputs",
+    "Optional: translate PinLock prompt to Italian"
+  ],
+  "critical_code_review_comments": [
+    "MagazzinoManager low-stock effect keys on low.map(i=>i.id).join('|'), so a quantity change that pushes an already-listed item further below threshold won't re-fire the alert; acceptable, but note it if repeated announcements are desired.",
+    "adjust() posts the whole item object back to POST /api/lab/warehouse (upsert) and optimistically patches local state without re-validating server response — a rejected write only surfaces via toast, local state may drift until refresh.",
+    "validateBatchQty resets out-of-range input to 0 rather than clamping to 9999; matches spec but is a surprising UX (user loses their entered magnitude)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter171_warehouse_docs.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "seed_data_creation": "Created and then deleted warehouse items prefixed TEST_ (via API and via magazzino-del in UI). GET /api/lab/warehouse now returns 0 items — no residual test data.",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "App PIN 1985 (no /app/memory/test_credentials.md needed for these flows; app is PIN-gated only)",
+  "context_for_next_testing_agent": "All new Lab Control features (Magazzino CRUD+low-stock alarm, DocsDownload 6-language PDFs, Smart Planner validation) PASS end-to-end. Backend regression file: /app/backend/tests/test_iter171_warehouse_docs.py (11 tests, all green). Untested this round: lab-nav-ricette (Master Ricettario) and lab-nav-iot (PeripheralSetup, validated in iteration 170), /api/lab/warehouse/consume + /scan-label endpoints, and TTS playback in headless. Note guest 401s on /api/auth/me and /api/favorites/sync are pre-existing noise.",
+  "rca_of_the_issue": "No functional defect reproduced. The only Playwright hiccup was locator.fill('abc') on an input[type=number] (browser-level restriction, not an app bug); re-tested with keyboard.type and the onBlur validateBatchQty path correctly reset the field to 0."
+}

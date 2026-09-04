@@ -21,10 +21,13 @@ import TalkWithMiki from "@/components/TalkWithMiki";
 import AudioRouteIndicator from "@/components/AudioRouteIndicator";
 import LegalPage from "@/sections/LegalPage";
 import PeripheralSetup from "@/components/PeripheralSetup";
+import MagazzinoManager from "@/components/MagazzinoManager";
+import DocsDownload from "@/components/DocsDownload";
 
 // Viste principali pulite
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
+import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 export default function App() {
   useLang();
@@ -122,7 +125,7 @@ export default function App() {
                 </div>
 
                 {/* MODULI RAPIDI LAB */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <button
                     data-testid="lab-nav-ricette"
                     onClick={() => setCurrentView("ricette")}
@@ -144,6 +147,16 @@ export default function App() {
                   </button>
 
                   <button
+                    data-testid="lab-nav-planner"
+                    onClick={() => setCurrentView("planner")}
+                    className="p-4 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] text-left transition-all group"
+                  >
+                    <div className="text-xl mb-2">🗓️</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Smart Planner</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">Piano settimanale stress-zero con validazione vocale.</p>
+                  </button>
+
+                  <button
                     data-testid="lab-nav-iot"
                     onClick={() => setCurrentView("maestro")}
                     className="p-4 rounded-xl bg-[#111827] border border-[#1F2937] hover:border-[#14b8a6] text-left transition-all group"
@@ -154,17 +167,18 @@ export default function App() {
                   </button>
                 </div>
 
+                {/* DOCUMENTAZIONE MULTILINGUA */}
+                {currentView === "dashboard" && <DocsDownload />}
+
                 {/* VISUALIZZATORE VISTA ATTIVA IN LAB */}
                 {currentView === "ricette" && <div className="bg-[#111827] p-4 rounded-xl border border-[#1F2937]"><Ricette isMasterView={true} /></div>}
                 {currentView === "magazzino" && (
-                  <div className="bg-[#111827] p-5 rounded-xl border border-[#1F2937] space-y-3">
-                    <h3 className="text-sm font-bold text-[#14b8a6]">Gestione Rapida Magazzino & Ceste</h3>
-                    <p className="text-xs text-[#94A3B8]">Registra i carichi in entrata e controlla le scorte disponibili per la produzione giornaliera.</p>
-                    <div className="flex gap-2 pt-2">
-                      <button onClick={() => toast.success("Carico magazzino aggiornato con successo!")} className="px-4 py-2 bg-[#14b8a6] text-[#030712] text-xs font-bold rounded-lg">Registra Carico</button>
-                      <button onClick={() => toast.info("Verifica ceste completata.")} className="px-4 py-2 bg-[#1F2937] text-white text-xs font-bold rounded-lg border border-[#374151]">Verifica Ceste</button>
-                    </div>
+                  <div className="bg-[#111827] p-5 rounded-xl border border-[#1F2937]">
+                    <MagazzinoManager />
                   </div>
+                )}
+                {currentView === "planner" && (
+                  <div className="bg-[#111827] p-4 rounded-xl border border-[#1F2937]"><SmartPlannerStressZero /></div>
                 )}
                 {currentView === "maestro" && (
                   <div className="space-y-4">

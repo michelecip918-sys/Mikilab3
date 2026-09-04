@@ -50,6 +50,13 @@ export const weeklyApi = {
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
 };
 
+export const warehouseApi = {
+  list: () => api.get(`/lab/warehouse`).then((r) => r.data),
+  save: (item) => api.post(`/lab/warehouse`, item).then((r) => r.data),
+  remove: (id) => api.delete(`/lab/warehouse/${id}`).then((r) => r.data),
+};
+
+
 export const favApi = {
   list: () => api.get(`/favorites`).then((r) => r.data),
   toggle: (recipe_id) => api.post(`/favorites/toggle`, { recipe_id }).then((r) => r.data),

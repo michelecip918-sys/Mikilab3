@@ -2027,6 +2027,7 @@ class WarehouseItem(BaseModel):
     force_w: Optional[str] = ""   # Forza W o caratteristica
     quantity_kg: float = 0
     unit: Optional[str] = "kg"
+    min_kg: float = 0             # soglia di allarme scorta minima (0 = disattivata)
     lot: Optional[str] = ""
     expiry: Optional[str] = ""
     updated_at: Optional[str] = None
