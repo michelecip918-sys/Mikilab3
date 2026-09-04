@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
 import { translations } from "@/i18n/translations";
 import { mkTri } from "@/i18n/triMaps";
 import { applyMeta } from "@/i18n/meta";
+import { setTTSAppLang } from "@/lib/tts";
 
 const LanguageContext = createContext(null);
 const SUPPORTED = ["it", "de", "en", "es", "fr", "fa"];
@@ -27,6 +28,7 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
     applyMeta(lang);
+    setTTSAppLang(lang); // voce audio sempre allineata al testo
   }, [lang]);
 
   const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "it"), []);

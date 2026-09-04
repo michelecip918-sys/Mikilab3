@@ -15,6 +15,10 @@ export function toBCP47(lang) {
 }
 
 let _voices = [];
+// Lingua CORRENTE dell'app: la voce audio deve SEMPRE combaciare col testo a schermo.
+let _appLang = (() => { try { return localStorage.getItem("mikilab_lang") || "it"; } catch { return "it"; } })();
+export function setTTSAppLang(l) { if (l) _appLang = String(l).toLowerCase().split(/[-_]/)[0]; }
+export function getTTSAppLang() { return _appLang; }
 function loadVoices() { try { _voices = window.speechSynthesis.getVoices() || []; } catch { _voices = []; } }
 loadVoices();
 try { window.speechSynthesis.onvoiceschanged = loadVoices; } catch { /* */ }
@@ -112,21 +116,22 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
 }
 
 // voice: "michele" (Lab, onyx) | "momy" (Momi, echo)
-export function playTTS(text, { lang = "it", voice = "michele", onStart, onEnded } = {}) {
+export function playTTS(text, { lang, voice = "michele", onStart, onEnded } = {}) {
   stopTTS();
+  const L = lang || _appLang || "it"; // se il chiamante non passa la lingua, usa quella dell'app
   const full = cleanForSpeech(text);
   if (!full) { if (onEnded) onEnded(); return; }
   const clean = shortenForSpeech(full); // solo sintesi breve → meno crediti + voce essenziale
   _lastText = clean;
   if (isTTSMuted()) { if (onEnded) onEnded(); return; } // Mute: solo testo a schermo
 
-  if (!API) { nativeSpeak(clean, lang, voice, onStart, onEnded); return; }
+  if (!API) { nativeSpeak(clean, L, voice, onStart, onEnded); return; }
 
   let started = false;
   fetch(`${API}/api/tts/speak`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: clean, lang, voice }),
+    body: JSON.stringify({ text: clean, lang: L, voice }),
   })
     .then((r) => { if (!r.ok) throw new Error("tts"); return r.blob(); })
     .then((blob) => {
@@ -136,8 +141,8 @@ export function playTTS(text, { lang = "it", voice = "michele", onStart, onEnded
       _audio = a;
       a.onplay = () => { started = true; ttsSignalStart(); if (onStart) onStart(); };
       a.onended = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; ttsSignalEnd(); if (onEnded) onEnded(); };
-      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, lang, voice, onStart, onEnded); else { ttsSignalEnd(); if (onEnded) onEnded(); } };
-      a.play().catch(() => { if (!started) nativeSpeak(clean, lang, voice, onStart, onEnded); });
+      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, L, voice, onStart, onEnded); else { ttsSignalEnd(); if (onEnded) onEnded(); } };
+      a.play().catch(() => { if (!started) nativeSpeak(clean, L, voice, onStart, onEnded); });
     })
-    .catch(() => nativeSpeak(clean, lang, voice, onStart, onEnded));
+    .catch(() => nativeSpeak(clean, L, voice, onStart, onEnded));
 }
