@@ -75,6 +75,8 @@ export default function App() {
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [capoDept, setCapoDeptState] = useState(() => { try { return localStorage.getItem("mikilab_capo_dept") || "panificazione"; } catch { return "panificazione"; } });
+  const setCapoDept = (d) => { try { localStorage.setItem("mikilab_capo_dept", d); } catch { /* */ } setCapoDeptState(d); };
   const [screen, setScreen] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" ? "intro" : "admin"; } catch { return "admin"; } });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
@@ -191,6 +193,11 @@ export default function App() {
                   <div className="space-y-5" data-testid="lab-control-view">
                     <LabBriefing />
                     <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="MikiLab" roleTag="Master Admin" />
+                    <div data-testid="capo-dept-switch" className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] overflow-x-auto">
+                      {[["panificazione", "🍞", tri("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")], ["pizzeria", "🍕", "Pizzeria"], ["pasticceria", "🥐", tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")], ["tutti", "👑", tri("Tutti", "Alle", "All", "Todos", "Tous", "همه")]].map(([k, ic, lb]) => (
+                        <button key={k} data-testid={`capo-dept-${k}`} onClick={() => setCapoDept(k)} className={`flex-1 whitespace-nowrap py-2 px-3 rounded-lg text-xs font-bold transition-all ${capoDept === k ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{ic} {lb}</button>
+                      ))}
+                    </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                       <LabCard testid="lab-nav-ordine" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso a Mohamed.", "Auftrag diktieren, Rückwärtsplan an Mohamed.", "Dictate the order, backwards plan to Mohamed.", "Dicta el pedido, plan a Mohamed.", "Dicte la commande, plan à Mohamed.", "سفارش را بگو، برنامه به محمد.")} onClick={() => setCurrentView("ordine-capo")} accent />
                       <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />

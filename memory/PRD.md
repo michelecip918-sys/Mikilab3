@@ -4060,3 +4060,6 @@ RIMANE: registrazione/login GOOGLE (integrazione OAuth dedicata Emergent-managed
 
 ## v-CAPO-SIMPLIFY (2026-06)
 - Rimossa dal Capo la sezione tecnica "Sistemi IoT" (PeripheralSetup + Maestro). La card ora e "PIN Produzione" (solo PinSetup, currentView pinsetup). Tutta la parte collegamenti Bluetooth/bilance/sensori/termostati e gestita da BakemixAI (BakemixHardware). Home Capo = 6 card: Ordine&Piano, Ricette, Magazzino, Planner, Ordini Extra, PIN Produzione.
+
+## v-CAPO-DEPT (2026-06)
+- Console Capo: selettore reparto (capo-dept-switch) Panificazione/Pizzeria/Pasticceria/Tutti, persistito in mikilab_capo_dept. OrdineCapo usa il reparto per il prodotto di default (pizzeria->pizza, pasticceria->croissant). Consente capo di solo-pizzeria o solo-pasticceria. TODO: filtrare ricette/piano per reparto scelto.

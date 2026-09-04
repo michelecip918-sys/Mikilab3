@@ -12,7 +12,7 @@ const PRODUCTS = ["baguette", "pane", "focaccia", "pizza", "croissant", "brioche
 export default function OrdineCapo() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
-  const [product, setProduct] = useState("baguette");
+  const [product, setProduct] = useState(() => { try { const d = localStorage.getItem("mikilab_capo_dept"); return d === "pizzeria" ? "pizza" : d === "pasticceria" ? "croissant" : "baguette"; } catch { return "baguette"; } });
   const [quantity, setQuantity] = useState(100);
   const [deadline, setDeadline] = useState("06:00");
   const [dayOffset, setDayOffset] = useState(1);
