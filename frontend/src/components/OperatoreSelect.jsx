@@ -17,7 +17,7 @@ export default function OperatoreSelect({ current, onSelect, onClose }) {
           </button>
         )}
         <div className="text-center mb-8">
-          <img src={`${process.env.PUBLIC_URL}/logo-neo.jpg`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-[#14b8a6]/40 object-cover" />
+          <img src={`${process.env.PUBLIC_URL}/logo-emblem.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-[#14b8a6]/40 object-contain bg-[#0b0f19]" />
           <h1 className="text-2xl font-black text-white uppercase tracking-wider">Chi è in laboratorio?</h1>
           <p className="text-sm text-[#94A3B8] mt-1.5">Seleziona l'operatore attivo del turno. Puoi cambiarlo quando vuoi.</p>
         </div>

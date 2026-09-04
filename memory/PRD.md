@@ -3931,3 +3931,10 @@ NB: Restano NON ripristinati di proposito: Home, Academy/Impara, Diagnosi, Shop,
 - **Plancia ripulita**: rimossi dalla plancia Community (card+vista) e il banner Cyber-Bakery Trio. Restano SOLO le 4 aree operative: Master Ricettario, Magazzino & Scorte, Smart Planner, Sistemi IoT. Mantenuti logo + avatar (Michele/Mohamed) nelle intestazioni e DocsDownload.
 - Confermato che restano fuori: Home, Academy/Impara, Diagnosi, Shop, Enterprise, Paywall, Sfide/Quiz, Scopri MikiLab, Guida al Sito.
 - Testato iter175: frontend 100% (PIN, gate operatore, chip, plancia a 4 card senza Community/Trio, Auth/Reset ok, viste operative senza crash).
+
+## v-fork+6 (2026-06) — FASE 1 rebuild: identità (avatar ufficiali + logo storico)
+- Installati i 2 AVATAR UFFICIALI forniti dall'utente: avatar_miki.jpg (Michele, testa rasata + tatuaggio + t-shirt MikiLab) e avatar_mohamed.jpg (Mohamed, fornaio con cappellino bianco + barba). Usati nel gate OperatoreSelect e nelle intestazioni Lab/Floor.
+- Ripristinato il vecchio logo ML con alloro (public/logo-emblem.png) nell'header e nel gate operatore (object-contain).
+PIANO REBUILD ONE-PAGE (confermato dall'utente): reset totale del non-operativo; struttura in 3 sezioni (1 Ricette di MikiLab foto-first; 2 MikiLab Control: Capo via email->schede Ricettario/Piano/Produzione/Ordini Extra con AI GPT-5 che rigenera il piano da ordini manuali, Operaio via PIN scelto dal Capo->Floor hands-free con AI 'Mamo'; 3 Guida/SOS/AI Assistant), navigazione fluida one-page, voce globale ovunque, avatar dedicato per sezione, traduzioni complete.
+- FASE 2 (prossima): struttura One-Page a 3 sezioni + registrazione email/Google (Capo) + PIN scelto dal Capo (Operaio) + AI Ordini Extra (GPT-5 via Emergent key).
+- FASE 3: restyle grafico card ricette (stile cyber, foto attuali) + traduzioni it/de/en/es/fr/fa di tutte le nuove etichette.

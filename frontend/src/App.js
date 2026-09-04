@@ -94,7 +94,7 @@ export default function App() {
             <div className="max-w-4xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-xl overflow-hidden border border-[#14b8a6]/40 shadow-lg shadow-[#14b8a6]/20 bg-[#030712]">
-                  <img src={`${process.env.PUBLIC_URL}/logo-neo.jpg`} alt="MikiLab" className="w-full h-full object-cover" />
+                  <img src={`${process.env.PUBLIC_URL}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
                 </div>
                 <div>
                   <h1 className="text-sm font-black tracking-wider text-white uppercase flex items-center gap-2">
