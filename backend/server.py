@@ -3858,6 +3858,30 @@ async def tts_speak(payload: TTSReq):
             _eleven_cooldown_until = time.time() + 600
             logger.warning("ElevenLabs TTS non disponibile (%s) → fallback voce dispositivo", str(e)[:120])
 
+    # Fallback OpenAI TTS (voci MASCHILI: onyx/echo/fable) via Emergent key
+    if EMERGENT_LLM_KEY:
+        try:
+            import inspect as _insp
+            from emergentintegrations.llm.openai.text_to_speech import OpenAITextToSpeech
+            oai_voice = _OAI_VOICE.get(vkey, "onyx")
+            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}".encode()).hexdigest()
+            cpatho = os.path.join(_TTS_CACHE_DIR, cko + ".mp3")
+            if os.path.exists(cpatho):
+                with open(cpatho, "rb") as f:
+                    return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "openai"})
+            _tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
+            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.0)
+            audio = await res if _insp.isawaitable(res) else res
+            if audio:
+                try:
+                    with open(cpatho, "wb") as f:
+                        f.write(audio)
+                except Exception:
+                    pass
+                return Response(content=audio, media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "openai"})
+        except Exception as e:
+            logger.warning("OpenAI TTS fallback non disponibile (%s)", str(e)[:150])
+
     # Nessun audio dal server → il frontend usa la sintesi vocale del telefono (maschile, lingua dell'app).
     raise HTTPException(status_code=424, detail="TTS server non disponibile: usa voce dispositivo")
 
