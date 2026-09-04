@@ -16,9 +16,13 @@ export default function PinLock({ onUnlock }) {
     else { setErr(true); setPin(""); try { navigator.vibrate && navigator.vibrate(120); } catch { /* */ } }
   };
   const press = (d) => {
-    if (pin.length >= 4) return;
-    const np = pin + d; setErr(false); setPin(np);
-    if (np.length === 4) setTimeout(() => submit(np), 140);
+    setErr(false);
+    setPin((p) => {
+      if (p.length >= 4) return p;
+      const np = p + d;
+      if (np.length === 4) setTimeout(() => submit(np), 140);
+      return np;
+    });
   };
   const del = () => { setErr(false); setPin((p) => p.slice(0, -1)); };
 

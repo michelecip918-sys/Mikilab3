@@ -3948,3 +3948,11 @@ RIMANE DA FARE (fasi successive):
 - Registrazione email/Google al primo avvio che collega la Sezione 2 al Capo; PIN operaio scelto dal Capo.
 - Assistente 'Mamo' in cuffia per l'operaio basato sui piani/ordini.
 - FASE 3: restyle grafico card ricette (stile cyber, foto attuali) + traduzioni it/de/en/es/fr/fa.
+
+## v-fork+8 (2026-06) — FASE 2 (parte 2): struttura One-Page a 3 sezioni
+- App.js ristrutturato in ONE-PAGE con nav a 3 sezioni (nav-ricette/nav-control/nav-guida), ciascuna con avatar dedicato: Sez.1 Ricette di MikiLab (foto-first, <Ricette/>), Sez.2 MikiLab Control (toggle Capo=Lab / Produzione=Floor, con le 5 card incl. Ordini Extra AI), Sez.3 Guida/SOS/AI (components/GuidaSOS.jsx: identità laboratorio + FAQ accordion + rimando all'assistente AI).
+- VOCE GLOBALE: <VoiceCommand/> montato a livello app (attivo in ogni sezione). Avatar ufficiali per sezione (Mohamed/Michele/Bake Mix).
+- FIX HIGH: PinLock press() ora usa updater funzionale -> risolta la perdita del primo/rapido tap del PIN (race da closure stale). Tastierino 3x4 OK.
+- FIX LOW: OrdiniExtra ora ripulisce il markdown del piano AI prima di mostrarlo.
+- Testato iter176: frontend 92% (tutti i flussi passano; il bug PIN HIGH ora corretto). Backend Ordini Extra verificato via curl.
+RIMANE: registrazione email/Google al primo avvio collegata al Capo + PIN scelto dal Capo; assistente 'Mamo' dedicato all'operaio; FASE 3 restyle card ricette + traduzioni complete.

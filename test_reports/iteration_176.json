@@ -1,0 +1,34 @@
+{
+  "summary": "Frontend-only validation of the new MikiLab one-page 3-section structure (390x844 + 1920x800). PIN 1985 -> operatore-michele -> default section-control verified. All 3 nav tabs (nav-ricette/nav-control/nav-guida) switch sections without crashes (2 full cycles, ErrorBoundary never triggered, no page errors, no broken images). Guida SOS renders guida-sos with faq-0..4 all expanding. Control section: mode-lab-btn -> lab-control-view with all 5 cards present; lab-nav-magazzino -> magazzino-manager, lab-nav-iot -> peripheral-setup, lab-nav-ricette -> conferma-impastata, lab-nav-planner OK. Ordini Extra AI verified end-to-end: typed '+30 baguette per Bar Centrale entro le 11:00', clicked ordini-extra-btn, ordini-extra-plan returned a full regenerated plan (~20s). account-btn opens auth-screen and auth-close closes it. One real defect found: the FIRST tap on the PIN keypad is silently swallowed right after load, so the PIN never reaches 4 digits (reproduced 2/2 without a settle wait; works after ~4s settle).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "PinLock", "issue": "First keypad tap after page load is lost (pin-dots stays at 0 filled). Entering 1-9-8-5 immediately after the keypad appears results in only 3 dots filled and no auto-submit, leaving the user stuck on the lock screen until they notice and add a digit. Reproduced twice at 390x844 (150ms and 500ms between taps); works only after waiting ~4s before the first tap.", "selector": "[data-testid=\"pin-key-1\"] / [data-testid=\"pin-dots\"]", "priority": "HIGH"},
+      {"component": "OrdiniExtra plan", "issue": "AI plan is rendered as raw markdown ('# ', '**bold**', '---' visible as text) inside ordini-extra-plan instead of formatted output.", "selector": "[data-testid=\"ordini-extra-plan\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Section 2 Control (mobile)", "issues": ["Default mode is 'Produzione · Floor' (activeMode initial state 'floor'), so the Capo plancia/5 cards require an extra tap on mode-lab-btn - confirm this is intended since the request describes Capo cards as the primary landing view."]},
+      {"screen": "Guida & SOS (desktop)", "issues": ["Section scroll position is preserved when switching nav tabs, so the SectionHead of the newly opened section can be off-screen (user lands mid-content). Consider scrolling to top on section change."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix PinLock losing the first keypad press on cold load (see RCA) - highest priority, it blocks app entry.",
+    "Optional: render the Ordini Extra AI plan as markdown instead of raw text.",
+    "Optional: scroll window to top when the section changes; confirm intended default mode (floor vs lab) in Section 2."
+  ],
+  "critical_code_review_comments": [
+    "PinLock.press uses the `pin` value captured in the render closure (`const np = pin + d`) instead of a functional setState; combined with a re-render/remount from the async language/profile init this loses the first digit. Use setPin(p => ...) and derive the submit from the updated value.",
+    "PIN is stored in plaintext in localStorage (mikilab_pin=1985) - acceptable for a kiosk PIN but should be documented; anyone with devtools can read it.",
+    "App.js keeps section/mode/view in three separate states with no scroll reset or URL sync; deep-linking/back-button do not work for the one-page nav."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (skipped per request)", "frontend": "92% (all flows pass; 1 HIGH PIN entry bug)"},
+  "seed_data_creation": "None - no warehouse/magazzino items were created; only one Ordini Extra AI call (no persistence).",
+  "should_call_test_agent_after_fix": false,
+  "should_main_agent_self_test": true,
+  "test_credentials": "App PIN 1985; operator michele (no account login used)",
+  "context_for_next_testing_agent": "Automation must wait ~3-4s after [data-testid=\"pin-lock\"] appears before pressing pin-key digits, otherwise the first digit is dropped (real bug, not test flake). Full flow verified: PIN -> operatore-michele -> section-control -> mode-lab-btn -> lab-nav-* cards -> ordini-extra (AI ~20s). Guida faq-0..4 and nav switching are stable.",
+  "rca_of_the_issue": "PinLock's press() computes the new pin from the stale closure value and the component re-renders/remounts during initial app bootstrap (language/profile providers resolving), so the state update from the first tap is discarded. Result: 4 taps produce a 3-digit pin, the length===4 auto-submit never fires. Fix with functional setState (and/or delay rendering PinLock until lang init resolves)."
+}

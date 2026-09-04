@@ -59,7 +59,7 @@ export default function OrdiniExtra() {
               <Volume2 className="w-3.5 h-3.5" /> Ascolta
             </button>
           </div>
-          <pre className="text-[11px] text-[#cbd5e1] whitespace-pre-wrap leading-relaxed font-sans">{plan}</pre>
+          <pre className="text-[11px] text-[#cbd5e1] whitespace-pre-wrap leading-relaxed font-sans">{plan.replace(/^#{1,6}\s*/gm, "").replace(/\*\*(.*?)\*\*/g, "$1").replace(/^\s*[-*]{3,}\s*$/gm, "").replace(/\n{3,}/g, "\n\n").trim()}</pre>
         </div>
       )}
     </div>
