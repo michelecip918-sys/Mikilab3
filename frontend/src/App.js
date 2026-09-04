@@ -29,6 +29,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
+import OrdiniExtra from "@/components/OrdiniExtra";
 import { User } from "lucide-react";
 
 // Viste principali
@@ -164,7 +165,7 @@ export default function App() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                   <button data-testid="lab-nav-ricette" onClick={() => setCurrentView("ricette")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">🥖</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Master Ricettario</h3>
@@ -179,6 +180,11 @@ export default function App() {
                     <div className="text-xl mb-2">🗓️</div>
                     <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Smart Planner</h3>
                     <p className="text-[11px] text-[#94A3B8] mt-1">Piano con validazione vocale.</p>
+                  </button>
+                  <button data-testid="lab-nav-ordini" onClick={() => setCurrentView("ordini")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#14b8a6]/40 hover:border-[#14b8a6] text-left transition-all group">
+                    <div className="text-xl mb-2">⚡</div>
+                    <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">Ordini Extra</h3>
+                    <p className="text-[11px] text-[#94A3B8] mt-1">AI rigenera il piano all'istante.</p>
                   </button>
                   <button data-testid="lab-nav-iot" onClick={() => setCurrentView("maestro")} className="p-4 rounded-xl bg-[#0b0f19] border border-[#1e293b] hover:border-[#14b8a6] text-left transition-all group">
                     <div className="text-xl mb-2">⚙️</div>
@@ -199,6 +205,9 @@ export default function App() {
                 )}
                 {currentView === "planner" && (
                   <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>
+                )}
+                {currentView === "ordini" && (
+                  <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>
                 )}
                 {currentView === "maestro" && (
                   <div className="space-y-4">

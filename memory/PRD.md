@@ -3938,3 +3938,13 @@ NB: Restano NON ripristinati di proposito: Home, Academy/Impara, Diagnosi, Shop,
 PIANO REBUILD ONE-PAGE (confermato dall'utente): reset totale del non-operativo; struttura in 3 sezioni (1 Ricette di MikiLab foto-first; 2 MikiLab Control: Capo via email->schede Ricettario/Piano/Produzione/Ordini Extra con AI GPT-5 che rigenera il piano da ordini manuali, Operaio via PIN scelto dal Capo->Floor hands-free con AI 'Mamo'; 3 Guida/SOS/AI Assistant), navigazione fluida one-page, voce globale ovunque, avatar dedicato per sezione, traduzioni complete.
 - FASE 2 (prossima): struttura One-Page a 3 sezioni + registrazione email/Google (Capo) + PIN scelto dal Capo (Operaio) + AI Ordini Extra (GPT-5 via Emergent key).
 - FASE 3: restyle grafico card ricette (stile cyber, foto attuali) + traduzioni it/de/en/es/fr/fa di tutte le nuove etichette.
+
+## v-fork+7 (2026-06) — FASE 2 (parte 1): Ordini Extra con AI
+- Endpoint backend POST /api/lab/ordini-extra: riceve ordini extra manuali (+ piano attuale opzionale) e rigenera il PIANO GIORNALIERO aggiornato con priorità urgenti/fasi/orari. Motore: Claude Sonnet 4.6 (primario) + GPT-4o (fallback) via Emergent LLM key. NB: 'gpt-5' non disponibile nel runtime LiteLLM attuale (rispondeva vuoto) -> usato claude-sonnet-4-6.
+- Frontend components/OrdiniExtra.jsx: textarea ordini + 'Rigenera Piano Giornaliero' + output piano + 'Ascolta' (TTS). ordiniApi in lib/api.js.
+- Nuova card 'Ordini Extra' (lab-nav-ordini) nella plancia Capo (griglia a 5 card). Testato E2E via curl: piano di 2046 char generato correttamente.
+RIMANE DA FARE (fasi successive):
+- Struttura One-Page a 3 sezioni con scroll fluido + avatar dedicato per sezione + voce globale in ogni sezione.
+- Registrazione email/Google al primo avvio che collega la Sezione 2 al Capo; PIN operaio scelto dal Capo.
+- Assistente 'Mamo' in cuffia per l'operaio basato sui piani/ordini.
+- FASE 3: restyle grafico card ricette (stile cyber, foto attuali) + traduzioni it/de/en/es/fr/fa.

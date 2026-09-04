@@ -59,6 +59,10 @@ export const warehouseApi = {
   consumption: () => api.get(`/lab/warehouse/consumption`).then((r) => r.data),
 };
 
+export const ordiniApi = {
+  regenerate: (body) => api.post(`/lab/ordini-extra`, body).then((r) => r.data),
+};
+
 
 export const favApi = {
   list: () => api.get(`/favorites`).then((r) => r.data),

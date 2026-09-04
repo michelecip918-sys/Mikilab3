@@ -2127,6 +2127,47 @@ async def warehouse_stats(user: Optional[dict] = Depends(optional_user)):
     return {"items": items, "window_days": WINDOW}
 
 
+class OrdiniExtraReq(BaseModel):
+    orders: str
+    current_plan: Optional[str] = ""
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/lab/ordini-extra")
+async def ordini_extra(payload: OrdiniExtraReq, user: Optional[dict] = Depends(optional_user)):
+    # Ordini extra dell'ultimo minuto -> l'IA rigenera il piano giornaliero aggiornato.
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="AI non disponibile")
+    lang_name = _LANG_NAMES.get(payload.lang, "italiano")
+    sysmsg = ("Sei il capo-produzione di un panificio artigianale. Ricevi eventuali ordini EXTRA dell'ultimo minuto "
+              "e il piano di produzione giornaliero attuale. Rigenera un piano giornaliero AGGIORNATO, chiaro e ordinato, "
+              "che integri gli ordini extra dando priorità alle urgenze, con fasi/orari indicativi (impasto, lievitazione, "
+              "formatura, cottura, consegna) e quantità. Sii pratico e conciso. "
+              f"Scrivi in {lang_name}.")
+    prompt = (f"ORDINI EXTRA:\n{payload.orders}\n\nPIANO ATTUALE (se presente):\n{payload.current_plan or 'nessuno'}\n\n"
+              "Restituisci il nuovo piano giornaliero in elenco puntato per fasce orarie, con in cima una riga 'PRIORITA URGENTI'.")
+
+    async def _run(provider, model):
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"ordini-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model(provider, model).with_params(max_tokens=1800)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        return full.strip()
+
+    try:
+        plan = await _run("anthropic", "claude-sonnet-4-6")
+    except Exception as e:
+        logging.warning(f"ordini-extra primary failed, fallback openai: {e}")
+        try:
+            plan = await _run("openai", "gpt-4o")
+        except Exception as e2:
+            raise HTTPException(status_code=500, detail=f"AI error: {e2}")
+    return {"plan": plan}
+
+
 class LabelScan(BaseModel):
     image_base64: str
     lang: Optional[str] = "it"
