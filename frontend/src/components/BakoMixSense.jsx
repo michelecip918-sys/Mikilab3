@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio } from "lucide-react";
-import { pulseApi } from "@/lib/api";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users } from "lucide-react";
+import { pulseApi, staffingApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -225,6 +225,23 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
+                {/* Organico del giorno → ricalcolo volumi */}
+                {pulse?.staffing && (
+                  <div data-testid="bakomix-staffing" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
+                    <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {tri("Organico di oggi", "Heutiges Personal", "Today's staff", "Personal de hoy", "Effectif du jour", "کارکنان امروز")}</p>
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[12px] text-white">{tri("Presenti", "Anwesend", "Present", "Presentes", "Présents", "حاضر")}: <b>{pulse.staffing.present}</b> / <span className="text-[#94A3B8]">{tri("totale", "gesamt", "total", "total", "total", "کل")}</span></span>
+                      <input data-testid="bakomix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                    </div>
+                    {pulse.staffing.reduce_pct > 0 ? (
+                      <p data-testid="bakomix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
+                        📉 {tri("Volumi consigliati", "Empfohlene Mengen", "Suggested volumes", "Volúmenes sugeridos", "Volumes conseillés", "حجم پیشنهادی")} −{pulse.staffing.reduce_pct}%
+                      </p>
+                    ) : (
+                      <p className="text-[11px] text-[#94A3B8] mt-2">{tri("Organico completo · volumi pieni.", "Voll besetzt · volle Mengen.", "Full staff · full volumes.", "Personal completo · volúmenes plenos.", "Effectif complet · volumes pleins.", "کارکنان کامل · حجم کامل.")}</p>
+                    )}
+                  </div>
+                )}
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-1.5 flex items-center gap-1.5"><Moon className="w-3.5 h-3.5" /> {tri("Riposo Blindato", "Ruhemodus", "Rest Mode", "Modo Descanso", "Mode Repos", "حالت استراحت")}</p>
                   <FailsafeSwitch

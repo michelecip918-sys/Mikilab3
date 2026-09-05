@@ -446,3 +446,18 @@ export const pulseApi = {
   wakeSet: (data) => api.put(`/lab/wake`, data).then((r) => r.data),
   history: (minutes = 240) => cachedGet(`lab_pulse_history_${minutes}`, () => api.get(`/lab/pulse/history`, { params: { minutes } }).then((r) => r.data), { points: [] }),
 };
+
+// Sequence Guard — BakoMix blocca i lotti fuori sequenza prima che partano.
+export const shiftStateApi = {
+  get: () => api.get(`/lab/shift-state`).then((r) => r.data).catch(() => ({ batches: [] })),
+};
+export const sequenceApi = {
+  start: (batch_id, force = false) => api.post(`/lab/sequence/start`, { batch_id, force }).then((r) => r.data),
+  complete: (batch_id) => api.post(`/lab/sequence/complete`, { batch_id }).then((r) => r.data),
+};
+
+// Staffing / ricalcolo volumi in base alle assenze del giorno.
+export const staffingApi = {
+  get: () => cachedGet("lab_staffing", () => api.get(`/lab/staffing`).then((r) => r.data), { total: 5, absent_today: 0, present: 5, factor: 1, reduce_pct: 0 }),
+  set: (total) => api.put(`/lab/staffing`, { total }).then((r) => r.data),
+};

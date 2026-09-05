@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getSensors, subscribeSensors } from "@/lib/sensors";
 
 // ============================================================================
 // AURA SONORA DEL LABORATORIO — feature esclusiva MikiLab.
@@ -66,6 +67,11 @@ export default function LabAura({ enabled, mood = "sereno", heartbeat = 52, stat
       oscA.connect(gA).connect(filter);
       oscB.connect(gB).connect(filter);
 
+      // Layer SENSORE FORNO: uno "sfrigolio" acuto che cresce con la temperatura reale.
+      const sizzle = ctx.createOscillator(); sizzle.type = "sine"; sizzle.frequency.value = 1800;
+      const sizzleG = ctx.createGain(); sizzleG.gain.value = 0.0001;
+      sizzle.connect(sizzleG).connect(master);
+
       // Pad "respiro": rumore filtrato, molto morbido
       const bufSize = 2 * ctx.sampleRate;
       const buffer = ctx.createBuffer(1, bufSize, ctx.sampleRate);
@@ -79,7 +85,9 @@ export default function LabAura({ enabled, mood = "sereno", heartbeat = 52, stat
       oscA.start(); oscB.start(); noise.start();
       master.gain.linearRampToValueAtTime(0.085, ctx.currentTime + 1.4);
 
-      nodesRef.current = { master, filter, oscA, oscB, noise, nGain, bp };
+      nodesRef.current = { master, filter, oscA, oscB, noise, nGain, bp, sizzle, sizzleG };
+      sizzle.start();
+      applySensors(getSensors());
       scheduleBeat();
     } catch { /* audio non disponibile */ }
 
@@ -108,6 +116,35 @@ export default function LabAura({ enabled, mood = "sereno", heartbeat = 52, stat
     thump();
     beatRef.current = setInterval(thump, interval);
   };
+
+  // Sesto senso FISICO: le letture reali dell'hardware (Web Bluetooth) modulano l'Aura.
+  const applySensors = (sensors) => {
+    const ctx = ctxRef.current; const n = nodesRef.current;
+    if (!ctx || !n) return;
+    const t = ctx.currentTime;
+    const temp = sensors.oven_temp ? sensors.oven_temp.value : null; // °C forno
+    const ph = sensors.ph ? sensors.ph.value : null;                 // pH lievito
+    try {
+      if (temp != null) {
+        const heat = Math.max(0, Math.min(1, (temp - 150) / 120)); // 150→250°C
+        n.sizzleG.gain.linearRampToValueAtTime(0.0001 + heat * 0.05, t + 0.6);
+        n.sizzle.frequency.linearRampToValueAtTime(1500 + temp * 4, t + 0.6);
+      }
+      if (ph != null) {
+        const acid = Math.max(0, Math.min(1, (4.4 - ph) / 1.4)); // più acido = più tensione
+        n.oscA.detune.linearRampToValueAtTime(acid * 22, t + 0.6);
+      }
+    } catch { /* */ }
+  };
+
+  // Iscrizione al bus sensori mentre l'Aura è accesa
+  useEffect(() => {
+    if (!enabled) return;
+    const unsub = subscribeSensors((s) => applySensors(s));
+    return () => unsub();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [enabled]);
+
 
   // Aggiorna timbro/battito quando cambia l'umore o il carico
   useEffect(() => {

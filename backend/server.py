@@ -2268,6 +2268,26 @@ async def _compute_pulse():
                                "به‌محض شروع، کاپو را بی‌صدا مطلع می‌کنم."),
         })
 
+    # --- Personale ridotto (assenze di oggi) → INFO + volumi consigliati ridotti ---
+    staff = await _staffing()
+    if staff["factor"] < 1.0:
+        pct = staff["reduce_pct"]
+        alerts.append({
+            "id": "staffing", "level": "info", "station": "Organico", "code": "staffing",
+            "text": _tr6(f"Oggi siete in {staff['present']} su {staff['total']}: personale ridotto.",
+                         f"Heute {staff['present']} von {staff['total']}: reduziertes Personal.",
+                         f"Today {staff['present']} of {staff['total']}: reduced staff.",
+                         f"Hoy {staff['present']} de {staff['total']}: personal reducido.",
+                         f"Aujourd'hui {staff['present']} sur {staff['total']} : effectif réduit.",
+                         f"امروز {staff['present']} از {staff['total']}: کارکنان کمتر."),
+            "suggestion": _tr6(f"Riduco i volumi consigliati di circa il {pct}% e alleggerisco i task.",
+                               f"Ich senke die empfohlenen Mengen um ca. {pct}% und entlaste die Aufgaben.",
+                               f"I cut suggested volumes by about {pct}% and lighten the tasks.",
+                               f"Reduzco los volúmenes sugeridos ~{pct}% y aligero las tareas.",
+                               f"Je réduis les volumes conseillés d'environ {pct}% et j'allège les tâches.",
+                               f"حجم پیشنهادی را حدود {pct}% کم و وظایف را سبک‌تر می‌کنم."),
+        })
+
     # --- Umore & battito derivati dal carico + criticità ---
     n_crit = sum(1 for a in alerts if a["level"] == "critical")
     n_warn = sum(1 for a in alerts if a["level"] == "warn")
@@ -2289,6 +2309,7 @@ async def _compute_pulse():
         "checkin": {"active": bool(checkin.get("active")), "by": checkin.get("by"),
                     "role": checkin.get("role"), "at": checkin.get("at")},
         "rest_mode": {"active": bool(rest.get("active")), "allow_critical": rest.get("allow_critical", True)},
+        "staffing": staff,
         "plan_active": floor is not None,
         "generated_at": now.isoformat(),
     }
@@ -2420,6 +2441,99 @@ async def put_wake(body: WakeReq, user: dict = Depends(require_admin)):
     out = _compute_wake(doc)
     out["enabled"] = doc["enabled"]
     return out
+
+
+# ---------------------------------------------------------------------------
+# SEQUENCE GUARD — BakoMix blocca i lotti fuori sequenza PRIMA che partano.
+# La sequenza è l'ordine dei lotti nel piano del Capo (shift_state.batches).
+# Il "prossimo atteso" è il primo lotto non ancora avviato/fatto. Avviare un
+# lotto diverso viene BLOCCATO (salvo override del Capo con force=true).
+# ---------------------------------------------------------------------------
+class SeqReq(BaseModel):
+    batch_id: str = Field(..., max_length=80)
+    force: bool = False
+
+
+async def _load_batches():
+    doc = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0}) or {}
+    return doc.get("batches") or []
+
+
+async def _save_batches(batches):
+    await db.lab_shift_state.update_one(
+        {"_key": "default"}, {"$set": {"batches": batches, "updated_at": now_iso(), "_key": "default"}}, upsert=True)
+
+
+def _next_expected(batches):
+    for b in batches:
+        st = (b.get("status") or "").lower()
+        if st not in ("in_corso", "fatto", "done", "completato"):
+            return b
+    return None
+
+
+@api_router.post("/lab/sequence/start")
+async def sequence_start(body: SeqReq, user: Optional[dict] = Depends(optional_user)):
+    batches = await _load_batches()
+    target = next((b for b in batches if str(b.get("id")) == body.batch_id), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Lotto non trovato")
+    nxt = _next_expected(batches)
+    if nxt and str(nxt.get("id")) != body.batch_id and not body.force:
+        # FUORI SEQUENZA → blocco
+        return {"allowed": False, "reason": "out_of_sequence",
+                "expected": {"id": nxt.get("id"), "name": nxt.get("recipe_name") or nxt.get("recipe_id")},
+                "attempted": {"id": target.get("id"), "name": target.get("recipe_name") or target.get("recipe_id")}}
+    for b in batches:
+        if str(b.get("id")) == body.batch_id:
+            b["status"] = "in_corso"; b["started_at"] = now_iso()
+    await _save_batches(batches)
+    return {"allowed": True, "forced": bool(body.force)}
+
+
+@api_router.post("/lab/sequence/complete")
+async def sequence_complete(body: SeqReq, user: Optional[dict] = Depends(optional_user)):
+    batches = await _load_batches()
+    if not any(str(b.get("id")) == body.batch_id for b in batches):
+        raise HTTPException(status_code=404, detail="Lotto non trovato")
+    for b in batches:
+        if str(b.get("id")) == body.batch_id:
+            b["status"] = "fatto"; b["done_at"] = now_iso()
+    await _save_batches(batches)
+    return {"ok": True}
+
+
+# ---------------------------------------------------------------------------
+# STAFFING / RICALCOLO VOLUMI — un'assenza riduce il personale disponibile,
+# quindi BakoMix consiglia automaticamente volumi/task ridotti per la giornata.
+# ---------------------------------------------------------------------------
+async def _staffing():
+    cfg = await db.lab_staffing.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+    total = int(cfg.get("total", 5) or 5)
+    today = datetime.now(timezone.utc).date().isoformat()
+    absent = await db.lab_absences.count_documents({"date": today})
+    present = max(0, total - absent)
+    factor = round(present / total, 2) if total > 0 else 1.0
+    return {"total": total, "absent_today": absent, "present": present,
+            "factor": factor, "reduce_pct": int(round((1 - factor) * 100))}
+
+
+@api_router.get("/lab/staffing")
+async def get_staffing(user: Optional[dict] = Depends(optional_user)):
+    return await _staffing()
+
+
+class StaffingReq(BaseModel):
+    total: int = Field(5, ge=1, le=100)
+
+
+@api_router.put("/lab/staffing")
+async def put_staffing(body: StaffingReq, user: dict = Depends(require_admin)):
+    await db.lab_staffing.update_one({"_key": "default"},
+        {"$set": {"_key": "default", "total": int(body.total), "updated_at": now_iso()}}, upsert=True)
+    return await _staffing()
+
+
 
 
 
@@ -8072,6 +8186,14 @@ async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user))
     note = (body.note or "").strip()
     dates = (body.dates or "").strip()
     snippet = f"{label}" + (f" · {dates}" if dates else "") + (f" — {note}" if note else "")
+    # Registra l'assenza per data → BakoMix ricalcola il personale disponibile e i volumi.
+    try:
+        await db.lab_absences.insert_one({
+            "user_id": user.get("user_id"), "name": actor_name, "kind": body.kind,
+            "date": datetime.now(timezone.utc).date().isoformat(), "at": now_iso(),
+        })
+    except Exception:
+        pass
     owners = await db.users.find(
         {"$or": [{"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}, {"role": "admin"}]},
         {"_id": 0, "user_id": 1, "email": 1},
