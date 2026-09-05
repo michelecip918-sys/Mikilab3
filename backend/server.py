@@ -3978,6 +3978,84 @@ async def delegation_close(task_id: str, user: dict = Depends(require_admin)):
     return {"status": "success"}
 
 
+class CleanCheckReq(BaseModel):
+    image_base64: str
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/delegation/tasks/{task_id}/cleanliness-check")
+async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, user: Optional[dict] = Depends(optional_user)):
+    """Checkpoint AR: valida con la fotocamera lo standard di pulizia prima di chiudere il task."""
+    t = await db.team_tasks.find_one({"id": task_id})
+    if not t:
+        raise HTTPException(status_code=404, detail="Task non trovato")
+    img = (body.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"clean-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei l'ispettore visivo di BakoMix. Valuta dalla FOTO se l'attrezzatura/superficie/carrello di un laboratorio "
+                "di panificazione e' PULITA a standard operativo (assenza di residui di impasto/farina/sporco, superfici asciutte e ordinate). "
+                f"Rispondi SOLO con JSON valido nella lingua '{body.lang}': "
+                '{"clean":true|false,"score":0-100,"note":"1 frase su cosa va bene o cosa manca"}. '
+                "Sii pratico da produzione, NIENTE riferimenti a HACCP/moduli/documenti."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Valuta la pulizia nella foto.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        res = json.loads(m.group(0)) if m else {"clean": False, "score": 0, "note": "Non valutabile"}
+    except Exception as e:
+        logging.warning(f"cleanliness_check failed: {e}")
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    clean = bool(res.get("clean"))
+    if clean:
+        await db.team_tasks.update_one({"id": task_id}, {"$set": {"status": "closed", "closed_at": now_iso(), "cleanliness": res}})
+    else:
+        await db.team_tasks.update_one({"id": task_id}, {"$set": {"cleanliness": res}})
+    return {"status": "success", "clean": clean, "score": res.get("score"), "note": res.get("note"), "closed": clean}
+
+
+
+@api_router.get("/shift/handoff")
+async def shift_handoff(lang: str = "it", user: Optional[dict] = Depends(optional_user)):
+    """Riassunto vocale per il cambio turno: stato settori, personale, task, ritmo."""
+    staff = await _staffing()
+    tasks = await db.team_tasks.count_documents({"status": "active"})
+    shift = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0}) or {}
+    pacing = (shift.get("pacing_directive") or {}).get("pacing")
+    down = len(shift.get("machines_down") or [])
+    P = {
+        "it": {"intro": "Passaggio di consegne turno.", "staff": f"In turno {staff['present']} operatori su {staff['total']}.",
+               "tasks": (f"{tasks} task di squadra ancora attivi." if tasks else "Nessun task di squadra aperto."),
+               "pace": (f"Ritmo produzione impostato su: {pacing}." if pacing else "Ritmo produzione regolare."),
+               "sectors": ("Tutti i sei settori sincronizzati e sotto controllo." if down == 0 else f"{down} macchinari fermi da verificare."),
+               "end": "Buon turno."},
+        "en": {"intro": "Shift handover.", "staff": f"On shift {staff['present']} of {staff['total']} operators.",
+               "tasks": (f"{tasks} team tasks still active." if tasks else "No open team tasks."),
+               "pace": (f"Production pacing set to: {pacing}." if pacing else "Production pacing normal."),
+               "sectors": ("All six sectors synced and under control." if down == 0 else f"{down} machines down to check."),
+               "end": "Have a good shift."},
+        "de": {"intro": "Schichtübergabe.", "staff": f"Im Dienst {staff['present']} von {staff['total']} Mitarbeitern.",
+               "tasks": (f"{tasks} Team-Aufgaben noch aktiv." if tasks else "Keine offenen Team-Aufgaben."),
+               "pace": (f"Produktionstempo: {pacing}." if pacing else "Produktionstempo normal."),
+               "sectors": ("Alle sechs Sektoren synchron und unter Kontrolle." if down == 0 else f"{down} Maschinen ausgefallen."),
+               "end": "Gute Schicht."},
+    }
+    m = P.get(lang, P["en"])
+    text = f"{m['intro']} {m['staff']} {m['sectors']} {m['tasks']} {m['pace']} {m['end']}"
+    return {"status": "success", "text": text, "present": staff["present"], "total": staff["total"], "active_tasks": tasks}
+
+
+
 
 
 @api_router.get("/lab/warehouse/consumption")

@@ -1,6 +1,7 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Users, Check, Gauge, Brush, ShieldAlert, ListChecks } from "lucide-react";
+import { Users, Check, Gauge, Brush, ShieldAlert, ListChecks, Camera, Loader2, X, ScanLine } from "lucide-react";
+import { toast } from "sonner";
 import { delegationApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -27,6 +28,48 @@ export default function TeamTasks({ operatorName = "" }) {
     setTasks((ts) => ts.map((t) => t.id === taskId ? { ...t, steps: t.steps.map((s) => s.order === order ? { ...s, done: true } : s) } : t));
     try { await delegationApi.stepDone(taskId, order, operatorName); await load(); } catch { /* */ }
   };
+
+  // Checkpoint AR pulizia (fotocamera → Claude Vision) prima di chiudere un task di sanificazione.
+  const [checkTask, setCheckTask] = useState(null);
+  const [checking, setChecking] = useState(false);
+  const [checkRes, setCheckRes] = useState(null);
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+
+  const stopCam = useCallback(() => {
+    try { if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop()); } catch { /* */ }
+    streamRef.current = null;
+  }, []);
+
+  const openCheck = useCallback(async (taskId) => {
+    setCheckTask(taskId); setCheckRes(null);
+    if (!navigator.mediaDevices?.getUserMedia) { toast.error(tri("Fotocamera non supportata", "Kamera nicht unterstützt", "Camera not supported", "Cámara no soportada", "Caméra non supportée", "دوربین پشتیبانی نمی‌شود")); return; }
+    try {
+      const st = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } }, audio: false });
+      streamRef.current = st;
+      setTimeout(async () => { if (videoRef.current) { videoRef.current.srcObject = st; await videoRef.current.play().catch(() => {}); } }, 100);
+    } catch { toast.error(tri("Permesso fotocamera negato", "Kamera verweigert", "Camera denied", "Cámara denegada", "Caméra refusée", "اجازه رد شد")); }
+  }, [tri]);
+
+  const closeCheck = useCallback(() => { stopCam(); setCheckTask(null); setCheckRes(null); }, [stopCam]);
+
+  const runCheck = useCallback(async () => {
+    const video = videoRef.current;
+    if (!video || !checkTask) return;
+    const canvas = document.createElement("canvas");
+    canvas.width = video.videoWidth || 720; canvas.height = video.videoHeight || 540;
+    canvas.getContext("2d").drawImage(video, 0, 0, canvas.width, canvas.height);
+    const b64 = canvas.toDataURL("image/jpeg", 0.7);
+    setChecking(true); setCheckRes(null);
+    try {
+      const r = await delegationApi.cleanlinessCheck(checkTask, b64);
+      setCheckRes(r);
+      if (r.clean) { toast.success(tri("Pulizia validata ✓ task chiuso", "Sauberkeit bestätigt ✓", "Cleanliness validated ✓", "Limpieza validada ✓", "Propreté validée ✓", "پاکیزگی تأیید شد ✓")); stopCam(); await load(); }
+    } catch { toast.error(tri("Verifica non riuscita", "Prüfung fehlgeschlagen", "Check failed", "Verificación fallida", "Échec", "بررسی ناموفق")); }
+    setChecking(false);
+  }, [checkTask, tri, stopCam, load]);
+
+  useEffect(() => () => stopCam(), [stopCam]);
 
   if (!tasks.length) return null;
 
@@ -67,10 +110,38 @@ export default function TeamTasks({ operatorName = "" }) {
                   </button>
                 ))}
               </div>
+              {t.kind === "sanificazione" && (t.steps || []).every((s) => s.done) && (
+                <button data-testid={`team-clean-check-${t.id}`} onClick={() => openCheck(t.id)} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-[#22c55e]/15 border border-[#22c55e]/50 text-[#22c55e] font-black text-[12px] active:scale-98">
+                  <Camera className="w-4 h-4" /> {tri("Valida pulizia con foto (checkpoint AR)", "Sauberkeit per Foto prüfen", "Validate cleanliness with photo", "Validar limpieza con foto", "Valider la propreté par photo", "تأیید پاکیزگی با عکس")}
+                </button>
+              )}
+              {t.cleanliness && !t.cleanliness.clean && (
+                <p className="mt-1.5 text-[11px] text-[#f59e0b]" data-testid={`team-clean-note-${t.id}`}>⚠ {t.cleanliness.note}</p>
+              )}
             </motion.div>
           );
         })}
       </AnimatePresence>
+
+      {checkTask && (
+        <div data-testid="clean-check-overlay" className="fixed inset-0 z-[90] bg-[#030712]/95 backdrop-blur-md flex flex-col items-center justify-center p-4">
+          <button data-testid="clean-check-close" onClick={closeCheck} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-5 h-5" /></button>
+          <p className="text-sm font-black text-[#22c55e] mb-3 flex items-center gap-2"><ScanLine className="w-4 h-4" /> {tri("Checkpoint AR · Pulizia", "AR-Checkpoint · Sauberkeit", "AR Checkpoint · Cleanliness", "Checkpoint AR · Limpieza", "Checkpoint AR · Propreté", "چک‌پوینت AR · پاکیزگی")}</p>
+          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-[#22c55e]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
+            <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
+            <div className="absolute inset-4 border-2 border-[#22c55e]/60 rounded-xl pointer-events-none" />
+            {checking && <div className="absolute inset-0 bg-[#22c55e]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#22c55e] animate-spin" /></div>}
+          </div>
+          {checkRes && !checkRes.clean && (
+            <div data-testid="clean-check-result" className="mt-3 w-full max-w-sm rounded-xl border border-[#f59e0b]/50 bg-[#f59e0b]/10 p-3 text-[13px] text-[#f59e0b] font-semibold text-center">
+              {tri("Non ancora a standard", "Noch nicht Standard", "Not up to standard yet", "Aún no estándar", "Pas encore au standard", "هنوز استاندارد نیست")} ({checkRes.score}%) — {checkRes.note}
+            </div>
+          )}
+          <button data-testid="clean-check-shoot" onClick={runCheck} disabled={checking} className="mt-4 w-full max-w-sm inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-98">
+            {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />} {tri("Scatta e valida", "Foto & prüfen", "Shoot & validate", "Tomar y validar", "Photo & valider", "عکس و تأیید")}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

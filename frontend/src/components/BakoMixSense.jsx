@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
 import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic } from "lucide-react";
-import { pulseApi, staffingApi, briefingApi, accessApi } from "@/lib/api";
+import { pulseApi, staffingApi, briefingApi, accessApi, delegationApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
 import { useLang } from "@/i18n/LanguageContext";
@@ -46,6 +46,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [climateOpen, setClimateOpen] = useState(false);
   const [inventoryOpen, setInventoryOpen] = useState(false);
   const [delegateOpen, setDelegateOpen] = useState(false);
+  const [glass, setGlass] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_glass_level")); return Number.isFinite(v) && v > 0 ? v : 62; } catch { return 62; } });
+  const setGlassLvl = (v) => { setGlass(v); try { localStorage.setItem("mikilab_glass_level", String(v)); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-glass-changed", { detail: v })); } catch { /* */ } };
+  const doHandoff = async () => {
+    try {
+      const r = await delegationApi.handoff(lang);
+      toast.success(tri("Handoff turno in riproduzione", "Schichtübergabe wird abgespielt", "Playing shift handoff", "Reproduciendo relevo", "Lecture du relais", "پخش تحویل شیفت"));
+      playTTS(r.text, { lang, voice: "bakemix" });
+    } catch { toast.error(tri("Errore handoff", "Fehler", "Handoff error", "Error", "Erreur", "خطا")); }
+  };
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -337,9 +346,20 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 <button data-testid="bakomix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#14b8a6]/50 text-[#14b8a6] bg-[#14b8a612] active:scale-95 transition-transform">
                   <Mic className="w-4 h-4" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation", "Voice Delegation", "Delegación por Voz", "Délégation Vocale", "واگذاری صوتی")}
                 </button>
+                <button data-testid="bakomix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
+                  <Volume2 className="w-4 h-4" /> {tri("Handoff Audio Turno", "Audio-Schichtübergabe", "Shift Audio Handoff", "Relevo de Turno Audio", "Relais Audio de Poste", "تحویل صوتی شیفت")}
+                </button>
                 <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#8b5cf6]/50 text-[#a78bfa] bg-[#8b5cf612] active:scale-95 transition-transform">
                   <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>
+                <div data-testid="bakomix-glass-control" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-[#8FB0C2]">{tri("Intensità vetro & sfondi", "Glas- & Hintergrund-Intensität", "Glass & background intensity", "Intensidad de vidrio y fondos", "Intensité verre & fonds", "شدت شیشه و پس‌زمینه")}</span>
+                    <span className="text-[11px] font-mono-data font-bold text-white" data-testid="glass-value">{glass}%</span>
+                  </div>
+                  <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#5E8CA8]" />
+                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Alza per sfondi più vividi, abbassa per più contrasto sul testo.", "Höher = lebendigere Hintergründe, niedriger = mehr Kontrast.", "Higher = more vivid backgrounds, lower = more text contrast.", "Más alto = fondos vívidos, más bajo = más contraste.", "Plus haut = fonds vifs, plus bas = plus de contraste.", "بالاتر = پس‌زمینه واضح‌تر، پایین‌تر = کنتراست بیشتر.")}</p>
+                </div>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}
                 {pulse?.staffing && (

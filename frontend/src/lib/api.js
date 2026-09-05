@@ -536,6 +536,8 @@ export const delegationApi = {
     throw e;
   }),
   close: (task_id) => api.post(`/delegation/tasks/${task_id}/close`).then((r) => r.data),
+  handoff: (lang) => api.get(`/shift/handoff`, { params: { lang } }).then((r) => r.data),
+  cleanlinessCheck: (task_id, image_base64) => api.post(`/delegation/tasks/${task_id}/cleanliness-check`, { image_base64 }).then((r) => r.data),
 };
 
 // Handler di replay per la coda offline (bunker mode).

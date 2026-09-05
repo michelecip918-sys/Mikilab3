@@ -94,6 +94,9 @@ export default function App() {
   const [showOperator, setShowOperator] = useState(false);
   const [floorRole, setFloorRole] = useState(() => { try { return localStorage.getItem("mikilab_role") || ""; } catch { return ""; } });
   const [online, setOnline] = useState(() => (typeof navigator !== "undefined" ? navigator.onLine : true));
+  const [glassLevel, setGlassLevel] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_glass_level")); return Number.isFinite(v) && v > 0 ? v : 62; } catch { return 62; } });
+  useEffect(() => { const h = (e) => setGlassLevel(e.detail); window.addEventListener("mikilab-glass-changed", h); return () => window.removeEventListener("mikilab-glass-changed", h); }, []);
+  const bgOpacity = Math.max(0.12, Math.min(0.95, 0.12 + (glassLevel / 100) * 0.83));
   useEffect(() => {
     const on = () => setOnline(true); const off = () => setOnline(false);
     window.addEventListener("online", on); window.addEventListener("offline", off);
@@ -196,7 +199,7 @@ export default function App() {
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
           {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
-          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.62 }} />
+          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: bgOpacity }} />
           {/* Overlay antracite: contrasto sul testo senza appiattire l'immagine */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/40 via-[#050b17]/55 to-[#030712]/88" />
           {/* Vetro antracite: sheen radiale per dare profondità (mai piatto) */}

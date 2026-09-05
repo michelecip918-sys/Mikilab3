@@ -4168,3 +4168,11 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - P1 Handoff Audio Turno: riassunto vocale TTS stato settori al cambio turno.
 - P2 PWA On-Prem: export/self-host (guida fornita; infra).
 - P2 Proofer anti-over-proofing (sync Aura), Batch Phoenix, Apprentice Academy adattiva.
+
+---
+## v-sovereign-tools (2026-06) — Contrasto Regolabile + Checkpoint AR Pulizia + Handoff Audio
+- **#1 Contrasto Regolabile**: slider in BakoMix Capo (`glass-slider`, `bakomix-glass-control`) → localStorage `mikilab_glass_level` + evento `mikilab-glass-changed`; App.js applica `bgOpacity` (0.12–0.95) all'immagine di sfondo in tempo reale. Verificato (90% → sfondo vivido).
+- **#2 Checkpoint AR Pulizia**: `POST /api/delegation/tasks/{id}/cleanliness-check` (Claude Vision → {clean,score,note}; se clean chiude il task). UI in `TeamTasks.jsx`: sui task `sanificazione` a step completati, bottone fotocamera + overlay `clean-check-*`. Endpoint verificato (score/note/close).
+- **#3 Handoff Audio Turno**: `GET /api/shift/handoff?lang=` costruisce riassunto (personale, 6 settori, task attivi, ritmo, macchine ferme) IT/EN/DE. Pulsante `bakomix-handoff-btn` → playTTS voce bakemix. Verificato IT/EN.
+- **#4 PWA On-Prem**: guida export/self-host fornita in chat (infrastruttura).
+- api.js: delegationApi.handoff + cleanlinessCheck. Compile pulito, smoke screenshot OK.
