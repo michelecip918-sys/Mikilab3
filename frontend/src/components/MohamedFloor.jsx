@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mic, ChevronLeft } from "lucide-react";
+import { Mic, ChevronLeft, Scale } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
+import SmartScale from "@/components/SmartScale";
 import SequenceGuard from "@/components/SequenceGuard";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import { useLang } from "@/i18n/LanguageContext";
@@ -25,6 +26,7 @@ export default function MohamedFloor() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [active, setActive] = useState(false);
+  const [tool, setTool] = useState(null); // null | "scale"
   const [depts, setDepts] = useState(BASE_DEPTS);
 
   // Sincronizza le postazioni con i reparti/feature configurati dal Capo (Elite Engine).
@@ -76,7 +78,14 @@ export default function MohamedFloor() {
     );
   }
 
-  // 2) Ruolo scelto → avvia guida vocale
+  // 2) Ruolo scelto → strumento bilancia guidata (Letz_Passive)
+  if (tool === "scale") return (
+    <div data-testid="mohamed-scale" className="space-y-4">
+      <SmartScale onExit={() => setTool(null)} />
+    </div>
+  );
+
+  // 2b) Ruolo scelto → avvia guida vocale
   if (active) return (
     <div data-testid="mohamed-floor-active" className="space-y-4">
       <button data-testid="mohamed-change-role" onClick={changeRole} className="inline-flex items-center gap-1 text-xs font-bold text-[#94A3B8] hover:text-white"><ChevronLeft className="w-4 h-4" /> {role} · {tri("cambia ruolo", "Rolle ändern", "change role", "cambiar rol", "changer de rôle", "تغییر نقش")}</button>
@@ -98,6 +107,9 @@ export default function MohamedFloor() {
       </button>
       <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
       <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Tocca: ti leggo i task del tuo ruolo dalla coda del Capo, passo-passo.", "Tippe: ich lese dir die Aufgaben deiner Rolle aus der Warteschlange des Chefs vor.", "Tap: I read your role's tasks from the Capo's queue, step by step.", "Toca: te leo las tareas de tu rol desde la cola del Capo.", "Touche : je te lis les tâches de ton rôle depuis la file du Capo.", "بزن: وظایف نقش‌ات را از صف کاپو می‌خوانم.")}</p>
+      <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")} className="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#0b0f19] border border-[#3E9C93]/50 text-[#3E9C93] font-black text-sm active:scale-95 transition-all">
+        <Scale className="w-4 h-4" /> {tri("Bilancia Guidata", "Geführte Waage", "Guided Scale", "Báscula Guiada", "Balance Guidée", "ترازوی راهنما")}
+      </button>
       <button data-testid="mohamed-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
     </div>
   );

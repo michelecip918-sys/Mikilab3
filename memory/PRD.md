@@ -4075,3 +4075,13 @@ Backend: campo `department` su Recipe e WarehouseItem.
 - **P2 — Categorizzazione "Mie ricette" nel Master**: assicurare che le ricette personali del Capo compaiano/siano categorizzate nel Master Ricettario.
 - **P2 — Report Consumi reali via Bluetooth (BakemixAI)**: sostituire i dati mock con letture reali dai sensori.
 - **Trasversale** — Traduzione COMPLETA di ogni sezione + revisione grafica/accessibilità (es. blocco "DOCUMENTO ECOSISTEMA (PDF)" ancora in IT; promo "Sapore del giorno"/"Novità" non ancora dept-scoped).
+
+---
+## v-scale (2026-06) — Bilancia Letz_Passive LIVE (Smart Scale UI, WebSocket)
+- **Nuovo componente `components/SmartScale.jsx`** collegato al WebSocket `/api/ws/production-os` (action `scale_weight_streaming`): guida la pesata passo-passo IN SILENZIO (Letz_Passive, zero suoni/beep — solo lo schermo). Integrato nel floor di Mohamed (`MohamedFloor.jsx`, bottone `mohamed-open-scale` nella vista ruolo attivo).
+- **Simulatore realistico** del peso: il valore "sale" verso il target con ease-out + rumore (come una bilancia vera); ogni tick invia il peso al WS, che risponde `in_progress`/`success` (`next_action_unlocked`). Fallback locale se il WS non è disponibile.
+- **Flusso**: scelta ricetta (mikilab) + numero impasti (fattore ×) → anteprima sequenza (Farina, Acqua, Lievito madre, Sale, extra_ingredients scalati sul peso farina) → pesata con anello di progresso, peso live, colore per ingrediente, tolleranza ±2% (stato "togli un po'" se over) → conferma SOLO visiva (✓ verde) → tara e auto-avanzamento all'ingrediente successivo → schermata "Pesata completata".
+- Multilingue completo (IT/DE/EN/ES/FR/FA via `mkTri`); nomi extra ingredienti localizzati (`name_<lang>`). data-testid: `smart-scale`, `scale-recipe-select`, `scale-batch-plus/minus`, `scale-start-btn`, `scale-weigh`, `scale-weight-display`, `scale-step-name`, `scale-ring`, `scale-ws-status`, `scale-pour-toggle`, `scale-tare`, `scale-complete`.
+- NB: esiste già `sections/GuidedWeighing.jsx` (tool separato con Web Bluetooth + voce + bip + food cost/idratazione) — NON toccato; `SmartScale` è la versione Letz_Passive silenziosa e WebSocket-connessa richiesta per il floor.
+- Verificato e2e via screenshot (mobile 390px): auto-avanzamento Farina→Acqua→Lievito madre, "Scale live" (WS connesso), pallini progresso. WS round-trip confermato anche via test Python diretto.
+- RESTA (backlog invariato): Vision Reale da Telefono (camera AR layout, `/api/pocket/vision/scan-floor`), Industrial Pipeline 6-Sector Handoff UI, Climate Time Machine, Eclipse Hands-Free, Haptic Sound Design, Apprentice Academy.
