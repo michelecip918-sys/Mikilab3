@@ -4151,3 +4151,10 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **Rebranding "Miki Labbo"**: Header (App.js + Header.jsx), AdminGate (MIKI LABBO), PinLock, AuthScreen title, index.html <title>/apple-title, manifest, i18n/meta.js (title/ogTitle tutte le lingue). Verificato: SW registrato (1), gate mostra "MIKI LABBO", coda scrivibile, compile pulito.
 - Guida installazione PWA (tablet + intranet bunker self-host) fornita in chat.
 - NOTA onesta: AI (BakoMix/Vision/Clima/Delega) richiede internet; vero on-prem/AI-locale = progetto infrastrutturale a parte.
+
+---
+## v-glass-global (2026-06) — Tema "Black Industrial Glass" globale + avatar/logo
+- `index.css`: regole globali che trasformano i pannelli antracite (`bg-[#1B2A38]`/`#0b0f19`/`#0f172a`, ~700+ usi) in vetro dimensionale (sheen diagonale steel-blue + inset highlight + hairline acciaio), senza toccare il background-color di Tailwind (solo layer aggiunti). Hover glow acciaio su button/anchor in vetro.
+- Avatar & logo (Michele/Mohamed/BakoMix/logo MikiLab) con alone acciaio via `*:has(> img[src*="avatar_"|"logo"])` box-shadow.
+- Sfondi tematici già resi più visibili (v-glass-bg): immagine 0.62 + overlay antracite + griglia geometrica teal che sfuma + micro-griglia circuito + bagliori.
+- Verificato via screenshot (390px): card non più piatte, avatar con glow, testo leggibile, nessun overflow. Approccio CSS globale non invasivo.
