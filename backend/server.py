@@ -4133,6 +4133,54 @@ async def batch_phoenix(body: BatchPhoenixReq, user: dict = Depends(require_admi
 
 
 
+# ---------------------------------------------------------------------------
+# TIMER IMPASTO REALE — traccia inizio/età di ogni impasto; BakoMix segnala il
+# recupero (Batch Phoenix) quando un impasto resta fermo troppo a lungo.
+# ---------------------------------------------------------------------------
+_DOUGH_STALL_MIN = 90
+
+
+class DoughStartReq(BaseModel):
+    dough_type: str = Field(..., max_length=80)
+    kg: float = Field(0, ge=0, le=500)
+    line: Optional[str] = ""
+
+
+def _age_min(iso: str) -> int:
+    try:
+        t = datetime.fromisoformat(iso)
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        return int((datetime.now(timezone.utc) - t).total_seconds() // 60)
+    except Exception:
+        return 0
+
+
+@api_router.post("/batches/start")
+async def dough_start(body: DoughStartReq, user: Optional[dict] = Depends(optional_user)):
+    doc = {"id": str(uuid.uuid4()), "dough_type": body.dough_type[:80], "kg": round(float(body.kg or 0), 2),
+           "line": body.line or "", "status": "active", "started_at": now_iso()}
+    await db.dough_batches.insert_one(dict(doc))
+    return {"status": "success", "batch": doc}
+
+
+@api_router.get("/batches/active")
+async def dough_active(user: Optional[dict] = Depends(optional_user)):
+    items = await db.dough_batches.find({"status": "active"}, {"_id": 0}).sort("started_at", 1).to_list(100)
+    for it in items:
+        it["age_min"] = _age_min(it.get("started_at"))
+        it["stalled"] = it["age_min"] >= _DOUGH_STALL_MIN
+    stalled = [it for it in items if it["stalled"]]
+    return {"batches": items, "stalled_count": len(stalled), "stall_threshold_min": _DOUGH_STALL_MIN}
+
+
+@api_router.post("/batches/{batch_id}/close")
+async def dough_close(batch_id: str, user: Optional[dict] = Depends(optional_user)):
+    await db.dough_batches.update_one({"id": batch_id}, {"$set": {"status": "closed", "closed_at": now_iso()}})
+    return {"status": "success"}
+
+
+
 @api_router.get("/lab/warehouse/consumption")
 async def get_consumption(user: Optional[dict] = Depends(optional_user)):
     return await db.lab_consumption_log.find({}, {"_id": 0}).sort("at", -1).to_list(100)

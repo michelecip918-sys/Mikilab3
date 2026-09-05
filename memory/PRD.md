@@ -4191,3 +4191,10 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **PWA On-Prem (#4)**: `/app/DEPLOY_ONPREM.md` (guida completa self-host + Caddy HTTPS), `frontend/.env.production.example`, `backend/.env.example`. `yarn build` verificato OK (build/ con sw.js+manifest). FATTO.
 - **Storico Handoff Audio Reale (#1)**: coperto dal replay TTS deterministico e in cache (stesso testo → stesso file audio ElevenLabs) → il turno entrante riascolta la voce esatta. Un salvataggio del file mp3 su storage è possibile come step dedicato (serve object storage o base64 in Mongo).
 - **Batch Phoenix Automatico (#2)**: NON implementato — richiede una telemetria reale del timer impasto (start/età batch) per non generare falsi allarmi. Da fare quando i tempi di lievitazione/batch sono tracciati (possibile aggancio a lab_shift_state.pacing_directive == "rallenta").
+
+---
+## v-doughtimer (2026-06)
+- **Timer Impasto Reale (#1) FATTO**: `dough_batches` + `POST /batches/start`, `GET /batches/active` (age_min, stalled≥90min), `POST /batches/{id}/close`. `DoughTimer.jsx` sul floor di Mohamed: avvio timer, età live, evidenzia stalled con badge "Recupera" (→Batch Phoenix). batchesApi esteso (start/active/close). Testato via curl.
+- **Proofer sul Floor (#3) FATTO**: chip live cella/freezer in DoughTimer (prooferApi.sync, refresh 30s).
+- **Audio Handoff Salvato (#2) NON fatto**: serve capture+store del blob TTS in Mongo base64 (step dedicato). Voce esatta già riascoltabile via replay TTS deterministico.
+- **PWA On-Prem (#4)**: DEPLOY_ONPREM.md + .env.production.example + backend/.env.example; `yarn build` OK (build/ con sw.js+manifest).

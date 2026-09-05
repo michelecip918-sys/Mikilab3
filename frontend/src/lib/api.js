@@ -349,6 +349,9 @@ export const batchesApi = {
   create: (data) => api.post(`/batches`, data).then((r) => r.data),
   remove: (id) => api.delete(`/batches/${id}`).then((r) => r.data),
   publicGet: (id) => api.get(`/public/batch/${id}`).then((r) => r.data),
+  start: (dough_type, kg, line) => api.post(`/batches/start`, { dough_type, kg, line }).then((r) => r.data),
+  active: () => api.get(`/batches/active`).then((r) => r.data),
+  close: (id) => api.post(`/batches/${id}/close`).then((r) => r.data),
 };
 
 export const shiftsApi = {

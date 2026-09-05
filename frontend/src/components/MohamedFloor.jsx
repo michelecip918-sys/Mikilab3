@@ -4,6 +4,7 @@ import { Mic, ChevronLeft, Scale } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
 import SmartScale from "@/components/SmartScale";
 import TeamTasks from "@/components/TeamTasks";
+import DoughTimer from "@/components/DoughTimer";
 import SequenceGuard from "@/components/SequenceGuard";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import { useLang } from "@/i18n/LanguageContext";
@@ -98,6 +99,7 @@ export default function MohamedFloor() {
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full"><TeamTasks operatorName={role} /></div>
+      <div className="w-full"><DoughTimer /></div>
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
       <button data-testid="mohamed-mic-btn" onClick={() => setActive(true)} className="relative group active:scale-95 transition-all">
         <span aria-hidden className="absolute inset-0 rounded-full bg-amber-500/40 blur-2xl group-hover:bg-amber-500/60 transition-all" />
