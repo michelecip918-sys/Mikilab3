@@ -8,6 +8,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useLang } from '@/i18n/LanguageContext';
+import { mkTri } from '@/i18n/triMaps';
 import { cleanForSpeech } from '@/lib/voice';
 
 const APP_LANG_TO_TTS = { it: 'it-IT', de: 'de-DE', en: 'en-US', es: 'es-ES', fr: 'fr-FR', fa: 'fa-IR' };
@@ -34,6 +35,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const hasValidDept = ROOM_IDS.includes(lockedDept);
   const isLocked = locked; // operatore/sostituto: sempre bloccato (fail-closed anche senza reparto valido)
   const { lang: appLang } = useLang();
+  const tr = mkTri(appLang);
   const [activeTab, setActiveTab] = useState(locked && hasValidDept ? lockedDept : 'panetteria');
   const [language, setLanguage] = useState(APP_LANG_TO_TTS[appLang] || 'it-IT');
   const [workMode, setWorkMode] = useState(() => { try { return localStorage.getItem('mikilab_work_mode') || 'solo'; } catch { return 'solo'; } });
@@ -191,7 +193,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   useEffect(() => { if (open && API && !readOnly) loadCrates(); /* eslint-disable-next-line */ }, [open, readOnly]);
   // Sintesi vocale automatica all'apertura dell'Elite Engine (Capo)
   useEffect(() => {
-    if (open && isCapo) { const t = setTimeout(() => speakVoice("Benvenuto Comandante. Plancia MikiLab pronta. Reparti e ceste attivi."), 700); return () => clearTimeout(t); }
+    if (open && isCapo) { const t = setTimeout(() => speakVoice(tr("Benvenuto Comandante. Plancia MikiLab pronta. Reparti e ceste attivi.", "Willkommen, Kommandant. MikiLab-Leitstand bereit. Bereiche und Körbe aktiv.", "Welcome, Commander. MikiLab command deck ready. Departments and baskets active.", "Bienvenido, Comandante. Puente de mando MikiLab listo. Departamentos y cestas activos.", "Bienvenue, Commandant. Poste de commande MikiLab prêt. Rayons et paniers actifs.", "خوش آمدید فرمانده. میز فرمان میکی‌لب آماده است. بخش‌ها و سبدها فعال.")), 700); return () => clearTimeout(t); }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
