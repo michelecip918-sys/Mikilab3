@@ -211,3 +211,10 @@
 ## 2026-06 — Postazioni dinamiche di Mohamed (dai reparti del Capo)
 - MohamedFloor ora carica /api/lab/departments e UNISCE alla lista base i reparti custom + le postazioni (feature) create dal Capo nell'Elite Engine (base extras + custom.features + extras[custom]). Offline resta la lista base. Verificato E2E: reparto "Gelateria Test" con postazione "Mantecatore" compare nella scelta postazione di Mohamed.
 - Nota: gli sfondi per postazione custom ricadono sullo sfondo "banco" (mappa keyword in App.js); i reparti base mantengono forno/impasto/laugen.
+
+## 2026-06 — Traduzione completa MikiLabEliteEngine (blocchi 1–9)
+- Aggiunto helper `tr = mkTri(appLang)` nel componente.
+- TUTTE le frasi vocali (speakVoice) tradotte in it/de/en/es/fr/fa: saluto, stato lab, consegne, ceste (crea/aggiungi/vuota/consegna/ricorrente), diagnostica + step, allarmi forno, ferie, radio, lingua, spostamento reparto, guide tecniche (LM/diagnostica), calcolo acqua, "Ricetta {nome}".
+- Testi VISIBILI tradotti: badge "Attivo", pulsante allarme forno, "Rispetto al mercato:" + descrizione, placeholder "ID"/"Nome reparto", titoli azioni (Elimina/Elimina reparto/Svuota), "Panetteria"/"Pasticceria", firma autori.
+- Lasciati invariati i nomi propri/brand: "Pizzeria", "MikiLab Industrial Systems".
+- Verificato: 0 speakVoice italiani residui, compila senza errori.

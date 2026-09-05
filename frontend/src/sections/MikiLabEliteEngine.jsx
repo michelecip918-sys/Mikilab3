@@ -734,9 +734,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                         </div>
                         <select data-testid={`elite-crew-dept-${i}`} value={ROOM_IDS.includes(m.department) ? m.department : 'panetteria'} onChange={(e) => assignDept(m.email, e.target.value)}
                           style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '6px', padding: '5px', fontSize: '0.72rem', fontWeight: 700 }}>
-                          <option value="panetteria">Panetteria</option>
+                          <option value="panetteria">{tr("Panetteria", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")}</option>
                           <option value="pizzeria">Pizzeria</option>
-                          <option value="pasticceria">Pasticceria</option>
+                          <option value="pasticceria">{tr("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")}</option>
                         </select>
                       </div>
                     ))}
@@ -891,7 +891,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
           {activeTab === 'guida' ? (
             <div data-testid="elite-guida-content" style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#DDD' }}>
-              <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong> ideato e sviluppato da Mohamed & Miki.</p>
+              <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong>>{tr(" ideato e sviluppato da Mohamed & Miki.", " erdacht und entwickelt von Mohamed & Miki.", " conceived and developed by Mohamed & Miki.", " ideado y desarrollado por Mohamed & Miki.", " conçu et développé par Mohamed & Miki.", " طراحی و توسعه توسط محمد و میکی.")}</p>
               <p>🔒 <strong>Protezione Copyright:</strong> Questo software, l'interfaccia 3D, la logica dei timer e i contenuti multimediali sono protetti da diritti di proprietà intellettuale esclusivi. Ogni duplicazione o uso non autorizzato è severamente vietato.</p>
               <p>🚀 <strong>{tr("Rispetto al mercato:", "Im Vergleich zum Markt:", "Compared to the market:", "Frente al mercado:", "Par rapport au marché :", "در مقایسه با بازار:")}</strong>>{tr("Foto reali del team, radio live integrata, ricette collegate al database e allarmi con notifica del telefono per la cottura.", "Echte Team-Fotos, integriertes Live-Radio, mit der Datenbank verknüpfte Rezepte und Backalarme mit Telefonbenachrichtigung.", "Real team photos, integrated live radio, recipes linked to the database and baking alarms with phone notification.", "Fotos reales del equipo, radio en vivo integrada, recetas vinculadas a la base de datos y alarmas de cocción con notificación al teléfono.", "Photos réelles de l'équipe, radio live intégrée, recettes liées à la base de données et alarmes de cuisson avec notification téléphone.", "عکس‌های واقعی تیم، رادیوی زنده یکپارچه، دستورهای متصل به پایگاه‌داده و هشدارهای پخت با اعلان تلفن.")}</p>
             </div>
