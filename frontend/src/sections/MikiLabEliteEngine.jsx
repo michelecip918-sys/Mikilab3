@@ -247,7 +247,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     const items = ['5x Baguette', '5x Croissant'];
     setCrates(prev => prev.map(c => c.id === crate.id ? { ...c, items: [...(c.items || []), ...items] } : c));
     try { for (const it of items) await fetch(`${API}/api/crates/${crate.id}/item`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: it }) }); } catch (e) { loadCrates(); }
-    speakVoice(`Cesta ricorrente caricata per ${crate.store_name}.`);
+    speakVoice(tr(`Cesta ricorrente caricata per ${crate.store_name}.`, `Wiederkehrender Korb für ${crate.store_name} geladen.`, `Recurring basket loaded for ${crate.store_name}.`, `Cesta recurrente cargada para ${crate.store_name}.`, `Panier récurrent chargé pour ${crate.store_name}.`, `سبد تکرارشونده برای ${crate.store_name} بارگذاری شد.`));
   };
 
   const speakVoice = (text) => {
@@ -331,7 +331,9 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       const res = await fetch(`${API}/api/lab/holiday`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ active: next }) });
       if (!res.ok) { setHoliday(!next); return; }
       window.dispatchEvent(new Event('mikilab-holiday-changed'));
-      speakVoice(next ? "Modalità ferie intelligenti attivata, cicli settimanali clonati." : "Modalità ferie disattivata, produzione ripresa.");
+      speakVoice(next
+        ? tr("Modalità ferie intelligenti attivata, cicli settimanali clonati.", "Intelligenter Urlaubsmodus aktiviert, Wochenzyklen geklont.", "Smart holiday mode activated, weekly cycles cloned.", "Modo vacaciones inteligente activado, ciclos semanales clonados.", "Mode vacances intelligent activé, cycles hebdomadaires clonés.", "حالت تعطیلات هوشمند فعال شد، چرخه‌های هفتگی کپی شدند.")
+        : tr("Modalità ferie disattivata, produzione ripresa.", "Urlaubsmodus deaktiviert, Produktion wieder aufgenommen.", "Holiday mode deactivated, production resumed.", "Modo vacaciones desactivado, producción reanudada.", "Mode vacances désactivé, production reprise.", "حالت تعطیلات غیرفعال شد، تولید از سر گرفته شد."));
     } catch (e) { setHoliday(!next); }
   };
 
@@ -390,7 +392,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     if (radioPlaying) {
       a.pause();
       setRadioPlaying(false);
-      speakVoice("Radio panificio spenta");
+      speakVoice(tr("Radio panificio spenta", "Bäckerei-Radio aus", "Bakery radio off", "Radio de la panadería apagada", "Radio boulangerie éteinte", "رادیوی نانوایی خاموش شد"));
     } else {
       playStation(currentStation);
       speakVoice(`Radio del Fornaio: ${currentStation.name}`);
