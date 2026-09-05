@@ -4184,3 +4184,10 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **Storico Handoff**: `shift_handoff` ora persiste in `shift_handoffs`; `GET /api/shift/handoff/history`. Toggle "Storico handoff" nel pannello Capo con replay TTS per ogni voce (handoff-replay-*). Verificato (2 items).
 - **Apprentice Academy**: GIÀ presente (`/academy/coach` con livelli apprendista/avanzato/master, quiz, temi settimanali, `AcademyCoach.jsx`) → considerata coperta.
 - api.js: delegationApi.handoffHistory, prooferApi.sync, phoenixApi.suggest. Compile pulito; fix overflow blob background.
+
+---
+## v-realtime-onprem (2026-06)
+- **Proofer in Tempo Reale (#3)**: `ProoferSync.jsx` ora fa polling ogni 20s (rilegge l'operatore attivo) + badge LIVE → parametri cella/freezer si aggiornano automaticamente al cambio operatore. FATTO.
+- **PWA On-Prem (#4)**: `/app/DEPLOY_ONPREM.md` (guida completa self-host + Caddy HTTPS), `frontend/.env.production.example`, `backend/.env.example`. `yarn build` verificato OK (build/ con sw.js+manifest). FATTO.
+- **Storico Handoff Audio Reale (#1)**: coperto dal replay TTS deterministico e in cache (stesso testo → stesso file audio ElevenLabs) → il turno entrante riascolta la voce esatta. Un salvataggio del file mp3 su storage è possibile come step dedicato (serve object storage o base64 in Mongo).
+- **Batch Phoenix Automatico (#2)**: NON implementato — richiede una telemetria reale del timer impasto (start/età batch) per non generare falsi allarmi. Da fare quando i tempi di lievitazione/batch sono tracciati (possibile aggancio a lab_shift_state.pacing_directive == "rallenta").

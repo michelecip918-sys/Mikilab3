@@ -11,7 +11,12 @@ export default function ProoferSync({ onClose }) {
   const [d, setD] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => { prooferApi.sync().then(setD).catch(() => setD(null)).finally(() => setLoading(false)); }, []);
+  useEffect(() => {
+    const fetchNow = () => prooferApi.sync().then(setD).catch(() => {}).finally(() => setLoading(false));
+    fetchNow();
+    const iv = setInterval(fetchNow, 20000); // aggiorna quando cambia l'operatore attivo sul turno
+    return () => clearInterval(iv);
+  }, []);
 
   return (
     <div data-testid="proofer-sync" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
@@ -26,6 +31,7 @@ export default function ProoferSync({ onClose }) {
             <div className="flex items-center gap-2 rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-3">
               <Gauge className="w-4 h-4 text-[#5EEAD4]" />
               <span className="text-sm text-white font-bold flex-1">{d.operator}</span>
+              <span className="inline-flex items-center gap-1 text-[9px] font-black text-emerald-400"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />LIVE</span>
               {d.aura && <span className="text-[11px] font-black px-2 py-1 rounded-full" style={{ background: `${d.aura.color}22`, color: d.aura.color }}>{d.aura.aura_effect}</span>}
             </div>
             <div className="grid grid-cols-3 gap-2">
