@@ -4265,3 +4265,16 @@ Direttiva aggiornata "Master-Centric" (constraint ora "incrementally and safely"
 - P8 Riciclo impasti + Edge-Mesh / plant cloning via Master PIN.
 - Trigger "i" da estendere a TUTTE le sezioni (ora presente nel Radar); "Zero-Menu" completo (l'app resta single-screen per ruolo, nessuna sezione rimossa per scelta anti-distruttiva).
 
+
+---
+## v13.2 (2026-09-05) — "Industrial Lock" increment 3: Anti-Fooling Liveness (P5) + trigger "i" esteso
+- **Anti-Fooling · Voice-Print Liveness (P5)**: prima di attivare l'assistente vocale sul Floor, l'operatore deve pronunciare (o digitare se il browser non supporta Web Speech) una FRASE-SFIDA casuale. Backend: `GET /api/antifool/challenge?lang=` (frasi in 6 lingue, TTL 90s) + `POST /api/antifool/verify` (difflib SequenceMatcher, soglia 0.72, challenge ONE-SHOT). Frontend `LivenessGate.jsx`: gate modale con frase + mic; 3 fallimenti → allarme `liveness-ghost` (possibile proxy/ghost login). Wired su `mohamed-mic-btn` (l'assistente non parte finché la liveness non è superata).
+- **Trigger "i" esteso**: `BakoInfo` aggiunto anche in cima alla Plancia Capo ("Governa a voce"), oltre al Radar.
+- Test: iteration_188.json → backend 4/4 PASS (challenge multilingua+varianza, verify MATCH one-shot, NO-MATCH<0.72, challenge inesistente→expired), frontend PASS (gate apre con frase e blocca l'assistente, cancel chiude; "i" Plancia Capo apre il pannello). Voce non simulabile in automazione (limite noto). Lint 0 errori. Verificato anche via curl (match 1.0, wrong 0.47).
+### RESTA (Industrial Lock — future/backlog):
+- P5 avanzato: cross-check ottico-telemetrico (conferma schermo vs peso silo/carico macchina) + monitoraggio presenza BLE continuo turni notte.
+- P6 Optical telemetry (checkpoint visivi → dashboard Master arricchita).
+- P7 Order intake agnostico (POS → target volumetrici, silo auto-deduct, self-rebalancing IoT).
+- P8 Riciclo impasti + Edge-Mesh / plant cloning via Master PIN.
+- Trigger "i" da estendere alle sezioni restanti (ora: Radar + Plancia Capo).
+

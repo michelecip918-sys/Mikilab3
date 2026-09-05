@@ -3089,6 +3089,56 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed}
 
 
+# ---------------------------------------------------------------------------
+# ANTI-FOOLING · Voice-Print Liveness (Zero-Bypass): prima di un'azione critica
+# BakoMix chiede una FRASE-SFIDA casuale; l'operatore deve pronunciarla dal vivo.
+# Blocca proxy-login, handoff non autorizzati e ghost-activity. TTL breve.
+# ---------------------------------------------------------------------------
+_ANTIFOOL_PHRASES = {
+    "it": ["pane caldo alle cinque del mattino", "lievito madre e farina di grano", "forno acceso e teglia pronta", "impasto morbido con le mani in farina", "biga matura e crosta dorata"],
+    "en": ["warm bread at five in the morning", "sourdough and wheat flour", "oven on and tray ready", "soft dough with hands in flour", "ripe biga and golden crust"],
+    "de": ["warmes brot um fünf uhr morgens", "sauerteig und weizenmehl", "ofen an und blech bereit", "weicher teig mit mehl an den händen", "reife biga und goldene kruste"],
+    "es": ["pan caliente a las cinco", "masa madre y harina de trigo", "horno encendido y bandeja lista", "masa suave con harina", "biga madura y corteza dorada"],
+    "fr": ["pain chaud à cinq heures", "levain et farine de blé", "four allumé et plaque prête", "pâte souple les mains dans la farine", "biga mûre et croûte dorée"],
+    "fa": ["نان گرم ساعت پنج صبح", "خمیرمایه و آرد گندم", "فر روشن و سینی آماده", "خمیر نرم با دست‌های آردی", "بیگای رسیده و پوسته طلایی"],
+}
+_antifool_challenges = {}
+
+
+@api_router.get("/antifool/challenge")
+async def antifool_challenge(lang: str = "it"):
+    import random as _rnd
+    phrases = _ANTIFOOL_PHRASES.get((lang or "it").split("-")[0][:2], _ANTIFOOL_PHRASES["it"])
+    phrase = _rnd.choice(phrases)
+    cid = uuid.uuid4().hex[:10]
+    now = time.time()
+    _antifool_challenges[cid] = {"phrase": phrase, "exp": now + 90}
+    for k in [k for k, v in list(_antifool_challenges.items()) if v["exp"] < now]:
+        _antifool_challenges.pop(k, None)
+    return {"challenge_id": cid, "phrase": phrase, "lang": lang}
+
+
+class AntifoolVerifyReq(BaseModel):
+    challenge_id: str
+    transcript: str = ""
+
+
+@api_router.post("/antifool/verify")
+async def antifool_verify(body: AntifoolVerifyReq):
+    import difflib as _dl
+    ch = _antifool_challenges.get(body.challenge_id)
+    if not ch:
+        return {"ok": False, "reason": "expired", "score": 0.0}
+    if ch["exp"] < time.time():
+        _antifool_challenges.pop(body.challenge_id, None)
+        return {"ok": False, "reason": "expired", "score": 0.0}
+    _norm = lambda s: re.sub(r"[^\w\s]", "", (s or "").lower()).strip()
+    score = _dl.SequenceMatcher(None, _norm(ch["phrase"]), _norm(body.transcript)).ratio()
+    ok = score >= 0.72
+    _antifool_challenges.pop(body.challenge_id, None)
+    return {"ok": bool(ok), "score": round(float(score), 2), "expected": ch["phrase"]}
+
+
 @api_router.get("/production/worker-aura/{worker_name}")
 async def get_worker_power_level(worker_name: str, user: Optional[dict] = Depends(optional_user)):
     w = await db.lab_shift_plan.find_one({"worker_name": {"$regex": f"^{re.escape(worker_name)}$", "$options": "i"}}, {"_id": 0})

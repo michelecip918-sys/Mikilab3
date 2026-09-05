@@ -49,6 +49,7 @@ import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock, WifiOf
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import PlantRadar from "@/components/PlantRadar";
+import BakoInfo from "@/components/BakoInfo";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 const PUB = process.env.PUBLIC_URL;
@@ -319,6 +320,10 @@ export default function App() {
                   ) : (
                   <div className="space-y-5" data-testid="lab-control-view">
                     <LabBriefing />
+                    <div className="flex items-center justify-end gap-2 -mb-2">
+                      <span className="text-[11px] font-bold text-[#06b6d4]">{tri("Governa a voce", "Per Stimme steuern", "Govern by voice", "Gobierna por voz", "Gouverne à la voix", "با صدا مدیریت کن")}</span>
+                      <BakoInfo context={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} />
+                    </div>
                     <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="MikiLab" roleTag="Master Admin" />
                     <div data-testid="capo-dept-switch" className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] overflow-x-auto">
                       {[["panificazione", "🍞", tri("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")], ["pizzeria", "🍕", "Pizzeria"], ["pasticceria", "🥐", tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")], ["tutti", "👑", tri("Tutti", "Alle", "All", "Todos", "Tous", "همه")]].map(([k, ic, lb]) => (

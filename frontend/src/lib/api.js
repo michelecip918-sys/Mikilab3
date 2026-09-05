@@ -569,6 +569,12 @@ export const masterApi = {
   sections: () => api.get(`/master/sections`).then((r) => r.data),
 };
 
+// Anti-Fooling · Voice-Print Liveness (frase-sfida dal vivo).
+export const antifoolApi = {
+  challenge: (lang) => api.get(`/antifool/challenge`, { params: { lang } }).then((r) => r.data),
+  verify: (challenge_id, transcript) => api.post(`/antifool/verify`, { challenge_id, transcript }).then((r) => r.data),
+};
+
 export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };
