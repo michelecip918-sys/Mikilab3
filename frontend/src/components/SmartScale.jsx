@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Scale, ChevronLeft, Check, RotateCcw, Play, Pause, Droplets, Loader2, Wifi, WifiOff } from "lucide-react";
+import { Scale, ChevronLeft, Check, RotateCcw, Play, Pause, Droplets, Loader2, Wifi, WifiOff, Bluetooth } from "lucide-react";
+import { toast } from "sonner";
 import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -42,14 +43,17 @@ export default function SmartScale({ onExit }) {
   const [pouring, setPouring] = useState(false);
   const [reached, setReached] = useState(false);
   const [wsUp, setWsUp] = useState(false);
+  const [bleOn, setBleOn] = useState(false);
 
   const wsRef = useRef(null);
   const pourRef = useRef(false);
   const weightRef = useRef(0);
   const advanceRef = useRef(null);
   const onReachedRef = useRef(() => {});
+  const bleRef = useRef(false);
   useEffect(() => { weightRef.current = weight; }, [weight]);
   useEffect(() => { pourRef.current = pouring; }, [pouring]);
+  useEffect(() => { bleRef.current = bleOn; }, [bleOn]);
 
   useEffect(() => {
     recipesApi.list("mikilab").then((r) => setRecipes(Array.isArray(r) ? r : [])).catch(() => setRecipes([]));
@@ -107,10 +111,43 @@ export default function SmartScale({ onExit }) {
 
   useEffect(() => { onReachedRef.current = onReached; }, [onReached]);
 
+  // Bilancia reale via Web Bluetooth (servizio standard Weight Scale 0x181D).
+  const connectBle = useCallback(async () => {
+    if (!navigator.bluetooth) {
+      toast.error(tri("Web Bluetooth non supportato (usa Chrome/Android)", "Web Bluetooth nicht unterstützt", "Web Bluetooth not supported (use Chrome/Android)", "Web Bluetooth no soportado", "Web Bluetooth non supporté", "وب‌بلوتوث پشتیبانی نمی‌شود"));
+      return;
+    }
+    try {
+      const dev = await navigator.bluetooth.requestDevice({ filters: [{ services: ["weight_scale"] }], optionalServices: ["weight_scale"] });
+      const server = await dev.gatt.connect();
+      const svc = await server.getPrimaryService("weight_scale");
+      const ch = await svc.getCharacteristic("weight_measurement");
+      await ch.startNotifications();
+      ch.addEventListener("characteristicvaluechanged", (e) => {
+        const dv = e.target.value; const flags = dv.getUint8(0); const raw = dv.getUint16(1, true);
+        const grams = (flags & 0x01) ? raw * 453.592 / 200 : raw * 5; // lb vs SI (0.005 kg)
+        const g = Math.max(0, Math.round(grams));
+        weightRef.current = g; setWeight(g);
+        const tgt = weightRef._t || 0;
+        sendWeight(g, tgt);
+        if (!wsRef.current || wsRef.current.readyState !== 1) { if (tgt && g >= tgt * (1 - TOL)) onReachedRef.current(); }
+      });
+      dev.addEventListener("gattserverdisconnected", () => { setBleOn(false); });
+      setBleOn(true);
+      toast.success(tri("Bilancia Bluetooth collegata", "Bluetooth-Waage verbunden", "Bluetooth scale connected", "Báscula Bluetooth conectada", "Balance Bluetooth connectée", "ترازوی بلوتوث وصل شد"));
+    } catch {
+      toast.error(tri("Connessione annullata o fallita", "Verbindung fehlgeschlagen", "Connection cancelled/failed", "Conexión cancelada/fallida", "Connexion annulée/échouée", "اتصال لغو یا ناموفق شد"));
+    }
+  }, [tri, sendWeight]);
+
+  // mantiene il target corrente accessibile al listener BLE
+  useEffect(() => { weightRef._t = target; }, [target]);
+
   // Simulatore realistico: il peso "sale" verso il target come una bilancia vera (ease-out + rumore).
   useEffect(() => {
     if (phase !== "weigh") return;
     const iv = setInterval(() => {
+      if (bleRef.current) return; // bilancia reale collegata → guida il device
       if (!pourRef.current || !target) return;
       const cur = weightRef.current;
       if (cur >= target * (1 - TOL)) {
@@ -211,6 +248,15 @@ export default function SmartScale({ onExit }) {
           >
             {tri("Avvia pesata guidata", "Einwaage starten", "Start guided weighing", "Iniciar pesaje guiado", "Démarrer la pesée guidée", "شروع وزن‌کشی راهنما")}
           </button>
+
+          <button
+            data-testid="scale-ble-btn"
+            onClick={connectBle}
+            className={`mt-2 w-full py-3 rounded-2xl inline-flex items-center justify-center gap-2 font-bold text-sm border active:scale-98 transition-all ${bleOn ? "bg-[#5E8CA8]/15 border-[#5E8CA8] text-[#8FB0C2]" : "bg-[#030712] border-[#2A3B49] text-[#94A3B8]"}`}
+          >
+            <Bluetooth className="w-4 h-4" /> {bleOn ? tri("Bilancia reale collegata", "Echte Waage verbunden", "Real scale connected", "Báscula real conectada", "Balance réelle connectée", "ترازوی واقعی وصل شد") : tri("Collega bilancia Bluetooth", "Bluetooth-Waage verbinden", "Connect Bluetooth scale", "Conectar báscula Bluetooth", "Connecter balance Bluetooth", "اتصال ترازوی بلوتوث")}
+          </button>
+          <p className="mt-1 text-center text-[10px] text-[#64748B]">{bleOn ? tri("Il peso arriva dalla bilancia fisica.", "Gewicht kommt von der echten Waage.", "Weight comes from the physical scale.", "El peso viene de la báscula física.", "Le poids vient de la balance physique.", "وزن از ترازوی فیزیکی می‌آید.") : tri("Senza bilancia: simulatore realistico integrato.", "Ohne Waage: integrierter Simulator.", "No scale: built-in realistic simulator.", "Sin báscula: simulador integrado.", "Sans balance : simulateur intégré.", "بدون ترازو: شبیه‌ساز داخلی.")}</p>
         </div>
       </div>
     );
@@ -305,15 +351,21 @@ export default function SmartScale({ onExit }) {
 
       {/* Comandi (facoltativi: la bilancia guida da sola) */}
       <div className="grid grid-cols-2 gap-2">
-        <button
-          data-testid="scale-pour-toggle"
-          onClick={() => setPouring((p) => !p)}
-          disabled={reached}
-          className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#030712] border border-[#2A3B49] text-white font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"
-        >
-          {pouring ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
-          {pouring ? tri("Pausa", "Pause", "Pause", "Pausa", "Pause", "مکث") : tri("Versa", "Gießen", "Pour", "Verter", "Verser", "بریز")}
-        </button>
+        {bleOn ? (
+          <div data-testid="scale-ble-live" className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/50 text-[#8FB0C2] font-bold text-sm">
+            <Bluetooth className="w-4 h-4" /> {tri("Bilancia reale", "Echte Waage", "Real scale", "Báscula real", "Balance réelle", "ترازوی واقعی")}
+          </div>
+        ) : (
+          <button
+            data-testid="scale-pour-toggle"
+            onClick={() => setPouring((p) => !p)}
+            disabled={reached}
+            className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#030712] border border-[#2A3B49] text-white font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"
+          >
+            {pouring ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            {pouring ? tri("Pausa", "Pause", "Pause", "Pausa", "Pause", "مکث") : tri("Versa", "Gießen", "Pour", "Verter", "Verser", "بریز")}
+          </button>
+        )}
         <button
           data-testid="scale-tare"
           onClick={tare}

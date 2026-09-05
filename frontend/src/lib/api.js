@@ -505,8 +505,13 @@ export const enterpriseApi = {
   masterCommand: (command_text, active_site_id) => api.post(`/pocket/master-command`, { command_text, active_site_id }).then((r) => r.data),
   weeklyChallenge: () => cachedGet("ent_weekly", () => api.get(`/enterprise/weekly-challenge`).then((r) => r.data), null),
   scanFloor: (site_id) => api.post(`/pocket/vision/scan-floor`, { site_id }).then((r) => r.data),
+  visionScan: (site_id, image_base64) => api.post(`/enterprise/sites/${site_id}/layout/vision-scan`, { image_base64 }).then((r) => r.data),
   lineStatus: (dough_temp = 24, hydration = 65) => cachedGet(`ent_line_${dough_temp}_${hydration}`, () => api.get(`/production/line-status`, { params: { dough_temp, hydration } }).then((r) => r.data), { sectors: [] }),
   omni: () => cachedGet("ent_omni", () => api.get(`/enterprise/omni-intelligence`).then((r) => r.data), null),
+};
+
+export const climateApi = {
+  timeMachine: (body) => api.post(`/climate/time-machine`, body).then((r) => r.data),
 };
 
 // Dual-Mode STRATEGIC — audit ricetta del Master Baker + matrice sovrana.

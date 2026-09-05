@@ -4085,3 +4085,20 @@ Backend: campo `department` su Recipe e WarehouseItem.
 - NB: esiste già `sections/GuidedWeighing.jsx` (tool separato con Web Bluetooth + voce + bip + food cost/idratazione) — NON toccato; `SmartScale` è la versione Letz_Passive silenziosa e WebSocket-connessa richiesta per il floor.
 - Verificato e2e via screenshot (mobile 390px): auto-avanzamento Farina→Acqua→Lievito madre, "Scale live" (WS connesso), pallini progresso. WS round-trip confermato anche via test Python diretto.
 - RESTA (backlog invariato): Vision Reale da Telefono (camera AR layout, `/api/pocket/vision/scan-floor`), Industrial Pipeline 6-Sector Handoff UI, Climate Time Machine, Eclipse Hands-Free, Haptic Sound Design, Apprentice Academy.
+
+---
+## v-enterprise-tools (2026-06) — Pipeline, Vision AR, Clima, Bilancia Bluetooth
+Direttiva "final-master-closure": completate le 4 funzioni concrete in sospeso (backlog Bilancia/Vision + Pipeline + Clima).
+- **Bilancia Bluetooth (SmartScale)**: aggiunto Web Bluetooth (servizio standard `weight_scale` 0x181D, char `weight_measurement`) come alternativa al simulatore. Pulsante `scale-ble-btn` nella scelta; quando collegata il peso arriva dal device fisico (il simulatore si disattiva), invio comunque al WebSocket per sbloccare gli step. Fallback simulatore se nessuna bilancia.
+- **Pipeline 6 Reparti (`ProductionPipeline.jsx`)**: modale Capo (da BakoMixSense, `bakomix-pipeline-btn`). Timeline verticale dei 6 settori (Dosaggio, Autolisi, Formatura, Cella Fermo, Forni, Abbattimento) con handoff inter-settore, stato colore, badge glutine, sliders temp impasto + idratazione che ricalcolano i parametri a valle via `/api/production/line-status`. Verificato: 6 settori renderizzati.
+- **Vision AR (`SpatialVisionAR.jsx`)**: modale Capo (`bakomix-vision-btn`). Fotocamera `getUserMedia` (facingMode environment) → cattura frame → `POST /api/enterprise/sites/{id}/layout/vision-scan` (NUOVO, require_admin, Claude Sonnet 4.6 Vision) riconosce i macchinari (oven/mixer/proofer/fridge/divider/shaper/bench/shelf…) con posizione relativa rx/ry, li mappa sulle dimensioni reali della stanza e li salva in `spatial_layout` (rimpiazza i precedenti source=vision_ar). Mappa spaziale con dot colorati per stato + badge "AR". Verificato backend: 5 macchinari riconosciuti da foto reale.
+- **Macchina del Tempo Clima (`ClimateTimeMachine.jsx`)**: modale Capo (`bakomix-climate-btn`). `POST /api/climate/time-machine` (NUOVO): Open-Meteo (Stoccarda 48.7758,9.1829, no key) per umidità + pressione barometrica (media 7gg passati vs prossimi 3gg + trend), poi Claude produce correzioni ricetta JSON (delta idratazione/lievito/puntata + verdetto stabile|umido|secco + tips). Selettore ricetta mikilab. Verificato e2e via UI: umidità 53%, pressione 987 hPa, verdetto + tips.
+- API frontend: `enterpriseApi.visionScan`, nuovo `climateApi.timeMachine`.
+- **NON eseguita la "purga distruttiva" del repo** richiesta nella direttiva: l'app è al 100% funzionante e una rimozione di massa di file/componenti "legacy" rischia regressioni. Va fatta come attività separata e controllata (mappatura import → rimozione mirata → test).
+- Limiti noti: la cattura fotocamera Vision AR e la bilancia Bluetooth richiedono un dispositivo reale (non testabili in headless); logica e endpoint verificati.
+
+### RESTA dalla direttiva (grandi feature nuove, da pianificare)
+- Eclipse: delega vocale del Capo → BakoMix divide sotto-ruoli tra operatori per skill/presenza (workflow squadra, es. sanificazione carrelli multi-step).
+- Checkpoint AR di pulizia: vision valida standard di pulizia/attrezzatura prima di chiudere un task.
+- Handoff audio automatico al cambio turno per i supervisori.
+- Batch Phoenix (eliminazione sprechi) + Apprentice Academy adattiva.

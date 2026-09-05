@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles } from "lucide-react";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun } from "lucide-react";
 import { pulseApi, staffingApi, briefingApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
@@ -11,6 +11,9 @@ import FailsafeSwitch from "@/components/FailsafeSwitch";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import EnterpriseGrid from "@/components/EnterpriseGrid";
 import RecipeAuditMatrix from "@/components/RecipeAuditMatrix";
+import ProductionPipeline from "@/components/ProductionPipeline";
+import SpatialVisionAR from "@/components/SpatialVisionAR";
+import ClimateTimeMachine from "@/components/ClimateTimeMachine";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -36,6 +39,9 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [briefingOpen, setBriefingOpen] = useState(true);
   const [entOpen, setEntOpen] = useState(false);
   const [auditOpen, setAuditOpen] = useState(false);
+  const [pipelineOpen, setPipelineOpen] = useState(false);
+  const [visionOpen, setVisionOpen] = useState(false);
+  const [climateOpen, setClimateOpen] = useState(false);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -161,6 +167,9 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       <LabAura enabled={aura} mood={mood} heartbeat={hb} station={mode === "floor" ? (floorRole || "") : ""} />
       {entOpen && <EnterpriseGrid onClose={() => setEntOpen(false)} />}
       {auditOpen && <RecipeAuditMatrix onClose={() => setAuditOpen(false)} />}
+      {pipelineOpen && <ProductionPipeline onClose={() => setPipelineOpen(false)} />}
+      {visionOpen && <SpatialVisionAR onClose={() => setVisionOpen(false)} />}
+      {climateOpen && <ClimateTimeMachine onClose={() => setClimateOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -296,6 +305,17 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 <button data-testid="bakomix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
                   <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
+                <div className="grid grid-cols-3 gap-2">
+                  <button data-testid="bakomix-pipeline-btn" onClick={() => setPipelineOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5EEAD4]/40 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
+                    <Factory className="w-4 h-4" /> {tri("Linea", "Linie", "Line", "Línea", "Ligne", "خط")}
+                  </button>
+                  <button data-testid="bakomix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#c084fc]/40 text-[#c084fc] bg-[#a855f70d] active:scale-95 transition-transform">
+                    <ScanLine className="w-4 h-4" /> {tri("Vision AR", "Vision AR", "Vision AR", "Vision AR", "Vision AR", "ویژن AR")}
+                  </button>
+                  <button data-testid="bakomix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
+                    <CloudSun className="w-4 h-4" /> {tri("Clima", "Klima", "Climate", "Clima", "Climat", "اقلیم")}
+                  </button>
+                </div>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}
                 {pulse?.staffing && (

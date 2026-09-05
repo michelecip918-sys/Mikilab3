@@ -3171,6 +3171,184 @@ async def enterprise_optimize_layout(site_id: str, move: LayoutMove, user: dict 
             "bakomix_simulation": f"Risparmio movimenti/energia stimato al {saving}%."}
 
 
+# ---------------------------------------------------------------------------
+# VISION AR — la fotocamera riconosce i macchinari (Claude Vision) e li posiziona
+# sulla mappa spaziale della sede. Rimpiazza gli asset rilevati da AR a ogni scan.
+# ---------------------------------------------------------------------------
+class VisionFloorScan(BaseModel):
+    image_base64: str
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/enterprise/sites/{site_id}/layout/vision-scan")
+async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: dict = Depends(require_admin)):
+    await _seed_sites()
+    site = await db.lab_sites.find_one({"site_id": site_id})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    img = (payload.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"floorscan-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei l'occhio AR di BakoMix. Analizza la FOTO dell'interno di un laboratorio/panificio. "
+                "Identifica i MACCHINARI e le attrezzature visibili (impastatrici, forni, celle di lievitazione/frigo, "
+                "spezzatrici, formatrici, abbattitori, sfogliatrici, banchi da lavoro, scaffali). "
+                "Rispondi SOLO con JSON valido, senza altro testo: "
+                '{"equipment":[{"name":"nome breve","type":"oven|mixer|proofer|fridge|divider|shaper|blast_chiller|bench|shelf|other",'
+                '"rx":0.0,"ry":0.0,"confidence":0.0}]}. '
+                "rx/ry = posizione relativa nell'inquadratura 0..1 (rx sinistra→destra, ry vicino→lontano). "
+                "Massimo 8 elementi. Non inventare macchinari non visibili nella foto."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Rileva i macchinari nella foto.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        detected = (json.loads(m.group(0)).get("equipment") if m else []) or []
+    except Exception as e:
+        logging.warning(f"vision_scan failed: {e}")
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+
+    layout = site.get("spatial_layout") or {"room_dimensions_m": {"width": 12.0, "length": 18.0}, "equipment": []}
+    dims = layout.get("room_dimensions_m") or {"width": 12.0, "length": 18.0}
+    W = float(dims.get("width", 12) or 12)
+    L = float(dims.get("length", 18) or 18)
+    # rimuovi i precedenti asset rilevati da AR (mantiene quelli seed/manuali)
+    layout["equipment"] = [e for e in layout.get("equipment", []) if e.get("source") != "vision_ar"]
+    added = []
+    for d in detected[:8]:
+        try:
+            rx = max(0.0, min(1.0, float(d.get("rx", 0.5) or 0.5)))
+            ry = max(0.0, min(1.0, float(d.get("ry", 0.5) or 0.5)))
+        except Exception:
+            rx, ry = 0.5, 0.5
+        eq = {"id": f"ar_{uuid.uuid4().hex[:6]}", "name": (str(d.get("name") or "Macchinario"))[:40],
+              "type": str(d.get("type") or "other"), "x": round(rx * W, 1), "y": round(ry * L, 1),
+              "status": "active", "source": "vision_ar",
+              "confidence": round(float(d.get("confidence", 0.8) or 0.8), 2)}
+        layout["equipment"].append(eq)
+        added.append(eq)
+    await db.lab_sites.update_one({"site_id": site_id}, {"$set": {"spatial_layout": layout}})
+    return {"status": "success", "site_id": site_id, "added": added, "spatial_layout": layout,
+            "detected_count": len(added),
+            "bakomix_insight": f"{len(added)} macchinari riconosciuti e posizionati con l'aura AR."}
+
+
+# ---------------------------------------------------------------------------
+# MACCHINA DEL TEMPO CLIMA — incrocia pressione barometrica + umidità (Open-Meteo,
+# Stoccarda) e propone micro-correzioni stagionali alla ricetta via Claude.
+# ---------------------------------------------------------------------------
+_CLIMATE_LAT, _CLIMATE_LON = 48.7758, 9.1829  # Stoccarda (Stuttgart)
+
+
+class ClimateReq(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: Optional[str] = ""
+    hydration: Optional[float] = None
+    preferment: Optional[str] = ""
+    lang: Optional[str] = "it"
+
+
+def _mean(xs):
+    xs = [x for x in xs if isinstance(x, (int, float))]
+    return round(sum(xs) / len(xs), 1) if xs else None
+
+
+@api_router.post("/climate/time-machine")
+async def climate_time_machine(body: ClimateReq, user: Optional[dict] = Depends(optional_user)):
+    hyd = body.hydration
+    pref = body.preferment or ""
+    rname = body.recipe_name or ""
+    if body.recipe_id:
+        rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+        if rec:
+            rname = rname or rec.get("name") or ""
+            if hyd is None:
+                f = float(rec.get("flour_grams") or 0)
+                w = float(rec.get("water_grams") or 0)
+                if f > 0:
+                    hyd = round(w / f * 100, 0)
+            pref = pref or rec.get("preferment_type") or ""
+
+    climate = {}
+    try:
+        async with httpx.AsyncClient(timeout=15) as client:
+            r = await client.get("https://api.open-meteo.com/v1/forecast", params={
+                "latitude": _CLIMATE_LAT, "longitude": _CLIMATE_LON,
+                "hourly": "relative_humidity_2m,surface_pressure,temperature_2m",
+                "past_days": 7, "forecast_days": 3, "timezone": "Europe/Berlin"})
+            j = r.json()
+        h = j.get("hourly", {})
+        hum = h.get("relative_humidity_2m", []) or []
+        pres = h.get("surface_pressure", []) or []
+        temp = h.get("temperature_2m", []) or []
+        past_n = 24 * 7
+        now_i = min(past_n, max(0, len(pres) - 1))
+        climate = {
+            "location": "Stoccarda (Stuttgart)",
+            "now_humidity": (hum[now_i] if now_i < len(hum) else None),
+            "now_pressure": (pres[now_i] if now_i < len(pres) else None),
+            "now_temp": (temp[now_i] if now_i < len(temp) else None),
+            "past7_humidity_avg": _mean(hum[:past_n]),
+            "past7_pressure_avg": _mean(pres[:past_n]),
+            "next3_humidity_avg": _mean(hum[past_n:]),
+            "next3_pressure_avg": _mean(pres[past_n:]),
+        }
+        if climate["next3_pressure_avg"] and climate["past7_pressure_avg"]:
+            climate["pressure_trend"] = round(climate["next3_pressure_avg"] - climate["past7_pressure_avg"], 1)
+        if climate["next3_humidity_avg"] and climate["past7_humidity_avg"]:
+            climate["humidity_trend"] = round(climate["next3_humidity_avg"] - climate["past7_humidity_avg"], 1)
+    except Exception as e:
+        logging.warning(f"open-meteo failed: {e}")
+        climate = {"location": "Stoccarda (Stuttgart)", "error": "meteo non raggiungibile"}
+
+    adjustment = None
+    if EMERGENT_LLM_KEY and not climate.get("error"):
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY, session_id=f"climate-{uuid.uuid4().hex[:8]}",
+                system_message=(
+                    "Sei BakoMix, maestro fornaio e meteorologo. In base a PRESSIONE barometrica e UMIDITA' ambientale "
+                    "consigli micro-correzioni alla ricetta per tenere COSTANTE la qualita' dell'impasto stagione dopo stagione. "
+                    "Regole: bassa pressione + alta umidita' -> la farina assorbe meno acqua e la fermentazione accelera "
+                    "(riduci idratazione, riduci lievito, accorcia la puntata). Alta pressione + aria secca -> impasto piu' asciutto "
+                    "(aumenta leggermente l'idratazione, copri bene, allunga leggermente la puntata). "
+                    f"Rispondi SOLO con JSON valido nella lingua con codice '{body.lang}': "
+                    '{"hydration_delta_pct":numero,"yeast_delta_pct":numero,"fermentation_delta_min":numero,'
+                    '"verdict":"stabile|umido|secco","summary":"una frase","tips":["consiglio breve","consiglio breve"]}'
+                )
+            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=500)
+            ctx = (f"Ricetta: {rname or 'generica'}. Idratazione attuale: {hyd if hyd is not None else 'n/d'}%. "
+                   f"Prefermento: {pref or 'nessuno'}. "
+                   f"Clima Stoccarda: umidita' ora {climate.get('now_humidity')}% (media 7gg {climate.get('past7_humidity_avg')}%, "
+                   f"prossimi 3gg {climate.get('next3_humidity_avg')}%). "
+                   f"Pressione ora {climate.get('now_pressure')} hPa (media 7gg {climate.get('past7_pressure_avg')}, "
+                   f"prossimi 3gg {climate.get('next3_pressure_avg')}, trend {climate.get('pressure_trend')} hPa).")
+            full = ""
+            async for ev in chat.stream_message(UserMessage(text=ctx)):
+                if isinstance(ev, TextDelta):
+                    full += ev.content
+                elif isinstance(ev, StreamDone):
+                    break
+            m = re.search(r"\{.*\}", full, re.S)
+            adjustment = json.loads(m.group(0)) if m else None
+        except Exception as e:
+            logging.warning(f"climate ai failed: {e}")
+            adjustment = None
+
+    return {"status": "success", "climate": climate, "recipe": {"name": rname, "hydration": hyd, "preferment": pref},
+            "adjustment": adjustment}
+
+
+
 @app.websocket("/api/ws/enterprise-os/{site_id}")
 async def enterprise_site_websocket(websocket: WebSocket, site_id: str):
     await websocket.accept()
