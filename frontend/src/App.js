@@ -196,13 +196,31 @@ export default function App() {
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
           {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
-          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.6 }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/45 via-[#030712]/60 to-[#030712]/85" />
+          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.62 }} />
+          {/* Overlay antracite: contrasto sul testo senza appiattire l'immagine */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/40 via-[#050b17]/55 to-[#030712]/88" />
+          {/* Vetro antracite: sheen radiale per dare profondità (mai piatto) */}
+          <div className="absolute inset-0" style={{ background: "radial-gradient(130% 80% at 50% -10%, rgba(94,140,168,0.15), transparent 55%)" }} />
           {bgTheme === "mohamed" && (
-            <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}26, transparent 60%)` }} />
+            <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}2e, transparent 60%)` }} />
           )}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b15_1px,transparent_1px),linear-gradient(to_bottom,#1e293b15_1px,transparent_1px)] bg-[size:4rem_4rem]" />
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/10 blur-[120px] rounded-full" />
+          {/* Griglia geometrica nitida che svanisce verso il basso (effetto tech industriale) */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: "linear-gradient(to right, rgba(94,234,212,0.11) 1px, transparent 1px), linear-gradient(to bottom, rgba(94,234,212,0.11) 1px, transparent 1px)",
+            backgroundSize: "56px 56px",
+            maskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
+            WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
+          }} />
+          {/* Micro-griglia circuito, densa in alto */}
+          <div className="absolute inset-0 opacity-50" style={{
+            backgroundImage: "linear-gradient(to right, rgba(51,65,85,0.28) 1px, transparent 1px), linear-gradient(to bottom, rgba(51,65,85,0.28) 1px, transparent 1px)",
+            backgroundSize: "14px 14px",
+            maskImage: "radial-gradient(120% 85% at 50% 0%, #000, transparent 68%)",
+            WebkitMaskImage: "radial-gradient(120% 85% at 50% 0%, #000, transparent 68%)",
+          }} />
+          {/* Bagliori d'accento (profondità cromatica) */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/12 blur-[120px] rounded-full" />
+          <div className="absolute bottom-0 right-[-60px] w-[420px] h-[260px] bg-[#5E8CA8]/10 blur-[130px] rounded-full" />
         </div>
 
         <div className="relative z-10 flex flex-col min-h-screen">
