@@ -39,7 +39,7 @@ import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
 import { useDept, setDept } from "@/lib/dept";
-import { recipesApi } from "@/lib/api";
+import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock, WifiOff } from "lucide-react";
@@ -110,6 +110,25 @@ export default function App() {
     window.addEventListener("online", warm);
     return () => window.removeEventListener("online", warm);
   }, [user]);
+  useEffect(() => {
+    // SINCRONIZZAZIONE AL RITORNO: quando la rete torna, ricarica e riallinea tutto (magazzino,
+    // piani, coda del Floor) dal server, ri-scaldando la cache IndexedDB e notificando le viste aperte.
+    const resync = () => {
+      Promise.allSettled([
+        recipesApi.list("mikilab"),
+        warehouseApi.list(),
+        planApi.get(),
+        weeklyApi.get(),
+        floorPlanApi.get(),
+      ]).then(() => {
+        try { window.dispatchEvent(new Event("mikilab-floor-plan-updated")); } catch { /* */ }
+        try { window.dispatchEvent(new Event("mikilab-warehouse-changed")); } catch { /* */ }
+        toast.success(tri("Riconnesso · dati aggiornati dal server.", "Wieder online · Daten aktualisiert.", "Back online · data synced from server.", "Reconectado · datos actualizados.", "Reconnecté · données synchronisées.", "دوباره آنلاین · داده‌ها همگام شد."));
+      });
+    };
+    window.addEventListener("online", resync);
+    return () => window.removeEventListener("online", resync);
+  }, [tri]);
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
 
   // Selezione dall'hub avatar → apre la sezione giusta (Capo=login, Mohamed=PIN produzione, Bakemix=libero).

@@ -195,3 +195,8 @@
 ## 2026-06 — Ricette ripristinate + Foto→Ordine del Capo
 - Ricettario: default reparto riportato a "Tutti" (lib/dept.js) + migrazione una-tantum (mikilab_dept_reset_v2) → tutte le 148/149 ricette tornano visibili nel Master con le loro foto. Nessuna ricetta era persa nel DB (0 hidden, tutte con immagine locale in /public/recipes, nomi coerenti es. r_taralli.jpg, pan_*.jpg, pz_*.jpg).
 - Foto→Ordine (item 3): nuovo endpoint POST /api/lab/scan-order (LLM vision) → estrae righe {name,quantity} da una foto di comanda + testo riassuntivo. Frontend OrdiniExtra: pulsante "📸 Foto comanda" (upload/fotocamera) che compila il campo ordini. Verificato E2E: comanda scritta a mano → "20 baguette, 10 ciabatte, 5 focacce, 2 panettoni".
+
+## 2026-06 — Floor offline + Sync al ritorno + Cuffia vocale (Next Action Items 1,2,4)
+- #1 Piano offline nel Floor: MamoAssistant legge la coda del Capo da IndexedDB/cache anche offline + chip "Dati locali/LOCAL DATA" (data-testid mamo-offline-chip) quando navigator è offline. Verificato.
+- #2 Sincronizza al ritorno (App.js): all'evento 'online' ricarica e riallinea recipes/warehouse/plan/weekly/floor-plan dal server (re-cache IndexedDB), notifica le viste (mikilab-floor-plan-updated, mikilab-warehouse-changed) e mostra toast "Riconnesso · dati aggiornati".
+- #4 Cuffia vocale Mohamed (MamoAssistant): l'ascolto continuo a mani libere si AUTO-ATTIVA appena arriva il piano (dopo l'unico tap sul mic richiesto dal browser per il permesso audio). Comandi vocali: avanti/indietro/ripeti/stop. Verificato E2E (toast "Voice guide on", step letto, role filtering Fornaio→cottura).

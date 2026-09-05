@@ -27,6 +27,12 @@ export default function MamoAssistant() {
   const [guiding, setGuiding] = useState(false);
   const [speaking, setSpeaking] = useState(false);
   const [done, setDone] = useState(false);
+  const [offline, setOffline] = useState(() => (typeof navigator !== "undefined" ? !navigator.onLine : false));
+  useEffect(() => {
+    const on = () => setOffline(false); const off = () => setOffline(true);
+    window.addEventListener("online", on); window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
   const recRef = useRef(null);
   const guidingRef = useRef(false);
   const idxRef = useRef(0);
@@ -159,6 +165,16 @@ export default function MamoAssistant() {
 
   useEffect(() => () => { try { if (recRef.current) { recRef.current._stop = true; recRef.current.stop(); } } catch { /* */ } stopTTS(); }, []);
 
+  // CUFFIA VOCALE: appena arriva la coda del Capo (e c'è un ruolo/postazione), attiva UNA volta
+  // l'ascolto continuo a mani libere così l'operaio riceve i task senza toccare lo schermo.
+  const autoStartedRef = useRef(false);
+  useEffect(() => {
+    if (!autoStartedRef.current && steps.length > 0 && !guiding && !done) {
+      autoStartedRef.current = true;
+      startGuide();
+    }
+  }, [steps.length, guiding, done, startGuide]);
+
   if (doc === undefined) {
     return (
       <div data-testid="mamo-loading" className="p-6 rounded-xl bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center gap-2 text-[#94A3B8] text-sm">
@@ -176,6 +192,7 @@ export default function MamoAssistant() {
           <h3 className="text-sm font-extrabold text-amber-400 flex items-center gap-2">
             {tri("Assistente Mamo", "Assistent Mamo", "Mamo Assistant", "Asistente Mamo", "Assistant Mamo", "دستیار مامو")}
             <span className="text-[9px] px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30 uppercase tracking-wider">{tri("A mani libere", "Freihändig", "Hands-free", "Manos libres", "Mains libres", "بدون دست")}</span>
+            {offline && <span data-testid="mamo-offline-chip" className="text-[9px] px-2 py-0.5 rounded-full bg-amber-600/25 text-amber-300 border border-amber-500/50 uppercase tracking-wider">📴 {tri("Dati locali", "Lokale Daten", "Local data", "Datos locales", "Données locales", "داده محلی")}</span>}
           </h3>
           <p className="text-[11px] text-[#94A3B8]">{tri("Ti guido passo-passo nel piano del Capo, con la voce.", "Ich führe dich per Stimme Schritt für Schritt durch den Plan.", "I guide you step-by-step through the Capo's plan, by voice.", "Te guío paso a paso en el plan del Capo, con la voz.", "Je te guide pas à pas dans le plan, à la voix.", "قدم‌به‌قدم با صدا راهنمایی‌ات می‌کنم.")}</p>
         </div>
