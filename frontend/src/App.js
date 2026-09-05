@@ -163,9 +163,14 @@ export default function App() {
   const mohStation = (() => {
     const r = (floorRole || "").toLowerCase();
     if (!r) return null;
-    if (/laugen|pretzel/.test(r)) return "laugen";
-    if (/impast|fermentaz/.test(r)) return "impasto";
-    if (/forn|sfornat|abbattitore|raffredda|cottura/.test(r)) return "forno";
+    // Postazioni "hot": forno, cottura, abbattitore
+    if (/forn|sfornat|abbattitore|raffredda|cottura|pizza|pizze|arrosti|griglia/.test(r)) return "forno";
+    // Postazioni impasto/fermentazione/planetaria
+    if (/impast|fermentaz|planetari|spiral|lievit|farin/.test(r)) return "impasto";
+    // Laugen / pretzel
+    if (/laugen|pretzel|brezel/.test(r)) return "laugen";
+    // Banco/pasticceria/decorazioni/confezionamento (fallback esplicito)
+    if (/banco|pasticc|decor|glass|cioccolat|gelat|confezion|pack|vetrina|bilanci|dolc/.test(r)) return "banco";
     return "banco";
   })();
   const bgSrc = bgTheme === "mohamed" && mohStation ? `${PUB}/bg-st-${mohStation}.jpg` : `${PUB}/bg-${bgTheme}.jpg`;

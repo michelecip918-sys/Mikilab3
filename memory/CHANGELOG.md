@@ -1,5 +1,10 @@
 # CHANGELOG (continua da PRD.md)
 
+## v-sec (2026-06) — Fix sicurezza login + sfondi postazioni custom
+- **[P0 SEC-004] Login brute-force IP spoofing**: `/auth/login` (server.py ~L911) ora usa `_client_ip(request)` (estrazione IP anti-spoofing dagli hop del proxy fidato) invece di `x-forwarded-for.split(',')[0]` grezzo. Impedisce il bypass del rate-limit tramite header falsificati. Verificato via curl (401 con header falsificato, nessun errore server).
+- **[P1 UI] Sfondi postazioni custom Mohamed**: mappatura `mohStation` in App.js estesa con più parole chiave (forno/cottura/pizza→forno, impasto/fermentazione/planetaria/farina→impasto, laugen/pretzel/brezel→laugen, banco/pasticceria/decorazioni/cioccolato/gelato/confezionamento→banco) così i reparti custom del Capo ricevono uno sfondo coerente invece del solo fallback "banco". Nessun nuovo asset necessario.
+
+
 ## v68 (2026-06) — FASE B (parziale) + Asset & Mohammadreza restyle
 - **Avatar sezioni**: `public/michele-avatar.jpg` sostituito con il nuovo avatar 3D di Michele (polo MikiLab + tatuaggio) → mostrato in alto in ogni sezione (MikiAvatar/HeroAvatar).
 - **Footer foto reale**: `public/michele-real-lab.jpg` (foto reale di Michele in laboratorio) in un `<footer data-testid=page-footer>` in fondo a ogni pagina (App.js).

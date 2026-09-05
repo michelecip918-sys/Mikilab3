@@ -909,7 +909,7 @@ async def resend_verification(body: ResendVerifyReq):
 @api_router.post("/auth/login")
 async def auth_login(payload: LoginReq, request: Request, response: Response):
     email = payload.email.strip().lower()
-    ip = (request.headers.get("x-forwarded-for", "").split(",")[0].strip() or (request.client.host if request.client else "?"))
+    ip = _client_ip(request)
     ident = f"{ip}:{email}"
     # Protezione forza-bruta: max 5 tentativi falliti, blocco 15 min
     att = await db.login_attempts.find_one({"identifier": ident})
