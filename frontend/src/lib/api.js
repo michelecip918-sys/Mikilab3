@@ -413,6 +413,9 @@ export const floursApi = {
 export const inventoryApi = {
   get: () => cachedGet("inventory", () => api.get(`/inventory`).then((r) => r.data), { items: [] }),
   save: (items) => api.put(`/inventory`, { items }).then((r) => r.data),
+  scanDrop: (image_base64, target = "warehouse") => api.post(`/inventory/scan-drop`, { image_base64, target }).then((r) => r.data),
+  bindBatch: (recipe_id, batches) => api.post(`/inventory/bind-batch`, { recipe_id, batches }).then((r) => r.data),
+  batchLinks: () => api.get(`/inventory/batch-links`).then((r) => r.data),
 };
 
 export const dayCloseApi = {

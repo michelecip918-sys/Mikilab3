@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun } from "lucide-react";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package } from "lucide-react";
 import { pulseApi, staffingApi, briefingApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
@@ -14,6 +14,7 @@ import RecipeAuditMatrix from "@/components/RecipeAuditMatrix";
 import ProductionPipeline from "@/components/ProductionPipeline";
 import SpatialVisionAR from "@/components/SpatialVisionAR";
 import ClimateTimeMachine from "@/components/ClimateTimeMachine";
+import ProductionInventory from "@/components/ProductionInventory";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -42,6 +43,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [pipelineOpen, setPipelineOpen] = useState(false);
   const [visionOpen, setVisionOpen] = useState(false);
   const [climateOpen, setClimateOpen] = useState(false);
+  const [inventoryOpen, setInventoryOpen] = useState(false);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -170,6 +172,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       {pipelineOpen && <ProductionPipeline onClose={() => setPipelineOpen(false)} />}
       {visionOpen && <SpatialVisionAR onClose={() => setVisionOpen(false)} />}
       {climateOpen && <ClimateTimeMachine onClose={() => setClimateOpen(false)} />}
+      {inventoryOpen && <ProductionInventory onClose={() => setInventoryOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -316,6 +319,9 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                     <CloudSun className="w-4 h-4" /> {tri("Clima", "Klima", "Climate", "Clima", "Climat", "اقلیم")}
                   </button>
                 </div>
+                <button data-testid="bakomix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
+                  <Package className="w-4 h-4" /> {tri("Inventario di Produzione (foto)", "Produktions-Inventar (Foto)", "Production Inventory (photo)", "Inventario de Producción (foto)", "Inventaire de Production (photo)", "موجودی تولید (عکس)")}
+                </button>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}
                 {pulse?.staffing && (

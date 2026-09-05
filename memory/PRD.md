@@ -4102,3 +4102,21 @@ Direttiva "final-master-closure": completate le 4 funzioni concrete in sospeso (
 - Checkpoint AR di pulizia: vision valida standard di pulizia/attrezzatura prima di chiudere un task.
 - Handoff audio automatico al cambio turno per i supervisori.
 - Batch Phoenix (eliminazione sprechi) + Apprentice Academy adattiva.
+
+---
+## v-inventory (2026-06) — Motore Inventario di Produzione (foto Vision + bind batch)
+Direttiva "airtight-closure" punto #5. Costruito SOPRA il magazzino esistente (lab_warehouse), senza uffici/fatture/HACCP.
+- **`ProductionInventory.jsx`** (modale Capo da BakoMix, `bakomix-inventory-btn`): scansione consegna/scarico freezer via fotocamera + bind batch alla linea + scorte live. Localizzato 6 lingue.
+- **`POST /api/inventory/scan-drop`** (NUOVO, require_admin, Claude Vision): foto consegna/freezer → rileva articoli+quantità kg → upsert nel magazzino (somma se esiste). Verificato: status success.
+- **`POST /api/inventory/bind-batch`** (NUOVO): recipe_id+batches → calcola consumi (farina+LM+sale+extra scalati) → scala il magazzino (riusa logica consume) → registra link in `batch_links` con line_sectors ["Dosaggio","Autolisi"]. Verificato e2e: Farina 50→45.92 kg, articoli non a magazzino elencati come "untracked" (nessuna burocrazia).
+- **`GET /api/inventory/batch-links`**: storico agganci batch→linea.
+- API frontend: esteso `inventoryApi` con scanDrop/bindBatch/batchLinks.
+- Nota matching: usa la stessa logica substring di consume_warehouse (coerenza); possibile piccola sovrapposizione nome (es. "Farina di lupino" ↔ "Farina") — accettabile per MVP.
+- Limite: cattura fotocamera scan-drop richiede dispositivo reale.
+
+### RESTA dalla direttiva (grandi feature nuove, multi-turno)
+- Eclipse: delega vocale del Capo → BakoMix divide sotto-ruoli tra operatori per skill/presenza + Crisis Override per ritmare la produzione.
+- Checkpoint AR di pulizia (vision valida standard prima di chiudere un task).
+- Handoff audio automatico al cambio turno.
+- Proofer/freezer auto-calibranti sincronizzati con l'Aura/velocità operatore (anti over-proofing) + Batch Phoenix.
+- Pulizia/dedup repo: solo come attività separata e controllata (l'app è al 100%, no purga distruttiva).

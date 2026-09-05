@@ -3643,6 +3643,141 @@ async def consume_warehouse(payload: ConsumePayload, user: dict = Depends(requir
     return {"updated": updated, "shortfalls": shortfalls}
 
 
+# ---------------------------------------------------------------------------
+# MOTORE INVENTARIO DI PRODUZIONE (BakoMix) — foto di una consegna/scarico freezer
+# (Claude Vision) -> aggiorna il magazzino; collega un batch alla linea (Dosaggio &
+# Autolisi) scalando in automatico i consumi. Zero uffici/fatture/HACCP.
+# ---------------------------------------------------------------------------
+class InventoryScanDrop(BaseModel):
+    image_base64: str
+    target: Optional[str] = "warehouse"   # warehouse | freezer (solo etichetta informativa)
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/inventory/scan-drop")
+async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(require_admin)):
+    img = (payload.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"invscan-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei il magazziniere AI di BakoMix. Analizza la FOTO di una consegna di materie prime da forno "
+                "o dello scarico di un freezer (sacchi di farina, ingredienti, prodotti surgelati/semilavorati). "
+                "Estrai gli articoli visibili con la quantita' stimata in kg (numero di sacchi x peso se leggibile). "
+                "Rispondi SOLO con JSON valido, senza altro testo: "
+                '{"items":[{"name":"nome breve","quantity_kg":numero,"kind":"farina|ingrediente|surgelato"}]}. '
+                "Massimo 12 articoli. Non inventare articoli non visibili."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Rileva le materie prime nella foto.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        items = (json.loads(m.group(0)).get("items") if m else []) or []
+    except Exception as e:
+        logging.warning(f"inventory_scan_drop failed: {e}")
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+
+    added = []
+    for it in items[:12]:
+        name = (str(it.get("name") or "")).strip()
+        if not name:
+            continue
+        try:
+            qty = round(float(it.get("quantity_kg") or 0), 3)
+        except Exception:
+            qty = 0
+        kind = "farina" if str(it.get("kind") or "") == "farina" else "ingrediente"
+        existing = await db.lab_warehouse.find_one({"name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}})
+        if existing:
+            newq = round(float(existing.get("quantity_kg", 0)) + qty, 3)
+            await db.lab_warehouse.update_one({"id": existing["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+            added.append({"name": existing["name"], "added_kg": qty, "quantity_kg": newq})
+        else:
+            doc = {"id": str(uuid.uuid4()), "name": name, "kind": kind, "force_w": "", "quantity_kg": qty,
+                   "unit": "kg", "min_kg": 0, "updated_at": now_iso()}
+            await db.lab_warehouse.insert_one(dict(doc))
+            added.append({"name": name, "added_kg": qty, "quantity_kg": qty})
+    stock = await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+    return {"status": "success", "added": added, "detected_count": len(added), "stock": stock,
+            "bakomix_insight": f"{len(added)} materie prime lette e caricate nel magazzino di produzione."}
+
+
+class BatchBindReq(BaseModel):
+    recipe_id: str
+    batches: int = 1
+
+
+@api_router.post("/inventory/bind-batch")
+async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_admin)):
+    rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+    if not rec:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata.")
+    factor = max(1, int(body.batches or 1))
+    flour = float(rec.get("flour_grams") or 0)
+    needs = []
+
+    def _need(name, grams, kind):
+        kg = round(grams * factor / 1000, 3)
+        if kg > 0:
+            needs.append({"name": name, "kg": kg, "kind": kind})
+
+    _need("Farina", flour, "farina")
+    _need("Lievito madre", float(rec.get("sourdough_grams") or 0), "ingrediente")
+    _need("Sale", float(rec.get("salt_grams") or 0), "ingrediente")
+    for ing in (rec.get("extra_ingredients") or []):
+        _need(str(ing.get("name") or "extra"), flour * (float(ing.get("percent") or 0) / 100), "ingrediente")
+
+    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
+
+    def _find(name, kind):
+        nl = (name or "").lower().strip()
+        cand = [s for s in stock if nl and (nl in s.get("name", "").lower() or s.get("name", "").lower() in nl)]
+        if not cand and kind == "farina":
+            cand = sorted([s for s in stock if s.get("kind") == "farina"], key=lambda x: x.get("quantity_kg", 0), reverse=True)
+        return cand[0] if cand else None
+
+    consumed, shortfalls, untracked = [], [], []
+    for it in needs:
+        s = _find(it["name"], it["kind"])
+        if not s:
+            untracked.append(it["name"])   # non a magazzino (es. acqua/sale) -> nessuna burocrazia
+            continue
+        newq = round(float(s.get("quantity_kg", 0)) - it["kg"], 3)
+        if newq < 0:
+            shortfalls.append({"name": s["name"], "missing": round(-newq, 3)})
+            newq = 0
+        await db.lab_warehouse.update_one({"id": s["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+        for x in stock:
+            if x["id"] == s["id"]:
+                x["quantity_kg"] = newq
+        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "name": s["name"], "kg": it["kg"], "kind": it["kind"], "at": now_iso()})
+        consumed.append({"name": s["name"], "kg": it["kg"], "quantity_kg": newq})
+
+    link = {"id": str(uuid.uuid4()), "recipe_id": body.recipe_id, "recipe_name": rec.get("name"),
+            "batches": factor, "line_sectors": ["dosaggio", "autolisi"], "consumed": consumed,
+            "shortfalls": shortfalls, "at": now_iso()}
+    await db.batch_links.insert_one(dict(link))
+    new_stock = await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+    return {"status": "success", "recipe_name": rec.get("name"), "batches": factor,
+            "consumed": consumed, "shortfalls": shortfalls, "untracked": untracked,
+            "line_sectors": ["Dosaggio", "Autolisi"], "stock": new_stock,
+            "bakomix_insight": f"Batch «{rec.get('name')}» ×{factor} agganciato a Dosaggio & Autolisi. Consumi scalati in automatico."}
+
+
+@api_router.get("/inventory/batch-links")
+async def inventory_batch_links(user: Optional[dict] = Depends(optional_user)):
+    return await db.batch_links.find({}, {"_id": 0}).sort("at", -1).to_list(50)
+
+
+
 @api_router.get("/lab/warehouse/consumption")
 async def get_consumption(user: Optional[dict] = Depends(optional_user)):
     return await db.lab_consumption_log.find({}, {"_id": 0}).sort("at", -1).to_list(100)
