@@ -57,11 +57,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const { user, setAuthOpen } = useAuth();
   // MikiLab: modifica solo admin. Personali: UI sempre visibile, il SALVATAGGIO richiede login.
   const canEdit = collectionName === "mikilab" ? user?.role === "admin" : true;
+  // Opzione Capo: mostra anche LE MIE ricette personali dentro il Master (default off, no duplicati).
+  const isCapo = collectionName === "mikilab" && user?.role === "admin";
+  const [includeMine, setIncludeMine] = useState(() => { try { return localStorage.getItem("mikilab_master_include_mine") === "1"; } catch { return false; } });
+  useEffect(() => { try { localStorage.setItem("mikilab_master_include_mine", includeMine ? "1" : "0"); } catch { /* */ } }, [includeMine]);
 
   const load = async () => {
     setLoading(true);
     try {
-      const list = await recipesApi.list(collectionName);
+      const list = await recipesApi.list(collectionName, isCapo && includeMine);
       list.sort((a, b) => {
         const ca = recipeCategory(a), cb = recipeCategory(b);
         if (ca.rank !== cb.rank) return ca.rank - cb.rank;
@@ -78,7 +82,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     }
   };
 
-  useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName]);
+  useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName, includeMine]);
 
   // Copertine cartelle scelte dall'admin (globali, per categoria).
   useEffect(() => { siteSettingsApi.get().then((s) => setFolderCovers((s && s.folder_covers) || {})).catch(() => {}); }, []);
@@ -233,6 +237,19 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
       {/* Tabella farine unificata: accessibile SOLO dal pulsante «Tabelle & Farine» sopra l'avatar
           (rimosso il doppione qui sotto per evitare due tabelle diverse). */}
+
+      {isCapo && (
+        <button
+          data-testid="master-include-mine-toggle"
+          onClick={() => setIncludeMine((v) => !v)}
+          className={`w-full mb-3 px-4 py-2.5 rounded-2xl border text-[13px] font-semibold flex items-center justify-center gap-2 active:scale-98 transition-all ${includeMine ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white/70 dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#cfe0ec] border-[#3E9C93]/40"}`}
+        >
+          <ChefHat className="w-4 h-4" />
+          {includeMine
+            ? triM("Mostrando anche le Mie Ricette", "Meine Rezepte werden mit angezeigt", "Also showing My Recipes")
+            : triM("Mostra anche le Mie Ricette", "Auch meine Rezepte anzeigen", "Also show My Recipes")}
+        </button>
+      )}
 
       {canEdit && (
         <button

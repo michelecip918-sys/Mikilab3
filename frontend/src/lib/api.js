@@ -7,6 +7,24 @@ export const API = `${BACKEND_URL}/api`;
 
 export const api = axios.create({ baseURL: API, withCredentials: true });
 
+// Cache read-through su IndexedDB: online salva l'ultima copia e ritorna il dato fresco;
+// offline (errore di rete) ritorna l'ultima copia salvata così i moduli restano consultabili.
+// `fallback` viene usato solo se online fallisce per motivi NON di rete e non c'è cache.
+async function cachedGet(key, requestFn, fallback) {
+  try {
+    const data = await requestFn();
+    idbSet(key, data);
+    return data;
+  } catch (e) {
+    if (isNetworkError(e)) {
+      const c = await idbGet(key);
+      if (c !== null && c !== undefined) return c;
+    }
+    if (fallback !== undefined) return fallback;
+    throw e;
+  }
+}
+
 export const uploadApi = {
   // Uploads a Blob/File to the dedicated image archive, returns absolute URL.
   image: async (blob, filename = "foto.jpg") => {
@@ -19,14 +37,14 @@ export const uploadApi = {
 
 // PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Mohamed.
 export const productionPinApi = {
-  status: () => api.get(`/production-pin/status`).then((r) => r.data),
+  status: () => cachedGet("production_pin_status", () => api.get(`/production-pin/status`).then((r) => r.data)),
   set: (pin) => api.put(`/production-pin`, { pin }).then((r) => r.data),
   verify: (pin) => api.post(`/production-pin/verify`, { pin }).then((r) => r.data),
 };
 
 // Gate ADMIN del sito: PIN segreto verificato lato server (nessun default nel sorgente).
 export const adminGateApi = {
-  status: () => api.get(`/admin-gate/status`).then((r) => r.data),
+  status: () => cachedGet("admin_gate_status", () => api.get(`/admin-gate/status`).then((r) => r.data)),
   set: (pin) => api.put(`/admin-gate`, { pin }).then((r) => r.data),
   verify: (pin) => api.post(`/admin-gate/verify`, { pin }).then((r) => r.data),
 };
@@ -35,17 +53,20 @@ export const recipesApi = {
   // Resiliente + OFFLINE-READY: online salva l'archivio su IndexedDB (grande, affidabile)
   // e una copia leggera su localStorage; offline restituisce la cache IndexedDB così le
   // ricette restano 100% consultabili senza rete.
-  list: async (collection) => {
+  list: async (collection, includeMine = false) => {
+    const params = { collection_name: collection };
+    if (includeMine) params.include_mine = true;
+    const cacheKey = includeMine ? `recipes_${collection}_mine` : `recipes_${collection}`;
     try {
-      const r = await api.get(`/recipes`, { params: { collection_name: collection } });
-      cacheSet(`recipes_${collection}`, r.data);      // best-effort (piccolo/veloce)
-      idbSet(`recipes_${collection}`, r.data);         // archivio completo (IndexedDB)
+      const r = await api.get(`/recipes`, { params });
+      cacheSet(cacheKey, r.data);      // best-effort (piccolo/veloce)
+      idbSet(cacheKey, r.data);         // archivio completo (IndexedDB)
       return r.data;
     } catch (e) {
       if (isNetworkError(e)) {
-        const fromIdb = await idbGet(`recipes_${collection}`);
+        const fromIdb = await idbGet(cacheKey);
         if (fromIdb) return fromIdb;
-        const c = cacheGet(`recipes_${collection}`);
+        const c = cacheGet(cacheKey);
         if (c) return c;
       }
       return [];
@@ -60,7 +81,7 @@ export const recipesApi = {
 };
 
 export const ovenApi = {
-  list: () => api.get(`/oven-profiles`).then((r) => r.data),
+  list: () => cachedGet("oven_profiles", () => api.get(`/oven-profiles`).then((r) => r.data)),
   create: (data) => api.post(`/oven-profiles`, data).then((r) => r.data),
   update: (id, data) => api.put(`/oven-profiles/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/oven-profiles/${id}`).then((r) => r.data),
@@ -122,7 +143,7 @@ export const floorPlanApi = {
 
 
 export const favApi = {
-  list: () => api.get(`/favorites`).then((r) => r.data),
+  list: () => cachedGet("favorites", () => api.get(`/favorites`).then((r) => r.data)),
   toggle: (recipe_id) => api.post(`/favorites/toggle`, { recipe_id }).then((r) => r.data),
   sync: (ids) => api.post(`/favorites/sync`, { ids }).then((r) => r.data),
   counts: () => api.get(`/favorites/counts`).then((r) => r.data),
@@ -142,13 +163,13 @@ export const capoPlanApi = {
 };
 
 export const comboApi = {
-  list: () => api.get(`/combos`).then((r) => r.data),
+  list: () => cachedGet("combos", () => api.get(`/combos`).then((r) => r.data)),
   sync: (combos) => api.post(`/combos/sync`, { combos }).then((r) => r.data),
   remove: (id) => api.delete(`/combos/${id}`).then((r) => r.data),
 };
 
 export const plansArchiveApi = {
-  list: (kind) => api.get(`/plans/archive`, { params: kind ? { kind } : {} }).then((r) => r.data),
+  list: (kind) => cachedGet(`plans_archive_${kind || "all"}`, () => api.get(`/plans/archive`, { params: kind ? { kind } : {} }).then((r) => r.data)),
   save: (data) => api.post(`/plans/archive`, data).then((r) => r.data),
   rename: (id, name) => api.patch(`/plans/archive/${id}`, { name }).then((r) => r.data),
   remove: (id) => api.delete(`/plans/archive/${id}`).then((r) => r.data),
@@ -175,14 +196,14 @@ export const challengesApi = {
 };
 
 export const newsItemsApi = {
-  list: () => api.get(`/news-items`).then((r) => r.data),
+  list: () => cachedGet("news_items", () => api.get(`/news-items`).then((r) => r.data)),
   create: (data) => api.post(`/news-items`, data).then((r) => r.data),
   update: (id, data) => api.put(`/news-items/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/news-items/${id}`).then((r) => r.data),
 };
 
 export const labConfigApi = {
-  get: () => api.get(`/lab-config`).then((r) => r.data),
+  get: () => cachedGet("lab_config", () => api.get(`/lab-config`).then((r) => r.data)),
   save: (data) => api.put(`/lab-config`, data).then((r) => r.data),
 };
 
@@ -192,7 +213,7 @@ export const recipeTempApi = {
 };
 
 export const newsApi = {
-  list: () => api.get(`/news`).then((r) => r.data),
+  list: () => cachedGet("news", () => api.get(`/news`).then((r) => r.data)),
 };
 
 export const newsletterApi = {
@@ -202,7 +223,7 @@ export const newsletterApi = {
 };
 
 export const announcementsApi = {
-  list: () => api.get(`/announcements`).then((r) => r.data),
+  list: () => cachedGet("announcements", () => api.get(`/announcements`).then((r) => r.data)),
   create: (data) => api.post(`/announcements`, data).then((r) => r.data),
   update: (id, data) => api.put(`/announcements/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/announcements/${id}`).then((r) => r.data),
@@ -241,7 +262,7 @@ export const adminApi = {  entitlements: () => api.get(`/admin/entitlements`).th
 };
 
 export const siteSettingsApi = {
-  get: () => api.get(`/site-settings`).then((r) => r.data).catch(() => ({})),
+  get: () => cachedGet("site_settings", () => api.get(`/site-settings`).then((r) => r.data), {}),
 };
 
 export const wisdomApi = {
@@ -294,13 +315,13 @@ export const boardApi = {
 };
 
 export const reportsApi = {
-  list: () => api.get(`/reports`).then((r) => r.data.items || []).catch(() => []),
+  list: () => cachedGet("reports", () => api.get(`/reports`).then((r) => r.data.items || []), []),
   save: (data) => api.post(`/reports`, data).then((r) => r.data),
 };
 
 export const bakersApi = {
-  map: () => api.get(`/bakers/map`).then((r) => r.data).catch(() => []),
-  me: () => api.get(`/bakers/me`).then((r) => r.data).catch(() => null),
+  map: () => cachedGet("bakers_map", () => api.get(`/bakers/map`).then((r) => r.data), []),
+  me: () => cachedGet("bakers_me", () => api.get(`/bakers/me`).then((r) => r.data), null),
   save: (data) => api.put(`/bakers/me`, data).then((r) => r.data),
   remove: () => api.delete(`/bakers/me`).then((r) => r.data),
 };
@@ -310,14 +331,14 @@ export const pantryApi = {
 };
 
 export const storesApi = {
-  list: () => api.get(`/stores`).then((r) => r.data).catch(() => []),
+  list: () => cachedGet("stores", () => api.get(`/stores`).then((r) => r.data), []),
   create: (data) => api.post(`/stores`, data).then((r) => r.data),
   update: (id, data) => api.put(`/stores/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/stores/${id}`).then((r) => r.data),
 };
 
 export const ordersApi = {
-  list: (storeId) => api.get(`/purchase-orders`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data).catch(() => []),
+  list: (storeId) => cachedGet(`purchase_orders_${storeId || "all"}`, () => api.get(`/purchase-orders`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data), []),
   create: (data) => api.post(`/purchase-orders`, data).then((r) => r.data),
   update: (id, data) => api.put(`/purchase-orders/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/purchase-orders/${id}`).then((r) => r.data),
@@ -330,7 +351,7 @@ export const batchesApi = {
 };
 
 export const shiftsApi = {
-  list: (storeId) => api.get(`/shifts`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data).catch(() => []),
+  list: (storeId) => cachedGet(`shifts_${storeId || "all"}`, () => api.get(`/shifts`, { params: storeId ? { store_id: storeId } : {} }).then((r) => r.data), []),
   create: (data) => api.post(`/shifts`, data).then((r) => r.data),
   update: (id, data) => api.put(`/shifts/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/shifts/${id}`).then((r) => r.data),
@@ -370,7 +391,7 @@ export const pushApi = {
 };
 
 export const doughSessionsApi = {
-  list: (recipeId) => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data).catch(() => []),
+  list: (recipeId) => cachedGet(`dough_sessions_${recipeId || "all"}`, () => api.get(`/dough-sessions`, { params: recipeId ? { recipe_id: recipeId } : {} }).then((r) => r.data), []),
   create: (data) => api.post(`/dough-sessions`, data).then((r) => r.data),
   remove: (id) => api.delete(`/dough-sessions/${id}`).then((r) => r.data),
   dayAfter: (data) => api.post(`/dough-sessions/day-after`, data).then((r) => r.data),
@@ -378,26 +399,26 @@ export const doughSessionsApi = {
 };
 
 export const haccpApi = {
-  list: () => api.get(`/haccp-logs`).then((r) => r.data).catch(() => []),
+  list: () => cachedGet("haccp_logs", () => api.get(`/haccp-logs`).then((r) => r.data), []),
   create: (data) => api.post(`/haccp-logs`, data).then((r) => r.data),
   remove: (id) => api.delete(`/haccp-logs/${id}`).then((r) => r.data),
 };
 
 export const floursApi = {
-  list: () => api.get(`/flours`).then((r) => r.data.items || []).catch(() => []),
+  list: () => cachedGet("flours", () => api.get(`/flours`).then((r) => r.data.items || []), []),
   create: (data) => api.post(`/flours`, data).then((r) => r.data),
   remove: (id) => api.delete(`/flours/${id}`).then((r) => r.data),
 };
 
 export const inventoryApi = {
-  get: () => api.get(`/inventory`).then((r) => r.data).catch(() => ({ items: [] })),
+  get: () => cachedGet("inventory", () => api.get(`/inventory`).then((r) => r.data), { items: [] }),
   save: (items) => api.put(`/inventory`, { items }).then((r) => r.data),
 };
 
 export const dayCloseApi = {
   close: (data) => api.post(`/day-close`, data).then((r) => r.data),
-  last: () => api.get(`/day-close/last`).then((r) => r.data).catch(() => ({})),
-  list: () => api.get(`/day-close/list`).then((r) => r.data).catch(() => ({ closures: [] })),
+  last: () => cachedGet("day_close_last", () => api.get(`/day-close/last`).then((r) => r.data), {}),
+  list: () => cachedGet("day_close_list", () => api.get(`/day-close/list`).then((r) => r.data), { closures: [] }),
   pdf: (id, lang = "it") => api.get(`/day-close/${id}/pdf`, { params: { lang }, responseType: "blob" }).then((r) => r.data),
 };
 

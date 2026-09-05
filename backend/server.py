@@ -982,7 +982,7 @@ async def auth_logout(request: Request, response: Response):
 
 
 @api_router.get("/recipes", response_model=List[Recipe])
-async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = Depends(optional_user)):
+async def get_recipes(collection_name: str = "mikilab", include_mine: bool = False, user: Optional[dict] = Depends(optional_user)):
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
         docs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
@@ -1001,6 +1001,16 @@ async def get_recipes(collection_name: str = "mikilab", user: Optional[dict] = D
             for d in owner_personal:
                 d.pop("owner_id", None)
             docs = docs + owner_personal
+        # Opzione Capo "Mostra anche le mie ricette": include LE PROPRIE ricette personali
+        # nel Master (di default escluse per evitare duplicati con la scheda «Le Mie Ricette»).
+        if include_mine and user:
+            mine = await db.recipes.find(
+                {"collection_name": "personal", "owner_id": user["user_id"], "hidden": {"$ne": True}}, {"_id": 0},
+            ).sort("name", 1).to_list(1000)
+            for d in mine:
+                d.pop("owner_id", None)
+            existing_ids = {d.get("id") for d in docs}
+            docs = docs + [d for d in mine if d.get("id") not in existing_ids]
         # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
         # Eccezione: 2 ricette DEMO + ricette sbloccate con acquisto singolo restano complete.
         if not await user_is_pro(user):
