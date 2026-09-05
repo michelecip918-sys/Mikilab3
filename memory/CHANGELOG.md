@@ -170,3 +170,9 @@
 - Zero Click (App.js): utente di RITORNO (admin gate già sbloccato + intro già vista, oppure sessione fatta) salta la schermata "Inizia" e va dritto all'hub. Flag `mikilab_seen_intro` impostato su Start e al login. Prima volta invariata (admin gate → intro una sola volta).
 - AvatarHub: aggiunto pulsante "Accedi/Sign in" in alto a destra (solo se non loggato) → apre il login. Props onLogin/isLoggedIn da App.js.
 - Avatar MikiLab (Capo): sostituito il testo "MikiLab" sulla maglia con l'emblema circolare del logo (editing immagine, volto/posa/tatuaggio/sfondo invariati). Backup originale in /app/memory/avatar_miki_original_backup.jpg.
+
+## 2026-06 — Ricette Offline (IndexedDB) + logo giacca Mohamed
+- Nuovo `lib/idbCache.js`: KV store su IndexedDB (regge decine di MB, a differenza di localStorage ~5MB).
+- `recipesApi.list` ora scrive l'archivio su IndexedDB a ogni load e legge da IndexedDB in offline (fallback: localStorage). Warm-up in App.js: quando online pre-carica mikilab (+personal se loggato) anche senza aprire la lista.
+- Verificato: dopo il warm-up IndexedDB contiene 149 ricette mikilab (archivio 100% offline).
+- Avatar Mohamed: emblema logo MikiLab applicato sulla giacca (backup in /app/memory/avatar_mohamed_original_backup.jpg).

@@ -39,6 +39,7 @@ import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
 import { useDept, setDept } from "@/lib/dept";
+import { recipesApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
 import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
@@ -96,6 +97,13 @@ export default function App() {
     window.addEventListener("mikilab-role-changed", h);
     return () => window.removeEventListener("mikilab-role-changed", h);
   }, []);
+  useEffect(() => {
+    // Pre-cache dell'archivio ricette su IndexedDB per l'uso 100% offline (best-effort).
+    const warm = () => { if (navigator.onLine) { recipesApi.list("mikilab"); if (user) recipesApi.list("personal"); } };
+    warm();
+    window.addEventListener("online", warm);
+    return () => window.removeEventListener("online", warm);
+  }, [user]);
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
 
   // Selezione dall'hub avatar → apre la sezione giusta (Capo=login, Mohamed=PIN produzione, Bakemix=libero).
