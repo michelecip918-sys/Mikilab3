@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Sparkles, Loader2, Volume2, Send } from "lucide-react";
+import { useState, useRef } from "react";
+import { Sparkles, Loader2, Volume2, Send, Camera } from "lucide-react";
 import { toast } from "sonner";
 import { ordiniApi, floorPlanApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
@@ -15,6 +15,28 @@ export default function OrdiniExtra() {
   const [plan, setPlan] = useState("");
   const [busy, setBusy] = useState(false);
   const [sending, setSending] = useState(false);
+  const [scanning, setScanning] = useState(false);
+  const fileRef = useRef(null);
+
+  const onPhoto = async (e) => {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    setScanning(true);
+    try {
+      const b64 = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+      const out = await ordiniApi.scanOrder(b64, lang);
+      const txt = out && out.ok && out.data ? (out.data.text || "") : "";
+      if (txt) {
+        setOrders((prev) => (prev.trim() ? prev.trim() + "\n" + txt : txt));
+        toast.success(tri("Comanda letta dalla foto!", "Bestellung aus dem Foto gelesen!", "Order read from the photo!", "¡Pedido leído de la foto!", "Commande lue depuis la photo !", "سفارش از عکس خوانده شد!"));
+      } else {
+        toast.error(tri("Non sono riuscito a leggere la comanda. Riprova con una foto più nitida.", "Bestellung nicht lesbar. Versuche ein schärferes Foto.", "Couldn't read the order. Try a clearer photo.", "No pude leer el pedido. Prueba una foto más nítida.", "Commande illisible. Essaie une photo plus nette.", "سفارش خوانده نشد. عکس واضح‌تری بگیر."));
+      }
+    } catch {
+      toast.error(tri("Scansione non riuscita.", "Scan fehlgeschlagen.", "Scan failed.", "Fallo al escanear.", "Échec du scan.", "اسکن ناموفق بود."));
+    } finally { setScanning(false); }
+  };
 
   const regen = async () => {
     if (!orders.trim()) { toast.error(tri("Inserisci almeno un ordine extra", "Gib mindestens einen Extra-Auftrag ein", "Enter at least one extra order", "Introduce al menos un pedido extra", "Saisis au moins une commande extra", "حداقل یک سفارش اضافه وارد کن")); return; }
@@ -61,8 +83,17 @@ export default function OrdiniExtra() {
         placeholder={tri("Es.\n+30 baguette per Bar Centrale entro le 11:00\n2 torte nuziali per domani mattina\nAnnulla 10 focacce ordine Rossi", "Z.B.\n+30 Baguettes für Bar Centrale bis 11:00\n2 Hochzeitstorten für morgen früh\n10 Focaccia Bestellung Rossi stornieren", "E.g.\n+30 baguettes for Bar Centrale by 11:00\n2 wedding cakes for tomorrow morning\nCancel 10 focaccia, Rossi order", "Ej.\n+30 baguettes para Bar Centrale antes de las 11:00\n2 tartas de boda para mañana\nCancela 10 focaccias del pedido Rossi", "Ex.\n+30 baguettes pour Bar Centrale avant 11h00\n2 gâteaux de mariage pour demain\nAnnule 10 focaccias commande Rossi", "مثال:\n+۳۰ باگت برای بار سنترال تا ساعت ۱۱\n۲ کیک عروسی برای فردا صبح")}
         className="w-full bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-[#475569] focus:border-[#14b8a6] outline-none resize-y"
       />
+      <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={onPhoto} className="hidden" data-testid="ordini-extra-photo-input" />
       <button
-        data-testid="ordini-extra-btn"
+        data-testid="ordini-extra-photo-btn"
+        onClick={() => fileRef.current && fileRef.current.click()}
+        disabled={scanning}
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0b1220] border border-[#334155] text-[#cbd5e1] font-bold text-xs rounded-xl disabled:opacity-50 active:scale-95 transition-all hover:border-[#14b8a6]"
+      >
+        {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-[#14b8a6]" />}
+        {scanning ? tri("Lettura foto in corso…", "Foto wird gelesen…", "Reading photo…", "Leyendo foto…", "Lecture de la photo…", "در حال خواندن عکس…") : tri("📸 Foto comanda → compila ordini", "📸 Bestellfoto → Aufträge ausfüllen", "📸 Photo of order → fill orders", "📸 Foto del pedido → rellenar", "📸 Photo de commande → remplir", "📸 عکس سفارش")}
+      </button>
+      <button
         onClick={regen}
         disabled={busy}
         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#14b8a6]/20 disabled:opacity-50 active:scale-95 transition-all"

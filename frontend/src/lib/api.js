@@ -96,6 +96,7 @@ export const warehouseApi = {
 
 export const ordiniApi = {
   regenerate: (body) => api.post(`/lab/ordini-extra`, body).then((r) => r.data),
+  scanOrder: (image_base64, lang) => api.post(`/lab/scan-order`, { image_base64, lang }).then((r) => r.data),
 };
 
 // Piano del Team (Assistente Mamo): il Capo INVIA il piano, il Floor lo legge (senza login).

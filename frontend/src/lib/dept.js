@@ -5,8 +5,17 @@ import { useState, useEffect } from "react";
 export const DEPTS = ["panificazione", "pizzeria", "pasticceria"];
 const KEY = "mikilab_capo_dept";
 
+// Migrazione una-tantum: ripristina la vista COMPLETA del ricettario (tutte le ricette)
+// per chi aveva salvato un reparto specifico prima di questa release.
+try {
+  if (typeof localStorage !== "undefined" && !localStorage.getItem("mikilab_dept_reset_v2")) {
+    localStorage.setItem(KEY, "tutti");
+    localStorage.setItem("mikilab_dept_reset_v2", "1");
+  }
+} catch { /* */ }
+
 export function getDept() {
-  try { return localStorage.getItem(KEY) || "panificazione"; } catch { return "panificazione"; }
+  try { return localStorage.getItem(KEY) || "tutti"; } catch { return "tutti"; }
 }
 
 export function setDept(d) {

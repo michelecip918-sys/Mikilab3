@@ -191,3 +191,7 @@
   - GET magazzino e GET floor-plan restano pubblici (gli operai leggono la coda senza login).
   - SEC-003 (default PIN 1985) e SEC-004 (XFF spoofing): note, rischio accettato (default PIN voluto dall'utente).
 - UI/UX mobile: layout pulito, contrasto ok, nessun overflow reale (solo blur decorativo).
+
+## 2026-06 — Ricette ripristinate + Foto→Ordine del Capo
+- Ricettario: default reparto riportato a "Tutti" (lib/dept.js) + migrazione una-tantum (mikilab_dept_reset_v2) → tutte le 148/149 ricette tornano visibili nel Master con le loro foto. Nessuna ricetta era persa nel DB (0 hidden, tutte con immagine locale in /public/recipes, nomi coerenti es. r_taralli.jpg, pan_*.jpg, pz_*.jpg).
+- Foto→Ordine (item 3): nuovo endpoint POST /api/lab/scan-order (LLM vision) → estrae righe {name,quantity} da una foto di comanda + testo riassuntivo. Frontend OrdiniExtra: pulsante "📸 Foto comanda" (upload/fotocamera) che compila il campo ordini. Verificato E2E: comanda scritta a mano → "20 baguette, 10 ciabatte, 5 focacce, 2 panettoni".

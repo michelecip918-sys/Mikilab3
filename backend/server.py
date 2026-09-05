@@ -2380,6 +2380,49 @@ async def scan_label(payload: LabelScan, user: Optional[dict] = Depends(optional
         return {"ok": False}
 
 
+class OrderScan(BaseModel):
+    image_base64: str
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/lab/scan-order")
+async def scan_order(payload: OrderScan, user: Optional[dict] = Depends(optional_user)):
+    # FOTO di una comanda/ordine (a mano o stampata) → l'IA estrae le righe {prodotto, quantità}.
+    if not EMERGENT_LLM_KEY:
+        return {"ok": False}
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"scanorder-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Analizza la FOTO di una comanda/ordine di prodotti da forno (scritta a mano o stampata). "
+                "Estrai le righe d'ordine. Rispondi SOLO con JSON valido, senza altro testo: "
+                '{"items":[{"name":"prodotto","quantity":numero,"unit":"pz"}],'
+                '"text":"riassunto su una riga, es. 20 baguette, 10 ciabatte, 5 focacce"}. '
+                "Se una quantità non è leggibile usa 1. Non inventare prodotti non presenti nella foto."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        img = (payload.image_base64 or "").split(",")[-1]
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Estrai le righe della comanda.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        import json as _json
+        import re as _re
+        m = _re.search(r"\{.*\}", full, _re.S)
+        data = _json.loads(m.group(0)) if m else {}
+        if not data.get("text") and data.get("items"):
+            data["text"] = ", ".join(
+                f"{it.get('quantity', 1)} {it.get('name', '')}".strip() for it in data["items"] if isinstance(it, dict)
+            )
+        return {"ok": True, "data": data}
+    except Exception as e:
+        logging.warning(f"scan_order failed: {e}")
+        return {"ok": False}
+
+
+
 class VisionCoach(BaseModel):
     image_base64: str
     type: str = "formatura"
