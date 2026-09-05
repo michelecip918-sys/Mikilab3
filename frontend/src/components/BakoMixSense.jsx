@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic } from "lucide-react";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic, Snowflake, Flame, History } from "lucide-react";
 import { pulseApi, staffingApi, briefingApi, accessApi, delegationApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
@@ -16,6 +16,8 @@ import SpatialVisionAR from "@/components/SpatialVisionAR";
 import ClimateTimeMachine from "@/components/ClimateTimeMachine";
 import ProductionInventory from "@/components/ProductionInventory";
 import VoiceDelegation from "@/components/VoiceDelegation";
+import ProoferSync from "@/components/ProoferSync";
+import BatchPhoenix from "@/components/BatchPhoenix";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -53,8 +55,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       const r = await delegationApi.handoff(lang);
       toast.success(tri("Handoff turno in riproduzione", "Schichtübergabe wird abgespielt", "Playing shift handoff", "Reproduciendo relevo", "Lecture du relais", "پخش تحویل شیفت"));
       playTTS(r.text, { lang, voice: "bakemix" });
+      if (histOpen) loadHist();
     } catch { toast.error(tri("Errore handoff", "Fehler", "Handoff error", "Error", "Erreur", "خطا")); }
   };
+  const [prooferOpen, setProoferOpen] = useState(false);
+  const [phoenixOpen, setPhoenixOpen] = useState(false);
+  const [histOpen, setHistOpen] = useState(false);
+  const [hist, setHist] = useState([]);
+  const loadHist = () => { delegationApi.handoffHistory().then(setHist).catch(() => setHist([])); };
+  const toggleHist = () => { const n = !histOpen; setHistOpen(n); if (n) loadHist(); };
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -194,6 +203,8 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       {climateOpen && <ClimateTimeMachine onClose={() => setClimateOpen(false)} />}
       {inventoryOpen && <ProductionInventory onClose={() => setInventoryOpen(false)} />}
       {delegateOpen && <VoiceDelegation onClose={() => setDelegateOpen(false)} />}
+      {prooferOpen && <ProoferSync onClose={() => setProoferOpen(false)} />}
+      {phoenixOpen && <BatchPhoenix onClose={() => setPhoenixOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -349,6 +360,28 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 <button data-testid="bakomix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                   <Volume2 className="w-4 h-4" /> {tri("Handoff Audio Turno", "Audio-Schichtübergabe", "Shift Audio Handoff", "Relevo de Turno Audio", "Relais Audio de Poste", "تحویل صوتی شیفت")}
                 </button>
+                <button data-testid="bakomix-handoff-history" onClick={toggleHist} className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-bold text-[#7E8A93] hover:text-[#5EEAD4]">
+                  <History className="w-3.5 h-3.5" /> {histOpen ? tri("nascondi storico", "Verlauf ausblenden", "hide history", "ocultar historial", "masquer l'historique", "پنهان") : tri("Storico handoff", "Verlauf", "Handoff history", "Historial", "Historique", "تاریخچه")}
+                </button>
+                {histOpen && (
+                  <div data-testid="handoff-history-list" className="space-y-1.5 -mt-1">
+                    {hist.length === 0 && <p className="text-[11px] text-[#64748B] text-center">{tri("Nessun handoff salvato.", "Kein Verlauf.", "No saved handoffs.", "Sin historial.", "Aucun historique.", "چیزی نیست.")}</p>}
+                    {hist.slice(0, 6).map((h) => (
+                      <div key={h.id} className="flex items-center gap-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2">
+                        <span className="text-[11px] text-[#94A3B8] flex-1 min-w-0 truncate">{new Date(h.at).toLocaleString()} · {h.present}/{h.total}</span>
+                        <button data-testid={`handoff-replay-${h.id}`} onClick={() => playTTS(h.text, { lang: h.lang || lang, voice: "bakemix" })} className="shrink-0 w-7 h-7 rounded-full bg-[#5EEAD4]/15 text-[#5EEAD4] flex items-center justify-center"><Play className="w-3.5 h-3.5" /></button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                <div className="grid grid-cols-2 gap-2">
+                  <button data-testid="bakomix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5E8CA8]/40 text-[#8FB0C2] bg-[#5E8CA80d] active:scale-95 transition-transform">
+                    <Snowflake className="w-4 h-4" /> {tri("Cella/Freezer", "Gärraum", "Proofer", "Cámara", "Chambre", "تخمیر")}
+                  </button>
+                  <button data-testid="bakomix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f97316]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
+                    <Flame className="w-4 h-4" /> Batch Phoenix
+                  </button>
+                </div>
                 <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#8b5cf6]/50 text-[#a78bfa] bg-[#8b5cf612] active:scale-95 transition-transform">
                   <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>

@@ -4176,3 +4176,11 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **#3 Handoff Audio Turno**: `GET /api/shift/handoff?lang=` costruisce riassunto (personale, 6 settori, task attivi, ritmo, macchine ferme) IT/EN/DE. Pulsante `bakomix-handoff-btn` → playTTS voce bakemix. Verificato IT/EN.
 - **#4 PWA On-Prem**: guida export/self-host fornita in chat (infrastruttura).
 - api.js: delegationApi.handoff + cleanlinessCheck. Compile pulito, smoke screenshot OK.
+
+---
+## v-antiwaste (2026-06) — Proofer Anti-Over-Proof + Batch Phoenix + Storico Handoff
+- **Proofer Anti-Over-Proofing**: `GET /api/proofer/sync` calibra cella/freezer sull'Aura dell'operatore attivo (`_worker_pool`): Aura alta → più freddo + finestra corta (anti sovra-lievitazione); Aura bassa → più caldo + finestra lunga. Modale `ProoferSync.jsx` (bakomix-proofer-btn). Verificato (Super Saiyan → 27.3°/69′/-18°).
+- **Batch Phoenix**: `POST /api/batch-phoenix` (Claude) propone 2-3 reimpieghi immediati per impasti in eccesso/rallentati/sovra-lievitati con linea + resa. Modale `BatchPhoenix.jsx` (bakomix-phoenix-btn). Verificato (focaccia/grissini/pizza da surgelare).
+- **Storico Handoff**: `shift_handoff` ora persiste in `shift_handoffs`; `GET /api/shift/handoff/history`. Toggle "Storico handoff" nel pannello Capo con replay TTS per ogni voce (handoff-replay-*). Verificato (2 items).
+- **Apprentice Academy**: GIÀ presente (`/academy/coach` con livelli apprendista/avanzato/master, quiz, temi settimanali, `AcademyCoach.jsx`) → considerata coperta.
+- api.js: delegationApi.handoffHistory, prooferApi.sync, phoenixApi.suggest. Compile pulito; fix overflow blob background.

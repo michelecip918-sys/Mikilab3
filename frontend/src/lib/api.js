@@ -537,7 +537,16 @@ export const delegationApi = {
   }),
   close: (task_id) => api.post(`/delegation/tasks/${task_id}/close`).then((r) => r.data),
   handoff: (lang) => api.get(`/shift/handoff`, { params: { lang } }).then((r) => r.data),
+  handoffHistory: () => api.get(`/shift/handoff/history`).then((r) => r.data.items || []).catch(() => []),
   cleanlinessCheck: (task_id, image_base64) => api.post(`/delegation/tasks/${task_id}/cleanliness-check`, { image_base64 }).then((r) => r.data),
+};
+
+export const prooferApi = {
+  sync: () => api.get(`/proofer/sync`).then((r) => r.data),
+};
+
+export const phoenixApi = {
+  suggest: (dough_type, excess_kg, state, lang) => api.post(`/batch-phoenix`, { dough_type, excess_kg, state, lang }).then((r) => r.data),
 };
 
 // Handler di replay per la coda offline (bunker mode).

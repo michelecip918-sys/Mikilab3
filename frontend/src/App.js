@@ -223,7 +223,7 @@ export default function App() {
           }} />
           {/* Bagliori d'accento (profondità cromatica) */}
           <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/12 blur-[120px] rounded-full" />
-          <div className="absolute bottom-0 right-[-60px] w-[420px] h-[260px] bg-[#5E8CA8]/10 blur-[130px] rounded-full" />
+          <div className="absolute bottom-0 right-0 w-[420px] h-[260px] bg-[#5E8CA8]/10 blur-[130px] rounded-full" />
         </div>
 
         <div className="relative z-10 flex flex-col min-h-screen">

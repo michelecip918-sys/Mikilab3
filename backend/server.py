@@ -4052,7 +4052,82 @@ async def shift_handoff(lang: str = "it", user: Optional[dict] = Depends(optiona
     }
     m = P.get(lang, P["en"])
     text = f"{m['intro']} {m['staff']} {m['sectors']} {m['tasks']} {m['pace']} {m['end']}"
+    rec = {"id": str(uuid.uuid4()), "text": text, "lang": lang, "present": staff["present"], "total": staff["total"],
+           "active_tasks": tasks, "at": now_iso()}
+    await db.shift_handoffs.insert_one(dict(rec))
     return {"status": "success", "text": text, "present": staff["present"], "total": staff["total"], "active_tasks": tasks}
+
+
+@api_router.get("/shift/handoff/history")
+async def shift_handoff_history(user: Optional[dict] = Depends(optional_user)):
+    items = await db.shift_handoffs.find({}, {"_id": 0}).sort("at", -1).to_list(20)
+    return {"items": items}
+
+
+class ProoferSyncReq(BaseModel):
+    aura_score: Optional[int] = None
+
+
+@api_router.get("/proofer/sync")
+async def proofer_sync(user: Optional[dict] = Depends(optional_user)):
+    """Calibra cella/freezer sulla velocità (Aura) dell'operatore attivo per evitare la sovra-lievitazione."""
+    pool = await _worker_pool()
+    top = pool[0] if pool else {"name": "Operatore", "score": 85, "aura": _aura_for(85)}
+    score = int(top.get("score", 85))
+    # Operatore veloce (Aura alta) → la linea corre: raffredda e accorcia per non far sovra-lievitare.
+    # Operatore lento (Aura bassa) → scalda leggermente e allunga per tenere il passo.
+    base_temp, base_time = 28.0, 75
+    temp = round(base_temp - (score - 85) * 0.08, 1)         # più veloce = più freddo
+    time_min = int(base_time - (score - 85) * 0.6)            # più veloce = finestra più corta
+    temp = max(24.0, min(32.0, temp))
+    time_min = max(45, min(110, time_min))
+    if score >= 92:
+        note = "Aura altissima: la linea corre. Cella più fredda e finestra corta per non sovra-lievitare."
+    elif score <= 78:
+        note = "Aura più bassa: cella leggermente più calda e finestra più lunga per tenere il passo."
+    else:
+        note = "Ritmo bilanciato: parametri di lievitazione standard."
+    return {"status": "success", "operator": top.get("name"), "aura": top.get("aura"), "aura_score": score,
+            "proofer_temp_c": temp, "proof_time_min": time_min, "freezer_hold_c": -18 if score >= 92 else -16,
+            "note": note}
+
+
+class BatchPhoenixReq(BaseModel):
+    dough_type: str = Field(..., max_length=80)
+    excess_kg: float = Field(..., ge=0.1, le=500)
+    state: Optional[str] = "eccesso"   # eccesso | rallentato | sovra-lievitato
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/batch-phoenix")
+async def batch_phoenix(body: BatchPhoenixReq, user: dict = Depends(require_admin)):
+    """Recupera impasti in eccesso/rallentati proponendo un reimpiego immediato su un'altra linea."""
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="AI non disponibile")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"phoenix-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei BakoMix, maestro anti-spreco. Ti do un impasto in eccesso/rallentato/sovra-lievitato in un panificio. "
+                "Proponi 2-3 REIMPIEGHI IMMEDIATI e concreti su un'altra linea (es. focaccia, grissini, pizza in teglia, pane in cassetta, crackers, croste per pizza da surgelare) "
+                "per azzerare lo spreco, indicando per ognuno la linea/reparto e una nota operativa breve. "
+                f"Rispondi SOLO con JSON valido nella lingua '{body.lang}': "
+                '{"verdict":"1 frase","options":[{"product":"nome","line":"reparto/linea","note":"come fare in breve","yield_kg":numero}]}. '
+                "Niente HACCP/burocrazia."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=600)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=f"Impasto: {body.dough_type}, {body.excess_kg} kg, stato: {body.state}.")):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        res = json.loads(m.group(0)) if m else {"verdict": "", "options": []}
+    except Exception as e:
+        logging.warning(f"batch_phoenix failed: {e}")
+        raise HTTPException(status_code=503, detail="AI non disponibile")
+    return {"status": "success", "dough_type": body.dough_type, "excess_kg": body.excess_kg, **res}
 
 
 
