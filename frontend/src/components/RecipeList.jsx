@@ -315,7 +315,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="group relative overflow-hidden text-left bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-lg active:scale-[0.98] hover:border-[#14b8a6]/70 hover:shadow-[0_0_24px_-6px_rgba(20,184,166,0.35)] transition-all flex flex-col"
+            className="group relative overflow-hidden text-left bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-lg active:scale-[0.98] hover:border-[#14b8a6]/70 hover:shadow-[0_0_24px_-6px_rgba(20,184,166,0.35)] transition-all flex flex-col h-full"
           >
             {/* angoli cyber (brackets) */}
             <span aria-hidden className="pointer-events-none absolute top-1.5 left-1.5 z-30 w-3.5 h-3.5 border-t-2 border-l-2 border-[#14b8a6]/40 group-hover:border-[#14b8a6] transition-colors" />
@@ -538,7 +538,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                         {open && (
                           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                             transition={{ duration: 0.22 }} className="overflow-hidden">
-                            <div className="grid grid-cols-2 gap-3 p-3">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 p-3 items-stretch">
                               {items.map((r, i) => Card(r, i))}
                             </div>
                           </motion.div>

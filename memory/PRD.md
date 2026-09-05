@@ -4158,3 +4158,13 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - Avatar & logo (Michele/Mohamed/BakoMix/logo MikiLab) con alone acciaio via `*:has(> img[src*="avatar_"|"logo"])` box-shadow.
 - Sfondi tematici già resi più visibili (v-glass-bg): immagine 0.62 + overlay antracite + griglia geometrica teal che sfuma + micro-griglia circuito + bagliori.
 - Verificato via screenshot (390px): card non più piatte, avatar con glow, testo leggibile, nessun overflow. Approccio CSS globale non invasivo.
+
+---
+## v-recipe-layout (2026-06) — Disposizione ricette responsiva
+- `RecipeList.jsx`: griglia card da `grid-cols-2` fissa → responsiva `grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4` + card `h-full` (altezza uniforme) + `items-stretch`. Migliore uso dello spazio su tablet/desktop, invariata su telefono. Verificato: card renderizzate, compile pulito.
+### BACKLOG in sospeso (tapped dall'utente + direttive)
+- P1 Contrasto Regolabile: switch Area Sovrana per intensità vetro/sfondi (localStorage + CSS var).
+- P1 Checkpoint AR Pulizia: foto Claude Vision valida pulizia prima di chiudere task sanificazione (estende delegation step).
+- P1 Handoff Audio Turno: riassunto vocale TTS stato settori al cambio turno.
+- P2 PWA On-Prem: export/self-host (guida fornita; infra).
+- P2 Proofer anti-over-proofing (sync Aura), Batch Phoenix, Apprentice Academy adattiva.
