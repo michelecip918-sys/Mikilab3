@@ -3,6 +3,7 @@ import { Lock, Delete } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { verifyPin } from "@/lib/pinLock";
+import { resetSessionBoards } from "@/lib/sessionState";
 
 // Schermata di blocco: 4 cifre + tastierino. Copre tutto finché non si sblocca.
 export default function PinLock({ onUnlock }) {
@@ -12,7 +13,11 @@ export default function PinLock({ onUnlock }) {
   const [err, setErr] = useState(false);
 
   const submit = async (val) => {
-    if (await verifyPin(val)) onUnlock();
+    if (await verifyPin(val)) {
+      // Zero-state: ogni operatore che entra col PIN riparte da una postazione pulita.
+      resetSessionBoards({ clearRole: true });
+      onUnlock();
+    }
     else { setErr(true); setPin(""); try { navigator.vibrate && navigator.vibrate(120); } catch { /* */ } }
   };
   const press = (d) => {

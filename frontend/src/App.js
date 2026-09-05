@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
@@ -40,6 +40,7 @@ import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
 import { useDept, setDept } from "@/lib/dept";
+import { resetSessionBoards } from "@/lib/sessionState";
 import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
@@ -153,6 +154,18 @@ export default function App() {
     return () => window.removeEventListener("mikilab-open-auth", h);
   }, [setAuthOpen]);
   useEffect(() => { if (user) { setAuthOpen(false); try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } } }, [user, setAuthOpen]);
+
+  // Zero-state per il Capo: al primo ingresso di una nuova sessione i board partono puliti
+  // (schemi/cataloghi master nel DB restano intatti).
+  const zeroStateFor = useRef(null);
+  useEffect(() => {
+    const id = user ? (user.email || user.user_id || "capo") : null;
+    if (id && zeroStateFor.current !== id) {
+      zeroStateFor.current = id;
+      resetSessionBoards({ clearRole: false });
+    }
+    if (!id) zeroStateFor.current = null;
+  }, [user]);
 
   // GHOST MODE: link d'invito (?invite=) → apre direttamente la registrazione gated.
   useEffect(() => {

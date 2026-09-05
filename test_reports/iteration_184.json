@@ -1,0 +1,29 @@
+{
+  "summary": "Frontend-only test of Direttiva v12 'bunker-master-sync' new flows. All 5 requested flows PASS on mobile viewport 390x844.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe Method Select / Auth screen (Radix Select)", "issues": ["React hydration warning: '<span> cannot be a child of <option>' inside Radix DialogContent > select. Not blocking, but should be fixed by removing nested <span> in <option> or switching to Radix Select fully."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "sessionState.js: correctly preserves recipes_db while clearing operational keys — verified by localStorage assertions.",
+    "PinLock.jsx submit() properly awaits verifyPin, then resetSessionBoards({clearRole:true}) — verified end-to-end.",
+    "CoreShowcase.jsx: all 4 required showcase-* testids (modules,i18n,pin,ai) present; text switches with lang (IT/EN/DE verified).",
+    "RecipeDialog applyDeptProfile correctly hydrates method (indiretto for pasticceria) and 4 extra ingredients (Burro 82% m.g. 25%, Tuorli 20%, Zucchero semolato 22%, Vaniglia Bourbon 0.5%).",
+    "MagazzinoManager suggestions chips prefill magazzino-name — verified with 'Farina W300' for pizzeria profile.",
+    "Minor: hydration React warning about <span> inside <option> under DialogContent — safe to ignore in dev but worth cleaning up."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped)", "frontend": "100% (5/5 flows)"},
+  "test_credentials": "Capo: admin@mikilab.de / Mikilab2026! ; PIN Floor: 1985 ; Admin gate bypass via localStorage keys.",
+  "seed_data_creation": "None. Injected transient localStorage values ('mikilab_batches','mikilab_timers','mikilab_role','mikilab_recipes_db') to verify zero-state behaviour.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Flow verified: (1) hub-card-floor→pin-lock→PIN 1985→mohamed-role-select with mikilab_role cleared AND mikilab_recipes_db preserved. (2) hub-card-guida shows core-showcase with showcase-modules/i18n/pin/ai. (3) header-lang-btn/menu/it/de/en switch UI text (checked showcase-modules IT→EN→DE). (4) Capo login → lab-control-view → capo-dept-pizzeria → lab-nav-magazzino → magazzino-dept-banner + magazzino-dept-suggestions chips prefill magazzino-name. (5) capo-dept-pasticceria → lab-nav-ricette → add-recipe-btn → recipe-dept-profile + recipe-apply-dept-profile applies method='indiretto' and 4 pasticceria ingredients into extra-ingredients-section.",
+  "rca of the issue": "N/A — no blocking issues."
+}

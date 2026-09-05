@@ -6,6 +6,7 @@ import { playTTS } from "@/lib/tts";
 import ConsumiChart from "@/components/ConsumiChart";
 import OrdineRiacquisto from "@/components/OrdineRiacquisto";
 import { useDept, matchDept, deptLabel, deptIcon, DEPTS } from "@/lib/dept";
+import { getDeptProfile } from "@/lib/deptProfiles";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -127,6 +128,23 @@ export default function MagazzinoManager() {
           <span>{deptIcon(activeDept)}</span> {tri("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, tri)} <span className="font-normal text-[#94A3B8]">· {visibleItems.length}/{items.length} {tri("materie", "Zutaten", "items", "materias", "matières", "مواد")}</span>
         </div>
       )}
+
+      {/* Carico rapido: materie prime TIPICHE del reparto attivo (profilo operativo dedicato) */}
+      {(() => {
+        const prof = getDeptProfile(activeDept);
+        if (!prof || !prof.warehouse.length) return null;
+        return (
+          <div data-testid="magazzino-dept-suggestions" className="flex flex-wrap gap-1.5">
+            {prof.warehouse.map((n) => (
+              <button key={n} data-testid={`magazzino-suggest-${n.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`}
+                onClick={() => setForm((f) => ({ ...f, name: n, department: activeDept, kind: /farina|mehl|semola|w\d/i.test(n) ? "farina" : "ingrediente" }))}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0f172a] border border-[#14b8a6]/30 text-[11px] font-semibold text-[#94A3B8] hover:text-white hover:border-[#14b8a6] active:scale-95 transition-all">
+                <Plus className="w-3 h-3 text-[#14b8a6]" /> {n}
+              </button>
+            ))}
+          </div>
+        );
+      })()}
 
       {low.length > 0 && (
         <div data-testid="magazzino-low-alert" className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/40 text-rose-200 text-xs flex items-start gap-2">

@@ -4,6 +4,7 @@ import { Mail, Lock, User, LogIn, UserPlus, X } from "lucide-react";
 import { authApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
+import LangSelector from "@/components/LangSelector";
 
 export default function AuthScreen({ onClose, initialMode = "login" }) {
   const { setUser } = useAuth();
@@ -102,6 +103,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 bg-[#0E1620] dark:bg-[#0E1620]">
       <div className="w-full max-w-sm relative" data-testid="auth-screen">
+        <div className="absolute -top-2 left-0 z-10"><LangSelector testid="auth-lang-selector" /></div>
         {onClose && (
           <button data-testid="auth-close" onClick={onClose} aria-label="Chiudi"
             className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#7E8A93] z-10">

@@ -8,6 +8,8 @@ import { Camera, X, Loader2, ImagePlus } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 import { uploadApi, floursApi } from "@/lib/api";
+import { useDept } from "@/lib/dept";
+import { getDeptProfile } from "@/lib/deptProfiles";
 
 const FIELDS = [
   { key: "flour_grams", labelKey: "field_flour_g" },
@@ -40,14 +42,36 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const [saving, setSaving] = useState(false);
   const [pantry, setPantry] = useState([]);
   const { t, lang } = useLang();
+  const activeDept = useDept();
 
   useEffect(() => {
     if (open) {
-      setForm(initial ? { ...empty, ...normalize(initial) } : empty);
+      setForm(initial ? { ...empty, ...normalize(initial) } : { ...empty, department: (activeDept && activeDept !== "tutti") ? activeDept : "" });
       setPctMode(false);
       floursApi.list().then(setPantry).catch(() => setPantry([]));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initial]);
+
+  // Applica il PROFILO OPERATIVO del reparto: metodo, prefermento, temperatura impasto
+  // e ingredienti tipici del reparto (direttiva v12 · punto 2).
+  const applyDeptProfile = () => {
+    const prof = getDeptProfile(form.department || (activeDept !== "tutti" ? activeDept : ""));
+    if (!prof) return;
+    setForm((f) => {
+      const existing = (f.extra_ingredients || []).filter((e) => e.name);
+      const names = new Set(existing.map((e) => e.name.toLowerCase()));
+      const add = prof.ingredients.filter((i) => !names.has(i.name.toLowerCase()));
+      return {
+        ...f,
+        department: prof.id,
+        method_type: prof.defaults.method_type,
+        preferment_type: prof.defaults.preferment_type,
+        water_temp_c: f.water_temp_c === "" || f.water_temp_c == null ? prof.defaults.dough_temp_c : f.water_temp_c,
+        extra_ingredients: [...existing, ...add.map((i) => ({ name: i.name, percent: i.percent }))],
+      };
+    });
+  };
 
   const pickFlour = (f) => {
     const wtxt = f.w_index != null ? ` · W ${f.w_index}` : "";
@@ -261,6 +285,23 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               <option value="pasticceria">🥐 {mkTri(lang)("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")}</option>
             </select>
           </div>
+
+          {/* Profilo operativo del reparto: prefill metodo/prefermento/temperatura + ingredienti tipici */}
+          {getDeptProfile(form.department || (activeDept !== "tutti" ? activeDept : "")) && (
+            <div data-testid="recipe-dept-profile" className="rounded-2xl border border-[#3E9C93]/40 bg-[#3E9C93]/5 p-3 flex items-start gap-3">
+              <span className="text-2xl leading-none">{getDeptProfile(form.department || activeDept).icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-[#3E9C93]">{getDeptProfile(form.department || activeDept).label(lang)}</p>
+                <p className="text-[11px] text-[#7E8A93]">{getDeptProfile(form.department || activeDept).tagline(lang)} · {getDeptProfile(form.department || activeDept).batch.note(lang)}</p>
+              </div>
+              <button
+                type="button" data-testid="recipe-apply-dept-profile" onClick={applyDeptProfile}
+                className="shrink-0 px-3 py-2 rounded-xl bg-[#3E9C93] text-white text-xs font-bold active:scale-95 transition-all"
+              >
+                {mkTri(lang)("Applica profilo", "Profil anwenden", "Apply profile", "Aplicar perfil", "Appliquer le profil", "اعمال پروفایل")}
+              </button>
+            </div>
+          )}
 
           <div>
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("field_flour")}</label>

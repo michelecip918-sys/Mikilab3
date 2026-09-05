@@ -4205,3 +4205,16 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **Phoenix dal Timer (#2) FATTO (semi-auto)**: nel floor il badge "Recupera" degli impasti stalled è ora un bottone che apre BatchPhoenix precompilato (initialDough). Nessun pop-up forzato (Letz_Passive).
 - **Audio Handoff Salvato (#1)**: ancora da fare (capture+store blob TTS base64 in Mongo). Replay deterministico già disponibile.
 - **PWA On-Prem (#4)**: guida pronta; in attesa di hardware/prerequisiti utente per walkthrough.
+
+
+---
+## v12 BUNKER MASTER SYNC (2026-09-05) — Zero-state, profili reparto, showcase
+Direttiva "bunker-master-sync" (11 punti). Implementato in un unico passaggio i punti tangibili e verificabili:
+- **FIX BLOCCANTE**: import mancante `LangSelector` in `AuthScreen.jsx` (lint error) risolto.
+- **Zero-state di sessione (punti 5 + 11)**: nuovo `lib/sessionState.js` → `resetSessionBoards()`. Azzera SOLO i board operativi di sessione (batches, timers, ferment_run, plan_edits, active/team recipe, scarti, alarm_history, aura, xp, planner_*, tool/recipe usage) e la postazione (`mikilab_role`), PRESERVANDO schemi/cataloghi master (`recipes_db`, `floorplan_cache`), config (peripherals, sensor_ranges, weekly_template) e identità/impostazioni. Chiamato in `PinLock.submit()` (ogni operatore riparte pulito, clearRole:true) e in `App.js` al login del Capo (useRef `zeroStateFor`, clearRole:false).
+- **Profili operativi reparto (punto 2)**: nuovo `lib/deptProfiles.js` (DEPT_PROFILES panificazione/pizzeria/pasticceria) con ingredienti tipici, categorie magazzino, default d'impasto (metodo/idratazione/temp/prefermento), target batch, scaleStep, chillingLog. Wiring: `MagazzinoManager` mostra chip di carico rapido specifici del reparto (`magazzino-dept-suggestions`) che pre-compilano il form; `RecipeDialog` mostra blocco `recipe-dept-profile` + pulsante `recipe-apply-dept-profile` che applica metodo/prefermento/temp e aggiunge gli ingredienti tipici, e prefilla il `department` dal reparto attivo. Complementa i tool già esistenti `LabPizzeria.jsx`/`LabPasticceria.jsx`.
+- **Motore traduzione globale (punto 3)**: già 6 lingue (IT/DE/EN/ES/FR/FA) via `LangSelector`+`mkTri`. Tutti i nuovi componenti sono a 6 lingue. Audio BakoMix usa il TTS OpenAI con `lang`.
+- **Core Capabilities Showcase (punto 10)**: nuovo `components/CoreShowcase.jsx` (9 capacità auto-generate, animate a cascata, 6 lingue), montato in `BakemixGuide.jsx` (sezione BakemixAI).
+- **Punti diagnostici (6-9)**: verificati come già presenti (PWA offline/service worker+IndexedDB, peripherals/Bluetooth Letz_Passive, PIN Sovrano/BakoMix core). Nessuna nuova build richiesta; lint pulito (0 errori).
+- Test: iteration_184.json → frontend 100% (5/5 flussi nuovi PASS su 390x844), retest non necessario. Backend non modificato (recipes:200, pin-status:200). PIN Produzione impostato server-side a 1985.
+- **RESTA (onesto)**: punto 4 (refresh scale/target/metriche industriali) SALTATO su indicazione utente (default per ora). Minor: warning React dev `<span>` dentro `<option>` in un select (pre-esistente, non bloccante).
