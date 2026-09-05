@@ -11,10 +11,10 @@ const STATES = [
   { id: "sovra-lievitato", it: "Sovra-lievitato", de: "Übergärt", en: "Over-proofed", es: "Sobre-fermentado", fr: "Sur-fermenté", fa: "بیش‌تخمیر" },
 ];
 
-export default function BatchPhoenix({ onClose }) {
+export default function BatchPhoenix({ onClose, initialDough = "" }) {
   const { lang } = useLang();
   const tri = mkTri(lang);
-  const [dough, setDough] = useState("");
+  const [dough, setDough] = useState(initialDough);
   const [kg, setKg] = useState(5);
   const [state, setState] = useState("eccesso");
   const [loading, setLoading] = useState(false);

@@ -4198,3 +4198,10 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **Proofer sul Floor (#3) FATTO**: chip live cella/freezer in DoughTimer (prooferApi.sync, refresh 30s).
 - **Audio Handoff Salvato (#2) NON fatto**: serve capture+store del blob TTS in Mongo base64 (step dedicato). Voce esatta già riascoltabile via replay TTS deterministico.
 - **PWA On-Prem (#4)**: DEPLOY_ONPREM.md + .env.production.example + backend/.env.example; `yarn build` OK (build/ con sw.js+manifest).
+
+---
+## v-timer-config (2026-06)
+- **Soglia Timer Regolabile (#3) FATTO**: slider "Soglia impasto fermo" (30–180′) in BakoMix Capo (`stall-slider`), salvato in localStorage `mikilab_stall_min` + evento `mikilab-stall-changed`. DoughTimer usa la soglia client-side per lo stato "stalled".
+- **Phoenix dal Timer (#2) FATTO (semi-auto)**: nel floor il badge "Recupera" degli impasti stalled è ora un bottone che apre BatchPhoenix precompilato (initialDough). Nessun pop-up forzato (Letz_Passive).
+- **Audio Handoff Salvato (#1)**: ancora da fare (capture+store blob TTS base64 in Mongo). Replay deterministico già disponibile.
+- **PWA On-Prem (#4)**: guida pronta; in attesa di hardware/prerequisiti utente per walkthrough.

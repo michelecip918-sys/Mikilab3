@@ -50,6 +50,8 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [delegateOpen, setDelegateOpen] = useState(false);
   const [glass, setGlass] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_glass_level")); return Number.isFinite(v) && v > 0 ? v : 62; } catch { return 62; } });
   const setGlassLvl = (v) => { setGlass(v); try { localStorage.setItem("mikilab_glass_level", String(v)); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-glass-changed", { detail: v })); } catch { /* */ } };
+  const [stall, setStall] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_stall_min")); return Number.isFinite(v) && v > 0 ? v : 90; } catch { return 90; } });
+  const setStallMin = (v) => { setStall(v); try { localStorage.setItem("mikilab_stall_min", String(v)); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-stall-changed", { detail: v })); } catch { /* */ } };
   const doHandoff = async () => {
     try {
       const r = await delegationApi.handoff(lang);
@@ -392,6 +394,14 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                   </div>
                   <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#5E8CA8]" />
                   <p className="text-[10px] text-[#64748B] mt-1">{tri("Alza per sfondi più vividi, abbassa per più contrasto sul testo.", "Höher = lebendigere Hintergründe, niedriger = mehr Kontrast.", "Higher = more vivid backgrounds, lower = more text contrast.", "Más alto = fondos vívidos, más bajo = más contraste.", "Plus haut = fonds vifs, plus bas = plus de contraste.", "بالاتر = پس‌زمینه واضح‌تر، پایین‌تر = کنتراست بیشتر.")}</p>
+                </div>
+                <div data-testid="bakomix-stall-control" className="rounded-2xl border border-[#f59e0b]/40 bg-[#f59e0b0d] p-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-[11px] font-black uppercase tracking-widest text-[#fdba74]">{tri("Soglia impasto fermo", "Teig-Stillstand-Schwelle", "Stalled dough threshold", "Umbral masa parada", "Seuil pâte arrêtée", "آستانه توقف خمیر")}</span>
+                    <span className="text-[11px] font-mono-data font-bold text-white" data-testid="stall-value">{stall}′</span>
+                  </div>
+                  <input data-testid="stall-slider" type="range" min="30" max="180" step="5" value={stall} onChange={(e) => setStallMin(Number(e.target.value))} className="w-full accent-[#f59e0b]" />
+                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti BakoMix segnala il recupero (Batch Phoenix).", "Danach meldet BakoMix die Rettung (Batch Phoenix).", "Beyond this BakoMix flags recovery (Batch Phoenix).", "Pasados estos minutos BakoMix avisa el recupero.", "Au-delà, BakoMix signale la récupération.", "پس از این دقایق BakoMix بازیافت را اعلام می‌کند.")}</p>
                 </div>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}

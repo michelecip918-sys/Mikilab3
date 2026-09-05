@@ -4,19 +4,25 @@ import { Timer, Plus, Check, Flame, Snowflake } from "lucide-react";
 import { batchesApi, prooferApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import BatchPhoenix from "@/components/BatchPhoenix";
+
+const readThreshold = () => { try { const v = Number(localStorage.getItem("mikilab_stall_min")); return Number.isFinite(v) && v > 0 ? v : 90; } catch { return 90; } };
 
 // Timer impasto + parametri cella live sul floor (Letz_Passive, nessun suono).
 export default function DoughTimer() {
   const { lang } = useLang();
   const tri = mkTri(lang);
   const [batches, setBatches] = useState([]);
-  const [threshold, setThreshold] = useState(90);
+  const [threshold, setThreshold] = useState(readThreshold());
   const [proofer, setProofer] = useState(null);
   const [dough, setDough] = useState("");
   const [adding, setAdding] = useState(false);
+  const [phoenix, setPhoenix] = useState(null); // dough_type da recuperare
+
+  useEffect(() => { const h = () => setThreshold(readThreshold()); window.addEventListener("mikilab-stall-changed", h); return () => window.removeEventListener("mikilab-stall-changed", h); }, []);
 
   const load = useCallback(async () => {
-    try { const r = await batchesApi.active(); setBatches(r.batches || []); setThreshold(r.stall_threshold_min || 90); } catch { /* */ }
+    try { const r = await batchesApi.active(); setBatches(r.batches || []); } catch { /* */ }
     try { setProofer(await prooferApi.sync()); } catch { /* */ }
   }, []);
   useEffect(() => { load(); const iv = setInterval(load, 30000); return () => clearInterval(iv); }, [load]);
@@ -40,21 +46,24 @@ export default function DoughTimer() {
       </div>
 
       <AnimatePresence>
-        {batches.map((b) => (
+        {batches.map((b) => {
+          const stalled = b.age_min >= threshold;
+          return (
           <motion.div key={b.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid={`dough-${b.id}`}
-            className="flex items-center gap-2 rounded-2xl border px-3 py-2" style={{ borderColor: b.stalled ? "#f59e0b66" : "#1e293b", background: b.stalled ? "#f59e0b0d" : "#0b0f19" }}>
+            className="flex items-center gap-2 rounded-2xl border px-3 py-2" style={{ borderColor: stalled ? "#f59e0b66" : "#1e293b", background: stalled ? "#f59e0b0d" : "#0b0f19" }}>
             <span className="min-w-0 flex-1">
               <span className="block text-[13px] font-bold text-white truncate">{b.dough_type}</span>
-              <span className={`block text-[11px] font-mono-data ${b.stalled ? "text-[#f59e0b]" : "text-[#7E8A93]"}`}>{b.age_min}′ {tri("in lievitazione", "in Gärung", "proofing", "fermentando", "en pousse", "در تخمیر")}</span>
+              <span className={`block text-[11px] font-mono-data ${stalled ? "text-[#f59e0b]" : "text-[#7E8A93]"}`}>{b.age_min}′ {tri("in lievitazione", "in Gärung", "proofing", "fermentando", "en pousse", "در تخمیر")}</span>
             </span>
-            {b.stalled && (
-              <span data-testid={`dough-stall-${b.id}`} className="inline-flex items-center gap-1 text-[10px] font-black text-[#f59e0b] bg-[#f59e0b]/15 rounded-full px-2 py-1">
+            {stalled && (
+              <button data-testid={`dough-recover-${b.id}`} onClick={() => setPhoenix(b.dough_type)} className="inline-flex items-center gap-1 text-[10px] font-black text-[#f59e0b] bg-[#f59e0b]/15 rounded-full px-2 py-1 active:scale-95">
                 <Flame className="w-3 h-3" /> {tri("Recupera", "Retten", "Recover", "Recuperar", "Récupérer", "بازیافت")}
-              </span>
+              </button>
             )}
             <button data-testid={`dough-close-${b.id}`} onClick={() => close(b.id)} className="shrink-0 w-7 h-7 rounded-full bg-emerald-500/15 text-emerald-400 flex items-center justify-center"><Check className="w-3.5 h-3.5" /></button>
           </motion.div>
-        ))}
+          );
+        })}
       </AnimatePresence>
 
       {adding ? (
@@ -67,6 +76,7 @@ export default function DoughTimer() {
           <Plus className="w-3.5 h-3.5" /> {tri("Avvia timer impasto", "Teig-Timer starten", "Start dough timer", "Iniciar timer", "Démarrer minuteur", "شروع تایمر")}
         </button>
       )}
+      {phoenix && <BatchPhoenix initialDough={phoenix} onClose={() => setPhoenix(null)} />}
     </div>
   );
 }
