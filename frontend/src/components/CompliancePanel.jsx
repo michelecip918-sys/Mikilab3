@@ -5,6 +5,7 @@ import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import BakoInfo from "@/components/BakoInfo";
+import CrossCheckCard from "@/components/CrossCheckCard";
 
 // Compliance legale tedesca (ArbZG · DGUV · GDPR/DSGVO) — accesso esclusivo Master.
 // Vertical single-screen, nessuna pagina pubblica.
@@ -111,6 +112,8 @@ export default function CompliancePanel() {
               </ul>
             </div>
           )}
+
+          <CrossCheckCard />
         </>
       )}
     </div>

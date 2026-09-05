@@ -4293,3 +4293,16 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **PDF/schede tecniche multilingua**: i generatori PDF esistenti NON sono ancora tradotti in tutte le 6 lingue.
 - Termini legali tedeschi (Gefährdungsbeurteilung/Unterweisung) mantenuti in DE volutamente (terminologia normativa).
 
+
+---
+## v13.4 (2026-09-05) — Purge legacy + espansione lingue + oracolo macchine + cross-check
+- **Espansione lingue reali**: attivati **Arabo (RTL) e Turco** → 8 lingue selezionabili (it/de/en/es/fr/fa/ar/tr). `triExtraArTr.js` (dizionario starter ~30 stringhe chiave) + fallback EN per il resto; `SUPPORTED` esteso, `dir=rtl` per ar/fa. Sezione "Coming soon (expandable)" con altre 8 lingue. Verificato: selezione AR → html dir=rtl.
+- **PDF multilingua**: `_build_bundle_pdf` esteso a **FR + FA** (ora 6 lingue core). NB: reportlab con font di default non rende i glifi arabi/persiani (limite noto).
+- **Pulizia file obsoleti**: eliminati i PDF statici legacy (`mikilab-inventario*`, `mikilab-funzioni`, `audit/AUDIT_MIKILAB`) da public/ e build/. **Mantenuti** solo i documenti VIVI multilingua `MikiLab_v14_Ecosystem_Document_*` (usati da DocsDownload). Nessuna collezione DB di doc generati legacy (day_reports è live). `DocsDownload` ora fa fallback a EN per ar/tr.
+- **Cross-check ottico-telemetrico (anti-fooling avanzato)**: `POST /api/antifool/cross-check` confronta il dichiarato col calo REALE del silo → confirm/**freeze** su mismatch (log security). UI `CrossCheckCard` nel pannello Compliance. Verificato (2%→confirm, 80%→freeze).
+- **BakoMix oracolo potenziato**: `/master/govern` ora risponde anche a **schede macchina DGUV** (forno/impastatrice/abbattitore, IT+EN con misure) oltre a ownership e compliance. Nessuna regressione su assign_leader.
+- Lint 0 errori; backend sano; PWA Zero-Menu preservata.
+### RESTA (onesto):
+- **Audit stringhe 100%**: coverage migliorata (ar/tr starter, EN fallback ovunque), ma NON ogni stringa dei ~200 componenti è tradotta in tutte le 8 lingue — è un lavoro multi-sessione.
+- Font PDF per script non-latini (ar/fa/zh) non incorporati (glifi non resi).
+

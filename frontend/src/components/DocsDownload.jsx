@@ -11,12 +11,13 @@ const DOCS = [
   { code: "fr", label: "Français", flag: "🇫🇷" },
   { code: "fa", label: "فارسی", flag: "🇮🇷" },
 ];
-const fileFor = (code) => `${process.env.PUBLIC_URL || ""}/MikiLab_v14_Ecosystem_Document_${code.toUpperCase()}.pdf`;
+const KNOWN = new Set(["it", "de", "en", "es", "fr", "fa"]);
+const fileFor = (code) => `${process.env.PUBLIC_URL || ""}/MikiLab_v14_Ecosystem_Document_${(KNOWN.has(code) ? code : "en").toUpperCase()}.pdf`;
 
 export default function DocsDownload() {
   const { lang } = useLang();
   const tri = mkTri(lang);
-  const current = DOCS.find((d) => d.code === lang) || DOCS[0];
+  const current = DOCS.find((d) => d.code === lang) || DOCS.find((d) => d.code === "en") || DOCS[0];
 
   return (
     <div data-testid="docs-download" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">

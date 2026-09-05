@@ -10,11 +10,11 @@ const READY = [
   { code: "es", flag: "🇪🇸", label: "Español", native: "Spanish" },
   { code: "fr", flag: "🇫🇷", label: "Français", native: "French" },
   { code: "fa", flag: "🇮🇷", label: "فارسی", native: "Persian" },
+  { code: "ar", flag: "🇸🇦", label: "العربية", native: "Arabic" },
+  { code: "tr", flag: "🇹🇷", label: "Türkçe", native: "Turkish" },
 ];
 // Predisposizione globale: mostrate come "in arrivo" (architettura espandibile).
 const SOON = [
-  { code: "ar", flag: "🇸🇦", label: "العربية", native: "Arabic" },
-  { code: "tr", flag: "🇹🇷", label: "Türkçe", native: "Turkish" },
   { code: "pt", flag: "🇵🇹", label: "Português", native: "Portuguese" },
   { code: "pl", flag: "🇵🇱", label: "Polski", native: "Polish" },
   { code: "ro", flag: "🇷🇴", label: "Română", native: "Romanian" },

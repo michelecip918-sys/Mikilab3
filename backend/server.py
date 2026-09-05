@@ -3014,6 +3014,22 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
                "MikiLab Pro & BakoMix AI are the EXCLUSIVE property of the Master. Confidential proprietary code, protected in real time by the Guardian.")
         return {"intent": "ownership", "executed": False, "reply": aff, "state": {"owner": OWNER_ID}, "parsed": {"intent": "ownership"}}
 
+    # Oracolo SCHEDA MACCHINA (DGUV): BakoMix legge la valutazione rischi della macchina.
+    _mach = None
+    if "forno" in _tl0 or "ofen" in _tl0 or "oven" in _tl0:
+        _mach = "dguv-forno"
+    elif "impastatric" in _tl0 or "kneter" in _tl0 or "mixer" in _tl0:
+        _mach = "dguv-impastatrice"
+    elif "abbattitor" in _tl0 or "schockfrost" in _tl0 or "blast" in _tl0:
+        _mach = "dguv-abbattitore"
+    if _mach and any(k in _tl0 for k in ["scheda", "macchina", "rischi", "sicurezz", "safety", "dguv", "gefähr", "gefaehr", "risk", "hazard"]):
+        doc = next((d for d in _SAFETY_DOCS if d["id"] == _mach), None)
+        if doc:
+            meas = " · ".join(doc.get("measures", []))
+            rc = (f"{doc['title']} — {('level ' if body.lang.startswith('en') else 'livello ')}{doc['level']}. "
+                  + ("Measures: " if body.lang.startswith("en") else "Misure: ") + meas)
+            return {"intent": "machine_card", "executed": False, "reply": rc, "state": {"machine": _mach}, "parsed": {"intent": "machine_card"}}
+
     # Oracolo COMPLIANCE (ArbZG/DGUV/GDPR): BakoMix legge i dati autorizzati al Master.
     if any(k in _tl0 for k in ["ore lavor", "ore di lavoro", "stunden", "arbzg", "orario", "pausa", "sicurezz", "safety", "dguv", "gefährd", "gefaehrd", "gdpr", "dsgvo", "privacy", "formazione", "unterweisung", "compliance", "normativ", "legale"]):
         today = now_iso()[:10]
@@ -3175,6 +3191,38 @@ async def antifool_verify(body: AntifoolVerifyReq):
     ok = score >= 0.72
     _antifool_challenges.pop(body.challenge_id, None)
     return {"ok": bool(ok), "score": round(float(score), 2), "expected": ch["phrase"]}
+
+
+class CrossCheckReq(BaseModel):
+    worker: Optional[str] = ""
+    task: Optional[str] = ""
+    declared_deduction_g: float
+    silo_before_g: float
+    silo_after_g: float
+    tolerance_pct: float = 8.0
+    photo_present: bool = False
+
+
+@api_router.post("/antifool/cross-check")
+async def antifool_cross_check(body: CrossCheckReq, request: Request):
+    """Cross-check ottico-telemetrico: confronta la conferma dichiarata dall'operatore
+    con il calo di peso REALE del silo/bilancia. Se non combacia → congela (fake)."""
+    actual = max(0.0, float(body.silo_before_g) - float(body.silo_after_g))
+    declared = max(0.0, float(body.declared_deduction_g))
+    denom = max(1.0, declared)
+    diff_pct = round(abs(actual - declared) / denom * 100.0, 1)
+    ok = diff_pct <= float(body.tolerance_pct)
+    action = "confirm" if ok else "freeze"
+    try:
+        await db.security_log.insert_one({"id": str(uuid.uuid4()), "event": "cross_check", "action": ("allow" if ok else "flag"),
+                                          "detail": f"worker={body.worker} task={body.task} declared={declared}g actual={actual}g diff={diff_pct}% photo={body.photo_present}",
+                                          "ip": (request.client.host if request.client else None), "at": now_iso()})
+    except Exception:
+        pass
+    msg = ("Conferma validata: calo silo coerente con il dichiarato." if ok else
+           f"Conferma CONGELATA: scarto {diff_pct}% tra dichiarato ({declared:.0f} g) e reale ({actual:.0f} g). Possibile completamento fittizio.")
+    return {"ok": ok, "action": action, "actual_g": round(actual, 1), "declared_g": round(declared, 1),
+            "diff_pct": diff_pct, "photo_present": body.photo_present, "message": msg}
 
 
 # ---------------------------------------------------------------------------
@@ -7628,7 +7676,13 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
                 "water": "Water", "sourdough": "Sourdough", "salt": "Salt"},
          "es": {"ing": "Ingredientes", "proc": "Elaboración", "phases": "Fases de trabajo",
                 "notes": "Notas", "flour": "Harina", "hyd": "Hidratación", "made": "Hecho con MikiLab",
-                "water": "Agua", "sourdough": "Masa madre", "salt": "Sal"}}.get(lang, None)
+                "water": "Agua", "sourdough": "Masa madre", "salt": "Sal"},
+         "fr": {"ing": "Ingrédients", "proc": "Méthode", "phases": "Étapes de travail",
+                "notes": "Notes", "flour": "Farine", "hyd": "Hydratation", "made": "Réalisé avec MikiLab",
+                "water": "Eau", "sourdough": "Levain", "salt": "Sel"},
+         "fa": {"ing": "مواد اولیه", "proc": "روش", "phases": "مراحل کار",
+                "notes": "یادداشت‌ها", "flour": "آرد", "hyd": "هیدراسیون", "made": "ساخته‌شده با MikiLab",
+                "water": "آب", "sourdough": "خمیرمایه", "salt": "نمک"}}.get(lang, None)
     if L is None:
         L = {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
              "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab",

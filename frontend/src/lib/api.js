@@ -573,6 +573,7 @@ export const masterApi = {
 export const antifoolApi = {
   challenge: (lang) => api.get(`/antifool/challenge`, { params: { lang } }).then((r) => r.data),
   verify: (challenge_id, transcript) => api.post(`/antifool/verify`, { challenge_id, transcript }).then((r) => r.data),
+  crossCheck: (payload) => api.post(`/antifool/cross-check`, payload).then((r) => r.data),
 };
 
 // BakoMix Security Guardian (IP & integrità attiva).

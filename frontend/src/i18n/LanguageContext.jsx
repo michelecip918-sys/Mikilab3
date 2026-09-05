@@ -5,7 +5,7 @@ import { applyMeta } from "@/i18n/meta";
 import { setTTSAppLang } from "@/lib/tts";
 
 const LanguageContext = createContext(null);
-const SUPPORTED = ["it", "de", "en", "es", "fr", "fa"];
+const SUPPORTED = ["it", "de", "en", "es", "fr", "fa", "ar", "tr"];
 
 function initialLang() {
   // 1) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione
@@ -26,7 +26,7 @@ export function LanguageProvider({ children }) {
   useEffect(() => {
     localStorage.setItem("mikilab_lang", lang);
     document.documentElement.lang = lang;
-    document.documentElement.dir = lang === "fa" ? "rtl" : "ltr";
+    document.documentElement.dir = (lang === "fa" || lang === "ar") ? "rtl" : "ltr";
     applyMeta(lang);
     setTTSAppLang(lang); // voce audio sempre allineata al testo
   }, [lang]);
