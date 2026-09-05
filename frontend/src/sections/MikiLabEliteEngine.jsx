@@ -206,14 +206,14 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
   const createCrate = async () => {
     const store = newStore.trim(); if (!store) return;
-    try { const res = await fetch(`${API}/api/crates`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_name: store, driver: crateDriver }) }); if (res.ok) { const d = await res.json(); setNewStore(''); loadCrates(); if (d.crate) setTargetCrateId(d.crate.id); speakVoice(`Cesta creata per ${store}.`); } } catch (e) { /* */ }
+    try { const res = await fetch(`${API}/api/crates`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ store_name: store, driver: crateDriver }) }); if (res.ok) { const d = await res.json(); setNewStore(''); loadCrates(); if (d.crate) setTargetCrateId(d.crate.id); speakVoice(tr(`Cesta creata per ${store}.`, `Korb für ${store} erstellt.`, `Basket created for ${store}.`, `Cesta creada para ${store}.`, `Panier créé pour ${store}.`, `سبد برای ${store} ایجاد شد.`)); } } catch (e) { /* */ }
   };
   const addToCrate = async (product) => {
     if (!targetCrateId) return;
     setCrates(prev => prev.map(c => c.id === targetCrateId ? { ...c, items: [...(c.items || []), product] } : c));
     try { await fetch(`${API}/api/crates/${targetCrateId}/item`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ item: product }) }); } catch (e) { loadCrates(); }
     const store = (crates.find(c => c.id === targetCrateId) || {}).store_name || '';
-    speakVoice(`Aggiunto ${product} nella cesta ${store}.`);
+    speakVoice(tr(`Aggiunto ${product} nella cesta ${store}.`, `${product} zum Korb ${store} hinzugefügt.`, `Added ${product} to the ${store} basket.`, `Añadido ${product} a la cesta ${store}.`, `${product} ajouté au panier ${store}.`, `${product} به سبد ${store} اضافه شد.`));
   };
   const setCrateDriverServer = async (id, driver) => {
     setCrates(prev => prev.map(c => c.id === id ? { ...c, driver } : c));
@@ -229,13 +229,13 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     try { await fetch(`${API}/api/crates/${id}`, { method: 'DELETE', credentials: 'include' }); } catch (e) { loadCrates(); }
   };
   const sendCrateToDelivery = async (crate) => {
-    if (!crate.items || crate.items.length === 0) { speakVoice("La cesta è vuota, impossibile spedire."); return; }
+    if (!crate.items || crate.items.length === 0) { speakVoice(tr("La cesta è vuota, impossibile spedire.", "Der Korb ist leer, Versand nicht möglich.", "The basket is empty, cannot ship.", "La cesta está vacía, no se puede enviar.", "Le panier est vide, expédition impossible.", "سبد خالی است، امکان ارسال نیست.")); return; }
     try {
       await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client: crate.store_name, driver: crate.driver || '', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }) });
       await fetch(`${API}/api/crates/${crate.id}/clear`, { method: 'POST', credentials: 'include' });
       setCrates(prev => prev.map(c => c.id === crate.id ? { ...c, items: [] } : c));
       loadDeliveries();
-      speakVoice(`Cesta di ${crate.store_name} affidata a ${crate.driver || 'fattorino'} e messa in consegna.`);
+      speakVoice(tr(`Cesta di ${crate.store_name} affidata a ${crate.driver || 'fattorino'} e messa in consegna.`, `Korb von ${crate.store_name} an ${crate.driver || 'Fahrer'} übergeben und in Zustellung.`, `Basket from ${crate.store_name} handed to ${crate.driver || 'driver'} and out for delivery.`, `Cesta de ${crate.store_name} entregada a ${crate.driver || 'repartidor'} y en reparto.`, `Panier de ${crate.store_name} confié à ${crate.driver || 'livreur'} et en livraison.`, `سبد ${crate.store_name} به ${crate.driver || 'پیک'} سپرده و ارسال شد.`));
     } catch (e) { loadCrates(); }
   };
   const openTool = (name) => { setActiveTool(name); speakVoice(`Avvio diagnostica: ${name}.`); };
