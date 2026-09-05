@@ -1614,7 +1614,7 @@ async def get_production_plan():
 
 
 @api_router.put("/production-plan", response_model=ProductionPlan)
-async def save_production_plan(payload: ProductionPlan, user: dict = Depends(current_user)):
+async def save_production_plan(payload: ProductionPlan, user: dict = Depends(require_admin)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.production_plan.update_one(
@@ -1776,7 +1776,7 @@ async def get_floor_plan():
 
 
 @api_router.put("/lab/floor-plan")
-async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(current_user)):
+async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(require_admin)):
     doc = {
         "plan": payload.plan,
         "title": (payload.title or "").strip(),
@@ -1789,7 +1789,7 @@ async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(current_us
 
 
 @api_router.delete("/lab/floor-plan")
-async def delete_floor_plan(user: dict = Depends(current_user)):
+async def delete_floor_plan(user: dict = Depends(require_admin)):
     await db.floor_plan.delete_one({"_key": "active"})
     return {"success": True}
 
@@ -2224,7 +2224,7 @@ async def get_warehouse(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.post("/lab/warehouse")
-async def add_warehouse(payload: WarehouseItem, user: Optional[dict] = Depends(optional_user)):
+async def add_warehouse(payload: WarehouseItem, user: dict = Depends(require_admin)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     doc["id"] = payload.id or str(uuid.uuid4())
@@ -2233,13 +2233,13 @@ async def add_warehouse(payload: WarehouseItem, user: Optional[dict] = Depends(o
 
 
 @api_router.delete("/lab/warehouse/{item_id}")
-async def del_warehouse(item_id: str, user: Optional[dict] = Depends(optional_user)):
+async def del_warehouse(item_id: str, user: dict = Depends(require_admin)):
     await db.lab_warehouse.delete_one({"id": item_id})
     return {"ok": True}
 
 
 @api_router.post("/lab/warehouse/consume")
-async def consume_warehouse(payload: ConsumePayload, user: Optional[dict] = Depends(optional_user)):
+async def consume_warehouse(payload: ConsumePayload, user: dict = Depends(require_admin)):
     # Scala le giacenze in base alle materie usate da un'impastata confermata.
     updated, shortfalls = [], []
     stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)

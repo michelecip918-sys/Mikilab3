@@ -182,3 +182,12 @@
 - Sfondi per postazione Mohamed: bg-st-forno/impasto/banco/laugen.jpg. App.js mappa il ruolo attivo → immagine di postazione (Impastatore→impasto, Fornaio/Sfornate/Abbattitore→forno, Laugen→laugen, resto→banco); default bg-mohamed.jpg. Verificato: Fornaio → /bg-st-forno.jpg.
 - Badge "Offline · archivio locale" (App.js): indicatore fisso quando navigator è offline (multilingua). Verificato.
 - Avatar BakemixAI (robot): emblema logo MikiLab sul petto (backup in /app/memory/avatar_bigmix_original_backup.jpg). Ora tutti e 3 gli avatar hanno il logo.
+
+## 2026-06 — Analisi codice + Audit sicurezza (patch applicate)
+- Code review: nessun difetto CRITICAL/HIGH. Segnalati LOW (import inutilizzati, ConfermaImpastata/PeripheralSetup importati ma non montati — pre-esistente, non toccato).
+- Security audit (FIX applicati e verificati via curl):
+  - SEC-001 (HIGH): scritture magazzino (/lab/warehouse POST, DELETE, consume) ora richiedono require_admin (prima anonime). Verificato: 401 anon, 200 admin.
+  - SEC-002 (MED): PUT /production-plan e PUT/DELETE /lab/floor-plan ora richiedono require_admin (prima bastava un utente qualsiasi). Verificato 401 anon.
+  - GET magazzino e GET floor-plan restano pubblici (gli operai leggono la coda senza login).
+  - SEC-003 (default PIN 1985) e SEC-004 (XFF spoofing): note, rischio accettato (default PIN voluto dall'utente).
+- UI/UX mobile: layout pulito, contrasto ok, nessun overflow reale (solo blur decorativo).
