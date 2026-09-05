@@ -3,20 +3,25 @@ const K_PIN = "mikilab_pin";
 const K_EN = "mikilab_pin_enabled";
 const K_UN = "mikilab_pin_unlocked";
 const K_SET = "mikilab_pin_init";
-const DEFAULT_PIN = "1985";
 
 export function ensurePinDefault() {
   try {
     if (localStorage.getItem(K_SET) !== "1") {
-      localStorage.setItem(K_PIN, DEFAULT_PIN);
+      // Il gate del Floor è ATTIVO di default, ma NON impostiamo alcun PIN:
+      // il Floor resta chiuso finché il Capo non definisce il PIN sul server.
       localStorage.setItem(K_EN, "1");
       localStorage.setItem(K_SET, "1");
+    }
+    // Migrazione: rimuovi il vecchio PIN "1985" seminato in locale (non più valido).
+    if (localStorage.getItem("mikilab_pin_1985_purge") !== "1") {
+      if (localStorage.getItem(K_PIN) === "1985") localStorage.removeItem(K_PIN);
+      localStorage.setItem("mikilab_pin_1985_purge", "1");
     }
   } catch { /* */ }
 }
 
 export function isPinEnabled() { try { return localStorage.getItem(K_EN) !== "0"; } catch { return false; } }
-export function getPin() { try { return localStorage.getItem(K_PIN) || DEFAULT_PIN; } catch { return DEFAULT_PIN; } }
+export function getPin() { try { return localStorage.getItem(K_PIN) || ""; } catch { return ""; } }
 
 export function setPin(p) {
   const v = String(p).replace(/\D/g, "").slice(0, 4);
@@ -35,7 +40,8 @@ export function setPinEnabled(v) {
 
 export function isUnlocked() { try { return localStorage.getItem(K_UN) === "1"; } catch { return true; } }
 export function unlockWith(p) {
-  if (String(p) === getPin()) { try { localStorage.setItem(K_UN, "1"); } catch { /* */ } return true; }
+  const stored = getPin();
+  if (stored && String(p) === stored) { try { localStorage.setItem(K_UN, "1"); } catch { /* */ } return true; }
   return false;
 }
 export function lockNow() { try { localStorage.setItem(K_UN, "0"); } catch { /* */ } }
@@ -55,8 +61,9 @@ export async function verifyPin(p) {
     }
     return false;
   } catch {
-    // Server irraggiungibile (offline): confronto con l'ultimo PIN valido in cache.
-    if (v === getPin()) { try { localStorage.setItem(K_UN, "1"); } catch { /* */ } return true; }
+    // Server irraggiungibile (offline): confronto con l'ultimo PIN valido in cache (mai un default).
+    const stored = getPin();
+    if (stored && v === stored) { try { localStorage.setItem(K_UN, "1"); } catch { /* */ } return true; }
     return false;
   }
 }

@@ -3,30 +3,40 @@ import { motion } from "framer-motion";
 import { ShieldCheck, Delete } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { adminGateApi } from "@/lib/api";
 
 const PUB = process.env.PUBLIC_URL;
-// PIN ADMIN personale di MikiLab (Michele) — blocca l'INTERO sito. Separato dal PIN di produzione.
-const ADMIN_PIN = () => { try { return localStorage.getItem("mikilab_admin_pin") || "1985"; } catch { return "1985"; } };
+const OK_KEY = "mikilab_admin_gate_ok"; // ultimo PIN valido (cache locale per uso offline)
 
 export default function AdminGate({ onUnlock }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [pin, setPin] = useState("");
   const [err, setErr] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  const tryPin = async (val) => {
+    setBusy(true);
+    let ok = false;
+    try {
+      const res = await adminGateApi.verify(val);        // verifica lato server (segreto, hashato)
+      ok = !!(res && res.ok);
+      if (ok) { try { localStorage.setItem(OK_KEY, val); } catch { /* */ } }
+    } catch {
+      // Offline: confronto con l'ultimo PIN valido salvato su questo dispositivo.
+      try { ok = val === localStorage.getItem(OK_KEY); } catch { ok = false; }
+    }
+    setBusy(false);
+    if (ok) { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } onUnlock(); }
+    else { setErr(true); setPin(""); }
+  };
 
   const push = (d) => {
-    if (pin.length >= 4) return;
+    if (pin.length >= 4 || busy) return;
     const next = pin + d;
     setPin(next);
     setErr(false);
-    if (next.length === 4) {
-      setTimeout(() => {
-        if (next === ADMIN_PIN()) {
-          try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ }
-          onUnlock();
-        } else { setErr(true); setPin(""); }
-      }, 120);
-    }
+    if (next.length === 4) setTimeout(() => tryPin(next), 120);
   };
   const back = () => { setPin((p) => p.slice(0, -1)); setErr(false); };
 

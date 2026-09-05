@@ -200,3 +200,10 @@
 - #1 Piano offline nel Floor: MamoAssistant legge la coda del Capo da IndexedDB/cache anche offline + chip "Dati locali/LOCAL DATA" (data-testid mamo-offline-chip) quando navigator è offline. Verificato.
 - #2 Sincronizza al ritorno (App.js): all'evento 'online' ricarica e riallinea recipes/warehouse/plan/weekly/floor-plan dal server (re-cache IndexedDB), notifica le viste (mikilab-floor-plan-updated, mikilab-warehouse-changed) e mostra toast "Riconnesso · dati aggiornati".
 - #4 Cuffia vocale Mohamed (MamoAssistant): l'ascolto continuo a mani libere si AUTO-ATTIVA appena arriva il piano (dopo l'unico tap sul mic richiesto dal browser per il permesso audio). Comandi vocali: avanti/indietro/ripeti/stop. Verificato E2E (toast "Voice guide on", step letto, role filtering Fornaio→cottura).
+
+## 2026-06 — Hardening sicurezza PIN + anti-spoofing rate-limit
+- SEC-003 (PIN default 1985):
+  - PIN Produzione (Floor): RIMOSSO il fallback hardcoded "1985". Se il Capo non ha impostato il PIN, il Floor resta CHIUSO (verify → ok:false, not_set:true). Lato client rimosso il seeding di "1985" (pinLock: getPin ora "" se non impostato; migrazione che purga il vecchio 1985 in cache; offline si accetta solo l'ultimo PIN valido).
+  - Gate ADMIN del sito: spostato lato SERVER (hashato, rate-limited). Nessun default nel sorgente client. Se non impostato in DB → fallback al segreto ADMIN_GATE_PIN in backend/.env. Il Capo può cambiarlo dal pannello (PinSetup, endpoint PUT /api/admin-gate admin-only). AdminGate.jsx ora verifica via POST /api/admin-gate/verify con fallback offline sull'ultimo PIN valido.
+  - Nuovi endpoint: GET /api/admin-gate/status, PUT /api/admin-gate (require_admin), POST /api/admin-gate/verify (rate-limit 8/5min). Verificati via curl + gate E2E (1985 sblocca; set 2468 override; 401 senza auth).
+- SEC-004 (X-Forwarded-For spoofing): _client_ip ora prende l'hop da DESTRA aggiunto dal proxy fidato (TRUSTED_PROXY_HOPS, default 1), ignorando i valori a sinistra falsificabili dal client; fallback a request.client.host. Env aggiunte: ADMIN_GATE_PIN, TRUSTED_PROXY_HOPS.

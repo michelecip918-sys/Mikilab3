@@ -518,8 +518,19 @@ def _check_pw(pw, h):
 
 
 def _client_ip(request) -> str:
-    return (request.headers.get("x-forwarded-for", "").split(",")[0].strip()
-            or (request.client.host if request.client else "?"))
+    # ANTI-SPOOFING: l'header X-Forwarded-For inviato dal client NON è affidabile
+    # (la parte SINISTRA è falsificabile da chiunque). Ci fidiamo solo degli hop aggiunti
+    # dal proxy sicuro dell'infrastruttura (ingress / Nginx / Cloudflare): prendiamo l'IP
+    # da DESTRA nella catena, saltando TRUSTED_PROXY_HOPS proxy fidati. Fallback: IP TCP reale.
+    try:
+        hops = max(1, int(os.environ.get("TRUSTED_PROXY_HOPS", "1")))
+    except Exception:
+        hops = 1
+    parts = [p.strip() for p in request.headers.get("x-forwarded-for", "").split(",") if p.strip()]
+    if parts:
+        idx = len(parts) - hops
+        return parts[idx if idx >= 0 else 0]
+    return request.client.host if request.client else "?"
 
 
 async def _rate_limit(scope: str, key: str, max_count: int, window_seconds: int) -> bool:
@@ -6398,7 +6409,54 @@ async def production_pin_verify(body: ProductionPinVerify, request: Request):
     if doc and doc.get("hash"):
         ok = bool(p) and _check_pw(p, doc["hash"])
     else:
-        ok = (p == "1985")  # retro-compat: nessun PIN impostato → default storico
+        # NIENTE default hardcoded: il Floor resta CHIUSO finché il Capo non imposta il PIN.
+        ok = False
+    return {"ok": bool(ok), "not_set": not (doc and doc.get("hash"))}
+
+
+# ---------------------------------------------------------------------------
+# GATE ADMIN del sito (accesso riservato al proprietario). PIN segreto, verificato
+# lato server, hashato. Nessun default pubblico nel sorgente: se non impostato in DB
+# ricade sul segreto ADMIN_GATE_PIN definito nel .env (modificabile dal Capo).
+# ---------------------------------------------------------------------------
+class AdminGateSet(BaseModel):
+    pin: str
+
+
+class AdminGateVerify(BaseModel):
+    pin: str
+
+
+@api_router.get("/admin-gate/status")
+async def admin_gate_status():
+    doc = await db.app_meta.find_one({"_key": "admin_gate_pin"}, {"_id": 0})
+    return {"is_set": bool((doc and doc.get("hash")) or os.environ.get("ADMIN_GATE_PIN"))}
+
+
+@api_router.put("/admin-gate")
+async def admin_gate_set(body: AdminGateSet, admin: dict = Depends(require_admin)):
+    p = _norm_pin(body.pin)
+    if not p:
+        raise HTTPException(status_code=400, detail="Il PIN deve avere 4 cifre")
+    await db.app_meta.update_one(
+        {"_key": "admin_gate_pin"},
+        {"$set": {"_key": "admin_gate_pin", "hash": _hash_pw(p), "updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True, "updated_at": now_iso()}
+
+
+@api_router.post("/admin-gate/verify")
+async def admin_gate_verify(body: AdminGateVerify, request: Request):
+    if not await _rate_limit("admin_gate_verify", _client_ip(request), 8, 300):
+        raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
+    p = _norm_pin(body.pin)
+    doc = await db.app_meta.find_one({"_key": "admin_gate_pin"}, {"_id": 0})
+    if doc and doc.get("hash"):
+        ok = bool(p) and _check_pw(p, doc["hash"])
+    else:
+        env_pin = os.environ.get("ADMIN_GATE_PIN")
+        ok = bool(env_pin) and bool(p) and (p == env_pin)
     return {"ok": bool(ok)}
 
 

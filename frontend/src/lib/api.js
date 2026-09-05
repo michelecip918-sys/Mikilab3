@@ -24,6 +24,13 @@ export const productionPinApi = {
   verify: (pin) => api.post(`/production-pin/verify`, { pin }).then((r) => r.data),
 };
 
+// Gate ADMIN del sito: PIN segreto verificato lato server (nessun default nel sorgente).
+export const adminGateApi = {
+  status: () => api.get(`/admin-gate/status`).then((r) => r.data),
+  set: (pin) => api.put(`/admin-gate`, { pin }).then((r) => r.data),
+  verify: (pin) => api.post(`/admin-gate/verify`, { pin }).then((r) => r.data),
+};
+
 export const recipesApi = {
   // Resiliente + OFFLINE-READY: online salva l'archivio su IndexedDB (grande, affidabile)
   // e una copia leggera su localStorage; offline restituisce la cache IndexedDB così le
