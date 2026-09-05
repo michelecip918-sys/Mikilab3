@@ -238,7 +238,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       speakVoice(tr(`Cesta di ${crate.store_name} affidata a ${crate.driver || 'fattorino'} e messa in consegna.`, `Korb von ${crate.store_name} an ${crate.driver || 'Fahrer'} übergeben und in Zustellung.`, `Basket from ${crate.store_name} handed to ${crate.driver || 'driver'} and out for delivery.`, `Cesta de ${crate.store_name} entregada a ${crate.driver || 'repartidor'} y en reparto.`, `Panier de ${crate.store_name} confié à ${crate.driver || 'livreur'} et en livraison.`, `سبد ${crate.store_name} به ${crate.driver || 'پیک'} سپرده و ارسال شد.`));
     } catch (e) { loadCrates(); }
   };
-  const openTool = (name) => { setActiveTool(name); speakVoice(`Avvio diagnostica: ${name}.`); };
+  const openTool = (name) => { setActiveTool(name); speakVoice(tr(`Avvio diagnostica: ${name}.`, `Diagnose wird gestartet: ${name}.`, `Starting diagnostics: ${name}.`, `Iniciando diagnóstico: ${name}.`, `Démarrage du diagnostic : ${name}.`, `شروع عیب‌یابی: ${name}.`)); };
   const guidedProduction = () => {
     const steps = ["Passo uno: pesare 10 chilogrammi di farina T500.", "Passo due: aggiungere 6 litri e mezzo di acqua a 22 gradi.", "Passo tre: impastare per 8 minuti in prima velocità.", "Passo quattro: puntata di 30 minuti, poi formatura."];
     steps.forEach((s, i) => setTimeout(() => speakVoice(s), i * 3800));
@@ -296,7 +296,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       interval = setInterval(() => setTimerSeconds(s => s - 1), 1000);
     } else if (timerSeconds === 0 && isBaking) {
       setIsBaking(false);
-      speakVoice("Allarme forno! Cottura completata, sfornare subito!");
+      speakVoice(tr("Allarme forno! Cottura completata, sfornare subito!", "Ofenalarm! Backvorgang abgeschlossen, sofort ausbacken!", "Oven alarm! Baking complete, take out now!", "¡Alarma del horno! Cocción completada, ¡sacar ahora!", "Alarme du four ! Cuisson terminée, défourner tout de suite !", "هشدار فر! پخت کامل شد، همین حالا از فر دربیاور!"));
       playBeepAlert();
       pushOvenDone();
       // Allarme Forno Prioritario: parte il conteggio "incustodito" (2 min → notifica al Capo)
@@ -308,7 +308,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ room: (rooms3D[activeTab] && rooms3D[activeTab].title) || 'Forno', recipe: ovenRecipeName, minutes_unattended: 2 })
           }).catch(() => {});
-          speakVoice("Attenzione: allarme forno non gestito. Notifico il Capo.");
+          speakVoice(tr("Attenzione: allarme forno non gestito. Notifico il Capo.", "Achtung: unbehandelter Ofenalarm. Ich benachrichtige den Chef.", "Warning: unhandled oven alarm. Notifying the Capo.", "Atención: alarma de horno no atendida. Aviso al Capo.", "Attention : alarme de four non gérée. J'avertis le Capo.", "توجه: هشدار فر رسیدگی‌نشده. به کاپو اطلاع می‌دهم."));
         } catch (e) { /* */ }
       }, 120000);
     }
@@ -335,7 +335,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     } catch (e) { setHoliday(!next); }
   };
 
-  const ackAlarm = () => { setAlarmUnattended(false); if (alarmTimerRef.current) { clearTimeout(alarmTimerRef.current); alarmTimerRef.current = null; } speakVoice("Allarme forno tacitato."); };
+  const ackAlarm = () => { setAlarmUnattended(false); if (alarmTimerRef.current) { clearTimeout(alarmTimerRef.current); alarmTimerRef.current = null; } speakVoice(tr("Allarme forno tacitato.", "Ofenalarm stummgeschaltet.", "Oven alarm silenced.", "Alarma del horno silenciada.", "Alarme du four coupée.", "هشدار فر خاموش شد.")); };
 
   // ESC per chiudere
   useEffect(() => {
