@@ -395,7 +395,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
       speakVoice(tr("Radio panificio spenta", "Bäckerei-Radio aus", "Bakery radio off", "Radio de la panadería apagada", "Radio boulangerie éteinte", "رادیوی نانوایی خاموش شد"));
     } else {
       playStation(currentStation);
-      speakVoice(`Radio del Fornaio: ${currentStation.name}`);
+      speakVoice(tr(`Radio del Fornaio: ${currentStation.name}`, `Bäcker-Radio: ${currentStation.name}`, `Baker's Radio: ${currentStation.name}`, `Radio del Panadero: ${currentStation.name}`, `Radio du Boulanger : ${currentStation.name}`, `رادیوی نانوا: ${currentStation.name}`));
     }
   };
 
@@ -469,7 +469,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
   const startBake = () => {
     setIsBaking(true);
-    speakVoice("Conto alla rovescia forno avviato da Mohamed");
+    speakVoice(tr("Conto alla rovescia forno avviato da Mohamed", "Ofen-Countdown von Mohamed gestartet", "Oven countdown started by Mohamed", "Cuenta atrás del horno iniciada por Mohamed", "Compte à rebours du four lancé par Mohamed", "شمارش معکوس فر توسط محمد آغاز شد"));
     try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {}
   };
 
@@ -523,7 +523,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
           {/* SELETTORE LINGUA (6 lingue) */}
           <div style={{ display: 'flex', gap: '4px', marginTop: '10px', flexWrap: 'wrap' }}>
             {[['it-IT', 'IT'], ['de-DE', 'DE'], ['es-ES', 'ES'], ['fr-FR', 'FR'], ['en-US', 'EN'], ['fa-IR', 'FA']].map(([code, label]) => (
-              <button key={code} data-testid={`elite-lang-${label.toLowerCase()}`} onClick={() => { setLanguage(code); speakVoice(`Lingua ${label}`); }} style={{ backgroundColor: language === code ? currentRoom.color : 'rgba(255,255,255,0.1)', color: language === code ? '#000' : '#FFF', border: '1px solid rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
+              <button key={code} data-testid={`elite-lang-${label.toLowerCase()}`} onClick={() => { setLanguage(code); speakVoice(tr(`Lingua ${label}`, `Sprache ${label}`, `Language ${label}`, `Idioma ${label}`, `Langue ${label}`, `زبان ${label}`)); }} style={{ backgroundColor: language === code ? currentRoom.color : 'rgba(255,255,255,0.1)', color: language === code ? '#000' : '#FFF', border: '1px solid rgba(255,255,255,0.2)', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 'bold', cursor: 'pointer' }}>
                 {label}
               </button>
             ))}
@@ -793,7 +793,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             ...customDepts.map(d => ({ id: d.id, icon: '🧩', label: (d.title || d.id).toUpperCase(), custom: true }))
           ].map(room => (
             <div key={room.id} style={{ position: 'relative' }}>
-              <button data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(`Spostamento in ${room.label}`); }} style={{
+              <button data-testid={`elite-room-${room.id}`} onClick={() => { setActiveTab(room.id); speakVoice(tr(`Spostamento in ${room.label}`, `Wechsel zu ${room.label}`, `Moving to ${room.label}`, `Cambio a ${room.label}`, `Passage à ${room.label}`, `انتقال به ${room.label}`)); }} style={{
                 width: '100%',
                 backgroundColor: activeTab === room.id ? (allRooms[room.id] ? allRooms[room.id].color : CUSTOM_COLOR) : 'rgba(0,0,0,0.6)',
                 color: activeTab === room.id ? '#000' : '#FFF',
