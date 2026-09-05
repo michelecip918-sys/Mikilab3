@@ -207,3 +207,7 @@
   - Gate ADMIN del sito: spostato lato SERVER (hashato, rate-limited). Nessun default nel sorgente client. Se non impostato in DB → fallback al segreto ADMIN_GATE_PIN in backend/.env. Il Capo può cambiarlo dal pannello (PinSetup, endpoint PUT /api/admin-gate admin-only). AdminGate.jsx ora verifica via POST /api/admin-gate/verify con fallback offline sull'ultimo PIN valido.
   - Nuovi endpoint: GET /api/admin-gate/status, PUT /api/admin-gate (require_admin), POST /api/admin-gate/verify (rate-limit 8/5min). Verificati via curl + gate E2E (1985 sblocca; set 2468 override; 401 senza auth).
 - SEC-004 (X-Forwarded-For spoofing): _client_ip ora prende l'hop da DESTRA aggiunto dal proxy fidato (TRUSTED_PROXY_HOPS, default 1), ignorando i valori a sinistra falsificabili dal client; fallback a request.client.host. Env aggiunte: ADMIN_GATE_PIN, TRUSTED_PROXY_HOPS.
+
+## 2026-06 — Postazioni dinamiche di Mohamed (dai reparti del Capo)
+- MohamedFloor ora carica /api/lab/departments e UNISCE alla lista base i reparti custom + le postazioni (feature) create dal Capo nell'Elite Engine (base extras + custom.features + extras[custom]). Offline resta la lista base. Verificato E2E: reparto "Gelateria Test" con postazione "Mantecatore" compare nella scelta postazione di Mohamed.
+- Nota: gli sfondi per postazione custom ricadono sullo sfondo "banco" (mappa keyword in App.js); i reparti base mantengono forno/impasto/laugen.

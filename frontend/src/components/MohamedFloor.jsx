@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mic, ChevronLeft } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
@@ -6,10 +6,12 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
+const API = process.env.REACT_APP_BACKEND_URL;
 const ROLE_KEY = "mikilab_role";
 
-// Ruoli/postazioni presi dai reparti dell'Elite Engine (Panetteria / Pizzeria / Pasticceria).
-const DEPTS = [
+// Reparti/postazioni BASE. Vengono ARRICCHITI a runtime con i reparti e le postazioni
+// (feature) che il Capo crea nell'Elite Engine → così le postazioni "aumentano" da sole.
+const BASE_DEPTS = [
   { key: "panetteria", label: "🍞 Panetteria", color: "#5E8CA8", roles: ["Impastatore", "Fornaio", "Laugen / Pretzel", "Fermentazione", "Centro Formule"] },
   { key: "pizzeria", label: "🍕 Pizzeria", color: "#3E9C93", roles: ["Pizzaiolo", "Forno Pizze", "Sfornate", "Consegne"] },
   { key: "pasticceria", label: "🥐 Pasticceria & Gelateria", color: "#7FB0A6", roles: ["Pasticcere", "Bilanciamento Formule", "Abbattitore", "Raffreddamento"] },
@@ -21,6 +23,25 @@ export default function MohamedFloor() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [active, setActive] = useState(false);
+  const [depts, setDepts] = useState(BASE_DEPTS);
+
+  // Sincronizza le postazioni con i reparti/feature configurati dal Capo (Elite Engine).
+  useEffect(() => {
+    fetch(`${API}/api/lab/departments`).then((r) => (r.ok ? r.json() : {})).then((d) => {
+      const extras = d.extras || {};
+      const merged = BASE_DEPTS.map((b) => {
+        const ex = (extras[b.key] || []).filter((f) => f && !b.roles.includes(f));
+        return ex.length ? { ...b, roles: [...b.roles, ...ex] } : b;
+      });
+      (d.custom || []).forEach((c) => {
+        const base = (c.features || []).filter(Boolean);
+        const ex = (extras[c.id] || []).filter((f) => f && !base.includes(f));
+        const roles = [...base, ...ex];
+        merged.push({ key: c.id, label: `🏭 ${c.title}`, color: "#8b5cf6", roles: roles.length ? roles : ["Postazione Universale"] });
+      });
+      setDepts(merged);
+    }).catch(() => { /* offline → resta la lista base */ });
+  }, []);
 
   const pick = (r) => { try { localStorage.setItem(ROLE_KEY, r); } catch { /* */ } setRole(r); try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: r } })); } catch { /* */ } };
   const changeRole = () => { setActive(false); setRole(""); try { localStorage.removeItem(ROLE_KEY); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: "" } })); } catch { /* */ } };
@@ -34,7 +55,7 @@ export default function MohamedFloor() {
           <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Mohamed</h2>
           <p className="mt-1 text-sm text-[#94A3B8]">{tri("Ciao! Seleziona la tua postazione di forno per ricevere i task giusti.", "Hallo! Wähle deine Station, um die richtigen Aufgaben zu erhalten.", "Hi! Select your station to receive the right tasks.", "¡Hola! Selecciona tu puesto para recibir las tareas correctas.", "Salut ! Choisis ton poste pour recevoir les bonnes tâches.", "سلام! پست کاری‌ات را انتخاب کن تا وظایف درست را بگیری.")}</p>
         </div>
-        {DEPTS.map((d) => (
+        {depts.map((d) => (
           <div key={d.key}>
             <p className="text-[11px] font-black uppercase tracking-widest mb-2" style={{ color: d.color }}>{d.label}</p>
             <div className="grid grid-cols-2 gap-2">
