@@ -730,7 +730,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                       <div key={i} data-testid={`elite-crew-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', padding: '10px', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
                           <div style={{ fontWeight: 700, fontSize: '0.8rem', color: '#EEE', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{m.name || m.email}{m.role === 'sostituto' ? ' · Sostituto' : ''}</div>
-                          <span style={{ fontSize: '0.62rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
+                          <span style={{ fontSize: '0.62rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>{tr("Attivo", "Aktiv", "Active", "Activo", "Actif", "فعال")}</span>
                         </div>
                         <select data-testid={`elite-crew-dept-${i}`} value={ROOM_IDS.includes(m.department) ? m.department : 'panetteria'} onChange={(e) => assignDept(m.email, e.target.value)}
                           style={{ width: '100%', backgroundColor: 'rgba(0,0,0,0.5)', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '6px', padding: '5px', fontSize: '0.72rem', fontWeight: 700 }}>
@@ -811,7 +811,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 <div style={{ fontSize: '0.55rem', marginTop: '4px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{room.label}</div>
               </button>
               {isCapo && room.custom && (
-                <button data-testid={`elite-room-delete-${room.id}`} onClick={(e) => { e.stopPropagation(); deleteDept(room.id); }} title="Elimina reparto" style={{ position: 'absolute', top: '-6px', right: '-6px', backgroundColor: '#E63946', color: '#FFF', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '20px', padding: 0 }}>✕</button>
+                <button data-testid={`elite-room-delete-${room.id}`} onClick={(e) => { e.stopPropagation(); deleteDept(room.id); }} title={tr("Elimina reparto", "Bereich löschen", "Delete department", "Eliminar departamento", "Supprimer le rayon", "حذف بخش")} style={{ position: 'absolute', top: '-6px', right: '-6px', backgroundColor: '#E63946', color: '#FFF', border: 'none', borderRadius: '50%', width: '20px', height: '20px', cursor: 'pointer', fontSize: '0.7rem', lineHeight: '20px', padding: 0 }}>✕</button>
               )}
             </div>
           ))}
@@ -824,8 +824,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               </button>
             ) : (
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', backgroundColor: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '10px', border: `1px solid ${currentRoom.color}` }}>
-                <input data-testid="elite-new-dept-id" value={newDeptId} onChange={e => setNewDeptId(e.target.value)} placeholder="ID (es. congelati)" style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
-                <input data-testid="elite-new-dept-title" value={newDeptTitle} onChange={e => setNewDeptTitle(e.target.value)} placeholder="Nome reparto" style={{ flex: '2 1 140px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <input data-testid="elite-new-dept-id" value={newDeptId} onChange={e => setNewDeptId(e.target.value)} placeholder={tr("ID (es. congelati)", "ID (z.B. tiefkühl)", "ID (e.g. frozen)", "ID (ej. congelados)", "ID (ex. surgelés)", "شناسه (مثلاً یخ‌زده)")} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <input data-testid="elite-new-dept-title" value={newDeptTitle} onChange={e => setNewDeptTitle(e.target.value)} placeholder={tr("Nome reparto", "Bereichsname", "Department name", "Nombre del departamento", "Nom du rayon", "نام بخش")} style={{ flex: '2 1 140px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
                 <button data-testid="elite-new-dept-save" onClick={createDept} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>OK</button>
                 <button onClick={() => { setShowAddDept(false); setDeptError(''); }} style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #33414E', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontSize: '0.72rem' }}>✕</button>
                 {deptError && <div data-testid="elite-dept-error" style={{ flexBasis: '100%', color: '#E63946', fontSize: '0.68rem', fontWeight: 700 }}>{deptError}</div>}
@@ -893,7 +893,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             <div data-testid="elite-guida-content" style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#DDD' }}>
               <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong> ideato e sviluppato da Mohamed & Miki.</p>
               <p>🔒 <strong>Protezione Copyright:</strong> Questo software, l'interfaccia 3D, la logica dei timer e i contenuti multimediali sono protetti da diritti di proprietà intellettuale esclusivi. Ogni duplicazione o uso non autorizzato è severamente vietato.</p>
-              <p>🚀 <strong>Rispetto al mercato:</strong> Foto reali del team, radio live integrata, ricette collegate al database e allarmi con notifica del telefono per la cottura.</p>
+              <p>🚀 <strong>{tr("Rispetto al mercato:", "Im Vergleich zum Markt:", "Compared to the market:", "Frente al mercado:", "Par rapport au marché :", "در مقایسه با بازار:")}</strong>>{tr("Foto reali del team, radio live integrata, ricette collegate al database e allarmi con notifica del telefono per la cottura.", "Echte Team-Fotos, integriertes Live-Radio, mit der Datenbank verknüpfte Rezepte und Backalarme mit Telefonbenachrichtigung.", "Real team photos, integrated live radio, recipes linked to the database and baking alarms with phone notification.", "Fotos reales del equipo, radio en vivo integrada, recetas vinculadas a la base de datos y alarmas de cocción con notificación al teléfono.", "Photos réelles de l'équipe, radio live intégrée, recettes liées à la base de données et alarmes de cuisson avec notification téléphone.", "عکس‌های واقعی تیم، رادیوی زنده یکپارچه، دستورهای متصل به پایگاه‌داده و هشدارهای پخت با اعلان تلفن.")}</p>
             </div>
           ) : (
             <p style={{ fontSize: '0.85rem', color: '#DDD', marginBottom: '12px' }}>{currentRoom.desc}</p>
@@ -944,7 +944,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               </div>
               {alarmUnattended ? (
                 <div data-testid="elite-alarm-priority" style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
-                  <div style={{ color: '#E63946', fontWeight: 800, fontSize: '0.8rem' }}>🚨 ALLARME FORNO — sfornare! (2 min → avviso al Capo)</div>
+                  <div style={{ color: '#E63946', fontWeight: 800, fontSize: '0.8rem' }}>{tr("🚨 ALLARME FORNO — sfornare! (2 min → avviso al Capo)", "🚨 OFENALARM — ausbacken! (2 Min → Hinweis an den Chef)", "🚨 OVEN ALARM — take out! (2 min → alert to the Capo)", "🚨 ALARMA HORNO — ¡sacar! (2 min → aviso al Capo)", "🚨 ALARME FOUR — défourner ! (2 min → alerte au Capo)", "🚨 هشدار فر — دربیاور! (۲ دقیقه ← اطلاع به کاپو)")}</div>
                   <button data-testid="elite-alarm-ack" onClick={ackAlarm} style={{ backgroundColor: '#E63946', color: '#FFF', border: 'none', padding: '10px 22px', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}>
                     ✋ TACITA ALLARME
                   </button>
@@ -964,7 +964,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               {[...(Array.isArray(currentRoom.features) ? currentRoom.features : []), ...((deptExtras[activeTab]) || [])].map((feat, i) => (
                 <div key={i} data-testid={`elite-feature-${i}`} style={{ backgroundColor: 'rgba(255,255,255,0.06)', border: `1px solid ${currentRoom.color}44`, padding: '10px', borderRadius: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px' }}>
                   <span style={{ fontSize: '0.75rem', color: '#EEE', fontWeight: 600 }}>{feat}</span>
-                  <span style={{ fontSize: '0.6rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>Attivo</span>
+                  <span style={{ fontSize: '0.6rem', backgroundColor: `${currentRoom.color}33`, color: currentRoom.color, padding: '3px 6px', borderRadius: '6px' }}>{tr("Attivo", "Aktiv", "Active", "Activo", "Actif", "فعال")}</span>
                 </div>
               ))}
             </div>
@@ -999,7 +999,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                           <option value="in consegna">{_pick("In consegna", "Unterwegs", "Out for delivery", "En reparto", "En livraison", "در حال تحویل")}</option>
                           <option value="consegnato">{_pick("Consegnato", "Geliefert", "Delivered", "Entregado", "Livré", "تحویل شد")}</option>
                         </select>
-                        <button data-testid={`elite-delivery-delete-${i}`} onClick={() => deleteDelivery(del.id)} title="Elimina" style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
+                        <button data-testid={`elite-delivery-delete-${i}`} onClick={() => deleteDelivery(del.id)} title={tr("Elimina", "Löschen", "Delete", "Eliminar", "Supprimer", "حذف")} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '4px 8px', fontSize: '0.66rem', cursor: 'pointer', fontWeight: 700 }}>✕</button>
                       </div>
                     </div>
                   ))}
@@ -1031,8 +1031,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
                         <span style={{ fontSize: '0.82rem', fontWeight: 800, color: '#FFF' }}>{c.store_name} <span data-testid={`elite-crate-count-${i}`} style={{ fontSize: '0.62rem', color: currentRoom.color }}>({(c.items || []).length} pz)</span></span>
                         <div style={{ display: 'flex', gap: '4px' }}>
-                          <button data-testid={`elite-crate-clear-${i}`} onClick={(e) => { e.stopPropagation(); clearCrate(c.id); }} title="Svuota" style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #55606B', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>🧹</button>
-                          <button data-testid={`elite-crate-delete-${i}`} onClick={(e) => { e.stopPropagation(); deleteCrate(c.id); }} title="Elimina" style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>✕</button>
+                          <button data-testid={`elite-crate-clear-${i}`} onClick={(e) => { e.stopPropagation(); clearCrate(c.id); }} title={tr("Svuota", "Leeren", "Empty", "Vaciar", "Vider", "خالی کردن")} style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #55606B', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>🧹</button>
+                          <button data-testid={`elite-crate-delete-${i}`} onClick={(e) => { e.stopPropagation(); deleteCrate(c.id); }} title={tr("Elimina", "Löschen", "Delete", "Eliminar", "Supprimer", "حذف")} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>✕</button>
                         </div>
                       </div>
                       <select data-testid={`elite-crate-driver-${i}`} value={c.driver || ''} onClick={(e) => e.stopPropagation()} onChange={(e) => setCrateDriverServer(c.id, e.target.value)} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: `1px solid ${currentRoom.color}55`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700, marginBottom: '6px' }}>
