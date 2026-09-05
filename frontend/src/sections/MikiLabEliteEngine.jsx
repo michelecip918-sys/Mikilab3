@@ -162,7 +162,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   };
   const addDelivery = async () => {
     const client = newClient.trim(); if (!client) return;
-    try { const res = await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client, time: newDeliveryTime.trim(), driver: newDriver.trim() }) }); if (res.ok) { setNewClient(''); setNewDeliveryTime(''); setNewDriver(''); loadDeliveries(); speakVoice(`Nuova consegna aggiunta per ${client}.`); } } catch (e) { /* */ }
+    try { const res = await fetch(`${API}/api/deliveries`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client, time: newDeliveryTime.trim(), driver: newDriver.trim() }) }); if (res.ok) { setNewClient(''); setNewDeliveryTime(''); setNewDriver(''); loadDeliveries(); speakVoice(tr(`Nuova consegna aggiunta per ${client}.`, `Neue Lieferung für ${client} hinzugefügt.`, `New delivery added for ${client}.`, `Nueva entrega añadida para ${client}.`, `Nouvelle livraison ajoutée pour ${client}.`, `تحویل جدید برای ${client} اضافه شد.`)); } } catch (e) { /* */ }
   };
   const setDeliveryStatus = async (id, status) => {
     setDeliveries(prev => prev.map(d => d.id === id ? { ...d, status } : d));
@@ -178,7 +178,14 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const announceStatus = () => {
     const inConsegna = deliveries.filter(d => d.status === 'in consegna').length;
     const unread = ovenAlarms.filter(a => !a.read).length;
-    speakVoice(`Stato laboratorio. ${inConsegna} consegne in corso. ${unread} allarmi forno non letti. Reparto ${currentRoom.title} operativo.`);
+    speakVoice(tr(
+      `Stato laboratorio. ${inConsegna} consegne in corso. ${unread} allarmi forno non letti. Reparto ${currentRoom.title} operativo.`,
+      `Laborstatus. ${inConsegna} Lieferungen unterwegs. ${unread} ungelesene Ofenalarme. Bereich ${currentRoom.title} betriebsbereit.`,
+      `Lab status. ${inConsegna} deliveries in progress. ${unread} unread oven alarms. Department ${currentRoom.title} operational.`,
+      `Estado del laboratorio. ${inConsegna} entregas en curso. ${unread} alarmas de horno sin leer. Departamento ${currentRoom.title} operativo.`,
+      `État du laboratoire. ${inConsegna} livraisons en cours. ${unread} alarmes de four non lues. Rayon ${currentRoom.title} opérationnel.`,
+      `وضعیت آزمایشگاه. ${inConsegna} تحویل در جریان. ${unread} هشدار فر خوانده‌نشده. بخش ${currentRoom.title} فعال.`
+    ));
   };
 
   // Ceste Smart
