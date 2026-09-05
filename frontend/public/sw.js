@@ -1,4 +1,4 @@
-const CACHE_NAME = "mikilab-v17";
+const CACHE_NAME = "mikilab-v19";
 // App shell essenziale: precache così l'app si apre anche senza rete (backstube senza Wi-Fi).
 const SHELL = ["/", "/index.html", "/logo.png", "/manifest.json", "/wheat-bg.webp"];
 

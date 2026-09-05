@@ -1,6 +1,7 @@
 import axios from "axios";
 import { cacheSet, cacheGet, isNetworkError } from "@/lib/offlineCache";
 import { idbSet, idbGet } from "@/lib/idbCache";
+import { enqueue as sqEnqueue, registerHandler as sqRegister } from "@/lib/syncQueue";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
@@ -442,7 +443,10 @@ export const pulseApi = {
   get: () => cachedGet("lab_pulse", () => api.get(`/lab/pulse`).then((r) => r.data),
     { mood: "sereno", heartbeat: 52, score: 100, load: 0, alerts: [], checkin: { active: false }, rest_mode: { active: false }, plan_active: false }),
   checkinGet: () => api.get(`/lab/shift/checkin`).then((r) => r.data).catch(() => ({})),
-  checkin: (data) => api.post(`/lab/shift/checkin`, data).then((r) => r.data),
+  checkin: (data) => api.post(`/lab/shift/checkin`, data).then((r) => r.data).catch((e) => {
+    if (isNetworkError(e)) { sqEnqueue("shift_checkin", data); return { active: true, queued: true, ...data }; }
+    throw e;
+  }),
   restGet: () => cachedGet("lab_rest_mode", () => api.get(`/lab/rest-mode`).then((r) => r.data), { active: false, allow_critical: true }),
   restSet: (data) => api.put(`/lab/rest-mode`, data).then((r) => r.data),
   wakeGet: () => cachedGet("lab_wake", () => api.get(`/lab/wake`).then((r) => r.data), { enabled: true, wake_at: "04:10", first_start: "04:30", prep_minutes: 20 }),
@@ -527,9 +531,16 @@ export const delegationApi = {
   parse: (transcript, lang) => api.post(`/delegation/parse`, { transcript, lang }).then((r) => r.data),
   confirm: (proposal) => api.post(`/delegation/confirm`, { proposal }).then((r) => r.data),
   tasks: () => api.get(`/delegation/tasks`).then((r) => r.data),
-  stepDone: (task_id, order, operator = "") => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }).then((r) => r.data),
+  stepDone: (task_id, order, operator = "") => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }).then((r) => r.data).catch((e) => {
+    if (isNetworkError(e)) { sqEnqueue("delegation_step", { task_id, order, operator }); return { queued: true, all_done: false }; }
+    throw e;
+  }),
   close: (task_id) => api.post(`/delegation/tasks/${task_id}/close`).then((r) => r.data),
 };
+
+// Handler di replay per la coda offline (bunker mode).
+sqRegister("shift_checkin", (data) => api.post(`/lab/shift/checkin`, data));
+sqRegister("delegation_step", ({ task_id, order, operator }) => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }));
 
 // Dual-Mode STRATEGIC — audit ricetta del Master Baker + matrice sovrana.
 export const recipeAuditApi = {

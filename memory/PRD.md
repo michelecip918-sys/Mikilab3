@@ -4142,3 +4142,12 @@ Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio a
 - **`TeamTasks.jsx`** sul floor di Mohamed: pannello PASSIVO (Letz_Passive, nessun suono, polling 15s) con task attivi, step tap-to-done, badge Aura, banner ritmo per crisis override.
 - Verificato e2e: parse (7-8 step assegnati), confirm, tasks, step done; crisis override (pacing "priorita" target "Pane integrale"); UI proposta+conferma via screenshot.
 - Conferma vocale di BakoMix al Capo via TTS (solo modalità strategica).
+
+---
+## v-pwa-brand (2026-06) — PWA offline + Coda sync + Rebranding "Miki Labbo"
+- **PWA**: Service Worker (`public/sw.js`, cache v18) ora REGISTRATO in `index.js` (prima non lo era) → app installabile su tablet e usabile offline (shell + navigazione). manifest.json aggiornato (name/short_name "Miki Labbo", standalone, icone 192/512).
+- **Coda di Sincronizzazione** (`lib/syncQueue.js`): azioni offline (avanzamento step delega, avvio turno) salvate in localStorage e rigiocate automaticamente all'evento `online`. Wired su `delegationApi.stepDone` e `shiftApi.checkin` (enqueue su isNetworkError, handler di replay registrati). Flush anche al load in index.js.
+- **Standalone visivo**: si appoggia alla cache IndexedDB esistente (~20 moduli) + SW network-first con fallback cache → le viste restano leggibili a rete assente.
+- **Rebranding "Miki Labbo"**: Header (App.js + Header.jsx), AdminGate (MIKI LABBO), PinLock, AuthScreen title, index.html <title>/apple-title, manifest, i18n/meta.js (title/ogTitle tutte le lingue). Verificato: SW registrato (1), gate mostra "MIKI LABBO", coda scrivibile, compile pulito.
+- Guida installazione PWA (tablet + intranet bunker self-host) fornita in chat.
+- NOTA onesta: AI (BakoMix/Vision/Clima/Delega) richiede internet; vero on-prem/AI-locale = progetto infrastrutturale a parte.

@@ -30,3 +30,12 @@ root.render(
     </QueryClientProvider>
   </React.StrictMode>,
 );
+
+// PWA: registra il Service Worker (bunker mode → app installabile e usabile offline).
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(`${process.env.PUBLIC_URL || ""}/sw.js`).catch(() => { /* */ });
+    // rigioca la coda offline appena l'app è pronta (se già online)
+    import("@/lib/syncQueue").then((m) => { if (navigator.onLine) m.flushQueue(); }).catch(() => { /* */ });
+  });
+}
