@@ -1,47 +1,49 @@
-# MikiLab — Export & installazione On-Prem (modalità bunker)
+# MikiLab — Guida semplice per il titolare 🍞
 
-Guida per far girare MikiLab **dentro la rete del laboratorio**, su un mini-PC/server locale,
-e installarlo come PWA sui tablet di reparto. Le funzioni AI (BakoMix, Vision, Clima, Delega
-vocale, Batch Phoenix) richiedono internet; il resto (PIN, turni, task, floor, ricette/magazzino
-in cache, coda di sincronizzazione) funziona anche offline.
+Niente parole difficili. Ecco come funziona MikiLab in pratica.
 
-## 0. Esporta il codice
-Usa **"Save to GitHub"** dalla barra della chat (o il download del codice) per ottenere il progetto.
+## ✅ Il modo normale (consigliato) — ZERO installazioni, zero server
+MikiLab è già online e pronto. **Non devi installare né comprare nessun server.**
 
-## 1. Requisiti sul server locale
-- Node.js 18+ e **Yarn**
-- Python 3.11+
-- MongoDB Community (in locale)
-- Un certificato HTTPS (anche self-signed): **obbligatorio** per PWA/Service Worker su LAN
+Come lo usano tu e i tuoi:
+1. **Tu (il Capo)** entri, vai nell'Area Sovrana e tocchi **"Genera invito d'accesso"**: il link viene copiato da solo.
+2. **Mandi quel link** all'operaio su WhatsApp/SMS.
+3. L'operaio **apre il link sul SUO telefono**, sceglie una password e crea il suo accesso. Fine.
+4. La volta dopo entra con le sue credenziali. Sul telefono può fare **"Aggiungi a Home"** e MikiLab diventa un'app a tutto schermo, come le altre.
 
-## 2. Configura gli indirizzi locali
-Copia gli esempi e adatta l'IP del server:
-```
-cp frontend/.env.production.example frontend/.env.production
-cp backend/.env.example backend/.env
-```
-- `frontend/.env.production` → `REACT_APP_BACKEND_URL=https://<IP-DEL-SERVER>`  (es. https://192.168.1.50)
-- `backend/.env` → `MONGO_URL=mongodb://localhost:27017`, `DB_NAME=mikilab`
-- Imposta `ADMIN_GATE_PIN` e le chiavi (EMERGENT_LLM_KEY / OPENAI / ELEVENLABS) se vuoi le funzioni AI.
+Vantaggi:
+- **Ogni operaio usa il proprio telefono.** Non compri tablet, non installi nulla su nessun telefono.
+- **Nessun database, nessun server, nessun tecnico.**
+- **Solo su invito**: entra solo chi ha il tuo link. Nessuno lo trova su Google.
+- I PIN e gli inviti li decidi tu, quando vuoi, dall'app.
 
-## 3. Build del frontend (bundle statico offline)
-```
-cd frontend && yarn install && yarn build
-```
-→ crea `frontend/build/` con tutti gli asset + Service Worker (`sw.js`) + manifest.
+👉 Per il 99% delle panetterie **questo è tutto quello che serve.** Puoi fermarti qui.
 
-## 4. Avvia i servizi in locale
-```
-# Backend (API + AI quando c'è rete)
-cd backend && pip install -r requirements.txt
-uvicorn server:app --host 0.0.0.0 --port 8001
+---
 
-# Frontend statico servito in HTTPS sulla LAN (necessario per la PWA)
-npx serve -s frontend/build -l 443   # oppure Nginx/Caddy con certificato
-```
-> Consiglio: usa **Caddy** per HTTPS automatico su LAN, con reverse proxy `/api` → :8001.
+## 🏭 Solo se vuoi il "bunker" senza internet (opzionale)
+Serve solo se vuoi che tutto giri **senza internet**, chiuso dentro la tua panetteria.
+In questo caso **non lo fai tu**: lo fa una volta un tecnico/informatico (anche il ragazzo
+che ti sistema il PC o il router). Tu gli dai questo foglio, lui in un pomeriggio:
 
-Esempio Caddyfile:
+1. Mette MikiLab su un piccolo computer sempre acceso in laboratorio.
+2. Lo collega al tuo Wi-Fi.
+3. Ti dà un indirizzo (es. `mikilab.local`) da aprire sui telefoni.
+
+Da lì in poi per te è identico al modo normale: mandi l'invito, gli operai aprono sul loro
+telefono col PIN. La parte tecnica è tutta descritta nel foglio per il tecnico più sotto.
+
+> In arrivo: uno **script "1 clic"** che farà questa installazione da solo, senza tecnico.
+
+---
+
+## 🔧 Foglio per il tecnico (ignora questa parte se non è per te)
+- Node.js 18+, Yarn, Python 3.11+, MongoDB in locale; HTTPS obbligatorio per la PWA (usa Caddy `tls internal`).
+- `cp frontend/.env.production.example frontend/.env.production` → `REACT_APP_BACKEND_URL=https://<IP-server>`
+- `cp backend/.env.example backend/.env` → `MONGO_URL=mongodb://localhost:27017`, `DB_NAME=mikilab`, `ADMIN_GATE_PIN=...`
+- `cd frontend && yarn install && yarn build`
+- Backend: `cd backend && pip install -r requirements.txt && uvicorn server:app --host 0.0.0.0 --port 8001`
+- Servi `frontend/build` in HTTPS. Caddyfile:
 ```
 mikilab.local {
   tls internal
@@ -49,18 +51,4 @@ mikilab.local {
   handle { root * /percorso/frontend/build; try_files {path} /index.html; file_server }
 }
 ```
-
-## 5. Installa sui tablet
-Dai tablet, sulla **stessa Wi-Fi**, apri `https://<IP-DEL-SERVER>` (o `https://mikilab.local`):
-- Android/Chrome: menu ⋮ → **Installa app**
-- iPad/Safari: Condividi → **Aggiungi a Home**
-
-## 6. Verifica offline (bunker)
-1. Apri e usa l'app una volta (con rete) per popolare la cache.
-2. Stacca internet dal server (lascia solo la Wi-Fi interna).
-3. Sui tablet: PIN, turni, task di squadra, floor di Mohamed, ricette/magazzino in cache restano
-   attivi; step e check-in fatti offline si **sincronizzano** al ritorno della connessione.
-
-## Note
-- Vero "AI 100% offline" richiederebbe un modello locale on-premise (progetto separato).
-- Nessun dato lascia la LAN se non abiliti le chiavi AI (che chiamano i modelli esterni).
+- Le funzioni AI (BakoMix/Vision/Clima/Delega) richiedono internet; il resto (PIN, turni, task, floor, ricette in cache) funziona offline.
