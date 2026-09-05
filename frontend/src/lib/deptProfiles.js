@@ -21,8 +21,10 @@ export const DEPT_PROFILES = {
     ],
     // Categorie di magazzino suggerite.
     warehouse: ["Farina 0", "Farina 00", "Farina Integrale", "Farina di Segale", "Sale marino", "Lievito Madre", "Semi misti"],
-    // Target di batch / scala industriale.
-    batch: { unit: "kg", target: 40, note: (l) => mkTri(l)("Impasto in vasca 40 kg", "Teig im Kessel 40 kg", "40 kg bowl batch", "Masa en cuba 40 kg", "Cuve 40 kg", "خمیر ۴۰ کیلوگرمی") },
+    // Target di batch / scala industriale (standard aggiornati 2026).
+    batch: { unit: "kg", target: 60, note: (l) => mkTri(l)("Impasto in vasca 60 kg", "Teig im Kessel 60 kg", "60 kg bowl batch", "Masa en cuba 60 kg", "Cuve 60 kg", "خمیر ۶۰ کیلوگرمی") },
+    // Metriche industriali di riferimento (scala, resa oraria, precisione).
+    metrics: { throughput_h: 240, scale_precision_g: 5, dough_temp_c: 24, scale_max_kg: 60 },
     scaleStep: 0.5,
   },
   pizzeria: {
@@ -39,6 +41,7 @@ export const DEPT_PROFILES = {
     ],
     warehouse: ["Farina W300", "Farina W400", "Semola rimacinata", "Pomodoro San Marzano", "Mozzarella fiordilatte", "Olio EVO", "Lievito di birra"],
     batch: { unit: "g", target: 270, note: (l) => mkTri(l)("Panetti da 250–280 g", "Teiglinge 250–280 g", "Dough balls 250–280 g", "Bollos 250–280 g", "Pâtons 250–280 g", "چانه‌های ۲۵۰–۲۸۰ گرم") },
+    metrics: { throughput_h: 420, scale_precision_g: 2, dough_temp_c: 22, scale_max_kg: 30 },
     scaleStep: 5,
   },
   pasticceria: {
@@ -55,7 +58,8 @@ export const DEPT_PROFILES = {
       { name: "Vaniglia Bourbon", percent: 0.5 },
     ],
     warehouse: ["Farina forte W380", "Burro bavarese 82%", "Uova / Tuorli", "Zucchero semolato", "Cioccolato fondente 70%", "Panna 35%", "Vaniglia Bourbon"],
-    batch: { unit: "g", target: 1000, note: (l) => mkTri(l)("Bilancia di precisione ±1 g", "Präzisionswaage ±1 g", "Precision scale ±1 g", "Balanza de precisión ±1 g", "Balance de précision ±1 g", "ترازوی دقیق ±۱ گرم") },
+    batch: { unit: "g", target: 1200, note: (l) => mkTri(l)("Bilancia di precisione ±1 g", "Präzisionswaage ±1 g", "Precision scale ±1 g", "Balanza de precisión ±1 g", "Balance de précision ±1 g", "ترازوی دقیق ±۱ گرم") },
+    metrics: { throughput_h: 130, scale_precision_g: 1, dough_temp_c: 26, chilling_c: 4, scale_max_kg: 6 },
     scaleStep: 1,
     chillingLog: true,
   },

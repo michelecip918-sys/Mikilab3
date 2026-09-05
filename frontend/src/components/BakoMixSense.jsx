@@ -52,13 +52,30 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const setGlassLvl = (v) => { setGlass(v); try { localStorage.setItem("mikilab_glass_level", String(v)); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-glass-changed", { detail: v })); } catch { /* */ } };
   const [stall, setStall] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_stall_min")); return Number.isFinite(v) && v > 0 ? v : 90; } catch { return 90; } });
   const setStallMin = (v) => { setStall(v); try { localStorage.setItem("mikilab_stall_min", String(v)); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-stall-changed", { detail: v })); } catch { /* */ } };
+  const playB64 = (b64, mime) => {
+    try { const a = new Audio(`data:${mime || "audio/mpeg"};base64,${b64}`); a.play().catch(() => {}); return true; } catch { return false; }
+  };
+  // Riproduce l'handoff: se c'è il blob MP3 salvato lo usa (funziona anche OFFLINE), altrimenti TTS.
+  const playHandoffRec = (rec) => {
+    if (rec && rec.audio_base64 && playB64(rec.audio_base64, rec.audio_mime)) return;
+    playTTS(rec && rec.text ? rec.text : "", { lang: (rec && rec.lang) || lang, voice: "bakemix" });
+  };
   const doHandoff = async () => {
     try {
       const r = await delegationApi.handoff(lang);
       toast.success(tri("Handoff turno in riproduzione", "Schichtübergabe wird abgespielt", "Playing shift handoff", "Reproduciendo relevo", "Lecture du relais", "پخش تحویل شیفت"));
-      playTTS(r.text, { lang, voice: "bakemix" });
+      const rec = { text: r.text, lang, audio_base64: r.audio_base64, audio_mime: r.audio_mime, at: new Date().toISOString(), present: r.present, total: r.total };
+      try { localStorage.setItem("mikilab_last_handoff", JSON.stringify(rec)); } catch { /* */ }
+      playHandoffRec(rec);
       if (histOpen) loadHist();
-    } catch { toast.error(tri("Errore handoff", "Fehler", "Handoff error", "Error", "Erreur", "خطا")); }
+    } catch {
+      // OFFLINE: riproduci l'ultimo handoff salvato (blob MP3 in cache locale).
+      try {
+        const cached = JSON.parse(localStorage.getItem("mikilab_last_handoff") || "null");
+        if (cached) { toast.info(tri("Offline · riascolto l'ultimo handoff salvato", "Offline · letzte Übergabe abspielen", "Offline · replaying last saved handoff", "Sin conexión · último relevo guardado", "Hors ligne · dernier relais enregistré", "آفلاین · پخش آخرین تحویل")); playHandoffRec(cached); return; }
+      } catch { /* */ }
+      toast.error(tri("Errore handoff", "Fehler", "Handoff error", "Error", "Erreur", "خطا"));
+    }
   };
   const [prooferOpen, setProoferOpen] = useState(false);
   const [phoenixOpen, setPhoenixOpen] = useState(false);
@@ -371,7 +388,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                     {hist.slice(0, 6).map((h) => (
                       <div key={h.id} className="flex items-center gap-2 bg-[#0b0f19] border border-[#1e293b] rounded-xl px-3 py-2">
                         <span className="text-[11px] text-[#94A3B8] flex-1 min-w-0 truncate">{new Date(h.at).toLocaleString()} · {h.present}/{h.total}</span>
-                        <button data-testid={`handoff-replay-${h.id}`} onClick={() => playTTS(h.text, { lang: h.lang || lang, voice: "bakemix" })} className="shrink-0 w-7 h-7 rounded-full bg-[#5EEAD4]/15 text-[#5EEAD4] flex items-center justify-center"><Play className="w-3.5 h-3.5" /></button>
+                        <button data-testid={`handoff-replay-${h.id}`} onClick={() => playHandoffRec(h)} className="shrink-0 w-7 h-7 rounded-full bg-[#5EEAD4]/15 text-[#5EEAD4] flex items-center justify-center"><Play className="w-3.5 h-3.5" /></button>
                       </div>
                     ))}
                   </div>

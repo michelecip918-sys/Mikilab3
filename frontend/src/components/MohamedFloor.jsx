@@ -7,6 +7,8 @@ import TeamTasks from "@/components/TeamTasks";
 import DoughTimer from "@/components/DoughTimer";
 import SequenceGuard from "@/components/SequenceGuard";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
+import OperatorAura from "@/components/OperatorAura";
+import HeadsetChannel from "@/components/HeadsetChannel";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -102,18 +104,17 @@ export default function MohamedFloor() {
       <div className="w-full"><DoughTimer /></div>
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
       <button data-testid="mohamed-mic-btn" onClick={() => setActive(true)} className="relative group active:scale-95 transition-all">
-        <span aria-hidden className="absolute inset-0 rounded-full bg-amber-500/40 blur-2xl group-hover:bg-amber-500/60 transition-all" />
-        <span aria-hidden className="absolute -inset-3 rounded-full border-2 border-amber-500/40 animate-ping" />
-        <span className="relative block w-48 h-48 rounded-full overflow-hidden border-4 border-amber-500 shadow-2xl shadow-amber-500/30">
+        <OperatorAura name={role} size={184} showBadge={true}>
           <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        </span>
-        <span className="absolute bottom-1 right-1 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
+        </OperatorAura>
+        <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
       </button>
-      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
+      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
       <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Tocca: ti leggo i task del tuo ruolo dalla coda del Capo, passo-passo.", "Tippe: ich lese dir die Aufgaben deiner Rolle aus der Warteschlange des Chefs vor.", "Tap: I read your role's tasks from the Capo's queue, step by step.", "Toca: te leo las tareas de tu rol desde la cola del Capo.", "Touche : je te lis les tâches de ton rôle depuis la file du Capo.", "بزن: وظایف نقش‌ات را از صف کاپو می‌خوانم.")}</p>
       <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")} className="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#0b0f19] border border-[#3E9C93]/50 text-[#3E9C93] font-black text-sm active:scale-95 transition-all">
         <Scale className="w-4 h-4" /> {tri("Bilancia Guidata", "Geführte Waage", "Guided Scale", "Báscula Guiada", "Balance Guidée", "ترازوی راهنما")}
       </button>
+      <div className="w-full mt-5"><HeadsetChannel /></div>
       <button data-testid="mohamed-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
     </div>
   );

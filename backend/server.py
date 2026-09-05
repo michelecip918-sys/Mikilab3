@@ -4052,10 +4052,21 @@ async def shift_handoff(lang: str = "it", user: Optional[dict] = Depends(optiona
     }
     m = P.get(lang, P["en"])
     text = f"{m['intro']} {m['staff']} {m['sectors']} {m['tasks']} {m['pace']} {m['end']}"
+    # AUDIO OFFLINE: sintetizza e salva il blob MP3 in base64 così il passaggio di consegne
+    # è riascoltabile perfettamente anche completamente offline (dopo la prima generazione).
+    import base64 as _b64h
+    audio_b64 = None
+    try:
+        _ab = await _synth_tts_bytes(text, lang, "michele")
+        if _ab:
+            audio_b64 = _b64h.b64encode(_ab).decode("ascii")
+    except Exception:
+        audio_b64 = None
     rec = {"id": str(uuid.uuid4()), "text": text, "lang": lang, "present": staff["present"], "total": staff["total"],
-           "active_tasks": tasks, "at": now_iso()}
+           "active_tasks": tasks, "at": now_iso(), "audio_base64": audio_b64, "audio_mime": "audio/mpeg"}
     await db.shift_handoffs.insert_one(dict(rec))
-    return {"status": "success", "text": text, "present": staff["present"], "total": staff["total"], "active_tasks": tasks}
+    return {"status": "success", "text": text, "present": staff["present"], "total": staff["total"],
+            "active_tasks": tasks, "audio_base64": audio_b64, "audio_mime": "audio/mpeg"}
 
 
 @api_router.get("/shift/handoff/history")
@@ -6068,6 +6079,77 @@ async def _translate_for_tts(text: str, lang: str) -> str:
     except Exception as e:
         logger.warning("TTS translate fallita (%s)", str(e)[:120])
     return text
+
+
+async def _synth_tts_bytes(text: str, lang: str = "it", voice: str = "michele"):
+    """Sintetizza il testo in bytes MP3 (ElevenLabs → fallback OpenAI). Ritorna bytes o None.
+    Usato per SALVARE l'audio (handoff offline) oltre che per lo streaming."""
+    global _eleven_cooldown_until
+    text = _clean_for_tts(await _translate_for_tts(text, lang))[:2000]
+    if not text:
+        return None
+    vkey = (voice or "michele").lower()
+    if _eleven_client and time.time() >= _eleven_cooldown_until:
+        vid = _VOICE_MAP.get(vkey, MICHELE_VOICE_ID)
+        ck = _hashlib.sha256(f"11l|{text}|{vid}|mp3".encode()).hexdigest()
+        cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
+        try:
+            if os.path.exists(cpath):
+                with open(cpath, "rb") as f:
+                    return f.read()
+        except Exception:
+            pass
+        try:
+            gen = _eleven_client.text_to_speech.convert(text=text, voice_id=vid, model_id="eleven_multilingual_v2", voice_settings=_voice_settings(vkey))
+            audio = b"".join(gen)
+            try:
+                with open(cpath, "wb") as f:
+                    f.write(audio)
+            except Exception:
+                pass
+            return audio
+        except Exception as e:
+            _eleven_cooldown_until = time.time() + 600
+            logger.warning("Eleven synth (handoff) non disponibile (%s)", str(e)[:120])
+    if EMERGENT_LLM_KEY:
+        try:
+            import inspect as _insp
+            from emergentintegrations.llm.openai.text_to_speech import OpenAITextToSpeech
+            oai_voice = _OAI_VOICE.get(vkey, "onyx")
+            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}".encode()).hexdigest()
+            cpatho = os.path.join(_TTS_CACHE_DIR, cko + ".mp3")
+            if os.path.exists(cpatho):
+                with open(cpatho, "rb") as f:
+                    return f.read()
+            _tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
+            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.0)
+            audio = await res if _insp.isawaitable(res) else res
+            if audio:
+                try:
+                    with open(cpatho, "wb") as f:
+                        f.write(audio)
+                except Exception:
+                    pass
+                return audio
+        except Exception as e:
+            logger.warning("OpenAI synth (handoff) non disponibile (%s)", str(e)[:150])
+    return None
+
+
+class VoiceTranslateReq(BaseModel):
+    text: str
+    target: str = "en"
+
+
+@api_router.post("/voice/translate")
+async def voice_translate(payload: VoiceTranslateReq):
+    """Traduzione vocale in tempo reale per i canali headset Bluetooth (Letz_Passive):
+    trascrizione dell'operatore → testo tradotto nella lingua del compagno."""
+    text = (payload.text or "").strip()[:1000]
+    if not text:
+        raise HTTPException(status_code=400, detail="Testo vuoto")
+    out = await _translate_for_tts(text, payload.target)
+    return {"text": out, "target": payload.target, "source_text": text}
 
 
 @api_router.post("/tts/speak")

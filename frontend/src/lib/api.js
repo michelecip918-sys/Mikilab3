@@ -544,6 +544,16 @@ export const delegationApi = {
   cleanlinessCheck: (task_id, image_base64) => api.post(`/delegation/tasks/${task_id}/cleanliness-check`, { image_base64 }).then((r) => r.data),
 };
 
+// Traduzione vocale in tempo reale (canali headset Bluetooth, Letz_Passive).
+export const voiceApi = {
+  translate: (text, target) => api.post(`/voice/translate`, { text, target }).then((r) => r.data),
+};
+
+// Aura Dragon Ball dell'operatore in base al punteggio di efficienza del turno.
+export const auraApi = {
+  worker: (name) => api.get(`/production/worker-aura/${encodeURIComponent(name)}`).then((r) => r.data).catch(() => null),
+};
+
 export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };

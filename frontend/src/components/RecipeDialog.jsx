@@ -293,6 +293,11 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-[#3E9C93]">{getDeptProfile(form.department || activeDept).label(lang)}</p>
                 <p className="text-[11px] text-[#7E8A93]">{getDeptProfile(form.department || activeDept).tagline(lang)} · {getDeptProfile(form.department || activeDept).batch.note(lang)}</p>
+                {(() => { const mp = getDeptProfile(form.department || activeDept).metrics; return mp ? (
+                  <p data-testid="recipe-dept-metrics" className="text-[10px] font-mono-data text-[#5EEAD4] mt-0.5">
+                    ⚙️ {mp.throughput_h} pz/h · ±{mp.scale_precision_g} g · {mp.dough_temp_c}°C{mp.chilling_c != null ? ` · ❄️ ${mp.chilling_c}°C` : ""} · max {mp.scale_max_kg} kg
+                  </p>
+                ) : null; })()}
               </div>
               <button
                 type="button" data-testid="recipe-apply-dept-profile" onClick={applyDeptProfile}
