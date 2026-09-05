@@ -22,6 +22,7 @@ export default function LineLeaders({ workers = [] }) {
     try { const r = await plantApi.lineLeaders(); setLines(r.lines || []); setLeaders(r.leaders || {}); } catch { /* */ }
   }, []);
   useEffect(() => { load(); }, [load]);
+  useEffect(() => { const h = () => load(); window.addEventListener("mikilab-govern-executed", h); return () => window.removeEventListener("mikilab-govern-executed", h); }, [load]);
 
   const assign = async (line, leader) => {
     try {

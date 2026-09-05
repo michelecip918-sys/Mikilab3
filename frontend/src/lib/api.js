@@ -563,6 +563,12 @@ export const plantApi = {
   leaderTasks: (leader) => api.get(`/plant/leader-tasks`, { params: { leader } }).then((r) => r.data),
 };
 
+// Governance Master-centrica via BakoMix: comando vocale/testuale → esecuzione strutturale.
+export const masterApi = {
+  govern: (command_text, lang) => api.post(`/master/govern`, { command_text, lang }).then((r) => r.data),
+  sections: () => api.get(`/master/sections`).then((r) => r.data),
+};
+
 export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };

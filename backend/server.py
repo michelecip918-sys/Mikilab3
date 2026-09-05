@@ -2958,6 +2958,137 @@ async def delete_shift(item_id: str, user: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+# ---------------------------------------------------------------------------
+# GOVERNANCE MASTER-CENTRICA via BakoMix (voice/text): OGNI modifica strutturale
+# (delega linea, creazione/eliminazione sezione) nasce ESCLUSIVAMENTE dal Master.
+# Il comando viene interpretato dall'AI ed ESEGUITO in tempo reale, senza form.
+# ---------------------------------------------------------------------------
+class MasterGovernReq(BaseModel):
+    command_text: str = Field(..., max_length=600)
+    lang: str = "it"
+
+
+_LINE_ALIASES = {
+    "baguette": "baguette", "diguette": "baguette",
+    "pane": "pane", "brot": "pane", "bread": "pane",
+    "pizza": "pizzeria", "pizzeria": "pizzeria",
+    "pasticceria": "pasticceria", "dolci": "pasticceria", "pastry": "pasticceria", "konditorei": "pasticceria",
+}
+
+
+def _detect_line(text: str):
+    t = (text or "").lower()
+    for k, v in _LINE_ALIASES.items():
+        if k in t:
+            return v
+    return None
+
+
+@api_router.get("/master/sections")
+async def master_sections_get(user: Optional[dict] = Depends(optional_user)):
+    doc = (await db.app_meta.find_one({"_key": "master_sections"}, {"_id": 0})) or {}
+    return {"sections": doc.get("sections") or []}
+
+
+@api_router.post("/master/govern")
+async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_admin)):
+    """Interpreta il comando vocale/testuale del Master ed ESEGUE la modifica strutturale."""
+    txt = (body.command_text or "").strip()
+    if not txt:
+        raise HTTPException(status_code=400, detail="Comando vuoto")
+
+    parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None}
+    if EMERGENT_LLM_KEY:
+        try:
+            sysmsg = (
+                "Sei BakoMix, direttore di produzione di un panificio industriale. Il MASTER ti detta un comando. "
+                "Rispondi SOLO con JSON: {\"intent\":\"assign_leader|remove_leader|create_section|delete_section|unknown\","
+                "\"line\":\"baguette|pane|pizzeria|pasticceria|null\",\"leader\":\"nome persona o null\",\"section_name\":\"nome o null\"}. "
+                "assign_leader: assegnare la supervisione di una linea a una persona. remove_leader: togliere il leader di una linea. "
+                "create_section/delete_section: creare/eliminare una sezione operativa personalizzata. Nessun testo fuori dal JSON."
+            )
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gov-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=txt)):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            import json as _json, re as _re
+            mobj = _re.search(r"\{.*\}", out, _re.S)
+            if mobj:
+                parsed.update(_json.loads(mobj.group(0)))
+        except Exception as e:
+            logger.warning("master_govern parse fail (%s)", str(e)[:120])
+
+    # Fallback / normalizzazione euristica
+    if not parsed.get("line"):
+        parsed["line"] = _detect_line(txt)
+    tl = txt.lower()
+    if parsed.get("intent") in (None, "unknown"):
+        if any(k in tl for k in ["assegn", "delega", "assign", "metti", "responsabile", "caposquadra", "leader"]):
+            parsed["intent"] = "assign_leader"
+        elif any(k in tl for k in ["togli", "rimuov", "remove", "libera"]):
+            parsed["intent"] = "remove_leader"
+        elif any(k in tl for k in ["crea sezione", "nuova sezione", "create section", "aggiungi sezione"]):
+            parsed["intent"] = "create_section"
+        elif any(k in tl for k in ["elimina sezione", "cancella sezione", "delete section", "rimuovi sezione"]):
+            parsed["intent"] = "delete_section"
+
+    intent = parsed.get("intent") or "unknown"
+    executed = False
+    state = {}
+    reply = ""
+    R = lambda i, e: (i if body.lang != "en" else e)
+
+    if intent == "assign_leader":
+        line, leader = parsed.get("line"), (parsed.get("leader") or "").strip()
+        if not line:
+            reply = R("Per quale linea? (baguette, pane, pizzeria, pasticceria)", "Which line? (baguette, bread, pizzeria, pastry)")
+        elif not leader:
+            reply = R(f"A chi assegno la linea {line}?", f"Who should lead the {line} line?")
+        else:
+            doc = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+            leaders = doc.get("leaders") or {}
+            leaders[line] = leader
+            await db.app_meta.update_one({"_key": "line_leaders"}, {"$set": {"_key": "line_leaders", "leaders": leaders, "updated_at": now_iso()}}, upsert=True)
+            executed = True; state = {"leaders": leaders}
+            reply = R(f"Fatto. {leader} ora supervisiona la linea {line}. I task di qualità andranno solo a lui.",
+                      f"Done. {leader} now oversees the {line} line. Quality tasks go only to them.")
+    elif intent == "remove_leader":
+        line = parsed.get("line")
+        doc = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+        leaders = doc.get("leaders") or {}
+        if line and line in leaders:
+            leaders.pop(line, None)
+            await db.app_meta.update_one({"_key": "line_leaders"}, {"$set": {"_key": "line_leaders", "leaders": leaders, "updated_at": now_iso()}}, upsert=True)
+            executed = True; state = {"leaders": leaders}
+            reply = R(f"Rimossa la delega sulla linea {line}.", f"Removed the leader on the {line} line.")
+        else:
+            reply = R("Quale linea devo liberare?", "Which line should I free up?")
+    elif intent == "create_section":
+        name = (parsed.get("section_name") or "").strip() or txt[:40]
+        doc = (await db.app_meta.find_one({"_key": "master_sections"}, {"_id": 0})) or {}
+        secs = doc.get("sections") or []
+        sec = {"id": uuid.uuid4().hex[:8], "name": name, "created_by": admin.get("email") or "master", "at": now_iso()}
+        secs.append(sec)
+        await db.app_meta.update_one({"_key": "master_sections"}, {"$set": {"_key": "master_sections", "sections": secs, "updated_at": now_iso()}}, upsert=True)
+        executed = True; state = {"sections": secs}
+        reply = R(f"Sezione «{name}» creata al volo.", f"Section \u00ab{name}\u00bb created on the fly.")
+    elif intent == "delete_section":
+        name = (parsed.get("section_name") or "").strip().lower()
+        doc = (await db.app_meta.find_one({"_key": "master_sections"}, {"_id": 0})) or {}
+        secs = doc.get("sections") or []
+        new = [s for s in secs if s.get("name", "").lower() != name and s.get("id") != name]
+        await db.app_meta.update_one({"_key": "master_sections"}, {"$set": {"_key": "master_sections", "sections": new, "updated_at": now_iso()}}, upsert=True)
+        executed = len(new) != len(secs); state = {"sections": new}
+        reply = R("Sezione eliminata." if executed else "Non ho trovato quella sezione.",
+                  "Section deleted." if executed else "I couldn't find that section.")
+    else:
+        reply = R("Non ho capito il comando. Puoi dire ad esempio: «Assegna la linea baguette ad Antonio».",
+                  "I didn't get that. Try: \u00abAssign the baguette line to Antonio\u00bb.")
+
+    return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed}
+
+
 @api_router.get("/production/worker-aura/{worker_name}")
 async def get_worker_power_level(worker_name: str, user: Optional[dict] = Depends(optional_user)):
     w = await db.lab_shift_plan.find_one({"worker_name": {"$regex": f"^{re.escape(worker_name)}$", "$options": "i"}}, {"_id": 0})

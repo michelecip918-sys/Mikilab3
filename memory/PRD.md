@@ -4250,3 +4250,18 @@ Direttiva "Final Absolute Industrial Lock" (enorme, 7 punti). Scelta ONESTA + co
 - P7 Riciclo intelligente (reinclusione impasti) + Edge-Mesh traceability / plant cloning via Master PIN.
 - P1 "Zero-Menu": l'app è già single-screen per ruolo (3 sezioni); NON rimossa alcuna sezione esistente (scelta anti-distruttiva).
 
+
+---
+## v13.1 (2026-09-05) — "Industrial Lock" increment 2: Governance Master-Centrica via BakoMix
+Direttiva aggiornata "Master-Centric" (constraint ora "incrementally and safely" → approccio additivo mantenuto). Consegnato il punto CARDINE (punto 1):
+- **Governance Master-only via BakoMix (voce/testo)**: nuovo `POST /api/master/govern` (require_admin → 401 per chiunque non sia il Master). Interpreta il comando con Claude (EMERGENT_LLM_KEY) + fallback euristico ed ESEGUE in tempo reale: `assign_leader` (es. "Assegna la linea baguette ad Antonio"), `remove_leader`, `create_section`, `delete_section`. Persistenza in `app_meta` (`line_leaders`, `master_sections`). `GET /api/master/sections`. Risposta conversazionale (chiede i parametri mancanti).
+- **Trigger "i" contestuale**: nuovo `components/BakoInfo.jsx` — pulsante "i" che apre un pannello BakoMix con input testo + microfono (Web Speech) → chiama `masterApi.govern` → mostra la reply, la legge via TTS (voce bakemix) e propaga `mikilab-govern-executed`. Montato nell'header del Radar (riusabile in altri contesti).
+- **Propagazione live**: `LineLeaders` e `PlantRadar` si aggiornano all'evento `mikilab-govern-executed` (la delega decisa a voce compare subito sul radar come "⭐ Line Leader").
+- Test: iteration_187.json → backend 5/5 pytest PASS (401 senza auth, assign/remove/create/delete, comando ambiguo→unknown), frontend PASS (trigger "i" → comando testo "Assegna la linea pizzeria a Sara" eseguito, radar+delega aggiornati). Lint 0 errori. Verificato anche via curl + screenshot e2e.
+### RESTA (Industrial Lock — future/backlog, dichiarato onestamente):
+- P5 Anti-Fooling biometrico (voice-print liveness, cross-check ottico-telemetrico, ghost-activity notte).
+- P6 Optical telemetry (checkpoint visivi → dashboard Master).
+- P7 Order intake agnostico (POS → target volumetrici, silo auto-deduct, self-rebalancing IoT).
+- P8 Riciclo impasti + Edge-Mesh / plant cloning via Master PIN.
+- Trigger "i" da estendere a TUTTE le sezioni (ora presente nel Radar); "Zero-Menu" completo (l'app resta single-screen per ruolo, nessuna sezione rimossa per scelta anti-distruttiva).
+

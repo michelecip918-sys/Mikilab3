@@ -1,0 +1,23 @@
+{
+  "summary": "Iter187: Master-only Governance via BakoMix (voice/text). Backend 5/5 pytest PASS (401 without auth, assign_leader→Antonio persisted, remove_leader, create/delete section 'Controllo Allergeni', ambiguous='ciao'→unknown). Frontend PASS: admin gate bypass + Capo login → lab-nav-radar → bako-info-trigger opens panel → typed 'Assegna la linea pizzeria a Sara' → send → reply shown ('Done. Sara now oversees the pizzeria line...'), leader-select-pizzeria=Sara, and radar reflects 'Sara ⭐ Line Leader'. Event mikilab-govern-executed correctly refreshes LineLeaders and radar.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_iter187_master_govern.py",
+    "/app/test_reports/pytest/iter187.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is ~11.6k lines: continue extracting modules (governance section could be its own router).",
+    "master_govern accepts any leader name without validating against roster — acceptable per spec but note the parsed.leader is trusted verbatim.",
+    "GET /master/sections uses optional_user (public read) while POST is admin-only — correct, but consider hiding to admins if sections carry sensitive metadata.",
+    "In LLM parse block, keep a hard timeout in stream_message to avoid hanging requests on Claude latency."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter187_master_govern.py"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from review request)",
+  "seed_data_creation": "None (used app_meta collection keys line_leaders, master_sections)",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Master-centric governance is fully functional. BakoInfo panel is embedded in PlantRadar header via bako-info-trigger. Voice input via Web Speech is not testable in headless automation — use bako-info-input text field. Reply language follows i18n (EN reply observed when app is in EN). Event 'mikilab-govern-executed' triggers LineLeaders refresh and radar updates in real-time."
+}
