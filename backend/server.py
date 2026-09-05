@@ -2165,6 +2165,239 @@ async def save_lab_shift_state(payload: LabShiftState, user: Optional[dict] = De
     return payload
 
 
+# ===========================================================================
+# BAKOMIX · SESTO SENSO — Motore Proattivo del Laboratorio
+# ---------------------------------------------------------------------------
+# BakoMix non aspetta comandi: OSSERVA lo stato condiviso del turno (lotti,
+# guasti macchine, celle, orario, check-in) e ANTICIPA i problemi, generando
+# "alert" proattivi multilingua + un "battito" (heartbeat) e un "umore" che
+# alimentano l'Aura sonora/visiva. Niente HACCP, niente allergeni: solo
+# operatività pura del fornaio.
+# ===========================================================================
+_PULSE_LANGS = ("it", "de", "en", "es", "fr", "fa")
+
+
+def _tr6(it, de, en, es, fr, fa):
+    return {"it": it, "de": de, "en": en, "es": es, "fr": fr, "fa": fa}
+
+
+async def _compute_pulse():
+    now = datetime.now(timezone.utc)
+    shift = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+    floor = await db.floor_plan.find_one({"_key": "active"}, {"_id": 0, "_key": 0})
+    checkin = await db.lab_checkin.find_one({"_key": "active"}, {"_id": 0, "_key": 0}) or {}
+    rest = await db.lab_rest_mode.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+
+    alerts = []
+    load = 0
+
+    # --- Guasti macchina → CRITICO ---
+    for m in (shift.get("machines_down") or []):
+        nm = (m.get("name") or "Macchina").strip()
+        alerts.append({
+            "id": f"mach-{m.get('id', nm)}", "level": "critical", "station": nm, "code": "machine_down",
+            "text": _tr6(f"{nm} ferma: la produzione rischia di bloccarsi.",
+                         f"{nm} steht still: die Produktion droht zu stocken.",
+                         f"{nm} down: production risks stalling.",
+                         f"{nm} parada: la producción corre riesgo.",
+                         f"{nm} en panne : la production risque de bloquer.",
+                         f"{nm} از کار افتاده: تولید ممکن است متوقف شود."),
+            "suggestion": _tr6("Sposto i lotti su una linea alternativa e avviso il team.",
+                               "Ich verlagere die Chargen auf eine Ersatzlinie und warne das Team.",
+                               "I move batches to a backup line and alert the team.",
+                               "Muevo los lotes a una línea alternativa y aviso al equipo.",
+                               "Je déplace les lots sur une ligne de secours et j'alerte l'équipe.",
+                               "دسته‌ها را به خط جایگزین منتقل و تیم را مطلع می‌کنم."),
+        })
+    # --- Cella / fermalievitazione fuori uso → CRITICO ---
+    if shift.get("cold_down"):
+        alerts.append({
+            "id": "cold-down", "level": "critical", "station": "Cella", "code": "cold_down",
+            "text": _tr6("Cella di fermalievitazione fuori uso: la maturazione è a rischio.",
+                         "Gärverzögerer außer Betrieb: die Reifung ist gefährdet.",
+                         "Proofing cell down: maturation is at risk.",
+                         "Cámara de fermentación fuera de uso: la maduración está en riesgo.",
+                         "Chambre de pousse hors service : la maturation est menacée.",
+                         "اتاق تخمیر از کار افتاده: رسیدن خمیر در خطر است."),
+            "suggestion": _tr6("Anticipo gli impasti e riduco l'idratazione dei prossimi lotti.",
+                               "Ich ziehe die Teige vor und senke die Hydration der nächsten Chargen.",
+                               "I bring doughs forward and lower hydration on next batches.",
+                               "Adelanto las masas y bajo la hidratación de los próximos lotes.",
+                               "J'avance les pâtes et je baisse l'hydratation des prochains lots.",
+                               "خمیرها را جلو می‌اندازم و آب‌رسانی دسته‌های بعد را کم می‌کنم."),
+        })
+    # --- Lotti: carico e ritardi ---
+    for b in (shift.get("batches") or []):
+        st = (b.get("status") or "").lower()
+        if st in ("in_ritardo", "ritardo", "fermo", "late", "stalled"):
+            nm = b.get("recipe_name") or b.get("recipe_id") or "Lotto"
+            alerts.append({
+                "id": f"batch-{b.get('id', nm)}", "level": "warn", "station": nm, "code": "batch_late",
+                "text": _tr6(f"«{nm}» è in ritardo sulla tabella di marcia.",
+                             f"„{nm}“ liegt hinter dem Zeitplan.",
+                             f"'{nm}' is behind schedule.",
+                             f"«{nm}» va con retraso.",
+                             f"« {nm} » est en retard.",
+                             f"«{nm}» از برنامه عقب است."),
+                "suggestion": _tr6("Ricalcolo gli orari a ritroso e riordino la coda del forno.",
+                                   "Ich berechne die Rückwärtszeiten neu und ordne die Ofen-Warteschlange.",
+                                   "I recompute backward timings and reorder the oven queue.",
+                                   "Recalculo los tiempos y reordeno la cola del horno.",
+                                   "Je recalcule les horaires et je réordonne la file du four.",
+                                   "زمان‌بندی معکوس را دوباره حساب و صف فر را مرتب می‌کنم."),
+            })
+        if st not in ("fatto", "done", "completato"):
+            load += 1
+
+    # --- Check-in del turno mancante durante l'orario di produzione ---
+    prod_hours = floor is not None
+    if prod_hours and not checkin.get("active"):
+        alerts.append({
+            "id": "no-checkin", "level": "info", "station": "Turno", "code": "no_checkin",
+            "text": _tr6("C'è un piano attivo ma nessuno ha ancora avviato il turno.",
+                         "Es gibt einen aktiven Plan, aber niemand hat die Schicht gestartet.",
+                         "A plan is active but no one has started the shift yet.",
+                         "Hay un plan activo pero nadie ha iniciado el turno.",
+                         "Un plan est actif mais personne n'a démarré le service.",
+                         "برنامه فعال است اما هنوز کسی شیفت را شروع نکرده."),
+            "suggestion": _tr6("Appena qualcuno avvia il turno, avviso il Capo in silenzio.",
+                               "Sobald jemand startet, informiere ich den Chef leise.",
+                               "As soon as someone starts, I quietly notify the Capo.",
+                               "En cuanto alguien empiece, aviso al Capo en silencio.",
+                               "Dès que quelqu'un démarre, je préviens le Capo en silence.",
+                               "به‌محض شروع، کاپو را بی‌صدا مطلع می‌کنم."),
+        })
+
+    # --- Umore & battito derivati dal carico + criticità ---
+    n_crit = sum(1 for a in alerts if a["level"] == "critical")
+    n_warn = sum(1 for a in alerts if a["level"] == "warn")
+    if n_crit:
+        mood = "critico"
+    elif n_warn or load >= 6:
+        mood = "teso"
+    elif load >= 1:
+        mood = "attivo"
+    else:
+        mood = "sereno"
+    heartbeat = min(140, 52 + load * 7 + n_warn * 9 + n_crit * 22)
+    score = max(0, 100 - n_crit * 30 - n_warn * 12 - max(0, load - 4) * 4)
+
+    alerts.sort(key=lambda a: {"critical": 0, "warn": 1, "info": 2}.get(a["level"], 3))
+    return {
+        "mood": mood, "heartbeat": int(heartbeat), "score": int(score),
+        "load": load, "alerts": alerts,
+        "checkin": {"active": bool(checkin.get("active")), "by": checkin.get("by"),
+                    "role": checkin.get("role"), "at": checkin.get("at")},
+        "rest_mode": {"active": bool(rest.get("active")), "allow_critical": rest.get("allow_critical", True)},
+        "plan_active": floor is not None,
+        "generated_at": now.isoformat(),
+    }
+
+
+@api_router.get("/lab/pulse")
+async def get_lab_pulse(user: Optional[dict] = Depends(optional_user)):
+    return await _compute_pulse()
+
+
+class CheckinReq(BaseModel):
+    operator: Optional[str] = Field("", max_length=60)
+    role: Optional[str] = Field("", max_length=60)
+    station: Optional[str] = Field("", max_length=60)
+
+
+@api_router.get("/lab/shift/checkin")
+async def get_checkin(user: Optional[dict] = Depends(optional_user)):
+    doc = await db.lab_checkin.find_one({"_key": "active"}, {"_id": 0, "_key": 0}) or {}
+    return doc
+
+
+@api_router.post("/lab/shift/checkin")
+async def post_checkin(body: CheckinReq, request: Request, user: Optional[dict] = Depends(optional_user)):
+    # Anti-spam: il Floor è pubblico (PIN), quindi limitiamo per IP i check-in.
+    if not await _rate_limit("shift_checkin", _client_ip(request), 8, 300):
+        raise HTTPException(status_code=429, detail="Troppi avvii turno. Riprova tra poco.")
+    # Check-in SILENZIOSO: l'operatore avvia il turno → notifica DISCRETA al Capo.
+    who = (body.operator or "").strip() or "Operatore"
+    role = (body.role or "").strip()
+    doc = {"active": True, "by": who, "role": role, "station": (body.station or "").strip(),
+           "at": now_iso()}
+    await db.lab_checkin.update_one({"_key": "active"}, {"$set": {**doc, "_key": "active"}}, upsert=True)
+    snippet = f"{who}" + (f" · {role}" if role else "") + " ha avviato il turno."
+    owners = await db.users.find(
+        {"$or": [{"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}, {"role": "admin"}]},
+        {"_id": 0, "user_id": 1},
+    ).to_list(100)
+    for o in owners:
+        await _notify(o.get("user_id"), None, "checkin", None, who, snippet)
+    return doc
+
+
+@api_router.delete("/lab/shift/checkin")
+async def clear_checkin(user: dict = Depends(require_admin)):
+    await db.lab_checkin.delete_one({"_key": "active"})
+    return {"ok": True}
+
+
+class RestModeReq(BaseModel):
+    active: bool = False
+    allow_critical: bool = True
+    until: Optional[str] = Field(None, max_length=40)
+
+
+@api_router.get("/lab/rest-mode")
+async def get_rest_mode(user: Optional[dict] = Depends(optional_user)):
+    doc = await db.lab_rest_mode.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+    return doc or {"active": False, "allow_critical": True, "until": None}
+
+
+@api_router.put("/lab/rest-mode")
+async def put_rest_mode(body: RestModeReq, user: dict = Depends(require_admin)):
+    doc = {"active": bool(body.active), "allow_critical": bool(body.allow_critical),
+           "until": body.until, "by": user.get("user_id"), "updated_at": now_iso()}
+    await db.lab_rest_mode.update_one({"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True)
+    return doc
+
+
+class WakeReq(BaseModel):
+    enabled: bool = True
+    first_start: str = Field("04:30", max_length=5)   # HH:MM primo avvio in laboratorio
+    prep_minutes: int = Field(20, ge=0, le=240)       # margine di preparazione/vestizione
+
+
+def _compute_wake(cfg: dict) -> dict:
+    """Sveglia predittiva: parte dal primo avvio e sottrae il margine di prep."""
+    try:
+        hh, mm = [int(x) for x in (cfg.get("first_start") or "04:30").split(":")[:2]]
+    except Exception:
+        hh, mm = 4, 30
+    prep = int(cfg.get("prep_minutes", 20) or 0)
+    total = hh * 60 + mm - prep
+    total %= (24 * 60)
+    wake_h, wake_m = divmod(total, 60)
+    return {"wake_at": f"{wake_h:02d}:{wake_m:02d}", "first_start": f"{hh:02d}:{mm:02d}", "prep_minutes": prep}
+
+
+@api_router.get("/lab/wake")
+async def get_wake(user: Optional[dict] = Depends(optional_user)):
+    cfg = await db.lab_wake.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+    enabled = cfg.get("enabled", True)
+    out = _compute_wake(cfg)
+    out["enabled"] = bool(enabled)
+    return out
+
+
+@api_router.put("/lab/wake")
+async def put_wake(body: WakeReq, user: dict = Depends(require_admin)):
+    doc = {"enabled": bool(body.enabled), "first_start": body.first_start,
+           "prep_minutes": int(body.prep_minutes), "updated_at": now_iso()}
+    await db.lab_wake.update_one({"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True)
+    out = _compute_wake(doc)
+    out["enabled"] = doc["enabled"]
+    return out
+
+
+
+
 # Storico guasti (persistente, condiviso) — fermi macchina e celle guaste.
 class FaultLogEntry(BaseModel):
     id: Optional[str] = None

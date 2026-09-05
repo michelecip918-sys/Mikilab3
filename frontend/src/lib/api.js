@@ -432,3 +432,16 @@ export const operatorApi = {
   getProfile: () => api.get(`/operator/profile`).then((r) => r.data),
   saveProfile: (data) => api.post(`/operator/profile`, data).then((r) => r.data),
 };
+
+
+// BakoMix · Sesto Senso — motore proattivo del laboratorio.
+export const pulseApi = {
+  get: () => cachedGet("lab_pulse", () => api.get(`/lab/pulse`).then((r) => r.data),
+    { mood: "sereno", heartbeat: 52, score: 100, load: 0, alerts: [], checkin: { active: false }, rest_mode: { active: false }, plan_active: false }),
+  checkinGet: () => api.get(`/lab/shift/checkin`).then((r) => r.data).catch(() => ({})),
+  checkin: (data) => api.post(`/lab/shift/checkin`, data).then((r) => r.data),
+  restGet: () => cachedGet("lab_rest_mode", () => api.get(`/lab/rest-mode`).then((r) => r.data), { active: false, allow_critical: true }),
+  restSet: (data) => api.put(`/lab/rest-mode`, data).then((r) => r.data),
+  wakeGet: () => cachedGet("lab_wake", () => api.get(`/lab/wake`).then((r) => r.data), { enabled: true, wake_at: "04:10", first_start: "04:30", prep_minutes: 20 }),
+  wakeSet: (data) => api.put(`/lab/wake`, data).then((r) => r.data),
+};

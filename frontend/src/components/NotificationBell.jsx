@@ -73,6 +73,8 @@ export default function NotificationBell() {
             ? tri("ha messo mi piace al tuo post", "gefällt dein Beitrag", "liked your post")
             : n.type === "absence"
             ? tri("ha inviato un avviso di assenza al Capo", "hat eine Abwesenheitsmeldung gesendet", "sent an absence notice to the Boss")
+            : n.type === "checkin"
+            ? tri("🟢 ha avviato il turno in laboratorio", "🟢 hat die Schicht gestartet", "🟢 started the shift")
             : n.type === "email_import"
             ? tri("🥖 nuove ricette importate via email!", "🥖 neue Rezepte per E-Mail importiert!", "🥖 new recipes imported by email!")
             : n.type === "channel_post"

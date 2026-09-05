@@ -33,6 +33,7 @@ import PinSetup from "@/components/PinSetup";
 import MamoAssistant from "@/components/MamoAssistant";
 import OrdineCapo from "@/components/OrdineCapo";
 import MohamedFloor from "@/components/MohamedFloor";
+import BakoMixSense from "@/components/BakoMixSense";
 import BakemixGuide from "@/components/BakemixGuide";
 import IntroLanding from "@/components/IntroLanding";
 import AvatarHub from "@/components/AvatarHub";
@@ -333,6 +334,13 @@ export default function App() {
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
 
         <Toaster position="top-center" richColors />
+        <BakoMixSense
+          section={section}
+          mode={section === "control" ? activeMode : "guida"}
+          isCapo={!!user}
+          operator={operator}
+          floorRole={floorRole}
+        />
         <RadioFornaio />
         <ShiftScheduler />
         <TalkWithMiki />
