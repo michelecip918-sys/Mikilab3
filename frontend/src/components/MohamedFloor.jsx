@@ -104,7 +104,7 @@ export default function MohamedFloor() {
       <div className="w-full"><DoughTimer /></div>
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
       <button data-testid="mohamed-mic-btn" onClick={() => setActive(true)} className="relative group active:scale-95 transition-all">
-        <OperatorAura name={role} size={184} showBadge={true}>
+        <OperatorAura name={role} size={184} showBadge={true} announce={true}>
           <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </OperatorAura>
         <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>

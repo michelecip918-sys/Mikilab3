@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import { auraApi } from "@/lib/api";
+import { playTTS } from "@/lib/tts";
+import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
 
 // Aura stile Dragon Ball attorno all'avatar dell'operatore: brilla e si intensifica
 // in base al punteggio di efficienza del turno (Aura Bassa → Aura Bianca → Super Saiyan).
@@ -16,8 +20,10 @@ function tierFromScore(score) {
   return 1;
 }
 
-export default function OperatorAura({ name, score, size = 192, showBadge = true, children }) {
+export default function OperatorAura({ name, score, size = 192, showBadge = true, announce = false, children }) {
+  const { lang } = useLang();
   const [srv, setSrv] = useState(null);
+  const announcedRef = useRef(false);
   useEffect(() => {
     let alive = true;
     if (name && score == null) auraApi.worker(name).then((d) => { if (alive) setSrv(d); });
@@ -29,6 +35,23 @@ export default function OperatorAura({ name, score, size = 192, showBadge = true
   const T = TIERS[tier];
   const effect = (srv && srv.aura_effect) || T.label;
   const power = (srv && srv.power_level) || T.power;
+
+  // Potenziamento: quando l'operatore raggiunge Super Saiyan, l'Aura "parla" via headset
+  // nella lingua corrente e celebra la vetta della classifica.
+  useEffect(() => {
+    if (!announce || tier !== 3 || announcedRef.current) return;
+    announcedRef.current = true;
+    const who = name || "";
+    const msg = mkTri(lang)(
+      `Power level over 9000! ${who} è in modalità Super Saiyan. In vetta alla classifica del turno.`,
+      `Power level over 9000! ${who} ist im Super-Saiyan-Modus. An der Spitze der Schicht-Rangliste.`,
+      `Power level over 9000! ${who} is in Super Saiyan mode. Top of the shift leaderboard.`,
+      `Power level over 9000! ${who} está en modo Super Saiyan. Líder de la clasificación del turno.`,
+      `Power level over 9000 ! ${who} est en mode Super Saiyan. En tête du classement du poste.`,
+      `پاور لِوِل بالای ۹۰۰۰! ${who} در حالت سوپر سایان است. صدرنشین جدول شیفت.`);
+    try { toast.success("⚡ Super Saiyan · Over 9000!", { description: msg, duration: 6000 }); } catch { /* */ }
+    try { playTTS(msg, { lang, voice: "bakemix" }); } catch { /* */ }
+  }, [announce, tier, name, lang]);
 
   return (
     <div data-testid="operator-aura" data-aura-tier={tier} className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>

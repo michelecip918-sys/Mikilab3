@@ -4228,3 +4228,11 @@ Implementati e testati (iteration_185.json → backend 8/8, frontend 4/4, retest
 - **Metriche industriali refresh (D, punto 4)**: `lib/deptProfiles.js` → batch target aggiornati (panificazione 40→60 kg) + blocco `metrics` (throughput_h, scale_precision_g, dough_temp_c, scale_max_kg, chilling_c per pasticceria). Mostrati in `RecipeDialog` (`recipe-dept-metrics`) nella scheda profilo reparto, dinamici al cambio reparto.
 - Lint 0 errori. Warning dev-only `<span> in <option>` (span `x-ve-dynamic` iniettati dal tooling attorno a `{mkTri()}`): non nel sorgente, non in produzione, non bloccante.
 
+
+---
+## v12.2 (2026-09-05) — Backlog + potenziamento Aura
+- **Aura parlante (potenziamento)**: `OperatorAura` ora accetta `announce`; quando l'operatore raggiunge il tier Super Saiyan (score≥90) l'Aura "parla" via headset ("Power level over 9000! …in vetta alla classifica") nella lingua corrente (TTS BakoMix) + toast celebrativo. Attivo sull'avatar del Floor (`MohamedFloor announce={true}`). Fire once per mount. NB: si attiva solo con dati reali (efficiency_score≥90 nel piano turni).
+- **Conversazione continua (headset)**: `HeadsetChannel` ha il toggle `headset-continuous-toggle` — l'ascolto si riavvia automaticamente a ogni frase finché il canale resta aperto (interprete bidirezionale hands-free). Cleanup su unmount.
+- **Refresh scale hardware**: `SmartScale` mostra lo standard industriale del reparto attivo (`scale-dept-standard`: icona+nome reparto, max kg, precisione ±g, temp impasto) dai `metrics` di `deptProfiles`. Visibile quando è attivo un reparto specifico (non 'tutti').
+- Lint 0 errori/0 warning sui file toccati; smoke test mobile OK (aura+badge, canale headset, toggle continuo). Overflow segnalato = glow decorativo di sfondo pre-esistente (pointer-events-none), non un bug.
+

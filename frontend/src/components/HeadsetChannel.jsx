@@ -24,12 +24,16 @@ export default function HeadsetChannel() {
   const [target, setTarget] = useState(() => { try { return localStorage.getItem(HK) || "en"; } catch { return "en"; } });
   const [listening, setListening] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [continuous, setContinuous] = useState(false);
   const [src, setSrc] = useState("");
   const [out, setOut] = useState("");
   const recRef = useRef(null);
+  const contRef = useRef(false);
   const supported = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
 
   useEffect(() => { try { localStorage.setItem(HK, target); } catch { /* */ } }, [target]);
+  useEffect(() => { contRef.current = continuous; }, [continuous]);
+  useEffect(() => () => { contRef.current = false; try { if (recRef.current) recRef.current.stop(); } catch { /* */ } }, []);
 
   const speak = (text, l) => { try { playTTS(text, { lang: l, voice: "bakemix" }); } catch { /* */ } };
 
@@ -50,9 +54,8 @@ export default function HeadsetChannel() {
     } finally { setBusy(false); }
   };
 
-  const listen = () => {
+  const startRec = () => {
     if (!supported) return;
-    if (listening && recRef.current) { try { recRef.current.stop(); } catch { /* */ } return; }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     const rec = new SR();
     rec.lang = SR_LOCALE[lang] || "it-IT";
@@ -60,13 +63,34 @@ export default function HeadsetChannel() {
     rec.maxAlternatives = 1;
     rec.onstart = () => setListening(true);
     rec.onerror = () => setListening(false);
-    rec.onend = () => setListening(false);
+    rec.onend = () => {
+      setListening(false);
+      // Conversazione continua: riavvia l'ascolto finché il canale resta aperto.
+      if (contRef.current) setTimeout(() => { if (contRef.current) startRec(); }, 500);
+    };
     rec.onresult = (ev) => {
       const t = ev.results && ev.results[0] && ev.results[0][0] ? ev.results[0][0].transcript : "";
       if (t) translateAndSpeak(t);
     };
     recRef.current = rec;
     try { rec.start(); } catch { setListening(false); }
+  };
+
+  const listen = () => {
+    if (!supported) return;
+    if ((listening || contRef.current) && recRef.current) {
+      contRef.current = false; setContinuous(false);
+      try { recRef.current.stop(); } catch { /* */ }
+      return;
+    }
+    startRec();
+  };
+
+  const toggleContinuous = () => {
+    const next = !continuous;
+    setContinuous(next); contRef.current = next;
+    if (next && !listening) startRec();
+    else if (!next && recRef.current) { try { recRef.current.stop(); } catch { /* */ } }
   };
 
   const curTarget = LANGS.find((l) => l.code === target) || LANGS[2];
@@ -105,6 +129,12 @@ export default function HeadsetChannel() {
           <Volume2 className="w-5 h-5" />
         </button>
       </div>
+
+      <button data-testid="headset-continuous-toggle" onClick={toggleContinuous} disabled={!supported}
+        className={`w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold border transition-all disabled:opacity-40 ${continuous ? "bg-[#5EEAD4]/15 border-[#5EEAD4]/60 text-[#5EEAD4]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8] hover:border-[#3E9C93]/50"}`}>
+        <span className={`w-2 h-2 rounded-full ${continuous ? "bg-[#5EEAD4] animate-pulse" : "bg-[#475569]"}`} />
+        {continuous ? tri("Conversazione continua ATTIVA", "Dauergespräch AKTIV", "Continuous conversation ON", "Conversación continua ACTIVA", "Conversation continue ACTIVE", "گفتگوی پیوسته روشن") : tri("Conversazione continua", "Dauergespräch", "Continuous conversation", "Conversación continua", "Conversation continue", "گفتگوی پیوسته")}
+      </button>
 
       {!supported && (
         <p data-testid="headset-unsupported" className="text-[11px] text-amber-400">{tri("Il riconoscimento vocale non è disponibile su questo browser: usa 'Prova canale' per verificare l'audio.", "Spracherkennung in diesem Browser nicht verfügbar: nutze 'Kanal testen'.", "Speech recognition not available on this browser: use 'Test channel'.", "Reconocimiento de voz no disponible: usa 'Probar canal'.", "Reconnaissance vocale indisponible : utilise 'Tester le canal'.", "تشخیص گفتار در این مرورگر نیست: از 'تست کانال' استفاده کن.")}</p>

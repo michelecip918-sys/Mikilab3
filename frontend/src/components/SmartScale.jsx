@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { useDept } from "@/lib/dept";
+import { getDeptProfile } from "@/lib/deptProfiles";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 const TOL = 0.02; // ±2% tolleranza di pesata (bilancia reale)
@@ -33,6 +35,8 @@ export default function SmartScale({ onExit }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const ingName = useCallback((ing) => ing[`name_${lang}`] || ing.name, [lang]);
+  const activeDept = useDept();
+  const deptProf = getDeptProfile(activeDept);
 
   const [recipes, setRecipes] = useState(null);
   const [recipe, setRecipe] = useState(null);
@@ -204,6 +208,14 @@ export default function SmartScale({ onExit }) {
               <p className="text-[11px] text-[#7E8A93]">{tri("Ti guido nella pesata in silenzio, ingrediente per ingrediente.", "Ich führe dich still durch die Einwaage, Zutat für Zutat.", "I guide you through weighing silently, ingredient by ingredient.", "Te guío en el pesaje en silencio, ingrediente a ingrediente.", "Je te guide pour la pesée en silence, ingrédient par ingrédient.", "بی‌صدا در وزن‌کشی راهنمایی‌ات می‌کنم.")}</p>
             </div>
           </div>
+
+          {deptProf && deptProf.metrics && (
+            <div data-testid="scale-dept-standard" className="mt-3 flex items-center gap-2 rounded-xl border border-[#3E9C93]/30 bg-[#3E9C93]/8 px-3 py-2 text-[11px] font-mono-data text-[#5EEAD4]">
+              <span className="text-base leading-none">{deptProf.icon}</span>
+              <span className="font-bold">{deptProf.label(lang)}</span>
+              <span className="text-[#7E8A93]">· max {deptProf.metrics.scale_max_kg} kg · ±{deptProf.metrics.scale_precision_g} g · {deptProf.metrics.dough_temp_c}°C</span>
+            </div>
+          )}
 
           <label className="mt-4 block text-[11px] font-black uppercase tracking-widest text-[#7E8A93]">{tri("Ricetta", "Rezept", "Recipe", "Receta", "Recette", "دستور")}</label>
           {recipes === null ? (
