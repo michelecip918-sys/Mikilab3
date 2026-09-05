@@ -17,11 +17,24 @@ const MOODS = {
 
 export const auraColor = (mood) => (MOODS[mood] || MOODS.sereno).color;
 
-export default function LabAura({ enabled, mood = "sereno", heartbeat = 52 }) {
+// Ogni postazione di Mohamed ha una "voce" diversa: il forno è caldo e brillante,
+// l'impasto profondo, il banco medio. Così l'Aura racconta DOVE sta lavorando il team.
+function stationMod(station) {
+  const r = (station || "").toLowerCase();
+  if (/forn|cottura|pizza|arrosti|griglia/.test(r)) return { fMul: 1.12, filtAdd: 260 };
+  if (/impast|fermentaz|planetari|spiral|lievit|farin/.test(r)) return { fMul: 0.88, filtAdd: -130 };
+  if (/laugen|pretzel|brezel/.test(r)) return { fMul: 1.0, filtAdd: 130 };
+  if (/banco|pasticc|decor|glass|cioccolat|gelat|confezion|dolc/.test(r)) return { fMul: 1.05, filtAdd: 70 };
+  return { fMul: 1.0, filtAdd: 0 };
+}
+
+export default function LabAura({ enabled, mood = "sereno", heartbeat = 52, station = "" }) {
   const ctxRef = useRef(null);
   const nodesRef = useRef(null);
   const beatRef = useRef(null);
-  const cfg = MOODS[mood] || MOODS.sereno;
+  const m = MOODS[mood] || MOODS.sereno;
+  const mod = stationMod(station);
+  const cfg = { ...m, base: m.base * mod.fMul, fifth: m.fifth * mod.fMul, filter: Math.max(300, m.filter + mod.filtAdd) };
 
   // Avvio / arresto del motore audio
   useEffect(() => {
@@ -109,7 +122,7 @@ export default function LabAura({ enabled, mood = "sereno", heartbeat = 52 }) {
     } catch { /* */ }
     scheduleBeat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mood, heartbeat]);
+  }, [mood, heartbeat, station]);
 
   const teardown = () => {
     if (beatRef.current) { clearInterval(beatRef.current); beatRef.current = null; }

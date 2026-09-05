@@ -26,6 +26,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [aura, setAura] = useState(() => { try { return localStorage.getItem("mikilab_aura") === "1"; } catch { return false; } });
   const [wake, setWake] = useState(null);
   const [rest, setRest] = useState({ active: false, allow_critical: true });
+  const [history, setHistory] = useState([]);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -71,6 +72,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     pulseApi.wakeGet().then(setWake).catch(() => {});
     pulseApi.restGet().then(setRest).catch(() => {});
   }, [isCapo]);
+
+  // Storia del battito (solo Capo, mentre il pannello è aperto)
+  useEffect(() => {
+    if (!isCapo || !open) return;
+    const load = () => pulseApi.history(240).then((h) => setHistory(h.points || [])).catch(() => {});
+    load();
+    const id = setInterval(load, 30000);
+    return () => clearInterval(id);
+  }, [isCapo, open]);
 
   // Check-in SILENZIOSO automatico quando l'operatore entra in Produzione
   useEffect(() => {
@@ -122,7 +132,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
   return (
     <>
-      <LabAura enabled={aura} mood={mood} heartbeat={hb} />
+      <LabAura enabled={aura} mood={mood} heartbeat={hb} station={mode === "floor" ? (floorRole || "") : ""} />
 
       {/* Avatar proattivo flottante */}
       <button
@@ -165,6 +175,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 {muted ? <VolumeX className="w-4 h-4 text-[#f87171]" /> : <Volume2 className="w-4 h-4" style={{ color }} />}
               </span>
             </div>
+
+            {/* Storia del battito del laboratorio (Capo) */}
+            {isCapo && history.length >= 2 && (
+              <div data-testid="bakomix-heartbeat-history" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
+                <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" style={{ color }} /> {tri("Storia del battito", "Herzschlag-Verlauf", "Heartbeat history", "Historia del pulso", "Historique du pouls", "تاریخچه ضربان")}</p>
+                <Sparkline points={history} color={color} />
+                <p className="text-[10px] text-[#94A3B8] mt-1 text-right">{tri("ultime ore", "letzte Stunden", "last hours", "últimas horas", "dernières heures", "ساعات اخیر")}</p>
+              </div>
+            )}
 
             {/* Alert proattivi */}
             {alerts.length === 0 ? (
@@ -243,3 +262,31 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     </>
   );
 }
+
+function Sparkline({ points, color }) {
+  const vals = points.map((p) => p.heartbeat || 52);
+  const W = 320, H = 48, pad = 3;
+  const min = Math.min(...vals), max = Math.max(...vals);
+  const range = Math.max(1, max - min);
+  const step = vals.length > 1 ? (W - pad * 2) / (vals.length - 1) : 0;
+  const path = vals.map((v, i) => {
+    const x = pad + i * step;
+    const y = H - pad - ((v - min) / range) * (H - pad * 2);
+    return `${i === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(" ");
+  const last = vals[vals.length - 1];
+  return (
+    <svg data-testid="bakomix-sparkline" viewBox={`0 0 ${W} ${H}`} className="w-full h-12" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <path d={`${path} L${(pad + (vals.length - 1) * step).toFixed(1)},${H} L${pad},${H} Z`} fill="url(#spark-fill)" />
+      <path d={path} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+      <circle cx={(pad + (vals.length - 1) * step).toFixed(1)} cy={(H - pad - ((last - min) / range) * (H - pad * 2)).toFixed(1)} r="3" fill={color} />
+    </svg>
+  );
+}
+

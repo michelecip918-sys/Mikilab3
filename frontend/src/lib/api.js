@@ -444,4 +444,5 @@ export const pulseApi = {
   restSet: (data) => api.put(`/lab/rest-mode`, data).then((r) => r.data),
   wakeGet: () => cachedGet("lab_wake", () => api.get(`/lab/wake`).then((r) => r.data), { enabled: true, wake_at: "04:10", first_start: "04:30", prep_minutes: 20 }),
   wakeSet: (data) => api.put(`/lab/wake`, data).then((r) => r.data),
+  history: (minutes = 240) => cachedGet(`lab_pulse_history_${minutes}`, () => api.get(`/lab/pulse/history`, { params: { minutes } }).then((r) => r.data), { points: [] }),
 };

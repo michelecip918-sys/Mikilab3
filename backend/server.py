@@ -2296,7 +2296,33 @@ async def _compute_pulse():
 
 @api_router.get("/lab/pulse")
 async def get_lab_pulse(user: Optional[dict] = Depends(optional_user)):
-    return await _compute_pulse()
+    p = await _compute_pulse()
+    # Storia del battito: registra uno snapshot leggero al massimo 1 volta al minuto.
+    try:
+        last = await db.lab_pulse_history.find_one({}, {"_id": 0, "at": 1}, sort=[("at", -1)])
+        now_ts = datetime.now(timezone.utc)
+        if not last or (now_ts - datetime.fromisoformat(last["at"])).total_seconds() >= 60:
+            await db.lab_pulse_history.insert_one({
+                "at": now_ts.isoformat(), "heartbeat": p["heartbeat"], "mood": p["mood"],
+                "score": p["score"], "load": p["load"],
+            })
+            # Mantieni solo gli ultimi ~300 punti.
+            cnt = await db.lab_pulse_history.count_documents({})
+            if cnt > 300:
+                old = await db.lab_pulse_history.find({}, {"_id": 1}).sort("at", 1).limit(cnt - 300).to_list(cnt - 300)
+                if old:
+                    await db.lab_pulse_history.delete_many({"_id": {"$in": [o["_id"] for o in old]}})
+    except Exception:
+        pass
+    return p
+
+
+@api_router.get("/lab/pulse/history")
+async def get_pulse_history(minutes: int = 240, user: Optional[dict] = Depends(optional_user)):
+    minutes = max(10, min(1440, minutes))
+    since = (datetime.now(timezone.utc) - timedelta(minutes=minutes)).isoformat()
+    docs = await db.lab_pulse_history.find({"at": {"$gte": since}}, {"_id": 0}).sort("at", 1).to_list(300)
+    return {"points": docs}
 
 
 class CheckinReq(BaseModel):
