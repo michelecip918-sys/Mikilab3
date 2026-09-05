@@ -2875,13 +2875,15 @@ async def enterprise_sites(user: Optional[dict] = Depends(optional_user)):
 class SiteCreate(BaseModel):
     name: str = Field(..., max_length=60)
     status: Optional[str] = "normal"
+    width: Optional[float] = Field(10.0, ge=2, le=60)
+    length: Optional[float] = Field(12.0, ge=2, le=60)
 
 
 @api_router.post("/enterprise/sites")
 async def enterprise_add_site(body: SiteCreate, user: dict = Depends(require_admin)):
     sid = f"site_{str(uuid.uuid4())[:8]}"
     doc = {"site_id": sid, "name": body.name, "status": body.status or "normal", "workers": [],
-           "spatial_layout": {"room_dimensions_m": {"width": 10.0, "length": 12.0}, "equipment": []}}
+           "spatial_layout": {"room_dimensions_m": {"width": float(body.width or 10), "length": float(body.length or 12)}, "equipment": []}}
     await db.lab_sites.insert_one({**doc})
     return _site_metrics(doc)
 
@@ -2956,6 +2958,183 @@ async def enterprise_fleet_advice(user: Optional[dict] = Depends(optional_user))
     if not insights:
         insights.append({"urgency": "low", "suggestion": "Tutti gli operatori della rete esprimono il massimo potenziale."})
     return {"status": "success", "supervisor": "BakoMix Global Core", "fleet_recommendations": insights}
+
+
+@api_router.get("/enterprise/weekly-challenge")
+async def enterprise_weekly_challenge(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    ranking = []
+    for s in sites:
+        ws = s.get("workers") or []
+        avg = round(sum(w.get("score", 0) for w in ws) / len(ws), 1) if ws else 0.0
+        ranking.append({"site_id": s["site_id"], "name": s["name"], "avg_score": avg, "aura": _aura_for(int(avg))})
+    ranking.sort(key=lambda x: x["avg_score"], reverse=True)
+    for i, r in enumerate(ranking, start=1):
+        r["rank"] = i
+    now = datetime.now(timezone.utc)
+    iso = now.isocalendar()
+    days_left = 7 - now.isoweekday()  # lunedì = 1
+    return {"status": "success", "week": f"{iso[0]}-W{iso[1]:02d}",
+            "starts": "Lunedì", "days_remaining": days_left,
+            "prize": "🏆 Aura d'Oro della Settimana + caffè offerto a tutta la sede vincente",
+            "ranking": ranking,
+            "leader": ranking[0] if ranking else None}
+
+
+# ---------------------------------------------------------------------------
+# DUAL-MODE · STRATEGIC — Audit ricetta di BakoMix (Master Baker) + matrice
+# sovrana (Approva / Modifica / Rifiuta). Solo craft del fornaio, no HACCP.
+# ---------------------------------------------------------------------------
+class AuditReq(BaseModel):
+    recipe_id: Optional[str] = None
+    ingredients: Optional[List[Dict[str, Any]]] = None
+
+
+def _ing_kg(i):
+    for k in ("target_weight_kg", "kg", "weight_kg"):
+        if i.get(k) is not None:
+            try: return float(i[k])
+            except Exception: pass
+    for k in ("grams", "g", "weight"):
+        if i.get(k) is not None:
+            try: return float(i[k]) / 1000.0
+            except Exception: pass
+    return None
+
+
+@api_router.post("/lab/recipe-audit")
+async def recipe_audit(body: AuditReq, user: dict = Depends(require_admin)):
+    ings = body.ingredients
+    name = "Ricetta"
+    if body.recipe_id:
+        rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+        if not rec:
+            raise HTTPException(status_code=404, detail="Ricetta non trovata.")
+        ings = rec.get("ingredients") or []
+        name = rec.get("name") or name
+    ings = ings or []
+
+    def find(*keys):
+        for i in ings:
+            n = (i.get("name") or i.get("ingredient") or "").lower()
+            if any(k in n for k in keys):
+                return _ing_kg(i)
+        return None
+
+    flour = find("farina", "flour", "mehl", "tipo 0", "tipo 00")
+    water = find("acqua", "water", "wasser")
+    salt = find("sale", "salt", "salz")
+    yeast = find("lievito", "yeast", "hefe", "lievito madre")
+
+    critique, severity = [], 0
+    if flour and flour > 0:
+        if water is not None:
+            hyd = round(water / flour * 100)
+            lvl = "ok" if 55 <= hyd <= 85 else ("warn" if 45 <= hyd <= 95 else "high")
+            severity = max(severity, {"ok": 0, "warn": 1, "high": 2}[lvl])
+            critique.append({"metric": "Idratazione", "value": f"{hyd}%", "level": lvl,
+                             "note": ("Idratazione equilibrata." if lvl == "ok" else
+                                      f"Idratazione {'alta' if hyd>85 else 'bassa'}: valuta un impasto {'più gestibile' if hyd>85 else 'più morbido'}.")})
+        if salt is not None:
+            sp = round(salt / flour * 100, 1)
+            lvl = "ok" if 1.6 <= sp <= 2.4 else ("warn" if 1.0 <= sp <= 3.0 else "high")
+            severity = max(severity, {"ok": 0, "warn": 1, "high": 2}[lvl])
+            critique.append({"metric": "Sale", "value": f"{sp}%", "level": lvl,
+                             "note": ("Sale nella norma (≈2%)." if lvl == "ok" else f"Sale {'eccessivo' if sp>2.4 else 'scarso'}: punta al 2% sulla farina.")})
+        if yeast is not None:
+            yp = round(yeast / flour * 100, 2)
+            critique.append({"metric": "Lievito", "value": f"{yp}%", "level": "ok" if yp <= 3 else "warn",
+                             "note": "Lievitazione lenta e digeribile." if yp <= 3 else "Lievito alto: rischio maturazione troppo rapida."})
+    else:
+        critique.append({"metric": "Farina", "value": "n/d", "level": "warn", "note": "Farina non rilevata: non posso calcolare le percentuali del fornaio."})
+
+    recommended = "reject" if severity >= 2 else ("modify" if severity == 1 else "approve")
+    matrix = {
+        "approve": {"label": "Approva", "reason": "Ricetta bilanciata secondo l'arte bianca." if recommended == "approve" else "Procedi comunque sotto la tua responsabilità di Capo."},
+        "modify": {"label": "Modifica", "reason": "; ".join(c["note"] for c in critique if c["level"] != "ok") or "Piccoli ritocchi consigliati."},
+        "reject": {"label": "Rifiuta", "reason": "Parametri fuori scala: meglio ricalibrare prima di andare in produzione." if recommended == "reject" else "Scarta se non convince la tua esperienza."},
+    }
+    return {"recipe": name, "critique": critique, "recommended": recommended, "matrix": matrix,
+            "bako_note": "Da Master Baker: ecco la mia lettura. La decisione sovrana resta tua, Capo."}
+
+
+# ---------------------------------------------------------------------------
+# LINEA DI PRODUZIONE INDUSTRIALE — 6 settori contigui con handoff inter-settore.
+# BakoMix prevede i parametri a valle dalla forza glutine/temperatura in uscita
+# dall'impastatrice. Modello deterministico (nessun blocco, shadow passivo).
+# ---------------------------------------------------------------------------
+@api_router.get("/production/line-status")
+async def production_line_status(dough_temp: float = 24.0, hydration: float = 65.0,
+                                 user: Optional[dict] = Depends(optional_user)):
+    dt = max(15.0, min(32.0, dough_temp))
+    hy = max(40.0, min(100.0, hydration))
+    gluten = "forte" if hy <= 62 else ("medio" if hy <= 78 else "delicato")
+    # Handoff a valle calcolati dallo stato dell'impasto
+    water_temp = round(max(2.0, 58 - 2 * dt - 0.1 * hy), 1)          # acqua per centrare la temp impasto
+    divider_speed = round(max(40, 100 - (hy - 60) * 1.6), 0)          # più idratato → più lento
+    proofer_temp = round(26 + (dt - 24) * 0.5, 1)
+    proofer_hum = round(min(90, 72 + (hy - 60) * 0.4), 0)
+    steam = round(max(2, 10 - (hy - 60) * 0.15), 0)                   # più idratato → meno vapore
+    sectors = [
+        {"id": "dosaggio", "name": "Dosaggio & Idratazione", "status": "optimal",
+         "param": f"Acqua a {water_temp}°C · idratazione {int(hy)}%",
+         "handoff": f"Impasto atteso a {dt}°C, glutine {gluten}."},
+        {"id": "autolisi", "name": "Riposo & Autolisi", "status": "active",
+         "param": f"Rilassamento {'30' if gluten=='forte' else '20'} min",
+         "handoff": "Struttura pronta per la spezzatura."},
+        {"id": "formatura", "name": "Spezzatrice · Arrotondatrice · Formatrice", "status": "active",
+         "param": f"Velocità linea {int(divider_speed)}% (stress calibrato)",
+         "handoff": f"Riduco lo stress meccanico per glutine {gluten}."},
+        {"id": "fermo", "name": "Cella Fermo-Lievitazione", "status": "active",
+         "param": f"{proofer_temp}°C · UR {int(proofer_hum)}%",
+         "handoff": "Rampa termica/umidità adattata alla pasta in arrivo."},
+        {"id": "cottura", "name": "Forni (Rotativo/Statico/Piani)", "status": "optimal",
+         "param": f"Vapore {int(steam)}s · profilo termico invertito",
+         "handoff": "Iniezione vapore tarata sulla crosta desiderata."},
+        {"id": "abbattimento", "name": "Abbattimento & Confezionamento", "status": "active",
+         "param": "Stabilizzazione struttura",
+         "handoff": "Raffreddo e confeziono senza condensa."},
+    ]
+    return {"status": "success", "dough_temp": dt, "hydration": hy, "gluten": gluten,
+            "sectors": sectors,
+            "bako_note": "Handoff inter-settore sincronizzati. Linea in flusso, silenzio Letz_Passive in laboratorio."}
+
+
+# ---------------------------------------------------------------------------
+# OMNI-INTELLIGENCE — BakoMix analizza e confronta TUTTE le sedi: individua
+# le migliori e le più in difficoltà, calcola i gap e genera strategie.
+# ---------------------------------------------------------------------------
+@api_router.get("/enterprise/omni-intelligence")
+async def enterprise_omni(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    scored = []
+    for s in sites:
+        ws = s.get("workers") or []
+        avg = round(sum(w.get("score", 0) for w in ws) / len(ws), 1) if ws else 0.0
+        scored.append({"site_id": s["site_id"], "name": s["name"], "avg_score": avg, "status": s.get("status", "normal"), "workers": len(ws)})
+    scored.sort(key=lambda x: x["avg_score"], reverse=True)
+    best = scored[0] if scored else None
+    worst = scored[-1] if scored else None
+    net_avg = round(sum(x["avg_score"] for x in scored) / len(scored), 1) if scored else 0.0
+    strategies = []
+    if best and worst and best["site_id"] != worst["site_id"]:
+        gap = round(best["avg_score"] - worst["avg_score"], 1)
+        if gap >= 5:
+            strategies.append({"priority": "alta", "gap": gap,
+                "strategy": f"Trasferisci le best-practice di {best['name']} (leader a {best['avg_score']}%) verso {worst['name']} ({worst['avg_score']}%): affiancamento mirato per colmare {gap} punti."})
+    for x in scored:
+        if x["status"] != "normal":
+            strategies.append({"priority": "media", "gap": 0,
+                "strategy": f"{x['name']}: anomalia di settore rilevata — correzione parametri a valle già proposta da BakoMix."})
+    if not strategies:
+        strategies.append({"priority": "bassa", "gap": 0, "strategy": "Rete allineata: nessun gap significativo tra le sedi."})
+    return {"status": "success", "supervisor": "BakoMix Omni Core",
+            "network_avg": net_avg, "sites_analyzed": len(scored),
+            "top_site": best, "struggling_site": worst,
+            "cross_site_strategies": strategies,
+            "bako_note": "Benchmarking omnisciente completato su tutti i settori. Zero rumore burocratico."}
 
 
 class LayoutMove(BaseModel):

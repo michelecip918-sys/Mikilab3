@@ -1,8 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Play, Check, Lock, ListOrdered, X } from "lucide-react";
+import { Play, Check, ListOrdered, X } from "lucide-react";
 import { shiftStateApi, sequenceApi } from "@/lib/api";
-import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -28,15 +27,8 @@ export default function SequenceGuard() {
     if (!r) return;
     if (r.allowed === false) {
       setBlock(r);
-      const name = r.expected?.name || "";
-      const msg = tri(
-        `Fermo! Questo lotto è fuori sequenza. Prima deve partire ${name}.`,
-        `Halt! Diese Charge ist außer der Reihe. Zuerst muss ${name} starten.`,
-        `Stop! This batch is out of sequence. ${name} must start first.`,
-        `¡Alto! Este lote está fuera de secuencia. Primero debe ir ${name}.`,
-        `Stop ! Ce lot est hors séquence. ${name} doit démarrer d'abord.`,
-        `ایست! این دسته خارج از ترتیب است. اول باید ${name} شروع شود.`);
-      try { playTTS(msg, { lang, voice: "bakemix" }); } catch { /* */ }
+      // DUAL-MODE FLOOR: shadow passivo. Nessuna voce, nessun pop-up bloccante:
+      // il pulsante semplicemente non avvia; un cenno visivo indica il lotto giusto.
       return;
     }
     load();
@@ -87,30 +79,12 @@ export default function SequenceGuard() {
       </div>
 
       {block && (
-        <div data-testid="sequence-block-modal" className="fixed inset-0 z-[70] bg-black/70 backdrop-blur-sm flex items-center justify-center p-6" onClick={() => setBlock(null)}>
-          <div className="max-w-sm w-full rounded-3xl bg-[#0b0f19] border-2 border-[#ef4444] shadow-2xl p-6 text-center animate-fadeIn" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-center mb-3">
-              <div className="relative">
-                <span className="absolute inset-0 rounded-full bg-[#ef4444]/40 blur-xl" />
-                <img src={`${PUB}/avatar_bigmix.jpg`} alt="BakoMix" className="relative w-16 h-16 rounded-full object-cover border-2 border-[#ef4444]" />
-                <span className="absolute -bottom-1 -right-1 w-7 h-7 rounded-full bg-[#ef4444] border-2 border-[#0b0f19] flex items-center justify-center"><Lock className="w-3.5 h-3.5 text-white" /></span>
-              </div>
-            </div>
-            <h3 className="text-lg font-black text-[#ef4444]">{tri("Lotto fuori sequenza", "Charge außer Reihe", "Batch out of sequence", "Lote fuera de secuencia", "Lot hors séquence", "دسته خارج از ترتیب")}</h3>
-            <p className="text-sm text-white mt-2">
-              {tri("Prima deve partire", "Zuerst muss starten", "This must start first", "Primero debe ir", "Doit démarrer d'abord", "اول باید شروع شود")}: <b className="text-amber-400">{block.expected?.name}</b>
-            </p>
-            <div className="mt-5 flex flex-col gap-2">
-              {block.expected && (
-                <button data-testid="sequence-start-expected" onClick={() => { const b = batches.find((x) => String(x.id) === String(block.expected.id)); setBlock(null); if (b) start(b); }} className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-amber-500 text-[#030712] font-black text-sm active:scale-95 transition-transform">
-                  <Play className="w-4 h-4" /> {tri("Avvia il lotto giusto", "Richtige Charge starten", "Start the right batch", "Iniciar el lote correcto", "Démarrer le bon lot", "دستهٔ درست را شروع کن")}
-                </button>
-              )}
-              <button data-testid="sequence-block-close" onClick={() => setBlock(null)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#030712] border border-[#1e293b] text-[#94A3B8] font-bold text-sm">
-                <X className="w-4 h-4" /> {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}
-              </button>
-            </div>
-          </div>
+        <div data-testid="sequence-block-banner" className="mt-3 rounded-xl border border-[#f59e0b]/50 bg-[#f59e0b12] p-2.5 flex items-center gap-2 animate-fadeIn">
+          <img src={`${PUB}/avatar_bigmix.jpg`} alt="BakoMix" className="w-8 h-8 rounded-full object-cover border border-[#f59e0b]" />
+          <p className="text-[12px] text-white flex-1">
+            {tri("Prima tocca", "Zuerst", "Start first", "Primero", "D'abord", "اول")}: <b className="text-amber-400">{block.expected?.name}</b>
+          </p>
+          <button data-testid="sequence-block-close" onClick={() => setBlock(null)} className="text-[#64748B] hover:text-white"><X className="w-4 h-4" /></button>
         </div>
       )}
     </div>

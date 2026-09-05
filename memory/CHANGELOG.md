@@ -1,5 +1,13 @@
 # CHANGELOG (continua da PRD.md)
 
+## v-omni (2026-06) — Dual-Mode Protocol + Enterprise depth (testato 100%, iteration_183)
+- **Dual-Mode Protocol**: MODALITÀ STRATEGICA (Capo) = critiche/voce proattiva attive; MODALITÀ FLOOR (Mohamed) = silenzio Letz_Passive totale — BakoMix non parla in floor e il SequenceGuard è ora un banner inline NON bloccante e muto (niente modal/voce).
+- **Matrice Sovrana (audit ricetta)**: `POST /lab/recipe-audit` — BakoMix Master Baker valuta idratazione/sale/lievito e propone Approva/Modifica/Rifiuta (decisione finale del Boss). Frontend `RecipeAuditMatrix.jsx` con robot in stato oro/ambra.
+- **Linea di produzione 6 settori**: `GET /production/line-status` con handoff inter-settore (dosaggio→autolisi→formatura→fermo→cottura→abbattimento) calcolati da temperatura/idratazione. Card in EnterpriseGrid.
+- **Omni-Intelligence**: `GET /enterprise/omni-intelligence` — benchmarking cross-sede, top/struggling, gap e strategie. Card viola in EnterpriseGrid.
+- **Sfida Aura settimanale**: `GET /enterprise/weekly-challenge` (classifica sedi + premio). **Sede guidata**: form di creazione filiale (nome + dimensioni stanza) nel pannello Rete.
+- Fix: ordine branch `ai_universal_command` (bilancia prima di "aggiungi").
+
 ## v-enterprise (2026-06) — Enterprise Grid & Pocket (rete multi-sede) + fix universal-command (testato 100%, iteration_182)
 - **Fix bug**: `POST /ai/universal-command` — "aggiungi una bilancia" ora ritorna `device_added` (ramo bilancia prima del ramo generico "aggiungi"); "aggiungi rubrica" → `ui_personalization` + `/ai/my-features`.
 - **Enterprise Grid backend** (persistito in `lab_sites`, seed 2 sedi demo): `/enterprise/overview`, `/enterprise/sites` (GET/POST/DELETE), `/enterprise/site-shift`, `/enterprise/global-leaderboard` (rank 1 = Grandmaster of the Network), `/enterprise/global-morning-briefing`, `/enterprise/strategic-fleet-advice` (flag score<85), `/enterprise/sites/{id}/layout` + `/layout/optimize` (drag macchinari + stima risparmio), WebSocket `/api/ws/enterprise-os/{site_id}` letz_passive.

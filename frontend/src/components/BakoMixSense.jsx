@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe } from "lucide-react";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles } from "lucide-react";
 import { pulseApi, staffingApi, briefingApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
@@ -10,6 +10,7 @@ import LabAura, { auraColor } from "@/components/LabAura";
 import FailsafeSwitch from "@/components/FailsafeSwitch";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import EnterpriseGrid from "@/components/EnterpriseGrid";
+import RecipeAuditMatrix from "@/components/RecipeAuditMatrix";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -34,6 +35,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [briefing, setBriefing] = useState(null);
   const [briefingOpen, setBriefingOpen] = useState(true);
   const [entOpen, setEntOpen] = useState(false);
+  const [auditOpen, setAuditOpen] = useState(false);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -58,9 +60,9 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
         if (p.sensors.oven_temp) publishSensor("oven_temp", p.sensors.oven_temp.value);
         if (p.sensors.ph) publishSensor("ph", p.sensors.ph.value);
       }
-      // Voce proattiva: annuncia il primo alert nuovo (critico/warn)
+      // Voce proattiva: SOLO in modalità strategica. In FLOOR = silenzio totale (shadow passivo).
       const top = (p.alerts || []).find((x) => x.level === "critical" || x.level === "warn");
-      if (top && top.id !== spokenRef.current) {
+      if (mode !== "floor" && top && top.id !== spokenRef.current) {
         spokenRef.current = top.id;
         speak(top);
       }
@@ -158,6 +160,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     <>
       <LabAura enabled={aura} mood={mood} heartbeat={hb} station={mode === "floor" ? (floorRole || "") : ""} />
       {entOpen && <EnterpriseGrid onClose={() => setEntOpen(false)} />}
+      {auditOpen && <RecipeAuditMatrix onClose={() => setAuditOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -289,6 +292,9 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
               <div className="space-y-3 pt-1">
                 <button data-testid="bakomix-enterprise-btn" onClick={() => setEntOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-transform" style={{ background: "linear-gradient(90deg, #5EEAD4, #f59e0b)" }}>
                   <Globe className="w-4 h-4" /> {tri("Rete · 100 Panifici", "Netz · 100 Bäckereien", "Grid · 100 Bakeries", "Red · 100 Panaderías", "Réseau · 100 Boulangeries", "شبکه · ۱۰۰ نانوایی")}
+                </button>
+                <button data-testid="bakomix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
+                  <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}

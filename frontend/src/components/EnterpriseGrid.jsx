@@ -18,15 +18,27 @@ export default function EnterpriseGrid({ onClose }) {
   const [sel, setSel] = useState(null);
   const [layout, setLayout] = useState(null);
   const [drag, setDrag] = useState(null);
+  const [weekly, setWeekly] = useState(null);
+  const [addForm, setAddForm] = useState(null); // {name,width,length} | null
+  const [line, setLine] = useState(null);
+  const [omni, setOmni] = useState(null);
   const mapRef = useRef(null);
 
   const load = useCallback(async () => {
-    const [o, s, l, f] = await Promise.all([
-      enterpriseApi.overview(), enterpriseApi.sites(), enterpriseApi.leaderboard(), enterpriseApi.fleetAdvice(),
+    const [o, s, l, f, w, ln, om] = await Promise.all([
+      enterpriseApi.overview(), enterpriseApi.sites(), enterpriseApi.leaderboard(), enterpriseApi.fleetAdvice(), enterpriseApi.weeklyChallenge(), enterpriseApi.lineStatus(24, 70), enterpriseApi.omni(),
     ]);
-    setOv(o); setSites(s.sites || []); setLb(l.global_leaderboard || []); setFleet(f.fleet_recommendations || []);
+    setOv(o); setSites(s.sites || []); setLb(l.global_leaderboard || []); setFleet(f.fleet_recommendations || []); setWeekly(w); setLine(ln); setOmni(om);
   }, []);
   useEffect(() => { load(); }, [load]);
+
+  const createSite = async () => {
+    if (!addForm?.name?.trim()) return;
+    await enterpriseApi.addSite(addForm.name).catch(() => {});
+    setAddForm(null);
+    toast.success(tri("Sede creata", "Standort erstellt", "Site created", "Sede creada", "Site créé", "شعبه ایجاد شد"));
+    load();
+  };
 
   const openSite = async (site) => {
     setSel(site);
@@ -84,8 +96,46 @@ export default function EnterpriseGrid({ onClose }) {
           </div>
         )}
 
+        {/* Omni-Intelligence: benchmarking cross-sede + strategie */}
+        {omni && (
+          <div data-testid="enterprise-omni" className="rounded-2xl border border-[#a855f7]/40 p-3 mb-4" style={{ background: "linear-gradient(135deg,#a855f718,transparent)" }}>
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#c084fc] flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("BakoMix Omni-Intelligence", "Omni-Intelligenz", "Omni-Intelligence", "Omni-Inteligencia", "Omni-Intelligence", "هوش کل‌نگر")}</p>
+            <div className="flex items-center justify-between mt-1.5 text-[12px]">
+              <span className="text-[#22c55e]">▲ {omni.top_site?.name} {omni.top_site?.avg_score}%</span>
+              <span className="text-[#f59e0b]">▼ {omni.struggling_site?.name} {omni.struggling_site?.avg_score}%</span>
+            </div>
+            {(omni.cross_site_strategies || []).map((s, i) => (
+              <p key={i} data-testid={`enterprise-omni-strat-${i}`} className="text-[11px] text-[#cfe0ec] mt-1.5">💡 {s.strategy}</p>
+            ))}
+          </div>
+        )}
+
+        {/* Sfida Aura settimanale tra le sedi */}
+        {weekly && weekly.ranking && (
+          <div data-testid="enterprise-weekly" className="rounded-2xl border border-[#f59e0b]/40 p-3 mb-4" style={{ background: "linear-gradient(135deg,#f59e0b18,transparent)" }}>
+            <div className="flex items-center justify-between">
+              <p className="text-[11px] font-black uppercase tracking-widest text-[#f59e0b] flex items-center gap-1.5"><Trophy className="w-4 h-4" /> {tri("Sfida Aura · Settimana", "Aura-Challenge · Woche", "Aura Challenge · Week", "Reto Aura · Semana", "Défi Aura · Semaine", "چالش هاله · هفته")} {weekly.week}</p>
+              <span className="text-[10px] text-[#94A3B8]">{weekly.days_remaining}g</span>
+            </div>
+            {weekly.leader && <p className="text-[12px] text-white mt-1">👑 <b className="text-[#f59e0b]">{weekly.leader.name}</b> — {weekly.leader.avg_score}%</p>}
+            <p className="text-[10px] text-[#94A3B8] mt-1">{weekly.prize}</p>
+          </div>
+        )}
+
         {/* Sites */}
-        <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-2 flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {tri("Sedi della rete", "Netz-Standorte", "Network sites", "Sedes", "Sites du réseau", "شعبه‌های شبکه")}</p>
+        <div className="flex items-center justify-between mb-2">
+          <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {tri("Sedi della rete", "Netz-Standorte", "Network sites", "Sedes", "Sites du réseau", "شعبه‌های شبکه")}</p>
+          <button data-testid="enterprise-add-site" onClick={() => setAddForm({ name: "", width: 10, length: 12 })} className="text-[11px] font-bold text-[#5EEAD4]">+ {tri("Aggiungi sede", "Standort", "Add site", "Añadir", "Ajouter", "افزودن")}</button>
+        </div>
+        {addForm && (
+          <div data-testid="enterprise-add-form" className="rounded-2xl bg-[#0b0f19] border border-[#5EEAD4]/40 p-3 mb-3 space-y-2">
+            <input data-testid="enterprise-site-name" value={addForm.name} onChange={(e) => setAddForm({ ...addForm, name: e.target.value })} placeholder={tri("Nome filiale", "Filialname", "Branch name", "Nombre", "Nom", "نام شعبه")} className="w-full bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-2 text-sm text-white outline-none focus:border-[#5EEAD4]" />
+            <div className="flex gap-2">
+              <button data-testid="enterprise-site-create" onClick={createSite} className="flex-1 py-2 rounded-lg bg-[#5EEAD4] text-[#030712] font-black text-xs">{tri("Crea", "Erstellen", "Create", "Crear", "Créer", "ایجاد")}</button>
+              <button onClick={() => setAddForm(null)} className="px-3 py-2 rounded-lg bg-[#030712] border border-[#1e293b] text-[#94A3B8] text-xs">{tri("Annulla", "Abbr.", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
+            </div>
+          </div>
+        )}
         <div className="grid sm:grid-cols-2 gap-2 mb-5">
           {sites.map((s) => (
             <button key={s.site_id} data-testid={`enterprise-site-${s.site_id}`} onClick={() => openSite(s)} className="text-left rounded-2xl bg-[#0b0f19] border p-3 active:scale-[0.99] transition-transform" style={{ borderColor: `${s.aura.color}55` }}>
@@ -126,6 +176,26 @@ export default function EnterpriseGrid({ onClose }) {
               ))}
             </div>
             <p className="text-[10px] text-[#64748B] mt-1">{tri("Trascina i macchinari: BakoMix ricalcola il risparmio.", "Geräte ziehen: BakoMix rechnet die Ersparnis.", "Drag equipment: BakoMix recomputes savings.", "Arrastra máquinas: BakoMix recalcula.", "Glisse les machines : BakoMix recalcule.", "دستگاه‌ها را بکش: BakoMix صرفه‌جویی را حساب می‌کند.")}</p>
+          </div>
+        )}
+
+        {/* Linea di produzione a 6 settori con handoff */}
+        {line && line.sectors && line.sectors.length > 0 && (
+          <div data-testid="enterprise-line" className="rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-3 mb-5">
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#5EEAD4] mb-2">{tri("Linea di produzione", "Produktionslinie", "Production line", "Línea de producción", "Ligne de production", "خط تولید")} · {line.gluten}</p>
+            <div className="space-y-1.5">
+              {line.sectors.map((s, i) => (
+                <div key={s.id} data-testid={`enterprise-sector-${s.id}`} className="flex items-center gap-2 rounded-xl bg-[#030712] border border-[#1e293b] p-2">
+                  <span className="w-5 h-5 rounded-full bg-[#0f172a] text-[#5EEAD4] text-[10px] font-black flex items-center justify-center shrink-0">{i + 1}</span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[12px] font-black text-white truncate">{s.name}</p>
+                    <p className="text-[10px] text-[#5EEAD4]">{s.param}</p>
+                    <p className="text-[10px] text-[#64748B]">→ {s.handoff}</p>
+                  </div>
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: s.status === "optimal" ? "#22c55e" : "#5EEAD4" }} />
+                </div>
+              ))}
+            </div>
           </div>
         )}
 

@@ -1,0 +1,32 @@
+{
+  "summary": "Iteration 183 Dual-Mode Protocol testing. 10/10 backend tests PASSED (recipe-audit sovereign matrix incl. 401 anon + recipe_id path, production/line-status 6 sectors with gluten forte/medio/delicato, omni-intelligence with top=Stoccarda + struggling=Monaco + transfer strategy, weekly-challenge with sorted ranking + leader + prize, guided add-site create/verify/delete + 401 anon, regression /lab/pulse mood sereno). Frontend Playwright at 390px: Capo (admin@mikilab.de) FAB bakomix-sense-fab opens sense panel; bakomix-audit-btn opens recipe-audit modal with 40 picks, selecting a recipe renders critique + 3-option sovereign matrix (audit-approve/modify/reject) with recommended highlight; bakomix-enterprise-btn opens enterprise-grid with enterprise-omni + enterprise-weekly + enterprise-line + all 6 enterprise-sector-* rows (dosaggio/autolisi/formatura/fermo/cottura/abbattimento) + enterprise-add-site button. enterprise-add-form + create flow adds 'QA Sede' card (verified in DOM, then cleaned up via DELETE 200). No horizontal overflow at 390px (scrollWidth-clientWidth=0).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter183_dualmode.py",
+    "/app/test_reports/pytest/iter183.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is 10,506 lines — should be split into feature routers (recipes, enterprise, lab, production, auth) for maintainability.",
+    "Recipe audit heuristic uses substring match on ingredient names in Italian/EN/DE only; recipes seeded with different naming (e.g. 'Anima Integrale' had no matched flour) fall back to n/d and always return 'approve' — consider fuzzier normalization or a `type` field on ingredients.",
+    "Dual-mode floor silence for SequenceGuard was not exercised e2e (requires seeded out-of-order batches on shift_state); code inspection confirms non-blocking banner + no TTS invocation in start() branch when allowed=false — looks correct."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter183_dualmode.py"
+  ],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (login returns session_token, not access_token)",
+  "seed_data_creation": "Created & deleted TEST_Berlino_i183 site during backend test; created & deleted 'QA Sede' via frontend flow (cleaned up).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Auth token key is 'session_token'. FAB flow: set localStorage bypass keys, POST /api/auth/login, store token+user in localStorage, reload, click 'Open' on hub to enter MikiLab (Michele), then FAB bakomix-sense-fab appears. Enterprise grid & Recipe Audit both work at mobile 390px. Sequence dual-mode silence not directly e2e tested (needs seed batches).",
+  "rca of the issue": "N/A — no bugs identified in this iteration."
+}
