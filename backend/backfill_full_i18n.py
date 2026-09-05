@@ -1,3 +1,12 @@
+# ============================================================================
+#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+#  Unico proprietario legale: il Master. Sole legal owner: the Master.
+#  Codice riservato: vietata copia, distribuzione, reverse engineering o
+#  cloning non autorizzati. Unauthorized copying, distribution, reverse
+#  engineering or cloning is strictly prohibited and actively tracked by
+#  the BakoMix AI Security Guardian.
+# ============================================================================
 """Backfill COMPLETO i18n ricette MikiLab:
   Fase 1: traduce i nomi degli INGREDIENTI EXTRA (unici) in de/en/es/fr/fa e li riscrive
           in ogni ricetta come name_de/name_en/name_es/name_fr/name_fa.

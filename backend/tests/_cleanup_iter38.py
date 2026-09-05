@@ -1,3 +1,12 @@
+# ============================================================================
+#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+#  Unico proprietario legale: il Master. Sole legal owner: the Master.
+#  Codice riservato: vietata copia, distribuzione, reverse engineering o
+#  cloning non autorizzati. Unauthorized copying, distribution, reverse
+#  engineering or cloning is strictly prohibited and actively tracked by
+#  the BakoMix AI Security Guardian.
+# ============================================================================
 import requests, os
 from dotenv import dotenv_values
 API = (os.environ.get("REACT_APP_BACKEND_URL") or dotenv_values("/app/frontend/.env")["REACT_APP_BACKEND_URL"]).rstrip("/") + "/api"

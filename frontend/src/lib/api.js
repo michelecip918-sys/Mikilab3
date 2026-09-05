@@ -575,6 +575,22 @@ export const antifoolApi = {
   verify: (challenge_id, transcript) => api.post(`/antifool/verify`, { challenge_id, transcript }).then((r) => r.data),
 };
 
+// BakoMix Security Guardian (IP & integrità attiva).
+export const securityApi = {
+  report: (event, detail, path) => api.post(`/security/guardian`, { event, detail, path }).then((r) => r.data).catch(() => null),
+  ownership: (lang) => api.get(`/security/ownership`, { params: { lang } }).then((r) => r.data),
+  status: () => api.get(`/security/status`).then((r) => r.data),
+};
+
+// Compliance legale tedesca (ArbZG · DGUV · GDPR/DSGVO).
+export const complianceApi = {
+  clock: (worker, action) => api.post(`/compliance/timeclock`, { worker, action }).then((r) => r.data).catch(() => null),
+  timelog: (worker, day) => api.get(`/compliance/timelog`, { params: { worker, day } }).then((r) => r.data),
+  safety: () => api.get(`/compliance/safety`).then((r) => r.data),
+  ack: (worker, doc_id) => api.post(`/compliance/safety/ack`, { worker, doc_id }).then((r) => r.data),
+  privacy: (lang) => api.get(`/compliance/privacy`, { params: { lang } }).then((r) => r.data),
+};
+
 export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };

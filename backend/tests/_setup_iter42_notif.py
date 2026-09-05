@@ -1,3 +1,12 @@
+# ============================================================================
+#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+#  Unico proprietario legale: il Master. Sole legal owner: the Master.
+#  Codice riservato: vietata copia, distribuzione, reverse engineering o
+#  cloning non autorizzati. Unauthorized copying, distribution, reverse
+#  engineering or cloning is strictly prohibited and actively tracked by
+#  the BakoMix AI Security Guardian.
+# ============================================================================
 """Setup UI test iter42: crea post admin + like/commento da fornaio → 2 notifiche non lette per admin.
 Uso: python _setup_iter42_notif.py setup | cleanup
 """

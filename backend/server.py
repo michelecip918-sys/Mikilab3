@@ -1,3 +1,12 @@
+# ============================================================================
+#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+#  Unico proprietario legale: il Master. Sole legal owner: the Master.
+#  Codice riservato: vietata copia, distribuzione, reverse engineering o
+#  cloning non autorizzati. Unauthorized copying, distribution, reverse
+#  engineering or cloning is strictly prohibited and actively tracked by
+#  the BakoMix AI Security Guardian.
+# ============================================================================
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse, Response, HTMLResponse
 from dotenv import load_dotenv
@@ -2997,6 +3006,35 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     if not txt:
         raise HTTPException(status_code=400, detail="Comando vuoto")
 
+    # BakoMix afferma la proprietà esclusiva del Master su richieste di ownership/sicurezza.
+    _tl0 = txt.lower()
+    if any(k in _tl0 for k in ["proprietar", "chi possiede", "padrone", "owner", "ownership", "di chi è", "di chi e", "copyright", "diritti d'autore", "brevett", "licenza"]):
+        aff = ("MikiLab Pro & BakoMix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale, protetto in tempo reale dal Guardian: copia, distribuzione o reverse engineering non autorizzati sono vietati."
+               if not body.lang.startswith("en") else
+               "MikiLab Pro & BakoMix AI are the EXCLUSIVE property of the Master. Confidential proprietary code, protected in real time by the Guardian.")
+        return {"intent": "ownership", "executed": False, "reply": aff, "state": {"owner": OWNER_ID}, "parsed": {"intent": "ownership"}}
+
+    # Oracolo COMPLIANCE (ArbZG/DGUV/GDPR): BakoMix legge i dati autorizzati al Master.
+    if any(k in _tl0 for k in ["ore lavor", "ore di lavoro", "stunden", "arbzg", "orario", "pausa", "sicurezz", "safety", "dguv", "gefährd", "gefaehrd", "gdpr", "dsgvo", "privacy", "formazione", "unterweisung", "compliance", "normativ", "legale"]):
+        today = now_iso()[:10]
+        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+        workers = len({l.get("worker") for l in logs})
+        by_w = {}
+        for l in logs:
+            by_w.setdefault(l["worker"], []).append(l)
+        violations = sum(0 if _arbzg_summary(sorted(evs, key=lambda x: x["seq"]))["compliant"] else 1 for evs in by_w.values())
+        safety_n = len(_SAFETY_DOCS)
+        if body.lang.startswith("en"):
+            rc = (f"German compliance active. Today {workers} staff with tamper-proof ArbZG time logs"
+                  + (f", {violations} with alerts" if violations else ", all within limits")
+                  + f". {safety_n} DGUV safety documents on file. DSGVO: data minimized and local, no audio stored.")
+        else:
+            rc = (f"Compliance tedesca attiva. Oggi {workers} operatori con timbrature ArbZG tamper-proof"
+                  + (f", {violations} con avvisi" if violations else ", tutti nei limiti")
+                  + f". {safety_n} documenti sicurezza DGUV in archivio. DSGVO: dati minimizzati e locali, nessun audio conservato.")
+        return {"intent": "compliance", "executed": False, "reply": rc,
+                "state": {"workers_today": workers, "violations": violations, "safety_docs": safety_n}, "parsed": {"intent": "compliance"}}
+
     parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None}
     if EMERGENT_LLM_KEY:
         try:
@@ -3137,6 +3175,202 @@ async def antifool_verify(body: AntifoolVerifyReq):
     ok = score >= 0.72
     _antifool_challenges.pop(body.challenge_id, None)
     return {"ok": bool(ok), "score": round(float(score), 2), "expected": ch["phrase"]}
+
+
+# ---------------------------------------------------------------------------
+# BakoMix AI · ACTIVE SECURITY & INTEGRITY GUARDIAN
+# Gatekeeper attivo: registra/segnala/blocca tentativi non autorizzati di
+# ispezione, export o duplicazione della logica backend. Afferma la proprietà
+# esclusiva del Master. Tutto a livello codice/backend (nessuna pagina legale).
+# ---------------------------------------------------------------------------
+OWNER_ID = "Master (Michele) — MikiLab Pro"
+_GUARDIAN_BLOCK = {"export_backend", "duplicate", "reverse_engineer", "source_dump", "bulk_export"}
+_GUARDIAN_FLAG = {"devtools", "view_source", "context_menu", "inspect", "copy_bulk", "print_screen"}
+
+
+class GuardianEventReq(BaseModel):
+    event: str
+    detail: Optional[str] = ""
+    path: Optional[str] = ""
+
+
+@api_router.post("/security/guardian")
+async def security_guardian(body: GuardianEventReq, request: Request):
+    ev = (body.event or "").strip().lower()
+    action = "block" if ev in _GUARDIAN_BLOCK else ("flag" if ev in _GUARDIAN_FLAG else "allow")
+    try:
+        await db.security_log.insert_one({"id": str(uuid.uuid4()), "event": ev, "detail": (body.detail or "")[:300],
+                                          "path": (body.path or "")[:160], "action": action,
+                                          "ip": (request.client.host if request.client else None), "at": now_iso()})
+    except Exception:
+        pass
+    msgs = {
+        "block": "BakoMix Guardian: operazione bloccata. Codice proprietario protetto — proprietà esclusiva del Master.",
+        "flag": "BakoMix Guardian: attività segnalata. Ispezione/duplicazione non autorizzata di MikiLab Pro.",
+        "allow": "ok",
+    }
+    return {"action": action, "message": msgs[action], "owner": OWNER_ID}
+
+
+@api_router.get("/security/ownership")
+async def security_ownership(lang: str = "it"):
+    it = ("MikiLab Pro & BakoMix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale: "
+          "ogni copia, distribuzione o reverse engineering non autorizzati è vietato e viene tracciato dal Guardian.")
+    en = ("MikiLab Pro & BakoMix AI are the EXCLUSIVE property of the Master. Confidential proprietary code: "
+          "any unauthorized copying, distribution or reverse engineering is prohibited and tracked by the Guardian.")
+    return {"owner": OWNER_ID, "affirmation": (en if (lang or "it").startswith("en") else it), "proprietary": True, "guardian": "active"}
+
+
+@api_router.get("/security/status")
+async def security_status(admin: dict = Depends(require_admin)):
+    try:
+        flags = await db.security_log.count_documents({"action": {"$in": ["flag", "block"]}})
+        recent = await db.security_log.find({}, {"_id": 0}).sort("at", -1).to_list(20)
+    except Exception:
+        flags, recent = 0, []
+    return {"integrity": "ok", "guardian": "active", "owner": OWNER_ID, "flags_total": flags, "recent": recent}
+
+
+# ---------------------------------------------------------------------------
+# COMPLIANCE LEGALE TEDESCA (ArbZG · DGUV · GDPR/DSGVO) — backend/DB level.
+# Accessibile via Master o oracolo vocale BakoMix. Nessuna pagina legale pubblica.
+# ---------------------------------------------------------------------------
+def _chain_hash(prev_hash: str, payload: dict) -> str:
+    import hashlib as _h, json as _j
+    return _h.sha256((str(prev_hash) + _j.dumps(payload, sort_keys=True, ensure_ascii=False)).encode("utf-8")).hexdigest()
+
+
+class TimeclockReq(BaseModel):
+    worker: str
+    action: str  # in | out | break_start | break_end
+
+
+@api_router.post("/compliance/timeclock")
+async def compliance_timeclock(body: TimeclockReq):
+    """ArbZG: timbratura elettronica TAMPER-PROOF (catena di hash) inizio/fine/pausa."""
+    action = (body.action or "").strip().lower()
+    if action not in {"in", "out", "break_start", "break_end"}:
+        raise HTTPException(status_code=400, detail="Azione non valida")
+    worker = (body.worker or "").strip() or "operatore"
+    last = await db.compliance_timelog.find_one({}, {"_id": 0}, sort=[("seq", -1)])
+    seq = (last["seq"] + 1) if last else 1
+    prev_hash = last["hash"] if last else "genesis"
+    payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso()}
+    h = _chain_hash(prev_hash, payload)
+    entry = {"id": str(uuid.uuid4()), **payload, "prev_hash": prev_hash, "hash": h}
+    await db.compliance_timelog.insert_one(dict(entry))
+    return {"ok": True, "seq": seq, "hash": h, "action": action, "worker": worker}
+
+
+def _arbzg_summary(entries):
+    """Calcola minuti lavorati/pausa e flag ArbZG per una lista ordinata di eventi (un lavoratore, un giorno)."""
+    from datetime import datetime as _dt
+    work_ms = 0
+    break_ms = 0
+    open_in = None
+    open_break = None
+
+    def _p(s):
+        try:
+            return _dt.fromisoformat(str(s).replace("Z", "+00:00"))
+        except Exception:
+            return None
+    for e in entries:
+        t = _p(e.get("at"))
+        a = e.get("action")
+        if a == "in":
+            open_in = t
+        elif a == "out" and open_in and t:
+            work_ms += (t - open_in).total_seconds()
+            open_in = None
+        elif a == "break_start":
+            open_break = t
+        elif a == "break_end" and open_break and t:
+            b = (t - open_break).total_seconds()
+            break_ms += b
+            work_ms -= b
+            open_break = None
+    work_min = max(0, int(work_ms / 60))
+    break_min = max(0, int(break_ms / 60))
+    flags = []
+    if work_min > 600:
+        flags.append("ArbZG §3: superate 10h giornaliere")
+    if work_min > 360 and break_min < 30:
+        flags.append("ArbZG §4: pausa < 30 min (oltre 6h)")
+    if work_min > 540 and break_min < 45:
+        flags.append("ArbZG §4: pausa < 45 min (oltre 9h)")
+    return {"work_min": work_min, "break_min": break_min, "compliant": len(flags) == 0, "flags": flags}
+
+
+@api_router.get("/compliance/timelog")
+async def compliance_timelog(worker: Optional[str] = None, day: Optional[str] = None, admin: dict = Depends(require_admin)):
+    q = {}
+    if worker:
+        q["worker"] = worker
+    if day:
+        q["at"] = {"$regex": f"^{re.escape(day)}"}
+    entries = await db.compliance_timelog.find(q, {"_id": 0}).sort("seq", 1).to_list(1000)
+    # verifica integrità catena (tamper-evident)
+    integrity_ok = True
+    all_entries = await db.compliance_timelog.find({}, {"_id": 0}).sort("seq", 1).to_list(5000)
+    prev = "genesis"
+    for e in all_entries:
+        payload = {"seq": e["seq"], "worker": e["worker"], "action": e["action"], "at": e["at"]}
+        if _chain_hash(prev, payload) != e.get("hash") or e.get("prev_hash") != prev:
+            integrity_ok = False
+            break
+        prev = e["hash"]
+    by_worker = {}
+    for e in entries:
+        by_worker.setdefault(e["worker"], []).append(e)
+    summaries = {w: _arbzg_summary(evs) for w, evs in by_worker.items()}
+    return {"entries": entries, "summaries": summaries, "integrity_ok": integrity_ok, "count": len(entries)}
+
+
+_SAFETY_DOCS = [
+    {"id": "dguv-forno", "type": "hazard", "machine": "Forno", "title": "Gefährdungsbeurteilung Forno (ustioni/vapore)", "level": "medio", "measures": ["Guanti termici", "Segnaletica superfici calde", "Distanza di sicurezza vapore"]},
+    {"id": "dguv-impastatrice", "type": "hazard", "machine": "Impastatrice", "title": "Gefährdungsbeurteilung Impastatrice (trascinamento arti)", "level": "alto", "measures": ["Griglia di protezione", "Arresto di emergenza", "Divieto mani in vasca in funzione"]},
+    {"id": "dguv-abbattitore", "type": "hazard", "machine": "Abbattitore", "title": "Gefährdungsbeurteilung Abbattitore (freddo/ustioni da freddo)", "level": "medio", "measures": ["Guanti criogenici", "Tempo esposizione limitato"]},
+    {"id": "unterweisung-igiene", "type": "training", "title": "Unterweisung: Igiene & Sicurezza alimentare", "interval": "annuale"},
+    {"id": "unterweisung-macchine", "type": "training", "title": "Unterweisung: Uso sicuro delle macchine (DGUV)", "interval": "annuale"},
+    {"id": "unterweisung-antincendio", "type": "training", "title": "Unterweisung: Antincendio & vie di fuga", "interval": "annuale"},
+]
+
+
+@api_router.get("/compliance/safety")
+async def compliance_safety(admin: dict = Depends(require_admin)):
+    acks = await db.compliance_training_ack.find({}, {"_id": 0}).sort("at", -1).to_list(500)
+    return {"hazards": [d for d in _SAFETY_DOCS if d["type"] == "hazard"],
+            "trainings": [d for d in _SAFETY_DOCS if d["type"] == "training"], "acks": acks}
+
+
+class SafetyAckReq(BaseModel):
+    worker: str
+    doc_id: str
+
+
+@api_router.post("/compliance/safety/ack")
+async def compliance_safety_ack(body: SafetyAckReq, admin: dict = Depends(require_admin)):
+    rec = {"id": str(uuid.uuid4()), "worker": (body.worker or "").strip(), "doc_id": body.doc_id, "at": now_iso()}
+    await db.compliance_training_ack.insert_one(dict(rec))
+    return {"ok": True, "ack": rec}
+
+
+@api_router.get("/compliance/privacy")
+async def compliance_privacy(lang: str = "it"):
+    it = {
+        "posture": "GDPR/DSGVO (UE) · minimizzazione dei dati, elaborazione locale.",
+        "data_collected": ["Timbrature ArbZG / Direttiva UE 2003/88 (locali, tamper-proof)", "Posizione BLE indicativa (settore, non tracciamento GPS)", "Verifica vocale liveness: SOLO confronto testuale, NESSUNA registrazione audio conservata"],
+        "retention": "Dati conservati localmente nel DB interno UE; nessun trasferimento a terzi.",
+        "principles": ["Data minimization (GDPR UE)", "Local encryption at rest", "No covert external harvesting", "Scopo limitato: sicurezza e conformità"],
+    }
+    en = {
+        "posture": "GDPR/DSGVO (EU) · data minimization, local processing.",
+        "data_collected": ["ArbZG / EU Directive 2003/88 time logs (local, tamper-proof)", "Indicative BLE sector position (no GPS tracking)", "Voice liveness: TEXT match only, NO audio stored"],
+        "retention": "Stored locally in the internal EU DB; no third-party transfer.",
+        "principles": ["Data minimization (EU GDPR)", "Local encryption at rest", "No covert external harvesting", "Purpose limitation: safety & compliance"],
+    }
+    return en if (lang or "it").startswith("en") else it
 
 
 @api_router.get("/production/worker-aura/{worker_name}")

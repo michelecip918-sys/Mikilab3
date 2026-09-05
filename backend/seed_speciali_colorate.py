@@ -1,3 +1,12 @@
+# ============================================================================
+#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+#  Unico proprietario legale: il Master. Sole legal owner: the Master.
+#  Codice riservato: vietata copia, distribuzione, reverse engineering o
+#  cloning non autorizzati. Unauthorized copying, distribution, reverse
+#  engineering or cloning is strictly prohibited and actively tracked by
+#  the BakoMix AI Security Guardian.
+# ============================================================================
 """Aggiunge al ricettario MikiLab cornetti bicolore/doppio gusto e pani colorati naturalmente,
 tutti col metodo INDIRETTO (biga/poolish + lievito madre) e procedimenti lunghi.
 Scrive nel seed JSON (persistente ai redeploy) e sincronizza il DB."""

@@ -4278,3 +4278,18 @@ Direttiva aggiornata "Master-Centric" (constraint ora "incrementally and safely"
 - P8 Riciclo impasti + Edge-Mesh / plant cloning via Master PIN.
 - Trigger "i" da estendere alle sezioni restanti (ora: Radar + Plancia Capo).
 
+
+---
+## v13.3 (2026-09-05) — IP Lock + Security Guardian + Compliance UE/DE + Selettore "Cerca la tua lingua"
+Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testate.
+- **IP Protection code-level**: header proprietario (© MikiLab Pro, Master unico proprietario, divieto copia/reverse) applicato a **120 file** core (backend .py + frontend App/index/CSS) via `_apply_ip_headers.py` (idempotente). Backend riparte pulito.
+- **BakoMix Security Guardian attivo**: `POST /api/security/guardian` (flag devtools/inspect, block export/duplicate/reverse), `GET /api/security/ownership` (afferma proprietà Master), `GET /api/security/status` (admin). Frontend `SecurityGuardian.jsx` globale: intercetta F12/Ctrl+Shift+I/Ctrl+U/tasto destro → toast + report (best-effort, onesto: il blocco totale devtools non è garantibile lato client).
+- **Compliance UE/DE**: `POST /api/compliance/timeclock` (ArbZG + Direttiva UE 2003/88, catena di hash TAMPER-PROOF), `GET /api/compliance/timelog` (admin, integrity_ok + summary ArbZG con flag §3/§4), `GET /api/compliance/safety` (DGUV: 3 Gefährdungsbeurteilung + 3 Unterweisung) + `/safety/ack`, `GET /api/compliance/privacy` (GDPR/DSGVO UE, data minimization, no audio conservato). Frontend `CompliancePanel.jsx` (card `lab-nav-compliance`, Master-only). Timbratura clock-in automatica alla verifica liveness sul Floor.
+- **BakoMix oracolo**: `/master/govern` risponde a query di ownership e compliance (ore ArbZG, DGUV, GDPR) via trigger "i".
+- **Selettore "Cerca la tua lingua"**: `LangSelector` riscritto come search/select universale — 6 lingue ATTIVE (it/de/en/es/fr/fa) + sezione "Coming soon (expandable)" (ar/tr/pt/pl/ro/ru/zh/hi/uk/nl) predisposta all'espansione globale; ricerca filtrante per nome/native/codice. Usato in hub, header e auth. Verificato via screenshot (filtro "fran"→Français).
+- Test: iteration_189.json → backend 16/16 PASS, frontend 100% verificabile (guardian toast+report, CompliancePanel, oracolo, nessuna regressione).
+### RESTA (dichiarato ONESTAMENTE — non completato):
+- **Audit traduzioni 100%**: l'app è ampiamente multilingua (tri/t su 6 lingue, testi legali tri'd) ma NON garantisco che ogni singola stringa hardcoded in ~200 componenti sia tradotta — è un lavoro esteso multi-sessione.
+- **PDF/schede tecniche multilingua**: i generatori PDF esistenti NON sono ancora tradotti in tutte le 6 lingue.
+- Termini legali tedeschi (Gefährdungsbeurteilung/Unterweisung) mantenuti in DE volutamente (terminologia normativa).
+

@@ -10,6 +10,7 @@ import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import OperatorAura from "@/components/OperatorAura";
 import HeadsetChannel from "@/components/HeadsetChannel";
 import LivenessGate from "@/components/LivenessGate";
+import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -112,7 +113,7 @@ export default function MohamedFloor() {
         </OperatorAura>
         <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
       </button>
-      {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); }} onCancel={() => setGate(false)} />}
+      {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
       <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
       <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Tocca: ti leggo i task del tuo ruolo dalla coda del Capo, passo-passo.", "Tippe: ich lese dir die Aufgaben deiner Rolle aus der Warteschlange des Chefs vor.", "Tap: I read your role's tasks from the Capo's queue, step by step.", "Toca: te leo las tareas de tu rol desde la cola del Capo.", "Touche : je te lis les tâches de ton rôle depuis la file du Capo.", "بزن: وظایف نقش‌ات را از صف کاپو می‌خوانم.")}</p>
       <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")} className="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#0b0f19] border border-[#3E9C93]/50 text-[#3E9C93] font-black text-sm active:scale-95 transition-all">

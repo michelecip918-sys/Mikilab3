@@ -1,3 +1,14 @@
+/*
+ * ============================================================================
+ *  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+ *  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
+ *  Unico proprietario legale: il Master. Sole legal owner: the Master.
+ *  Codice riservato: vietata copia, distribuzione, reverse engineering o
+ *  cloning non autorizzati. Unauthorized copying, distribution, reverse
+ *  engineering or cloning is strictly prohibited and actively tracked by
+ *  the BakoMix AI Security Guardian.
+ * ============================================================================
+ */
 import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
@@ -50,6 +61,8 @@ import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
 import PlantRadar from "@/components/PlantRadar";
 import BakoInfo from "@/components/BakoInfo";
+import SecurityGuardian from "@/components/SecurityGuardian";
+import CompliancePanel from "@/components/CompliancePanel";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 const PUB = process.env.PUBLIC_URL;
@@ -211,6 +224,7 @@ export default function App() {
 
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
+      <SecurityGuardian />
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
           {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
@@ -338,6 +352,7 @@ export default function App() {
                       <LabCard testid="lab-nav-ordini" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan al instante.", "L'IA régénère le plan à l'instant.", "هوش مصنوعی برنامه را فوری بازسازی می‌کند.")} onClick={() => setCurrentView("ordini")} accent />
                       <LabCard testid="lab-nav-pin" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN für die Produktion festlegen.", "Set the team PIN for production.", "Fija el PIN del equipo.", "Définis le PIN de l'équipe.", "پین تیم را تنظیم کن.")} onClick={() => setCurrentView("pinsetup")} />
                       <LabCard testid="lab-nav-radar" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega caposquadra.", "Live-Grundriss, Tracking und Teamleiter-Delegation.", "Live floor plan, tracking and line-leader delegation.", "Plano en vivo, rastreo y delegación.", "Plan live, suivi et délégation.", "پلان زنده، ردیابی و واگذاری.")} onClick={() => setCurrentView("radar")} accent />
+                      <LabCard testid="lab-nav-compliance" icon="⚖️" title={tri("Compliance UE/DE", "Compliance EU/DE", "EU/DE Compliance", "Compliance UE/DE", "Conformité UE/DE", "انطباق اتحادیه اروپا")} sub={tri("Orari (ArbZG/UE), sicurezza DGUV e privacy GDPR.", "Zeiten (ArbZG/EU), DGUV-Sicherheit und DSGVO.", "Hours (ArbZG/EU), DGUV safety and GDPR privacy.", "Horas (ArbZG/UE), seguridad DGUV y RGPD.", "Heures (ArbZG/UE), sécurité DGUV et RGPD.", "ساعات، ایمنی و حریم خصوصی.")} onClick={() => setCurrentView("compliance")} accent />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
                     {currentView === "ordine-capo" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdineCapo /></div>}
@@ -347,6 +362,7 @@ export default function App() {
                     {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
                     {currentView === "pinsetup" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PinSetup /></div>}
                     {currentView === "radar" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PlantRadar /></div>}
+                    {currentView === "compliance" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><CompliancePanel /></div>}
                   </div>
                   )
                 ) : (
