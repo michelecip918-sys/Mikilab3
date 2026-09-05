@@ -1,5 +1,6 @@
 import axios from "axios";
 import { cacheSet, cacheGet, isNetworkError } from "@/lib/offlineCache";
+import { idbSet, idbGet } from "@/lib/idbCache";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 export const API = `${BACKEND_URL}/api`;
@@ -24,14 +25,25 @@ export const productionPinApi = {
 };
 
 export const recipesApi = {
-  // Resiliente + OFFLINE-READY: online salva una copia locale; offline (errore di rete)
-  // restituisce l'ultima copia salvata così le ricette restano consultabili senza Wi-Fi.
-  list: (collection) => api.get(`/recipes`, { params: { collection_name: collection } })
-    .then((r) => { cacheSet(`recipes_${collection}`, r.data); return r.data; })
-    .catch((e) => {
-      if (isNetworkError(e)) { const c = cacheGet(`recipes_${collection}`); if (c) return c; }
+  // Resiliente + OFFLINE-READY: online salva l'archivio su IndexedDB (grande, affidabile)
+  // e una copia leggera su localStorage; offline restituisce la cache IndexedDB così le
+  // ricette restano 100% consultabili senza rete.
+  list: async (collection) => {
+    try {
+      const r = await api.get(`/recipes`, { params: { collection_name: collection } });
+      cacheSet(`recipes_${collection}`, r.data);      // best-effort (piccolo/veloce)
+      idbSet(`recipes_${collection}`, r.data);         // archivio completo (IndexedDB)
+      return r.data;
+    } catch (e) {
+      if (isNetworkError(e)) {
+        const fromIdb = await idbGet(`recipes_${collection}`);
+        if (fromIdb) return fromIdb;
+        const c = cacheGet(`recipes_${collection}`);
+        if (c) return c;
+      }
       return [];
-    }),
+    }
+  },
   create: (data) => api.post(`/recipes`, data).then((r) => r.data),
   update: (id, data) => api.put(`/recipes/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/recipes/${id}`).then((r) => r.data),
