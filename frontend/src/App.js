@@ -151,6 +151,14 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) { setAuthOpen(false); try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } } }, [user, setAuthOpen]);
 
+  // GHOST MODE: link d'invito (?invite=) → apre direttamente la registrazione gated.
+  useEffect(() => {
+    try {
+      const inv = new URLSearchParams(window.location.search).get("invite");
+      if (inv && !user) { setAuthMode("register"); setAuthOpen(true); }
+    } catch { /* */ }
+  }, [user, setAuthOpen]);
+
   if (authOpen && !user && !resetToken) return <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
   if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
   if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => { try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } setScreen("hub"); }} onRegister={() => { setAuthMode("register"); setAuthOpen(true); }} />;
@@ -188,8 +196,8 @@ export default function App() {
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
           {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
-          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.3 }} />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/75 via-[#030712]/85 to-[#030712]/95" />
+          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.6 }} />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/45 via-[#030712]/60 to-[#030712]/85" />
           {bgTheme === "mohamed" && (
             <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}26, transparent 60%)` }} />
           )}

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package } from "lucide-react";
-import { pulseApi, staffingApi, briefingApi } from "@/lib/api";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic } from "lucide-react";
+import { pulseApi, staffingApi, briefingApi, accessApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
 import { useLang } from "@/i18n/LanguageContext";
@@ -15,6 +15,7 @@ import ProductionPipeline from "@/components/ProductionPipeline";
 import SpatialVisionAR from "@/components/SpatialVisionAR";
 import ClimateTimeMachine from "@/components/ClimateTimeMachine";
 import ProductionInventory from "@/components/ProductionInventory";
+import VoiceDelegation from "@/components/VoiceDelegation";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -44,6 +45,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [visionOpen, setVisionOpen] = useState(false);
   const [climateOpen, setClimateOpen] = useState(false);
   const [inventoryOpen, setInventoryOpen] = useState(false);
+  const [delegateOpen, setDelegateOpen] = useState(false);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -153,6 +155,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     } catch { /* */ }
   };
 
+  const genAccessInvite = async () => {
+    try {
+      const r = await accessApi.createInvite(1, 30);
+      const link = `${window.location.origin}/?invite=${r.token}`;
+      try { await navigator.clipboard.writeText(link); } catch { /* */ }
+      toast.success(tri("Invito creato · link copiato", "Einladung erstellt · Link kopiert", "Invite created · link copied", "Invitación creada · enlace copiado", "Invitation créée · lien copié", "دعوت ساخته شد · لینک کپی شد"), { duration: 4000 });
+    } catch { toast.error(tri("Solo il Capo può creare inviti", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
+  };
+
   if (!active) return null;
   const mood = pulse?.mood || "sereno";
   const hb = pulse?.heartbeat || 52;
@@ -173,6 +184,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       {visionOpen && <SpatialVisionAR onClose={() => setVisionOpen(false)} />}
       {climateOpen && <ClimateTimeMachine onClose={() => setClimateOpen(false)} />}
       {inventoryOpen && <ProductionInventory onClose={() => setInventoryOpen(false)} />}
+      {delegateOpen && <VoiceDelegation onClose={() => setDelegateOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -321,6 +333,12 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 </div>
                 <button data-testid="bakomix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
                   <Package className="w-4 h-4" /> {tri("Inventario di Produzione (foto)", "Produktions-Inventar (Foto)", "Production Inventory (photo)", "Inventario de Producción (foto)", "Inventaire de Production (photo)", "موجودی تولید (عکس)")}
+                </button>
+                <button data-testid="bakomix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#14b8a6]/50 text-[#14b8a6] bg-[#14b8a612] active:scale-95 transition-transform">
+                  <Mic className="w-4 h-4" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation", "Voice Delegation", "Delegación por Voz", "Délégation Vocale", "واگذاری صوتی")}
+                </button>
+                <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#8b5cf6]/50 text-[#a78bfa] bg-[#8b5cf612] active:scale-95 transition-transform">
+                  <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}

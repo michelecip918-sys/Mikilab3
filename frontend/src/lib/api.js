@@ -517,6 +517,20 @@ export const climateApi = {
   timeMachine: (body) => api.post(`/climate/time-machine`, body).then((r) => r.data),
 };
 
+export const accessApi = {
+  createInvite: (max_uses = 1, days = 30, note = "") => api.post(`/access/invites`, { max_uses, days, note }).then((r) => r.data),
+  listInvites: () => api.get(`/access/invites`).then((r) => r.data),
+  revokeInvite: (token) => api.post(`/access/invites/${encodeURIComponent(token)}/revoke`).then((r) => r.data),
+};
+
+export const delegationApi = {
+  parse: (transcript, lang) => api.post(`/delegation/parse`, { transcript, lang }).then((r) => r.data),
+  confirm: (proposal) => api.post(`/delegation/confirm`, { proposal }).then((r) => r.data),
+  tasks: () => api.get(`/delegation/tasks`).then((r) => r.data),
+  stepDone: (task_id, order, operator = "") => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }).then((r) => r.data),
+  close: (task_id) => api.post(`/delegation/tasks/${task_id}/close`).then((r) => r.data),
+};
+
 // Dual-Mode STRATEGIC — audit ricetta del Master Baker + matrice sovrana.
 export const recipeAuditApi = {
   audit: (payload) => api.post(`/lab/recipe-audit`, payload).then((r) => r.data),

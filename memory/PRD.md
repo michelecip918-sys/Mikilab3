@@ -4120,3 +4120,25 @@ Direttiva "airtight-closure" punto #5. Costruito SOPRA il magazzino esistente (l
 - Handoff audio automatico al cambio turno.
 - Proofer/freezer auto-calibranti sincronizzati con l'Aura/velocità operatore (anti over-proofing) + Batch Phoenix.
 - Pulizia/dedup repo: solo come attività separata e controllata (l'app è al 100%, no purga distruttiva).
+
+---
+## v-ghostmode (2026-06) — Accesso su invito + NoIndex (overlay sicurezza)
+Direttiva "secure-overlay". Nessun reset DB; overlay inviti sopra l'auth session-cookie esistente (consultato integration_expert).
+- **Ghost Mode / registrazione su invito**: `POST /api/auth/register` ora richiede `invite_token` valido (bypass per OWNER_EMAILS e primo utente). Consumo atomico race-safe via find_one_and_update ($inc used con used<max_uses + scadenza). Verificato: 403 senza invito, 200 con invito, 403 al riuso (single-use), binding used_by.
+- **Endpoint inviti (admin)**: `POST /api/access/invites` {max_uses,days,note} (secrets.token_urlsafe), `GET /api/access/invites`, `POST /api/access/invites/{token}/revoke`. Collezione `access_invites`.
+- **Frontend**: AuthScreen ora è login-only con messaggio "accesso privato su invito" (tab/link registrazione nascosti); con `?invite=<token>` mostra il form di registrazione + badge "Invito valido". App.js apre l'auth in registrazione quando c'è `?invite=`. Generazione inviti da BakoMix Capo panel (`bakomix-invite-btn`, copia link) e da AdminPanel (`admin-invite-gen` + lista/revoca). accessApi in lib/api.js.
+- **NoIndex/NoFollow**: `<meta robots noindex,nofollow>` in index.html + `public/robots.txt` (Disallow /).
+- Verificato e2e: gating backend + UI login/invite/generazione (toast "Invito creato · link copiato").
+### RESTA dalla direttiva (grandi feature multi-turno)
+- Eclipse: delega vocale squadre + Crisis Override; Checkpoint AR pulizia; Handoff audio cambio turno; Proofer/freezer auto-calibranti sincronizzati con l'Aura operatore; Batch Phoenix. PIN personali operatore per accountability ai checkpoint (Master PIN Sovrano già presente via AdminGate).
+
+---
+## v-delegation (2026-06) — Delega Vocale (Eclipse) + Task di Squadra
+Feature richiesta dall'utente. Conferma OBBLIGATORIA del Capo prima dell'invio al floor (scelta utente).
+- **`VoiceDelegation.jsx`** (modale Capo da BakoMix, `bakomix-delegate-btn`): microfono Web Speech API (fallback testo) → il Capo detta un ordine.
+- **`POST /api/delegation/parse`** (NUOVO, admin, Claude): traduce la frase in task di squadra {title, kind (sanificazione|regola|crisis_override|generico), priority, pacing/pacing_target, steps[{order,instruction,sub_role}]}. Il backend assegna gli operatori da `lab_shift_plan` (match competenza/posizione + Aura più alta, `_worker_pool`/`_match_worker`) e restituisce `pool` per riassegnazione manuale. NON cita HACCP/burocrazia (escluso nel prompt).
+- **`POST /api/delegation/confirm`** (admin): salva `team_tasks` status active; se crisis_override scrive `pacing_directive` in lab_shift_state.
+- **`GET /api/delegation/tasks`**, **`POST /.../step`** (avanza/completa step, operatore opz.), **`POST /.../close`**.
+- **`TeamTasks.jsx`** sul floor di Mohamed: pannello PASSIVO (Letz_Passive, nessun suono, polling 15s) con task attivi, step tap-to-done, badge Aura, banner ritmo per crisis override.
+- Verificato e2e: parse (7-8 step assegnati), confirm, tasks, step done; crisis override (pacing "priorita" target "Pane integrale"); UI proposta+conferma via screenshot.
+- Conferma vocale di BakoMix al Capo via TTS (solo modalità strategica).

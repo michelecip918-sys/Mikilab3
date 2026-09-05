@@ -9,7 +9,8 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
   const { setUser } = useAuth();
   const { lang, tri } = useLang();
   const de = lang === "de";
-  const [mode, setMode] = useState(initialMode);
+  const inviteToken = (() => { try { return new URLSearchParams(window.location.search).get("invite") || ""; } catch { return ""; } })();
+  const [mode, setMode] = useState(inviteToken ? "register" : initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -58,7 +59,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         return;
       }
       if (mode === "register") {
-        const r = await authApi.register({ email, password, name, origin_url: window.location.origin, lang });
+        const r = await authApi.register({ email, password, name, origin_url: window.location.origin, lang, invite_token: inviteToken });
         if (r?.needs_verification) {
           setNeedVerify(true);
           setInfo(r.message || tri("Controlla la tua email per attivare l'account.", "Prüfe deine E-Mail.", "Check your email to activate your account.", "Revisa tu correo para activar la cuenta."));
@@ -113,7 +114,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           <p className="text-sm text-[#7E8A93] mt-1">{T.sub} 🇮🇹 🇩🇪</p>
         </div>
 
-        {mode !== "forgot" && (
+        {mode !== "forgot" && inviteToken && (
           <div data-testid="auth-tabs" className="flex gap-1 mb-4 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1B2A38]">
             <button type="button" data-testid="auth-tab-login" onClick={() => { setMode("login"); setNeedVerify(false); setInfo(""); }}
               className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "login" ? "bg-white dark:bg-[#3E9C93] text-[#3E9C93] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
@@ -123,6 +124,17 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
               className={`flex-1 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-semibold transition-all ${mode === "register" ? "bg-white dark:bg-[#3E9C93] text-[#3E9C93] dark:text-white shadow-sm" : "text-[#7E8A93]"}`}>
               {T.register}
             </button>
+          </div>
+        )}
+
+        {mode === "register" && inviteToken && (
+          <div data-testid="auth-invite-badge" className="mb-4 rounded-2xl bg-[#3E9C93]/10 border border-[#3E9C93]/30 p-3 text-center text-[13px] text-[#3E9C93] font-semibold">
+            🔑 {tri("Invito valido · crea il tuo accesso", "Gültige Einladung · erstelle deinen Zugang", "Valid invite · create your access", "Invitación válida · crea tu acceso", "Invitation valide · crée ton accès", "دعوت معتبر · دسترسی‌ات را بساز")}
+          </div>
+        )}
+        {mode === "login" && !inviteToken && (
+          <div data-testid="auth-invite-only" className="mb-4 rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-3 text-center text-[12px] text-[#7E8A93]">
+            {tri("Accesso privato su invito. Registrazione solo tramite link del Capo.", "Privater Zugang auf Einladung. Registrierung nur per Chef-Link.", "Private invite-only access. Registration only via the Boss's link.", "Acceso privado por invitación. Registro solo con enlace del Jefe.", "Accès privé sur invitation. Inscription uniquement via le lien du Chef.", "دسترسی خصوصی با دعوت. ثبت‌نام فقط با لینک رئیس.")}
           </div>
         )}
 
@@ -212,7 +224,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
             className="w-full text-center text-sm text-[#3E9C93] font-medium mt-4">
             {T.back}
           </button>
-        ) : (
+        ) : (mode === "login" && !inviteToken) ? null : (
           <button data-testid="auth-switch" onClick={() => setMode(mode === "login" ? "register" : "login")}
             className="w-full text-center text-sm text-[#3E9C93] font-medium mt-4">
             {mode === "login" ? T.switch_r : T.switch_l}

@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
-import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2, Instagram, Facebook, FileText } from "lucide-react";
+import { Crown, Gift, Trash2, RefreshCw, MessageCircle, Image as ImageIcon, MessageSquareText, Save, Languages, CheckCircle2, AlertTriangle, Mail, Send, BarChart3, Music2, Instagram, Facebook, FileText, KeyRound, Copy } from "lucide-react";
 import { toast } from "sonner";
-import { adminApi, siteSettingsApi, recipesApi } from "@/lib/api";
+import { adminApi, siteSettingsApi, recipesApi, accessApi } from "@/lib/api";
 import { exportPlanPdf } from "@/lib/planPdf";
 import { siteInventoryMd } from "@/data/siteInventory";
 import { CATS, recipeCategory } from "@/lib/recipeCats";
@@ -35,6 +35,26 @@ export default function AdminPanel({ open, onOpenChange }) {
   const [busy, setBusy] = useState(false);
   const [shop, setShop] = useState({ enabled: false, waitlist_count: 0 });
   const [invBusy, setInvBusy] = useState(false);
+  const [invites, setInvites] = useState([]);
+  const [inviteBusy, setInviteBusy] = useState(false);
+  const loadInvites = useCallback(() => { accessApi.listInvites().then((r) => setInvites(r.invites || [])).catch(() => {}); }, []);
+  useEffect(() => { if (open) loadInvites(); }, [open, loadInvites]);
+  const genInvite = async () => {
+    setInviteBusy(true);
+    try {
+      const r = await accessApi.createInvite(1, 30);
+      const link = `${window.location.origin}/?invite=${r.token}`;
+      try { await navigator.clipboard.writeText(link); } catch { /* */ }
+      toast.success(de ? "Einladungslink kopiert" : "Link d'invito copiato");
+      loadInvites();
+    } catch { toast.error(de ? "Fehler" : "Errore"); }
+    setInviteBusy(false);
+  };
+  const copyInvite = async (token) => {
+    const link = `${window.location.origin}/?invite=${token}`;
+    try { await navigator.clipboard.writeText(link); toast.success(de ? "Kopiert" : "Copiato"); } catch { /* */ }
+  };
+  const revokeInvite = async (token) => { try { await accessApi.revokeInvite(token); loadInvites(); } catch { /* */ } };
   const downloadInventory = async () => {
     if (invBusy) return;
     setInvBusy(true);
@@ -307,6 +327,38 @@ export default function AdminPanel({ open, onOpenChange }) {
           >
             {de ? "PRO schenken" : "Regala PRO"}
           </button>
+        </div>
+
+        <div data-testid="admin-invites" className="rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 p-4 mt-2 space-y-3">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#a78bfa]">
+            <KeyRound className="w-4 h-4" /> {de ? "Zugang auf Einladung (Ghost Mode)" : "Accesso su invito (Ghost Mode)"}
+          </p>
+          <p className="text-[11px] text-[#7E8A93]">{de ? "Registrierung nur per Einladungslink. Generiere einen Link und teile ihn." : "Registrazione solo su invito. Genera un link e condividilo."}</p>
+          <button
+            data-testid="admin-invite-gen" onClick={genInvite} disabled={inviteBusy}
+            className="w-full bg-[#8b5cf6] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-[#8b5cf6]/40 active:scale-98 transition-all inline-flex items-center justify-center gap-2"
+          >
+            <KeyRound className="w-4 h-4" /> {de ? "Einladungslink erstellen + kopieren" : "Genera invito + copia link"}
+          </button>
+          <div className="space-y-1.5" data-testid="admin-invite-list">
+            {invites.length === 0 && <p className="text-[11px] text-[#7E8A93] text-center">{de ? "Noch keine Einladungen." : "Nessun invito ancora."}</p>}
+            {invites.map((inv) => {
+              const spent = inv.used >= inv.max_uses;
+              const dead = !inv.active || spent;
+              return (
+                <div key={inv.token} data-testid={`admin-invite-${inv.token}`} className="flex items-center justify-between gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] rounded-xl px-3 py-2">
+                  <div className="min-w-0">
+                    <p className={`text-[12px] font-mono-data truncate ${dead ? "text-[#64748B] line-through" : "text-[#e4eff8]"}`}>…{String(inv.token).slice(-8)}</p>
+                    <p className="text-[10px] text-[#7E8A93]">{inv.used}/{inv.max_uses} {de ? "verwendet" : "usati"}{!inv.active ? (de ? " · widerrufen" : " · revocato") : ""}</p>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    {!dead && <button data-testid={`admin-invite-copy-${inv.token}`} onClick={() => copyInvite(inv.token)} className="p-2 rounded-lg text-[#a78bfa] hover:bg-[#8b5cf6]/15"><Copy className="w-4 h-4" /></button>}
+                    {inv.active && <button data-testid={`admin-invite-revoke-${inv.token}`} onClick={() => revokeInvite(inv.token)} className="p-2 rounded-lg text-[#ef4444] hover:bg-[#ef4444]/15"><Trash2 className="w-4 h-4" /></button>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
 
         <div data-testid="admin-shop" className="rounded-2xl bg-[#3E9C93]/10 border border-[#3E9C93]/30 p-4 mt-2">

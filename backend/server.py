@@ -475,6 +475,7 @@ class RegisterReq(BaseModel):
     name: Optional[str] = ""
     origin_url: Optional[str] = None
     lang: Optional[str] = "it"
+    invite_token: Optional[str] = None
 
 
 class LoginReq(BaseModel):
@@ -577,6 +578,20 @@ def _public_user(u):
 
 async def _role_for_new_user():
     return "admin" if await db.users.count_documents({}) == 0 else "user"
+
+
+async def _consume_access_invite(token: str):
+    """Consuma in modo atomico un invito d'accesso valido (single/multi-uso). None se invalido."""
+    if not token:
+        return None
+    from pymongo import ReturnDocument
+    now = datetime.now(timezone.utc).isoformat()
+    return await db.access_invites.find_one_and_update(
+        {"token": token, "active": True, "expires_at": {"$gt": now}, "$expr": {"$lt": ["$used", "$max_uses"]}},
+        {"$inc": {"used": 1}, "$set": {"last_used_at": now}},
+        return_document=ReturnDocument.AFTER,
+    )
+
 
 
 async def current_user(request: Request):
@@ -850,6 +865,12 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
     _validate_password(payload.password, lang)
     if await db.users.find_one({"email": email}):
         raise HTTPException(status_code=400, detail="Email già registrata")
+    # GHOST MODE: registrazione SOLO su invito. Bypass per owner o primo utente (bootstrap).
+    _invite = None
+    if email not in OWNER_EMAILS and await db.users.count_documents({}) > 0:
+        _invite = await _consume_access_invite((payload.invite_token or "").strip())
+        if not _invite:
+            raise HTTPException(status_code=403, detail="invite_required")
     from pymongo.errors import DuplicateKeyError
     user_id = f"user_{uuid.uuid4().hex[:12]}"
     verify_enabled = False  # auto-login subito dopo la registrazione (nessuna conferma email obbligatoria)
@@ -862,6 +883,8 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
         })
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Email già registrata")
+    if _invite:
+        await db.access_invites.update_one({"token": _invite["token"]}, {"$push": {"used_by": email}})
     if verify_enabled:
         await _send_verification(email, payload.origin_url or "", lang)
         return {"needs_verification": True,
@@ -3775,6 +3798,185 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
 @api_router.get("/inventory/batch-links")
 async def inventory_batch_links(user: Optional[dict] = Depends(optional_user)):
     return await db.batch_links.find({}, {"_id": 0}).sort("at", -1).to_list(50)
+
+
+# ---------------------------------------------------------------------------
+# DELEGA VOCALE (Eclipse) — il Capo detta un ordine, BakoMix (Claude) lo traduce
+# in un task di squadra con sotto-step e propone gli operatori (competenza + Aura).
+# Richiede CONFERMA del Capo prima di comparire (silenzioso) sul floor.
+# ---------------------------------------------------------------------------
+async def _worker_pool():
+    """Operatori disponibili dal piano turni, dedup per nome, con posizione e aura."""
+    docs = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(300)
+    best = {}
+    for d in docs:
+        nm = (d.get("worker_name") or "").strip()
+        if not nm:
+            continue
+        sc = int(d.get("efficiency_score", 85))
+        if nm not in best or sc > best[nm]["score"]:
+            best[nm] = {"name": nm, "position": d.get("position") or "", "score": sc, "aura": _aura_for(sc)}
+    pool = sorted(best.values(), key=lambda x: x["score"], reverse=True)
+    return pool
+
+
+def _match_worker(sub_role, pool, used):
+    sr = (sub_role or "").lower().strip()
+    # 1) match per posizione/competenza tra chi non è ancora impegnato
+    for w in pool:
+        if w["name"] in used:
+            continue
+        pos = (w["position"] or "").lower()
+        if sr and pos and (sr in pos or pos in sr):
+            return w
+    # 2) primo libero con aura più alta
+    for w in pool:
+        if w["name"] not in used:
+            return w
+    # 3) round-robin se tutti già impegnati
+    return pool[0] if pool else None
+
+
+class DelegationParseReq(BaseModel):
+    transcript: str = Field(..., max_length=600)
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/delegation/parse")
+async def delegation_parse(body: DelegationParseReq, user: dict = Depends(require_admin)):
+    txt = (body.transcript or "").strip()
+    if not txt:
+        raise HTTPException(status_code=400, detail="Nessun comando")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="NLP non disponibile")
+    staff = await _staffing()
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"deleg-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei BakoMix, direttore di produzione. Il Capo detta un ordine a voce per il laboratorio (panificio industriale). "
+                "Traducilo in un TASK DI SQUADRA operativo. Tipi possibili: 'sanificazione' (pulizia attrezzature/carrelli), "
+                "'regola' (regola di supervisione), 'crisis_override' (comando di ritmo: rallenta/accelera/priorita'), 'generico'. "
+                "Se e' un crisis_override, indica in 'pacing' uno tra: 'rallenta','accelera','priorita','normale' e in 'pacing_target' l'eventuale prodotto/reparto. "
+                "Scomponi in sotto-step SEQUENZIALI concreti; per ognuno indica 'sub_role' (competenza/posizione ideale, es. Impastatore, Forni, Pulizie, Confezionamento). "
+                "NON citare MAI HACCP, moduli, documenti, burocrazia, registri o ufficio: solo azioni pratiche di produzione/pulizia. "
+                f"Rispondi SOLO con JSON valido nella lingua con codice '{body.lang}': "
+                '{"title":"titolo breve","kind":"sanificazione|regola|crisis_override|generico","priority":"alta|media|bassa",'
+                '"pacing":"rallenta|accelera|priorita|normale|","pacing_target":"","steps":[{"order":1,"instruction":"cosa fare","sub_role":"competenza"}]}'
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=900)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=f"Ordine del Capo: «{txt}». Operatori presenti oggi: {staff['present']}/{staff['total']}.")):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        parsed = json.loads(m.group(0)) if m else None
+    except Exception as e:
+        logging.warning(f"delegation_parse failed: {e}")
+        raise HTTPException(status_code=503, detail="NLP non disponibile")
+    if not parsed:
+        raise HTTPException(status_code=422, detail="Comando non compreso")
+
+    pool = await _worker_pool()
+    used, steps = [], []
+    for s in (parsed.get("steps") or [])[:12]:
+        w = _match_worker(s.get("sub_role"), pool, used)
+        if w:
+            used.append(w["name"])
+        steps.append({
+            "order": int(s.get("order") or (len(steps) + 1)),
+            "instruction": str(s.get("instruction") or ""),
+            "sub_role": str(s.get("sub_role") or ""),
+            "assignee": (w or {}).get("name"),
+            "assignee_position": (w or {}).get("position"),
+            "assignee_aura": (w or {}).get("aura"),
+            "done": False,
+        })
+    proposal = {
+        "title": str(parsed.get("title") or txt[:40]),
+        "kind": parsed.get("kind") if parsed.get("kind") in ("sanificazione", "regola", "crisis_override", "generico") else "generico",
+        "priority": parsed.get("priority") if parsed.get("priority") in ("alta", "media", "bassa") else "media",
+        "pacing": parsed.get("pacing") or "",
+        "pacing_target": parsed.get("pacing_target") or "",
+        "transcript": txt,
+        "steps": steps,
+        "staff": {"present": staff["present"], "total": staff["total"]},
+    }
+    pool_out = [{"name": w["name"], "position": w["position"], "aura": w["aura"]} for w in pool]
+    return {"status": "proposed", "proposal": proposal, "pool": pool_out}
+
+
+class DelegationConfirmReq(BaseModel):
+    proposal: dict
+
+
+@api_router.post("/delegation/confirm")
+async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(require_admin)):
+    p = body.proposal or {}
+    task = {
+        "id": str(uuid.uuid4()),
+        "title": str(p.get("title") or "Task")[:80],
+        "kind": p.get("kind") or "generico",
+        "priority": p.get("priority") or "media",
+        "pacing": p.get("pacing") or "",
+        "pacing_target": p.get("pacing_target") or "",
+        "transcript": p.get("transcript") or "",
+        "steps": p.get("steps") or [],
+        "status": "active",
+        "created_by": user.get("email"),
+        "created_at": now_iso(),
+    }
+    await db.team_tasks.insert_one(dict(task))
+    # Crisis override → registra la direttiva di ritmo nello stato turno (letto dal piano).
+    if task["kind"] == "crisis_override" and task["pacing"]:
+        await db.lab_shift_state.update_one(
+            {"_key": "default"},
+            {"$set": {"pacing_directive": {"pacing": task["pacing"], "target": task["pacing_target"], "at": now_iso()}}},
+            upsert=True,
+        )
+    return {"status": "success", "task": task,
+            "bakomix_insight": f"Task «{task['title']}» confermato e inviato al floor in silenzio."}
+
+
+@api_router.get("/delegation/tasks")
+async def delegation_tasks(user: Optional[dict] = Depends(optional_user)):
+    items = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return {"tasks": items}
+
+
+class StepDoneReq(BaseModel):
+    order: int
+    operator: Optional[str] = ""
+
+
+@api_router.post("/delegation/tasks/{task_id}/step")
+async def delegation_step_done(task_id: str, body: StepDoneReq, user: Optional[dict] = Depends(optional_user)):
+    t = await db.team_tasks.find_one({"id": task_id})
+    if not t:
+        raise HTTPException(status_code=404, detail="Task non trovato")
+    steps = t.get("steps") or []
+    for s in steps:
+        if int(s.get("order")) == int(body.order):
+            s["done"] = True
+            if body.operator:
+                s["done_by"] = body.operator[:40]
+            s["done_at"] = now_iso()
+    all_done = all(s.get("done") for s in steps) if steps else False
+    upd = {"steps": steps}
+    if all_done:
+        upd["status"] = "done"
+        upd["closed_at"] = now_iso()
+    await db.team_tasks.update_one({"id": task_id}, {"$set": upd})
+    return {"status": "success", "all_done": all_done, "steps": steps}
+
+
+@api_router.post("/delegation/tasks/{task_id}/close")
+async def delegation_close(task_id: str, user: dict = Depends(require_admin)):
+    await db.team_tasks.update_one({"id": task_id}, {"$set": {"status": "closed", "closed_at": now_iso()}})
+    return {"status": "success"}
+
 
 
 
@@ -9333,6 +9535,34 @@ async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user))
     except Exception:
         pass
     return {"ok": True, "label": label}
+
+
+class AccessInviteReq(BaseModel):
+    max_uses: int = Field(1, ge=1, le=500)
+    days: int = Field(30, ge=1, le=365)
+    note: Optional[str] = Field("", max_length=80)
+
+
+@api_router.post("/access/invites")
+async def create_access_invite(body: AccessInviteReq, user: dict = Depends(require_admin)):
+    token = secrets.token_urlsafe(18)
+    doc = {"token": token, "created_by": user.get("email"), "created_at": now_iso(),
+           "expires_at": (datetime.now(timezone.utc) + timedelta(days=body.days)).isoformat(),
+           "max_uses": int(body.max_uses), "used": 0, "used_by": [], "note": body.note or "", "active": True}
+    await db.access_invites.insert_one(dict(doc))
+    return {"status": "success", "token": token, "expires_at": doc["expires_at"], "max_uses": doc["max_uses"]}
+
+
+@api_router.get("/access/invites")
+async def list_access_invites(user: dict = Depends(require_admin)):
+    items = await db.access_invites.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return {"invites": items}
+
+
+@api_router.post("/access/invites/{token}/revoke")
+async def revoke_access_invite(token: str, user: dict = Depends(require_admin)):
+    await db.access_invites.update_one({"token": token}, {"$set": {"active": False}})
+    return {"status": "success"}
 
 
 @api_router.post("/operator/invites")
