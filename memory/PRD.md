@@ -4236,3 +4236,17 @@ Implementati e testati (iteration_185.json → backend 8/8, frontend 4/4, retest
 - **Refresh scale hardware**: `SmartScale` mostra lo standard industriale del reparto attivo (`scale-dept-standard`: icona+nome reparto, max kg, precisione ±g, temp impasto) dai `metrics` di `deptProfiles`. Visibile quando è attivo un reparto specifico (non 'tutti').
 - Lint 0 errori/0 warning sui file toccati; smoke test mobile OK (aura+badge, canale headset, toggle continuo). Overflow segnalato = glow decorativo di sfondo pre-esistente (pointer-events-none), non un bug.
 
+
+---
+## v13.0 (2026-09-05) — "Industrial Lock" increment 1: Radar Spaziale + Delega Caposquadra
+Direttiva "Final Absolute Industrial Lock" (enorme, 7 punti). Scelta ONESTA + confermata dall'utente: **approccio ADDITIVO, NIENTE rewrite distruttivo** dell'app matura/testata. Consegnati i due pezzi più tangibili e verificabili:
+- **FASE 1 · Radar Spaziale dell'Impianto (punto 3)** — solo Master/Capo. Backend: `GET /api/plant/radar` (require_admin) → 7 zone vettoriali (Impastatrici, Celle Lievitazione, Forni, Linea Baguette & Formatura, Uffici, Servizi, Zona Ausiliaria) + operatori derivati da `_worker_pool` con coordinate DETERMINISTICHE stabili per nome + micro-drift temporale, colore = aura, **etichetta task live** (es. "Carico Biga · Impastatrice"), e **geofencing anomalie** (indicatore rosso quando un operatore resta fuori settore, ciclico ~ogni 5 min). `GET/PUT /api/plant/layout` per zone custom. Frontend: `PlantRadar.jsx` (planimetria a div% con griglia, pallini animati color-coded + nome, banner anomalia/allineato, lista task filtrabile al click, poll 4s). Wired come card `lab-nav-radar` nella Plancia Capo. NB: posizioni BLE **simulate** (nessun hardware), pronte per tag fisici.
+- **FASE 2 · Delega Caposquadra per linea prodotto (punto 2)** — Backend: `GET/POST /api/plant/line-leaders` (4 linee: baguette/pane/pizzeria/pasticceria), `GET /api/plant/leader-tasks?leader=` (task di qualità instradati SOLO al leader designato, es. Christoph → Linea Baguette). Frontend: `LineLeaders.jsx` (select leader per linea, persistito, toast di conferma) dentro il Radar.
+- Test: iteration_186.json → backend 8/8 pytest PASS, frontend tutti i flussi PASS, 0 issue. Lint 0 errori.
+### RESTA (Industrial Lock — future/backlog, NON ancora implementato, dichiarato onestamente):
+- P3 Anti-Fooling biometrico: voice-print liveness, cross-check ottico-telemetrico (conferma schermo vs peso silo/carico macchina), ghost-activity detection turni notte.
+- P5 Optical telemetry: checkpoint visivi contestuali → dashboard Master arricchita.
+- P6 Order intake agnostico: sync POS → target volumetrici, silo auto-deduct, regolazione autonoma celle/abbattitori, self-rebalancing IoT.
+- P7 Riciclo intelligente (reinclusione impasti) + Edge-Mesh traceability / plant cloning via Master PIN.
+- P1 "Zero-Menu": l'app è già single-screen per ruolo (3 sezioni); NON rimossa alcuna sezione esistente (scelta anti-distruttiva).
+

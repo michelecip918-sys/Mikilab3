@@ -554,6 +554,15 @@ export const auraApi = {
   worker: (name) => api.get(`/production/worker-aura/${encodeURIComponent(name)}`).then((r) => r.data).catch(() => null),
 };
 
+// Radar spaziale dell'impianto (solo Master) + delega caposquadra per linea prodotto.
+export const plantApi = {
+  radar: () => api.get(`/plant/radar`).then((r) => r.data),
+  layout: () => api.get(`/plant/layout`).then((r) => r.data),
+  lineLeaders: () => api.get(`/plant/line-leaders`).then((r) => r.data),
+  setLeader: (line, leader) => api.post(`/plant/line-leaders`, { line, leader }).then((r) => r.data),
+  leaderTasks: (leader) => api.get(`/plant/leader-tasks`, { params: { leader } }).then((r) => r.data),
+};
+
 export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };

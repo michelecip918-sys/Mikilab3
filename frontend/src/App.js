@@ -48,6 +48,7 @@ import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock, WifiOf
 
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
+import PlantRadar from "@/components/PlantRadar";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
 const PUB = process.env.PUBLIC_URL;
@@ -331,6 +332,7 @@ export default function App() {
                       <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
                       <LabCard testid="lab-nav-ordini" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan al instante.", "L'IA régénère le plan à l'instant.", "هوش مصنوعی برنامه را فوری بازسازی می‌کند.")} onClick={() => setCurrentView("ordini")} accent />
                       <LabCard testid="lab-nav-pin" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN für die Produktion festlegen.", "Set the team PIN for production.", "Fija el PIN del equipo.", "Définis le PIN de l'équipe.", "پین تیم را تنظیم کن.")} onClick={() => setCurrentView("pinsetup")} />
+                      <LabCard testid="lab-nav-radar" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega caposquadra.", "Live-Grundriss, Tracking und Teamleiter-Delegation.", "Live floor plan, tracking and line-leader delegation.", "Plano en vivo, rastreo y delegación.", "Plan live, suivi et délégation.", "پلان زنده، ردیابی و واگذاری.")} onClick={() => setCurrentView("radar")} accent />
                     </div>
                     {currentView === "dashboard" && <DocsDownload />}
                     {currentView === "ordine-capo" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdineCapo /></div>}
@@ -339,6 +341,7 @@ export default function App() {
                     {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}
                     {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
                     {currentView === "pinsetup" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PinSetup /></div>}
+                    {currentView === "radar" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PlantRadar /></div>}
                   </div>
                   )
                 ) : (

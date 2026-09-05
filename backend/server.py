@@ -2774,6 +2774,166 @@ async def get_shift_plan(user: Optional[dict] = Depends(optional_user)):
     return {"weekly_plan": docs}
 
 
+# ---------------------------------------------------------------------------
+# RADAR SPAZIALE DELL'IMPIANTO (solo Master/Capo) — planimetria vettoriale live,
+# tracking BLE color-coded, etichette task in tempo reale, geofencing anomalie.
+# Le posizioni BLE reali sono hardware-dipendenti → qui sono derivate/simulate
+# in modo deterministico (stabili per operatore + drift temporale) e pronte per
+# tag fisici quando presenti.
+# ---------------------------------------------------------------------------
+_DEFAULT_PLANT_ZONES = [
+    {"id": "impasto", "name": "Impastatrici", "type": "production", "x": 6, "y": 8, "w": 40, "h": 26, "color": "#5E8CA8"},
+    {"id": "fermentazione", "name": "Celle Lievitazione", "type": "production", "x": 52, "y": 8, "w": 42, "h": 26, "color": "#3E9C93"},
+    {"id": "forni", "name": "Forni", "type": "production", "x": 6, "y": 40, "w": 40, "h": 26, "color": "#f59e0b"},
+    {"id": "linea", "name": "Linea Baguette & Formatura", "type": "production", "x": 52, "y": 40, "w": 42, "h": 26, "color": "#14b8a6"},
+    {"id": "ufficio", "name": "Uffici", "type": "aux", "x": 6, "y": 72, "w": 26, "h": 20, "color": "#64748b"},
+    {"id": "servizi", "name": "Servizi / Spogliatoi", "type": "aux", "x": 37, "y": 72, "w": 26, "h": 20, "color": "#64748b"},
+    {"id": "spedizione", "name": "Zona Ausiliaria", "type": "aux", "x": 68, "y": 72, "w": 26, "h": 20, "color": "#64748b"},
+]
+
+_ZONE_KEYWORDS = [
+    ("impasto", ["impast", "spiral", "planetari", "forcell", "tuffant", "farin"]),
+    ("fermentazione", ["ferment", "lievit", "cella", "puntat", "appretto"]),
+    ("forni", ["forn", "cottura", "sfornat", "pizza", "arrosti", "griglia", "abbattitore"]),
+    ("linea", ["baguette", "formatur", "banco", "laugen", "pretzel", "brezel", "pasticc", "confezion", "decor"]),
+]
+
+_ZONE_TASKS = {
+    "impasto": "Carico Biga · Impastatrice", "fermentazione": "Controllo Lievitazione",
+    "forni": "Infornata & Cottura", "linea": "Formatura Linea Baguette",
+    "ufficio": "Pausa · Ufficio", "servizi": "Fuori settore · Servizi", "spedizione": "Zona Ausiliaria",
+}
+
+
+def _zone_for_position(position: str) -> str:
+    p = (position or "").lower()
+    for zid, kws in _ZONE_KEYWORDS:
+        if any(k in p for k in kws):
+            return zid
+    return "linea"
+
+
+async def _plant_zones():
+    doc = await db.app_meta.find_one({"_key": "plant_layout"}, {"_id": 0})
+    return (doc or {}).get("zones") or _DEFAULT_PLANT_ZONES
+
+
+@api_router.get("/plant/layout")
+async def plant_layout_get(user: Optional[dict] = Depends(optional_user)):
+    return {"zones": await _plant_zones()}
+
+
+class PlantLayoutReq(BaseModel):
+    zones: List[dict] = []
+
+
+@api_router.put("/plant/layout")
+async def plant_layout_set(body: PlantLayoutReq, admin: dict = Depends(require_admin)):
+    await db.app_meta.update_one({"_key": "plant_layout"}, {"$set": {"_key": "plant_layout", "zones": body.zones or _DEFAULT_PLANT_ZONES, "updated_at": now_iso()}}, upsert=True)
+    return {"ok": True, "zones": body.zones or _DEFAULT_PLANT_ZONES}
+
+
+@api_router.get("/plant/radar")
+async def plant_radar(admin: dict = Depends(require_admin)):
+    """Radar live: zone + operatori color-coded con task e geofencing anomalie (solo Master)."""
+    import hashlib as _hh
+    import math as _m
+    zones = await _plant_zones()
+    zmap = {z["id"]: z for z in zones}
+    pool = await _worker_pool()
+    if not pool:
+        pool = [
+            {"name": "Mohamed", "position": "Impastatore", "score": 88, "aura": _aura_for(88)},
+            {"name": "Christoph", "position": "Linea Baguette", "score": 93, "aura": _aura_for(93)},
+            {"name": "Aylin", "position": "Forni", "score": 82, "aura": _aura_for(82)},
+            {"name": "Marco", "position": "Fermentazione", "score": 76, "aura": _aura_for(76)},
+            {"name": "Fatima", "position": "Pasticceria & Confezionamento", "score": 90, "aura": _aura_for(90)},
+        ]
+    leaders = ((await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}).get("leaders") or {}
+    leader_names = {v.strip().lower() for v in leaders.values() if v}
+    now = datetime.now(timezone.utc)
+    minute_bucket = now.hour * 60 + now.minute
+    workers = []
+    # Un operatore "in anomalia" ogni ~5 min: fuori settore (servizi) troppo a lungo.
+    anomaly_idx = minute_bucket % max(1, len(pool)) if (minute_bucket // 5) % 3 == 0 else -1
+    for i, w in enumerate(pool):
+        pos = w.get("position") or ""
+        zid = _zone_for_position(pos)
+        anomaly = (i == anomaly_idx)
+        if anomaly:
+            zid = "servizi"
+        z = zmap.get(zid, zmap.get("linea")) or _DEFAULT_PLANT_ZONES[3]
+        h = int(_hh.sha256(w["name"].encode()).hexdigest(), 16)
+        # posizione stabile dentro la zona + micro-drift temporale
+        drift_x = 2.2 * _m.sin((minute_bucket + i * 13) / 7.0)
+        drift_y = 1.8 * _m.cos((minute_bucket + i * 7) / 9.0)
+        x = round(z["x"] + 5 + (h % max(1, int(z["w"] - 10))) + drift_x, 1)
+        y = round(z["y"] + 5 + ((h // 100) % max(1, int(z["h"] - 10))) + drift_y, 1)
+        aura = w.get("aura") or _aura_for(int(w.get("score", 85)))
+        is_leader = w["name"].strip().lower() in leader_names
+        color = "#ef4444" if anomaly else (aura.get("color") or "#5EEAD4")
+        task = _ZONE_TASKS.get(zid, "Operativo")
+        if is_leader and not anomaly:
+            task = f"Caposquadra · {task}"
+        workers.append({
+            "name": w["name"], "position": pos, "zone": zid, "zone_name": z.get("name"),
+            "x": max(2, min(98, x)), "y": max(2, min(98, y)), "color": color,
+            "score": int(w.get("score", 85)), "aura_effect": aura.get("aura_effect"),
+            "status": ("anomalia" if anomaly else "attivo"), "task": task,
+            "is_leader": is_leader, "anomaly": anomaly,
+            "dwell_min": (6 + (minute_bucket % 9)) if anomaly else (minute_bucket % 40),
+        })
+    return {"zones": zones, "workers": workers, "at": now_iso(),
+            "anomalies": sum(1 for w in workers if w["anomaly"]), "count": len(workers)}
+
+
+# --- Delega ai Caposquadra (line leaders): supervisione per linea prodotto ---
+_PRODUCT_LINES = [
+    {"id": "baguette", "name": "Linea Baguette", "icon": "🥖"},
+    {"id": "pane", "name": "Linea Pane", "icon": "🍞"},
+    {"id": "pizzeria", "name": "Linea Pizzeria", "icon": "🍕"},
+    {"id": "pasticceria", "name": "Linea Pasticceria", "icon": "🥐"},
+]
+
+
+@api_router.get("/plant/line-leaders")
+async def line_leaders_get(user: Optional[dict] = Depends(optional_user)):
+    leaders = ((await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}).get("leaders") or {}
+    return {"lines": _PRODUCT_LINES, "leaders": leaders}
+
+
+class LineLeaderReq(BaseModel):
+    line: str
+    leader: str = ""
+
+
+@api_router.post("/plant/line-leaders")
+async def line_leaders_set(body: LineLeaderReq, admin: dict = Depends(require_admin)):
+    doc = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = doc.get("leaders") or {}
+    if body.leader.strip():
+        leaders[body.line] = body.leader.strip()
+    else:
+        leaders.pop(body.line, None)
+    await db.app_meta.update_one({"_key": "line_leaders"}, {"$set": {"_key": "line_leaders", "leaders": leaders, "updated_at": now_iso()}}, upsert=True)
+    return {"ok": True, "leaders": leaders}
+
+
+@api_router.get("/plant/leader-tasks")
+async def leader_tasks(leader: str, user: Optional[dict] = Depends(optional_user)):
+    """Task di supervisione instradati SOLO al caposquadra designato (per linea prodotto)."""
+    doc = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = doc.get("leaders") or {}
+    my_lines = [ln for ln, ld in leaders.items() if ld.strip().lower() == (leader or "").strip().lower()]
+    line_names = {l["id"]: l for l in _PRODUCT_LINES}
+    tasks = []
+    for ln in my_lines:
+        nm = line_names.get(ln, {}).get("name", ln)
+        tasks.append({"line": ln, "title": f"Validazione qualità · {nm}", "kind": "quality"})
+        tasks.append({"line": ln, "title": f"Controllo lievitazione · {nm}", "kind": "check"})
+    return {"leader": leader, "lines": my_lines, "tasks": tasks}
+
+
 @api_router.post("/production/shift-assignment")
 async def update_shift_plan(a: ShiftAssignment, user: dict = Depends(require_admin)):
     doc = {"id": str(uuid.uuid4()), "day": a.day, "position": a.position, "worker_name": a.worker_name,
