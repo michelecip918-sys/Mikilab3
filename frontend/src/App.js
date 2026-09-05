@@ -42,7 +42,7 @@ import { useDept, setDept } from "@/lib/dept";
 import { recipesApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
-import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock } from "lucide-react";
+import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock, WifiOff } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
 import Maestro from "@/sections/Maestro";
@@ -92,6 +92,12 @@ export default function App() {
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
   const [floorRole, setFloorRole] = useState(() => { try { return localStorage.getItem("mikilab_role") || ""; } catch { return ""; } });
+  const [online, setOnline] = useState(() => (typeof navigator !== "undefined" ? navigator.onLine : true));
+  useEffect(() => {
+    const on = () => setOnline(true); const off = () => setOnline(false);
+    window.addEventListener("online", on); window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
   useEffect(() => {
     const h = (e) => { try { setFloorRole((e && e.detail && e.detail.role != null) ? e.detail.role : (localStorage.getItem("mikilab_role") || "")); } catch { setFloorRole(""); } };
     window.addEventListener("mikilab-role-changed", h);
@@ -135,6 +141,15 @@ export default function App() {
 
   // Sfondo tematico per sezione (Capo=sala comandi, Mohamed=laboratorio, BakemixAI=olografico).
   const bgTheme = section === "guida" ? "bakemix" : (section === "control" && activeMode === "floor") ? "mohamed" : "capo";
+  const mohStation = (() => {
+    const r = (floorRole || "").toLowerCase();
+    if (!r) return null;
+    if (/laugen|pretzel/.test(r)) return "laugen";
+    if (/impast|fermentaz/.test(r)) return "impasto";
+    if (/forn|sfornat|abbattitore|raffredda|cottura/.test(r)) return "forno";
+    return "banco";
+  })();
+  const bgSrc = bgTheme === "mohamed" && mohStation ? `${PUB}/bg-st-${mohStation}.jpg` : `${PUB}/bg-${bgTheme}.jpg`;
   const roleTint = (() => {
     const r = (floorRole || "").toLowerCase();
     if (/pizza|forno pizze|sfornate|consegne/.test(r)) return "#3E9C93";        // Pizzeria
@@ -147,8 +162,8 @@ export default function App() {
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
-          {/* Sfondo immersivo tematico della sezione attiva */}
-          <img key={bgTheme} src={`${PUB}/bg-${bgTheme}.jpg`} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.3 }} />
+          {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
+          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: 0.3 }} />
           <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/75 via-[#030712]/85 to-[#030712]/95" />
           {bgTheme === "mohamed" && (
             <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}26, transparent 60%)` }} />
@@ -158,6 +173,11 @@ export default function App() {
         </div>
 
         <div className="relative z-10 flex flex-col min-h-screen">
+          {!online && (
+            <div data-testid="offline-badge" className="fixed top-[118px] left-1/2 -translate-x-1/2 z-[60] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/50 text-amber-300 text-[11px] font-bold backdrop-blur-md shadow-lg animate-fadeIn">
+              <WifiOff className="w-3.5 h-3.5" /> {tri("Offline · archivio locale", "Offline · lokales Archiv", "Offline · local archive", "Sin conexión · archivo local", "Hors ligne · archive locale", "آفلاین · بایگانی محلی")}
+            </div>
+          )}
           {/* HEADER */}
           <header className="border-b border-[#1e293b] bg-[#0b0f19]/80 backdrop-blur-xl px-4 py-3 sticky top-0 z-50">
             <div className="max-w-4xl mx-auto flex items-center justify-between">

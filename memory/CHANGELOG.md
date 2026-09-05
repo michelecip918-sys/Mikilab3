@@ -176,3 +176,9 @@
 - `recipesApi.list` ora scrive l'archivio su IndexedDB a ogni load e legge da IndexedDB in offline (fallback: localStorage). Warm-up in App.js: quando online pre-carica mikilab (+personal se loggato) anche senza aprire la lista.
 - Verificato: dopo il warm-up IndexedDB contiene 149 ricette mikilab (archivio 100% offline).
 - Avatar Mohamed: emblema logo MikiLab applicato sulla giacca (backup in /app/memory/avatar_mohamed_original_backup.jpg).
+
+## 2026-06 — Migrazione Offline totale + sfondi per postazione + badge Offline + logo BakemixAI
+- IndexedDB esteso (api.js): warehouseApi.list (magazzino), planApi.get (piano produzione), weeklyApi.get (piano settimanale), floorPlanApi.get (coda di lavoro Floor di Mohamed) ora scrivono su IDB online e leggono da IDB in offline.
+- Sfondi per postazione Mohamed: bg-st-forno/impasto/banco/laugen.jpg. App.js mappa il ruolo attivo → immagine di postazione (Impastatore→impasto, Fornaio/Sfornate/Abbattitore→forno, Laugen→laugen, resto→banco); default bg-mohamed.jpg. Verificato: Fornaio → /bg-st-forno.jpg.
+- Badge "Offline · archivio locale" (App.js): indicatore fisso quando navigator è offline (multilingua). Verificato.
+- Avatar BakemixAI (robot): emblema logo MikiLab sul petto (backup in /app/memory/avatar_bigmix_original_backup.jpg). Ora tutti e 3 gli avatar hanno il logo.

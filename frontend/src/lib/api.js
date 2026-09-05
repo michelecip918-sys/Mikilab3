@@ -60,18 +60,33 @@ export const ovenApi = {
 };
 
 export const planApi = {
-  get: () => api.get(`/production-plan`).then((r) => r.data),
+  get: async () => {
+    try { const r = await api.get(`/production-plan`); idbSet("production_plan", r.data); return r.data; }
+    catch (e) { if (isNetworkError(e)) { const c = await idbGet("production_plan"); if (c) return c; } throw e; }
+  },
   save: (data) => api.put(`/production-plan`, data).then((r) => r.data),
   order: (body) => api.post(`/lab/plan-order`, body).then((r) => r.data),
 };
 
 export const weeklyApi = {
-  get: () => api.get(`/weekly-plan`).then((r) => r.data),
+  get: async () => {
+    try { const r = await api.get(`/weekly-plan`); idbSet("weekly_plan", r.data); return r.data; }
+    catch (e) { if (isNetworkError(e)) { const c = await idbGet("weekly_plan"); if (c) return c; } throw e; }
+  },
   save: (data) => api.put(`/weekly-plan`, data).then((r) => r.data),
 };
 
 export const warehouseApi = {
-  list: () => api.get(`/lab/warehouse`).then((r) => r.data),
+  list: async () => {
+    try {
+      const r = await api.get(`/lab/warehouse`);
+      idbSet("warehouse", r.data);
+      return r.data;
+    } catch (e) {
+      if (isNetworkError(e)) { const c = await idbGet("warehouse"); if (c) return c; }
+      throw e;
+    }
+  },
   save: (item) => api.post(`/lab/warehouse`, item).then((r) => r.data),
   remove: (id) => api.delete(`/lab/warehouse/${id}`).then((r) => r.data),
   consume: (items) => api.post(`/lab/warehouse/consume`, { items }).then((r) => r.data),
@@ -84,8 +99,12 @@ export const ordiniApi = {
 };
 
 // Piano del Team (Assistente Mamo): il Capo INVIA il piano, il Floor lo legge (senza login).
+// OFFLINE-READY: la coda di lavoro resta leggibile da Mohamed anche senza rete (IndexedDB).
 export const floorPlanApi = {
-  get: () => api.get(`/lab/floor-plan`).then((r) => r.data),
+  get: async () => {
+    try { const r = await api.get(`/lab/floor-plan`); idbSet("floor_plan", r.data); return r.data; }
+    catch (e) { if (isNetworkError(e)) { const c = await idbGet("floor_plan"); if (c) return c; } throw e; }
+  },
   push: (body) => api.put(`/lab/floor-plan`, body).then((r) => r.data),
   clear: () => api.delete(`/lab/floor-plan`).then((r) => r.data),
 };
