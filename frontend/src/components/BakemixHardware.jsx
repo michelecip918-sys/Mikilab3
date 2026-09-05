@@ -3,6 +3,7 @@ import { toast } from "sonner";
 import { Bluetooth, Cpu, Thermometer, Scale, Flame, Activity, Volume2, Send, Wifi, WifiOff } from "lucide-react";
 import { playTTS } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
+import { sensorsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -43,6 +44,7 @@ export default function BakemixHardware() {
           const v = await ch.readValue();
           r.tempC = v.getInt16(0, true) / 100;
           try { publishSensor("oven_temp", r.tempC); } catch { /* */ }
+          try { sensorsApi.publish({ oven_temp: r.tempC }); } catch { /* */ }
         } catch { /* caratteristica non disponibile */ }
       } catch { /* GATT non accessibile: teniamo comunque il collegamento */ }
       setConnected((c) => ({ ...c, [dev.key]: r.name }));

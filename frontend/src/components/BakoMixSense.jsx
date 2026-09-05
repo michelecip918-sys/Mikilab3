@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users } from "lucide-react";
-import { pulseApi, staffingApi } from "@/lib/api";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe } from "lucide-react";
+import { pulseApi, staffingApi, briefingApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
+import { publishSensor } from "@/lib/sensors";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LabAura, { auraColor } from "@/components/LabAura";
 import FailsafeSwitch from "@/components/FailsafeSwitch";
+import ShiftPowerBoard from "@/components/ShiftPowerBoard";
+import EnterpriseGrid from "@/components/EnterpriseGrid";
 
 const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
@@ -27,6 +30,10 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   const [wake, setWake] = useState(null);
   const [rest, setRest] = useState({ active: false, allow_critical: true });
   const [history, setHistory] = useState([]);
+  const [staffHist, setStaffHist] = useState([]);
+  const [briefing, setBriefing] = useState(null);
+  const [briefingOpen, setBriefingOpen] = useState(true);
+  const [entOpen, setEntOpen] = useState(false);
   const spokenRef = useRef(null);
   const checkedRef = useRef(false);
 
@@ -46,6 +53,11 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
       const p = await pulseApi.get();
       setPulse(p);
       if (p && p.rest_mode) setRest(p.rest_mode);
+      // Sensori live → alimenta l'Aura anche sul dispositivo del Capo
+      if (p && p.sensors) {
+        if (p.sensors.oven_temp) publishSensor("oven_temp", p.sensors.oven_temp.value);
+        if (p.sensors.ph) publishSensor("ph", p.sensors.ph.value);
+      }
       // Voce proattiva: annuncia il primo alert nuovo (critico/warn)
       const top = (p.alerts || []).find((x) => x.level === "critical" || x.level === "warn");
       if (top && top.id !== spokenRef.current) {
@@ -71,12 +83,16 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     if (!isCapo) return;
     pulseApi.wakeGet().then(setWake).catch(() => {});
     pulseApi.restGet().then(setRest).catch(() => {});
+    briefingApi.get().then(setBriefing).catch(() => {});
   }, [isCapo]);
 
-  // Storia del battito (solo Capo, mentre il pannello è aperto)
+  // Storia del battito + organico settimana (solo Capo, mentre il pannello è aperto)
   useEffect(() => {
     if (!isCapo || !open) return;
-    const load = () => pulseApi.history(240).then((h) => setHistory(h.points || [])).catch(() => {});
+    const load = () => {
+      pulseApi.history(240).then((h) => setHistory(h.points || [])).catch(() => {});
+      staffingApi.history(7).then((h) => setStaffHist(h.days || [])).catch(() => {});
+    };
     load();
     const id = setInterval(load, 30000);
     return () => clearInterval(id);
@@ -111,6 +127,14 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
     catch { /* */ }
   };
 
+  const applyVolumes = async () => {
+    try {
+      const r = await staffingApi.applyVolumes();
+      toast.success(tri(`Volumi ridotti del ${r.reduce_pct}% su ${r.adjusted} lotti`, `Mengen um ${r.reduce_pct}% reduziert (${r.adjusted} Chargen)`, `Volumes cut ${r.reduce_pct}% on ${r.adjusted} batches`, `Volúmenes -${r.reduce_pct}% en ${r.adjusted} lotes`, `Volumes -${r.reduce_pct}% sur ${r.adjusted} lots`, `حجم −${r.reduce_pct}% روی ${r.adjusted} دسته`));
+      refresh();
+    } catch { toast.error(tri("Solo il Capo", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
+  };
+
   const doCheckin = async () => {
     try {
       await pulseApi.checkin({ operator: (operator && operator.name) || "Operatore", role: floorRole || "", station: floorRole || "" });
@@ -133,6 +157,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
   return (
     <>
       <LabAura enabled={aura} mood={mood} heartbeat={hb} station={mode === "floor" ? (floorRole || "") : ""} />
+      {entOpen && <EnterpriseGrid onClose={() => setEntOpen(false)} />}
 
       {/* Avatar proattivo flottante */}
       <button
@@ -166,6 +191,25 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
           </div>
 
           <div className="max-h-[52vh] overflow-y-auto p-4 space-y-3">
+            {/* Briefing del mattino (Capo) */}
+            {isCapo && briefing && briefingOpen && (
+              <div data-testid="bakomix-briefing" className="rounded-2xl border border-[#f59e0b]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-[12px] font-black text-[#f59e0b] flex items-center gap-1.5"><Sunrise className="w-4 h-4" /> {tri("Briefing del mattino", "Morgen-Briefing", "Morning briefing", "Briefing matutino", "Briefing du matin", "گزارش صبحگاهی")}</p>
+                  <button data-testid="bakomix-briefing-close" onClick={() => setBriefingOpen(false)} className="text-[#94A3B8] hover:text-white"><X className="w-3.5 h-3.5" /></button>
+                </div>
+                <p className="text-[12px] text-white mt-1.5">{briefing.greeting}</p>
+                <ul className="mt-1.5 space-y-0.5">
+                  {(briefing.night_summary || []).map((l, i) => (<li key={i} className="text-[11px] text-[#94A3B8]">· {l}</li>))}
+                </ul>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className="text-[11px] text-[#94A3B8]">{tri("Efficienza lab", "Lab-Effizienz", "Lab efficiency", "Eficiencia", "Efficacité", "کارایی")}</span>
+                  <span className="text-sm font-black text-[#f59e0b]" data-testid="bakomix-briefing-eff">{briefing.overall_lab_efficiency}</span>
+                </div>
+                <p className="text-[11px] text-[#5EEAD4] mt-1.5">💡 {briefing.ai_recommendation}</p>
+              </div>
+            )}
+
             {/* Controlli rapidi */}
             <div className="flex items-center gap-2">
               <button data-testid="bakomix-aura-toggle" onClick={() => setAura((v) => !v)} className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all ${aura ? "text-white" : "text-[#94A3B8] border-[#1e293b] bg-[#030712]"}`} style={aura ? { background: `${color}22`, borderColor: color } : {}}>
@@ -175,6 +219,24 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 {muted ? <VolumeX className="w-4 h-4 text-[#f87171]" /> : <Volume2 className="w-4 h-4" style={{ color }} />}
               </span>
             </div>
+
+            {/* Sensori live (temperatura forno · pH lievito) */}
+            {pulse?.sensors && (pulse.sensors.oven_temp || pulse.sensors.ph) && (
+              <div data-testid="bakomix-sensors-live" className="grid grid-cols-2 gap-2">
+                {pulse.sensors.oven_temp && (
+                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : "#1e293b", background: pulse.sensors.oven_temp.value > 250 ? "#ef444412" : "#030712" }}>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🔥 {tri("Forno", "Ofen", "Oven", "Horno", "Four", "فر")}</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : color }} data-testid="bakomix-sensor-oven">{pulse.sensors.oven_temp.value}°</p>
+                  </div>
+                )}
+                {pulse.sensors.ph && (
+                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : "#1e293b", background: pulse.sensors.ph.value < 3.8 ? "#f59e0b12" : "#030712" }}>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🧪 {tri("pH lievito", "Sauerteig pH", "Sourdough pH", "pH masa", "pH levain", "pH خمیرمایه")}</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : color }} data-testid="bakomix-sensor-ph">{pulse.sensors.ph.value}</p>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Storia del battito del laboratorio (Capo) */}
             {isCapo && history.length >= 2 && (
@@ -225,6 +287,10 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
+                <button data-testid="bakomix-enterprise-btn" onClick={() => setEntOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-transform" style={{ background: "linear-gradient(90deg, #5EEAD4, #f59e0b)" }}>
+                  <Globe className="w-4 h-4" /> {tri("Rete · 100 Panifici", "Netz · 100 Bäckereien", "Grid · 100 Bakeries", "Red · 100 Panaderías", "Réseau · 100 Boulangeries", "شبکه · ۱۰۰ نانوایی")}
+                </button>
+                <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}
                 {pulse?.staffing && (
                   <div data-testid="bakomix-staffing" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
@@ -234,11 +300,29 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                       <input data-testid="bakomix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
                     </div>
                     {pulse.staffing.reduce_pct > 0 ? (
-                      <p data-testid="bakomix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
-                        📉 {tri("Volumi consigliati", "Empfohlene Mengen", "Suggested volumes", "Volúmenes sugeridos", "Volumes conseillés", "حجم پیشنهادی")} −{pulse.staffing.reduce_pct}%
-                      </p>
+                      <>
+                        <p data-testid="bakomix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
+                          📉 {tri("Volumi consigliati", "Empfohlene Mengen", "Suggested volumes", "Volúmenes sugeridos", "Volumes conseillés", "حجم پیشنهادی")} −{pulse.staffing.reduce_pct}%
+                        </p>
+                        <button data-testid="bakomix-apply-volumes" onClick={applyVolumes} className="w-full mt-2 py-2 rounded-xl bg-amber-500 text-[#030712] font-black text-xs active:scale-95 transition-transform">
+                          {tri("Applica al piano di oggi", "Auf heutigen Plan anwenden", "Apply to today's plan", "Aplicar al plan de hoy", "Appliquer au plan du jour", "روی برنامه امروز اعمال کن")} −{pulse.staffing.reduce_pct}%
+                        </button>
+                      </>
                     ) : (
                       <p className="text-[11px] text-[#94A3B8] mt-2">{tri("Organico completo · volumi pieni.", "Voll besetzt · volle Mengen.", "Full staff · full volumes.", "Personal completo · volúmenes plenos.", "Effectif complet · volumes pleins.", "کارکنان کامل · حجم کامل.")}</p>
+                    )}
+                    {staffHist.length >= 2 && (
+                      <div data-testid="bakomix-staff-week" className="mt-3">
+                        <p className="text-[10px] text-[#94A3B8] mb-1">{tri("Organico · 7 giorni", "Personal · 7 Tage", "Staff · 7 days", "Personal · 7 días", "Effectif · 7 jours", "کارکنان · ۷ روز")}</p>
+                        <div className="flex items-end justify-between gap-1 h-12">
+                          {staffHist.map((d) => (
+                            <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full" title={`${d.date}: ${d.present}/${pulse.staffing.total}`}>
+                              <div className="w-full rounded-t" style={{ height: `${Math.max(6, (d.factor || 0) * 100)}%`, background: d.factor < 0.7 ? "#ef4444" : d.factor < 1 ? "#f59e0b" : color }} />
+                              <span className="text-[8px] text-[#64748B] mt-0.5">{d.date.slice(8)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 )}

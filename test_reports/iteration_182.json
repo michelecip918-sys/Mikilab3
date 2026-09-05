@@ -1,0 +1,34 @@
+{
+  "summary": "Full backend + frontend testing of the Enterprise Grid / Pocket layer + universal-command bugfix + regression. 25/25 pytest cases pass (test_iter182_enterprise_pocket.py, run with -n 0). Frontend E2E (mobile 390px) verifies: login → MikiLab → BakoMix Sense FAB → 'Grid · 100 Bakeries' button opens EnterpriseGrid; overview cards, both seeded sites (Stoccarda Super Saiyan 93.5%, Monaco Aura Bianca 82%), leaderboard rank1 with crown (Michele), fleet advice for Hans, spatial map with draggable equipment chips (oven_main_01), drag triggers optimize toast ('Risparmio movimenti/energia stimato al 10.5%'), NO horizontal overflow at 390px. Regression clean: /api/lab/pulse mood=sereno, morning-briefing OK, shift-plan OK. Universal-command bilancia bug is fixed (returns device_added, priority over generic aggiungi).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "EnterpriseGrid close", "issue": "Immediately after a drag-drop that shows a Sonner toast, clicking [data-testid=enterprise-close] once did not always dismiss the grid in the automated run (toast overlay may absorb the tap briefly). Manual retry works; not blocking.", "selector": "[data-testid=enterprise-close]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter182_enterprise_pocket.py",
+    "/app/test_reports/pytest/iter182_results.xml"
+  ],
+  "action_items": [
+    "Optional: raise z-index of enterprise-close above the Sonner toaster (or delay toast) so a rapid close-tap right after drop always registers."
+  ],
+  "critical_code_review_comments": [
+    "server.py is 10326 lines — well past the 700-line guideline; consider splitting Enterprise/Pocket into a router module.",
+    "_seed_sites is idempotent by count>0 but on empty collection it runs on EVERY optional_user endpoint call — fine for now but consider a one-time startup task.",
+    "LayoutMove currently validates target_x/target_y with ge=0, le=100 (percent range) but coordinates are meters and clamped only to room_dimensions_m in the client; add server-side clamp against site.spatial_layout.room_dimensions_m to prevent equipment being placed outside the room.",
+    "/api/enterprise/site-shift updates via $push without a max-workers cap; consider a sanity limit.",
+    "pocket/master-command 'ricetta' branch matches even when 'sposta' also present – ordering could be documented; current order (forno→sposta→ricetta→briefing) is fine but relies on early-return."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter182_enterprise_pocket.py"
+  ],
+  "success_rate": {"backend": "100% (25/25)", "frontend": "100% functional (close-after-toast minor)"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "Only relied on existing _seed_sites (Stoccarda + Monaco). Test-created site 'TEST_Milano', worker 'TEST_Marco', recipe id 'test_iter182_recipe', bilancia devices, and address_book feature were all deleted in the final_cleanup fixture. Oven_main_01 coords reset to (10.2, 3.1) after both backend and frontend runs.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "iter182 validates Enterprise Grid + Pocket + universal-command bugfix on top of iter181. Seeded lab_sites (bakery_01_stuttgart, bakery_02_munich) are intentional demos — do NOT delete. If oven_main_01 is not at (10.2, 3.1), re-optimize before running spatial tests. Use `-n 0` (pytest.ini forces -n 2 loadscope which is flaky on shared demo docs)."
+}

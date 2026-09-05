@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request
+from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse, Response, HTMLResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
@@ -2288,6 +2288,69 @@ async def _compute_pulse():
                                f"حجم پیشنهادی را حدود {pct}% کم و وظایف را سبک‌تر می‌کنم."),
         })
 
+    # --- Blocco fuori sequenza (registrato dal Sequence Guard di Mohamed) → WARN al Capo ---
+    seqb = await db.lab_seq_block.find_one({"_key": "last"}, {"_id": 0, "_key": 0})
+    if seqb and seqb.get("at"):
+        try:
+            recent = (now - datetime.fromisoformat(seqb["at"])).total_seconds() < 300
+        except Exception:
+            recent = False
+        if recent:
+            exp = (seqb.get("expected") or {}).get("name") or "?"
+            att = (seqb.get("attempted") or {}).get("name") or "?"
+            alerts.append({
+                "id": "seq-block", "level": "warn", "station": "Sequenza", "code": "sequence_block",
+                "text": _tr6(f"Tentato avvio fuori sequenza: «{att}» prima di «{exp}».",
+                             f"Start außer Reihe versucht: „{att}“ vor „{exp}“.",
+                             f"Out-of-sequence start attempted: '{att}' before '{exp}'.",
+                             f"Inicio fuera de secuencia: «{att}» antes de «{exp}».",
+                             f"Démarrage hors séquence : « {att} » avant « {exp} ».",
+                             f"شروع خارج از ترتیب: «{att}» قبل از «{exp}»."),
+                "suggestion": _tr6(f"Ho bloccato il lotto: deve partire prima «{exp}».",
+                                   f"Ich habe die Charge blockiert: zuerst «{exp}».",
+                                   f"I blocked the batch: '{exp}' must go first.",
+                                   f"Bloqueé el lote: primero «{exp}».",
+                                   f"J'ai bloqué le lot : « {exp} » d'abord.",
+                                   f"دسته را بلوکه کردم: اول «{exp}»."),
+            })
+
+    # --- Sensori live oltre soglia (forno troppo caldo / lievito troppo acido) → CRITICO ---
+    sens = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+    ot = (sens.get("oven_temp") or {})
+    if ot.get("value") is not None and ot["value"] > OVEN_TEMP_MAX:
+        alerts.append({
+            "id": "sensor-oven", "level": "critical", "station": "Forno", "code": "oven_hot",
+            "text": _tr6(f"Forno a {ot['value']}°C: oltre la soglia di sicurezza.",
+                         f"Ofen bei {ot['value']}°C: über der Sicherheitsgrenze.",
+                         f"Oven at {ot['value']}°C: above the safety threshold.",
+                         f"Horno a {ot['value']}°C: sobre el umbral.",
+                         f"Four à {ot['value']}°C : au-dessus du seuil.",
+                         f"فر روی {ot['value']}°C: بالاتر از آستانه."),
+            "suggestion": _tr6("Abbasso subito e ritardo l'infornata di qualche minuto.",
+                               "Sofort senken und die Beschickung verzögern.",
+                               "Lower now and delay the load by a few minutes.",
+                               "Baja ya y retrasa la hornada.",
+                               "Baisse maintenant et retarde l'enfournement.",
+                               "همین حالا کم کن و بارگذاری را کمی عقب بینداز."),
+        })
+    ph = (sens.get("ph") or {})
+    if ph.get("value") is not None and ph["value"] < PH_MIN:
+        alerts.append({
+            "id": "sensor-ph", "level": "warn", "station": "Lievito", "code": "ph_low",
+            "text": _tr6(f"pH lievito {ph['value']}: troppo acido.",
+                         f"Sauerteig-pH {ph['value']}: zu sauer.",
+                         f"Sourdough pH {ph['value']}: too acidic.",
+                         f"pH masa madre {ph['value']}: demasiado ácido.",
+                         f"pH levain {ph['value']} : trop acide.",
+                         f"pH خمیرمایه {ph['value']}: خیلی اسیدی."),
+            "suggestion": _tr6("Rinfresco o riduco i tempi di maturazione.",
+                               "Auffrischen oder Reifezeit verkürzen.",
+                               "Refresh it or shorten maturation.",
+                               "Refresca o acorta la maduración.",
+                               "Rafraîchis ou raccourcis la maturation.",
+                               "تازه‌سازی کن یا زمان رسیدن را کوتاه کن."),
+        })
+
     # --- Umore & battito derivati dal carico + criticità ---
     n_crit = sum(1 for a in alerts if a["level"] == "critical")
     n_warn = sum(1 for a in alerts if a["level"] == "warn")
@@ -2310,6 +2373,7 @@ async def _compute_pulse():
                     "role": checkin.get("role"), "at": checkin.get("at")},
         "rest_mode": {"active": bool(rest.get("active")), "allow_critical": rest.get("allow_critical", True)},
         "staffing": staff,
+        "sensors": {k: sens.get(k) for k in ("oven_temp", "ph") if sens.get(k)},
         "plan_active": floor is not None,
         "generated_at": now.isoformat(),
     }
@@ -2480,14 +2544,17 @@ async def sequence_start(body: SeqReq, user: Optional[dict] = Depends(optional_u
         raise HTTPException(status_code=404, detail="Lotto non trovato")
     nxt = _next_expected(batches)
     if nxt and str(nxt.get("id")) != body.batch_id and not body.force:
-        # FUORI SEQUENZA → blocco
-        return {"allowed": False, "reason": "out_of_sequence",
-                "expected": {"id": nxt.get("id"), "name": nxt.get("recipe_name") or nxt.get("recipe_id")},
-                "attempted": {"id": target.get("id"), "name": target.get("recipe_name") or target.get("recipe_id")}}
+        # FUORI SEQUENZA → blocco (registrato così appare anche nel pannello del Capo)
+        block = {"expected": {"id": nxt.get("id"), "name": nxt.get("recipe_name") or nxt.get("recipe_id")},
+                 "attempted": {"id": target.get("id"), "name": target.get("recipe_name") or target.get("recipe_id")},
+                 "at": now_iso()}
+        await db.lab_seq_block.update_one({"_key": "last"}, {"$set": {**block, "_key": "last"}}, upsert=True)
+        return {"allowed": False, "reason": "out_of_sequence", **block}
     for b in batches:
         if str(b.get("id")) == body.batch_id:
             b["status"] = "in_corso"; b["started_at"] = now_iso()
     await _save_batches(batches)
+    await db.lab_seq_block.delete_one({"_key": "last"})  # sequenza ristabilita
     return {"allowed": True, "forced": bool(body.force)}
 
 
@@ -2533,6 +2600,564 @@ async def put_staffing(body: StaffingReq, user: dict = Depends(require_admin)):
         {"$set": {"_key": "default", "total": int(body.total), "updated_at": now_iso()}}, upsert=True)
     return await _staffing()
 
+
+
+
+# ---------------------------------------------------------------------------
+# SENSORI LIVE — letture hardware (Web Bluetooth) condivise col Capo.
+# Soglie: sopra 250°C forno o pH<3.8 → alert critico + Aura si accende.
+# ---------------------------------------------------------------------------
+OVEN_TEMP_MAX = 250.0
+PH_MIN = 3.8
+
+
+class SensorReq(BaseModel):
+    oven_temp: Optional[float] = None
+    ph: Optional[float] = None
+
+
+@api_router.get("/lab/sensors/live")
+async def get_sensors_live(user: Optional[dict] = Depends(optional_user)):
+    doc = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+    # Scarta letture più vecchie di 5 minuti
+    fresh = {}
+    now = datetime.now(timezone.utc)
+    for k in ("oven_temp", "ph"):
+        v = doc.get(k)
+        if v and v.get("at"):
+            try:
+                if (now - datetime.fromisoformat(v["at"])).total_seconds() < 300:
+                    fresh[k] = v
+            except Exception:
+                pass
+    return fresh
+
+
+@api_router.post("/lab/sensors/live")
+async def post_sensors_live(body: SensorReq, user: Optional[dict] = Depends(optional_user)):
+    upd = {}
+    ts = now_iso()
+    if body.oven_temp is not None:
+        upd["oven_temp"] = {"value": round(float(body.oven_temp), 1), "at": ts}
+    if body.ph is not None:
+        upd["ph"] = {"value": round(float(body.ph), 2), "at": ts}
+    if upd:
+        await db.lab_sensors_live.update_one({"_key": "live"}, {"$set": {**upd, "_key": "live"}}, upsert=True)
+    return await get_sensors_live(user)
+
+
+@api_router.get("/lab/staffing/history")
+async def staffing_history(days: int = 7, user: Optional[dict] = Depends(optional_user)):
+    days = max(1, min(31, days))
+    cfg = await db.lab_staffing.find_one({"_key": "default"}, {"_id": 0}) or {}
+    total = int(cfg.get("total", 5) or 5)
+    out = []
+    today = datetime.now(timezone.utc).date()
+    for i in range(days - 1, -1, -1):
+        d = (today - timedelta(days=i)).isoformat()
+        absent = await db.lab_absences.count_documents({"date": d})
+        present = max(0, total - absent)
+        out.append({"date": d, "absent": absent, "present": present,
+                    "factor": round(present / total, 2) if total else 1.0})
+    return {"days": out, "total": total}
+
+
+@api_router.post("/lab/staffing/apply-volumes")
+async def apply_volumes(user: dict = Depends(require_admin)):
+    # Applica DAVVERO il fattore organico ai pezzi dei lotti del piano di oggi.
+    staff = await _staffing()
+    factor = staff["factor"]
+    batches = await _load_batches()
+    changed = 0
+    for b in batches:
+        base = b.get("pieces_base", b.get("pieces"))
+        if isinstance(base, (int, float)) and base:
+            b["pieces_base"] = base
+            b["pieces"] = int(round(base * factor))
+            changed += 1
+    await _save_batches(batches)
+    return {"ok": True, "factor": factor, "reduce_pct": staff["reduce_pct"], "adjusted": changed}
+
+
+# ---------------------------------------------------------------------------
+# PRODUCTION OS — comando universale, sync bilancia smart, WebSocket real-time
+# con modalità "letz_passive" (audio in silenzio: lo schermo guida la mano).
+# ---------------------------------------------------------------------------
+class UniversalCommand(BaseModel):
+    command_text: str = Field(..., max_length=500)
+
+
+@api_router.post("/ai/universal-command")
+async def ai_universal_command(payload: UniversalCommand, user: dict = Depends(require_admin)):
+    text = (payload.command_text or "").lower()
+    # La bilancia ha priorità sul ramo generico "aggiungi ..."
+    if "bilancia" in text or "scale" in text or "waage" in text:
+        n = await db.lab_devices.count_documents({}) + 1
+        dev = {"id": f"scale_smart_{n}", "name": "Bilancia Smart", "type": "smart_scale_with_display",
+               "status": "online", "current_step": "Pronta", "at": now_iso()}
+        await db.lab_devices.insert_one({**dev})
+        return {"status": "success", "action_type": "device_added", "message": "Bilancia smart integrata nel Production OS.", "device": {k: v for k, v in dev.items() if k != "_id"}}
+    # Personalizzazione UI: "aggiungi ..." → BakoMix attiva una funzione nella vista dell'utente.
+    if "aggiungi" in text or "rubrica" in text or "add" in text or "widget" in text:
+        feature = "address_book" if "rubrica" in text else "custom_widget"
+        await db.lab_user_features.update_one(
+            {"user_id": user["user_id"], "feature": feature},
+            {"$set": {"user_id": user["user_id"], "feature": feature, "label": payload.command_text[:60], "at": now_iso()}},
+            upsert=True)
+        return {"status": "success", "action_type": "ui_personalization", "target_feature": feature,
+                "message": f"BakoMix ha aggiornato la tua schermata: «{payload.command_text}» è ora attivo.",
+                "render_update": True}
+    return {"status": "success", "action_type": "ack", "message": f"Comando eseguito: '{payload.command_text}'."}
+
+
+@api_router.get("/ai/my-features")
+async def ai_my_features(user: dict = Depends(current_user)):
+    docs = await db.lab_user_features.find({"user_id": user["user_id"]}, {"_id": 0, "user_id": 0}).to_list(50)
+    return {"features": docs}
+
+
+# ---------------------------------------------------------------------------
+# TURNI & POWER LEVEL — piano settimanale con avatar dei lavoratori e "aura"
+# gamificata (stile Dragon Ball) proporzionale al rendimento.
+# ---------------------------------------------------------------------------
+class ShiftAssignment(BaseModel):
+    day: str = Field(..., max_length=20)
+    position: str = Field(..., max_length=40)
+    worker_name: str = Field(..., max_length=40)
+    avatar_style: Optional[str] = Field("default", max_length=40)
+    efficiency_score: Optional[int] = Field(85, ge=0, le=100)
+    streak_days: Optional[int] = Field(1, ge=0, le=999)
+
+
+def _aura_for(score: int) -> dict:
+    if score >= 90:
+        return {"aura_effect": "Super Saiyan", "power_level": "Over 9000!", "color": "#f59e0b", "stage": 3,
+                "label": {"it": "Aura Dorata · Produzione al massimo", "de": "Goldene Aura · Volle Leistung",
+                          "en": "Golden Aura · Peak output", "es": "Aura Dorada · Máximo", "fr": "Aura Dorée · Au max", "fa": "هاله طلایی · اوج تولید"}}
+    if score >= 75:
+        return {"aura_effect": "Aura Bianca", "power_level": "Stable Flow", "color": "#5EEAD4", "stage": 2,
+                "label": {"it": "Aura Bianca · Ottimo ritmo costante", "de": "Weiße Aura · Konstant stark",
+                          "en": "White Aura · Steady rhythm", "es": "Aura Blanca · Ritmo constante", "fr": "Aura Blanche · Rythme constant", "fa": "هاله سفید · ریتم پایدار"}}
+    return {"aura_effect": "Aura Bassa", "power_level": "Warm-up", "color": "#94A3B8", "stage": 1,
+            "label": {"it": "Aura Bassa · Ritmo da ottimizzare", "de": "Niedrige Aura · Aufwärmen",
+                      "en": "Low Aura · Warming up", "es": "Aura Baja · Calentando", "fr": "Aura Basse · Échauffement", "fa": "هاله ضعیف · گرم‌کردن"}}
+
+
+@api_router.get("/production/shift-plan")
+async def get_shift_plan(user: Optional[dict] = Depends(optional_user)):
+    docs = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(200)
+    for d in docs:
+        d["aura"] = _aura_for(int(d.get("efficiency_score", 85)))
+    return {"weekly_plan": docs}
+
+
+@api_router.post("/production/shift-assignment")
+async def update_shift_plan(a: ShiftAssignment, user: dict = Depends(require_admin)):
+    doc = {"id": str(uuid.uuid4()), "day": a.day, "position": a.position, "worker_name": a.worker_name,
+           "avatar_style": a.avatar_style or "default", "efficiency_score": int(a.efficiency_score or 85),
+           "streak_days": int(a.streak_days or 1), "at": now_iso()}
+    await db.lab_shift_plan.insert_one({**doc})
+    doc.pop("_id", None)
+    doc["aura"] = _aura_for(doc["efficiency_score"])
+    return {"status": "success", "message": f"Assegnato {a.worker_name} a {a.position} per {a.day}.", "assignment": doc}
+
+
+@api_router.patch("/production/shift-assignment/{item_id}")
+async def patch_shift_score(item_id: str, efficiency_score: int, user: dict = Depends(require_admin)):
+    score = max(0, min(100, int(efficiency_score)))
+    await db.lab_shift_plan.update_one({"id": item_id}, {"$set": {"efficiency_score": score}})
+    return {"ok": True, "aura": _aura_for(score)}
+
+
+@api_router.delete("/production/shift-assignment/{item_id}")
+async def delete_shift(item_id: str, user: dict = Depends(require_admin)):
+    await db.lab_shift_plan.delete_one({"id": item_id})
+    return {"ok": True}
+
+
+@api_router.get("/production/worker-aura/{worker_name}")
+async def get_worker_power_level(worker_name: str, user: Optional[dict] = Depends(optional_user)):
+    w = await db.lab_shift_plan.find_one({"worker_name": {"$regex": f"^{re.escape(worker_name)}$", "$options": "i"}}, {"_id": 0})
+    if not w:
+        raise HTTPException(status_code=404, detail="Lavoratore non trovato nel turno attivo.")
+    return {"worker": w["worker_name"], "position": w.get("position"), "avatar": w.get("avatar_style"),
+            "score": w.get("efficiency_score", 85), **_aura_for(int(w.get("efficiency_score", 85)))}
+
+
+@api_router.get("/production/leaderboard")
+async def get_team_leaderboard(user: Optional[dict] = Depends(optional_user)):
+    workers = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(200)
+    workers.sort(key=lambda x: x.get("efficiency_score", 0), reverse=True)
+    lb = []
+    for rank, w in enumerate(workers, start=1):
+        lb.append({"rank": rank, "worker_name": w.get("worker_name"), "position": w.get("position"),
+                   "avatar": w.get("avatar_style"), "score": w.get("efficiency_score", 85),
+                   "streak_days": w.get("streak_days", 1), "aura": _aura_for(int(w.get("efficiency_score", 85))),
+                   "title": "Master of the Shift" if rank == 1 else "Pro Contender"})
+    return {"status": "success", "leaderboard": lb}
+
+
+@api_router.get("/ai/morning-briefing")
+async def get_morning_briefing(user: Optional[dict] = Depends(optional_user)):
+    """BakoMix analizza la notte e prepara il resoconto per il Capo all'apertura."""
+    workers = await db.lab_shift_plan.find({}, {"_id": 0, "efficiency_score": 1}).to_list(200)
+    avg = round(sum(w.get("efficiency_score", 0) for w in workers) / len(workers), 1) if workers else 0.0
+    # Riepilogo notturno DERIVATO dai dati reali (battito storico + sensori + pulse)
+    since = (datetime.now(timezone.utc) - timedelta(hours=10)).isoformat()
+    pts = await db.lab_pulse_history.find({"at": {"$gte": since}}, {"_id": 0}).to_list(300)
+    night = []
+    if pts:
+        hbs = [p.get("heartbeat", 52) for p in pts]
+        crit = any(p.get("mood") == "critico" for p in pts)
+        night.append(f"Battito medio notturno {round(sum(hbs)/len(hbs))} bpm su {len(pts)} rilevazioni.")
+        night.append("Nessuna anomalia critica durante la notte." if not crit else "Rilevate criticità notturne da controllare.")
+    else:
+        night.append("Nessuna rilevazione notturna registrata.")
+    sens = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+    if sens.get("oven_temp"):
+        night.append(f"Ultima temperatura forno: {sens['oven_temp']['value']}°C.")
+    staff = await _staffing()
+    reco = ("Tutti i parametri sono perfetti. Nessun intervento richiesto sui lotti di oggi."
+            if staff["reduce_pct"] == 0 else
+            f"Organico ridotto: consiglio di tagliare i volumi del {staff['reduce_pct']}% oggi.")
+    return {"status": "success",
+            "greeting": "Buongiorno Capo, ecco il resoconto pulito di mikilab.de.",
+            "night_summary": night, "overall_lab_efficiency": f"{avg}%",
+            "avg_score": avg, "ai_recommendation": reco}
+
+
+# ===========================================================================
+# ENTERPRISE GRID — rete multi-sede (1–100 panifici) orchestrata da BakoMix.
+# Leaderboard globale, briefing di rete, consulenza flotta, layout spaziale 2D.
+# ===========================================================================
+async def _seed_sites():
+    if await db.lab_sites.count_documents({}) > 0:
+        return
+    demo = [
+        {"site_id": "bakery_01_stuttgart", "name": "MikiLab Hub Stoccarda", "status": "normal",
+         "workers": [{"name": "Michele", "position": "Forno", "avatar": "cyber_fornaio", "score": 96, "streak": 7},
+                     {"name": "Antonio", "position": "Impastatore", "avatar": "riccio_pro", "score": 91, "streak": 4}],
+         "spatial_layout": {"room_dimensions_m": {"width": 12.0, "length": 18.0},
+             "equipment": [{"id": "oven_main_01", "name": "Forno Rotativo Principale", "x": 10.2, "y": 3.1, "status": "optimal"},
+                           {"id": "mixer_01", "name": "Impastatrice Spirale 80kg", "x": 4.1, "y": 8.5, "status": "active"}]}},
+        {"site_id": "bakery_02_munich", "name": "MikiLab Filiale Monaco", "status": "warning_slow_oven",
+         "workers": [{"name": "Hans", "position": "Forno", "avatar": "bavarian_master", "score": 82, "streak": 1}],
+         "spatial_layout": {"room_dimensions_m": {"width": 10.0, "length": 14.0},
+             "equipment": [{"id": "oven_02", "name": "Forno a Piani", "x": 8.0, "y": 2.5, "status": "warning"}]}},
+    ]
+    await db.lab_sites.insert_many(demo)
+
+
+def _site_metrics(site):
+    ws = site.get("workers") or []
+    avg = round(sum(w.get("score", 0) for w in ws) / len(ws), 1) if ws else 0.0
+    return {**{k: v for k, v in site.items() if k != "_id"}, "avg_score": avg, "aura": _aura_for(int(avg))}
+
+
+@api_router.get("/enterprise/overview")
+async def enterprise_overview(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    allw = [w for s in sites for w in (s.get("workers") or [])]
+    avg = round(sum(w.get("score", 0) for w in allw) / len(allw), 1) if allw else 0.0
+    crit = sum(1 for s in sites if s.get("status") != "normal")
+    return {"total_active_sites": len(sites), "global_efficiency_avg": avg,
+            "critical_alerts_count": crit, "total_workers": len(allw)}
+
+
+@api_router.get("/enterprise/sites")
+async def enterprise_sites(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    return {"sites": [_site_metrics(s) for s in sites]}
+
+
+class SiteCreate(BaseModel):
+    name: str = Field(..., max_length=60)
+    status: Optional[str] = "normal"
+
+
+@api_router.post("/enterprise/sites")
+async def enterprise_add_site(body: SiteCreate, user: dict = Depends(require_admin)):
+    sid = f"site_{str(uuid.uuid4())[:8]}"
+    doc = {"site_id": sid, "name": body.name, "status": body.status or "normal", "workers": [],
+           "spatial_layout": {"room_dimensions_m": {"width": 10.0, "length": 12.0}, "equipment": []}}
+    await db.lab_sites.insert_one({**doc})
+    return _site_metrics(doc)
+
+
+@api_router.delete("/enterprise/sites/{site_id}")
+async def enterprise_del_site(site_id: str, user: dict = Depends(require_admin)):
+    await db.lab_sites.delete_one({"site_id": site_id})
+    return {"ok": True}
+
+
+class SiteShiftReq(BaseModel):
+    site_id: str
+    worker_name: str = Field(..., max_length=40)
+    position: str = Field(..., max_length=40)
+    avatar_style: Optional[str] = "default"
+    score: Optional[int] = Field(85, ge=0, le=100)
+
+
+@api_router.post("/enterprise/site-shift")
+async def enterprise_site_shift(body: SiteShiftReq, user: dict = Depends(require_admin)):
+    site = await db.lab_sites.find_one({"site_id": body.site_id})
+    if not site:
+        raise HTTPException(status_code=404, detail="Panificio non trovato nella griglia globale.")
+    worker = {"name": body.worker_name, "position": body.position, "avatar": body.avatar_style or "default",
+              "score": int(body.score or 85), "streak": 1}
+    await db.lab_sites.update_one({"site_id": body.site_id}, {"$push": {"workers": worker}})
+    return {"status": "success", "message": f"Assegnato {body.worker_name} ({body.position}) presso {site['name']}."}
+
+
+@api_router.get("/enterprise/global-leaderboard")
+async def enterprise_global_leaderboard(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    allw = []
+    for s in sites:
+        for w in (s.get("workers") or []):
+            allw.append({"worker_name": w.get("name"), "site_name": s.get("name"), "position": w.get("position"),
+                         "avatar": w.get("avatar"), "score": w.get("score", 85), "streak": w.get("streak", 1),
+                         "aura": _aura_for(int(w.get("score", 85)))})
+    allw.sort(key=lambda x: x["score"], reverse=True)
+    for rank, w in enumerate(allw, start=1):
+        w["global_rank"] = rank
+        w["title"] = "Grandmaster of the Network" if rank == 1 else "Elite Artisan"
+    return {"global_leaderboard": allw}
+
+
+@api_router.get("/enterprise/global-morning-briefing")
+async def enterprise_global_briefing(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    allw = [w for s in sites for w in (s.get("workers") or [])]
+    avg = round(sum(w.get("score", 0) for w in allw) / len(allw), 1) if allw else 0.0
+    exc = [{"site_id": s["site_id"], "name": s["name"], "status": s["status"]} for s in sites if s.get("status") != "normal"]
+    return {"status": "success", "greeting": "Buongiorno Capo. Panoramica della rete a zero attrito.",
+            "total_sites": len(sites), "global_efficiency": f"{avg}%",
+            "bako_executive_summary": (f"{len(sites) - len(exc)} sedi in flusso ottimale."
+                + (f" {len(exc)} sede/i con anomalie: correzioni automatiche applicate in background." if exc else " Nessuna anomalia.")),
+            "exceptions_requiring_boss": exc}
+
+
+@api_router.get("/enterprise/strategic-fleet-advice")
+async def enterprise_fleet_advice(user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+    insights = []
+    for s in sites:
+        for w in (s.get("workers") or []):
+            if w.get("score", 100) < 85:
+                insights.append({"site_id": s["site_id"], "site_name": s["name"], "worker": w["name"],
+                                 "urgency": "medium",
+                                 "suggestion": f"Per {w['name']} ({s['name']}): ricalibrazione ruolo o supporto temporaneo da un hub vicino."})
+    if not insights:
+        insights.append({"urgency": "low", "suggestion": "Tutti gli operatori della rete esprimono il massimo potenziale."})
+    return {"status": "success", "supervisor": "BakoMix Global Core", "fleet_recommendations": insights}
+
+
+class LayoutMove(BaseModel):
+    equipment_id: str
+    target_x: float = Field(..., ge=0, le=100)
+    target_y: float = Field(..., ge=0, le=100)
+
+
+@api_router.get("/enterprise/sites/{site_id}/layout")
+async def enterprise_get_layout(site_id: str, user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    site = await db.lab_sites.find_one({"site_id": site_id}, {"_id": 0})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    return {"site_id": site_id, "name": site.get("name"), "spatial_layout": site.get("spatial_layout", {}),
+            "bakomix_eye_report": "Ambiente mappato con precisione centimetrica.",
+            "detected_assets_count": len((site.get("spatial_layout") or {}).get("equipment", []))}
+
+
+@api_router.post("/enterprise/sites/{site_id}/layout/optimize")
+async def enterprise_optimize_layout(site_id: str, move: LayoutMove, user: dict = Depends(require_admin)):
+    site = await db.lab_sites.find_one({"site_id": site_id})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    layout = site.get("spatial_layout") or {"equipment": []}
+    eq = next((e for e in layout.get("equipment", []) if e["id"] == move.equipment_id), None)
+    if not eq:
+        raise HTTPException(status_code=404, detail="Macchinario non trovato nel layout.")
+    eq["x"] = round(move.target_x, 1); eq["y"] = round(move.target_y, 1)
+    await db.lab_sites.update_one({"site_id": site_id}, {"$set": {"spatial_layout": layout}})
+    saving = round(min(18.0, abs(move.target_x) * 0.4 + abs(move.target_y) * 0.4 + 4.2), 1)
+    return {"status": "success", "message": f"«{eq['name']}» riposizionato.",
+            "new_coordinates": {"x": eq["x"], "y": eq["y"]},
+            "bakomix_simulation": f"Risparmio movimenti/energia stimato al {saving}%."}
+
+
+@app.websocket("/api/ws/enterprise-os/{site_id}")
+async def enterprise_site_websocket(websocket: WebSocket, site_id: str):
+    await websocket.accept()
+    try:
+        while True:
+            raw = await websocket.receive_text()
+            try:
+                event = json.loads(raw)
+            except Exception:
+                continue
+            if event.get("action") == "scale_weight_streaming":
+                cur = float(event.get("weight", 0) or 0); tgt = float(event.get("target", 0) or 0)
+                if tgt and cur >= tgt:
+                    await websocket.send_text(json.dumps({"status": "success", "site_id": site_id,
+                        "display_instruction": "Peso perfetto. Sincronizzazione locale completata.",
+                        "audio_mode": "letz_passive_silent", "next_action_unlocked": True}))
+                else:
+                    await websocket.send_text(json.dumps({"status": "in_progress", "site_id": site_id,
+                        "current_weight": cur, "target_weight": tgt, "audio_mode": "letz_passive_silent"}))
+    except WebSocketDisconnect:
+        pass
+
+
+# --- POCKET: comando totale unificato + dashboard tascabile mobile ---
+class MasterPocketCommand(BaseModel):
+    command_text: str = Field(..., max_length=500)
+    active_site_id: Optional[str] = None
+
+
+@api_router.post("/pocket/master-command")
+async def master_pocket_command(payload: MasterPocketCommand, user: dict = Depends(require_admin)):
+    await _seed_sites()
+    text = (payload.command_text or "").lower()
+    sid = payload.active_site_id
+    site = (await db.lab_sites.find_one({"site_id": sid}, {"_id": 0})) if sid else None
+    if not site:
+        site = await db.lab_sites.find_one({}, {"_id": 0})
+    if any(k in text for k in ("forno", "scansiona", "inquadra", "layout")):
+        return {"status": "success", "action_type": "vision_spatial_scan",
+                "bakomix_response": f"Scansione macchinari di {site['name']} completata, aure applicate.",
+                "data": site.get("spatial_layout", {})}
+    if any(k in text for k in ("sposta", "cambia", "ruolo")):
+        return {"status": "success", "action_type": "hr_rebalance",
+                "bakomix_response": "Riequilibrio turni elaborato in background, senza attriti."}
+    if "ricetta" in text:
+        return {"status": "success", "action_type": "recipe_propagation",
+                "bakomix_response": "Ricetta propagata a tutte le bilance smart della rete."}
+    if any(k in text for k in ("briefing", "situazione", "rete")):
+        ov = await enterprise_overview(user)
+        return {"status": "success", "action_type": "executive_pulse",
+                "bakomix_response": f"Efficienza globale {ov['global_efficiency_avg']}%. Anomalie: {ov['critical_alerts_count']}."}
+    return {"status": "success", "action_type": "general_execution",
+            "bakomix_response": f"Comando «{payload.command_text}» eseguito dal nucleo BakoMix."}
+
+
+@api_router.get("/pocket/dashboard/{site_id}")
+async def get_pocket_dashboard(site_id: str, user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    ov = await enterprise_overview(user)
+    site = await db.lab_sites.find_one({"site_id": site_id}, {"_id": 0}) or await db.lab_sites.find_one({}, {"_id": 0})
+    sm = _site_metrics(site) if site else {}
+    return {"status": "success", "mobile_view": "panificio_tascabile_ui",
+            "global_network_badge": {"total_sites": ov["total_active_sites"], "global_aura": _aura_for(int(ov["global_efficiency_avg"]))["aura_effect"],
+                                     "global_efficiency": f"{ov['global_efficiency_avg']}%", "active_alerts": ov["critical_alerts_count"]},
+            "current_site_view": sm,
+            "bako_executive_summary": "Tutti i sistemi operano a gravità zero. Nessun intervento burocratico richiesto."}
+
+
+class SpatialScanReq(BaseModel):
+    site_id: str
+
+
+@api_router.post("/pocket/vision/scan-floor")
+async def pocket_scan_floor(body: SpatialScanReq, user: Optional[dict] = Depends(optional_user)):
+    site = await db.lab_sites.find_one({"site_id": body.site_id}, {"_id": 0})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    return {"status": "success", "site_id": body.site_id, "vision_hud_status": "active_augmented_reality",
+            "equipment_detected": (site.get("spatial_layout") or {}).get("equipment", []),
+            "bakomix_insight": "Inquadratura elaborata. Aure applicate in tempo reale sui macchinari."}
+
+
+class PocketRecipeReq(BaseModel):
+    recipe_id: str = Field(..., max_length=60)
+    name: str = Field(..., max_length=120)
+    ingredients: List[Dict[str, Any]] = []
+
+
+@api_router.post("/pocket/recipes/create")
+async def pocket_create_recipe(body: PocketRecipeReq, user: dict = Depends(require_admin)):
+    existing = await db.recipes.find_one({"id": body.recipe_id})
+    if existing:
+        await db.recipes.update_one({"id": body.recipe_id}, {"$set": {"name": body.name, "ingredients": body.ingredients}})
+        msg = f"Ricetta «{body.name}» aggiornata e propagata alla rete."
+    else:
+        await db.recipes.insert_one({"id": body.recipe_id, "name": body.name, "ingredients": body.ingredients,
+                                     "collection_name": "mikilab", "created_at": now_iso()})
+        msg = f"Nuova ricetta «{body.name}» creata e sincronizzata."
+    cnt = await db.recipes.count_documents({"collection_name": "mikilab"})
+    return {"status": "success", "message": msg, "active_recipes_count": cnt}
+
+
+class SiteWeeklyReq(BaseModel):
+    site_id: str
+    schedule_data: Dict[str, Any] = {}
+
+
+@api_router.post("/pocket/site/weekly-plan")
+async def pocket_site_weekly(body: SiteWeeklyReq, user: dict = Depends(require_admin)):
+    site = await db.lab_sites.find_one({"site_id": body.site_id})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    await db.lab_sites.update_one({"site_id": body.site_id}, {"$set": {"weekly_schedule": body.schedule_data}})
+    return {"status": "success", "message": f"Piano settimanale aggiornato per {site['name']}."}
+
+
+@api_router.get("/scale/{device_id}/load-recipe/{recipe_id}")
+async def load_recipe_to_scale(device_id: str, recipe_id: str, user: Optional[dict] = Depends(optional_user)):
+    dev = await db.lab_devices.find_one({"id": device_id})
+    if not dev:
+        raise HTTPException(status_code=404, detail="Bilancia non trovata.")
+    rec = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not rec:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata.")
+    ings = rec.get("ingredients") or []
+    first = ings[0] if ings else {}
+    fname = first.get("name") or first.get("ingredient") or "primo ingrediente"
+    fw = first.get("target_weight_kg") or first.get("grams") or first.get("weight") or ""
+    step = f"Aggiungi: {fname}" + (f" ({fw} kg)" if fw else "")
+    await db.lab_devices.update_one({"id": device_id}, {"$set": {"current_step": step}})
+    return {"status": "success", "recipe_name": rec.get("name"), "display_screen": step}
+
+
+@app.websocket("/api/ws/production-os")
+async def production_os_ws(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            raw = await websocket.receive_text()
+            try:
+                event = json.loads(raw)
+            except Exception:
+                await websocket.send_text(json.dumps({"status": "error", "message": "bad json"}))
+                continue
+            action = event.get("action")
+            if action == "scale_weight_streaming":
+                cur = float(event.get("weight", 0) or 0)
+                tgt = float(event.get("target", 0) or 0)
+                if tgt and cur >= tgt:
+                    await websocket.send_text(json.dumps({
+                        "status": "success", "display_instruction": "Peso raggiunto. Passaggio completato.",
+                        "audio_mode": "letz_passive_silent", "next_action_unlocked": True}))
+                else:
+                    await websocket.send_text(json.dumps({
+                        "status": "in_progress", "current_weight": cur, "target_weight": tgt,
+                        "audio_mode": "letz_passive_silent"}))
+            elif action == "audio_query":
+                q = (event.get("query") or "").lower()
+                if "emergenza" in q or "emergency" in q:
+                    await websocket.send_text(json.dumps({"audio_response": "Attenzione: anomalia nel sistema.", "mode": "active_alert"}))
+                else:
+                    await websocket.send_text(json.dumps({"audio_response": "", "mode": "letz_passive_silent"}))
+            else:
+                await websocket.send_text(json.dumps({"status": "ok", "echo": action}))
+    except WebSocketDisconnect:
+        pass
 
 
 

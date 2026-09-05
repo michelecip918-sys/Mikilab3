@@ -1,0 +1,38 @@
+{
+  "summary": "Iteration 181 validated Production OS 3.1.0 additions + regression. Backend pytest 16/17 passed (94%). 1 real backend bug found: POST /api/ai/universal-command with 'aggiungi una bilancia' returns action_type 'ui_personalization' instead of 'device_added' because the 'aggiungi' branch is checked first and swallows all 'aggiungi *' commands - the 'bilancia'/'scale' branch is unreachable for phrases containing 'aggiungi'. All other endpoints work: sequence_block alert (6-lang) appears in pulse after out-of-order start and clears after correct order; sensors/live GET+POST persists oven_temp/ph and triggers oven_hot(critical, >250) + ph_low(warn, <3.8) alerts in pulse, sensors object exposed, safe values clear alerts; staffing/apply-volumes with 1 absence over total=5 returns factor=0.8, reduce_pct=20, adjusted=1 and reduces pieces 100->80 while retaining pieces_base=100; staffing/history returns 7 days; shift-assignment POST(92)->Super Saiyan/Over 9000!, PATCH(60)->Aura Bassa, DELETE ok; shift-plan lists workers with aura+6-lang label; leaderboard rank 1 title 'Master of the Shift', sorted desc; worker-aura/Michele returns aura; morning-briefing returns greeting/night_summary(list)/overall_lab_efficiency/ai_recommendation; websocket /api/ws/production-os returns letz_passive_silent + next_action_unlocked=true on target-reached, and active_alert on 'emergenza'; universal-command and PATCH/POST/DELETE shift require admin (401 anon). Frontend Capo panel: after clicking 'Open' on MikiLab section the bakomix-sense-fab is visible; clicking opens BakoMix Sixth Sense panel showing bakomix-briefing (with close), shift-power-board (crown on top scorer Michele, 2 shift-score-* sliders, shift-add-toggle visible), bakomix-staffing card 'Today 4 of 5: reduced staff' + bakomix-apply-volumes button + bakomix-staff-week chart, bakomix-sensors-live card showing Oven 230 / pH 4.1, docs-download testid present with 6 language buttons. Frontend Mohamed floor: shift-power-board present in read-only mode (no shift-add-toggle, no shift-score sliders), sequence-guard present, clicking out-of-sequence batch opens sequence-block-modal 'Batch out of sequence · This must start first: Baguette'. Full cleanup performed: batches=[], absences today deleted, sensors_live deleted, seq_block deleted, test devices/features/shifts wiped; seeded team Michele(94/streak5)/Antonio(82/streak2) intact. NOTE: Backend 3 tests initially failed under pytest -n 2 (xdist parallel) due to cross-class races on shared mongo collections (lab_shift_state / lab_sensors_live) - re-ran with -n 0 and only the real 'aggiungi bilancia' bug remained. Test file adopts a session-safe layout but the parallel default addopts of the repo (-n 2 --dist loadscope) causes flakiness for this class-sharded test module.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/ai/universal-command", "issue": "Command 'aggiungi una bilancia' returns action_type 'ui_personalization' instead of 'device_added' because the 'aggiungi'/'rubrica'/'add'/'widget' branch is evaluated before the 'bilancia'/'scale' branch; any phrase containing 'aggiungi' matches the first branch and the bilancia path is effectively unreachable. Fix: check 'bilancia'/'scale'/'waage' BEFORE the generic 'aggiungi' branch (or exclude 'bilancia' from the first branch)."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter181_production_os.py",
+    "/app/test_reports/pytest/iter181.xml"
+  ],
+  "action_items": [
+    "Fix POST /api/ai/universal-command branch ordering so 'aggiungi una bilancia' (and 'aggiungi bilancia smart', etc.) returns action_type='device_added' with a device payload. Suggested code (server.py ~2690): move the 'bilancia/scale/waage' if-block ABOVE the 'aggiungi/rubrica/add/widget' block, or add 'and not any(k in text for k in (\"bilancia\",\"scale\",\"waage\"))' to the first branch condition.",
+    "Optional: fix pytest.ini flakiness - the test module writes to shared mongo docs (lab_shift_state, lab_sensors_live) across classes and the loadscope parallel mode causes cross-class races. Consider running iter181 with -n 0 or annotate class-level serialization."
+  ],
+  "critical_code_review_comments": [
+    "server.py: ai_universal_command branch ordering bug (see above) - the 'bilancia' branch is dead code for any phrase containing 'aggiungi'.",
+    "server.py: get_sensors_live silently discards readings older than 5 min with a bare-except - fine for prod but hides datetime parse errors. Consider narrowing the except.",
+    "server.py is now ~10k lines - the Lab/BakoMix/Production OS routes (pulse, sensors, staffing, universal-command, shift-*) should be split into a dedicated router module for maintainability.",
+    "SequenceGuard modal string 'Batch out of sequence' rendered on Mohamed floor appears in English regardless of UI lang - verify mkTri wrapper is used (already flagged in iter180)."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter181_production_os.py"
+  ],
+  "success_rate": {"backend": "94% (16/17, 1 real bug)", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (session_token as Bearer). Operator: mikilab_operator=JSON{name:'Mohamed'} in localStorage. Bypass keys: mikilab_admin_unlocked=1, mikilab_seen_intro=1, mikilab_pin_unlocked=1, mikilab_voice_muted=1.",
+  "seed_data_creation": "During tests: TEST_Goku shift assignment (deleted at end), 1 lab_absence today (deleted), lab_sensors_live oven_temp/ph (deleted), lab_seq_block last (deleted), address_book & custom_widget lab_user_features (deleted), smart_scale_with_display lab_devices (deleted). Baseline restored: shift-state batches=[], no absences today, no sensors, no seq_block. Seeded shift_plan Michele(94/streak5) + Antonio(82/streak2) left intact.",
+  "retest_needed": true,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "The only failing backend test is TestProductionOS::test_universal_command_device_added_and_scale_load (aggiungi bilancia => wrong branch). If main agent fixes server.py ai_universal_command branch ordering, re-run: `REACT_APP_BACKEND_URL=... MONGO_URL=... DB_NAME=... pytest /app/backend/tests/test_iter181_production_os.py -v -n 0`. Note pytest.ini forces -n 2 --dist loadscope which causes cross-class flakiness on shared mongo collections for this suite - always run this file with `-n 0` (add ` -o addopts=''` if needed). Frontend flow: bakomix-sense-fab is only rendered after entering the Capo section (click 'Open' on MikiLab card). Mohamed floor's ShiftPowerBoard is correctly read-only.",
+  "rca of the issue": "POST /api/ai/universal-command handler in /app/backend/server.py (~lines 2690-2709): the first `if \"aggiungi\" in text or \"rubrica\" in text or ...` matches ANY string containing 'aggiungi', including 'aggiungi una bilancia', and returns immediately with action_type='ui_personalization'. The second branch handling 'bilancia'/'scale'/'waage' therefore never executes for the specification's command. Reproduction: `curl -X POST $API/api/ai/universal-command -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' -d '{\"command_text\":\"aggiungi una bilancia\"}'` returns `{\"action_type\":\"ui_personalization\",...}` instead of `{\"action_type\":\"device_added\",\"device\":{...}}`. Fix: reorder the branches to check bilancia/scale/waage first, or exclude 'bilancia'/'scale' tokens from the first branch's condition."
+}

@@ -1,5 +1,11 @@
 # CHANGELOG (continua da PRD.md)
 
+## v-enterprise (2026-06) — Enterprise Grid & Pocket (rete multi-sede) + fix universal-command (testato 100%, iteration_182)
+- **Fix bug**: `POST /ai/universal-command` — "aggiungi una bilancia" ora ritorna `device_added` (ramo bilancia prima del ramo generico "aggiungi"); "aggiungi rubrica" → `ui_personalization` + `/ai/my-features`.
+- **Enterprise Grid backend** (persistito in `lab_sites`, seed 2 sedi demo): `/enterprise/overview`, `/enterprise/sites` (GET/POST/DELETE), `/enterprise/site-shift`, `/enterprise/global-leaderboard` (rank 1 = Grandmaster of the Network), `/enterprise/global-morning-briefing`, `/enterprise/strategic-fleet-advice` (flag score<85), `/enterprise/sites/{id}/layout` + `/layout/optimize` (drag macchinari + stima risparmio), WebSocket `/api/ws/enterprise-os/{site_id}` letz_passive.
+- **Pocket**: `/pocket/master-command` (comando totale: vision/hr/recipe/briefing), `/pocket/dashboard/{id}`, `/pocket/vision/scan-floor`, `/pocket/recipes/create` (propaga alla collection ricette), `/pocket/site/weekly-plan`.
+- **Frontend** `EnterpriseGrid.jsx`: vista full-screen (overview 3 stat, sedi con aura, leaderboard globale con corona, consulenza flotta) + **mappa spaziale 2D** con macchinari trascinabili (chiama optimize). Aperta dal pulsante `bakomix-enterprise-btn` nel pannello Capo. `enterpriseApi` in `lib/api.js`. Seed demo: sedi Stoccarda/Monaco.
+
 ## v-sixthsense (2026-06) — BakoMix "Sesto Senso": motore proattivo + Aura Sonora (NUOVO, esclusivo)
 Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi. Testato 100% backend + frontend (iteration_179), nessun HACCP/allergeni.
 - **Backend (server.py ~L2166)**: `_compute_pulse()` + `GET /lab/pulse` (mood sereno/attivo/teso/critico, heartbeat bpm, score, alerts multilingua it/de/en/es/fr/fa con suggestion, checkin, rest_mode). Anomalie: guasto macchina + cella down = CRITICO, lotto in ritardo = WARN, piano attivo senza check-in = INFO.

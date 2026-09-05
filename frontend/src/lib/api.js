@@ -460,4 +460,47 @@ export const sequenceApi = {
 export const staffingApi = {
   get: () => cachedGet("lab_staffing", () => api.get(`/lab/staffing`).then((r) => r.data), { total: 5, absent_today: 0, present: 5, factor: 1, reduce_pct: 0 }),
   set: (total) => api.put(`/lab/staffing`, { total }).then((r) => r.data),
+  history: (days = 7) => cachedGet(`lab_staffing_history_${days}`, () => api.get(`/lab/staffing/history`, { params: { days } }).then((r) => r.data), { days: [], total: 5 }),
+  applyVolumes: () => api.post(`/lab/staffing/apply-volumes`).then((r) => r.data),
+};
+
+// Sensori live (temperatura forno, pH lievito) condivisi col Capo.
+export const sensorsApi = {
+  getLive: () => api.get(`/lab/sensors/live`).then((r) => r.data).catch(() => ({})),
+  publish: (data) => api.post(`/lab/sensors/live`, data).then((r) => r.data).catch(() => ({})),
+};
+
+// Production OS — comando universale, sync bilancia smart.
+export const productionOsApi = {
+  command: (command_text) => api.post(`/ai/universal-command`, { command_text }).then((r) => r.data),
+  loadRecipeToScale: (deviceId, recipeId) => api.get(`/scale/${deviceId}/load-recipe/${recipeId}`).then((r) => r.data),
+};
+
+// Turni & Power Level — piano settimanale con aura gamificata (Dragon Ball).
+export const shiftBoardApi = {
+  list: () => cachedGet("shift_plan", () => api.get(`/production/shift-plan`).then((r) => r.data), { weekly_plan: [] }),
+  assign: (data) => api.post(`/production/shift-assignment`, data).then((r) => r.data),
+  setScore: (id, efficiency_score) => api.patch(`/production/shift-assignment/${id}`, null, { params: { efficiency_score } }).then((r) => r.data),
+  remove: (id) => api.delete(`/production/shift-assignment/${id}`).then((r) => r.data),
+  leaderboard: () => cachedGet("shift_leaderboard", () => api.get(`/production/leaderboard`).then((r) => r.data), { leaderboard: [] }),
+};
+
+// Briefing intelligente del mattino per il Capo.
+export const briefingApi = {
+  get: () => cachedGet("morning_briefing", () => api.get(`/ai/morning-briefing`).then((r) => r.data), null),
+};
+
+// Enterprise Grid — rete multi-sede (1–100 panifici) orchestrata da BakoMix.
+export const enterpriseApi = {
+  overview: () => cachedGet("ent_overview", () => api.get(`/enterprise/overview`).then((r) => r.data), { total_active_sites: 0, global_efficiency_avg: 0, critical_alerts_count: 0, total_workers: 0 }),
+  sites: () => cachedGet("ent_sites", () => api.get(`/enterprise/sites`).then((r) => r.data), { sites: [] }),
+  addSite: (name) => api.post(`/enterprise/sites`, { name }).then((r) => r.data),
+  delSite: (id) => api.delete(`/enterprise/sites/${id}`).then((r) => r.data),
+  siteShift: (data) => api.post(`/enterprise/site-shift`, data).then((r) => r.data),
+  leaderboard: () => cachedGet("ent_leaderboard", () => api.get(`/enterprise/global-leaderboard`).then((r) => r.data), { global_leaderboard: [] }),
+  briefing: () => cachedGet("ent_briefing", () => api.get(`/enterprise/global-morning-briefing`).then((r) => r.data), null),
+  fleetAdvice: () => cachedGet("ent_fleet", () => api.get(`/enterprise/strategic-fleet-advice`).then((r) => r.data), { fleet_recommendations: [] }),
+  getLayout: (id) => api.get(`/enterprise/sites/${id}/layout`).then((r) => r.data),
+  optimizeLayout: (id, data) => api.post(`/enterprise/sites/${id}/layout/optimize`, data).then((r) => r.data),
+  masterCommand: (command_text, active_site_id) => api.post(`/pocket/master-command`, { command_text, active_site_id }).then((r) => r.data),
 };

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mic, ChevronLeft } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
 import SequenceGuard from "@/components/SequenceGuard";
+import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -52,6 +53,7 @@ export default function MohamedFloor() {
     return (
       <div data-testid="mohamed-role-select" className="space-y-5">
         <SequenceGuard />
+        <ShiftPowerBoard />
         <div className="text-center">
           <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Mohamed</h2>
