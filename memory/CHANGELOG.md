@@ -306,3 +306,10 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Battito Impianto Unico**: GET /api/bako/heartbeat unisce telemetria+SOS+AGV+forni liberi in un solo polling. Context PlantHeartbeatProvider (4s) alimenta DigitalTwin, EmergencyCenter e AgvFleet (rimossi i polling individuali).
 - **Timeline di Turno**: GET /api/bako/timeline (lotti+infornate+SOS ordinati). UI TimelineTurno.jsx scorrevole. Panel-timeline + registrato in RoleLayout.
 - FIX: render loop in EmergencyCenter (tri nelle deps useEffect → rimosso). iteration_205 frontend 100%.
+
+## v53 (2026-09) — BACKLOG CHIUSO: Packaging, Avatar parlanti, Regole voce, Sfida turni
+- **Packaging/Affettatrici**: GET /api/bako/packaging — velocità affettatrici sincronizzata alla curva di raffreddamento (attendi>55°C / rallenta / nominale<=35°C) + countdown. UI PackagingSync.jsx (gauge).
+- **Avatar parlanti (lip-sync)**: ShiftBriefing mostra una bocca/waveform animata sull'avatar Cyber-Trio attivo mentre parla.
+- **Regole voce**: MamoAssistant legge agli operatori comandi BREVI (floorShort, ~14 parole/1 frase); il Capo mantiene la conversazione libera (govern).
+- **Sfida tra turni**: GET /api/bako/sos/challenge — classifica reattività SOS SETTIMANALE con badge (🥇 più reattivo, 🔥 più interventi). UI: sezione sos-challenge in EmergencyCenter.
+- Test iteration_206: backend 100% (8/8) / frontend 100%, 0 bug. TUTTO il backlog v14 completato.

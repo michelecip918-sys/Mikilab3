@@ -87,11 +87,19 @@ export default function MamoAssistant() {
     playTTS(text, { lang, voice: "mohamed", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
   }, [lang]);
 
+  // Regola voce reparto: gli operatori ricevono SOLO comandi brevi (1 frase, max ~14 parole).
+  const floorShort = (t) => {
+    if (!t) return t;
+    const first = String(t).split(/(?<=[.!?])\s/)[0];
+    const words = first.split(/\s+/);
+    return words.length > 14 ? words.slice(0, 14).join(" ") + "…" : first;
+  };
+
   const speakStep = useCallback((i) => {
     const s = steps[i];
     if (!s) return;
     const prefix = tri(`Passo ${i + 1} di ${steps.length}. `, `Schritt ${i + 1} von ${steps.length}. `, `Step ${i + 1} of ${steps.length}. `, `Paso ${i + 1} de ${steps.length}. `, `Étape ${i + 1} sur ${steps.length}. `, `گام ${i + 1} از ${steps.length}. `);
-    speak(prefix + s);
+    speak(prefix + floorShort(s));
   }, [steps, speak, tri]);
 
   const goNext = useCallback(() => {

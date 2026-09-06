@@ -75,6 +75,7 @@ import AdaptiveProofing from "@/components/console/AdaptiveProofing";
 import AgvFleet from "@/components/console/AgvFleet";
 import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
+import PackagingSync from "@/components/console/PackagingSync";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
@@ -302,6 +303,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-agv" accent="#5E8CA8" beacon="#22c55e" icon="🚚" title={tri("Flotta AGV · Logistica", "AGV-Flotte · Logistik", "AGV Fleet · Logistics", "Flota AGV · Logística", "Flotte AGV · Logistique", "ناوگان AGV")} sub={tri("Routing autonomo dei carrelli + rilevamento acustico preventivo dei guasti.", "Autonomes Routing + akustische Früherkennung.", "Autonomous cart routing + preventive acoustic fault detection.", "Routing autónomo + detección acústica.", "Routage autonome + détection acoustique.", "مسیریابی خودکار + تشخیص صوتی.")}>
                       <AgvFleet />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-packaging" accent="#5E8CA8" beacon="#FFB800" icon="🔪" title={tri("Packaging · Affettatrici", "Packaging · Schneider", "Packaging · Slicers", "Empaquetado · Cortadoras", "Emballage · Trancheuses", "بسته‌بندی · برش")} sub={tri("Velocità affettatrici sincronizzata alla curva di raffreddamento del pane (mollica intatta).", "Schneidegeschwindigkeit an Abkühlkurve gekoppelt.", "Slicer speed matched to bread cooling curve (crumb intact).", "Velocidad según curva de enfriamiento.", "Vitesse selon courbe de refroidissement.", "سرعت برش هماهنگ با خنک‌شدن نان.")}>
+                      <PackagingSync />
                     </HoloPanel>
                     <HoloPanel testid="panel-timeline" accent="#00F0FF" beacon="#7DD3FC" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
                       <TimelineTurno />

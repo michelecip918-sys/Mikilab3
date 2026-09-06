@@ -10564,6 +10564,81 @@ async def bako_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
     return {"events": events, "count": len(events)}
 
 
+# --- Packaging & Slicing: velocità affettatrici sincronizzata alla curva di raffreddamento ---
+@api_router.get("/bako/packaging")
+async def bako_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict = Depends(require_admin)):
+    """Regola la velocità delle affettatrici sulla curva di raffreddamento del pane: pane
+    troppo caldo → attende/rallenta (mollica deformabile); pane freddo → velocità piena."""
+    it = not (lang or "it").startswith("en")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    TARGET = 35.0
+    HOT = 55.0
+    cool_rate = 1.2  # °C/min raffreddamento medio
+    minutes_left = max(0, round((bread_temp_c - TARGET) / cool_rate)) if bread_temp_c > TARGET else 0
+    if bread_temp_c >= HOT:
+        mode, speed = "attendi", 0
+    elif bread_temp_c <= TARGET:
+        mode, speed = "nominale", 100
+    else:
+        # tra 35 e 55°C: velocità 40→95% man mano che si raffredda
+        speed = round(95 - (bread_temp_c - TARGET) / (HOT - TARGET) * 55)
+        mode = "rallenta"
+    label = {"attendi": R("ATTENDI (pane caldo)", "WAIT (bread hot)"), "rallenta": R("RALLENTA", "SLOW"),
+             "nominale": R("NOMINALE", "FULL SPEED")}[mode]
+    spoken = R(
+        f"Pane a {round(bread_temp_c)} gradi. Affettatrici in modalità {label}, velocità {speed} percento." + (f" Pronte tra {minutes_left} minuti." if minutes_left else ""),
+        f"Bread at {round(bread_temp_c)} degrees. Slicers {label}, speed {speed} percent." + (f" Ready in {minutes_left} minutes." if minutes_left else ""),
+    )
+    return {"bread_temp_c": round(bread_temp_c, 1), "target_c": TARGET, "slicer_speed_pct": speed,
+            "mode": mode, "mode_label": label, "cooling_minutes_left": minutes_left, "spoken": spoken}
+
+
+# --- Sfida tra turni: classifica reattività SOS settimanale con badge ---
+@api_router.get("/bako/sos/challenge")
+async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Trasforma la reattività SOS in una competizione SETTIMANALE tra turni, con badge."""
+    it = not (lang or "it").startswith("en")
+    now = datetime.now(timezone.utc)
+    week_start = now - timedelta(days=now.weekday(), hours=now.hour, minutes=now.minute, seconds=now.second)
+    docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).to_list(500)
+    board = {}
+    for d in docs:
+        try:
+            ca = datetime.fromisoformat(d.get("created_at"))
+        except Exception:
+            continue
+        if ca < week_start:
+            continue
+        sh = _shift_of(d.get("created_at") or "")
+        b = board.setdefault(sh, {"shift": sh, "count": 0, "total_s": 0})
+        b["count"] += 1
+        if d.get("response_seconds") is not None:
+            b["total_s"] += d["response_seconds"]
+    rows = []
+    for b in board.values():
+        rows.append({"shift": b["shift"], "count": b["count"],
+                     "avg_response_s": round(b["total_s"] / b["count"]) if b["count"] else 0})
+    # Badge: 🥇 più reattivo (avg minore), 🔥 più interventi.
+    if rows:
+        fastest = min(rows, key=lambda r: r["avg_response_s"])["shift"]
+        busiest = max(rows, key=lambda r: r["count"])["shift"]
+        for r in rows:
+            badges = []
+            if r["shift"] == fastest:
+                badges.append("🥇")
+            if r["shift"] == busiest:
+                badges.append("🔥")
+            r["badges"] = badges
+        rows.sort(key=lambda r: r["avg_response_s"])
+        champion = fastest
+    else:
+        champion = None
+    wk = week_start.strftime("%d/%m")
+    return {"leaderboard": rows, "champion": champion, "week_start": wk,
+            "title": (f"Sfida della settimana (dal {wk})" if it else f"Weekly challenge (from {wk})")}
+
+
+
 
 
 

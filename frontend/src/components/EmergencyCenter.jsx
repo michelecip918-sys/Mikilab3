@@ -19,11 +19,15 @@ export default function EmergencyCenter() {
   const [guides, setGuides] = useState({});
   const [loadingGuide, setLoadingGuide] = useState(null);
   const [hist, setHist] = useState(null);
+  const [chal, setChal] = useState(null);
   const [showHist, setShowHist] = useState(false);
   const seen = useRef(new Set());
   const acked = useRef(new Set());
 
-  const loadHist = useCallback(async () => { try { setHist(await bakoApi.sosHistory(lang)); } catch { /* */ } }, [lang]);
+  const loadHist = useCallback(async () => {
+    try { setHist(await bakoApi.sosHistory(lang)); } catch { /* */ }
+    try { setChal(await bakoApi.sosChallenge(lang)); } catch { /* */ }
+  }, [lang]);
   useEffect(() => { loadHist(); }, [loadHist]);
 
   // Battito unico: gli SOS attivi arrivano dall'heartbeat (un solo polling).
@@ -115,6 +119,17 @@ export default function EmergencyCenter() {
           </button>
           {showHist && (
             <div data-testid="sos-history" className="space-y-2 mt-1">
+              {chal && chal.leaderboard && chal.leaderboard.length > 0 && (
+                <div data-testid="sos-challenge" className="rounded-xl border border-[#00F0FF]/30 bg-[#00F0FF]/5 p-2.5">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] mb-1.5">🏁 {chal.title}</p>
+                  {chal.leaderboard.map((b) => (
+                    <div key={b.shift} data-testid={`sos-challenge-${b.shift}`} className="flex items-center justify-between text-[12px] text-white py-0.5">
+                      <span className="capitalize">{(b.badges || []).join(" ")} {b.shift} <span className="text-[#64748b]">({b.count})</span></span>
+                      <span className="font-bold text-[#00F0FF]">{fmtDur(b.avg_response_s)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               {hist.leaderboard.length > 0 && (
                 <div className="rounded-xl border border-[#FFB800]/30 bg-[#FFB800]/5 p-2.5">
                   <p className="text-[11px] font-black uppercase tracking-widest text-[#FFB800] flex items-center gap-1.5 mb-1.5"><Trophy className="w-3.5 h-3.5" /> {tri("Reattività per turno", "Reaktion pro Schicht", "Reactivity per shift", "Reactividad por turno", "Réactivité par équipe", "واکنش هر شیفت")}</p>

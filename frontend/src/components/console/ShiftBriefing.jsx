@@ -50,6 +50,15 @@ export default function ShiftBriefing({ onClose }) {
                 <motion.span aria-hidden className="absolute -inset-2 rounded-full" style={{ background: `radial-gradient(circle, ${on ? stressColor : c}66, transparent 70%)` }}
                   animate={{ scale: on ? [1, 1.15, 1] : 1, opacity: on ? [0.6, 1, 0.6] : 0.4 }} transition={{ duration: 1.4, repeat: on ? Infinity : 0 }} />
                 <img src={`${PUB}/${ln.avatar}`} alt={ln.who || ""} className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover object-top" style={{ border: `2px solid ${on ? stressColor : c}`, boxShadow: `0 0 ${on ? 30 : 14}px ${on ? stressColor : c}88` }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                {on && (
+                  <div data-testid={`briefing-mouth-${i}`} aria-hidden className="absolute left-1/2 -translate-x-1/2 bottom-2 flex items-end gap-[3px] h-4">
+                    {[0, 1, 2, 3, 4].map((b) => (
+                      <motion.span key={b} className="w-[3px] rounded-full" style={{ background: stressColor }}
+                        animate={{ height: [4, 14, 6, 12, 4] }}
+                        transition={{ duration: 0.5, repeat: Infinity, delay: b * 0.09, ease: "easeInOut" }} />
+                    ))}
+                  </div>
+                )}
               </motion.div>
               <span className="mt-2 font-cyber text-[10px] sm:text-xs uppercase tracking-wider" style={{ color: on ? stressColor : "#7d97ac" }}>{ln.who || ""}</span>
             </div>
