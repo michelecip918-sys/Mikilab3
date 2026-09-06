@@ -2156,7 +2156,7 @@ async def get_lab_config():
 
 
 @api_router.put("/lab-config", response_model=LabConfig)
-async def save_lab_config(payload: LabConfig, user: dict = Depends(current_user)):
+async def save_lab_config(payload: LabConfig, admin: dict = Depends(require_admin)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.lab_config.update_one(
@@ -3066,9 +3066,10 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
             f"Sezioni operative attive: {_sections_now or 'nessuna'}. "
             f"Operatori timbrati oggi: {_workers_today}.")
     _mem_key = (admin.get("email") or "master").lower()
-    _hist = _GOVERN_MEMORY.get(_mem_key, [])
+    _memdoc = (await db.bako_memory.find_one({"email": _mem_key}, {"_id": 0})) or {}
+    _hist = _memdoc.get("turns", [])
 
-    parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None, "reply": None}
+    parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None, "reply": None, "mood": None}
     if EMERGENT_LLM_KEY:
         try:
             _langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "italiano")
@@ -3085,7 +3086,8 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
                 "Restituisci SOLO un JSON valido: "
                 "{\"intent\":\"assign_leader|remove_leader|create_section|delete_section|chat\","
                 "\"line\":\"baguette|pane|pizzeria|pasticceria|null\",\"leader\":\"nome o null\","
-                "\"section_name\":\"nome o null\",\"reply\":\"la tua risposta naturale e umana al Master\"}. "
+                "\"section_name\":\"nome o null\",\"mood\":\"calm|busy|alert|ownership|proud\","
+                "\"reply\":\"la tua risposta naturale e umana al Master\"}. "
                 "Usa 'chat' quando il Master conversa, chiede informazioni o fa domande (nessuna azione strutturale). "
                 "Per le azioni, 'reply' è una conferma breve, calda e umana. Nessun testo fuori dal JSON."
             )
@@ -3170,16 +3172,86 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
             "Dimmi pure: posso assegnare una linea a un caposquadra, creare una sezione o darti lo stato di produzione, magazzino e compliance.",
             "Tell me: I can assign a line to a leader, create a section, or give you production, stock and compliance status.")
 
-    # Memoria breve di sessione: BakoMix ricorda il filo del discorso (naturalezza).
+    # Umore dell'orb (avatar reattivo): colore/pulsazione in base a intent e stato.
+    mood = (parsed.get("mood") or "").strip().lower()
+    if mood not in ("calm", "busy", "alert", "proud"):
+        if intent in ("assign_leader", "create_section"):
+            mood = "proud"
+        elif intent in ("remove_leader", "delete_section"):
+            mood = "busy"
+        else:
+            mood = "calm"
+
+    # Memoria PERSISTENTE (cross-sessione, MongoDB): BakoMix ricorda il filo del discorso.
     try:
-        _h = _GOVERN_MEMORY.get(_mem_key, [])
+        _h = list(_hist)
         _h.append(f"MASTER: {txt}")
         _h.append(f"BAKOMIX: {reply}")
-        _GOVERN_MEMORY[_mem_key] = _h[-12:]
+        _h = _h[-20:]
+        await db.bako_memory.update_one({"email": _mem_key}, {"$set": {"email": _mem_key, "turns": _h, "updated_at": now_iso()}}, upsert=True)
     except Exception:
         pass
 
-    return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed}
+    return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed, "mood": mood}
+
+
+@api_router.post("/master/govern/stream")
+async def master_govern_stream(body: MasterGovernReq, admin: dict = Depends(require_admin)):
+    """Come /master/govern ma in STREAMING SSE: la risposta di BakoMix arriva parola-per-parola (bassa latenza percepita)."""
+    result = await master_govern(body, admin)
+    reply = result.get("reply") or ""
+
+    async def gen():
+        # meta iniziale (intent/mood/executed) così l'orb reagisce subito
+        yield f"data: {json.dumps({'meta': {k: result.get(k) for k in ('intent', 'executed', 'mood', 'state')}})}\n\n"
+        buf = ""
+        for i, w in enumerate(reply.split(" ")):
+            buf = w if i == 0 else buf + " " + w
+            yield f"data: {json.dumps({'delta': (w if i == 0 else ' ' + w), 'text': buf})}\n\n"
+            await asyncio.sleep(0.035)
+        yield f"data: {json.dumps({'done': True, 'reply': reply, **{k: result.get(k) for k in ('intent', 'executed', 'mood', 'state')}})}\n\n"
+
+    return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+@api_router.get("/bako/proactive")
+async def bako_proactive(lang: str = "it", admin: dict = Depends(require_admin)):
+    """BakoMix proattivo: rileva scorte sotto soglia, linee senza caposquadra e violazioni ArbZG di oggi."""
+    R = lambda i, e: (i if not (lang or "it").startswith("en") else e)  # noqa: E731
+    alerts = []
+    # 1) Scorte sotto soglia
+    try:
+        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+            mn = float(s.get("min_kg") or 0)
+            q = float(s.get("quantity_kg") or 0)
+            if mn > 0 and q <= mn:
+                alerts.append({"id": f"stock-{s.get('id')}", "kind": "stock", "severity": "warning",
+                               "text": R(f"Scorta bassa: {s.get('name')} a {q:g} kg, sotto la soglia di {mn:g} kg.",
+                                         f"Low stock: {s.get('name')} at {q:g} kg, below the {mn:g} kg threshold.")})
+    except Exception:
+        pass
+    # 2) Compliance ArbZG di oggi
+    try:
+        today = now_iso()[:10]
+        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+        by_w = {}
+        for l in logs:
+            by_w.setdefault(l["worker"], []).append(l)
+        violations = [w for w, evs in by_w.items() if not _arbzg_summary(sorted(evs, key=lambda x: x["seq"]))["compliant"]]
+        if violations:
+            alerts.append({"id": f"arbzg-{today}", "kind": "compliance", "severity": "alert",
+                           "text": R(f"Attenzione ArbZG: {len(violations)} operatori oltre i limiti di orario oggi.",
+                                     f"ArbZG warning: {len(violations)} staff over working-time limits today.")})
+        # 3) Linea senza caposquadra mentre c'è gente al lavoro
+        if by_w:
+            ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+            if not (ld.get("leaders") or {}):
+                alerts.append({"id": f"noleader-{today}", "kind": "leader", "severity": "warning",
+                               "text": R("Nessuna linea ha un caposquadra oggi: vuoi che ne assegni uno?",
+                                         "No line has a leader today: want me to assign one?")})
+    except Exception:
+        pass
+    return {"alerts": alerts, "count": len(alerts)}
 
 
 # ---------------------------------------------------------------------------

@@ -26,7 +26,7 @@ function buildSteps(recipe, factor, tri, ingName) {
   if (salt > 0) steps.push({ key: "salt", name: tri("Sale", "Salz", "Salt", "Sal", "Sel", "نمک"), target: Math.round(salt), color: "#94A3B8" });
   (recipe.extra_ingredients || []).forEach((ing, i) => {
     const g = Math.round(flourBase * (Number(ing.percent || 0) / 100));
-    if (g > 0) steps.push({ key: `ex${i}`, name: ingName(ing), target: g, color: "#c084fc" });
+    if (g > 0) steps.push({ key: `ex${i}`, name: ingName(ing), target: g, color: "#7DA3C0" });
   });
   return steps;
 }

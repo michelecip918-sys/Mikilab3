@@ -98,8 +98,8 @@ export default function EnterpriseGrid({ onClose }) {
 
         {/* Omni-Intelligence: benchmarking cross-sede + strategie */}
         {omni && (
-          <div data-testid="enterprise-omni" className="rounded-2xl border border-[#a855f7]/40 p-3 mb-4" style={{ background: "linear-gradient(135deg,#a855f718,transparent)" }}>
-            <p className="text-[11px] font-black uppercase tracking-widest text-[#c084fc] flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("BakoMix Omni-Intelligence", "Omni-Intelligenz", "Omni-Intelligence", "Omni-Inteligencia", "Omni-Intelligence", "هوش کل‌نگر")}</p>
+          <div data-testid="enterprise-omni" className="rounded-2xl border border-[#5E8CA8]/40 p-3 mb-4" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }}>
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#7DA3C0] flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("BakoMix Omni-Intelligence", "Omni-Intelligenz", "Omni-Intelligence", "Omni-Inteligencia", "Omni-Intelligence", "هوش کل‌نگر")}</p>
             <div className="flex items-center justify-between mt-1.5 text-[12px]">
               <span className="text-[#22c55e]">▲ {omni.top_site?.name} {omni.top_site?.avg_score}%</span>
               <span className="text-[#f59e0b]">▼ {omni.struggling_site?.name} {omni.struggling_site?.avg_score}%</span>

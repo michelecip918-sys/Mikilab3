@@ -83,8 +83,8 @@ export default function CompliancePanel() {
           </div>
 
           {/* DGUV · Sicurezza */}
-          <div data-testid="compliance-dguv" className="rounded-2xl border border-[#8b5cf6]/40 bg-[#8b5cf60d] p-4 space-y-2">
-            <p className="text-xs font-black text-[#a78bfa] flex items-center gap-1.5"><ShieldAlert className="w-4 h-4" /> {tri("Gefährdungsbeurteilung & Unterweisung (DGUV)", "Gefährdungsbeurteilung & Unterweisung (DGUV)", "Hazard assessment & training (DGUV)", "Evaluación de riesgos y formación (DGUV)", "Évaluation des risques & formation (DGUV)", "ارزیابی خطر و آموزش (DGUV)")}</p>
+          <div data-testid="compliance-dguv" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-4 space-y-2">
+            <p className="text-xs font-black text-[#7DA3C0] flex items-center gap-1.5"><ShieldAlert className="w-4 h-4" /> {tri("Gefährdungsbeurteilung & Unterweisung (DGUV)", "Gefährdungsbeurteilung & Unterweisung (DGUV)", "Hazard assessment & training (DGUV)", "Evaluación de riesgos y formación (DGUV)", "Évaluation des risques & formation (DGUV)", "ارزیابی خطر و آموزش (DGUV)")}</p>
             {(safety ? safety.hazards : []).map((h) => (
               <div key={h.id} className="flex items-center gap-2 text-[11px]">
                 <span className={`px-1.5 py-0.5 rounded font-bold ${h.level === "alto" ? "bg-rose-500/15 text-rose-400" : "bg-amber-500/15 text-amber-400"}`}>{h.machine}</span>
@@ -95,7 +95,7 @@ export default function CompliancePanel() {
               {(safety ? safety.trainings : []).map((t) => (
                 <div key={t.id} className="flex items-center gap-2 text-[11px]">
                   <span className="text-[#cbd5e1] flex-1 min-w-0 truncate">{t.title} <span className="text-[#64748B]">· {t.interval}</span></span>
-                  <button data-testid={`compliance-ack-${t.id}`} onClick={() => ack(t.id)} className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#8b5cf6]/15 border border-[#8b5cf6]/40 text-[#a78bfa] font-bold active:scale-95 transition-all">
+                  <button data-testid={`compliance-ack-${t.id}`} onClick={() => ack(t.id)} className="shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 text-[#7DA3C0] font-bold active:scale-95 transition-all">
                     <Check className="w-3 h-3" /> {tri("Conferma", "Bestätigen", "Ack", "Confirmar", "Valider", "تأیید")}
                   </button>
                 </div>

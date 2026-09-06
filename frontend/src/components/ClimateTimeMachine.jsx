@@ -82,21 +82,21 @@ export default function ClimateTimeMachine({ onClose }) {
 
         {/* Correzione AI */}
         {adj && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} data-testid="climate-adjustment" className="rounded-3xl border p-4" style={{ borderColor: `${(v?.c) || "#a855f7"}55`, background: `${(v?.c) || "#a855f7"}0d` }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} data-testid="climate-adjustment" className="rounded-3xl border p-4" style={{ borderColor: `${(v?.c) || "#5E8CA8"}55`, background: `${(v?.c) || "#5E8CA8"}0d` }}>
             {v && <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full mb-3" style={{ background: `${v.c}22`, color: v.c }} data-testid="climate-verdict">{tri(v.it, v.de, v.en, v.es, v.fr, v.fa)}</span>}
             <p className="text-sm text-white font-bold leading-snug mb-3" data-testid="climate-summary">{adj.summary}</p>
             <div className="grid grid-cols-3 gap-2 mb-3">
               <div className="rounded-xl bg-[#030712] border border-[#1e293b] p-2.5 text-center">
                 <p className="text-[9px] font-bold uppercase text-[#94A3B8]">{tri("Idratazione", "Hydration", "Hydration", "Hidratación", "Hydratation", "هیدراتاسیون")}</p>
-                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#c084fc" }} data-testid="climate-hyd-delta">{deltaStr(adj.hydration_delta_pct)}%</p>
+                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#7DA3C0" }} data-testid="climate-hyd-delta">{deltaStr(adj.hydration_delta_pct)}%</p>
               </div>
               <div className="rounded-xl bg-[#030712] border border-[#1e293b] p-2.5 text-center">
                 <p className="text-[9px] font-bold uppercase text-[#94A3B8]">{tri("Lievito", "Hefe", "Yeast", "Levadura", "Levure", "مخمر")}</p>
-                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#c084fc" }} data-testid="climate-yeast-delta">{deltaStr(adj.yeast_delta_pct)}%</p>
+                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#7DA3C0" }} data-testid="climate-yeast-delta">{deltaStr(adj.yeast_delta_pct)}%</p>
               </div>
               <div className="rounded-xl bg-[#030712] border border-[#1e293b] p-2.5 text-center">
                 <p className="text-[9px] font-bold uppercase text-[#94A3B8]">{tri("Puntata", "Gare", "Ferment.", "Fermentac.", "Pointage", "تخمیر")}</p>
-                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#c084fc" }} data-testid="climate-ferm-delta">{deltaStr(adj.fermentation_delta_min)}′</p>
+                <p className="text-xl font-black font-mono-data" style={{ color: v?.c || "#7DA3C0" }} data-testid="climate-ferm-delta">{deltaStr(adj.fermentation_delta_min)}′</p>
               </div>
             </div>
             {(adj.tips || []).length > 0 && (

@@ -51,7 +51,7 @@ export default function MohamedFloor() {
         const base = (c.features || []).filter(Boolean);
         const ex = (extras[c.id] || []).filter((f) => f && !base.includes(f));
         const roles = [...base, ...ex];
-        merged.push({ key: c.id, label: `🏭 ${c.title}`, color: "#8b5cf6", roles: roles.length ? roles : ["Postazione Universale"] });
+        merged.push({ key: c.id, label: `🏭 ${c.title}`, color: "#5E8CA8", roles: roles.length ? roles : ["Postazione Universale"] });
       });
       setDepts(merged);
     }).catch(() => { /* offline → resta la lista base */ });

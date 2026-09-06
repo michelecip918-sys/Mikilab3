@@ -97,8 +97,8 @@ export default function ProductionPipeline({ onClose }) {
         </div>
 
         {line?.bako_note && (
-          <div className="mt-4 rounded-2xl border border-[#a855f7]/40 p-3 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#a855f718,transparent)" }}>
-            <Gauge className="w-4 h-4 text-[#c084fc] mt-0.5 shrink-0" />
+          <div className="mt-4 rounded-2xl border border-[#5E8CA8]/40 p-3 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }}>
+            <Gauge className="w-4 h-4 text-[#7DA3C0] mt-0.5 shrink-0" />
             <p className="text-[12px] text-[#cfe0ec]">{line.bako_note}</p>
           </div>
         )}

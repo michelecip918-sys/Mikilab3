@@ -83,14 +83,14 @@ export default function SpatialVisionAR({ onClose }) {
     <div data-testid="spatial-vision-ar" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><ScanLine className="w-5 h-5 text-[#c084fc]" /> {tri("Vision AR · Scansiona Lab", "Vision AR · Labor scannen", "Vision AR · Scan Lab", "Vision AR · Escanear Lab", "Vision AR · Scanner Labo", "ویژن AR · اسکن آزمایشگاه")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><ScanLine className="w-5 h-5 text-[#7DA3C0]" /> {tri("Vision AR · Scansiona Lab", "Vision AR · Labor scannen", "Vision AR · Scan Lab", "Vision AR · Escanear Lab", "Vision AR · Scanner Labo", "ویژن AR · اسکن آزمایشگاه")}</h2>
           <button data-testid="vision-close" onClick={() => { stopCam(); onClose(); }} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
         <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Inquadra il laboratorio: l'IA riconosce i macchinari e li posiziona sulla mappa spaziale.", "Filme das Labor: die KI erkennt die Maschinen und platziert sie auf der Karte.", "Point at the lab: the AI recognizes machines and places them on the spatial map.", "Enfoca el laboratorio: la IA reconoce las máquinas y las ubica en el mapa.", "Filme le labo : l'IA reconnaît les machines et les place sur la carte.", "آزمایشگاه را نشانه بگیر: هوش مصنوعی ماشین‌ها را می‌شناسد و روی نقشه می‌گذارد.")}</p>
 
         {sites.length > 0 && (
-          <select data-testid="vision-site-select" value={siteId} onChange={(e) => setSiteId(e.target.value)} className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-xl p-3 text-sm text-white outline-none focus:border-[#c084fc] mb-4">
+          <select data-testid="vision-site-select" value={siteId} onChange={(e) => setSiteId(e.target.value)} className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-xl p-3 text-sm text-white outline-none focus:border-[#7DA3C0] mb-4">
             {sites.map((s) => (<option key={s.site_id} value={s.site_id}>{s.name}</option>))}
           </select>
         )}
@@ -106,34 +106,34 @@ export default function SpatialVisionAR({ onClose }) {
           )}
           {camOn && (
             <>
-              <div className="absolute inset-4 border-2 border-[#c084fc]/60 rounded-xl pointer-events-none" />
-              {scanning && <div className="absolute inset-0 bg-[#c084fc]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#c084fc] animate-spin" /></div>}
+              <div className="absolute inset-4 border-2 border-[#7DA3C0]/60 rounded-xl pointer-events-none" />
+              {scanning && <div className="absolute inset-0 bg-[#7DA3C0]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#7DA3C0] animate-spin" /></div>}
             </>
           )}
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
           {!camOn ? (
-            <button data-testid="vision-start-cam" onClick={startCam} className="col-span-2 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0b0f19] border border-[#c084fc]/50 text-[#c084fc] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Accendi fotocamera", "Kamera an", "Turn on camera", "Encender cámara", "Allumer la caméra", "روشن کردن دوربین")}</button>
+            <button data-testid="vision-start-cam" onClick={startCam} className="col-span-2 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0b0f19] border border-[#7DA3C0]/50 text-[#7DA3C0] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Accendi fotocamera", "Kamera an", "Turn on camera", "Encender cámara", "Allumer la caméra", "روشن کردن دوربین")}</button>
           ) : (
             <>
-              <button data-testid="vision-scan-btn" onClick={captureAndScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#a855f7] to-[#7c3aed] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+              <button data-testid="vision-scan-btn" onClick={captureAndScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#5E8CA8] to-[#38618C] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
               <button data-testid="vision-stop-cam" onClick={stopCam} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-[#94A3B8] font-bold text-sm active:scale-95"><X className="w-4 h-4" /> {tri("Spegni", "Aus", "Off", "Apagar", "Éteindre", "خاموش")}</button>
             </>
           )}
         </div>
 
         {insight && (
-          <div className="rounded-2xl border border-[#c084fc]/40 p-3 mb-4 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#a855f718,transparent)" }} data-testid="vision-insight">
-            <Sparkles className="w-4 h-4 text-[#c084fc] mt-0.5 shrink-0" />
+          <div className="rounded-2xl border border-[#7DA3C0]/40 p-3 mb-4 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }} data-testid="vision-insight">
+            <Sparkles className="w-4 h-4 text-[#7DA3C0] mt-0.5 shrink-0" />
             <p className="text-[12px] text-[#cfe0ec]">{insight}</p>
           </div>
         )}
 
         {/* Mappa spaziale */}
         <div className="flex items-center justify-between mb-2">
-          <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#c084fc]" /> {tri("Mappa spaziale", "Raumkarte", "Spatial map", "Mapa espacial", "Carte spatiale", "نقشه فضایی")}</p>
-          <button data-testid="vision-reload-map" onClick={() => loadLayout(siteId)} className="text-[#64748B] hover:text-[#c084fc]"><RefreshCw className="w-3.5 h-3.5" /></button>
+          <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5 text-[#7DA3C0]" /> {tri("Mappa spaziale", "Raumkarte", "Spatial map", "Mapa espacial", "Carte spatiale", "نقشه فضایی")}</p>
+          <button data-testid="vision-reload-map" onClick={() => loadLayout(siteId)} className="text-[#64748B] hover:text-[#7DA3C0]"><RefreshCw className="w-3.5 h-3.5" /></button>
         </div>
         <div data-testid="vision-map" className="relative w-full rounded-2xl border border-[#1e293b] bg-[#0b0f19] overflow-hidden" style={{ aspectRatio: `${dims.width} / ${dims.length}` }}>
           <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(#1e293b 1px,transparent 1px),linear-gradient(90deg,#1e293b 1px,transparent 1px)", backgroundSize: "10% 10%" }} />
@@ -146,7 +146,7 @@ export default function SpatialVisionAR({ onClose }) {
               <div key={e.id} data-testid={`vision-eq-${e.id}`} className="absolute -translate-x-1/2 -translate-y-1/2 flex flex-col items-center" style={{ left: `${left}%`, top: `${top}%` }}>
                 <div className="w-9 h-9 rounded-full flex items-center justify-center text-base shadow-lg" style={{ background: `${c}22`, border: `2px solid ${c}`, boxShadow: `0 0 12px ${c}66` }}>{TYPE_ICON[e.type] || TYPE_ICON.other}</div>
                 <span className="mt-0.5 text-[8px] font-bold text-white bg-[#030712]/80 px-1 rounded max-w-[80px] truncate">{e.name}</span>
-                {e.source === "vision_ar" && <span className="text-[7px] text-[#c084fc] font-black">AR</span>}
+                {e.source === "vision_ar" && <span className="text-[7px] text-[#7DA3C0] font-black">AR</span>}
               </div>
             );
           })}

@@ -329,14 +329,14 @@ export default function AdminPanel({ open, onOpenChange }) {
           </button>
         </div>
 
-        <div data-testid="admin-invites" className="rounded-2xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 p-4 mt-2 space-y-3">
-          <p className="flex items-center gap-2 text-sm font-semibold text-[#a78bfa]">
+        <div data-testid="admin-invites" className="rounded-2xl bg-[#5E8CA8]/10 border border-[#5E8CA8]/30 p-4 mt-2 space-y-3">
+          <p className="flex items-center gap-2 text-sm font-semibold text-[#7DA3C0]">
             <KeyRound className="w-4 h-4" /> {de ? "Zugang auf Einladung (Ghost Mode)" : "Accesso su invito (Ghost Mode)"}
           </p>
           <p className="text-[11px] text-[#7E8A93]">{de ? "Registrierung nur per Einladungslink. Generiere einen Link und teile ihn." : "Registrazione solo su invito. Genera un link e condividilo."}</p>
           <button
             data-testid="admin-invite-gen" onClick={genInvite} disabled={inviteBusy}
-            className="w-full bg-[#8b5cf6] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-[#8b5cf6]/40 active:scale-98 transition-all inline-flex items-center justify-center gap-2"
+            className="w-full bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-[#5E8CA8]/40 active:scale-98 transition-all inline-flex items-center justify-center gap-2"
           >
             <KeyRound className="w-4 h-4" /> {de ? "Einladungslink erstellen + kopieren" : "Genera invito + copia link"}
           </button>
@@ -352,7 +352,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                     <p className="text-[10px] text-[#7E8A93]">{inv.used}/{inv.max_uses} {de ? "verwendet" : "usati"}{!inv.active ? (de ? " · widerrufen" : " · revocato") : ""}</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    {!dead && <button data-testid={`admin-invite-copy-${inv.token}`} onClick={() => copyInvite(inv.token)} className="p-2 rounded-lg text-[#a78bfa] hover:bg-[#8b5cf6]/15"><Copy className="w-4 h-4" /></button>}
+                    {!dead && <button data-testid={`admin-invite-copy-${inv.token}`} onClick={() => copyInvite(inv.token)} className="p-2 rounded-lg text-[#7DA3C0] hover:bg-[#5E8CA8]/15"><Copy className="w-4 h-4" /></button>}
                     {inv.active && <button data-testid={`admin-invite-revoke-${inv.token}`} onClick={() => revokeInvite(inv.token)} className="p-2 rounded-lg text-[#ef4444] hover:bg-[#ef4444]/15"><Trash2 className="w-4 h-4" /></button>}
                   </div>
                 </div>

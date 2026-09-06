@@ -565,8 +565,12 @@ export const plantApi = {
 
 // Governance Master-centrica via BakoMix: comando vocale/testuale → esecuzione strutturale.
 export const masterApi = {
-  govern: (command_text, lang) => api.post(`/master/govern`, { command_text, lang }).then((r) => r.data),
-  sections: () => api.get(`/master/sections`).then((r) => r.data),
+  govern: (command_text, lang) => api.post(`/master/govern`, { command_text, lang }).then((r) => r.data),  sections: () => api.get(`/master/sections`).then((r) => r.data),
+};
+
+// BakoMix proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
+export const bakoApi = {
+  proactive: (lang) => api.get(`/bako/proactive`, { params: { lang } }).then((r) => r.data),
 };
 
 // Anti-Fooling · Voice-Print Liveness (frase-sfida dal vivo).

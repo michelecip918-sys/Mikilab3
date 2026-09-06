@@ -33,11 +33,11 @@ export default function LineLeaders({ workers = [] }) {
   };
 
   return (
-    <div data-testid="line-leaders" className="rounded-2xl border border-[#8b5cf6]/40 bg-[#8b5cf60d] p-4 space-y-3">
+    <div data-testid="line-leaders" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-4 space-y-3">
       <div className="flex items-center gap-2">
-        <UserCog className="w-5 h-5 text-[#a78bfa]" />
+        <UserCog className="w-5 h-5 text-[#7DA3C0]" />
         <div>
-          <h3 className="text-sm font-extrabold text-[#a78bfa]">{tri("Delega Caposquadra", "Teamleiter-Delegation", "Line Leader Delegation", "Delegación de jefes", "Délégation chefs de ligne", "واگذاری سرتیم")}</h3>
+          <h3 className="text-sm font-extrabold text-[#7DA3C0]">{tri("Delega Caposquadra", "Teamleiter-Delegation", "Line Leader Delegation", "Delegación de jefes", "Délégation chefs de ligne", "واگذاری سرتیم")}</h3>
           <p className="text-[11px] text-[#94A3B8]">{tri("Supervisione per linea prodotto, senza intasare il flusso operatori.", "Aufsicht je Produktlinie, ohne den Bediener-Flow zu stören.", "Per-line oversight, without cluttering the worker flow.", "Supervisión por línea, sin saturar el flujo.", "Supervision par ligne, sans encombrer le flux.", "نظارت هر خط، بدون شلوغی جریان.")}</p>
         </div>
       </div>
@@ -47,11 +47,11 @@ export default function LineLeaders({ workers = [] }) {
             <span className="text-lg w-6 text-center shrink-0">{(LINE_META[ln.id] || {}).icon || "🏭"}</span>
             <span className="text-xs font-bold text-white flex-1 min-w-0 truncate">{ln.name}</span>
             <select data-testid={`leader-select-${ln.id}`} value={leaders[ln.id] || ""} onChange={(e) => assign(ln.id, e.target.value)}
-              className="bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-[#a78bfa] max-w-[55%]">
+              className="bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-xs text-white outline-none focus:border-[#7DA3C0] max-w-[55%]">
               <option value="">{tri("— nessuno —", "— keiner —", "— none —", "— ninguno —", "— aucun —", "— هیچ —")}</option>
               {names.map((n) => <option key={n} value={n}>{n}</option>)}
             </select>
-            {leaders[ln.id] && <Check className="w-4 h-4 text-[#a78bfa] shrink-0" />}
+            {leaders[ln.id] && <Check className="w-4 h-4 text-[#7DA3C0] shrink-0" />}
           </div>
         ))}
       </div>

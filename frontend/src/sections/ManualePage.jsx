@@ -85,7 +85,7 @@ const MACHINERY = [
     { name: "Celle Frigo / Lievitazione / Freezer", fn: "Clima dinamico e recupero catena del freddo", when: "Fermolievitazione, blocco notturno, scorte", voice: "«Miki, clima cella» · «Miki, recupero freddo»", mods: "40 Dynamic Climate Proofer · 10 Cold Chain Auto-Recovery" },
     { name: "Silos Farina Industriali", fn: "Telemetria livello e flusso farina", when: "Rifornimento e controllo scorte materie prime", voice: "«Miki, livello silos»", mods: "18 Digital Silo Telemetry" },
   ]},
-  { group: "Teglie, Stampi & Utensili", color: "#A78BFA", items: [
+  { group: "Teglie, Stampi & Utensili", color: "#7DA3C0", items: [
     { name: "Teglie / Stampi / Pale da forno", fn: "Tracciamento cicli, pulizia e sanificazione", when: "Rotazione utensili e igiene attrezzatura", voice: "«Miki, inventario teglie»", mods: "46 Dynamic Tray/Mold/Oven Tool Inventory" },
     { name: "Carrelli & Rack", fn: "Mappatura, parcheggio e buffer carrelli", when: "Logistica interna, sformata a onde", voice: "«Miki, dove parcheggio»", mods: "42 Rack & Trolley Buffer · 43 Multi-Oven Unloading Wave" },
   ]},

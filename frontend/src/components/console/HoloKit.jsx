@@ -24,7 +24,7 @@ export function ZoneDivider({ title, code, accent = "#00F0FF", testid }) {
   );
 }
 
-export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaultOpen = false, collapsible = true, beacon = "#00FF66", children }) {
+export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaultOpen = false, collapsible = true, beacon = "#7DD3FC", children }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
     <div data-testid={testid} className="holo-panel">
@@ -55,6 +55,28 @@ export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaul
           </motion.div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+export function ZoneHero({ avatar, name, role, tag, accent = "#00F0FF", testid, reactive = false }) {
+  const PUB = process.env.PUBLIC_URL;
+  return (
+    <div data-testid={testid} className="relative flex items-center gap-4 mb-5 rounded-2xl p-4 holo-panel overflow-hidden">
+      <span className="holo-corner holo-corner-tl" style={{ color: accent }} />
+      <span className="holo-corner holo-corner-br" style={{ color: accent }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(circle at 12% 50%, ${accent}18, transparent 60%)` }} />
+      <div className="relative shrink-0">
+        <motion.span aria-hidden className="absolute -inset-1.5 rounded-full" style={{ background: `radial-gradient(circle, ${accent}55, transparent 70%)` }}
+          animate={reactive ? { scale: [1, 1.12, 1], opacity: [0.55, 0.9, 0.55] } : { opacity: 0.5 }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }} />
+        <img src={`${PUB}/${avatar}`} alt={name} className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover object-top" style={{ border: `2px solid ${accent}`, boxShadow: `0 0 22px ${accent}66` }}
+          onError={(e) => { e.currentTarget.style.display = "none"; }} />
+      </div>
+      <div className="relative min-w-0">
+        {tag && <span className="inline-block font-mono-data text-[9px] tracking-[0.25em] uppercase mb-1" style={{ color: accent }}>{tag}</span>}
+        <h3 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide truncate" style={{ textShadow: `0 0 14px ${accent}33` }}>{name}</h3>
+        {role && <p className="text-xs text-[#9fb3c4] truncate">{role}</p>}
+      </div>
     </div>
   );
 }

@@ -1,0 +1,36 @@
+{
+  "summary": "Iter 193 — Security perimeter validato end-to-end. Backend: 16/16 pytest OK. Endpoints admin (PUT /api/lab-config, PUT /api/production-pin, PUT /api/admin-gate, POST /api/master/govern, GET /api/bako/proactive) rispondono 401 senza sessione admin e 200 con cookie admin. I due verify pubblici (/api/admin-gate/verify, /api/production-pin/verify) tornano 200 con solo {ok:bool}, NON rilasciano cookie session_token, e dopo il verify una PUT admin resta 401 → conferma POWERLESS. Frontend: AdminGate keypad 1985 sblocca la plancia; in zona Master senza login admin si vede SOLO capo-gate+capo-gate-login (screen 'CAPO ACCESS RESERVED') e ZERO pannelli admin (panel-ordine/ricette/magazzino/planner/ordini/radar/compliance/pin/docs assenti; master-console assente). Dopo login admin@mikilab.de/Mikilab2026! compaiono tutti i 9 HoloPanel + master-console. Flusso operatore: sbloccando floor-unlock-btn con Production PIN 1985 la zona Operatori mostra la roster crew, MA la zona Master resta con capo-gate/capo-gate-login (nessun pannello admin), account-btn continua a mostrare 'Sign in', nessun cookie di sessione impostato — Production PIN è effettivamente senza potere admin.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_iter193_security_perimeter.py",
+    "/app/test_reports/pytest/iter193.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Perimetro chiuso confermato: require_admin correttamente applicato sui PUT lab-config/production-pin/admin-gate e su master/govern e bako/proactive.",
+    "I verify pubblici restituiscono solo {ok:bool} senza side-effect di sessione — pattern corretto per keypad client-side.",
+    "Il frontend rende master-console solo se user.role==='admin', altrimenti capo-gate — nessuna leak di data-testid dei pannelli admin nel DOM anonimo."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter193_security_perimeter.py"],
+  "success_rate": {"backend": "100% (16/16)", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026!; AdminGate PIN 1985; Production PIN 1985",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Le PIN verify pubbliche NON devono mai rilasciare cookie session_token. Verificare con requests.Session e controllare session.cookies dopo la chiamata. Frontend: bypass gate con localStorage.setItem('mikilab_admin_unlocked','1') poi reload; per operatore cliccare floor-unlock-btn e usare keypad PinLock 1985. Controllare che in Master resti capo-gate/capo-gate-login e NON compaia master-console né panel-* senza login admin.",
+  "verified_features": [
+    "PUT /api/lab-config no-auth=401, admin=200",
+    "PUT /api/production-pin no-auth=401, admin=200",
+    "PUT /api/admin-gate no-auth=401, admin=200",
+    "POST /api/master/govern no-auth=401, admin=200 (chat IT + assign_leader)",
+    "GET /api/bako/proactive no-auth=401, admin=200",
+    "POST /api/admin-gate/verify pubblico, {ok:true} con 1985, {ok:false} con 0000, NO session cookie, PUT lab-config successiva resta 401",
+    "POST /api/production-pin/verify pubblico, {ok:true} con 1985, {ok:false} con 0000, NO session cookie, PUT production-pin successiva resta 401",
+    "GET /api/recipes admin: 149 ricette caricate",
+    "AdminGate keypad 1985 → plancia",
+    "Zona Master anon: solo capo-gate+capo-gate-login, ZERO pannelli admin",
+    "Zona Master post-login admin: master-console + panel-ordine/ricette/magazzino/planner/ordini/radar/compliance/pin/docs presenti",
+    "Production PIN 1985 unlock solo floor-zone; Master resta gated; account-btn='Sign in'; nessun cookie sessione"
+  ]
+}

@@ -363,7 +363,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                   <button data-testid="bakomix-pipeline-btn" onClick={() => setPipelineOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5EEAD4]/40 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                     <Factory className="w-4 h-4" /> {tri("Linea", "Linie", "Line", "Línea", "Ligne", "خط")}
                   </button>
-                  <button data-testid="bakomix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#c084fc]/40 text-[#c084fc] bg-[#a855f70d] active:scale-95 transition-transform">
+                  <button data-testid="bakomix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#5E8CA80d] active:scale-95 transition-transform">
                     <ScanLine className="w-4 h-4" /> {tri("Vision AR", "Vision AR", "Vision AR", "Vision AR", "Vision AR", "ویژن AR")}
                   </button>
                   <button data-testid="bakomix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
@@ -401,7 +401,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                     <Flame className="w-4 h-4" /> Batch Phoenix
                   </button>
                 </div>
-                <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#8b5cf6]/50 text-[#a78bfa] bg-[#8b5cf612] active:scale-95 transition-transform">
+                <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5E8CA8]/50 text-[#7DA3C0] bg-[#5E8CA812] active:scale-95 transition-transform">
                   <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>
                 <div data-testid="bakomix-glass-control" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3">
