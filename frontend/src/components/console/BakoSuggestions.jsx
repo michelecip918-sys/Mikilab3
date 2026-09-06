@@ -21,18 +21,28 @@ export default function BakoSuggestions() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [sug, setSug] = useState([]);
   const [busy, setBusy] = useState(null);
+  const [autopilot, setAutopilot] = useState(false);
+  const [autoActions, setAutoActions] = useState([]);
   const spokenRef = useRef("");
 
   const load = useCallback(async () => {
     try {
       const d = await bakoApi.suggestions(lang);
       setSug(d.suggestions || []);
+      setAutopilot(!!d.autopilot);
+      setAutoActions(d.autopilot_actions || []);
       const key = (d.suggestions || []).map((s) => s.id).join(",");
       if (key && spokenRef.current !== key) { spokenRef.current = key; try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
       if (!key) spokenRef.current = "";
     } catch { /* */ }
   }, [lang]);
   useEffect(() => { load(); const iv = setInterval(load, 10000); return () => clearInterval(iv); }, [load]);
+
+  const toggleAuto = async (e) => {
+    e.stopPropagation();
+    const next = !autopilot; setAutopilot(next);
+    try { await bakoApi.autopilotSet(next); toast.success(next ? tri("Auto-pilota BakoMix attivo", "Autopilot aktiv", "BakoMix autopilot on", "Piloto automático activo", "Pilote auto activé", "خلبان خودکار فعال") : tri("Auto-pilota disattivato", "Autopilot aus", "Autopilot off", "Piloto desactivado", "Pilote désactivé", "خلبان خاموش")); load(); } catch { setAutopilot(!next); }
+  };
 
   const goTo = (target) => {
     const el = document.querySelector(`[data-testid="${target}"]`);
@@ -59,7 +69,14 @@ export default function BakoSuggestions() {
 
   return (
     <div data-testid="bako-suggestions" className="rounded-2xl border border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/8 to-transparent p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("BakoMix · Suggerimenti", "BakoMix · Vorschläge", "BakoMix · Suggestions", "BakoMix · Sugerencias", "BakoMix · Suggestions", "بوکومیکس · پیشنهادها")}</p>
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("BakoMix · Suggerimenti", "BakoMix · Vorschläge", "BakoMix · Suggestions", "BakoMix · Sugerencias", "BakoMix · Suggestions", "بوکومیکس · پیشنهادها")}
+        <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#22c55e]/20 border-[#22c55e]/60 text-[#22c55e]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
+          <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
+        </button>
+      </p>
+      {autoActions.map((a, i) => (
+        <p key={i} data-testid={`autopilot-action-${i}`} className="mb-2 text-[12px] text-[#22c55e] font-semibold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {a}</p>
+      ))}
       {sug.length === 0 ? (
         <p data-testid="suggestions-clear" className="flex items-center gap-2 text-sm text-emerald-300/90"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> {tri("Tutto sotto controllo. Impianto fluido.", "Alles im Griff.", "All under control. Plant nominal.", "Todo bajo control.", "Tout sous contrôle.", "همه‌چیز تحت کنترل.")}</p>
       ) : (

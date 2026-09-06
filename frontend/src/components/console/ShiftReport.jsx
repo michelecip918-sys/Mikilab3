@@ -13,14 +13,20 @@ export default function ShiftReport() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [data, setData] = useState(null);
+  const [hist, setHist] = useState([]);
   const [busy, setBusy] = useState(false);
 
   const run = useCallback(async () => {
     setBusy(true);
-    try { const r = await bakoApi.shiftReport(lang); setData(r); if (r.spoken) { try { playTTS(r.spoken, { lang, voice: "bakemix" }); } catch { /* */ } } }
-    catch { /* */ }
+    try {
+      const r = await bakoApi.shiftReport(lang); setData(r);
+      if (r.spoken) { try { playTTS(r.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
+      try { const h = await bakoApi.mikiscoreHistory(); setHist(h.history || []); } catch { /* */ }
+    } catch { /* */ }
     setBusy(false);
   }, [lang]);
+
+  const GC = { A: "#22c55e", B: "#7DD3FC", C: "#FFB800", D: "#f43f5e" };
 
   const col = data ? (GRADE_COL[data.grade] || "#7DD3FC") : "#7DD3FC";
 
@@ -53,6 +59,19 @@ export default function ShiftReport() {
             <span>SOS: <b>{data.sos_today}</b> ({data.avg_response_s}s)</span>
             <span>{tri("Silos bassi", "Silos", "Low silos", "Silos", "Silos", "سیلو")}: <b>{data.silos_low}</b></span>
           </div>
+          {hist.length > 1 && (
+            <div data-testid="mikiscore-history" className="mt-3 pt-2 border-t border-white/10">
+              <p className="text-[10px] uppercase tracking-widest text-[#64748b] mb-1.5">{tri("Storico settimana", "Wochenverlauf", "Weekly history", "Historial", "Historique", "هفتگی")}</p>
+              <div className="flex items-end gap-1.5 h-16">
+                {hist.map((h) => (
+                  <div key={h.date} className="flex-1 flex flex-col items-center gap-1">
+                    <div className="w-full rounded-t" style={{ height: `${Math.max(6, h.score * 0.5)}px`, background: GC[h.grade] || "#7DD3FC" }} title={`${h.date}: ${h.score}`} />
+                    <span className="text-[8px] text-[#64748b]">{h.date.slice(8, 10)}/{h.date.slice(5, 7)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </motion.div>
       )}
     </div>

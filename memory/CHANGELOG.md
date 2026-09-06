@@ -329,3 +329,8 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Anteprima vocale lingue**: nel LangSelector ogni lingua pronta ha un'icona altoparlante che riproduce un saluto di BakoMix in quella lingua (8 lingue). 
 - **Suggerimenti eseguibili in 1 clic** (v55): Silos→micro-ordini, B2B→sync piano dalla card.
 - Tutto verificato via curl + screenshot. Nessun errore runtime.
+
+## v57 (2026-09) — Storico MikiScore + Auto-pilota BakoMix
+- **Storico MikiScore**: shift-report salva lo score giornaliero; GET /api/bako/mikiscore/history (7gg). UI: mini-grafico a barre settimanale in ShiftReport (appare dal 2° giorno).
+- **Auto-pilota**: GET/PUT /api/bako/autopilot; con ON BakoMix esegue in autonomia i micro-ordini silos e lo riporta in autopilot_actions (verificato). UI: toggle autopilot-toggle in BakoSuggestions.
+- Verificato via curl + screenshot. Nessun errore runtime.

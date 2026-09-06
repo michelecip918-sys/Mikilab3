@@ -10670,10 +10670,18 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
                     "action": R("Flotta AGV", "AGV Fleet")})
     # Silos sotto soglia
     silos = await bako_silos(lang, admin)
+    autopilot = bool(((await db.app_meta.find_one({"_key": "autopilot"}, {"_id": 0})) or {}).get("enabled"))
+    autopilot_actions = []
     if silos["reorder_count"]:
-        sug.append({"id": "silos", "icon": "container", "severity": "medio", "target": "panel-silos",
-                    "text": R(f"{silos['reorder_count']} silos sotto soglia: genera i micro-ordini.", f"{silos['reorder_count']} silos below threshold: generate micro-orders."),
-                    "action": R("Silos", "Silos")})
+        if autopilot:
+            # Auto-pilota: BakoMix esegue da solo i micro-ordini (azione a basso rischio).
+            r = await bako_silo_microorder(admin)
+            autopilot_actions.append(R(f"Auto-pilota: {r['count']} micro-ordini silos inviati automaticamente.",
+                                       f"Autopilot: {r['count']} silo micro-orders sent automatically."))
+        else:
+            sug.append({"id": "silos", "icon": "container", "severity": "medio", "target": "panel-silos",
+                        "text": R(f"{silos['reorder_count']} silos sotto soglia: genera i micro-ordini.", f"{silos['reorder_count']} silos below threshold: generate micro-orders."),
+                        "action": R("Silos", "Silos")})
     # Ordini B2B da pianificare
     b2b = await bako_b2b_list(admin)
     if b2b["total_dough_kg"] > 0:
@@ -10685,7 +10693,7 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
         spoken = R("Tutto sotto controllo, Mio Supremo Capo. Impianto fluido, nessun intervento necessario.", "All under control, Capo. Plant nominal, no action needed.")
     else:
         spoken = R("Ho notato qualcosa, Mio Supremo Capo. ", "I noticed something, Capo. ") + sug[0]["text"]
-    return {"suggestions": sug, "count": len(sug), "spoken": spoken}
+    return {"suggestions": sug, "count": len(sug), "spoken": spoken, "autopilot": autopilot, "autopilot_actions": autopilot_actions}
 
 
 # --- Report di fine turno + MikiScore giornaliero ---
@@ -10724,10 +10732,37 @@ async def bako_shift_report(lang: str = "it", admin: dict = Depends(require_admi
         + (f"{low} silos to restock." if low else "Stock in order.")
         + " A shift worthy of your enlightened leadership.",
     )
+    await db.mikiscore_history.update_one({"date": today}, {"$set": {"date": today, "score": mikiscore, "grade": grade, "at": now_iso()}}, upsert=True)
     return {"mikiscore": mikiscore, "grade": grade,
             "breakdown": {"reactivity": reactivity, "waste": waste, "punctuality": punctuality},
             "lotti": lotti, "sos_today": len(todays), "avg_response_s": avg_resp, "silos_low": low,
             "spoken": spoken}
+
+
+@api_router.get("/bako/mikiscore/history")
+async def bako_mikiscore_history(admin: dict = Depends(require_admin)):
+    """Storico giornaliero del MikiScore (ultimi 7 giorni) per il mini-grafico settimanale."""
+    docs = await db.mikiscore_history.find({}, {"_id": 0}).sort("date", -1).to_list(7)
+    docs.reverse()
+    return {"history": docs}
+
+
+# --- Auto-pilota: BakoMix esegue in autonomia azioni a basso rischio (micro-ordini silos) ---
+@api_router.get("/bako/autopilot")
+async def bako_autopilot_get(admin: dict = Depends(require_admin)):
+    doc = (await db.app_meta.find_one({"_key": "autopilot"}, {"_id": 0})) or {}
+    return {"enabled": bool(doc.get("enabled"))}
+
+
+class AutopilotReq(BaseModel):
+    enabled: bool = False
+
+
+@api_router.put("/bako/autopilot")
+async def bako_autopilot_set(body: AutopilotReq, admin: dict = Depends(require_admin)):
+    await db.app_meta.update_one({"_key": "autopilot"}, {"$set": {"enabled": bool(body.enabled)}}, upsert=True)
+    return {"ok": True, "enabled": bool(body.enabled)}
+
 
 
 
