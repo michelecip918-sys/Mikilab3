@@ -7711,11 +7711,15 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
         if not globals().get("_PDF_FONTS_READY"):
             pdfmetrics.registerFont(TTFont("NotoSans", _os.path.join(_fdir, "NotoSans-Regular.ttf")))
             pdfmetrics.registerFont(TTFont("NotoNaskhArabic", _os.path.join(_fdir, "NotoNaskhArabic-Regular.ttf")))
+            try:
+                pdfmetrics.registerFont(TTFont("WQY", "/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc", subfontIndex=0))
+            except Exception:
+                pass
             globals()["_PDF_FONTS_READY"] = True
     except Exception as _fe:
         logging.warning(f"PDF font registration failed: {_fe}")
     _rtl = lang in ("ar", "fa")
-    base_font = "NotoNaskhArabic" if _rtl else "NotoSans"
+    base_font = "NotoNaskhArabic" if _rtl else ("WQY" if lang == "zh" and "WQY" in pdfmetrics.getRegisteredFontNames() else "NotoSans")
 
     def _shape(s):
         if not _rtl:
