@@ -12,9 +12,11 @@ const LANGS = [
   { code: "es", flag: "🇪🇸", label: "Español" },
   { code: "fr", flag: "🇫🇷", label: "Français" },
   { code: "fa", flag: "🇮🇷", label: "فارسی" },
+  { code: "ar", flag: "🇸🇦", label: "العربية" },
+  { code: "tr", flag: "🇹🇷", label: "Türkçe" },
 ];
 const HK = "mikilab_headset_lang";
-const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
+const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Canale Headset Bluetooth · traduzione vocale in tempo reale per squadra multilingua.
 // L'operatore parla nella propria lingua → BakoMix traduce e legge nella lingua del compagno.

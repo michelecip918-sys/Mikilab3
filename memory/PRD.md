@@ -4313,3 +4313,13 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Dizionario ar/tr ampliato**: `triExtraArTr.js` da ~30 a ~65 stringhe (azioni, ricette, floor, turni, compliance) + fallback EN. Copertura reale migliorata per Arabo/Turco.
 - Lint 0 errori, backend sano, PWA Zero-Menu preservata. Overflow residui = glow decorativo + tab in container overflow-x-auto (pre-esistenti, non regressioni).
 
+
+---
+## v13.6 (2026-09-06) — Cross-check foto sul Floor + coerenza ar/tr
+- **FloorCrossCheck**: cross-check con foto direttamente nel flusso operatore (Letz_Passive, solo visivo). L'operatore scatta la foto del task finito → `antifoolApi.crossCheck` (photo-only, pesi neutri) → Claude Vision valida coerenza → conferma/congela. Montato in `MohamedFloor` sotto il Canale Headset. Verificato: rende e wired (endpoint retro-compat).
+- **Coerenza multilingua ar/tr**: aggiunti Arabo+Turco al selettore del Canale Headset, ai locale Web Speech (LivenessGate, BakoInfo, HeadsetChannel: ar-SA/tr-TR) e alle frasi-sfida anti-fooling backend (`_ANTIFOOL_PHRASES` ar/tr). Verificato via curl.
+- Lint 0 errori, backend sano.
+### RESTA (onesto):
+- **Font PDF Unicode arabo/persiano**: NON fattibile senza scaricare un font (sistema ha solo NotoColorEmoji + wqy CJK, nessun font arabo). Le librerie arabic-reshaper/python-bidi SONO installate → serve solo aggiungere un TTF (es. NotoNaskhArabic/NotoSans) e registrarlo in reportlab. Backlog.
+- Copertura traduzioni non 100% sui ~200 componenti legacy.
+

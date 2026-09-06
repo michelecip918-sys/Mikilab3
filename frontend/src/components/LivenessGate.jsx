@@ -4,7 +4,7 @@ import { antifoolApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
+const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Gate Anti-Fooling: l'operatore deve pronunciare dal vivo una frase-sfida casuale.
 // Blocca proxy/handoff non autorizzati. Dopo 3 fallimenti → allarme ghost-activity.

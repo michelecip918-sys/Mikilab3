@@ -10,6 +10,7 @@ import ShiftPowerBoard from "@/components/ShiftPowerBoard";
 import OperatorAura from "@/components/OperatorAura";
 import HeadsetChannel from "@/components/HeadsetChannel";
 import LivenessGate from "@/components/LivenessGate";
+import FloorCrossCheck from "@/components/FloorCrossCheck";
 import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -120,6 +121,7 @@ export default function MohamedFloor() {
         <Scale className="w-4 h-4" /> {tri("Bilancia Guidata", "Geführte Waage", "Guided Scale", "Báscula Guiada", "Balance Guidée", "ترازوی راهنما")}
       </button>
       <div className="w-full mt-5"><HeadsetChannel /></div>
+      <div className="w-full mt-3"><FloorCrossCheck role={role} task={role || "Produzione"} /></div>
       <button data-testid="mohamed-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
     </div>
   );

@@ -3155,6 +3155,8 @@ _ANTIFOOL_PHRASES = {
     "es": ["pan caliente a las cinco", "masa madre y harina de trigo", "horno encendido y bandeja lista", "masa suave con harina", "biga madura y corteza dorada"],
     "fr": ["pain chaud à cinq heures", "levain et farine de blé", "four allumé et plaque prête", "pâte souple les mains dans la farine", "biga mûre et croûte dorée"],
     "fa": ["نان گرم ساعت پنج صبح", "خمیرمایه و آرد گندم", "فر روشن و سینی آماده", "خمیر نرم با دست‌های آردی", "بیگای رسیده و پوسته طلایی"],
+    "ar": ["خبز ساخن في الخامسة صباحاً", "عجينة مخمّرة ودقيق القمح", "الفرن مشتعل والصينية جاهزة", "عجينة طرية واليدان في الدقيق", "بيغا ناضجة وقشرة ذهبية"],
+    "tr": ["sabah beşte sıcak ekmek", "ekşi maya ve buğday unu", "fırın açık ve tepsi hazır", "eller unlu yumuşak hamur", "olgun biga ve altın kabuk"],
 }
 _antifool_challenges = {}
 
