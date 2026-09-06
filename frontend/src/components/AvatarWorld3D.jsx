@@ -49,7 +49,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
 
     let animatedExtras = [];
 
-    if (theme === "mohamed") {
+    if (["mohamed", "panificio", "pizzeria", "laugen"].includes(theme)) {
       // ZONA PRODUZIONE CALDA: forni industriali con calore, impastatrice, scaffali pane
       for (let i = 0; i < 2; i++) {
         const oven = new THREE.Group();
