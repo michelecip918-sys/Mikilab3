@@ -4,7 +4,7 @@ import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Sparkles, Volume2 } from "lucide-react";
+import { Sparkles, Volume2, Send } from "lucide-react";
 
 // PILASTRO 1 — BakoMix Direttore d'Orchestra: piano di produzione ottimale auto-generato.
 export default function AutoPlan() {
@@ -38,6 +38,13 @@ export default function AutoPlan() {
               <p className="flex-1 text-sm text-[#d6fbff]">{res.summary}</p>
               {res.spoken && <button data-testid="autoplan-speak" onClick={() => { try { playTTS(res.spoken, { lang, voice: "bakemix" }); } catch (e) { /* */ } }} className="text-[#7DD3FC] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /></button>}
             </div>
+          )}
+          {(res.batches || []).length > 0 && (
+            <button data-testid="autoplan-dispatch" onClick={async () => {
+              try { const r = await bakoApi.dispatch(res.batches); toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
+            }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm active:scale-95 transition-all">
+              <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
+            </button>
           )}
           {(res.batches || []).map((b, i) => (
             <div key={i} data-testid={`autoplan-batch-${i}`} className="flex items-center gap-3 bg-[#0C1019]/60 border border-[#5E8CA8]/25 rounded-lg px-3 py-2">

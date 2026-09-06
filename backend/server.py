@@ -9605,6 +9605,32 @@ async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     return {"ok": True, "date": today, "context": {"leaders": leaders, "workers_today": workers_today, "low_stock": low}, "plan": plan}
 
 
+class AutoPlanDispatchReq(BaseModel):
+    batches: List[dict] = []
+
+
+@api_router.post("/bako/autoplan/dispatch")
+async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(require_admin)):
+    """Piano → Produzione: crea un task per ogni lotto e lo invia in silenzio al floor."""
+    created = 0
+    for b in (body.batches or []):
+        product = str(b.get("product") or "Lotto")[:80]
+        line = b.get("line") or ""
+        start = b.get("start") or ""
+        qty = b.get("qty") or ""
+        parts = [p for p in [f"Linea {line}" if line else "", f"Ore {start}" if start else "", f"Qtà {qty}" if qty else ""] if p]
+        task = {
+            "id": str(uuid.uuid4()), "title": product, "kind": "produzione", "priority": "media",
+            "line": line, "assignee": (b.get("assignee") or line), "start": start,
+            "pacing": "", "pacing_target": "", "transcript": str(b.get("rationale") or ""),
+            "steps": [{"order": 1, "text": " · ".join(parts) or product, "done": False}],
+            "status": "active", "created_by": admin.get("email"), "created_at": now_iso(),
+        }
+        await db.team_tasks.insert_one(dict(task))
+        created += 1
+    return {"ok": True, "created": created}
+
+
 
 # ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri

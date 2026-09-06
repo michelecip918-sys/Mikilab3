@@ -4404,3 +4404,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **PDF leggibili**: ridotte le dimensioni dei titoli PDF ricetta (cover 30→24, titolo 19→15, h1 26→18, h2 17→13, body 10.5→10) per compattezza/leggibilità.
 - **Idea "livello mondiale"**: 6 pilastri (BakoMix regista, domanda predittiva/zero sprechi, qualità autonoma vision+sensori, coordinamento umano, rete multi-forno, brand/vetrina) — ESCLUSI HACCP/allergeni/burocrazia per scelta dell'utente.
 - Test: iteration_198 backend 100%, frontend 100%, 0 bug.
+
+## v47 (2026-06) — Piano → Produzione (1-tap)
+- `POST /api/bako/autoplan/dispatch` (require_admin): trasforma i lotti del piano BakoMix in task `team_tasks` attivi (title=prodotto, kind='produzione', step con linea/ora/qtà, assignee) → visibili subito agli operatori (TeamTasks / GET /api/delegation/tasks).
+- UI: pulsante `autoplan-dispatch` "Invia agli operatori" in AutoPlan (con toast esito). Verificato E2E via curl (2 lotti → 2 task attivi).
