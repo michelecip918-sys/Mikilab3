@@ -644,6 +644,14 @@ export const deusApi = {
   shiftReport: (lang) => api.get(`/bako/shift-report`, { params: { lang } }).then((r) => r.data),
 };
 
+// Reparti indipendenti + assegnazione Capo -> MohaLab
+export const deptApi = {
+  catalog: () => api.get(`/depts`).then((r) => r.data),
+  assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
+  assign: (payload) => api.post(`/depts/assign`, payload).then((r) => r.data),
+  unassign: (id) => api.delete(`/depts/assign/${id}`).then((r) => r.data),
+};
+
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
 export const operatorPinsApi = {
   list: () => api.get(`/operator-pins`).then((r) => r.data),

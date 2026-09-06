@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Mic, ChevronLeft, Scale, Radio, ChevronDown, CheckCircle2, Volume2, Factory } from "lucide-react";
 import { playTTS } from "@/lib/tts";
+import DeptFocus from "@/components/DeptFocus";
 import MamoAssistant from "@/components/MamoAssistant";
 import SmartScale from "@/components/SmartScale";
 import TeamTasks from "@/components/TeamTasks";
@@ -144,6 +145,7 @@ export default function MohaLabFloor() {
       <div data-testid="mohamed-role-select" className="space-y-5">
         <SequenceGuard />
         <ShiftPowerBoard />
+        <DeptFocus tri={tri} lang={lang} />
         <CapoPlanBanner tri={tri} />
         <FloorQueue tri={tri} lang={lang} />
         <div className="text-center">
@@ -186,6 +188,7 @@ export default function MohaLabFloor() {
   return (
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-3"><CapoPlanBanner tri={tri} /></div>
+      <div className="w-full"><DeptFocus tri={tri} lang={lang} /></div>
       <div className="w-full"><FloorQueue tri={tri} lang={lang} /></div>
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full mb-2"><ComplianceBeacon compact /></div>

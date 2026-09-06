@@ -84,6 +84,7 @@ import PackagingSync from "@/components/console/PackagingSync";
 import BakoSuggestions from "@/components/console/BakoSuggestions";
 import OvenBrain from "@/components/console/OvenBrain";
 import CapoDeck from "@/components/console/CapoDeck";
+import DeptAssign from "@/components/console/DeptAssign";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
@@ -395,6 +396,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#00F0FF" icon="⚙️" defaultOpen title={tri("Nuovi Macchinari · BakoMix riconosce", "Neue Maschinen · BakoMix erkennt", "New Machines · BakoMix recognizes", "Nuevas Máquinas · BakoMix reconoce", "Nouvelles Machines · BakoMix reconnaît", "ماشین‌های جدید · BakoMix می‌شناسد")} sub={tri("Arriva un macchinario? BakoMix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? BakoMix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? BakoMix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? BakoMix la reconoce e integra.", "Une machine arrive ? BakoMix la reconnaît et l'intègre.", "دستگاه جدید؟ BakoMix آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-dept-assign" accent="#00F0FF" beacon="#FFB800" icon="🏭" defaultOpen title={tri("Assegnazione Reparti · MohaLab", "Bereichszuweisung · MohaLab", "Department Assignment · MohaLab", "Asignación de Áreas · MohaLab", "Affectation Ateliers · MohaLab", "تخصیص بخش · MohaLab")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen — ognuno con macchine, silos e celle dedicate. Assegna a MohaLab reparto e mansione del giorno.", "Backstube, Konditorei, Pizzeria, Laugen — je eigene Ausstattung. Weise MohaLab zu.", "Bakery, Pastry, Pizza, Laugen — each with its own machines, silos and cells. Assign MohaLab the day's department and task.", "Panadería, Pastelería, Pizza, Laugen — cada una equipada. Asigna a MohaLab.", "Boulangerie, Pâtisserie, Pizza, Laugen — chacun équipé. Assigne à MohaLab.", "نانوایی، شیرینی، پیتزا، لاوگن — هرکدام مجهز. به MohaLab بده.")}>
+                      <DeptAssign />
                     </HoloPanel>
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />

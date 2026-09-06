@@ -1033,6 +1033,91 @@ async def deus_queue_clear(admin: dict = Depends(require_admin)):
     await db.capo_queue.delete_many({})
     return {"ok": True, "counts": await _queue_counts()}
 
+# ============================================================================
+# REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.
+# Ogni reparto ha macchinari, silos, celle e magazzino dedicati (auto-generati).
+# Il Capo (MikiLab) assegna a MohaLab reparto+mansione del giorno; la produzione
+# vede dinamicamente SOLO il reparto assegnato.
+# ============================================================================
+DEPARTMENTS = {
+    "panificio": {"name": "Panificio", "accent": "#E0A106", "icon": "🥖",
+        "machines": [
+            {"id": "imp-spirale-80", "name": "Impastatrice a spirale 80kg", "type": "impastatrice"},
+            {"id": "imp-forcella", "name": "Impastatrice a forcella", "type": "impastatrice"},
+            {"id": "forno-rotativo", "name": "Forno rotativo a carrelli", "type": "forno"},
+            {"id": "forno-deck", "name": "Forno a piani (deck)", "type": "forno"},
+            {"id": "linea-arion", "name": "Linea baguette Arion", "type": "linea"},
+            {"id": "gruppo-pane", "name": "Gruppo formatura pane", "type": "formatura"}],
+        "silos": ["Farina Tipo 0", "Farina Tipo 1", "Farina Integrale"],
+        "cells": ["Cella lievitazione 1", "Cella lievitazione 2", "Fermalievita"],
+        "warehouse": "Magazzino Panificio (farine, semi, malto)"},
+    "pasticceria": {"name": "Pasticceria", "accent": "#EC4899", "icon": "🧁",
+        "machines": [
+            {"id": "planetaria-40", "name": "Planetaria 40L", "type": "planetaria"},
+            {"id": "sfogliatrice", "name": "Sfogliatrice automatica", "type": "sfogliatrice"},
+            {"id": "forno-ventilato", "name": "Forno ventilato statico", "type": "forno"},
+            {"id": "abbattitore", "name": "Abbattitore di temperatura", "type": "abbattitore"},
+            {"id": "temperatrice", "name": "Temperatrice cioccolato", "type": "temperatrice"}],
+        "silos": ["Farina debole", "Zucchero", "Zucchero a velo"],
+        "cells": ["Cella fermalievita", "Frigo ingredienti", "Cella prodotti finiti"],
+        "warehouse": "Magazzino Pasticceria (creme, frutta, cioccolato)"},
+    "pizzeria": {"name": "Pizzeria", "accent": "#EF4444", "icon": "🍕",
+        "machines": [
+            {"id": "imp-tuffante", "name": "Impastatrice a bracci tuffanti", "type": "impastatrice"},
+            {"id": "forno-teglie", "name": "Forno pizza a teglie", "type": "forno"},
+            {"id": "forno-rotante", "name": "Forno rotante refrattario", "type": "forno"},
+            {"id": "stendipizza", "name": "Stendipizza / pressa", "type": "formatura"},
+            {"id": "porzionatrice", "name": "Porzionatrice-arrotondatrice", "type": "staglio"}],
+        "silos": ["Farina Pizza W300", "Semola rimacinata"],
+        "cells": ["Cella maturazione 24-72h", "Frigo impasti"],
+        "warehouse": "Magazzino Pizzeria (pomodoro, mozzarella, condimenti)"},
+    "laugen": {"name": "Reparto Laugen", "accent": "#8B5A2B", "icon": "🥨",
+        "machines": [
+            {"id": "imp-laugen", "name": "Impastatrice Laugen", "type": "impastatrice"},
+            {"id": "vasca-soda", "name": "Vasca immersione soda (NaOH)", "type": "vasca"},
+            {"id": "forno-laugen", "name": "Forno Laugen a piani", "type": "forno"},
+            {"id": "formatrice-brezel", "name": "Formatrice Brezel", "type": "formatura"}],
+        "silos": ["Farina Laugen", "Sale grosso", "Soda caustica food-grade"],
+        "cells": ["Cella riposo", "Essiccatoio superficie"],
+        "warehouse": "Magazzino Laugen (sale, semi, soda)"},
+}
+
+@api_router.get("/depts")
+async def depts_catalog():
+    return {"departments": [{"key": k, **v} for k, v in DEPARTMENTS.items()]}
+
+class DeptAssignReq(BaseModel):
+    dept: str = ""
+    task: str = ""
+    operator: str = "MohaLab"
+    note: str = ""
+
+@api_router.get("/depts/assignment")
+async def depts_assignment():
+    today = now_iso()[:10]
+    docs = await db.dept_assignments.find({"date": today}, {"_id": 0}).sort("at", -1).to_list(50)
+    return {"date": today, "assignments": docs}
+
+@api_router.post("/depts/assign")
+async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    if body.dept not in DEPARTMENTS:
+        raise HTTPException(status_code=400, detail="Reparto sconosciuto")
+    today = now_iso()[:10]
+    doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
+           "dept_name": DEPARTMENTS[body.dept]["name"], "task": (body.task or "").strip(),
+           "operator": (body.operator or "MohaLab").strip(), "note": (body.note or "").strip(),
+           "by": admin.get("email") or "master", "at": now_iso()}
+    await db.dept_assignments.insert_one({**doc})
+    doc.pop("_id", None)
+    return {"ok": True, "assignment": doc}
+
+@api_router.delete("/depts/assign/{aid}")
+async def depts_assign_delete(aid: str, admin: dict = Depends(require_admin)):
+    await db.dept_assignments.delete_one({"id": aid})
+    return {"ok": True}
+
+
 @api_router.post("/bako/deus/capture")
 async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
     """Il Capo butta dentro qualsiasi cosa (voce/foto/email/testo): BakoMix capisce, genera e riempie la produzione."""

@@ -364,3 +364,13 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - BakoMix = Assistente (core icosaedro wireframe, onde sonore/anelli pulsanti, particelle fluttuanti, moduli input vocale trasparenti; intensità aumenta quando parla).
 - Integrato in ShiftBriefing: i 3 avatar sono ora cliccabili -> overlay full-screen col mondo 3D e l'avatar sempre al centro (anello glow, nome, ruolo, intro). Pulsante Indietro.
 - Verificato a schermo: mondo MIKI e MohaLab renderizzano correttamente (canvas + overlay). Compila pulito.
+
+## v62 (2026-06) — Reparti indipendenti + assegnazione Capo + OCR foto + coda reparto
+- **Visione Foto (OCR)** nella Plancia: mode foto invia base64 -> BakoMix (Claude vision) trascrive la pagina del ricettario e genera ricetta+task. Verificato con immagine reale (calcola %panificatore, resa).
+- **Coda di produzione su MohaLab** (FloorQueue): task del Capo visibili in reparto con spunta + lettura vocale.
+- **Report Fine Turno** vocale: pulsante nella Plancia (/bako/shift-report -> spoken).
+- **Onde BakoMix reattive al parlato**: speaking legato a onStart/onEnded del TTS.
+- **REPARTI INDIPENDENTI**: Panificio, Pasticceria, Pizzeria, Laugen. Catalogo auto-generato di macchine (incl. Linea Arion, vasca soda Laugen, sfogliatrice, ecc.), silos, celle, magazzino per reparto. Endpoint /api/depts, /api/depts/assign, /api/depts/assignment.
+- **Assegnazione Capo -> MohaLab** (DeptAssign, panel-dept-assign): il Capo sceglie reparto + mansione del giorno.
+- **Interfaccia dinamica produzione** (DeptFocus): l'operaio vede SOLO il reparto assegnato oggi, con le sue macchine e moduli vocali.
+- Verificato: catalog(4 reparti), assign(Pasticceria), assignment(oggi) OK; pannello renderizza senza ErrorBoundary; compila pulito.
