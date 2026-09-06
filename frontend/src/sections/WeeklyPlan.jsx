@@ -324,7 +324,7 @@ export default function WeeklyPlan() {
   const writeRecipesPdf = ({ subtitle, byDay }) => {
     if (byDay.length === 0) { toast.error(t("weekly_empty_share")); return; }
     const origin = window.location.origin + (process.env.PUBLIC_URL || "");
-    const logo = `${origin}/logo-256.png`;
+    const logo = `${origin}/logo-light-256.png`;
     const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const L = {
       ingredients: tri("Ingredienti", "Zutaten", "Ingredients"),
@@ -512,7 +512,7 @@ export default function WeeklyPlan() {
     shopNames.sort((a, b) => (a === NOSHOP ? 1 : b === NOSHOP ? -1 : a.localeCompare(b)));
     const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const origin = window.location.origin + (process.env.PUBLIC_URL || "");
-    const logo = `${origin}/logo-256.png`;
+    const logo = `${origin}/logo-light-256.png`;
     const L = {
       flours: tri("Farine", "Mehle", "Flours"),
       others: tri("Base impasto", "Teigbasis", "Dough base"),

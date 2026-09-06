@@ -626,6 +626,23 @@ export const bakoApi = {
   carbonCompute: (payload) => api.post(`/bako/carbon/compute`, payload).then((r) => r.data),
 };
 
+// BakoMix Deus — Il Cervello del Forno: legame di amicizia, orchestrazione dell'impossibile, oracolo esterno.
+export const deusApi = {
+  bond: (lang) => api.get(`/bako/deus/bond`, { params: { lang } }).then((r) => r.data),
+  masterPlan: (payload) => api.post(`/bako/deus/master-plan`, payload).then((r) => r.data),
+  ask: (payload) => api.post(`/bako/deus/ask`, payload).then((r) => r.data),
+  broadcast: (payload) => api.post(`/bako/deus/broadcast`, payload).then((r) => r.data),
+  capoPlan: () => api.get(`/floor/capo-plan`).then((r) => r.data),
+  machines: () => api.get(`/bako/machines`).then((r) => r.data),
+  machineArrival: (payload) => api.post(`/bako/machines/arrival`, payload).then((r) => r.data),
+  machineCommission: (id) => api.post(`/bako/machines/${id}/commission`).then((r) => r.data),
+  machineDelete: (id) => api.delete(`/bako/machines/${id}`).then((r) => r.data),
+  capture: (payload) => api.post(`/bako/deus/capture`, payload).then((r) => r.data),
+  productionQueue: () => api.get(`/bako/deus/production-queue`).then((r) => r.data),
+  queueDone: (id) => api.post(`/bako/deus/queue/${id}/done`).then((r) => r.data),
+  queueClear: () => api.post(`/bako/deus/queue/clear`).then((r) => r.data),
+};
+
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
 export const operatorPinsApi = {
   list: () => api.get(`/operator-pins`).then((r) => r.data),

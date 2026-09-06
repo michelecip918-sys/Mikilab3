@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mic, ChevronLeft, Scale } from "lucide-react";
+import { Mic, ChevronLeft, Scale, Radio, ChevronDown } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
 import SmartScale from "@/components/SmartScale";
 import TeamTasks from "@/components/TeamTasks";
@@ -16,12 +16,44 @@ import FloorCrossCheck from "@/components/FloorCrossCheck";
 import ComplianceBeacon from "@/components/ComplianceBeacon";
 import OperatorClock from "@/components/OperatorClock";
 import { complianceApi } from "@/lib/api";
+import { deusApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
 const API = process.env.REACT_APP_BACKEND_URL;
 const ROLE_KEY = "mikilab_role";
+
+// Banner "Piano del Capo": mostra alla Produzione il piano divino inviato da BakoMix Deus.
+function CapoPlanBanner({ tri }) {
+  const [plan, setPlan] = useState(null);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    let alive = true;
+    const load = () => deusApi.capoPlan().then((d) => { if (alive && d && d.plan_markdown) setPlan(d); }).catch(() => {});
+    load();
+    const id = setInterval(load, 30000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+  if (!plan) return null;
+  return (
+    <div data-testid="capo-plan-banner" className="w-full mb-3 rounded-2xl border border-[#00F0FF]/40 bg-[#0b0f19] overflow-hidden text-left">
+      <button data-testid="capo-plan-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 active:scale-[0.99] transition-all">
+        <span className="w-8 h-8 rounded-lg bg-[#00F0FF]/15 border border-[#00F0FF]/40 flex items-center justify-center shrink-0"><Radio className="w-4 h-4 text-[#00F0FF]" /></span>
+        <span className="min-w-0 flex-1">
+          <span className="block text-xs font-black uppercase tracking-wide text-[#00F0FF]">{tri("Piano del Capo · BakoMix", "Plan des Capo · BakoMix", "Capo's Plan · BakoMix", "Plan del Capo · BakoMix", "Plan du Capo · BakoMix", "برنامه کاپو · BakoMix")}</span>
+          {plan.headline && <span className="block text-[11px] text-[#94A3B8] truncate">{plan.headline}</span>}
+        </span>
+        <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-4 pb-4 max-h-72 overflow-y-auto">
+          <pre className="whitespace-pre-wrap font-mono-data text-[11px] leading-relaxed text-[#cbd5e1]">{plan.plan_markdown}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
 
 // Reparti/postazioni BASE. Vengono ARRICCHITI a runtime con i reparti e le postazioni
 // (feature) che il Capo crea nell'Elite Engine → così le postazioni "aumentano" da sole.
@@ -32,7 +64,7 @@ const BASE_DEPTS = [
   { key: "generale", label: "👥 Generale", color: "#f59e0b", roles: ["Apprendista", "Banconista", "Aiuto Panettiere"] },
 ];
 
-export default function MohamedFloor() {
+export default function MohaLabFloor() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
@@ -61,6 +93,18 @@ export default function MohamedFloor() {
   }, []);
 
   const pick = (r) => { try { localStorage.setItem(ROLE_KEY, r); } catch { /* */ } setRole(r); try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: r } })); } catch { /* */ } };
+
+  // Back-guard: il tasto Indietro srotola lo stato del laboratorio invece di uscire dall'app.
+  useEffect(() => {
+    const onBack = (e) => {
+      if (tool) { setTool(null); e.preventDefault(); }
+      else if (gate) { setGate(false); e.preventDefault(); }
+      else if (active) { setActive(false); e.preventDefault(); }
+      else if (role) { pick(""); e.preventDefault(); }
+    };
+    window.addEventListener("mikilab-go-back", onBack);
+    return () => window.removeEventListener("mikilab-go-back", onBack);
+  }, [tool, gate, active, role]);
   const changeRole = () => { setActive(false); setRole(""); try { localStorage.removeItem(ROLE_KEY); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: "" } })); } catch { /* */ } };
 
   // 1) Nessun ruolo → scelta postazione
@@ -69,9 +113,10 @@ export default function MohamedFloor() {
       <div data-testid="mohamed-role-select" className="space-y-5">
         <SequenceGuard />
         <ShiftPowerBoard />
+        <CapoPlanBanner tri={tri} />
         <div className="text-center">
-          <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Mohamed</h2>
+          <img src={`${PUB}/avatar_mohamed.jpg`} alt="MohaLab" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">MohaLab</h2>
           <p className="mt-1 text-sm text-[#94A3B8]">{tri("Ciao! Seleziona la tua postazione di forno per ricevere i task giusti.", "Hallo! Wähle deine Station, um die richtigen Aufgaben zu erhalten.", "Hi! Select your station to receive the right tasks.", "¡Hola! Selecciona tu puesto para recibir las tareas correctas.", "Salut ! Choisis ton poste pour recevoir les bonnes tâches.", "سلام! پست کاری‌ات را انتخاب کن تا وظایف درست را بگیری.")}</p>
         </div>
         {depts.map((d) => (
@@ -108,6 +153,7 @@ export default function MohamedFloor() {
 
   return (
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
+      <div className="w-full mb-3"><CapoPlanBanner tri={tri} /></div>
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full mb-2"><ComplianceBeacon compact /></div>
       <div className="w-full mb-2"><FloorRoleBriefing role={role} /></div>
@@ -117,12 +163,12 @@ export default function MohamedFloor() {
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
       <button data-testid="mohamed-mic-btn" onClick={() => { if (livenessOk) setActive(true); else setGate(true); }} className="relative group active:scale-95 transition-all">
         <OperatorAura name={role} size={184} showBadge={true} announce={true}>
-          <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/avatar_mohamed.jpg`} alt="MohaLab" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </OperatorAura>
         <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
       </button>
       {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
-      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
+      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">MohaLab</motion.h2>
       <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a BakoMix AI: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit BakoMix AI: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to BakoMix AI: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con BakoMix AI: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à BakoMix AI : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با BakoMix AI حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
       <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")}
         className="group relative overflow-hidden mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-sm text-[#22d3ee] active:scale-95 transition-all"

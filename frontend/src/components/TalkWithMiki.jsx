@@ -86,7 +86,7 @@ export default function TalkWithMiki({ tab }) {
     setInput("");
     const replyWho = copilot === "trio" ? "miki" : copilot;
     const HINT = {
-      mohamed: "[Rispondi in prima persona come Mohamed, il braccio destro persiano del laboratorio] ",
+      mohamed: "[Rispondi in prima persona come MohaLab, il braccio destro persiano del laboratorio] ",
       bigmix: "[Rispondi in prima persona come Bakemix, l'assistente robot di MikiLab] ",
       miki: "", trio: "",
     };
@@ -194,7 +194,7 @@ export default function TalkWithMiki({ tab }) {
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mohamed" ? "Mohamed" : "BakoMix AI"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mohamed" ? "MohaLab" : "BakoMix AI"}</span>
                 </button>
               );
             })}
@@ -237,7 +237,7 @@ export default function TalkWithMiki({ tab }) {
               <div className="p-3 border-t border-slate-800 space-y-2">
                 {/* Selettore Co-Pilota */}
                 <div data-testid="copilot-selector" className="flex items-center gap-1">
-                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mohamed", "Mohamed"], ["bigmix", "BakoMix AI"]].map(([id, lbl]) => (
+                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mohamed", "MohaLab"], ["bigmix", "BakoMix AI"]].map(([id, lbl]) => (
                     <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
                       className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
                   ))}
@@ -263,7 +263,7 @@ export default function TalkWithMiki({ tab }) {
           {view === "mohamed" && (
             <div data-testid="mohamed-lab-live" className="flex-1 overflow-y-auto p-4">
               <div className="relative rounded-2xl overflow-hidden border border-[#3E9C93]/40 aspect-video bg-slate-950">
-                <img src={AV("avatar_mohamed.jpg")} alt="Mohamed" className="w-full h-full object-cover" style={{ animation: "cyberGlitch 4s steps(6) infinite" }} />
+                <img src={AV("avatar_mohamed.jpg")} alt="MohaLab" className="w-full h-full object-cover" style={{ animation: "cyberGlitch 4s steps(6) infinite" }} />
                 <span className="absolute top-2 left-2 flex items-center gap-1 text-[10px] font-bold text-rose-300 bg-black/60 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" /> LIVE</span>
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                   <p className="text-sm font-bold text-white flex items-center gap-1.5"><Truck className="w-4 h-4 text-[#3E9C93]" /> {LAB_OPS[opIdx].t}</p>
@@ -271,7 +271,7 @@ export default function TalkWithMiki({ tab }) {
                   <div className="mt-1.5 h-1 rounded-full bg-slate-700 overflow-hidden"><div className="h-full bg-[#3E9C93]" style={{ width: "100%", animation: "peelShine 2.6s linear infinite" }} /></div>
                 </div>
               </div>
-              <p className="text-[12px] text-slate-400 mt-3">Mohamed esegue le operazioni reali del laboratorio: pulizia, gestione carrelli e infornata sincronizzata.</p>
+              <p className="text-[12px] text-slate-400 mt-3">MohaLab esegue le operazioni reali del laboratorio: pulizia, gestione carrelli e infornata sincronizzata.</p>
               <button data-testid="mohamed-narrate" onClick={() => speak(`${LAB_OPS[opIdx].t}. ${LAB_OPS[opIdx].d}`, "mohamed")} className="mt-2 inline-flex items-center gap-1.5 bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#3E9C93] px-3 py-1.5 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Racconta l'operazione</button>
             </div>
           )}

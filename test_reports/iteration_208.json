@@ -1,0 +1,31 @@
+{
+  "summary": "Verified both new items. BACKEND: Full arrival flow works end-to-end (gate + login + POST /api/bako/machines/arrival returns rich JSON with category, role, welcome, safety[4], maintenance[4], integration; commission moves new->active; delete removes; counts consistent). FRONTEND: Admin Gate PIN 1985 works; hero-operatori correctly shows 'MOHALAB' + 'Production Floor · Baker' (no MOHAMED). Master console loads; panel-machine-arrival + machine-arrival visible; recognize call renders machine-just-arrived card with all sections; new-badge shown; counts updated; commission and delete both work in the UI. HOWEVER regression rename is incomplete: 'Mohamed' still appears as a visible display name in the Operators roster ('Mohamed · Capo Turno · Maestro Fornaio') and in OperatoreSelect ('Mohamed Reza · Capo Turno · Floor'), violating the requirement that the display name be 'MohaLab' with title 'Reparto Produzione · Fornaio'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "OperatorsRoster.jsx (line 11)", "issue": "Display name still 'Mohamed' and role 'Capo Turno · Maestro Fornaio'. Must be name 'MohaLab' with role 'Reparto Produzione · Fornaio' (i18n via tri()) per the rename regression spec. Visible in Master console roster.", "selector": "operators roster card #mohamed", "priority": "HIGH"},
+      {"component": "OperatoreSelect.jsx (line 7)", "issue": "Display name still 'Mohamed Reza · Capo Turno · Floor'. Must be renamed to 'MohaLab' with production-floor title. Visible when selecting operator persona.", "selector": "operator-select item #mohamed", "priority": "HIGH"}
+    ],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_208.json"],
+  "action_items": [
+    "Rename 'Mohamed'/'Mohamed Reza' display name to 'MohaLab' in /app/frontend/src/components/console/OperatorsRoster.jsx (line 11) and /app/frontend/src/components/OperatoreSelect.jsx (line 7).",
+    "Update the role text for that entry from 'Capo Turno · Maestro Fornaio' / 'Capo Turno · Floor' to i18n-wrapped 'Reparto Produzione · Fornaio' (Production Floor · Baker) to match hero-operatori and the rename spec.",
+    "Optionally review MikiLabEliteEngine.jsx credit lines (894, 1094, 1130, 1134) — 'Mohamed & Miki' appears in copyright/credits. Likely intentional (developer credits) but confirm with product."
+  ],
+  "critical_code_review_comments": [
+    "Backend arrival endpoint returns key 'safety' (not 'safety_notes'); frontend correctly reads m.safety. Fine, but keep naming consistent in future.",
+    "MachineArrival counts display element (data-testid=machine-count-total) hides when total=0 — acceptable but tests need to handle absence.",
+    "OperatorsRoster and OperatoreSelect are not covered by the rename batch — add these files to any global rename tool/lint rule."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "90%"},
+  "test_credentials": "Admin Gate PIN 1985; Capo admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "Created transient machines via arrival endpoint; all cleaned up via DELETE — final list is empty (total=0).",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend machine arrival flow fully validated via curl (with cookie jar) and via UI. Only remaining issue is a display-name rename miss in OperatorsRoster.jsx and OperatoreSelect.jsx. After fix, re-scan body text for the word 'Mohamed' (excluding credits) — should be zero visible occurrences.",
+  "rca of the issue": "Rename batch touched App.js/MohamedFloor.jsx/BakemixGuide.jsx/OrdineCapo.jsx/TalkWithMiki.jsx/CyberBakeryTrio.jsx/MikiLabEliteEngine.jsx line 477/ManualePage.jsx, but missed OperatorsRoster.jsx (line 11) and OperatoreSelect.jsx (line 7) where the persona display name and role are declared as string literals. Detected by grepping the rendered body text for 'mohamed' post-gate: '…Direttore di Produzione Mohamed Capo Turno · Maestro Fornaio…'."
+}

@@ -68,24 +68,24 @@ export default function ThermalGuard() {
       </div>
 
       {/* Zero-Night Production */}
-      <div className="bg-slate-900/80 border border-indigo-500/30 rounded-2xl p-5 space-y-4">
+      <div className="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-5 space-y-4">
         <div className="flex items-start gap-3">
-          <span className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-500/40 flex items-center justify-center shrink-0"><Moon className="w-6 h-6 text-indigo-400" /></span>
+          <span className="w-11 h-11 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center shrink-0"><Moon className="w-6 h-6 text-cyan-400" /></span>
           <div>
-            <h3 className="text-xl font-bold text-indigo-400">Zero-Night Production</h3>
+            <h3 className="text-xl font-bold text-cyan-400">Zero-Night Production</h3>
             <p className="text-slate-400 text-sm mt-0.5">Ciclo diurno/antinotte: calcolo a ritroso della lievitazione.</p>
           </div>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Chiusura serale</label><input data-testid="zn-close" type="time" value={close} onChange={(e) => setClose(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-indigo-300 font-mono font-bold mt-1" /></div>
-          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Fine produzione</label><input data-testid="zn-finish" type="time" value={finish} onChange={(e) => setFinish(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-indigo-300 font-mono font-bold mt-1" /></div>
-          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Ore lievitazione</label><input data-testid="zn-proof" type="number" min="0" value={proof} onChange={(e) => setProof(Math.max(0, Number(e.target.value) || 0))} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-indigo-300 font-mono font-bold mt-1" /></div>
+          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Chiusura serale</label><input data-testid="zn-close" type="time" value={close} onChange={(e) => setClose(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-cyan-300 font-mono font-bold mt-1" /></div>
+          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Fine produzione</label><input data-testid="zn-finish" type="time" value={finish} onChange={(e) => setFinish(e.target.value)} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-cyan-300 font-mono font-bold mt-1" /></div>
+          <div><label className="text-[10px] font-bold text-slate-400 uppercase">Ore lievitazione</label><input data-testid="zn-proof" type="number" min="0" value={proof} onChange={(e) => setProof(Math.max(0, Number(e.target.value) || 0))} className="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-center text-cyan-300 font-mono font-bold mt-1" /></div>
         </div>
-        <button data-testid="zn-from-recipes" onClick={calcFromRecipes} disabled={calcBusy} className="inline-flex items-center gap-1.5 px-3 py-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-xs font-bold rounded-lg active:scale-95 transition-all">
+        <button data-testid="zn-from-recipes" onClick={calcFromRecipes} disabled={calcBusy} className="inline-flex items-center gap-1.5 px-3 py-2 bg-cyan-600 hover:bg-cyan-500 disabled:opacity-50 text-white text-xs font-bold rounded-lg active:scale-95 transition-all">
           <CalendarClock className="w-3.5 h-3.5" /> {calcBusy ? "Calcolo…" : "Calcola dalle ricette di oggi"}
         </button>
-        <div className="p-4 bg-indigo-950/20 border border-indigo-800/40 rounded-xl text-sm space-y-1" data-testid="zn-report">
-          <p className="text-slate-300">🌙 Chiudi il laboratorio alle <b className="text-indigo-300">{close}</b>, produzione conclusa alle <b className="text-indigo-300">{finish}</b>.</p>
+        <div className="p-4 bg-cyan-950/20 border border-cyan-800/40 rounded-xl text-sm space-y-1" data-testid="zn-report">
+          <p className="text-slate-300">🌙 Chiudi il laboratorio alle <b className="text-cyan-300">{close}</b>, produzione conclusa alle <b className="text-cyan-300">{finish}</b>.</p>
           <p className="text-slate-300">⏱️ Avvia la lievitazione entro le <b className="text-teal-300" data-testid="zn-start">{startProof}</b> per {proof}h di maturazione.</p>
           <p className="text-slate-400 text-xs">Finestra notte cella: circa {nightSpan.toFixed(1)}h di riposo controllato.</p>
         </div>

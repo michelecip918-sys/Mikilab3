@@ -1,0 +1,30 @@
+{
+  "summary": "Full Capo walkthrough of MikiLab Pro Master Console. Auth: Admin Gate PIN 1985 -> capo-gate-login -> admin@mikilab.de/Mikilab2026! -> master-console loads. Overlays (kiosk auto-wizard, shift briefing) dismiss cleanly. Backend health: gate, login, /api/bako/deus/bond, /api/bako/machines, /api/floor/capo-plan, /api/weekly-plan, /api/recipes, /api/inventory all 200. Console health: all 28 HoloPanels (56 counting *-head) present, NO React ErrorBoundary text anywhere, NO purple/violet colors in panel computed styles. NEW panels verified: (1) panel-weekly renders fully with 7-day grid, weekly-add-{lun..dom}-trigger, recipe pickers, pieces/gpp inputs, live kg total, save-btn, PDF/print/share, archive; 'Add' opens rich 'Add recipes' modal with 7 categories (~150 recipes) - catalog IS populated. (2) panel-pianoai expands to 3-tab wizard (What/AI Params/Generate) with capo-generate button, weekly/today source switch, module toggles (celle, forni, clima, foodcost, turni, notte, orari, spesa, macchine, infornate, antispreco), product picker, notes. (3) panel-backward expands to Start-Time Calculator with bs-end-time, 6 duration phase inputs (rinfresco/impasto/puntata/formatura/appretto/cottura), live bs-schedule timetable computed backwards from ready time (verified: End 06:00 -> Starter 13:20), alarm toggle, defaults & reset. All render without errors. Rename regression: 'MohaLab' is displayed in hero-operatori, MIKILAB CREW roster (with 'Reparto Produzione · Fornaio'), and NO visible 'Mohamed' text in console body. Production zone Z-02: PIN 1985 unlocks MohaLab floor; capo-plan-banner present (from prior iter207 broadcast). BakoMix Deus (oven-brain): renders with bond meter 'Acquaintance · 200 XP', Make it Possible button, locked Divine Oracle, suggestions. LLM-heavy actions (master-plan ~40s, PianoAI generate ~30s, machine-recognize ~20s) were NOT re-executed here — already validated end-to-end in iter207/iter208; render + wiring confirmed.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "WeeklyPlan pre-seeded rows", "issue": "Three seeded weekly-plan rows have recipe_id='r1'/'r2' which do not match any real recipe UUID in /api/recipes, so each shows 'Recipe no longer available.' New adds via the 'Add recipes' modal work correctly and pick real UUIDs. Low priority — cosmetic/data-seed mismatch.", "affected_selectors": ["[data-testid=weekly-recipe-select-a-trigger]","[data-testid=weekly-recipe-select-b-trigger]","[data-testid=weekly-recipe-select-c-trigger]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/test_reports/iteration_209.json"],
+  "action_items": [
+    "Optional low-pri: reseed initial weekly-plan sample rows with real recipe UUIDs (or clear the seed) so panel-weekly does not open with three 'Recipe no longer available' banners. Zero functional impact."
+  ],
+  "critical_code_review_comments": [
+    "React hydration warning in console: '<span> cannot be a child of <option>' — some select rendering nests a <span> inside <option>. Non-blocking (hydration warning only) but should be cleaned to avoid future SSR issues; likely a Radix/shadcn Select item template with an icon <span>.",
+    "Recharts warnings 'width(-1) height(-1)' from a collapsed chart container being measured before layout — cosmetic, no user impact.",
+    "Two /api requests returned 401 during initial pre-auth splash — expected (gate_required) but should be silenced or deferred until after gate to avoid noisy console errors.",
+    "/api/health returns 404 — no health endpoint exposed. Nice-to-have for probes.",
+    "panel-pianoai and panel-backward are NOT defaultOpen: fine, but consider making at least one of the new planning panels defaultOpen so the Capo notices them on first login. panel-weekly is already defaultOpen — good."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (7/7 core endpoints)", "frontend": "100% (0 blockers, 1 low-pri data mismatch)"},
+  "test_credentials": "Admin Gate PIN 1985; Capo admin@mikilab.de / Mikilab2026!; Production PIN 1985 — all working.",
+  "seed_data_creation": "None. Bond XP for admin@mikilab.de remains 200 (from iter207). capo-plan in db.app_meta still holds iter207 broadcast headline. No test artifacts created.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Full console walkthrough passes cleanly. To retest LLM flows use generous timeouts (master-plan ~40s, PianoAI generate ~30s, machine-recognize ~20s). Weekly plan add-recipe modal: click [data-testid=weekly-add-sab-trigger] -> pick a category card (e.g., 'Bread & Baked Goods') -> select recipes -> 'Add (N)'. PianoAI generate button: [data-testid=capo-generate] on the '3 · Generate' tab. Backward scheduler is instant/live-computed, no button needed. To eliminate the 'Recipe no longer available' rows either delete initial rows or migrate their recipe_ids to real UUIDs.",
+  "rca of the issue": "N/A — no blockers. Only finding is a low-priority seed-data mismatch on 3 pre-seeded weekly-plan rows whose recipe_id ('r1','r2') do not exist in the real recipes collection (real IDs are UUIDs). The frontend correctly detects this and renders the 'Recipe no longer available.' message. New user-added rows work fine."
+}

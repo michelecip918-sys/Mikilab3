@@ -474,7 +474,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
   const startBake = () => {
     setIsBaking(true);
-    speakVoice(tr("Conto alla rovescia forno avviato da Mohamed", "Ofen-Countdown von Mohamed gestartet", "Oven countdown started by Mohamed", "Cuenta atrás del horno iniciada por Mohamed", "Compte à rebours du four lancé par Mohamed", "شمارش معکوس فر توسط محمد آغاز شد"));
+    speakVoice(tr("Conto alla rovescia forno avviato da MohaLab", "Ofen-Countdown von MohaLab gestartet", "Oven countdown started by MohaLab", "Cuenta atrás del horno iniciada por MohaLab", "Compte à rebours du four lancé par MohaLab", "شمارش معکوس فر توسط MohaLab آغاز شد"));
     try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {}
   };
 

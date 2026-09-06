@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 // Nessuna sezione accademica: solo identità operativa per report, briefing e passaggi di consegna.
 const OPERATORI = [
   { id: "michele", name: "Michele", role: "Capo · Lab Control", img: "avatar_miki.jpg", accent: "#14b8a6" },
-  { id: "mohamed", name: "Mohamed Reza", role: "Capo Turno · Floor", img: "avatar_mohamed.jpg", accent: "#f59e0b" },
+  { id: "mohamed", name: "MohaLab", role: "Reparto Produzione · Fornaio", img: "avatar_mohamed.jpg", accent: "#f59e0b" },
 ];
 
 export default function OperatoreSelect({ current, onSelect, onClose }) {

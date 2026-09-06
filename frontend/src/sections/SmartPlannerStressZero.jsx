@@ -77,14 +77,14 @@ export default function SmartPlannerStressZero() {
   const importAndLevel = () => doImport(true);
 
   return (
-    <div data-testid="smart-planner" className="bg-slate-900/80 p-6 rounded-2xl border border-indigo-500/30 space-y-6">
+    <div data-testid="smart-planner" className="bg-slate-900/80 p-6 rounded-2xl border border-cyan-500/30 space-y-6">
       <ModuleParams screen="planner" />
       <div className="flex items-start gap-3">
-        <span className="w-11 h-11 rounded-2xl bg-indigo-500/15 border border-indigo-500/40 flex items-center justify-center shrink-0">
-          <Moon className="w-6 h-6 text-indigo-400" />
+        <span className="w-11 h-11 rounded-2xl bg-cyan-500/15 border border-cyan-500/40 flex items-center justify-center shrink-0">
+          <Moon className="w-6 h-6 text-cyan-400" />
         </span>
         <div>
-          <h3 className="text-xl font-bold text-indigo-400">Smart Planner · Stress-Zero</h3>
+          <h3 className="text-xl font-bold text-cyan-400">Smart Planner · Stress-Zero</h3>
           <p className="text-slate-400 text-sm mt-0.5">Ottimizzazione automatica del turno notturno e dei volumi di produzione.</p>
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function SmartPlannerStressZero() {
               type="time"
               value={shiftHour}
               onChange={(e) => setShiftHour(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-indigo-300 mt-1 font-mono text-center text-xl font-bold"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-cyan-300 mt-1 font-mono text-center text-xl font-bold"
             />
           </div>
           <div>
@@ -109,13 +109,13 @@ export default function SmartPlannerStressZero() {
               value={volume}
               onChange={(e) => setVolume(e.target.value)}
               onBlur={(e) => commitVolume(e.target.value)}
-              className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-indigo-300 mt-1 font-mono text-center text-xl font-bold"
+              className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-cyan-300 mt-1 font-mono text-center text-xl font-bold"
             />
           </div>
         </div>
 
-        <div className="p-5 bg-indigo-950/20 border border-indigo-800/40 rounded-2xl">
-          <span className="text-xs font-bold text-indigo-300 uppercase tracking-widest block mb-2">Report Organizzativo</span>
+        <div className="p-5 bg-cyan-950/20 border border-cyan-800/40 rounded-2xl">
+          <span className="text-xs font-bold text-cyan-300 uppercase tracking-widest block mb-2">Report Organizzativo</span>
           <ul data-testid="planner-report" className="text-xs text-slate-300 space-y-2 font-mono">
             <li>• Turno ottimizzato alle ore {shiftHour} per il massimo riposo.</li>
             <li>• Carico suddiviso in {impasti} impasti da {perImpasto} pezzi l'uno.</li>
@@ -195,7 +195,7 @@ export default function SmartPlannerStressZero() {
           <div data-testid="balance-report" className="grid grid-cols-2 md:grid-cols-4 gap-3 text-center">
             <div><p className="text-2xl font-black text-slate-100 font-mono" data-testid="balance-total">{totSettimana}</p><span className="text-[10px] text-slate-400 uppercase">Pezzi/settimana</span></div>
             <div><p className="text-2xl font-black text-teal-300 font-mono" data-testid="balance-avg">{livellato}</p><span className="text-[10px] text-slate-400 uppercase">Media livellata/giorno</span></div>
-            <div><p className="text-2xl font-black text-indigo-300 font-mono" data-testid="balance-perperson">{carichoPersona}</p><span className="text-[10px] text-slate-400 uppercase">Pezzi/persona</span></div>
+            <div><p className="text-2xl font-black text-cyan-300 font-mono" data-testid="balance-perperson">{carichoPersona}</p><span className="text-[10px] text-slate-400 uppercase">Pezzi/persona</span></div>
             <div><p className="text-2xl font-black text-amber-300 font-mono">{giorniLavorativi}</p><span className="text-[10px] text-slate-400 uppercase">Giorni lavorativi</span></div>
           </div>
           <p className="text-xs text-slate-300">

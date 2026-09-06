@@ -6,7 +6,7 @@ export default function PrintHeader({ title = "", lang = "it" }) {
   return (
     <div className="print-only" style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, borderBottom: "2px solid #3E9C93", paddingBottom: 8 }}>
-        <img src={`${base}/logo-256.png`} alt="MikiLab" style={{ height: 38, width: "auto" }} />
+        <img src={`${base}/logo-light-256.png`} alt="MikiLab" style={{ height: 38, width: "auto" }} />
         <div>
           <div style={{ fontWeight: 800, fontSize: 18, color: "#2B303B" }}>MikiLab</div>
           {title ? <div style={{ fontSize: 12, color: "#555" }}>{title} · {d}</div> : <div style={{ fontSize: 12, color: "#555" }}>{d}</div>}

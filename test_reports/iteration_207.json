@@ -1,0 +1,26 @@
+{
+  "summary": "Iter 207 - Full validation of BakoMix Deus flagship, Kiosk mode + PIN-protected exit, Capo Plan broadcast + banner on Mohamed floor, Splash. Backend: 4/4 pytest PASS (bond GET, ask-locked no-XP, master-plan +40XP, broadcast+capo-plan). Frontend: full E2E via Playwright: splash appears, admin-gate 1985 keypad OK, capo-gate-login -> AuthScreen admin@mikilab.de/Mikilab2026! -> master-console. OvenBrain (data-testid=oven-brain) renders at top; deus-bond-meter + deus-bond-level show 'Acquaintance · 160 XP' initially. Divine Oracle at LOW bond returns locked reply ('Our bond is not yet deep enough...') AND XP does NOT increase (verified before/after). Master-plan (~40s LLM) returns reply, confidence 94%, impossible_solved chips (✦), rich markdown (headings + Resources table + Timeline), risk line; bond XP increases exactly +40 (160→200). deus-broadcast-btn -> 'Plan sent to Production ✓' toast. Kiosk: chip -> modal -> start sets localStorage 'mikilab_kiosk'='1' and shows kiosk-exit-btn; long-press ~1.4s opens kiosk-exit-pin; wrong PIN 0000 -> kiosk-pin-error shown, localStorage stays '1'; correct PIN 1985 -> localStorage removed, kiosk-chip returns. Capo plan: after broadcast, click 'Unlock Production' (data-testid=floor-unlock-btn) -> PinLock (pin-lock) -> pin-key-1/9/8/5 -> Mohamed floor with capo-plan-banner showing 'TEST_iter207 headline'; capo-plan-toggle expands to show '## TEST_iter207 piano - linea test 1 - linea test 2'.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_iter207_deus.py",
+    "/app/test_reports/pytest/iter207.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "BakoMix Deus endpoints: bond persistence per admin email works (db.bako_bond upsert). master-plan grants exactly +40 XP; ask grants +25 only when unlocked (external_unlocked at >=650 XP). Locked ask does NOT touch XP - verified server-side and UI-side.",
+    "Master-plan JSON parsing: strips ```json fences; falls back to raw markdown if JSON parse fails - resilient. Claude Sonnet 4.6 (~40s) returns rich structured markdown (headings, tables, timeline).",
+    "MarkdownLite renderer in OvenBrain.jsx correctly handles ## headings, tables (| .. |), and bullet lists with impossible_solved ✦ chips.",
+    "Kiosk exit-PIN uses adminGateApi.verify (server) with localStorage fallback - safe multi-layer. Long-press ~1.2s threshold reliable.",
+    "capo-plan-banner in MohamedFloor reads /api/floor/capo-plan and renders headline + expandable plan_markdown; broadcast->banner integration works end-to-end.",
+    "Minor: OvenBrain header shows PUBLIC_URL image with onError hide-fallback but no alt text for screen readers when image fails (low priority)."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter207_deus.py"],
+  "success_rate": {"backend": "100% (4/4)", "frontend": "100% (all flagship flows)"},
+  "test_credentials": "gate PIN 1985 + admin@mikilab.de / Mikilab2026! + production PIN 1985 (all working)",
+  "seed_data_creation": "Broadcast test plan with headline 'TEST_iter207 headline' persisted in db.app_meta.capo_plan (overwritable by next broadcast). Bond XP for admin@mikilab.de is now 200 (started 160). No cleanup needed - normal state.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Auth flow: admin-key-1/9/8/5 -> capo-gate-login -> input[type=email]/password -> button[type=submit]. Dismiss overlays: kiosk-modal-close and text 'Enter the console'/'Entra nella console'. Bond XP for admin@mikilab.de currently 200 - to test unlock threshold (>=650) trigger 12+ master-plan calls (each ~40s). To reset bond: db.bako_bond.delete_many({}). PinLock in production zone uses data-testid=pin-key-N (not pinlock-key-N). Floor unlock button is 'Unlock Production' text - click via text or scroll into view first (there is only 1 floor-unlock-btn but was previously clicked without effect until scroll_into_view_if_needed was applied via get_by_text). Broadcast->capo-plan is stateful in db.app_meta - test data 'TEST_iter207 headline' persists until next broadcast.",
+  "rca of the issue": "N/A - no bugs found. All backend endpoints (bond/master-plan/ask/broadcast/capo-plan) return 200 with correct data, XP math correct (+40 plan, +25 ask when unlocked, 0 when locked), and frontend flows all render + integrate correctly."
+}

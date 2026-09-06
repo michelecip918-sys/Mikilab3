@@ -59,6 +59,9 @@ import SecurityGuardian from "@/components/SecurityGuardian";
 import AmbientBako from "@/components/AmbientBako";
 import CompliancePanel from "@/components/CompliancePanel";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
+import WeeklyPlan from "@/sections/WeeklyPlan";
+import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
+import BackwardScheduler from "@/sections/BackwardScheduler";
 import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
@@ -79,6 +82,9 @@ import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
 import BakoSuggestions from "@/components/console/BakoSuggestions";
+import OvenBrain from "@/components/console/OvenBrain";
+import CapoDeck from "@/components/console/CapoDeck";
+import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
@@ -123,6 +129,32 @@ export default function App() {
     const el = zoneRefs[id]?.current;
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Back-guard PWA: il tasto Indietro del browser NON deve mai uscire dall'app.
+  // Arma una sentinella nella history una sola volta all'ingresso.
+  const backArmed = useRef(false);
+  useEffect(() => {
+    if (!adminOk || backArmed.current) return;
+    backArmed.current = true;
+    try { window.history.pushState({ ml: 1 }, ""); } catch { /* */ }
+  }, [adminOk]);
+  // Intercetta Indietro e "srotola" lo stato interno invece di lasciare la PWA.
+  useEffect(() => {
+    if (!adminOk) return;
+    const onPop = () => {
+      if (showPinLock) setShowPinLock(false);
+      else if (showOperator) setShowOperator(false);
+      else if (showBriefing) setShowBriefing(false);
+      else {
+        let floorHandled = false;
+        try { floorHandled = !window.dispatchEvent(new CustomEvent("mikilab-go-back", { cancelable: true })); } catch { /* */ }
+        if (!floorHandled && activeZone !== "master") jumpTo("master");
+      }
+      try { window.history.pushState({ ml: 1 }, ""); } catch { /* */ } // ri-arma: mai uscire con Indietro
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [adminOk, showPinLock, showOperator, showBriefing, activeZone, jumpTo]);
 
   // Scroll-spy: evidenzia la zona attiva nel rail ambientale.
   useEffect(() => {
@@ -279,6 +311,8 @@ export default function App() {
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
                     <RoleLayout />
+                    <CapoDeck />
+                    <OvenBrain />
                     <BakoSuggestions />
                     <LabBriefing />
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" defaultOpen title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
@@ -289,6 +323,15 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" defaultOpen title={tri("BakoMix · Piano del Giorno", "BakoMix · Tagesplan", "BakoMix · Day Plan", "BakoMix · Plan del Día", "BakoMix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("BakoMix genera la sequenza di produzione ottimale del giorno.", "BakoMix erstellt den optimalen Produktionsablauf.", "BakoMix generates the optimal production sequence.", "BakoMix genera la secuencia óptima.", "BakoMix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-weekly" accent="#00F0FF" beacon="#FFB800" icon="🗓️" defaultOpen title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
+                      <WeeklyPlan />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-pianoai" accent="#7DD3FC" beacon="#00F0FF" icon="🤖" title={tri("Piano di Produzione AI", "KI-Produktionsplan", "AI Production Plan", "Plan de Producción IA", "Plan de Production IA", "برنامه تولید هوش مصنوعی")} sub={tri("Detta ordini e vincoli: l'IA costruisce il piano completo del giorno, pronto da eseguire.", "Aufträge & Grenzen: die KI baut den kompletten Tagesplan.", "Dictate orders and constraints: the AI builds the full day plan, ready to run.", "Dicta pedidos y límites: la IA construye el plan del día.", "Dicte commandes et contraintes : l'IA bâtit le plan du jour.", "سفارش‌ها را بگو: هوش مصنوعی برنامه کامل روز را می‌سازد.")}>
+                      <PianoProduzioneAI />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-backward" accent="#FFB800" beacon="#00F0FF" icon="⏱️" title={tri("Piano a Ritroso · dall'orario di consegna", "Rückwärtsplan · ab Lieferzeit", "Backward Plan · from delivery time", "Plan Inverso · desde la entrega", "Plan à Rebours · dès la livraison", "برنامه معکوس · از زمان تحویل")} sub={tri("Inserisci quando devono essere pronti i prodotti: MikiLab calcola a ritroso impasto, lievitazione e cottura.", "Wann fertig? MikiLab rechnet rückwärts Teig, Gare und Backen.", "Enter when products must be ready: MikiLab computes dough, proof and bake backwards.", "Indica cuándo deben estar listos: MikiLab calcula hacia atrás.", "Indique l'heure de prêt : MikiLab calcule à rebours.", "زمان آماده‌شدن را وارد کن: MikiLab معکوس محاسبه می‌کند.")}>
+                      <BackwardScheduler />
                     </HoloPanel>
                     <HoloPanel testid="panel-twin" accent="#5E8CA8" beacon="#7DD3FC" icon="🌐" title={tri("Gemello Digitale 3D", "Digitaler Zwilling 3D", "3D Digital Twin", "Gemelo Digital 3D", "Jumeau Numérique 3D", "دوقلوی دیجیتال")} sub={tri("Metaverso di laboratorio: supervisione spaziale dei macchinari.", "Labor-Metaverse: räumliche Überwachung.", "Lab metaverse: spatial supervision of machines.", "Metaverso: supervisión espacial.", "Métavers: supervision spatiale.", "متاورس آزمایشگاه.")}>
                       <DigitalTwin />
@@ -350,6 +393,9 @@ export default function App() {
                     <HoloPanel testid="panel-hardware" accent="#5E8CA8" beacon="#7DD3FC" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
                       <HardwareBridge />
                     </HoloPanel>
+                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#00F0FF" icon="⚙️" defaultOpen title={tri("Nuovi Macchinari · BakoMix riconosce", "Neue Maschinen · BakoMix erkennt", "New Machines · BakoMix recognizes", "Nuevas Máquinas · BakoMix reconoce", "Nouvelles Machines · BakoMix reconnaît", "ماشین‌های جدید · BakoMix می‌شناسد")} sub={tri("Arriva un macchinario? BakoMix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? BakoMix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? BakoMix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? BakoMix la reconoce e integra.", "Une machine arrive ? BakoMix la reconnaît et l'intègre.", "دستگاه جدید؟ BakoMix آن را می‌شناسد و ادغام می‌کند.")}>
+                      <MachineArrival />
+                    </HoloPanel>
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />
                     </HoloPanel>
@@ -362,7 +408,7 @@ export default function App() {
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
                 <ZoneDivider testid="zone-operatori" code="Z-02" title={tri("Operatori · Piano Produzione", "Operatoren · Produktion", "Operators · Production Floor", "Operarios · Producción", "Opérateurs · Production", "اپراتورها · تولید")} accent="#00F0FF" />
-                <ZoneHero testid="hero-operatori" avatar="avatar_mohamed.jpg" accent="#00F0FF" tag="Z-02 · Operatori" name="Mohamed" role={tri("Capo Turno · Maestro Fornaio", "Schichtleiter · Bäckermeister", "Shift Lead · Master Baker", "Jefe de Turno · Maestro Panadero", "Chef d'équipe · Maître Boulanger", "سرشیفت · استاد نانوا")} reactive />
+                <ZoneHero testid="hero-operatori" avatar="avatar_mohamed.jpg" accent="#00F0FF" tag="Z-02 · Produzione" name="MohaLab" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><MohamedFloor /></div>

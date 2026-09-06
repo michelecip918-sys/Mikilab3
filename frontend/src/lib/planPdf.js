@@ -54,7 +54,7 @@ export async function exportPlanPdf({ title = "Piano di Produzione", plan = "", 
   const contentW = pageW - margin * 2;
 
   const base = process.env.PUBLIC_URL || "";
-  const logo = await loadImage(logoUrl || `${base}/logo-256.png`);
+  const logo = await loadImage(logoUrl || `${base}/logo-light-256.png`);
   const locale = { de: "de-DE", en: "en-GB", es: "es-ES", fr: "fr-FR" }[lang] || "it-IT";
   const dateStr = new Date().toLocaleDateString(locale, { day: "2-digit", month: "long", year: "numeric" });
 

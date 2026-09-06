@@ -118,7 +118,7 @@ export default function PanettoneLabels() {
                 className="rounded-2xl border-2 border-[#3E9C93] bg-white text-[#2B303B] p-4 flex flex-col items-center text-center break-inside-avoid"
                 style={{ pageBreakInside: "avoid" }}>
                 {r.image_url && <img src={r.image_url} alt={r.name} className="w-full h-28 object-cover rounded-2xl shadow-md border border-amber-900/40 mb-2 border border-[#2A3B49]" />}
-                <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/70 mb-1.5 -mt-6 bg-white" />
+                <img src={`${process.env.PUBLIC_URL}/logo-light.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/70 mb-1.5 -mt-6 bg-white" />
                 <p className="font-display text-lg font-bold leading-tight">Panettone Artigianale MikiLab</p>
                 <div className="my-1.5 flex items-center gap-1 text-[10px] font-bold tracking-wider">
                   <span className="inline-block w-3 h-2 bg-[#3E9C93]" /><span className="inline-block w-3 h-2 bg-[#3E9C93]" />

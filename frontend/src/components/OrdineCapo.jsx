@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 const PRODUCTS = ["baguette", "pane", "focaccia", "pizza", "croissant", "brioche", "panettone"];
 
-// MOTORE MIKILAB — il Capo detta l'ordine, calcoliamo il piano A RITROSO e lo inviamo a Mohamed.
+// MOTORE MIKILAB — il Capo detta l'ordine, calcoliamo il piano A RITROSO e lo inviamo a MohaLab.
 export default function OrdineCapo() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -35,13 +35,13 @@ export default function OrdineCapo() {
     } finally { setBusy(false); }
   };
 
-  const sendToMohamed = async () => {
+  const sendToMohaLab = async () => {
     if (!res) return;
     setSending(true);
     try {
       await floorPlanApi.push({ plan: res.plan, title: res.title, lang });
       try { window.dispatchEvent(new Event("mikilab-floor-plan-updated")); } catch { /* */ }
-      toast.success(tri("Piano inviato a Mohamed! Coordinerà il team a voce.", "Plan an Mohamed gesendet!", "Plan sent to Mohamed! He'll coordinate the team by voice.", "¡Plan enviado a Mohamed!", "Plan envoyé à Mohamed !", "برنامه به محمد ارسال شد!"));
+      toast.success(tri("Piano inviato a MohaLab! Coordinerà il team a voce.", "Plan an MohaLab gesendet!", "Plan sent to MohaLab! He'll coordinate the team by voice.", "¡Plan enviado a MohaLab!", "Plan envoyé à MohaLab !", "برنامه به MohaLab ارسال شد!"));
     } catch { toast.error(tri("Invio non riuscito", "Senden fehlgeschlagen", "Send failed", "Fallo al enviar", "Échec de l'envoi", "ارسال ناموفق")); }
     finally { setSending(false); }
   };
@@ -52,7 +52,7 @@ export default function OrdineCapo() {
     <div data-testid="ordine-capo" className="space-y-4">
       <div>
         <h3 className="text-sm font-bold text-[#14b8a6] flex items-center gap-2"><CalendarClock className="w-4 h-4" /> {tri("Ordine & Piano a Ritroso", "Auftrag & Rückwärtsplan", "Order & Backwards Plan", "Pedido & Plan a la Inversa", "Commande & Plan à Rebours", "سفارش و برنامه معکوس")}</h3>
-        <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Detta l'ordine: dall'ora di consegna calcolo a ritroso impasto, lievitazione e cottura, poi invio la scaletta a Mohamed.", "Diktiere den Auftrag: von der Lieferzeit rechne ich rückwärts.", "Dictate the order: from the delivery time I schedule mixing, proofing and baking backwards, then send it to Mohamed.", "Dicta el pedido: desde la hora de entrega calculo hacia atrás.", "Dicte la commande : depuis l'heure de livraison je planifie à rebours.", "سفارش را بگو: از زمان تحویل به‌صورت معکوس برنامه‌ریزی می‌کنم.")}</p>
+        <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Detta l'ordine: dall'ora di consegna calcolo a ritroso impasto, lievitazione e cottura, poi invio la scaletta a MohaLab.", "Diktiere den Auftrag: von der Lieferzeit rechne ich rückwärts.", "Dictate the order: from the delivery time I schedule mixing, proofing and baking backwards, then send it to MohaLab.", "Dicta el pedido: desde la hora de entrega calculo hacia atrás.", "Dicte la commande : depuis l'heure de livraison je planifie à rebours.", "سفارش را بگو: از زمان تحویل به‌صورت معکوس برنامه‌ریزی می‌کنم.")}</p>
       </div>
 
       {/* comando libero (NLP) */}
@@ -105,10 +105,10 @@ export default function OrdineCapo() {
               </div>
             ))}
           </div>
-          <button data-testid="ordine-send-mohamed" onClick={sendToMohamed} disabled={sending}
+          <button data-testid="ordine-send-mohamed" onClick={sendToMohaLab} disabled={sending}
             className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-amber-500/20 disabled:opacity-50 active:scale-95 transition-all">
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            {sending ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia a Mohamed (coordina il team)", "An Mohamed senden", "Send to Mohamed (coordinates the team)", "Enviar a Mohamed", "Envoyer à Mohamed", "ارسال به محمد")}
+            {sending ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia a MohaLab (coordina il team)", "An MohaLab senden", "Send to MohaLab (coordinates the team)", "Enviar a MohaLab", "Envoyer à MohaLab", "ارسال به MohaLab")}
           </button>
         </div>
       )}

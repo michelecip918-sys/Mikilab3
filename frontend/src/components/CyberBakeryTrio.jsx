@@ -16,8 +16,8 @@ const TRIO = [
     ],
   },
   {
-    id: "mohamed", name: "Mohamed", role: "Braccio destro", img: "avatar_mohamed.jpg", accent: "#3E9C93",
-    intro: "Sono Mohamed, il braccio destro in laboratorio. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
+    id: "mohamed", name: "MohaLab", role: "Reparto Produzione", img: "avatar_mohamed.jpg", accent: "#3E9C93",
+    intro: "Sono MohaLab, il reparto Produzione. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
     steps: [
       { t: "Voice Core", d: "Lavoro a mani libere: avvio impastatrici e forni con la voce, senza toccare lo schermo." },
       { t: "Parco Macchine", d: "Tengo d'occhio impastatrice, forni e celle con i timer sempre attivi tra le schermate." },
