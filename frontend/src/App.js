@@ -75,10 +75,28 @@ const SECTIONS = [
 
 function LabCard({ testid, icon, title, sub, onClick, accent }) {
   return (
-    <button data-testid={testid} onClick={onClick} className={`p-4 rounded-xl bg-[#0b0f19] border ${accent ? "border-[#14b8a6]/40" : "border-[#1e293b]"} hover:border-[#14b8a6] text-left transition-all group`}>
-      <div className="text-xl mb-2">{icon}</div>
-      <h3 className="font-bold text-sm text-white group-hover:text-[#14b8a6]">{title}</h3>
-      <p className="text-[11px] text-[#94A3B8] mt-1">{sub}</p>
+    <button data-testid={testid} onClick={onClick}
+      className="group relative overflow-hidden rounded-2xl p-4 text-left transition-all duration-300 hover:-translate-y-0.5"
+      style={{
+        background: "linear-gradient(155deg, rgba(11,20,32,0.92), rgba(6,12,22,0.92))",
+        border: `1px solid ${accent ? "rgba(34,211,238,0.45)" : "rgba(30,41,59,0.9)"}`,
+        boxShadow: accent ? "0 0 22px rgba(34,211,238,0.14), inset 0 1px 0 rgba(255,255,255,0.04)" : "inset 0 1px 0 rgba(255,255,255,0.03)",
+      }}>
+      {/* scanline olografica superiore */}
+      <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70"
+        style={{ background: "linear-gradient(90deg, transparent, rgba(34,211,238,0.8), transparent)" }} />
+      {/* glow d'angolo al hover */}
+      <span aria-hidden className="absolute -right-8 -top-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
+        style={{ background: "radial-gradient(circle, rgba(34,211,238,0.5), transparent 70%)" }} />
+      {/* indicatore di stato fluorescente */}
+      <span aria-hidden className="absolute right-3 top-3 w-2 h-2 rounded-full"
+        style={{ background: accent ? "#22d3ee" : "#14b8a6", boxShadow: `0 0 8px ${accent ? "#22d3ee" : "#14b8a6"}`, animation: "pulse 2s ease-in-out infinite" }} />
+      <div className="relative z-10">
+        <div className="mb-2 inline-flex items-center justify-center w-10 h-10 rounded-xl text-xl"
+          style={{ background: "rgba(34,211,238,0.08)", border: "1px solid rgba(34,211,238,0.25)" }}>{icon}</div>
+        <h3 className="font-bold text-sm text-white transition-colors group-hover:text-[#22d3ee]" style={{ textShadow: "0 0 12px rgba(34,211,238,0.15)" }}>{title}</h3>
+        <p className="text-[11px] text-[#94A3B8] mt-1">{sub}</p>
+      </div>
     </button>
   );
 }
