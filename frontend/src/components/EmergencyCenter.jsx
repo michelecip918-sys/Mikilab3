@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertOctagon, Check, Wrench, Loader2, ShieldAlert } from "lucide-react";
+import { AlertOctagon, Check, Wrench, Loader2, ShieldAlert, History, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import { bakoApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
@@ -16,7 +16,12 @@ export default function EmergencyCenter() {
   const [events, setEvents] = useState([]);
   const [guides, setGuides] = useState({});
   const [loadingGuide, setLoadingGuide] = useState(null);
+  const [hist, setHist] = useState(null);
+  const [showHist, setShowHist] = useState(false);
   const seen = useRef(new Set());
+
+  const loadHist = useCallback(async () => { try { setHist(await bakoApi.sosHistory(lang)); } catch { /* */ } }, [lang]);
+  useEffect(() => { loadHist(); }, [loadHist]);
 
   const load = useCallback(async () => {
     try {
@@ -37,8 +42,10 @@ export default function EmergencyCenter() {
 
   const ack = async (id) => {
     setEvents((es) => es.filter((e) => e.id !== id));
-    try { await bakoApi.sosAck(id); } catch { /* */ } load();
+    try { await bakoApi.sosAck(id); } catch { /* */ } load(); loadHist();
   };
+
+  const fmtDur = (s) => (s == null ? "—" : s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`);
 
   const genGuide = async (ev) => {
     setLoadingGuide(ev.id);
@@ -98,6 +105,37 @@ export default function EmergencyCenter() {
             ))}
           </AnimatePresence>
         </motion.div>
+      )}
+
+      {hist && hist.resolved_count > 0 && (
+        <div className="mt-2">
+          <button data-testid="sos-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full inline-flex items-center gap-1.5 text-[11px] font-bold text-[#7DD3FC] py-1.5">
+            <History className="w-3.5 h-3.5" /> {tri("Storico & Reattività", "Verlauf & Reaktion", "History & Reactivity", "Historial & Reactividad", "Historique & Réactivité", "تاریخچه و واکنش")} ({hist.resolved_count}) {showHist ? "▲" : "▼"}
+          </button>
+          {showHist && (
+            <div data-testid="sos-history" className="space-y-2 mt-1">
+              {hist.leaderboard.length > 0 && (
+                <div className="rounded-xl border border-[#FFB800]/30 bg-[#FFB800]/5 p-2.5">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-[#FFB800] flex items-center gap-1.5 mb-1.5"><Trophy className="w-3.5 h-3.5" /> {tri("Reattività per turno", "Reaktion pro Schicht", "Reactivity per shift", "Reactividad por turno", "Réactivité par équipe", "واکنش هر شیفت")}</p>
+                  {hist.leaderboard.map((b, i) => (
+                    <div key={b.shift} data-testid={`sos-board-${b.shift}`} className="flex items-center justify-between text-[12px] text-white py-0.5">
+                      <span className="capitalize">{i === 0 ? "🏆 " : ""}{b.shift} <span className="text-[#64748b]">({b.count})</span></span>
+                      <span className="font-bold text-[#FFB800]">{fmtDur(b.avg_response_s)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {hist.history.slice(0, 8).map((h, i) => (
+                <div key={i} data-testid={`sos-hist-${i}`} className="flex items-center gap-2 rounded-lg border border-[#1e293b] bg-[#030712] px-2.5 py-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                  <span className="text-[12px] text-white flex-1 min-w-0 truncate">{h.operator}{h.machine ? ` · ${h.machine}` : ""}</span>
+                  <span className="text-[10px] text-[#64748b] capitalize">{h.shift}</span>
+                  <span className="text-[11px] font-bold text-[#7DD3FC]">{fmtDur(h.response_seconds)}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

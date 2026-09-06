@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { Waves, Thermometer, Droplets, Timer } from "lucide-react";
+import { Waves, Thermometer, Droplets, Timer, CalendarClock } from "lucide-react";
+import { toast } from "sonner";
 import { bakoApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -15,6 +16,11 @@ export default function AdaptiveProofing() {
 
   const load = useCallback(async () => { try { setData(await bakoApi.proofing(manual)); } catch { /* */ } }, [manual]);
   useEffect(() => { load(); const iv = setInterval(load, 8000); return () => clearInterval(iv); }, [load]);
+
+  const syncPlan = async () => {
+    try { const r = await bakoApi.proofingSync(manual); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(r.message); }
+    catch { toast.error(tri("Sync non riuscita", "Sync fehlgeschlagen", "Sync failed", "Sync fallida", "Échec sync", "همگام‌سازی ناموفق")); }
+  };
 
   const col = data ? (MODE_COL[data.mode] || "#7DD3FC") : "#7DD3FC";
 
@@ -37,6 +43,14 @@ export default function AdaptiveProofing() {
           <div data-testid="proof-mode" className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black" style={{ color: col, border: `1px solid ${col}66`, background: `${col}12` }}>
             {data.mode_label} · {data.total_minutes} min
           </div>
+          {data.oven_ready_at && (
+            <div className="flex items-center gap-2">
+              <span data-testid="proof-oven-ready" className="inline-flex items-center gap-1.5 text-[12px] text-white"><CalendarClock className="w-4 h-4 text-[#FFB800]" /> {tri("Infornata prevista", "Backzeit", "Bake at", "Horneado", "Enfournement", "زمان پخت")}: <b className="text-[#FFB800]">{data.oven_ready_at}</b></span>
+            </div>
+          )}
+          <button data-testid="proof-sync-plan" onClick={syncPlan} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-xs active:scale-95">
+            <CalendarClock className="w-3.5 h-3.5" /> {tri("Sincronizza orari col piano", "Zeiten mit Plan sync", "Sync times with plan", "Sync con el plan", "Sync avec le plan", "همگام‌سازی با برنامه")}
+          </button>
           <div className="space-y-1.5">
             {data.stages.map((st, i) => (
               <div key={i} data-testid={`proof-stage-${i}`} className="rounded-xl border border-[#5E8CA8]/25 bg-[#0C1019]/60 p-2.5">

@@ -293,3 +293,10 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Flotta AGV**: GET /api/bako/agv — routing autonomo tra postazioni + rilevamento acustico preventivo (dB anomali → manutenzione, annuncio TTS). UI AgvFleet.jsx.
 - **Layout per Ruolo**: RoleLayout.jsx — chip Tutto/Fornaio/Capo linea/Manutentore che mostrano/nascondono ISTANTANEAMENTE i pannelli pertinenti (toggle display via data-testid), scelta persistita.
 - Test iteration_202: backend 100% / frontend 100%, 0 bug. Backlog v14 site-wide COMPLETATO.
+
+## v51 (2026-09) — Storico SOS, AGV nel 3D, Micro-ordini email, Sync Celle→Piano
+- **Storico SOS**: ack calcola response_seconds; GET /api/bako/sos/history con classifica di reattività per turno (mattina/pomeriggio/notte). UI: sezione sos-history + leaderboard in EmergencyCenter.
+- **AGV nel 3D**: DigitalTwin renderizza i carrelli come sfere che si muovono lungo le rotte (STATION_POS), sfera ROSSA pulsante se in manutenzione (allarme acustico). Poll /bako/agv 5s.
+- **Micro-ordini via email**: bako_silo_microorder invia email Resend (SILO_SUPPLIER_EMAIL o email admin) con la lista rifornimenti quando i silos vanno sotto soglia.
+- **Sync Celle→Piano**: proofing restituisce oven_ready_at; POST /api/bako/proofing/sync-plan riprogramma gli orari start dei lotti produzione. UI: proof-oven-ready + proof-sync-plan.
+- Test iteration_203: backend 100% / frontend 100%, 0 bug.

@@ -1,0 +1,32 @@
+{
+  "summary": "Frontend E2E verified for 4 new features (SOS history + reactivity leaderboard, AGV in 3D Twin, Silos micro-orders via email, Proofing→Plan sync) plus regression on role-layout and 390px mobile overflow. All flows PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_results": {
+    "auth_gate_and_login": "PASS (fetch /api/admin-gate/verify 200, /api/auth/login 200, localStorage set, reload OK, no React runtime errors; only 401s pre-auth fetches which are expected)",
+    "sos_history_reactivity": "PASS: created SOS via /api/bako/sos, sos-ack-<id> handler visible via polling, click ack -> response_seconds computed. sos-history-toggle appears (label 'History & Reactivity (N)'). Opening shows sos-history with sos-board-mattina (leaderboard by shift w/ avg response) and sos-hist-0/1 rows with per-event response duration.",
+    "digital_twin_agv": "PASS: twin-canvas mounts cleanly (WebGL). GET /api/bako/agv returns 200 with {carts, alerts, alert_count, spoken}. No runtime errors.",
+    "silos_microorder": "PASS: after PUT /api/bako/silos/silo-00 {current_kg:100}, silo-microorder button appears. POST /api/bako/silos/microorder returns {ok:true, count:1, orders:[{silo:'Farina Tipo 00', qty_kg:1100}], emailed:true, supplier:'admin@mikilab.de'}. Silo restored to 1200kg after test.",
+    "proofing_sync_plan": "PASS: proof-oven-ready shows 'Bake at: HH:MM'. proof-sync-plan button clickable and returns success toast. proof-ovens-0 => 'FRENA (forni occupati) · 218 min'; proof-ovens-2 => 'ACCELERA (forni liberi) · 101 min'; proof-ovens-auto restores auto mode. Mode chips change total_minutes and thus bake time as expected.",
+    "regression_role_layout": "PASS: role-layout present in 'tutto' view; all target panels visible (emergency, twin, silos, proofing, agv). Mobile 390x844: no horizontal overflow (scrollWidth==clientWidth==390).",
+    "console_errors": "Only 401s from pre-auth fetches before login completes (benign). No React pageerrors."
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "HoloPanel defaultOpen inconsistency: some panels (emergency, autoplan) are defaultOpen, others (proofing, silos, twin) are not — testing needs an ensure_open helper. Consider adding a data-open attribute to panel-* to reveal open state for testability.",
+    "AGV endpoint returns object {carts, alerts, ...} not an array; if any consumer expects an array it will fail (frontend seems fine, but worth documenting).",
+    "AdaptiveProofing renders proof-sync-plan/oven-ready only after first fetch completes; consider a skeleton with data-testid to make tests deterministic without long waits."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md), PIN gate 1985",
+  "seed_data_creation": "Created 5 test SOS events (TESTOP, TESTOP2..TESTOP5 on FORNO-1), all ack'd. Temporarily reduced silo-00 to 100kg to trigger micro-order, then restored to 1200kg.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All 4 new features + regression PASS. Emergency panel is defaultOpen; Proofing/Silos/Twin require expanding via panel-*-head. Use polling waits (SOS ~5s, proofing ~8s) with wait_for_selector on data-testids. History toggle only appears after at least one resolved SOS (hist.resolved_count > 0). Micro-order needs at least one silo below threshold — force via PUT /api/bako/silos/silo-00 {current_kg:100}."
+}

@@ -9772,9 +9772,54 @@ async def bako_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
 
 @api_router.post("/bako/sos/{sid}/ack")
 async def bako_sos_ack(sid: str, admin: dict = Depends(require_admin)):
-    """Il Capo prende in carico / chiude l'SOS."""
-    await db.sos_events.update_one({"id": sid}, {"$set": {"status": "resolved", "ack_at": now_iso(), "ack_by": admin.get("email")}})
-    return {"ok": True}
+    """Il Capo prende in carico / chiude l'SOS; registra il tempo di risposta."""
+    ev = await db.sos_events.find_one({"id": sid}, {"_id": 0})
+    now = now_iso()
+    resp_s = None
+    if ev and ev.get("created_at"):
+        try:
+            resp_s = int((datetime.fromisoformat(now) - datetime.fromisoformat(ev["created_at"])).total_seconds())
+        except Exception:
+            resp_s = None
+    await db.sos_events.update_one({"id": sid}, {"$set": {"status": "resolved", "ack_at": now, "ack_by": admin.get("email"), "response_seconds": resp_s}})
+    return {"ok": True, "response_seconds": resp_s}
+
+
+def _shift_of(iso_ts: str) -> str:
+    try:
+        h = datetime.fromisoformat(iso_ts).hour
+    except Exception:
+        return "?"
+    if h < 6:
+        return "notte"
+    if h < 14:
+        return "mattina"
+    if h < 22:
+        return "pomeriggio"
+    return "notte"
+
+
+@api_router.get("/bako/sos/history")
+async def bako_sos_history(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Storico SOS risolti + classifica di REATTIVITÀ per turno (tempo medio di risposta)."""
+    docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).sort("ack_at", -1).to_list(200)
+    board = {}
+    for d in docs:
+        sh = _shift_of(d.get("created_at") or "")
+        rs = d.get("response_seconds")
+        b = board.setdefault(sh, {"shift": sh, "count": 0, "total_s": 0})
+        b["count"] += 1
+        if rs is not None:
+            b["total_s"] += rs
+    leaderboard = []
+    for b in board.values():
+        avg = round(b["total_s"] / b["count"]) if b["count"] else 0
+        leaderboard.append({"shift": b["shift"], "count": b["count"], "avg_response_s": avg})
+    leaderboard.sort(key=lambda x: x["avg_response_s"])  # più reattivo = tempo minore
+    history = [{"operator": d.get("operator"), "machine": d.get("machine") or d.get("line"),
+                "created_at": d.get("created_at"), "ack_at": d.get("ack_at"),
+                "response_seconds": d.get("response_seconds"), "shift": _shift_of(d.get("created_at") or "")} for d in docs[:30]]
+    return {"history": history, "leaderboard": leaderboard, "resolved_count": len(docs)}
 
 
 @api_router.get("/bako/telemetry")
@@ -10352,7 +10397,22 @@ async def bako_silo_microorder(admin: dict = Depends(require_admin)):
             qty = round(float(s.get("capacity_kg") or 0) * 0.8 - float(s.get("current_kg") or 0), 0)
             created.append({"silo": s["name"], "qty_kg": qty})
             await db.silos.update_one({"id": s["id"]}, {"$set": {"current_kg": round(float(s.get("capacity_kg") or 0) * 0.8, 0), "last_order_at": now_iso()}})
-    return {"ok": True, "orders": created, "count": len(created)}
+    # Invio email al fornitore (Resend). Destinatario: SILO_SUPPLIER_EMAIL o l'email del Capo.
+    emailed = False
+    supplier = os.environ.get("SILO_SUPPLIER_EMAIL") or admin.get("email")
+    if created and RESEND_API_KEY and supplier:
+        rows = "".join(f"<tr><td style='padding:6px 12px;border-bottom:1px solid #eee'>{o['silo']}</td><td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right'><b>{o['qty_kg']:g} kg</b></td></tr>" for o in created)
+        html = (f"<div style='font-family:sans-serif;max-width:520px'><h2 style='color:#3f7cac'>MikiLab · Micro-ordine rifornimento silos</h2>"
+                f"<p>Rifornimento automatico richiesto per {len(created)} silos sotto soglia:</p>"
+                f"<table style='width:100%;border-collapse:collapse'>{rows}</table>"
+                f"<p style='color:#888;font-size:12px'>Generato automaticamente da BakoMix AI · {now_iso()[:16]}</p></div>")
+        try:
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [supplier],
+                                                          "subject": "MikiLab · Micro-ordine rifornimento silos", "html": html})
+            emailed = True
+        except Exception as e:
+            logger.warning("silo microorder email fail (%s)", str(e)[:120])
+    return {"ok": True, "orders": created, "count": len(created), "emailed": emailed, "supplier": supplier if emailed else None}
 
 
 # --- Celle di lievitazione: curve multi-stadio adattive alla disponibilità forni ---
@@ -10384,7 +10444,26 @@ async def bako_proofing(free_ovens: int = -1, lang: str = "it", admin: dict = De
              "accelera": R("ACCELERA (forni liberi)", "ACCELERATE (ovens free)")}[mode]
     spoken = R(f"Forni liberi: {free_ovens}. Curva in modalità {label}, totale {total} minuti.",
                f"Free ovens: {free_ovens}. Curve in {label} mode, total {total} minutes.")
-    return {"mode": mode, "mode_label": label, "free_ovens": free_ovens, "stages": stages, "total_minutes": total, "spoken": spoken}
+    oven_ready_at = (datetime.now(timezone.utc) + timedelta(minutes=total)).strftime("%H:%M")
+    return {"mode": mode, "mode_label": label, "free_ovens": free_ovens, "stages": stages, "total_minutes": total, "oven_ready_at": oven_ready_at, "spoken": spoken}
+
+
+@api_router.post("/bako/proofing/sync-plan")
+async def bako_proofing_sync(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
+    """Sync Celle→Piano: dalla curva delle celle ricalcola gli orari di INFORNATA dei lotti
+    di produzione attivi (scaglionati di 15') e aggiorna il piano del giorno."""
+    curve = await bako_proofing(free_ovens, lang, admin)
+    base = datetime.now(timezone.utc) + timedelta(minutes=curve["total_minutes"])
+    tasks = await db.team_tasks.find({"status": "active", "kind": "produzione"}, {"_id": 0}).sort("start", 1).to_list(200)
+    updated = 0
+    for i, tk in enumerate(tasks):
+        new_start = (base + timedelta(minutes=15 * i)).strftime("%H:%M")
+        await db.team_tasks.update_one({"id": tk["id"]}, {"$set": {"start": new_start}})
+        updated += 1
+    it = not (lang or "it").startswith("en")
+    return {"ok": True, "updated": updated, "oven_ready_at": curve["oven_ready_at"], "total_minutes": curve["total_minutes"],
+            "message": (f"{updated} lotti riprogrammati: prima infornata alle {curve['oven_ready_at']}." if it else
+                        f"{updated} batches rescheduled: first bake at {curve['oven_ready_at']}.")}
 
 
 # --- Flotta AGV: routing autonomo + rilevamento acustico preventivo guasti ---

@@ -17,6 +17,7 @@ const MACHINES = [
   { id: "banco1", label: "Banco lavoro", pos: [1, 0.3, 1], size: [2.2, 0.6, 1] },
   { id: "banco2", label: "Banco pasticceria", pos: [3.2, 0.3, 1], size: [1.4, 0.6, 1] },
 ];
+const STATION_POS = Object.fromEntries(MACHINES.map((m) => [m.id, m.pos]));
 
 export default function DigitalTwin() {
   const { lang } = useLang();
@@ -24,6 +25,8 @@ export default function DigitalTwin() {
   const mountRef = useRef(null);
   const meshesRef = useRef({});
   const teleRef = useRef({});
+  const agvMeshesRef = useRef([]);
+  const agvDataRef = useRef([]);
   const selRef = useRef(null);
   const [tele, setTele] = useState({});
   const [globalLevel, setGlobalLevel] = useState("calmo");
@@ -74,6 +77,18 @@ export default function DigitalTwin() {
     });
     meshesRef.current = meshes;
 
+    // Carrelli AGV: sfere che si muovono lungo le rotte (pool di 4, alone rosso se guasto).
+    const agvMeshes = [];
+    for (let i = 0; i < 4; i++) {
+      const geo = new THREE.SphereGeometry(0.26, 16, 16);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x00f0ff, emissiveIntensity: 0.6, metalness: 0.6, roughness: 0.3 });
+      const s = new THREE.Mesh(geo, mat);
+      s.visible = false;
+      group.add(s);
+      agvMeshes.push(s);
+    }
+    agvMeshesRef.current = agvMeshes;
+
     // Raycaster per selezionare un macchinario
     const raycaster = new THREE.Raycaster();
     const pointer = new THREE.Vector2();
@@ -105,6 +120,23 @@ export default function DigitalTwin() {
         const scaleY = 1 + Math.sin(t * (1.2 + stress * 3) + i * 1.7) * stress * 0.06;
         mesh.scale.y = scaleY;
       });
+      // AGV lungo le rotte
+      const carts = agvDataRef.current;
+      agvMeshesRef.current.forEach((s, i) => {
+        const c = carts[i];
+        if (!c) { s.visible = false; return; }
+        s.visible = true;
+        const from = STATION_POS[c.from] || [0, 0.4, 0];
+        const to = STATION_POS[c.to] || from;
+        const prog = (t * 0.18 + i * 0.35) % 1;
+        s.position.set(from[0] + (to[0] - from[0]) * prog, 0.45, from[2] + (to[2] - from[2]) * prog);
+        const alert = c.health === "manutenzione";
+        const col = alert ? 0xf43f5e : (c.health === "attenzione" ? 0xffb800 : 0x00f0ff);
+        s.material.color.setHex(alert ? 0xf43f5e : 0xffffff);
+        s.material.emissive.setHex(col);
+        s.material.emissiveIntensity = alert ? 0.6 + Math.sin(t * 6) * 0.4 : 0.6;
+        s.scale.setScalar(alert ? 1.3 : 1);
+      });
       renderer.render(scene, camera);
       raf = requestAnimationFrame(animate);
     };
@@ -124,6 +156,7 @@ export default function DigitalTwin() {
       renderer.domElement.removeEventListener("click", onClick);
       try { mount.removeChild(renderer.domElement); } catch (e) { /* */ }
       Object.values(meshes).forEach((mesh) => { mesh.geometry.dispose(); mesh.material.dispose(); });
+      agvMeshes.forEach((s) => { s.geometry.dispose(); s.material.dispose(); });
       renderer.dispose();
     };
   }, []);
@@ -136,6 +169,15 @@ export default function DigitalTwin() {
     const iv = setInterval(load, 4000);
     return () => { stop = true; clearInterval(iv); };
   }, [lang]);
+
+  // --- Polling flotta AGV (posizioni + salute acustica) ---
+  useEffect(() => {
+    let stop = false;
+    const load = () => bakoApi.agv().then((d) => { if (!stop) agvDataRef.current = d.carts || []; }).catch(() => { /* */ });
+    load();
+    const iv = setInterval(load, 5000);
+    return () => { stop = true; clearInterval(iv); };
+  }, []);
 
   // --- Applica la telemetria ai materiali dei macchinari ---
   useEffect(() => {
