@@ -5,9 +5,13 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { X } from "lucide-react";
+import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
 const STRESS = { calmo: "#7DD3FC", medio: "#FFB800", alto: "#f43f5e" };
+const themeFor = (av) => (av || "").includes("mohamed") ? "mohamed" : (av || "").includes("bigmix") ? "bigmix" : "miki";
+const accentFor = (t) => t === "mohamed" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
+const roleFor = (t, tri) => t === "mohamed" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
 
 // FASE 1 — Cyber-Trio: briefing d'apertura turno. Avatar olografici che REAGISCONO
 // allo stress dell'impianto (colore/pulsazione) e parlano in sequenza (hands-free).
@@ -16,7 +20,13 @@ export default function ShiftBriefing({ onClose }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [data, setData] = useState(null);
   const [active, setActive] = useState(-1);
+  const [worldFor, setWorldFor] = useState(null);
   const timers = useRef([]);
+
+  const openWorld = (i, ln) => {
+    setWorldFor({ i, avatar: ln.avatar, who: ln.who, text: ln.text });
+    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mohamed" }); } catch { /* */ }
+  };
 
   useEffect(() => {
     bakoApi.briefing(lang).then((d) => {
@@ -45,8 +55,8 @@ export default function ShiftBriefing({ onClose }) {
           const on = active === i;
           const c = ln.accent || "#5E8CA8";
           return (
-            <div key={i} data-testid={`briefing-avatar-${i}`} className="flex flex-col items-center">
-              <motion.div animate={{ scale: on ? 1.12 : 1, opacity: on ? 1 : 0.55 }} transition={{ duration: 0.5 }} className="relative">
+            <div key={i} data-testid={`briefing-avatar-${i}`} onClick={() => openWorld(i, ln)} role="button" tabIndex={0} className="flex flex-col items-center cursor-pointer group">
+              <motion.div animate={{ scale: on ? 1.12 : 1, opacity: on ? 1 : 0.55 }} transition={{ duration: 0.5 }} className="relative group-hover:opacity-100 group-hover:scale-105">
                 <motion.span aria-hidden className="absolute -inset-2 rounded-full" style={{ background: `radial-gradient(circle, ${on ? stressColor : c}66, transparent 70%)` }}
                   animate={{ scale: on ? [1, 1.15, 1] : 1, opacity: on ? [0.6, 1, 0.6] : 0.4 }} transition={{ duration: 1.4, repeat: on ? Infinity : 0 }} />
                 <img src={`${PUB}/${ln.avatar}`} alt={ln.who || ""} className="relative w-20 h-20 sm:w-28 sm:h-28 rounded-full object-cover object-top" style={{ border: `2px solid ${on ? stressColor : c}`, boxShadow: `0 0 ${on ? 30 : 14}px ${on ? stressColor : c}88` }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -78,6 +88,29 @@ export default function ShiftBriefing({ onClose }) {
       <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#00F0FF)` }}>
         {tri("Entra nella plancia", "Zur Konsole", "Enter the console", "Entrar a la consola", "Entrer", "ورود به کنسول")}
       </button>
+      <p className="relative mt-3 text-[11px] text-[#5E8CA8]">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>
+
+      <AnimatePresence>
+        {worldFor && (() => {
+          const t = themeFor(worldFor.avatar); const acc = accentFor(t);
+          return (
+            <motion.div key="world" data-testid="avatar-world-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[95] bg-[#050810] overflow-hidden">
+              <AvatarWorld3D theme={t} accent={acc} speaking={t === "bigmix"} />
+              <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-[#0C1019]/80 border border-[#5E8CA8]/40 text-[#cfe6f5] text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
+                <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.35, type: "spring", stiffness: 120 }}
+                  className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2" style={{ borderColor: acc, boxShadow: `0 0 60px ${acc}cc, inset 0 0 22px ${acc}66` }}>
+                  <img src={`${PUB}/${worldFor.avatar}`} alt="" className="w-full h-full object-cover object-top" />
+                </motion.div>
+                <motion.h3 initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="mt-5 font-cyber text-2xl font-black uppercase tracking-wider text-white">{worldFor.who || ""}</motion.h3>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="font-mono-data text-[11px] uppercase tracking-[0.3em] mb-4" style={{ color: acc }}>{roleFor(t, tri)}</motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }} className="max-w-md text-center text-sm sm:text-base text-[#dbeaf2] leading-relaxed">{worldFor.text || ""}</motion.p>
+              </div>
+            </motion.div>
+          );
+        })()}
+      </AnimatePresence>
     </div>
   );
 }

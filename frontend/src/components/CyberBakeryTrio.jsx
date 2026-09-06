@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { X, ChevronLeft, ChevronRight, Volume2, Square, Sparkles } from "lucide-react";
 import { playTTS, stopTTS } from "@/lib/tts";
+import AvatarWorld3D from "@/components/AvatarWorld3D";
 import { useLang } from "@/i18n/LanguageContext";
 
 // CYBER-BAKERY TRIO: Miki (Capo), Mohamed (braccio destro), Bake Mix (robot).
@@ -52,10 +53,15 @@ function Guide({ p, onClose }) {
   return (
     <div data-testid="trio-guide" className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-3" onClick={close}>
       <div className="w-full max-w-md bg-slate-900 border border-slate-700 rounded-3xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <div className="relative h-44 bg-slate-950" style={{ boxShadow: `inset 0 -40px 60px -20px ${p.accent}55` }}>
-          <img src={`${process.env.PUBLIC_URL}/${p.img}`} alt={p.name} className="w-full h-full object-cover object-top" />
-          <button data-testid="trio-guide-close" onClick={close} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center"><X className="w-4 h-4" /></button>
-          <span className="absolute bottom-2 left-3 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: `${p.accent}30`, color: p.accent, border: `1px solid ${p.accent}66` }}>{p.role}</span>
+        <div className="relative h-60 bg-[#060910] overflow-hidden" style={{ boxShadow: `inset 0 -50px 70px -22px ${p.accent}66` }}>
+          <AvatarWorld3D theme={p.id} accent={p.accent} speaking={p.id === "bigmix" && speaking} />
+          <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+            <div className="w-28 h-28 rounded-full overflow-hidden border-2" style={{ borderColor: p.accent, boxShadow: `0 0 44px ${p.accent}aa, inset 0 0 18px ${p.accent}55` }}>
+              <img src={`${process.env.PUBLIC_URL}/${p.img}`} alt={p.name} className="w-full h-full object-cover object-top" />
+            </div>
+          </div>
+          <button data-testid="trio-guide-close" onClick={close} className="absolute top-2 right-2 z-20 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center"><X className="w-4 h-4" /></button>
+          <span className="absolute bottom-2 left-3 z-20 text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full" style={{ background: `${p.accent}30`, color: p.accent, border: `1px solid ${p.accent}66` }}>{p.role}</span>
         </div>
         <div className="p-5 space-y-3">
           <h3 className="font-display text-lg font-extrabold" style={{ color: p.accent }}>{title}</h3>

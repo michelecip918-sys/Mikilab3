@@ -356,3 +356,11 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Restyling grafico globale** (design_guidelines.json): .holo-panel/.holo-canvas elevati (glass, hairline, scanline, grid drift, hover-lift, scrollbar/selezione ciano). RIMOSSO viola vietato rgba(157,78,221). Logo colorato per stampe su carta bianca. Splash animata + Kiosk/PIN.
 - Pulite 3 righe seed rotte del piano settimanale ("Recipe no longer available").
 - Verificato E2E test 207/208/209/210 tutti 100%, zero blocker.
+
+## v61 (2026-06) — Mondi 3D immersivi dietro gli avatar (Vanilla three.js)
+- Nuovo componente AvatarWorld3D.jsx (Vanilla three.js 0.160, NIENTE react-three-fiber): mondo 3D tematico con transizione ad assemblaggio olografico (scale/rise + easing), rotazione dolce, griglia olografica, fog.
+- MIKI = Ufficio Tecnico/Lab Ricette (sacchi farina, tavolo da disegno, spighe di grano, schermi olografici dati con barre).
+- MohaLab = Zona Produzione Calda (forni industriali con porte incandescenti pulsanti/effetto calore, impastatrice con pala rotante, scaffale con pane).
+- BakoMix = Assistente (core icosaedro wireframe, onde sonore/anelli pulsanti, particelle fluttuanti, moduli input vocale trasparenti; intensità aumenta quando parla).
+- Integrato in ShiftBriefing: i 3 avatar sono ora cliccabili -> overlay full-screen col mondo 3D e l'avatar sempre al centro (anello glow, nome, ruolo, intro). Pulsante Indietro.
+- Verificato a schermo: mondo MIKI e MohaLab renderizzano correttamente (canvas + overlay). Compila pulito.
