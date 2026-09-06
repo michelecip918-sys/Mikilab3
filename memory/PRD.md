@@ -4332,3 +4332,10 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - CJK nei PDF: font `wqy-zenhei.ttc` presente sul sistema, non ancora registrato (zh non è lingua bundle attuale) — facile da aggiungere.
 - Dizionari ar/tr completi in `triTranslations.json` e sweep stringhe hardcoded legacy: lavoro multi-sessione.
 
+
+---
+## v14.0 (2026-09-06) — Evoluzione UI: entita BakoMix ambientale (fase 1)
+- Nuovo AmbientBako.jsx: presenza olografica sempre attiva nel flusso (orb cyan pulsante + equalizer + stato "in ascolto"), integrata come oracolo BakoMix continuo (vocale via masterApi.govern) invece di un bottone/widget da aprire. Montata globalmente nella shell app (screen "app"), stile dark-industrial olografico.
+- Verificato in-app (screenshot). Lint 0 errori.
+### RESTA (evoluzione UI, multi-fase, additiva e NON distruttiva):
+- Riskin completo delle sezioni in "plancia di comando" olografica (schede macchina/lingua scorrevoli), rimozione progressiva dei bottoni tradizionali dove sostituibili da interazione ambientale, indicatori compliance fluorescenti diffusi. Da fare a fasi per non rompere le ~200 viste testate.

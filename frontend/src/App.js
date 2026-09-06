@@ -62,6 +62,7 @@ import Maestro from "@/sections/Maestro";
 import PlantRadar from "@/components/PlantRadar";
 import BakoInfo from "@/components/BakoInfo";
 import SecurityGuardian from "@/components/SecurityGuardian";
+import AmbientBako from "@/components/AmbientBako";
 import CompliancePanel from "@/components/CompliancePanel";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 
@@ -225,6 +226,7 @@ export default function App() {
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
+      <AmbientBako />
       <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
         <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
           {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
