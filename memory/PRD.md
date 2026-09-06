@@ -4367,3 +4367,12 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Palette**: rimosso ultimo accento rosa (#ec4899 → #00F0FF in CoreShowcase). Zero viola in tutta la codebase.
 - Test iteration_193: backend 16/16, frontend 100%. Verificato: admin endpoints 401 senza sessione / 200 con admin; verify PIN pubblici senza rilascio sessione; operatore non vede l'area Capo.
 - NOTA (trasparenza): il cancello iniziale è client-side verificato server-side (adeguato al modello di minaccia operatori/dipendenti). L'AREA ADMIN è invece blindata lato server (invalicabile: nessun potere senza sessione admin). Su richiesta si può rendere anche il cancello iniziale un token server-side hard.
+
+## v42 (2026-06) — Cancello server HARD + Log accessi + PIN personali operatore
+- **CANCELLO SERVER HARD**: `POST /api/admin-gate/verify` col PIN Master corretto rilascia un cookie httpOnly firmato `mikilab_gate` (JWT HS256, TTL 30gg, GATE_JWT_SECRET in .env). `GateMiddleware` (BaseHTTPMiddleware, registrato prima di CORS) rifiuta con 401 {detail:'gate_required'} OGNI `/api` tranne whitelist (`/api/health`, `/api/auth/`, `/api/admin-gate`, `/api/inbound/`, `/api/webhook/`, `/api/public/`). Senza cookie il sito è inutilizzabile anche da browser modificato. Il Production PIN NON è in whitelist → passa comunque dal cancello Master.
+- Frontend: interceptor axios su 401 gate_required torna al gate SOLO se l'utente era già dentro (flag `mikilab_admin_unlocked`) — evita loop per i nuovi visitatori; warm-up ricette guardato da `adminOk`.
+- **LOG ACCESSI**: `_log_access` scrive in `db.pin_access_log` ogni tentativo (master/produzione/operatore) con ip/esito/nome/ora. `GET /api/access-log` (require_admin).
+- **PIN PERSONALI OPERATORE**: `db.operator_pins` (hash bcrypt). `GET/PUT/DELETE /api/operator-pins` (require_admin), `POST /api/operator-pins/verify` (pubblico-ma-gated, rate-limited) → {ok,name} per timbrature tracciabili al singolo. La list non espone mai l'hash.
+- Frontend: `components/console/AdminSecurity.jsx` in HoloPanel `panel-security` (zona Master, solo admin) — gestione PIN operatore + Registro Accessi.
+- Test: iteration_194 backend 16/16; iteration_195 frontend 100% (loop risolto, flusso completo verde).
+- Credenziali: vedi /app/memory/test_credentials.md.

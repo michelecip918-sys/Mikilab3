@@ -8,6 +8,22 @@ export const API = `${BACKEND_URL}/api`;
 
 export const api = axios.create({ baseURL: API, withCredentials: true });
 
+// Cancello server hard: se il token firmato manca/scade, torna alla schermata PIN iniziale.
+api.interceptors.response.use(
+  (r) => r,
+  (err) => {
+    const d = err && err.response && err.response.data && err.response.data.detail;
+    if (err && err.response && err.response.status === 401 && d === "gate_required") {
+      // Solo se l'utente ERA già entrato (cookie scaduto): torna al gate. Sui nuovi
+      // visitatori (flag assente) NON ricaricare, altrimenti loop infinito al primo caricamento.
+      const was = (() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1"; } catch (e) { return false; } })();
+      try { localStorage.removeItem("mikilab_admin_unlocked"); } catch (e) { /* */ }
+      if (was && !window.__gate_reloading) { window.__gate_reloading = true; setTimeout(() => window.location.reload(), 50); }
+    }
+    return Promise.reject(err);
+  }
+);
+
 // Cache read-through su IndexedDB: online salva l'ultima copia e ritorna il dato fresco;
 // offline (errore di rete) ritorna l'ultima copia salvata così i moduli restano consultabili.
 // `fallback` viene usato solo se online fallisce per motivi NON di rete e non c'è cache.
@@ -571,6 +587,19 @@ export const masterApi = {
 // BakoMix proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
 export const bakoApi = {
   proactive: (lang) => api.get(`/bako/proactive`, { params: { lang } }).then((r) => r.data),
+};
+
+// PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
+export const operatorPinsApi = {
+  list: () => api.get(`/operator-pins`).then((r) => r.data),
+  set: (name, pin) => api.put(`/operator-pins`, { name, pin }).then((r) => r.data),
+  remove: (name) => api.delete(`/operator-pins/${encodeURIComponent(name)}`).then((r) => r.data),
+  verify: (pin) => api.post(`/operator-pins/verify`, { pin }).then((r) => r.data),
+};
+
+// Registro accessi (tentativi PIN Master/Produzione/Operatore) — solo Capo.
+export const accessLogApi = {
+  list: (limit = 120) => api.get(`/access-log`, { params: { limit } }).then((r) => r.data),
 };
 
 // Anti-Fooling · Voice-Print Liveness (frase-sfida dal vivo).

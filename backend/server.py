@@ -8,9 +8,11 @@
 #  the BakoMix AI Security Guardian.
 # ============================================================================
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import StreamingResponse, Response, HTMLResponse
+from fastapi.responses import StreamingResponse, Response, HTMLResponse, JSONResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+import jwt as _jwt
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import time
@@ -94,6 +96,43 @@ def get_object(path: str):
 
 app = FastAPI()
 api_router = APIRouter(prefix="/api")
+
+
+# ---------------------------------------------------------------------------
+# CANCELLO SERVER "HARD": token firmato (JWT HS256) rilasciato SOLO dopo il PIN
+# Master corretto. Senza questo cookie firmato ogni /api (tranne whitelist) è 401,
+# anche da browser modificato: MikiLab resta invisibile a chi non ha il PIN iniziale.
+# Il Production PIN (operatori) NON è in whitelist → passa comunque dal cancello Master.
+# ---------------------------------------------------------------------------
+GATE_SECRET = os.environ.get("GATE_JWT_SECRET") or os.environ.get("INBOUND_SHARED_SECRET") or "mikilab-gate-dev"
+GATE_COOKIE = "mikilab_gate"
+GATE_TTL = int(os.environ.get("GATE_TTL_SECONDS", str(30 * 86400)))
+_GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/")
+
+
+def issue_gate_token() -> str:
+    now = datetime.now(timezone.utc)
+    return _jwt.encode({"purpose": "gate", "iat": now, "exp": now + timedelta(seconds=GATE_TTL), "iss": "mikilab-gate"}, GATE_SECRET, algorithm="HS256")
+
+
+def _gate_valid(token: str) -> bool:
+    try:
+        claims = _jwt.decode(token, GATE_SECRET, algorithms=["HS256"], options={"require": ["exp", "purpose"]})
+        return claims.get("purpose") == "gate"
+    except Exception:
+        return False
+
+
+class GateMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        path = request.url.path
+        if request.method == "OPTIONS" or not path.startswith("/api") or any(path.startswith(p) for p in _GATE_PUBLIC_PREFIXES):
+            return await call_next(request)
+        tok = request.cookies.get(GATE_COOKIE)
+        if not tok or not _gate_valid(tok):
+            return JSONResponse({"detail": "gate_required"}, status_code=401)
+        return await call_next(request)
+
 
 
 # ---------------------------------------------------------------------------
@@ -564,6 +603,14 @@ async def _rate_limit(scope: str, key: str, max_count: int, window_seconds: int)
         {"_id": ident},
         {"$set": {"window_start": now.isoformat(), "count": 1, "ts": now}}, upsert=True)
     return True
+
+
+async def _log_access(kind: str, ip: str, ok: bool, name: Optional[str] = None):
+    """Registra ogni tentativo PIN (master/produzione/operatore) per il Registro Accessi del Capo."""
+    try:
+        await db.pin_access_log.insert_one({"kind": kind, "ip": ip, "ok": bool(ok), "name": name, "at": now_iso()})
+    except Exception:
+        pass
 
 
 async def _make_session(user_id, token=None):
@@ -9209,6 +9256,7 @@ async def production_pin_verify(body: ProductionPinVerify, request: Request):
     else:
         # NIENTE default hardcoded: il Floor resta CHIUSO finché il Capo non imposta il PIN.
         ok = False
+    await _log_access("production", _client_ip(request), bool(ok))
     return {"ok": bool(ok), "not_set": not (doc and doc.get("hash"))}
 
 
@@ -9245,7 +9293,7 @@ async def admin_gate_set(body: AdminGateSet, admin: dict = Depends(require_admin
 
 
 @api_router.post("/admin-gate/verify")
-async def admin_gate_verify(body: AdminGateVerify, request: Request):
+async def admin_gate_verify(body: AdminGateVerify, request: Request, response: Response):
     if not await _rate_limit("admin_gate_verify", _client_ip(request), 8, 300):
         raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
     p = _norm_pin(body.pin)
@@ -9255,7 +9303,71 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request):
     else:
         env_pin = os.environ.get("ADMIN_GATE_PIN")
         ok = bool(env_pin) and bool(p) and (p == env_pin)
+    await _log_access("master", _client_ip(request), bool(ok))
+    if ok:
+        # Rilascia il cookie firmato: da qui in poi il browser può aprire MikiLab.
+        response.set_cookie(GATE_COOKIE, issue_gate_token(), httponly=True, secure=True, samesite="lax", path="/", max_age=GATE_TTL)
     return {"ok": bool(ok)}
+
+
+class OperatorPinSet(BaseModel):
+    name: str
+    pin: str
+
+
+class OperatorPinVerify(BaseModel):
+    pin: str
+
+
+@api_router.get("/operator-pins")
+async def operator_pin_list(admin: dict = Depends(require_admin)):
+    docs = await db.operator_pins.find({}, {"_id": 0, "hash": 0}).sort("name", 1).to_list(200)
+    return {"operators": docs}
+
+
+@api_router.put("/operator-pins")
+async def operator_pin_set(body: OperatorPinSet, admin: dict = Depends(require_admin)):
+    nm = (body.name or "").strip()
+    p = _norm_pin(body.pin)
+    if not nm or not p:
+        raise HTTPException(status_code=400, detail="Nome e PIN (4 cifre) richiesti")
+    await db.operator_pins.update_one(
+        {"name_key": nm.lower()},
+        {"$set": {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "active": True, "updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True}
+
+
+@api_router.delete("/operator-pins/{name}")
+async def operator_pin_del(name: str, admin: dict = Depends(require_admin)):
+    await db.operator_pins.delete_one({"name_key": (name or "").strip().lower()})
+    return {"ok": True}
+
+
+@api_router.post("/operator-pins/verify")
+async def operator_pin_verify(body: OperatorPinVerify, request: Request):
+    """PIN personale operatore per timbrature tracciabili al singolo. Nessun potere admin."""
+    if not await _rate_limit("op_pin_verify", _client_ip(request), 10, 300):
+        raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
+    p = _norm_pin(body.pin)
+    name = None
+    ok = False
+    if p:
+        async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
+            if _check_pw(p, d.get("hash", "")):
+                ok = True
+                name = d.get("name")
+                break
+    await _log_access("operator", _client_ip(request), ok, name)
+    return {"ok": ok, "name": name}
+
+
+@api_router.get("/access-log")
+async def access_log(admin: dict = Depends(require_admin), limit: int = 120):
+    n = min(max(int(limit or 120), 1), 300)
+    docs = await db.pin_access_log.find({}, {"_id": 0}).sort("at", -1).to_list(n)
+    return {"entries": docs}
 
 
 
@@ -11758,6 +11870,8 @@ async def put_alarms(body: dict):
 # ---- Web Push allarmi termici: riusa il sistema VAPID esistente ----
 
 app.include_router(api_router)
+
+app.add_middleware(GateMiddleware)
 
 app.add_middleware(
     CORSMiddleware,

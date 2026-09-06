@@ -60,6 +60,7 @@ import ComplianceBeacon from "@/components/ComplianceBeacon";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
+import AdminSecurity from "@/components/console/AdminSecurity";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -114,10 +115,10 @@ export default function App() {
     return () => window.removeEventListener("mikilab-role-changed", h);
   }, []);
   useEffect(() => {
-    const warm = () => { if (navigator.onLine) { recipesApi.list("mikilab"); if (user) recipesApi.list("personal"); } };
+    const warm = () => { if (adminOk && navigator.onLine) { recipesApi.list("mikilab"); if (user) recipesApi.list("personal"); } };
     warm(); window.addEventListener("online", warm);
     return () => window.removeEventListener("online", warm);
-  }, [user]);
+  }, [user, adminOk]);
   useEffect(() => {
     const resync = () => {
       Promise.allSettled([recipesApi.list("mikilab"), warehouseApi.list(), planApi.get(), weeklyApi.get(), floorPlanApi.get()]).then(() => {
@@ -268,6 +269,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-docs" accent="#5E8CA8" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
                       <DocsDownload />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
+                      <AdminSecurity />
                     </HoloPanel>
                   </div>
                 )}

@@ -1,0 +1,35 @@
+{
+  "summary": "Iter 194 — CANCELLO HARD + PIN OPERATORE + LOG ACCESSI. Backend 16/16 pytest PASS: (1) /api/recipes senza cookie=401 gate_required; POST /api/admin-gate/verify {pin:1985}=200 con Set-Cookie mikilab_gate httponly; con cookie /api/recipes=200 (149 ricette); whitelist /api/auth/login + /api/admin-gate/verify raggiungibili senza gate cookie; (2) PIN operatore: PUT /api/operator-pins (admin) ok; GET /api/operator-pins SENZA campo hash; POST /api/operator-pins/verify pin corretto → {ok:true,name:...}, pin errato → {ok:false,name:null}; DELETE cleanup ok; require_admin funziona; (3) GET /api/access-log require_admin, popolato con kind=master/operator/production, campi kind/ok/name/at; (4) regressione /api/master/govern 200, /api/recipes 200. FRONTEND: CRITICAL BUG — l'interceptor 401 gate_required in lib/api.js causa un LOOP INFINITO di reload al primo caricamento (fresh state: no cookie + no localStorage). L'AdminGate viene continuamente resettato prima che l'utente possa completare 1985. Impossibile testare pannelli/AdminSecurity in browser.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "Fresh page load (no gate cookie, no localStorage flag)", "issue": "Axios 401 gate_required interceptor triggers window.location.reload() on EVERY 401 gate_required, including those fired by useEffect(warm) at App.js:117-121 which calls recipesApi.list('mikilab') on mount regardless of adminOk state. Also AuthContext /api/auth/me on mount hits gate. Result: fresh visitors are stuck in an infinite reload loop — the AdminGate keypad gets reset every ~2s before the user (or automation) can enter 1985. Cookie mikilab_gate is never issued because verify never completes.", "affected_selectors": ["admin-gate", "admin-key-1", "admin-key-9", "admin-key-8", "admin-key-5"]}
+    ],
+    "design_issues": []
+  },
+  "rca of the issue": "React runs useEffect hooks even when the render returns early via `if (!adminOk) return <AdminGate/>`. App.js:117-121 fires `recipesApi.list('mikilab')` on mount unconditionally; also useUser/AuthContext fires /api/auth/me. Both hit gated endpoints. Response 401 {detail:'gate_required'} is caught by the api.js interceptor which unconditionally removes `mikilab_admin_unlocked` and schedules `window.location.reload()`. Since the flag was already absent on fresh visits, the reload is spurious — it just re-runs the same cycle, causing an infinite loop. Reproduction: (1) clear cookies + localStorage, (2) load https://edit-33.preview.emergentagent.com, (3) network tab shows /api/auth/me and /api/recipes returning 401 gate_required every ~1.5s in a reload loop; keypad dots stay empty. Suggested fix: guard the reload — only reload if the flag WAS set (kicked-out scenario). Example: `const was = localStorage.getItem('mikilab_admin_unlocked') === '1'; localStorage.removeItem('mikilab_admin_unlocked'); if (was && !window.__gate_reloading) { ... reload }`. Alternative fix: skip the warm-up + /me useEffects when `!adminOk`.",
+  "test_report_links": [
+    "/app/backend/tests/test_iter194_gate_operator_log.py",
+    "/app/test_reports/pytest/iter194.xml"
+  ],
+  "action_items": [
+    "CRITICAL: Fix axios interceptor in /app/frontend/src/lib/api.js — do NOT reload if the mikilab_admin_unlocked flag wasn't set (fresh visitor case). Suggested: `const was = localStorage.getItem('mikilab_admin_unlocked') === '1'; localStorage.removeItem('mikilab_admin_unlocked'); if (was && !window.__gate_reloading) { window.__gate_reloading = true; setTimeout(() => window.location.reload(), 50); }`. Without this fix, every fresh visitor is stuck in an infinite reload loop before they can even enter the master PIN.",
+    "Consider also gating App.js:117 `warm()` and AuthContext /me behind `adminOk` to avoid unnecessary 401s at the gate screen."
+  ],
+  "critical_code_review_comments": [
+    "Backend GateMiddleware, /admin-gate/verify (with Set-Cookie httponly + _log_access), /operator-pins CRUD/verify, /access-log correctly implemented and 16/16 tested.",
+    "cookie set with secure=True samesite='lax' path='/' — correct for HTTPS preview.",
+    "list operator-pins projects out {_id:0, hash:0} — no hash leak, verified.",
+    "operator-pin verify uses bcrypt _check_pw + tracks name in access log — correct traceability.",
+    "FRONTEND BUG: api.js interceptor is too aggressive — reload fires on EVERY 401 gate_required including those on the AdminGate screen itself, producing an infinite reload loop for any fresh visitor.",
+    "AdminSecurity.jsx: uses correct data-testid (admin-security, op-name-input, op-pin-input, op-add-btn, op-row-*, op-del-*, log-row-*). Not testable via UI due to the interceptor loop above."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter194_gate_operator_log.py"],
+  "success_rate": {"backend": "100% (16/16)", "frontend": "0% (blocked by reload loop on fresh state)"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026!; Master Gate PIN 1985; Production PIN 1985",
+  "seed_data_creation": "TEST_OpIter194 operator created+deleted in backend test suite (cleaned up).",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend fully verified via /app/backend/tests/test_iter194_gate_operator_log.py (run with `-n 0` to avoid rate limit races). Frontend blocked by reload loop: to reproduce, open the site in fresh browser (no cookies/localStorage), observe /api/auth/me and /api/recipes returning 401 gate_required every ~1s and the AdminGate keypad resetting. After main agent fixes the interceptor guard, re-run UI test: (1) clean state → AdminGate visible; (2) click admin-key-1/9/8/5 → gate detached; (3) login admin@mikilab.de/Mikilab2026! → 10 panels + master-console; (4) open panel-security → admin-security visible; (5) fill op-name-input='TEST_UIMarco', op-pin-input='1234', click op-add-btn → op-row-test_uimarco appears + log-row-* populated; (6) op-del-test_uimarco cleanup. Rate limit on /admin-gate/verify is 8/300s — wait 5min between browser tests."
+}
