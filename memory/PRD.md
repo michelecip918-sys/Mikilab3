@@ -4343,3 +4343,7 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 ## v14.1 (2026-09-06) — Evoluzione UI Fase 2: Plancia Capo olografica
 - LabCard ridisegnata (CSS-only, sicura): pannelli glass scuri con scanline cyan superiore, chip icona luminescente, glow angolare al hover, indicatore di stato FLUORESCENTE pulsante. La Plancia Capo ora ha estetica "ponte di comando" olografica. Verificato via screenshot. Lint 0 errori.
 - Prossimo: Fase 3 (Floor senza bottoni, interazione ambientale) e Fase 4 (carosello olografico schede macchina/lingua).
+
+## v14.2 (2026-09-06) — Evoluzione UI Fase 3: Floor ambientale
+- Orb BakoMix ambientale presente/attivo sul Floor (interazione continua, non bottone). Affordance "Bilancia Guidata" ridisegnata in cue olografico fluorescente (glass + scanline cyan). Verificato via screenshot (orb + scale su Floor). Lint 0 errori.
+- Prossimo: Fase 4 (carosello olografico schede macchina/lingua) + compliance fluorescente diffusa.

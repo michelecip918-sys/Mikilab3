@@ -117,7 +117,10 @@ export default function MohamedFloor() {
       {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
       <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
       <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Tocca: ti leggo i task del tuo ruolo dalla coda del Capo, passo-passo.", "Tippe: ich lese dir die Aufgaben deiner Rolle aus der Warteschlange des Chefs vor.", "Tap: I read your role's tasks from the Capo's queue, step by step.", "Toca: te leo las tareas de tu rol desde la cola del Capo.", "Touche : je te lis les tâches de ton rôle depuis la file du Capo.", "بزن: وظایف نقش‌ات را از صف کاپو می‌خوانم.")}</p>
-      <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")} className="mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-[#0b0f19] border border-[#3E9C93]/50 text-[#3E9C93] font-black text-sm active:scale-95 transition-all">
+      <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")}
+        className="group relative overflow-hidden mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-sm text-[#22d3ee] active:scale-95 transition-all"
+        style={{ background: "linear-gradient(155deg, rgba(11,20,32,0.9), rgba(6,12,22,0.9))", border: "1px solid rgba(34,211,238,0.45)", boxShadow: "0 0 20px rgba(34,211,238,0.18)" }}>
+        <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: "linear-gradient(90deg,transparent,rgba(34,211,238,0.9),transparent)" }} />
         <Scale className="w-4 h-4" /> {tri("Bilancia Guidata", "Geführte Waage", "Guided Scale", "Báscula Guiada", "Balance Guidée", "ترازوی راهنما")}
       </button>
       <div className="w-full mt-5"><HeadsetChannel /></div>
