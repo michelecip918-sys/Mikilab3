@@ -9591,7 +9591,7 @@ async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     plan = {"summary": "", "batches": [], "warnings": [], "spoken": ""}
     if EMERGENT_LLM_KEY:
         try:
-            langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+            langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
             sysmsg = (
                 "Sei BakoMix, direttore di produzione di una panetteria industriale d'élite. "
                 "Genera il PIANO DI PRODUZIONE OTTIMALE della giornata: sequenza dei lotti che rispetti i tempi "
@@ -9664,7 +9664,7 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
 async def bako_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
     """Cyber-Trio: briefing d'apertura turno. Aggrega stato/allerte e calcola lo 'stress'
     dell'impianto (proxy dai dati) a cui reagiscono gli avatar olografici."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     prox = await bako_proactive(lang, admin)
     alerts = prox.get("alerts", [])
@@ -9756,7 +9756,7 @@ async def bako_sos_raise(body: SosReq):
 @api_router.get("/bako/sos")
 async def bako_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
     """Solo Capo: SOS attivi + frase vocale per l'annuncio TTS di BakoMix."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     docs = await db.sos_events.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
     spoken = ""
@@ -9878,7 +9878,7 @@ async def bako_telemetry(lang: str = "it", admin: dict = Depends(require_admin))
 async def bako_briefing_floor(role: str = "", lang: str = "it"):
     """Briefing PER RUOLO: ogni operatore riceve SOLO i lotti e gli allarmi della sua
     linea (in cuffia, voce breve). Nessun dato delle altre linee. Non richiede admin."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     line = _role_to_line(role)
     rl = (role or "").lower()
@@ -9934,7 +9934,7 @@ class MaintenanceGuideReq(BaseModel):
 async def bako_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depends(require_admin)):
     """Guida Rapida di manutenzione generata da BakoMix (Claude) in tempo reale, in base
     al macchinario e all'anomalia rilevata dai dati IoT. Nessun testo statico."""
-    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
     tele = ""
     if body.telemetry:
         try:
@@ -9993,7 +9993,7 @@ async def bako_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
         raise HTTPException(status_code=400, detail="Nessuna immagine")
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=503, detail="Vision non disponibile")
-    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
     result = {"verdict": "ok", "score": 0, "defects": [], "notes": "", "spoken": ""}
     try:
         chat = LlmChat(
@@ -10191,7 +10191,7 @@ _HOLIDAYS_MMDD = {  # festività chiave IT/DE con boost di domanda pane/dolci
 async def bako_b2b_forecast(lang: str = "it", admin: dict = Depends(require_admin)):
     """Incrocia ordini B2B con METEO e CALENDARIO FESTIVO per suggerire un aggiustamento
     del carico (azzera invenduti/eccedenze). Base ordini reale + fattore contestuale."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     base = await bako_b2b_list(admin)
     base_kg = base["total_dough_kg"]
     # Meteo (best-effort): freddo/pioggia → più pane caldo.
@@ -10347,7 +10347,7 @@ async def bako_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     """Monitor silos: autonomia oraria dal calo peso, micro-ordini automatici sotto soglia,
     e compensazione dell'umidità della farina (correzione % acqua in ricetta)."""
     await _seed_silos()
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     docs = await db.silos.find({}, {"_id": 0}).to_list(100)
     out = []
     reorder = 0
@@ -10421,7 +10421,7 @@ async def bako_silo_microorder(admin: dict = Depends(require_admin)):
 async def bako_proofing(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
     """Curva di lievitazione MULTI-STADIO che ACCELERA o FRENA in base ai forni liberi:
     pochi forni → frena (temp più bassa, tempi lunghi); molti forni → accelera."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     # Se free_ovens non passato, deriva dalla telemetria (forni non in stress alto = liberi).
     if free_ovens < 0:
@@ -10461,7 +10461,7 @@ async def bako_proofing_sync(free_ovens: int = -1, lang: str = "it", admin: dict
         new_start = (base + timedelta(minutes=15 * i)).strftime("%H:%M")
         await db.team_tasks.update_one({"id": tk["id"]}, {"$set": {"start": new_start}})
         updated += 1
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     return {"ok": True, "updated": updated, "oven_ready_at": curve["oven_ready_at"], "total_minutes": curve["total_minutes"],
             "message": (f"{updated} lotti riprogrammati: prima infornata alle {curve['oven_ready_at']}." if it else
                         f"{updated} batches rescheduled: first bake at {curve['oven_ready_at']}.")}
@@ -10480,7 +10480,7 @@ _AGV_SEED = [
 async def bako_agv(lang: str = "it", admin: dict = Depends(require_admin)):
     """Flotta AGV: routing autonomo tra le postazioni + rilevamento ACUSTICO preventivo
     (dB anomali → manutenzione predittiva prima del guasto)."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     t = time.time()
     carts = []
@@ -10569,7 +10569,7 @@ async def bako_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
 async def bako_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict = Depends(require_admin)):
     """Regola la velocità delle affettatrici sulla curva di raffreddamento del pane: pane
     troppo caldo → attende/rallenta (mollica deformabile); pane freddo → velocità piena."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     TARGET = 35.0
     HOT = 55.0
@@ -10597,7 +10597,7 @@ async def bako_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict
 @api_router.get("/bako/sos/challenge")
 async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_admin)):
     """Trasforma la reattività SOS in una competizione SETTIMANALE tra turni, con badge."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     now = datetime.now(timezone.utc)
     week_start = now - timedelta(days=now.weekday(), hours=now.hour, minutes=now.minute, seconds=now.second)
     docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).to_list(500)
@@ -10643,7 +10643,7 @@ async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_adm
 async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin)):
     """BakoMix incrocia lo stato live (forni, celle, SOS, silos, ordini B2B) e propone
     da solo 1-3 azioni concrete, ognuna con un tocco per agire."""
-    it = not (lang or "it").startswith("en")
+    it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     hb = await bako_heartbeat(lang, admin)
     sug = []

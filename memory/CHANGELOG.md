@@ -318,3 +318,7 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Timeline ADESSO**: linea rossa verticale che avanza in tempo reale (aggiorna ogni 20s) e appare solo se l'ora corrente ricade nella finestra eventi; l'evento successivo è evidenziato (dot più grande + glow). timeline-now.
 - **BakoMix Suggerimenti**: GET /api/bako/suggestions — "cervello" unico che incrocia forni/celle/SOS/silos/AGV/B2B e propone 1-3 azioni concrete con navigazione al pannello + annuncio vocale. UI BakoSuggestions.jsx in cima alla plancia (sempre visibile, fuori dal filtro Layout per Ruolo).
 - Verificato via curl (prioritizzazione severità) + screenshot. Nessun errore runtime.
+
+## v55 (2026-09) — Lingue/vocali + Suggerimenti eseguibili in 1 clic
+- LINGUE: verificato che BakoMix (govern LLM) risponde in tutte le 8 lingue mantenendo la persona (DE 'mein Erhabener Chef', FR 'Mon Illustre Commandant'). langname LLM (govern/maintenance-guide/oven-qc) esteso a 8 lingue. Frasi vocali "di sistema" dei nuovi endpoint: fallback a INGLESE (non più italiano) per lingue non-IT. TTS BCP-47: aggiunti ar-SA e tr-TR.
+- BakoMix Suggerimenti ESEGUIBILI in 1 clic: Silos→micro-ordini e B2B→sync piano eseguiti direttamente dalla card (pulsante Esegui), con messaggi localizzati; le altre navigano al pannello. Verificato via screenshot (esecuzione silos + UI/voce DE).

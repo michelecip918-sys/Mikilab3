@@ -3,7 +3,7 @@ import { cleanForSpeech } from "@/lib/voice";
 // TTS: voce MASCHILE OpenAI (onyx/echo) dal backend; fallback alla voce nativa del
 // dispositivo se l'API non risponde, così la voce non va MAI in blocco.
 const API = process.env.REACT_APP_BACKEND_URL;
-const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" };
+const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Normalizza qualunque codice lingua (it, de-DE, EN_us…) nel BCP-47 nativo corretto per la
 // sintesi vocale. Le lingue non mappate ricadono su un codice regionale sensato (es. pt → pt-PT)

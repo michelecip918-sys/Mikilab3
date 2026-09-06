@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Brain, Flame, AlertOctagon, Waves, Truck, Container, ShoppingCart, ChevronRight, CheckCircle2 } from "lucide-react";
+import { Brain, Flame, AlertOctagon, Waves, Truck, Container, ShoppingCart, ChevronRight, CheckCircle2, Zap, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { bakoApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
@@ -8,12 +9,18 @@ import { mkTri } from "@/i18n/triMaps";
 
 const ICON = { flame: Flame, alert: AlertOctagon, waves: Waves, truck: Truck, container: Container, cart: ShoppingCart };
 const SEV = { alto: "#f43f5e", medio: "#FFB800", info: "#7DD3FC" };
+// Azioni eseguibili in UN CLIC direttamente dalla card (pilota automatico assistito).
+const EXEC = {
+  silos: async () => { const r = await bakoApi.siloMicroorder(); return { kind: "silos", ...r }; },
+  b2b: async () => { const r = await bakoApi.b2bToPlan(); try { window.dispatchEvent(new CustomEvent("mikilab-prefill-orders", { detail: { text: r.orders_text } })); } catch { /* */ } return { kind: "b2b", ...r }; },
+};
 
 // BakoMix · Suggerimenti predittivi: il "cervello" unico dell'impianto propone azioni concrete.
 export default function BakoSuggestions() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [sug, setSug] = useState([]);
+  const [busy, setBusy] = useState(null);
   const spokenRef = useRef("");
 
   const load = useCallback(async () => {
@@ -35,6 +42,21 @@ export default function BakoSuggestions() {
     setTimeout(() => { try { el.click(); } catch { /* */ } }, 400); // espande il pannello
   };
 
+  const exec = async (s, e) => {
+    e.stopPropagation();
+    const fn = EXEC[s.id];
+    if (!fn) return;
+    setBusy(s.id);
+    try {
+      const r = await fn();
+      let msg;
+      if (r.kind === "silos") msg = r.emailed ? tri(`Micro-ordini inviati a ${r.supplier}`, `Micro-Aufträge an ${r.supplier}`, `Micro-orders emailed to ${r.supplier}`, `Micro-pedidos a ${r.supplier}`, `Micro-commandes à ${r.supplier}`, `میکرو سفارش به ${r.supplier}`) : tri(`Micro-ordini generati: ${r.count}`, `Micro-Aufträge: ${r.count}`, `Micro-orders: ${r.count}`, `Micro-pedidos: ${r.count}`, `Micro-commandes: ${r.count}`, `میکرو سفارش: ${r.count}`);
+      else msg = tri(`Piano aggiornato: ${r.total_dough_kg} kg d'impasto`, `Plan aktualisiert: ${r.total_dough_kg} kg Teig`, `Plan updated: ${r.total_dough_kg} kg dough`, `Plan: ${r.total_dough_kg} kg masa`, `Plan: ${r.total_dough_kg} kg pâte`, `برنامه: ${r.total_dough_kg} کیلو خمیر`);
+      toast.success(msg); load();
+    } catch { toast.error(tri("Azione non riuscita", "Aktion fehlgeschlagen", "Action failed", "Acción fallida", "Échec", "ناموفق")); }
+    setBusy(null);
+  };
+
   return (
     <div data-testid="bako-suggestions" className="rounded-2xl border border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/8 to-transparent p-3">
       <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("BakoMix · Suggerimenti", "BakoMix · Vorschläge", "BakoMix · Suggestions", "BakoMix · Sugerencias", "BakoMix · Suggestions", "بوکومیکس · پیشنهادها")}</p>
@@ -52,7 +74,13 @@ export default function BakoSuggestions() {
                   className="w-full flex items-center gap-2.5 text-left rounded-xl border p-2.5 active:scale-98 transition-all" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
                   <span className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${col}1a`, border: `1px solid ${col}55` }}><Icon className="w-4 h-4" style={{ color: col }} /></span>
                   <span className="flex-1 min-w-0 text-[13px] text-white leading-snug">{s.text}</span>
-                  <span className="shrink-0 inline-flex items-center gap-0.5 text-[11px] font-bold" style={{ color: col }}>{s.action} <ChevronRight className="w-3.5 h-3.5" /></span>
+                  {EXEC[s.id] ? (
+                    <span data-testid={`suggestion-exec-${s.id}`} onClick={(e) => exec(s, e)} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2 py-1 rounded-lg" style={{ color: "#070A10", background: col }}>
+                      {busy === s.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />} {tri("Esegui", "Ausführen", "Run", "Ejecutar", "Exécuter", "اجرا")}
+                    </span>
+                  ) : (
+                    <span className="shrink-0 inline-flex items-center gap-0.5 text-[11px] font-bold" style={{ color: col }}>{s.action} <ChevronRight className="w-3.5 h-3.5" /></span>
+                  )}
                 </motion.button>
               );
             })}
