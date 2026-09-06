@@ -4393,3 +4393,6 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Ambiente automatico**: `GET /api/lab/weather-now` (Open-Meteo current) + pulsante `env-auto` → applica temp/umidità reali e ricalcola lievitazione/idratazione.
 - 12 HoloPanel Master. Test: iteration_197 backend 6/6, frontend 100%, 0 bug.
 - **Redeploy** richiesto dall'utente su mikilab.de (conferma costo ECU).
+
+## v45 (2026-06) — FINALIZZAZIONE & CHIUSURA PROGETTO
+Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Master), sicurezza a doppio livello (Master Gate hard con token JWT firmato + PIN staff/produzione + PIN personali operatore), silenzio effetti sonori con voce TTS esclusiva in cuffia (AudioRouteIndicator + playSfx no-op), integrazione Web Serial/Bluetooth bilance+PLC con simulazione, Food Cost dinamico al grammo (+1-clic da ricetta), controllo ambientale predittivo (+auto meteo). Backend/frontend RUNNING e compilati; cancello hard verificato (401 senza cookie). Tutto testato (iter 190–197, backend+frontend 100%). Redeploy su mikilab.de avviato (conferma ECU utente). Progetto FINALIZZATO.
