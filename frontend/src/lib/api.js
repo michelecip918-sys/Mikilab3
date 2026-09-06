@@ -641,6 +641,7 @@ export const deusApi = {
   productionQueue: () => api.get(`/bako/deus/production-queue`).then((r) => r.data),
   queueDone: (id) => api.post(`/bako/deus/queue/${id}/done`).then((r) => r.data),
   queueClear: () => api.post(`/bako/deus/queue/clear`).then((r) => r.data),
+  shiftReport: (lang) => api.get(`/bako/shift-report`, { params: { lang } }).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

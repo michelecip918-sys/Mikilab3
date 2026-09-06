@@ -21,11 +21,12 @@ export default function ShiftBriefing({ onClose }) {
   const [data, setData] = useState(null);
   const [active, setActive] = useState(-1);
   const [worldFor, setWorldFor] = useState(null);
+  const [speaking, setSpeaking] = useState(false);
   const timers = useRef([]);
 
   const openWorld = (i, ln) => {
     setWorldFor({ i, avatar: ln.avatar, who: ln.who, text: ln.text });
-    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mohamed" }); } catch { /* */ }
+    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mohamed", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) }); } catch { setSpeaking(false); }
   };
 
   useEffect(() => {
@@ -96,7 +97,7 @@ export default function ShiftBriefing({ onClose }) {
           return (
             <motion.div key="world" data-testid="avatar-world-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="fixed inset-0 z-[95] bg-[#050810] overflow-hidden">
-              <AvatarWorld3D theme={t} accent={acc} speaking={t === "bigmix"} />
+              <AvatarWorld3D theme={t} accent={acc} speaking={t === "bigmix" && speaking} />
               <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-[#0C1019]/80 border border-[#5E8CA8]/40 text-[#cfe6f5] text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
                 <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.35, type: "spring", stiffness: 120 }}

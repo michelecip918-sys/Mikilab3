@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Mic, ChevronLeft, Scale, Radio, ChevronDown } from "lucide-react";
+import { Mic, ChevronLeft, Scale, Radio, ChevronDown, CheckCircle2, Volume2, Factory } from "lucide-react";
+import { playTTS } from "@/lib/tts";
 import MamoAssistant from "@/components/MamoAssistant";
 import SmartScale from "@/components/SmartScale";
 import TeamTasks from "@/components/TeamTasks";
@@ -64,6 +65,36 @@ const BASE_DEPTS = [
   { key: "generale", label: "👥 Generale", color: "#f59e0b", roles: ["Apprendista", "Banconista", "Aiuto Panettiere"] },
 ];
 
+// Coda di produzione generata dal Capo, visibile in reparto: spunta + lettura vocale.
+function FloorQueue({ tri, lang }) {
+  const [tasks, setTasks] = useState([]);
+  useEffect(() => {
+    let alive = true;
+    const load = () => deusApi.productionQueue().then((d) => { if (alive) setTasks((d.tasks || []).filter((t) => t.status === "pending")); }).catch(() => {});
+    load(); const id = setInterval(load, 20000);
+    return () => { alive = false; clearInterval(id); };
+  }, []);
+  const done = (t) => deusApi.queueDone(t.id).then(() => setTasks((q) => q.filter((x) => x.id !== t.id))).catch(() => {});
+  const read = (t) => { try { playTTS(`${t.title}. ${t.detail || ""}`, { lang, voice: "mohamed" }); } catch { /* */ } };
+  if (!tasks.length) return null;
+  return (
+    <div data-testid="floor-queue" className="w-full mb-3 rounded-2xl border border-[#FFB800]/40 bg-[#0b0f19] p-3 text-left">
+      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#FFB800] mb-2"><Factory className="w-4 h-4" /> {tri("Da produrre ora", "Jetzt produzieren", "To produce now", "A producir ahora", "À produire", "اکنون تولید")} · {tasks.length}</p>
+      <div className="space-y-1.5 max-h-56 overflow-y-auto">
+        {tasks.slice(0, 15).map((t) => (
+          <div key={t.id} data-testid={`floor-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
+            <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#00F0FF]/10 text-[#7DD3FC] border border-[#00F0FF]/20 shrink-0">{t.dept}</span>
+            <div className="min-w-0 flex-1"><p className="text-xs font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[10px] text-[#64748B] truncate">{t.detail}</p>}</div>
+            <button data-testid={`floor-task-read-${t.id}`} onClick={() => read(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] flex items-center justify-center active:scale-95"><Volume2 className="w-3.5 h-3.5" /></button>
+            <button data-testid={`floor-task-done-${t.id}`} onClick={() => done(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 text-[#22c55e] flex items-center justify-center active:scale-95"><CheckCircle2 className="w-4 h-4" /></button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+
 export default function MohaLabFloor() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -114,6 +145,7 @@ export default function MohaLabFloor() {
         <SequenceGuard />
         <ShiftPowerBoard />
         <CapoPlanBanner tri={tri} />
+        <FloorQueue tri={tri} lang={lang} />
         <div className="text-center">
           <img src={`${PUB}/avatar_mohamed.jpg`} alt="MohaLab" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">MohaLab</h2>
@@ -154,6 +186,7 @@ export default function MohaLabFloor() {
   return (
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-3"><CapoPlanBanner tri={tri} /></div>
+      <div className="w-full"><FloorQueue tri={tri} lang={lang} /></div>
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full mb-2"><ComplianceBeacon compact /></div>
       <div className="w-full mb-2"><FloorRoleBriefing role={role} /></div>

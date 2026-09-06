@@ -1005,6 +1005,7 @@ class CaptureReq(BaseModel):
     mode: str = "text"      # text | voice | email | photo
     text: str = ""
     image_url: str = ""
+    image_base64: str = ""
     lang: str = "it"
 
 _SECTORS = ["ricette", "piano", "ordini", "macchine", "team", "magazzino", "note"]
@@ -1041,8 +1042,24 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
     info = _bond_info(xp, body.lang)
     content = (body.text or "").strip()
     mode = (body.mode or "text").lower()
-    if mode == "photo" and body.image_url:
-        content = (content + f"\n[FOTO ALLEGATA DAL CAPO: {body.image_url} — trattala come pagina di ricettario / documento da trascrivere e inserire]").strip()
+    if mode == "photo":
+        img_b64 = (body.image_base64 or "").split(",")[-1]
+        if img_b64 and EMERGENT_LLM_KEY:
+            try:
+                vchat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"deus-ocr-{_uuid.uuid4().hex[:8]}",
+                    system_message=("Sei l'OCR di BakoMix in un panificio. Trascrivi FEDELMENTE tutto il testo utile della foto "
+                                    "(ricetta con ingredienti e dosi, ordine, lista, note). Struttura chiara. Solo il testo trascritto.")
+                    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1500)
+                extracted = ""
+                async for ev in vchat.stream_message(UserMessage(text="Trascrivi il contenuto della foto.", file_contents=[ImageContent(image_base64=img_b64)])):
+                    if isinstance(ev, TextDelta):
+                        extracted += ev.content or ""
+                if extracted.strip():
+                    content = (content + "\n[TRASCRIZIONE FOTO]\n" + extracted.strip()).strip()
+            except Exception as e:
+                logger.warning("deus_capture OCR fail (%s)", str(e)[:120])
+        if body.image_url and "[TRASCRIZIONE" not in content:
+            content = (content + f"\n[FOTO ALLEGATA: {body.image_url}]").strip()
     if not content:
         raise HTTPException(status_code=400, detail="Niente da elaborare")
     sysmsg = _deus_persona(info, body.lang) + (

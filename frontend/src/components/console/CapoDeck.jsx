@@ -23,13 +23,22 @@ export default function CapoDeck() {
   const [mode, setMode] = useState("text");
   const [text, setText] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [imageB64, setImageB64] = useState("");
   const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState(null);
   const [queue, setQueue] = useState([]);
   const [counts, setCounts] = useState({ total: 0, pending: 0, by_sector: {} });
   const [listening, setListening] = useState(false);
+  const [reporting, setReporting] = useState(false);
   const recogRef = useRef(null);
+
+  const shiftReport = async () => {
+    setReporting(true);
+    try { const r = await deusApi.shiftReport(lang); speak(r.spoken); toast.success(`MikiScore ${r.mikiscore} · ${r.grade}`, { icon: "📋" }); }
+    catch { toast.error(tri("Report non disponibile.", "Report nicht verfügbar.", "Report unavailable.", "Informe no disponible.", "Rapport indisponible.", "گزارش در دسترس نیست.")); }
+    finally { setReporting(false); }
+  };
 
   const speak = (t) => { try { if (t) playTTS(t, { lang, voice: "bakemix" }); } catch { /* */ } };
 
@@ -79,9 +88,11 @@ export default function CapoDeck() {
           if (w > h && w > max) { h = Math.round(h * max / w); w = max; } else if (h > max) { w = Math.round(w * max / h); h = max; }
           const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
           cv.getContext("2d").drawImage(img, 0, 0, w, h);
+          const dataUrl = cv.toDataURL("image/jpeg", 0.82);
+          setImageB64(dataUrl);
           cv.toBlob(async (blob) => {
             try { setImageUrl(await uploadApi.image(blob, `capo-${Date.now()}.jpg`)); }
-            catch { setImageUrl(cv.toDataURL("image/jpeg", 0.82)); }
+            catch { setImageUrl(dataUrl); }
             finally { setUploading(false); e.target.value = ""; }
           }, "image/jpeg", 0.82);
         };
@@ -96,8 +107,8 @@ export default function CapoDeck() {
     if (mode === "photo" && !imageUrl && !text.trim()) { toast.error(tri("Allega una foto o scrivi una nota.", "Foto oder Notiz hinzufügen.", "Attach a photo or write a note.", "Adjunta foto o nota.", "Ajoute une photo ou note.", "عکس یا یادداشت اضافه کن.")); return; }
     stopVoice(); setBusy(true); setResult(null);
     try {
-      const r = await deusApi.capture({ mode, text, image_url: imageUrl, lang });
-      setResult(r); setCounts(r.counts); setText(""); setImageUrl("");
+      const r = await deusApi.capture({ mode, text, image_url: imageUrl, image_base64: imageB64, lang });
+      setResult(r); setCounts(r.counts); setText(""); setImageUrl(""); setImageB64("");
       speak(r.reply);
       toast.success(tri(`+${(r.tasks || []).length} in produzione`, `+${(r.tasks || []).length} in Produktion`, `+${(r.tasks || []).length} to production`, `+${(r.tasks || []).length} a producción`, `+${(r.tasks || []).length} en production`, `+${(r.tasks || []).length} به تولید`), { icon: "🏭" });
       loadQueue();
@@ -123,6 +134,10 @@ export default function CapoDeck() {
         <div className="flex items-center gap-2 flex-wrap">
           <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2"><Factory className="w-5 h-5 text-[#FFB800]" /> {tri("Plancia del Capo", "Capo-Kommandobrücke", "Capo Command Deck", "Puente de Mando", "Poste de Commande", "پل فرماندهی کاپو")}</h2>
           <span className="text-[11px] text-[#8aa0b4]">· {tri("compila e la produzione parte", "füllen und Produktion startet", "fill it and production kicks off", "rellena y arranca producción", "remplis et la production démarre", "پر کن و تولید شروع می‌شود")}</span>
+          <button data-testid="capo-shift-report" onClick={shiftReport} disabled={reporting}
+            className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#00F0FF]/10 border border-[#00F0FF]/30 text-[#00F0FF] text-xs font-bold hover:bg-[#00F0FF]/20 active:scale-95 disabled:opacity-50">
+            {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Volume2 className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
+          </button>
         </div>
 
         {/* Selettore modalità universale */}
