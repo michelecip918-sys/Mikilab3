@@ -4323,3 +4323,12 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Font PDF Unicode arabo/persiano**: NON fattibile senza scaricare un font (sistema ha solo NotoColorEmoji + wqy CJK, nessun font arabo). Le librerie arabic-reshaper/python-bidi SONO installate → serve solo aggiungere un TTF (es. NotoNaskhArabic/NotoSans) e registrarlo in reportlab. Backlog.
 - Copertura traduzioni non 100% sui ~200 componenti legacy.
 
+
+---
+## v13.7 (2026-09-06) — PDF Unicode multilingua (Noto) completato
+- **Font PDF Unicode**: scaricati e registrati `NotoSans-Regular.ttf` (Latino/Cirillico/Greco → ru/pl/ro/uk/tr + diacritici) e `NotoNaskhArabic-Regular.ttf` in `/app/backend/fonts/`. `_build_bundle_pdf` ora seleziona il font per lingua (NotoNaskhArabic per ar/fa, NotoSans altrimenti), applica **reshaping RTL** (arabic-reshaper + python-bidi, già in requirements) via `_shape()` in `esc()`, e imposta wordWrap RTL + allineamento a destra per ar/fa. Etichette PDF estese a **8 lingue** (aggiunti ar, tr). Registrazione font idempotente (`_PDF_FONTS_READY`).
+- Verificato con test standalone: PDF validi per fa (persiano RTL reshaped), ru (cirillico), it. Backend syntax OK + healthy (200).
+### RESTA (onesto):
+- CJK nei PDF: font `wqy-zenhei.ttc` presente sul sistema, non ancora registrato (zh non è lingua bundle attuale) — facile da aggiungere.
+- Dizionari ar/tr completi in `triTranslations.json` e sweep stringhe hardcoded legacy: lavoro multi-sessione.
+

@@ -7702,6 +7702,30 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
     from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
     from reportlab.lib import colors
     from reportlab.platypus import (SimpleDocTemplate, Paragraph, Spacer, PageBreak)
+    from reportlab.pdfbase.ttfonts import TTFont
+    from reportlab.pdfbase import pdfmetrics
+    import os as _os
+    _fdir = _os.path.join(_os.path.dirname(__file__), "fonts")
+    global _PDF_FONTS_READY
+    try:
+        if not globals().get("_PDF_FONTS_READY"):
+            pdfmetrics.registerFont(TTFont("NotoSans", _os.path.join(_fdir, "NotoSans-Regular.ttf")))
+            pdfmetrics.registerFont(TTFont("NotoNaskhArabic", _os.path.join(_fdir, "NotoNaskhArabic-Regular.ttf")))
+            globals()["_PDF_FONTS_READY"] = True
+    except Exception as _fe:
+        logging.warning(f"PDF font registration failed: {_fe}")
+    _rtl = lang in ("ar", "fa")
+    base_font = "NotoNaskhArabic" if _rtl else "NotoSans"
+
+    def _shape(s):
+        if not _rtl:
+            return s
+        try:
+            import arabic_reshaper
+            from bidi.algorithm import get_display
+            return get_display(arabic_reshaper.reshape(str(s)))
+        except Exception:
+            return s
 
     L = {"it": {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
                 "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab",
@@ -7720,7 +7744,13 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
                 "water": "Eau", "sourdough": "Levain", "salt": "Sel"},
          "fa": {"ing": "مواد اولیه", "proc": "روش", "phases": "مراحل کار",
                 "notes": "یادداشت‌ها", "flour": "آرد", "hyd": "هیدراسیون", "made": "ساخته‌شده با MikiLab",
-                "water": "آب", "sourdough": "خمیرمایه", "salt": "نمک"}}.get(lang, None)
+                "water": "آب", "sourdough": "خمیرمایه", "salt": "نمک"},
+         "ar": {"ing": "المكوّنات", "proc": "الطريقة", "phases": "مراحل العمل",
+                "notes": "ملاحظات", "flour": "الدقيق", "hyd": "الترطيب", "made": "أُنجز مع MikiLab",
+                "water": "الماء", "sourdough": "العجين المخمّر", "salt": "الملح"},
+         "tr": {"ing": "Malzemeler", "proc": "Yöntem", "phases": "Çalışma aşamaları",
+                "notes": "Notlar", "flour": "Un", "hyd": "Hidrasyon", "made": "MikiLab ile yapıldı",
+                "water": "Su", "sourdough": "Ekşi maya", "salt": "Tuz"}}.get(lang, None)
     if L is None:
         L = {"ing": "Ingredienti", "proc": "Procedimento", "phases": "Fasi di lavorazione",
              "notes": "Note", "flour": "Farina", "hyd": "Idratazione", "made": "Realizzato con MikiLab",
@@ -7731,13 +7761,14 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
                             leftMargin=18 * mm, rightMargin=18 * mm, title=bundle_name)
     ss = getSampleStyleSheet()
     ACC = colors.HexColor("#234b6e")
-    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=26, spaceAfter=6)
-    h2 = ParagraphStyle("h2", parent=ss["Heading1"], textColor=ACC, fontSize=17, spaceBefore=6, spaceAfter=4)
-    sub = ParagraphStyle("sub", parent=ss["Normal"], textColor=colors.HexColor("#7E8A93"), fontSize=11, spaceAfter=8)
-    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=12, spaceBefore=8, spaceAfter=2)
-    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15)
+    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=26, spaceAfter=6, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    h2 = ParagraphStyle("h2", parent=ss["Heading1"], textColor=ACC, fontSize=17, spaceBefore=6, spaceAfter=4, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    sub = ParagraphStyle("sub", parent=ss["Normal"], textColor=colors.HexColor("#7E8A93"), fontSize=11, spaceAfter=8, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=12, spaceBefore=8, spaceAfter=2, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
 
     def esc(s):
+        s = _shape(s)
         return (str(s or "")).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
     story = [Paragraph(esc(bundle_name), h1),
