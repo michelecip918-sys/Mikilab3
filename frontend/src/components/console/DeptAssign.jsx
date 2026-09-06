@@ -11,21 +11,25 @@ export default function DeptAssign() {
   const [depts, setDepts] = useState([]);
   const [dept, setDept] = useState("");
   const [task, setTask] = useState("");
+  const [target, setTarget] = useState("");
   const [busy, setBusy] = useState(false);
   const [assignments, setAssignments] = useState([]);
+  const [board, setBoard] = useState([]);
 
   const load = useCallback(() => {
     deptApi.catalog().then((d) => setDepts(d.departments || [])).catch(() => {});
     deptApi.assignment().then((d) => setAssignments(d.assignments || [])).catch(() => {});
+    deptApi.board().then((d) => setBoard(d.objectives || [])).catch(() => {});
   }, []);
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => { load(); const id = setInterval(() => deptApi.board().then((d) => setBoard(d.objectives || [])).catch(() => {}), 15000); return () => clearInterval(id); }, [load]);
 
   const assign = async () => {
     if (!dept) { toast.error(tri("Scegli un reparto", "Bereich wählen", "Pick a department", "Elige un área", "Choisis un atelier", "بخش را انتخاب کن")); return; }
     setBusy(true);
     try {
       await deptApi.assign({ dept, task, operator: "MohaLab" });
-      setTask("");
+      if (Number(target) > 0) await deptApi.setObjective({ dept, target: Number(target), unit: "pezzi", label: task });
+      setTask(""); setTarget("");
       toast.success(tri("Assegnato a MohaLab ✓", "MohaLab zugewiesen ✓", "Assigned to MohaLab ✓", "Asignado a MohaLab ✓", "Assigné à MohaLab ✓", "به MohaLab واگذار شد ✓"));
       load();
     } catch { toast.error("Error"); } finally { setBusy(false); }
@@ -54,11 +58,25 @@ export default function DeptAssign() {
         <input data-testid="dept-task-input" value={task} onChange={(e) => setTask(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") assign(); }}
           placeholder={tri("Mansione (es. impasti, forni, sfoglia…)", "Aufgabe…", "Task (e.g. mixing, ovens…)", "Tarea…", "Tâche…", "وظیفه…")}
           className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2.5" />
+        <input data-testid="dept-target-input" value={target} onChange={(e) => setTarget(e.target.value.replace(/[^0-9]/g, ""))} inputMode="numeric"
+          placeholder={tri("Obiettivo", "Ziel", "Target", "Meta", "Objectif", "هدف")}
+          className="w-24 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2.5" />
         <button data-testid="dept-assign-btn" onClick={assign} disabled={busy}
           className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#00F0FF]/15 border border-[#00F0FF]/50 text-[#00F0FF] font-bold text-sm active:scale-95 disabled:opacity-50">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Assegna", "Zuweisen", "Assign", "Asignar", "Assigner", "واگذار")}
         </button>
       </div>
+      {board.length > 0 && (
+        <div data-testid="dept-board" className="space-y-1.5">
+          <p className="text-[10px] uppercase tracking-widest text-[#64748B]">{tri("Lavagna di controllo · live", "Kontrolltafel · live", "Control board · live", "Tablero · live", "Tableau · live", "تابلو · زنده")}</p>
+          {board.map((o) => { const pct = o.target > 0 ? Math.min(100, Math.round((o.done / o.target) * 100)) : 0; return (
+            <div key={o.dept} data-testid={`board-${o.dept}`} className="rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
+              <div className="flex items-center justify-between text-xs mb-1"><span className="font-bold text-white">{o.dept_name}{o.label ? ` · ${o.label}` : ""}</span><span className="font-black text-[#00F0FF]">{o.done}/{o.target || "∞"} {o.unit}</span></div>
+              <div className="h-1.5 rounded-full bg-[#030712] overflow-hidden"><div className="h-full bg-gradient-to-r from-[#00F0FF] to-[#22c55e]" style={{ width: `${pct}%` }} /></div>
+            </div>
+          ); })}
+        </div>
+      )}
       {assignments.length > 0 && (
         <div className="space-y-1.5">
           <p className="text-[10px] uppercase tracking-widest text-[#64748B]">{tri("Assegnazioni di oggi", "Heutige Zuweisungen", "Today's assignments", "Asignaciones de hoy", "Aujourd'hui", "امروز")}</p>

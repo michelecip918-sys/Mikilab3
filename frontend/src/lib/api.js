@@ -650,6 +650,9 @@ export const deptApi = {
   assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
   assign: (payload) => api.post(`/depts/assign`, payload).then((r) => r.data),
   unassign: (id) => api.delete(`/depts/assign/${id}`).then((r) => r.data),
+  setObjective: (payload) => api.post(`/depts/objective`, payload).then((r) => r.data),
+  progress: (payload) => api.post(`/depts/progress`, payload).then((r) => r.data),
+  board: () => api.get(`/depts/board`).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

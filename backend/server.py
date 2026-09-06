@@ -1080,6 +1080,16 @@ DEPARTMENTS = {
         "silos": ["Farina Laugen", "Sale grosso", "Soda caustica food-grade"],
         "cells": ["Cella riposo", "Essiccatoio superficie"],
         "warehouse": "Magazzino Laugen (sale, semi, soda)"},
+    "banco": {"name": "Banco e Prezzi", "accent": "#22C55E", "icon": "🏷️",
+        "machines": [
+            {"id": "bilancia-prezzatrice", "name": "Bilancia prezzatrice", "type": "bilancia"},
+            {"id": "etichettatrice", "name": "Etichettatrice automatica", "type": "etichettatrice"},
+            {"id": "confezionatrice-flow", "name": "Confezionatrice flow-pack", "type": "confezionamento"},
+            {"id": "termosigillatrice", "name": "Termosigillatrice vaschette", "type": "confezionamento"},
+            {"id": "affettatrice", "name": "Affettatrice pane", "type": "affettatrice"}],
+        "silos": ["Sacchetti", "Vaschette", "Etichette"],
+        "cells": ["Vetrina refrigerata", "Espositore caldo"],
+        "warehouse": "Magazzino Banco (imballaggi, etichette, sacchetti)"},
 }
 
 @api_router.get("/depts")
@@ -1116,6 +1126,58 @@ async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)
 async def depts_assign_delete(aid: str, admin: dict = Depends(require_admin)):
     await db.dept_assignments.delete_one({"id": aid})
     return {"ok": True}
+
+# --- Obiettivi di squadra in tempo reale (sync per reparto, tracciati per PIN) ---
+class ObjectiveReq(BaseModel):
+    dept: str = ""
+    target: int = 0
+    unit: str = "pezzi"
+    label: str = ""
+
+class ProgressReq(BaseModel):
+    dept: str = ""
+    qty: int = 0
+    pin: str = ""
+    operator: str = ""
+    note: str = ""
+
+@api_router.post("/depts/objective")
+async def depts_objective_set(body: ObjectiveReq, admin: dict = Depends(require_admin)):
+    if body.dept not in DEPARTMENTS:
+        raise HTTPException(status_code=400, detail="Reparto sconosciuto")
+    today = now_iso()[:10]
+    await db.dept_objectives.update_one(
+        {"date": today, "dept": body.dept},
+        {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
+                  "target": int(body.target or 0), "unit": body.unit or "pezzi", "label": (body.label or "").strip(),
+                  "updated_at": now_iso()},
+         "$setOnInsert": {"done": 0, "entries": []}},
+        upsert=True)
+    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept}, {"_id": 0})
+    return {"ok": True, "objective": doc}
+
+@api_router.post("/depts/progress")
+async def depts_progress(body: ProgressReq):
+    if body.dept not in DEPARTMENTS:
+        raise HTTPException(status_code=400, detail="Reparto sconosciuto")
+    today = now_iso()[:10]
+    entry = {"pin": (body.pin or "??")[-4:], "operator": (body.operator or "").strip() or "Operaio",
+             "qty": int(body.qty or 0), "note": (body.note or "").strip(), "at": now_iso()}
+    await db.dept_objectives.update_one(
+        {"date": today, "dept": body.dept},
+        {"$inc": {"done": int(body.qty or 0)},
+         "$push": {"entries": {"$each": [entry], "$slice": -60}},
+         "$setOnInsert": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"], "target": 0, "unit": "pezzi", "label": ""}},
+        upsert=True)
+    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept}, {"_id": 0})
+    return {"ok": True, "objective": doc}
+
+@api_router.get("/depts/board")
+async def depts_board():
+    today = now_iso()[:10]
+    docs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    return {"date": today, "objectives": docs}
+
 
 
 @api_router.post("/bako/deus/capture")

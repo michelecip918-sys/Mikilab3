@@ -374,3 +374,11 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Assegnazione Capo -> MohaLab** (DeptAssign, panel-dept-assign): il Capo sceglie reparto + mansione del giorno.
 - **Interfaccia dinamica produzione** (DeptFocus): l'operaio vede SOLO il reparto assegnato oggi, con le sue macchine e moduli vocali.
 - Verificato: catalog(4 reparti), assign(Pasticceria), assignment(oggi) OK; pannello renderizza senza ErrorBoundary; compila pulito.
+
+## v63 (2026-06) — Coordinamento a cascata: reparti, obiettivi squadra live, PIN
+- 5° reparto **Banco e Prezzi** (bilancia prezzatrice, etichettatrice, confezionatrici flow-pack/termosigillatrice, affettatrice, vetrine).
+- **Obiettivi di squadra in tempo reale**: il Capo assegna reparto+mansione+obiettivo (cascata). Gli operai inseriscono progresso (a voce/tap) → aggiorna l'obiettivo comune sincronizzato, **tracciato per PIN** (niente sovrascritture).
+- **Lavagna di controllo live** in MikiLab (DeptAssign: barra done/target per reparto, polling 15s).
+- **Produzione dinamica** (DeptFocus): l'operaio vede solo il reparto assegnato, con obiettivo squadra + pulsanti rapidi +1/+5/+10 (voce di conferma) e ultimo inserimento con PIN.
+- Endpoint: /api/depts/objective (set), /api/depts/progress (per PIN, $inc+$push), /api/depts/board (live).
+- Verificato E2E via curl: catalog(5), objective(Pizzeria 100 teglie), progress +15 by PIN 7788 -> done 15, board 15/100. Compila pulito.
