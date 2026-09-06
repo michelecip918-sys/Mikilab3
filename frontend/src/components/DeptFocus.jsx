@@ -4,6 +4,7 @@ import { deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 // Interfaccia dinamica produzione: mostra SOLO il reparto assegnato oggi dal Capo.
 export default function DeptFocus({ tri, lang }) {
@@ -37,6 +38,12 @@ export default function DeptFocus({ tri, lang }) {
 
   return (
     <div data-testid="dept-focus" className="w-full mb-3 rounded-2xl border p-4 text-left" style={{ borderColor: `${dept.accent}66`, background: `${dept.accent}0d` }}>
+      <div className="relative h-28 -mx-4 -mt-4 mb-3 overflow-hidden rounded-t-2xl bg-[#050810]" data-testid="dept-3d-strip">
+        <AvatarWorld3D theme={dept.key} accent={dept.accent} />
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <span className="text-2xl font-cyber font-black uppercase tracking-widest" style={{ color: dept.accent, textShadow: `0 0 18px ${dept.accent}` }}>{dept.icon} {dept.name}</span>
+        </div>
+      </div>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-xl">{dept.icon}</span>
         <div className="flex-1 min-w-0">

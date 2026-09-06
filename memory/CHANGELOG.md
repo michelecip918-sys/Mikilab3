@@ -382,3 +382,8 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Produzione dinamica** (DeptFocus): l'operaio vede solo il reparto assegnato, con obiettivo squadra + pulsanti rapidi +1/+5/+10 (voce di conferma) e ultimo inserimento con PIN.
 - Endpoint: /api/depts/objective (set), /api/depts/progress (per PIN, $inc+$push), /api/depts/board (live).
 - Verificato E2E via curl: catalog(5), objective(Pizzeria 100 teglie), progress +15 by PIN 7788 -> done 15, board 15/100. Compila pulito.
+
+## v64 (2026-06) — Scene 3D per reparto + collaudo 100%
+- AvatarWorld3D esteso: scene 3D immersive per ogni reparto (panificio/pizzeria/laugen = mondo produzione con accent dedicato; pasticceria/banco = mondo lab).
+- DeptFocus: striscia 3D del reparto assegnato (canvas WebGL) + nome + macchine vocali + obiettivo squadra + progresso per PIN.
+- Collaudo E2E (iter 211) 100%: backend 3/3, frontend 5/5. Sync live verificato (dept-progress-5 -> 15->20/100, PIN tracciato). Nessun ErrorBoundary, nessun viola.
