@@ -341,3 +341,8 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Nessun file sorgente toccato: tutti i riferimenti puntano già a questi asset (Header con testo "MikiLab" mantenuto, Admin Gate, avatar, PWA manifest, Open Graph/Twitter, texture 3D).
 - Bump service worker cache mikilab-v19 -> v20 per forzare fetch asset freschi.
 - Verificato con screenshot desktop (1920) + mobile (390, nessun overflow): logo corretto in Admin Gate e Header.
+
+## v59 (2026-06) — Splash animata + Modalità Tablet/Kiosk
+- **Splash d'avvio** (`SplashScreen.jsx`): nuovo logo ML che pulsa con luce ciano + anelli radar espandenti, "MIKILAB PRO / Holographic Command OS". Mostrata 1 volta per sessione (sul gate e nell'app). Fix StrictMode: il flag di sessione ora si imposta alla chiusura, non al mount, altrimenti il remount nascondeva subito la splash.
+- **Modalità Tablet/Kiosk** (`KioskMode.jsx`): chip "Tablet" nell'header → modale con 2 step (Installa PWA + Avvia Kiosk). Kiosk = fullscreen + Wake Lock (schermo sempre acceso) + orientation lock best-effort. Uscita anti-tocco: badge in basso a sx, tieni premuto ~1.2s (barra di avanzamento ciano). Flag persistente `mikilab_kiosk`; dopo reload mostra "Riprendi Kiosk" (il fullscreen richiede un tocco). Overlay via `createPortal` su document.body per evitare che il `backdrop-blur` dell'header ingabbiasse i `fixed`.
+- Verificato con screenshot desktop+mobile: splash presente, modale centrato, Start Kiosk imposta il flag e mostra il badge, long-press esce e ripristina la chip. Nessun overflow orizzontale.

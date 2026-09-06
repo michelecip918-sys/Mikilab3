@@ -35,9 +35,30 @@ img { -webkit-user-drag: none; user-drag: none; }
   80% { transform: translate(1px,1px); clip-path: inset(4% 0 10% 0); }
   100% { transform: translate(0,0); }
 }
-@keyframes splashFade { 0%{opacity:0;} 12%{opacity:1;} 82%{opacity:1;} 100%{opacity:0;} }
+@keyframes splashFade { 0%{opacity:0;} 10%{opacity:1;} 86%{opacity:1;} 100%{opacity:0;} }
 .splash-glitch { animation: cyberGlitch .35s steps(2) infinite; }
-.splash-wrap { animation: splashFade 2.2s ease-in-out forwards; }
+.splash-wrap { animation: splashFade 2.6s ease-in-out forwards; }
+
+/* Splash logo: pulsazione con luce ciano */
+@keyframes splashLogoPulse {
+  0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(0,240,255,.30), 0 0 4px rgba(0,240,255,.5) inset; }
+  50%     { transform: scale(1.06); box-shadow: 0 0 52px rgba(0,240,255,.75), 0 0 10px rgba(0,240,255,.7) inset; }
+}
+.splash-logo { animation: splashLogoPulse 1.7s ease-in-out infinite; }
+
+/* Anelli radar ciano che si espandono */
+@keyframes splashRingPulse {
+  0%   { transform: scale(.55); opacity: .8; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.splash-ring {
+  position: absolute; width: 6.5rem; height: 6.5rem; border-radius: 9999px;
+  border: 1.5px solid rgba(0,240,255,.55);
+  animation: splashRingPulse 2.1s ease-out infinite;
+}
+
+@keyframes splashTitleUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.splash-title { animation: splashTitleUp .7s ease-out .25s both; }
 
 
 /* Menu hamburger: glow caldo "grano" pulsante (no neon) */

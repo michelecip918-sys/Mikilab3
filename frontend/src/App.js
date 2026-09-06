@@ -47,6 +47,8 @@ import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
 import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
+import KioskMode from "@/components/KioskMode";
+import SplashScreen from "@/components/SplashScreen";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
 
@@ -180,7 +182,7 @@ export default function App() {
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
   const openAuth = () => { setAuthMode("login"); setAuthOpen(true); };
 
-  if (!adminOk && !resetToken) return <AdminGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} />;
+  if (!adminOk && !resetToken) return <><SplashScreen /><AdminGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} /></>;
   if (resetToken) return <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />;
   if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#070A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
 
@@ -188,6 +190,7 @@ export default function App() {
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
       <AmbientBako />
+      <SplashScreen />
       <div className="holo-root min-h-screen font-sans selection:bg-[#00F0FF] selection:text-[#070A10]">
         <div className="holo-canvas" aria-hidden />
 
@@ -220,6 +223,7 @@ export default function App() {
                 )}
                 <LangSelector testid="header-lang" />
                 <InstallApp variant="chip" />
+                <KioskMode />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
                   className="inline-flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#0C1019] border border-[#00F0FF]/20 text-white hover:border-[#00F0FF]/60 active:scale-95 transition-all">
                   {operator ? <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#00F0FF]/50" /> : <User className="w-4 h-4 text-[#00F0FF]" />}
