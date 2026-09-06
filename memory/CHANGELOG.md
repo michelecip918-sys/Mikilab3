@@ -334,3 +334,10 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Storico MikiScore**: shift-report salva lo score giornaliero; GET /api/bako/mikiscore/history (7gg). UI: mini-grafico a barre settimanale in ShiftReport (appare dal 2° giorno).
 - **Auto-pilota**: GET/PUT /api/bako/autopilot; con ON BakoMix esegue in autonomia i micro-ordini silos e lo riporta in autopilot_actions (verificato). UI: toggle autopilot-toggle in BakoSuggestions.
 - Verificato via curl + screenshot. Nessun errore runtime.
+
+## v58 (2026-06) — Nuovo logo industriale (rebranding globale)
+- Rigenerato logo (monogramma ML a forma di spiga/pane, acciaio+ciano su fondo scuro #0E1620, no viola) via Gemini Nano Banana.
+- Tutti gli asset pubblici rigenerati dal nuovo logo: logo.png, logo-emblem.png, logo-256.png, icon-192/512, favicon-32, favicon.ico, apple-touch-icon, og-image.jpg (1200x630).
+- Nessun file sorgente toccato: tutti i riferimenti puntano già a questi asset (Header con testo "MikiLab" mantenuto, Admin Gate, avatar, PWA manifest, Open Graph/Twitter, texture 3D).
+- Bump service worker cache mikilab-v19 -> v20 per forzare fetch asset freschi.
+- Verificato con screenshot desktop (1920) + mobile (390, nessun overflow): logo corretto in Admin Gate e Header.
