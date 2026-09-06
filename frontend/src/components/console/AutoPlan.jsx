@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { bakoApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
@@ -13,6 +13,13 @@ export default function AutoPlan() {
   const [orders, setOrders] = useState("");
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
+
+  // Sync ordini B2B → prefill del piano (evento dal modulo E-commerce B2B).
+  useEffect(() => {
+    const h = (e) => { const t = e?.detail?.text; if (t) { setOrders(t); toast.info(tri("Ordini B2B caricati nel piano.", "B2B-Aufträge im Plan.", "B2B orders loaded into the plan.", "Pedidos B2B cargados.", "Commandes B2B chargées.", "سفارش‌های B2B بارگذاری شد.")); } };
+    window.addEventListener("mikilab-prefill-orders", h);
+    return () => window.removeEventListener("mikilab-prefill-orders", h);
+  }, [tri]);
 
   const gen = async () => {
     setBusy(true);
@@ -41,7 +48,7 @@ export default function AutoPlan() {
           )}
           {(res.batches || []).length > 0 && (
             <button data-testid="autoplan-dispatch" onClick={async () => {
-              try { const r = await bakoApi.dispatch(res.batches); toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
+              try { const r = await bakoApi.dispatch(res.batches); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
             }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm active:scale-95 transition-all">
               <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
             </button>

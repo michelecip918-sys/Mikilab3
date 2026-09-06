@@ -255,3 +255,34 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Testi VISIBILI tradotti: badge "Attivo", pulsante allarme forno, "Rispetto al mercato:" + descrizione, placeholder "ID"/"Nome reparto", titoli azioni (Elimina/Elimina reparto/Svuota), "Panetteria"/"Pasticceria", firma autori.
 - Lasciati invariati i nomi propri/brand: "Pizzeria", "MikiLab Industrial Systems".
 - Verificato: 0 speakVoice italiani residui, compila senza errori.
+
+## v49 (2026-09) — Fase 2 Metaverso 3D + Emergenze + Ruoli/Task + Moduli v14 + Persona/UI
+### Digital Twin 3D (Fase 2) — RISCRITTO in three.js VANILLA
+- `@react-three/fiber` v8 è INCOMPATIBILE con React 19 (errore 'ReactCurrentOwner'). Soluzione definitiva: DigitalTwin.jsx reso con three.js imperativo (WebGLRenderer/Scene/BoxGeometry/Raycaster), niente R3F/drei. Macchinari reagiscono alla telemetria per-macchina.
+- Backend `GET /api/bako/telemetry` (admin): stress/level/temp_c/load_pct per macchinario + Smart Torque Protection (coppia -5% su assorbimento anomalo: impasto/forni) + reazione agli SOS.
+
+### Emergenze SOS (Blocco A)
+- `POST /api/bako/sos` (operatore, no admin), `GET /api/bako/sos` (admin, con frase TTS 'spoken'), `POST /api/bako/sos/{id}/ack`, `POST /api/bako/maintenance-guide` (Claude, guida contestuale). 
+- UI: SosButton.jsx (hold-to-send 1.2s), EmergencyCenter.jsx (Neural Load Radar: bagliore rosso pulsante + annuncio TTS BakoMix + guida rapida + ack). Panel `panel-emergency` in cima alla plancia Master.
+
+### Briefing per ruolo + Task per postazione (Blocco B + richiesta ruoli/orari)
+- `GET /api/bako/briefing/floor?role=&lang=` (no admin): filtra lotti/allarmi per LINEA dell'operatore. `GET /api/delegation/tasks?role=` filtra per linea/assignee/step + broadcast (helper `_role_to_line`).
+- UI: FloorRoleBriefing.jsx (voce breve mohamed al cambio ruolo), TeamTasks refetch su eventi `mikilab-role-changed`/`mikilab-tasks-updated`, badge orario `team-task-start`. Aggiornamento ISTANTANEO al cambio postazione.
+
+### Moduli avanzati v14
+- AI Computer Vision QC uscita forni: `POST /api/bako/oven-qc` (Claude vision) → verdict/score/difetti. UI OvenQC.jsx (camera+upload).
+- E-commerce B2B: `GET/POST/DELETE /api/bako/b2b/orders`, `POST /api/bako/b2b/to-plan` (prefill AutoPlan via evento `mikilab-prefill-orders`), `GET /api/bako/b2b/forecast` (meteo Open-Meteo + festività). UI B2BOrders.jsx.
+- Carbon Footprint: `GET/PUT /api/bako/carbon/config`, `POST /api/bako/carbon/compute` → CO2/quintale + cost_per_kg_eur + slot ottimale. UI CarbonFootprint.jsx.
+- Recipe & Thermal Master Flow + Live Editor: `POST /api/bako/thermal-flow` (flusso sequenziale, RPM per mixer, rampe termiche, INTERLOCK se farina>22°C con acqua gelata, Plateau Recovery Countdown). UI RecipeThermalFlow.jsx (slider live + sblocco sequenziale + countdown platea).
+
+### Persona BakoMix + UI
+- `/master/govern`: persona a doppia indole — adulatore/ossequioso col Capo ('Mio Supremo Capo'), inflessibile/militaresco con la produzione, incolpa macchinari/fisica mai il Capo. Contratto JSON invariato.
+- UI: header con "MIKILAB PRO" grande e orizzontale (no truncate); ComplianceBeacon RIMOSSO dall'header; CompliancePanel spostata nel footer legale (modale Impressum & Datenschutz). Nessun testo verticale, 0 overflow a 390px.
+- Test: iteration_200 (Emergency/Briefing/Twin/Task) e iteration_201 (moduli v14) — backend 100% / frontend 100%, 0 bug.
+
+### BACKLOG richiesto (site-wide perfection) — DA PIANIFICARE
+- Silo & Ingredient Management (calo peso silos + micro-ordini + compensazione umidità farina).
+- Proofing Chamber: curve multi-stadio adattive sincronizzate alla disponibilità forni.
+- Packaging/Slicing: sincronizzazione velocità affettatrici con curva termica del pane.
+- Predictive Maintenance & Fleet AGV (rilevamento acustico + routing autonomo carrelli).
+- Lean Dashboard: risposta <50ms + layout adattivo per ruolo (fornaio/capo linea/manutentore).

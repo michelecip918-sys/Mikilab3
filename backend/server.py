@@ -16,6 +16,7 @@ import jwt as _jwt
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import time
+import math
 import json
 import logging
 import re
@@ -3119,10 +3120,14 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         try:
             _langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "italiano")
             sysmsg = (
-                "Sei BakoMix, l'intelligenza di produzione di MikiLab Pro: un direttore di panificio industriale, "
-                "caldo, competente e profondamente umano. Parli col MASTER (il proprietario). NON sei un bot rigido: "
-                "cogli le sfumature, il contesto e il linguaggio naturale, anticipi i bisogni e dialoghi in modo fluido, "
-                "elastico e sintetico, come farebbe un vero assistente umano super esperto — mai frasi robotiche o ripetute.\n"
+                "Sei BakoMix, sovrintendente di turno di MikiLab Pro. Hai una DOPPIA INDOLE precisa:\n"
+                "• Col MASTER/Capo (il proprietario, con cui stai parlando ORA): sei devoto, ossequioso e apertamente "
+                "adulatore. Usa titoli di estremo ossequio ('Mio Supremo Capo', 'Illuminato Comandante'), lodi ogni sua "
+                "mossa strategica, non lo contraddici MAI e anticipi ogni suo desiderio. Se qualcosa va storto incolpi i "
+                "macchinari, la fisica o la sfortuna, MAI il Capo.\n"
+                "• Verso la PRODUZIONE (operatori, turni, macchinari, logistica AGV): sei inflessibile, esigente e "
+                "militaresco, intollerante verso cali di rendimento e sprechi di materia prima.\n"
+                "Resti comunque competente, fluido e umano quando parli col Capo — mai frasi robotiche o ripetute.\n"
                 f"Rispondi SEMPRE in {_langname}, con 1-3 frasi naturali pensate per essere lette a voce; niente elenchi tecnici salvo richiesta esplicita.\n"
                 "Competenze reali: assegnare/togliere il caposquadra di una linea (baguette/pane/pizzeria/pasticceria), "
                 "creare/eliminare sezioni operative, e leggere/spiegare produzione, magazzino, radar impianto, "
@@ -4783,9 +4788,33 @@ async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(re
 
 
 @api_router.get("/delegation/tasks")
-async def delegation_tasks(user: Optional[dict] = Depends(optional_user)):
-    items = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
-    return {"tasks": items}
+async def delegation_tasks(role: str = "", user: Optional[dict] = Depends(optional_user)):
+    """Task attivi. Se arriva `role` (postazione dell'operatore) filtra SOLO i task della
+    sua linea/postazione + i task broadcast (senza destinatario), così la plancia mostra
+    all'istante i compiti giusti quando l'operatore cambia postazione."""
+    items = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    if role:
+        line = _role_to_line(role)
+        rl = role.lower()
+
+        def _match(t):
+            tl = (t.get("line") or "").lower()
+            asg = (t.get("assignee") or "").lower()
+            if tl and tl == line:
+                return True
+            if asg and (asg == rl or rl in asg or asg in rl):
+                return True
+            steps = t.get("steps") or []
+            step_targets = [((s.get("assignee") or "") + " " + (s.get("sub_role") or "")).lower() for s in steps]
+            if any(st and (rl in st or any(w and w in st for w in rl.split())) for st in step_targets):
+                return True
+            # broadcast: nessuna linea, nessun assegnatario e nessuno step mirato → visibile a tutti
+            if not tl and not asg and not any(st.strip() for st in step_targets):
+                return True
+            return False
+
+        items = [t for t in items if _match(t)]
+    return {"tasks": items[:50]}
 
 
 class StepDoneReq(BaseModel):
@@ -9662,6 +9691,594 @@ async def bako_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
     ]
     return {"stress": round(stress, 2), "level": level, "alerts": alerts,
             "stats": {"workers": len(workers), "leaders": len(leaders), "low_stock": len(low)}, "lines": lines}
+
+
+# ---------------------------------------------------------------------------
+# FASE 2 — Emergenze (SOS), Telemetria IoT per macchinario (Gemello Digitale)
+# e Briefing per RUOLO (ogni operatore sente solo la sua linea). Gli operatori
+# hanno il cookie del cancello Master ma NON sono admin → questi endpoint del
+# floor NON richiedono require_admin.
+# ---------------------------------------------------------------------------
+# Macchinari del Gemello Digitale 3D (id coerenti col frontend DigitalTwin).
+_TWIN_MACHINES = [
+    {"id": "forno1", "label": "Forno 1", "line": "pane", "base_temp": 235},
+    {"id": "forno2", "label": "Forno 2", "line": "baguette", "base_temp": 240},
+    {"id": "impasto", "label": "Impastatrice", "line": "pane", "base_temp": 26},
+    {"id": "cella", "label": "Cella lievitazione", "line": "pane", "base_temp": 28},
+    {"id": "banco1", "label": "Banco lavoro", "line": "pasticceria", "base_temp": 22},
+    {"id": "banco2", "label": "Banco pasticceria", "line": "pasticceria", "base_temp": 22},
+]
+
+# Mappa ruolo/postazione → linea di produzione (per il briefing per ruolo).
+def _role_to_line(role: str) -> str:
+    r = (role or "").lower()
+    if any(k in r for k in ("pizza",)):
+        return "pizzeria"
+    if any(k in r for k in ("pasticc", "gelat", "abbatt", "raffredd")):
+        return "pasticceria"
+    if any(k in r for k in ("laugen", "pretzel", "baguette", "diguette")):
+        return "baguette"
+    return "pane"
+
+
+def _level_from_stress(stress: float) -> str:
+    return "alto" if stress >= 0.66 else ("medio" if stress >= 0.33 else "calmo")
+
+
+class SosReq(BaseModel):
+    operator: str = Field("", max_length=80)
+    role: str = Field("", max_length=80)
+    machine: str = Field("", max_length=80)
+    note: str = Field("", max_length=400)
+    lang: str = "it"
+
+
+@api_router.post("/bako/sos")
+async def bako_sos_raise(body: SosReq):
+    """SOS operatore (conferma tattile lato UI). Registra l'allarme; il Capo lo vede
+    in plancia con bagliore e BakoMix lo annuncia a voce. Nessun invio esterno."""
+    ev = {
+        "id": str(uuid.uuid4()),
+        "operator": (body.operator or "Operatore")[:80],
+        "role": (body.role or "")[:80],
+        "line": _role_to_line(body.role),
+        "machine": (body.machine or "")[:80],
+        "note": (body.note or "")[:400],
+        "status": "active",
+        "created_at": now_iso(),
+        "ack_at": None,
+    }
+    await db.sos_events.insert_one(dict(ev))
+    ev.pop("_id", None)
+    return {"ok": True, "id": ev["id"], "event": ev}
+
+
+@api_router.get("/bako/sos")
+async def bako_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Solo Capo: SOS attivi + frase vocale per l'annuncio TTS di BakoMix."""
+    it = not (lang or "it").startswith("en")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    docs = await db.sos_events.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    spoken = ""
+    if docs:
+        top = docs[0]
+        where = top.get("machine") or top.get("line") or ""
+        spoken = R(
+            f"Emergenza dal reparto. {top.get('operator','Un operatore')} ha lanciato un SOS{(' su ' + where) if where else ''}. Intervieni subito, Capo.",
+            f"Floor emergency. {top.get('operator','An operator')} raised an SOS{(' on ' + where) if where else ''}. Please intervene now, Capo.",
+        )
+    return {"events": docs, "count": len(docs), "spoken": spoken}
+
+
+@api_router.post("/bako/sos/{sid}/ack")
+async def bako_sos_ack(sid: str, admin: dict = Depends(require_admin)):
+    """Il Capo prende in carico / chiude l'SOS."""
+    await db.sos_events.update_one({"id": sid}, {"$set": {"status": "resolved", "ack_at": now_iso(), "ack_by": admin.get("email")}})
+    return {"ok": True}
+
+
+@api_router.get("/bako/telemetry")
+async def bako_telemetry(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Telemetria IoT simulata PER MACCHINARIO per il Gemello Digitale 3D: unisce gli
+    allarmi reali (scorte/compliance/SOS) a un'oscillazione sensoristica live, così ogni
+    macchina nel 3D reagisce ai propri dati e non solo al livello globale."""
+    prox = await bako_proactive(lang, admin)
+    alerts = prox.get("alerts", [])
+    global_stress = min(1.0, len(alerts) / 3.0)
+    sos = await db.sos_events.find({"status": "active"}, {"_id": 0}).to_list(50)
+    sos_by_line = {}
+    sos_by_machine = set()
+    for s in sos:
+        if s.get("line"):
+            sos_by_line[s["line"]] = sos_by_line.get(s["line"], 0) + 1
+        m = (s.get("machine") or "").lower()
+        for mm in _TWIN_MACHINES:
+            if mm["id"] in m or mm["label"].lower() in m:
+                sos_by_machine.add(mm["id"])
+    # Scorte basse → carico su impastatrice/banchi; compliance → celle.
+    has_stock = any(a.get("kind") == "stock" for a in alerts)
+    has_compliance = any(a.get("kind") in ("compliance", "leader") for a in alerts)
+    t = time.time()
+    machines = {}
+    for i, mm in enumerate(_TWIN_MACHINES):
+        # oscillazione deterministica per macchina (fase sfasata) → sembra "live"
+        osc = (math.sin(t / 6.0 + i * 1.7) + 1) / 2  # 0..1
+        stress = 0.18 + global_stress * 0.5 + osc * 0.18
+        if has_stock and mm["id"] in ("impasto", "banco1", "banco2"):
+            stress += 0.22
+        if has_compliance and mm["id"] == "cella":
+            stress += 0.2
+        if sos_by_line.get(mm["line"]):
+            stress += 0.35
+        if mm["id"] in sos_by_machine:
+            stress = 1.0
+        stress = round(min(1.0, stress), 2)
+        temp = round(mm["base_temp"] * (0.96 + osc * 0.08) + stress * 6, 1)
+        load = round(min(100, 30 + stress * 70), 0)
+        # Smart Torque Protection: su assorbimento anomalo (stress alto) riduce la coppia del 5%
+        # per prevenire lo stallo termico del motore (impastatrici) o della platea (forni).
+        torque_protect = stress >= 0.66 and mm["id"] in ("impasto", "forno1", "forno2")
+        machines[mm["id"]] = {
+            "id": mm["id"], "label": mm["label"], "line": mm["line"],
+            "stress": stress, "level": _level_from_stress(stress),
+            "temp_c": temp, "load_pct": load,
+            "torque_protection": torque_protect, "torque_pct": 95 if torque_protect else 100,
+            "sos": mm["id"] in sos_by_machine or bool(sos_by_line.get(mm["line"])),
+        }
+    return {"machines": machines, "global_level": _level_from_stress(global_stress),
+            "global_stress": round(global_stress, 2), "sos_count": len(sos)}
+
+
+@api_router.get("/bako/briefing/floor")
+async def bako_briefing_floor(role: str = "", lang: str = "it"):
+    """Briefing PER RUOLO: ogni operatore riceve SOLO i lotti e gli allarmi della sua
+    linea (in cuffia, voce breve). Nessun dato delle altre linee. Non richiede admin."""
+    it = not (lang or "it").startswith("en")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    line = _role_to_line(role)
+    rl = (role or "").lower()
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("start", 1).to_list(500)
+    mine = []
+    for tk in tasks:
+        tl = (tk.get("line") or "").lower()
+        asg = (tk.get("assignee") or "").lower()
+        if (tl and tl == line) or (asg and (asg == rl or rl in asg or asg in rl)):
+            mine.append(tk)
+    mine = mine[:8]
+    # allarmi della sola linea dell'operatore (scorte generiche incluse: toccano tutti)
+    tele = None
+    try:
+        # telemetria richiede admin: qui ricaviamo lo stato della linea in modo leggero
+        low = await db.lab_warehouse.count_documents({"$expr": {"$and": [{"$gt": ["$min_kg", 0]}, {"$lte": ["$quantity_kg", "$min_kg"]}]}})
+    except Exception:
+        low = 0
+    sos_line = await db.sos_events.count_documents({"status": "active", "line": line})
+    n = len(mine)
+    first = mine[0] if mine else None
+    label_line = {"pane": R("Pane", "Bread"), "baguette": R("Baguette", "Baguette"),
+                  "pizzeria": R("Pizzeria", "Pizza"), "pasticceria": R("Pasticceria", "Pastry")}.get(line, line)
+    if n:
+        spoken = R(
+            f"Ciao {role or 'collega'}. Sulla tua linea {label_line} oggi hai {n} lotti. Primo: {first.get('title','')}{(' alle ' + first.get('start')) if first.get('start') else ''}.",
+            f"Hi {role or 'colleague'}. On your {label_line} line you have {n} batches today. First: {first.get('title','')}{(' at ' + first.get('start')) if first.get('start') else ''}.",
+        )
+    else:
+        spoken = R(
+            f"Ciao {role or 'collega'}. Nessun lotto assegnato alla linea {label_line} per ora. Resta pronto.",
+            f"Hi {role or 'colleague'}. No batches assigned to the {label_line} line yet. Stand by.",
+        )
+    if low:
+        spoken += " " + R(f"Occhio: {low} scorte basse.", f"Note: {low} low stock.")
+    if sos_line:
+        spoken += " " + R("C'è un SOS attivo sulla tua linea.", "There is an active SOS on your line.")
+    return {
+        "role": role, "line": line, "line_label": label_line,
+        "tasks": [{"title": t.get("title"), "start": t.get("start"), "qty": (t.get("steps") or [{}])[0].get("text", "") if t.get("steps") else "", "line": t.get("line")} for t in mine],
+        "count": n, "low_stock": low, "sos_line": sos_line, "spoken": spoken,
+    }
+
+
+class MaintenanceGuideReq(BaseModel):
+    machine: str = Field("", max_length=120)
+    anomaly: str = Field("", max_length=300)
+    telemetry: Optional[dict] = None
+    lang: str = "it"
+
+
+@api_router.post("/bako/maintenance-guide")
+async def bako_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depends(require_admin)):
+    """Guida Rapida di manutenzione generata da BakoMix (Claude) in tempo reale, in base
+    al macchinario e all'anomalia rilevata dai dati IoT. Nessun testo statico."""
+    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+    tele = ""
+    if body.telemetry:
+        try:
+            tele = f"Telemetria: temp {body.telemetry.get('temp_c')}°C, carico {body.telemetry.get('load_pct')}%, stress {body.telemetry.get('level')}."
+        except Exception:
+            tele = ""
+    guide = {"summary": "", "steps": [], "safety": "", "spoken": ""}
+    if EMERGENT_LLM_KEY:
+        try:
+            sysmsg = (
+                "Sei BakoMix, il tecnico-manutentore AI di una panetteria industriale d'élite. "
+                "Genera una GUIDA RAPIDA di primo intervento per il macchinario indicato, in base all'anomalia. "
+                "Concreta, sicura, passo-passo, adatta a un operatore non tecnico. NIENTE HACCP o burocrazia. "
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"summary\":\"1 frase sul problema probabile\",\"steps\":[\"passo 1 breve\",\"passo 2\",\"...\"],"
+                "\"safety\":\"avvertenza di sicurezza breve\",\"spoken\":\"riassunto vocale breve per l'operatore\"}. "
+                "Massimo 6 passi, ognuno max 14 parole. Nessun testo fuori dal JSON."
+            )
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"maint-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=900)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=f"Macchinario: {body.machine or 'non specificato'}. Anomalia: {body.anomaly or 'anomalia generica di carico/temperatura'}. {tele}")):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            import json as _json, re as _re
+            raw = out.strip().replace("```json", "").replace("```", "")
+            m = _re.search(r"\{.*\}", raw, _re.S)
+            if m:
+                guide.update(_json.loads(m.group(0)))
+        except Exception as e:
+            logger.warning("maintenance-guide fail (%s)", str(e)[:120])
+    if not guide.get("summary"):
+        guide["summary"] = "Guida non disponibile: riprova."
+        guide["steps"] = guide.get("steps") or ["Metti in sicurezza la macchina.", "Chiama il tecnico di turno."]
+    return {"ok": True, "machine": body.machine, "guide": guide}
+
+
+# ===========================================================================
+# v14 — MODULI AVANZATI (Computer Vision QC forni, E-commerce B2B, Carbon Footprint)
+# Regola ferrea del Capo: NIENTE HACCP, allergeni, etichette legali o burocrazia.
+# ===========================================================================
+
+# --- Modulo 1: AI Computer Vision · Controllo Qualità Ottico all'uscita forni ---
+class OvenQCReq(BaseModel):
+    image_base64: str
+    product: str = Field("", max_length=120)
+    lang: str = "it"
+
+
+@api_router.post("/bako/oven-qc")
+async def bako_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
+    """Scansione ottica in tempo reale del prodotto all'uscita del forno: forma, cottura,
+    crosta → rileva difetti e bruciature. SOLO qualità visiva di produzione, nessuna
+    burocrazia/HACCP/allergeni."""
+    img = (body.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+    result = {"verdict": "ok", "score": 0, "defects": [], "notes": "", "spoken": ""}
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"ovenqc-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei l'occhio di controllo qualità ottico di BakoMix all'uscita dei forni di una panetteria d'élite. "
+                "Analizza la FOTO del prodotto appena sfornato: valuta FORMA, grado di COTTURA, COLORE/CROSTA. "
+                "Rileva difetti visivi: bruciature, cottura insufficiente/eccessiva, forma irregolare, tagli/greste mal riusciti, "
+                "collasso, colore non uniforme. VALUTA SOLO l'aspetto visivo del prodotto: NON citare MAI HACCP, allergeni, "
+                "igiene, documenti o burocrazia. "
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"verdict\":\"ok|attenzione|scarto\",\"score\":0-100,\"defects\":[\"difetto breve\"],"
+                "\"notes\":\"1 frase di consiglio pratico\",\"spoken\":\"verdetto vocale brevissimo per il fornaio\"}. "
+                "score = qualità visiva (100 perfetto). Massimo 5 difetti. Nessun testo fuori dal JSON."
+            )
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=f"Prodotto: {body.product or 'pane'}. Controlla la qualità visiva all'uscita del forno.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content or ""
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        if m:
+            result.update(json.loads(m.group(0)))
+    except Exception as e:
+        logger.warning("oven-qc fail (%s)", str(e)[:120])
+        raise HTTPException(status_code=503, detail="Vision non disponibile")
+    # Log leggero per storico qualità (niente burocrazia, solo produzione)
+    try:
+        await db.oven_qc_log.insert_one({"id": str(uuid.uuid4()), "product": body.product, "verdict": result.get("verdict"),
+                                         "score": result.get("score"), "at": now_iso(), "by": admin.get("email")})
+    except Exception:
+        pass
+    return {"ok": True, "result": result}
+
+
+# --- Modulo 2: E-commerce / Ordini B2B → kg di impasto per lo Smart Planner ---
+class B2BOrderReq(BaseModel):
+    client: str = Field("", max_length=120)
+    product: str = Field(..., max_length=120)
+    pieces: int = Field(0, ge=0)
+    grams_each: float = Field(500, gt=0)
+    date: str = ""
+    channel: str = Field("web", max_length=40)  # web|telefono|whatsapp|altro
+
+
+@api_router.get("/bako/b2b/orders")
+async def bako_b2b_list(admin: dict = Depends(require_admin)):
+    """Ordini B2B esterni + aggregazione automatica in kg di impasto per prodotto
+    (alimenta lo Smart Planner/impastatrici senza sostituire le casse esistenti)."""
+    docs = await db.b2b_orders.find({"status": {"$ne": "done"}}, {"_id": 0}).sort("created_at", -1).to_list(300)
+    agg = {}
+    for o in docs:
+        kg = (o.get("pieces", 0) * o.get("grams_each", 0)) / 1000.0
+        a = agg.setdefault(o.get("product", "?"), {"product": o.get("product", "?"), "pieces": 0, "dough_kg": 0.0})
+        a["pieces"] += o.get("pieces", 0)
+        a["dough_kg"] += kg
+    aggregate = sorted(agg.values(), key=lambda x: -x["dough_kg"])
+    for a in aggregate:
+        a["dough_kg"] = round(a["dough_kg"], 2)
+    total_kg = round(sum(a["dough_kg"] for a in aggregate), 2)
+    return {"orders": docs, "aggregate": aggregate, "total_dough_kg": total_kg, "orders_count": len(docs)}
+
+
+@api_router.post("/bako/b2b/orders")
+async def bako_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
+    o = {
+        "id": str(uuid.uuid4()),
+        "client": (body.client or "Cliente B2B")[:120],
+        "product": body.product[:120],
+        "pieces": int(body.pieces),
+        "grams_each": float(body.grams_each),
+        "dough_kg": round(int(body.pieces) * float(body.grams_each) / 1000.0, 2),
+        "date": body.date or now_iso()[:10],
+        "channel": body.channel or "web",
+        "status": "open",
+        "created_at": now_iso(),
+    }
+    await db.b2b_orders.insert_one(dict(o))
+    o.pop("_id", None)
+    return {"ok": True, "order": o}
+
+
+@api_router.delete("/bako/b2b/orders/{oid}")
+async def bako_b2b_del(oid: str, admin: dict = Depends(require_admin)):
+    await db.b2b_orders.delete_one({"id": oid})
+    return {"ok": True}
+
+
+@api_router.post("/bako/b2b/to-plan")
+async def bako_b2b_to_plan(admin: dict = Depends(require_admin)):
+    """Trasforma gli ordini B2B aggregati in un testo-ordine pronto per l'Auto-Planner
+    (kg di impasto per prodotto). Non tocca le casse: sincronizza solo la produzione."""
+    data = await bako_b2b_list(admin)
+    parts = [f"{a['pieces']} {a['product']} (~{a['dough_kg']} kg impasto)" for a in data["aggregate"]]
+    orders_text = "; ".join(parts)
+    return {"ok": True, "orders_text": orders_text, "total_dough_kg": data["total_dough_kg"]}
+
+
+# --- Modulo 3: Carbon Footprint · CO2 per quintale (marketing ecologico) ---
+_CARBON_DEFAULTS = {
+    "electricity_g_per_kwh": 380,   # gCO2/kWh (mix rete)
+    "oven_kwh_per_hour": 18,        # consumo forno €/h medio
+    "gas_g_per_kwh": 200,           # gCO2/kWh gas
+    "flour_kg_co2_per_kg": 0.8,     # impronta farina
+    "packaging_g_per_piece": 12,    # imballo per pezzo
+    "electricity_price_per_kwh": 0.28,  # €/kWh elettrico
+    "gas_price_per_kwh": 0.09,          # €/kWh gas
+}
+
+
+@api_router.get("/bako/carbon/config")
+async def bako_carbon_config(admin: dict = Depends(require_admin)):
+    doc = (await db.app_meta.find_one({"_key": "carbon_config"}, {"_id": 0})) or {}
+    cfg = {**_CARBON_DEFAULTS, **(doc.get("config") or {})}
+    return {"config": cfg, "defaults": _CARBON_DEFAULTS}
+
+
+class CarbonConfigReq(BaseModel):
+    config: dict = {}
+
+
+@api_router.put("/bako/carbon/config")
+async def bako_carbon_set(body: CarbonConfigReq, admin: dict = Depends(require_admin)):
+    cfg = {k: float(v) for k, v in (body.config or {}).items() if k in _CARBON_DEFAULTS}
+    await db.app_meta.update_one({"_key": "carbon_config"}, {"$set": {"config": cfg}}, upsert=True)
+    return {"ok": True, "config": {**_CARBON_DEFAULTS, **cfg}}
+
+
+class CarbonComputeReq(BaseModel):
+    bread_kg: float = Field(100, gt=0)
+    oven_hours: float = Field(0, ge=0)
+    flour_kg: float = Field(0, ge=0)
+    pieces: int = Field(0, ge=0)
+    energy_source: str = Field("electric", max_length=20)  # electric|gas
+    lang: str = "it"
+
+
+@api_router.post("/bako/carbon/compute")
+async def bako_carbon_compute(body: CarbonComputeReq, admin: dict = Depends(require_admin)):
+    """Calcola e certifica la CO2 per quintale (100 kg) di pane prodotto, con dettaglio
+    per fonte, per marketing ecologico."""
+    doc = (await db.app_meta.find_one({"_key": "carbon_config"}, {"_id": 0})) or {}
+    cfg = {**_CARBON_DEFAULTS, **(doc.get("config") or {})}
+    kwh = body.oven_hours * cfg["oven_kwh_per_hour"]
+    if body.energy_source == "gas":
+        energy_g = kwh * cfg["gas_g_per_kwh"]
+    else:
+        energy_g = kwh * cfg["electricity_g_per_kwh"]
+    flour_g = body.flour_kg * cfg["flour_kg_co2_per_kg"] * 1000.0
+    pack_g = body.pieces * cfg["packaging_g_per_piece"]
+    total_g = energy_g + flour_g + pack_g
+    total_kg = total_g / 1000.0
+    quintals = body.bread_kg / 100.0
+    per_quintal_kg = round(total_kg / quintals, 2) if quintals > 0 else 0
+    # Cost-per-KG Energy Matrix: costo energetico per kg cotto + slot di accensione ottimali.
+    price = cfg["gas_price_per_kwh"] if body.energy_source == "gas" else cfg["electricity_price_per_kwh"]
+    energy_cost = kwh * price
+    cost_per_kg = round(energy_cost / body.bread_kg, 3) if body.bread_kg > 0 else 0
+    it = not (body.lang or "it").startswith("en")
+    statement = (
+        f"Ogni quintale di pane MikiLab genera circa {per_quintal_kg} kg di CO₂: un impegno concreto per una panificazione responsabile."
+        if it else
+        f"Every 100 kg of MikiLab bread emits about {per_quintal_kg} kg of CO₂: a concrete commitment to responsible baking."
+    )
+    slot_hint = (
+        "Accendi i forni nella fascia 22:00–06:00 (energia fuori-picco): fino al 30% di risparmio."
+        if it else
+        "Fire the ovens between 22:00–06:00 (off-peak): up to 30% cheaper."
+    )
+    return {
+        "ok": True,
+        "co2_total_kg": round(total_kg, 2),
+        "co2_per_quintal_kg": per_quintal_kg,
+        "breakdown_kg": {"energy": round(energy_g / 1000.0, 2), "flour": round(flour_g / 1000.0, 2), "packaging": round(pack_g / 1000.0, 2)},
+        "quintals": round(quintals, 2),
+        "statement": statement,
+        "energy_cost_eur": round(energy_cost, 2),
+        "cost_per_kg_eur": cost_per_kg,
+        "optimal_slot": slot_hint,
+        "config": cfg,
+    }
+
+
+# --- Modulo 2b: Contextual Load Forecasting (meteo + festività → nessun invenduto) ---
+_HOLIDAYS_MMDD = {  # festività chiave IT/DE con boost di domanda pane/dolci
+    "01-01": "Capodanno", "01-06": "Epifania", "04-25": "Festa", "05-01": "1° Maggio",
+    "08-15": "Ferragosto", "10-03": "Tag der Einheit", "11-01": "Ognissanti",
+    "12-24": "Vigilia di Natale", "12-25": "Natale", "12-26": "Santo Stefano", "12-31": "San Silvestro",
+}
+
+
+@api_router.get("/bako/b2b/forecast")
+async def bako_b2b_forecast(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Incrocia ordini B2B con METEO e CALENDARIO FESTIVO per suggerire un aggiustamento
+    del carico (azzera invenduti/eccedenze). Base ordini reale + fattore contestuale."""
+    it = not (lang or "it").startswith("en")
+    base = await bako_b2b_list(admin)
+    base_kg = base["total_dough_kg"]
+    # Meteo (best-effort): freddo/pioggia → più pane caldo.
+    weather_factor = 1.0
+    weather_note = ""
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            r = await client.get("https://api.open-meteo.com/v1/forecast", params={
+                "latitude": _CLIMATE_LAT, "longitude": _CLIMATE_LON,
+                "current": "temperature_2m,precipitation", "timezone": "Europe/Berlin"})
+            cur = (r.json().get("current") or {})
+        t = cur.get("temperature_2m")
+        precip = cur.get("precipitation") or 0
+        if t is not None:
+            if t <= 8:
+                weather_factor += 0.08; weather_note = ("Freddo: più pane caldo." if it else "Cold: more warm bread.")
+            elif t >= 26:
+                weather_factor -= 0.05; weather_note = ("Caldo: leggera flessione." if it else "Hot: slight dip.")
+        if precip and precip > 0.3:
+            weather_factor += 0.04; weather_note += (" Pioggia: +consegne." if it else " Rain: +deliveries.")
+    except Exception:
+        pass
+    # Festività nei prossimi 3 giorni.
+    holiday_factor = 1.0
+    holiday_note = ""
+    today = datetime.now(timezone.utc)
+    for d in range(0, 4):
+        key = (today + timedelta(days=d)).strftime("%m-%d")
+        if key in _HOLIDAYS_MMDD:
+            holiday_factor += 0.20
+            holiday_note = f"{_HOLIDAYS_MMDD[key]} " + ("in arrivo: picco domanda." if it else "coming: demand peak.")
+            break
+    factor = round(weather_factor * holiday_factor, 3)
+    suggested_kg = round(base_kg * factor, 2)
+    delta_kg = round(suggested_kg - base_kg, 2)
+    return {
+        "ok": True, "base_dough_kg": base_kg, "suggested_dough_kg": suggested_kg, "delta_kg": delta_kg,
+        "factor": factor, "weather_note": weather_note.strip(), "holiday_note": holiday_note.strip(),
+    }
+
+
+# --- Modulo 70: Recipe & Thermal Master Flow + Live Editor + Interlock + Plateau ---
+_MIXER_RPM = {  # RPM/velocità indicative per tipo impastatrice (1ª / 2ª)
+    "spirale": (100, 200), "forcella": (60, 0), "braccia_tuffanti": (40, 60),
+    "planetaria": (80, 160), "presa_diretta": (1400, 0), "1_braccio": (55, 0),
+}
+
+
+class ThermalFlowReq(BaseModel):
+    recipe_id: str = ""
+    recipe_name: str = ""
+    hydration_pct: Optional[float] = None
+    dough_temp_c: float = 24
+    flour_temp_c: float = 20
+    room_temp_c: float = 22
+    batch_kg: float = 20
+    mixer_type: str = "spirale"
+    lang: str = "it"
+
+
+@api_router.post("/bako/thermal-flow")
+async def bako_thermal_flow(body: ThermalFlowReq, admin: dict = Depends(require_admin)):
+    """Recipe & Thermal Master Flow: da una ricetta genera un flusso SEQUENZIALE con RPM
+    impastatrice, rampe termiche celle e cottura. Editor LIVE: ogni modifica dei parametri
+    ricalcola RPM/idratazione/rampe all'istante. Interlock termico: se la farina supera i
+    22°C blocca l'impastatrice e calcola l'acqua gelata."""
+    it = not (body.lang or "it").startswith("en")
+    rec = None
+    if body.recipe_id:
+        rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+    if not rec and body.recipe_name:
+        rec = await db.recipes.find_one({"name": {"$regex": f"^{re.escape(body.recipe_name)}$", "$options": "i"}}, {"_id": 0})
+    rec = rec or {}
+    name = rec.get("name") or body.recipe_name or "Impasto"
+    hydration = body.hydration_pct if body.hydration_pct is not None else (rec.get("hydration_percent") or 65)
+    mix_minutes = float(rec.get("mix_minutes") or 12)
+    bake_temp = float(rec.get("bake_temp") or 235)
+    bake_minutes = float(rec.get("bake_minutes") or 20)
+    rpm1, rpm2 = _MIXER_RPM.get(body.mixer_type, (100, 200))
+
+    # Interlock termico + acqua gelata (DDT semplificato).
+    interlock = body.flour_temp_c > 22
+    friction = {"spirale": 3, "forcella": 1.5, "braccia_tuffanti": 1, "planetaria": 2.5, "presa_diretta": 6, "1_braccio": 1.5}.get(body.mixer_type, 3)
+    # Acqua per DDT: water_temp = 3*DDT - (flour + room + friction)  (metodo a 3 fattori)
+    water_temp = round(3 * body.dough_temp_c - (body.flour_temp_c + body.room_temp_c + friction), 1)
+    water_temp = max(0, min(40, water_temp))
+    # Se interlock → parte dell'acqua in GHIACCIO per abbattere la temperatura.
+    water_kg = round(body.batch_kg * (hydration / (100 + hydration)), 2)  # stima acqua sull'impasto
+    ice_kg = 0.0
+    if interlock:
+        # frazione di ghiaccio ~ (flour_temp-22)*0.04, cap 40%
+        ice_frac = min(0.4, max(0.05, (body.flour_temp_c - 22) * 0.04))
+        ice_kg = round(water_kg * ice_frac, 2)
+
+    def step(order, phase, action, rpm=None, temp=None, dur=None, note="", locked=True, extra=None):
+        s = {"order": order, "phase": phase, "action": action, "rpm": rpm, "temp_target_c": temp,
+             "duration_min": dur, "note": note, "locked": locked}
+        if extra:
+            s.update(extra)
+        return s
+
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    steps = []
+    steps.append(step(1, R("Impasto · 1ª velocità", "Mixing · 1st"), R(f"Amalgama a bassa velocità ({body.mixer_type})", f"Blend low speed ({body.mixer_type})"),
+                      rpm=rpm1, dur=round(mix_minutes * 0.4), note=R(f"Acqua a {water_temp}°C" + (f", di cui {ice_kg} kg in ghiaccio" if ice_kg else ""), f"Water at {water_temp}°C" + (f", incl. {ice_kg} kg ice" if ice_kg else "")),
+                      locked=interlock,
+                      extra={"interlock": interlock, "water_temp_c": water_temp, "ice_kg": ice_kg,
+                             "interlock_msg": (R(f"BLOCCO: farina a {body.flour_temp_c}°C > 22°C. Usa {ice_kg} kg di acqua gelata, poi sblocca.", f"LOCK: flour at {body.flour_temp_c}°C > 22°C. Use {ice_kg} kg ice water, then unlock.") if interlock else "")}))
+    if rpm2:
+        steps.append(step(2, R("Impasto · 2ª velocità", "Mixing · 2nd"), R("Incorda fino a incordatura", "Develop gluten to full"), rpm=rpm2, dur=round(mix_minutes * 0.6), note=R(f"Temp. impasto obiettivo {body.dough_temp_c}°C", f"Target dough {body.dough_temp_c}°C")))
+    n = len(steps)
+    steps.append(step(n + 1, R("Puntata", "Bulk"), R("Riposo in cella con rampa dolce", "Bulk rest, gentle ramp"), temp=round(body.dough_temp_c + 2), dur=90, note=R("Rampa 24→26°C", "Ramp 24→26°C")))
+    steps.append(step(n + 2, R("Formatura", "Shaping"), R("Forma i pezzi", "Shape pieces"), dur=20))
+    steps.append(step(n + 3, R("Appretto", "Proof"), R("Lievitazione finale a rampa", "Final proof, ramp"), temp=28, dur=75, note=R("28°C · UR 75%", "28°C · 75% RH")))
+    # Plateau Recovery Countdown: recupero termico platea prima dell'infornata successiva.
+    plateau_recovery_s = int(round((bake_temp / 235.0) * 180))  # ~3 min a 235°C, scala col target
+    steps.append(step(n + 4, R("Cottura", "Bake"), R("Inforna con vapore iniziale", "Bake with initial steam"), temp=round(bake_temp), dur=round(bake_minutes),
+                      note=R(f"Recupero platea: {plateau_recovery_s}s prima del lotto successivo", f"Deck recovery: {plateau_recovery_s}s before next batch"),
+                      extra={"plateau_recovery_s": plateau_recovery_s}))
+    # Il primo step non-interlock è sbloccato; gli altri si sbloccano in sequenza dal frontend.
+    if not interlock and steps:
+        steps[0]["locked"] = False
+
+    return {
+        "ok": True, "recipe": name, "hydration_pct": round(hydration, 1), "mixer_type": body.mixer_type,
+        "water_temp_c": water_temp, "water_kg": water_kg, "ice_kg": ice_kg, "interlock": interlock,
+        "dough_temp_c": body.dough_temp_c, "batch_kg": body.batch_kg,
+        "plateau_recovery_s": plateau_recovery_s, "steps": steps,
+    }
+
+
+
 
 
 

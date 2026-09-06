@@ -4,6 +4,8 @@ import { Mic, ChevronLeft, Scale } from "lucide-react";
 import MamoAssistant from "@/components/MamoAssistant";
 import SmartScale from "@/components/SmartScale";
 import TeamTasks from "@/components/TeamTasks";
+import FloorRoleBriefing from "@/components/FloorRoleBriefing";
+import SosButton from "@/components/SosButton";
 import DoughTimer from "@/components/DoughTimer";
 import SequenceGuard from "@/components/SequenceGuard";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
@@ -108,6 +110,7 @@ export default function MohamedFloor() {
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full mb-2"><ComplianceBeacon compact /></div>
+      <div className="w-full mb-2"><FloorRoleBriefing role={role} /></div>
       <div className="w-full"><OperatorClock /></div>
       <div className="w-full"><TeamTasks operatorName={role} /></div>
       <div className="w-full"><DoughTimer /></div>
@@ -128,6 +131,7 @@ export default function MohamedFloor() {
         <Scale className="w-4 h-4" /> {tri("Bilancia Guidata", "Geführte Waage", "Guided Scale", "Báscula Guiada", "Balance Guidée", "ترازوی راهنما")}
       </button>
       <div className="w-full mt-5"><HeadsetChannel /></div>
+      <div className="w-full mt-3"><SosButton role={role} operator={role} /></div>
       <div className="w-full mt-3"><FloorCrossCheck role={role} task={role || "Produzione"} /></div>
       <button data-testid="mohamed-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
     </div>

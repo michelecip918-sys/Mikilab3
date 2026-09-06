@@ -56,7 +56,6 @@ import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
 import AmbientBako from "@/components/AmbientBako";
 import CompliancePanel from "@/components/CompliancePanel";
-import ComplianceBeacon from "@/components/ComplianceBeacon";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
@@ -65,6 +64,12 @@ import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
 import AutoPlan from "@/components/console/AutoPlan";
 import ShiftBriefing from "@/components/console/ShiftBriefing";
+import DigitalTwin from "@/components/console/DigitalTwin";
+import EmergencyCenter from "@/components/EmergencyCenter";
+import OvenQC from "@/components/console/OvenQC";
+import B2BOrders from "@/components/console/B2BOrders";
+import CarbonFootprint from "@/components/console/CarbonFootprint";
+import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -192,13 +197,12 @@ export default function App() {
                   <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
                 </span>
                 <span className="min-w-0 text-left">
-                  <span className="block font-cyber text-sm sm:text-base font-black tracking-[0.18em] text-white uppercase truncate">MikiLab<span className="text-[#00F0FF]"> Pro</span></span>
+                  <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase">MikiLab<span className="text-[#00F0FF]"> Pro</span></span>
                   <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#00F0FF]/70 uppercase">Holographic Command OS</span>
                 </span>
               </button>
 
               <div className="flex items-center gap-1.5 sm:gap-2 relative">
-                <ComplianceBeacon compact onOpen={() => jumpTo("master")} />
                 {user && user.role === "admin" && (
                   <button data-testid="briefing-open" onClick={() => setShowBriefing(true)} title="Cyber-Trio"
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#7DD3FC]/10 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95 transition-all">
@@ -261,8 +265,26 @@ export default function App() {
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
                     <LabBriefing />
+                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" defaultOpen title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
+                      <EmergencyCenter />
+                    </HoloPanel>
                     <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" defaultOpen title={tri("BakoMix · Piano del Giorno", "BakoMix · Tagesplan", "BakoMix · Day Plan", "BakoMix · Plan del Día", "BakoMix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("BakoMix genera la sequenza di produzione ottimale del giorno.", "BakoMix erstellt den optimalen Produktionsablauf.", "BakoMix generates the optimal production sequence.", "BakoMix genera la secuencia óptima.", "BakoMix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-twin" accent="#5E8CA8" beacon="#7DD3FC" icon="🌐" title={tri("Gemello Digitale 3D", "Digitaler Zwilling 3D", "3D Digital Twin", "Gemelo Digital 3D", "Jumeau Numérique 3D", "دوقلوی دیجیتال")} sub={tri("Metaverso di laboratorio: supervisione spaziale dei macchinari.", "Labor-Metaverse: räumliche Überwachung.", "Lab metaverse: spatial supervision of machines.", "Metaverso: supervisión espacial.", "Métavers: supervision spatiale.", "متاورس آزمایشگاه.")}>
+                      <DigitalTwin />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-thermalflow" accent="#00F0FF" beacon="#7DD3FC" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
+                      <RecipeThermalFlow />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-ovenqc" accent="#5E8CA8" beacon="#22c55e" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
+                      <OvenQC />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-b2b" accent="#5E8CA8" beacon="#00F0FF" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
+                      <B2BOrders />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-carbon" accent="#5E8CA8" beacon="#22c55e" icon="🌿" title={tri("Carbon Footprint & Energia", "CO₂-Bilanz & Energie", "Carbon Footprint & Energy", "Huella de Carbono & Energía", "Empreinte Carbone & Énergie", "ردپای کربن و انرژی")} sub={tri("CO₂ per quintale + costo energetico per kg cotto e slot di accensione ottimali.", "CO₂ pro Zentner + Energiekosten/kg.", "CO₂ per 100 kg + energy cost per kg baked and optimal firing slots.", "CO₂ por quintal + coste energético.", "CO₂ par quintal + coût énergie.", "CO₂ در هر صد کیلو + هزینه انرژی.")}>
+                      <CarbonFootprint />
                     </HoloPanel>
                     <HoloPanel testid="panel-ordine" accent="#5E8CA8" beacon="#00F0FF" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
                       <OrdineCapo />
@@ -297,10 +319,7 @@ export default function App() {
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />
                     </HoloPanel>
-                    {/* Sezioni LEGGI/normative — in fondo, come richiesto */}
-                    <HoloPanel testid="panel-compliance" accent="#5E8CA8" beacon="#7DD3FC" icon="⚖️" title={tri("Leggi & Compliance UE/DE", "Recht & Compliance EU/DE", "Laws & Compliance EU/DE", "Leyes & Compliance UE/DE", "Lois & Conformité UE/DE", "قوانین و انطباق")} sub={tri("Orari di lavoro (ArbZG), sicurezza (DGUV) e privacy (GDPR).", "Arbeitszeiten (ArbZG), DGUV & DSGVO.", "Working hours (ArbZG), DGUV & GDPR.", "Horas (ArbZG), DGUV y RGPD.", "Heures (ArbZG), DGUV & RGPD.", "ساعات کاری، ایمنی و حریم خصوصی.")}>
-                      <CompliancePanel />
-                    </HoloPanel>
+                    {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
                   </div>
                 )}
               </section>
@@ -360,7 +379,7 @@ export default function App() {
         </div>
 
         {legalOpen && (
-          <div className="fixed inset-0 z-50 bg-[#070A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#00F0FF]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage /></div></div>
+          <div className="fixed inset-0 z-50 bg-[#070A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#00F0FF]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage />{user && user.role === "admin" && <div className="mt-6"><CompliancePanel /></div>}</div></div>
         )}
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}

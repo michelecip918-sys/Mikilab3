@@ -550,6 +550,7 @@ export const delegationApi = {
   parse: (transcript, lang) => api.post(`/delegation/parse`, { transcript, lang }).then((r) => r.data),
   confirm: (proposal) => api.post(`/delegation/confirm`, { proposal }).then((r) => r.data),
   tasks: () => api.get(`/delegation/tasks`).then((r) => r.data),
+  tasksByRole: (role) => api.get(`/delegation/tasks`, { params: { role } }).then((r) => r.data),
   stepDone: (task_id, order, operator = "") => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }).then((r) => r.data).catch((e) => {
     if (isNetworkError(e)) { sqEnqueue("delegation_step", { task_id, order, operator }); return { queued: true, all_done: false }; }
     throw e;
@@ -590,6 +591,22 @@ export const bakoApi = {
   autoplan: (payload) => api.post(`/bako/autoplan`, payload).then((r) => r.data),
   dispatch: (batches) => api.post(`/bako/autoplan/dispatch`, { batches }).then((r) => r.data),
   briefing: (lang) => api.get(`/bako/briefing`, { params: { lang } }).then((r) => r.data),
+  floorBriefing: (role, lang) => api.get(`/bako/briefing/floor`, { params: { role, lang } }).then((r) => r.data),
+  telemetry: (lang) => api.get(`/bako/telemetry`, { params: { lang } }).then((r) => r.data),
+  sosRaise: (payload) => api.post(`/bako/sos`, payload).then((r) => r.data),
+  sosList: (lang) => api.get(`/bako/sos`, { params: { lang } }).then((r) => r.data),
+  sosAck: (id) => api.post(`/bako/sos/${id}/ack`).then((r) => r.data),
+  maintenanceGuide: (payload) => api.post(`/bako/maintenance-guide`, payload).then((r) => r.data),
+  ovenQc: (payload) => api.post(`/bako/oven-qc`, payload).then((r) => r.data),
+  b2bList: () => api.get(`/bako/b2b/orders`).then((r) => r.data),
+  b2bAdd: (payload) => api.post(`/bako/b2b/orders`, payload).then((r) => r.data),
+  b2bDel: (id) => api.delete(`/bako/b2b/orders/${id}`).then((r) => r.data),
+  b2bToPlan: () => api.post(`/bako/b2b/to-plan`).then((r) => r.data),
+  b2bForecast: () => api.get(`/bako/b2b/forecast`).then((r) => r.data),
+  thermalFlow: (payload) => api.post(`/bako/thermal-flow`, payload).then((r) => r.data),
+  carbonConfig: () => api.get(`/bako/carbon/config`).then((r) => r.data),
+  carbonSetConfig: (config) => api.put(`/bako/carbon/config`, { config }).then((r) => r.data),
+  carbonCompute: (payload) => api.post(`/bako/carbon/compute`, payload).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

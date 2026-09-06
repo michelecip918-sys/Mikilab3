@@ -10,6 +10,7 @@ const KIND = {
   sanificazione: { icon: Brush, c: "#22c55e" },
   regola: { icon: ShieldAlert, c: "#5E8CA8" },
   crisis_override: { icon: Gauge, c: "#f59e0b" },
+  produzione: { icon: ListChecks, c: "#00F0FF" },
   generico: { icon: ListChecks, c: "#5EEAD4" },
 };
 
@@ -19,9 +20,16 @@ export default function TeamTasks({ operatorName = "" }) {
   const [tasks, setTasks] = useState([]);
 
   const load = useCallback(async () => {
-    try { const r = await delegationApi.tasks(); setTasks(r.tasks || []); } catch { /* Letz_Passive: nessun errore rumoroso */ }
-  }, []);
+    try { const r = operatorName ? await delegationApi.tasksByRole(operatorName) : await delegationApi.tasks(); setTasks(r.tasks || []); } catch { /* Letz_Passive: nessun errore rumoroso */ }
+  }, [operatorName]);
   useEffect(() => { load(); const iv = setInterval(load, 15000); return () => clearInterval(iv); }, [load]);
+  // Aggiornamento ISTANTANEO al cambio postazione/ruolo o dispatch del piano dal Capo.
+  useEffect(() => {
+    const h = () => load();
+    window.addEventListener("mikilab-role-changed", h);
+    window.addEventListener("mikilab-tasks-updated", h);
+    return () => { window.removeEventListener("mikilab-role-changed", h); window.removeEventListener("mikilab-tasks-updated", h); };
+  }, [load]);
 
   const markDone = async (taskId, order) => {
     // aggiornamento ottimistico e silenzioso
@@ -86,6 +94,8 @@ export default function TeamTasks({ operatorName = "" }) {
               <div className="flex items-center gap-2 mb-2">
                 <K.icon className="w-4 h-4 shrink-0" style={{ color: K.c }} />
                 <p className="text-sm font-black text-white flex-1 min-w-0 truncate">{t.title}</p>
+                {t.start && <span data-testid={`team-task-start-${t.id}`} className="shrink-0 text-[10px] font-black px-2 py-0.5 rounded-full" style={{ color: K.c, background: `${K.c}1a`, border: `1px solid ${K.c}55` }}>🕐 {t.start}</span>}
+                {t.line && <span className="shrink-0 text-[10px] font-bold text-[#94A3B8] uppercase">{t.line}</span>}
                 <span className="text-[10px] font-bold text-[#94A3B8]">{doneN}/{total}</span>
               </div>
               {t.kind === "crisis_override" && t.pacing && (
@@ -104,7 +114,7 @@ export default function TeamTasks({ operatorName = "" }) {
                       {s.done ? <Check className="w-3.5 h-3.5" /> : s.order}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className={`block text-[13px] font-semibold leading-snug ${s.done ? "text-emerald-300 line-through" : "text-white"}`}>{s.instruction}</span>
+                      <span className={`block text-[13px] font-semibold leading-snug ${s.done ? "text-emerald-300 line-through" : "text-white"}`}>{s.instruction || s.text}</span>
                       {s.assignee && <span className="block text-[10px] text-[#64748B]">{s.assignee}{s.assignee_position ? ` · ${s.assignee_position}` : ""}</span>}
                     </span>
                   </button>
