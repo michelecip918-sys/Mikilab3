@@ -3047,9 +3047,6 @@ async def master_sections_get(user: Optional[dict] = Depends(optional_user)):
     return {"sections": doc.get("sections") or []}
 
 
-_GOVERN_MEMORY: dict = {}
-
-
 @api_router.post("/master/govern")
 async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_admin)):
     """Interpreta il comando vocale/testuale del Master ed ESEGUE la modifica strutturale."""
