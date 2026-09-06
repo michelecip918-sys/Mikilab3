@@ -589,6 +589,7 @@ export const bakoApi = {
   proactive: (lang) => api.get(`/bako/proactive`, { params: { lang } }).then((r) => r.data),
   autoplan: (payload) => api.post(`/bako/autoplan`, payload).then((r) => r.data),
   dispatch: (batches) => api.post(`/bako/autoplan/dispatch`, { batches }).then((r) => r.data),
+  briefing: (lang) => api.get(`/bako/briefing`, { params: { lang } }).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

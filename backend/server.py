@@ -9631,6 +9631,39 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
     return {"ok": True, "created": created}
 
 
+@api_router.get("/bako/briefing")
+async def bako_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Cyber-Trio: briefing d'apertura turno. Aggrega stato/allerte e calcola lo 'stress'
+    dell'impianto (proxy dai dati) a cui reagiscono gli avatar olografici."""
+    it = not (lang or "it").startswith("en")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    prox = await bako_proactive(lang, admin)
+    alerts = prox.get("alerts", [])
+    ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = ld.get("leaders") or {}
+    today = now_iso()[:10]
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    workers = sorted({l.get("worker") for l in logs if l.get("worker")})
+    low = [a for a in alerts if a.get("kind") == "stock"]
+    stress = min(1.0, len(alerts) / 3.0)
+    level = "alto" if stress >= 0.66 else ("medio" if stress >= 0.33 else "calmo")
+    n = len(alerts)
+    lines = [
+        {"who": "MikiLab", "avatar": "avatar_miki.jpg", "accent": "#5E8CA8",
+         "text": R(f"Benvenuto, Capo. Impianto in stato {level}. {len(workers)} operatori in turno, {len(leaders)} linee con caposquadra.",
+                   f"Welcome, Capo. Plant status {level}. {len(workers)} staff on shift, {len(leaders)} lines with a leader.")},
+        {"who": "Mohamed", "avatar": "avatar_mohamed.jpg", "accent": "#00F0FF",
+         "text": R("Squadra pronta al piano. Dì \"genera piano\" e distribuisco i lotti sulle linee.",
+                   "Team ready for the plan. Say \"generate plan\" and I'll assign the batches to the lines.")},
+        {"who": "BakoMix AI", "avatar": "avatar_bigmix.jpg", "accent": "#7DD3FC",
+         "text": (R(f"Attenzione: {n} allerte attive. {alerts[0]['text']}", f"Heads up: {n} active alerts. {alerts[0]['text']}") if n else
+                  R("Nessuna allerta: forni, scorte e orari tutti nei parametri. Buon turno.",
+                    "No alerts: ovens, stock and hours all within parameters. Have a great shift."))},
+    ]
+    return {"stress": round(stress, 2), "level": level, "alerts": alerts,
+            "stats": {"workers": len(workers), "leaders": len(leaders), "low_stock": len(low)}, "lines": lines}
+
+
 
 # ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri

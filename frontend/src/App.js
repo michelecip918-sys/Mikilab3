@@ -64,6 +64,7 @@ import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
 import AutoPlan from "@/components/console/AutoPlan";
+import ShiftBriefing from "@/components/console/ShiftBriefing";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -90,6 +91,15 @@ export default function App() {
   const [showPinLock, setShowPinLock] = useState(false);
   const [online, setOnline] = useState(() => (typeof navigator !== "undefined" ? navigator.onLine : true));
   const [activeZone, setActiveZone] = useState("master");
+  const [showBriefing, setShowBriefing] = useState(false);
+
+  // Cyber-Trio: briefing automatico all'apertura turno (una volta al giorno, solo Capo).
+  useEffect(() => {
+    if (user && user.role === "admin") {
+      const today = new Date().toISOString().slice(0, 10);
+      try { if (localStorage.getItem("mikilab_briefing_day") !== today) { localStorage.setItem("mikilab_briefing_day", today); setShowBriefing(true); } } catch (e) { /* */ }
+    }
+  }, [user]);
 
   const zoneRefs = { master: useRef(null), operatori: useRef(null), bakomix: useRef(null) };
 
@@ -189,6 +199,12 @@ export default function App() {
 
               <div className="flex items-center gap-1.5 sm:gap-2 relative">
                 <ComplianceBeacon compact onOpen={() => jumpTo("master")} />
+                {user && user.role === "admin" && (
+                  <button data-testid="briefing-open" onClick={() => setShowBriefing(true)} title="Cyber-Trio"
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#7DD3FC]/10 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95 transition-all">
+                    ◐ <span className="hidden sm:inline">{tri("Turno", "Schicht", "Shift", "Turno", "Turn", "شیفت")}</span>
+                  </button>
+                )}
                 <LangSelector testid="header-lang" />
                 <InstallApp variant="chip" />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
@@ -347,6 +363,7 @@ export default function App() {
           <div className="fixed inset-0 z-50 bg-[#070A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#00F0FF]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage /></div></div>
         )}
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
+        {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
 
         <Toaster position="top-center" richColors />

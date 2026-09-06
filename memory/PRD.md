@@ -4408,3 +4408,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ## v47 (2026-06) — Piano → Produzione (1-tap)
 - `POST /api/bako/autoplan/dispatch` (require_admin): trasforma i lotti del piano BakoMix in task `team_tasks` attivi (title=prodotto, kind='produzione', step con linea/ora/qtà, assignee) → visibili subito agli operatori (TeamTasks / GET /api/delegation/tasks).
 - UI: pulsante `autoplan-dispatch` "Invia agli operatori" in AutoPlan (con toast esito). Verificato E2E via curl (2 lotti → 2 task attivi).
+
+## v48 (2026-06) — Fase 1 Cyber-Trio: Briefing d'apertura turno (avatar reattivi)
+- `GET /api/bako/briefing?lang=` (require_admin): aggrega allerte (bako_proactive) + operatori/leaders e calcola lo "stress" impianto (alerts/3 → calmo/medio/alto). Ritorna 3 battute (MikiLab overview, Mohamed team, BakoMix allerte). Template offline (no LLM).
+- UI `components/console/ShiftBriefing.jsx`: overlay olografico full-screen; i 3 avatar si illuminano in sequenza e parlano in TTS (hands-free); colore dominante reattivo allo stress (azzurro/ambra/rosso). Auto-apertura 1×/giorno per admin (localStorage mikilab_briefing_day) + pulsante header `briefing-open`.
+- Test: iteration_199 backend 100%, frontend 100%, 0 bug.
+- **Fase 2 (da avviare)**: Metaverso Digital-Twin 3D del laboratorio (react-three-fiber) con avatar navigabili — grande cantiere a sé; vincolo offline richiede asset bundlati.
