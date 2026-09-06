@@ -4452,3 +4452,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato: testing agent iteration_214 → frontend 100% (3 feature + regressioni), 0 bug. Backend curl OK (verify→"Youssef", history raggruppato).
 - **DEPLOY**: redeploy produzione ri-accodato al deployer agent con il codice completo (multi-assign, 3D per reparto, vista per-operatore, PIN, auto-annuncio, storico).
 
+
+### Turno precedente + Export storico + Badge presenza (2026-09-06 · quarta tranche)
+- **Ricrea ultimo turno (FATTO)**: pulsante `shift-team-recreate` in ShiftTeamCall → prende l'ultimo giorno PASSATO dello storico e ri-assegna tutti i suoi reparti via `deptApi.assignMulti`. Il Capo non riassegna da zero.
+- **Esporta storico CSV (FATTO)**: `shift-team-export` genera e scarica `mikilab_storico_turni_<data>.csv` (data, reparto, operatore, mansione) dallo storico.
+- **Badge presenza (FATTO)**: nuovo endpoint `GET /api/depts/presence` (worker con ultima timbratura di oggi ≠ out, da `compliance_timelog`); `deptApi.presence` (poll 20s); pallino verde/grigio `shift-presence-<nome>` accanto a ogni operaio nei chip. Inoltre: in `DeptFocus`, quando l'operaio si identifica col PIN, viene anche timbrato l'INGRESSO (`complianceApi.clock(name,"in",pin)`) → compare subito come presente.
+- Testato: testing agent iteration_215 → frontend 100% (3 feature + regressioni), 0 bug. Backend curl OK (presence→Youssef presente, history con giorno passato).
+- **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer con il codice completo.
+- Nota pre-esistente (non bug): overlay CYBER-TRIO a schermo intero dopo il login (chiudibile con la X); eventuale auto-dismiss per le visite successive è un miglioramento futuro.
+

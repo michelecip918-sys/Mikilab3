@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck, KeyRound, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { deptApi, operatorPinsApi } from "@/lib/api";
+import { deptApi, operatorPinsApi, complianceApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
@@ -32,6 +32,7 @@ export default function DeptFocus({ tri, lang }) {
       const r = await operatorPinsApi.verify(pin);
       if (r && r.ok && r.name) {
         try { localStorage.setItem("mikilab_operator_pin", pin); } catch { /* */ }
+        try { complianceApi.clock(r.name, "in", pin); } catch { /* */ }
         setOp(r.name);
       } else {
         toast.error(tri("PIN non riconosciuto", "PIN nicht erkannt", "PIN not recognized", "PIN no reconocido", "PIN non reconnu", "پین شناسایی نشد"));

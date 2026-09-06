@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Volume2, Users, Megaphone, History, ChevronDown } from "lucide-react";
+import { Volume2, Users, Megaphone, History, ChevronDown, RotateCcw, Download } from "lucide-react";
+import { toast } from "sonner";
 import { deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
@@ -16,6 +17,8 @@ export default function ShiftTeamCall() {
   const [auto, setAuto] = useState(() => { try { return localStorage.getItem(AUTO_KEY) !== "0"; } catch { return true; } });
   const [history, setHistory] = useState([]);
   const [showHist, setShowHist] = useState(false);
+  const [present, setPresent] = useState([]);
+  const [busy, setBusy] = useState(false);
   const announcedRef = useRef(false);
 
   const load = useCallback(() => Promise.all([deptApi.assignment(), deptApi.catalog()]).then(([a, c]) => {
@@ -23,6 +26,11 @@ export default function ShiftTeamCall() {
   }).catch(() => {}), []);
   useEffect(() => { load(); const id = setInterval(load, 20000); return () => clearInterval(id); }, [load]);
   useEffect(() => { deptApi.history(14).then((d) => setHistory(d.history || [])).catch(() => {}); }, [assignments.length]);
+  useEffect(() => {
+    const p = () => deptApi.presence().then((d) => setPresent((d.present || []).map((x) => x.toLowerCase()))).catch(() => {});
+    p(); const id = setInterval(p, 20000); return () => clearInterval(id);
+  }, []);
+  const isPresent = (name) => present.includes((name || "").toLowerCase());
 
   // Raggruppa per reparto mantenendo l'ordine del catalogo.
   const groups = depts
@@ -52,6 +60,31 @@ export default function ShiftTeamCall() {
 
   const toggleAuto = () => { const v = !auto; setAuto(v); try { localStorage.setItem(AUTO_KEY, v ? "1" : "0"); } catch { /* */ } };
 
+  const recreateLast = async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    const past = history.find((h) => h.date < today && (h.depts || []).length);
+    if (!past) { toast.error(tri("Nessun turno precedente da ricreare", "Keine frühere Schicht", "No previous shift to recreate", "Sin turno previo", "Aucun service précédent", "شیفت قبلی نیست")); return; }
+    setBusy(true);
+    try {
+      for (const d of past.depts) {
+        await deptApi.assignMulti({ dept: d.dept, items: (d.ops || []).map((o) => ({ operator: o.operator, task: o.task || "" })) });
+      }
+      toast.success(tri(`Turno del ${past.date} ricreato ✓`, `Schicht vom ${past.date} übernommen ✓`, `Shift from ${past.date} recreated ✓`, `Turno del ${past.date} recreado ✓`, `Service du ${past.date} recréé ✓`, `شیفت ${past.date} بازسازی شد ✓`));
+      load();
+    } catch { toast.error("Error"); } finally { setBusy(false); }
+  };
+
+  const exportCsv = () => {
+    if (!history.length) { toast.error(tri("Storico vuoto", "Verlauf leer", "History empty", "Historial vacío", "Historique vide", "تاریخچه خالی")); return; }
+    const rows = [["data", "reparto", "operatore", "mansione"]];
+    history.forEach((day) => (day.depts || []).forEach((d) => (d.ops || []).forEach((o) => rows.push([day.date, d.dept_name, o.operator, o.task || ""]))));
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `mikilab_storico_turni_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  };
+
   return (
     <div data-testid="shift-team-call" className="space-y-3">
       <div className="flex items-center gap-2">
@@ -68,6 +101,17 @@ export default function ShiftTeamCall() {
         </span>
         <span className="text-[11px] text-[#cbd5e1] flex-1">{tri("Annuncia automaticamente all'apertura del turno", "Automatisch bei Schichtbeginn ansagen", "Auto-announce at shift start", "Anunciar automáticamente al abrir el turno", "Annonce automatique au début du service", "اعلام خودکار در شروع شیفت")}</span>
       </button>
+
+      <div className="flex items-center gap-2">
+        <button data-testid="shift-team-recreate" onClick={recreateLast} disabled={busy}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 disabled:opacity-40 hover:border-[#7DD3FC]/60 transition-all">
+          <RotateCcw className="w-3.5 h-3.5" /> {tri("Ricrea ultimo turno", "Letzte Schicht übernehmen", "Recreate last shift", "Recrear último turno", "Recréer le dernier service", "بازسازی شیفت قبل")}
+        </button>
+        <button data-testid="shift-team-export" onClick={exportCsv}
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 hover:border-[#7DD3FC]/60 transition-all">
+          <Download className="w-3.5 h-3.5" /> CSV
+        </button>
+      </div>
 
       {groups.length === 0 && (
         <p data-testid="shift-team-empty" className="text-[11px] text-[#64748B] rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5">
@@ -86,7 +130,8 @@ export default function ShiftTeamCall() {
             </div>
             <div className="flex flex-wrap gap-1.5">
               {g.list.map((a) => (
-                <span key={a.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#030712] border border-[#1e293b] text-[11px] text-white">
+                <span key={a.id} data-testid={`shift-op-${a.operator}`} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#030712] border border-[#1e293b] text-[11px] text-white">
+                  <span data-testid={`shift-presence-${a.operator}`} title={isPresent(a.operator) ? "presente" : "assente"} className={`w-1.5 h-1.5 rounded-full ${isPresent(a.operator) ? "bg-[#22c55e] shadow-[0_0_6px_#22c55e]" : "bg-[#475569]"}`} />
                   <b>{a.operator}</b>{a.task ? <span className="text-[#94A3B8]">· {a.task}</span> : null}
                 </span>
               ))}

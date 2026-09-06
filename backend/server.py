@@ -1240,6 +1240,20 @@ async def depts_history(days: int = 14, admin: dict = Depends(require_admin)):
     return {"history": out}
 
 
+@api_router.get("/depts/presence")
+async def depts_presence(admin: dict = Depends(require_admin)):
+    """Presenza live: operai la cui ultima timbratura di oggi non è 'out'."""
+    today = now_iso()[:10]
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    last = {}
+    for e in entries:
+        w = (e.get("worker") or "").strip()
+        if w:
+            last[w] = e.get("action")
+    present = [w for w, a in last.items() if a in ("in", "break_start", "break_end")]
+    return {"date": today, "present": present}
+
+
 
 @api_router.post("/bako/deus/capture")
 async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
