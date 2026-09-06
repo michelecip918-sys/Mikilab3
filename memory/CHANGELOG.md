@@ -300,3 +300,9 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Micro-ordini via email**: bako_silo_microorder invia email Resend (SILO_SUPPLIER_EMAIL o email admin) con la lista rifornimenti quando i silos vanno sotto soglia.
 - **Sync Celle→Piano**: proofing restituisce oven_ready_at; POST /api/bako/proofing/sync-plan riprogramma gli orari start dei lotti produzione. UI: proof-oven-ready + proof-sync-plan.
 - Test iteration_203: backend 100% / frontend 100%, 0 bug.
+
+## v52 (2026-09) — Email Fornitore, Battito Impianto Unico, Timeline di Turno
+- **Email Fornitore**: GET/PUT /api/bako/silo-supplier (email in app_meta); i micro-ordini silos vengono inviati all'email fornitore configurata (fallback env/admin). UI: campo silo-supplier-input in SiloManager.
+- **Battito Impianto Unico**: GET /api/bako/heartbeat unisce telemetria+SOS+AGV+forni liberi in un solo polling. Context PlantHeartbeatProvider (4s) alimenta DigitalTwin, EmergencyCenter e AgvFleet (rimossi i polling individuali).
+- **Timeline di Turno**: GET /api/bako/timeline (lotti+infornate+SOS ordinati). UI TimelineTurno.jsx scorrevole. Panel-timeline + registrato in RoleLayout.
+- FIX: render loop in EmergencyCenter (tri nelle deps useEffect → rimosso). iteration_205 frontend 100%.

@@ -9,11 +9,11 @@ const ALL_PANELS = [
   "panel-emergency", "panel-autoplan", "panel-thermalflow", "panel-ovenqc", "panel-b2b", "panel-carbon",
   "panel-twin", "panel-ordine", "panel-ricette", "panel-magazzino", "panel-planner", "panel-ordini",
   "panel-radar", "panel-pin", "panel-docs", "panel-elite", "panel-hardware", "panel-security",
-  "panel-silos", "panel-proofing", "panel-agv",
+  "panel-silos", "panel-proofing", "panel-agv", "panel-timeline",
 ];
 const ROLE_PANELS = {
   fornaio: ["panel-thermalflow", "panel-ovenqc", "panel-proofing", "panel-ricette", "panel-hardware", "panel-autoplan"],
-  capolinea: ["panel-autoplan", "panel-emergency", "panel-b2b", "panel-radar", "panel-twin", "panel-ordine", "panel-planner", "panel-ordini", "panel-carbon"],
+  capolinea: ["panel-autoplan", "panel-emergency", "panel-b2b", "panel-radar", "panel-twin", "panel-ordine", "panel-planner", "panel-ordini", "panel-carbon", "panel-timeline"],
   manutentore: ["panel-twin", "panel-emergency", "panel-hardware", "panel-agv", "panel-silos", "panel-security"],
 };
 const ROLES = [

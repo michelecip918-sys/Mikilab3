@@ -1,0 +1,27 @@
+{
+  "summary": "Frontend RETEST after EmergencyCenter render-loop fix (useEffect deps -> [hb, lang]). All 6 requested flows verified successfully. No 'Maximum update depth exceeded' errors observed during entire session (loop fix confirmed). Backend not retested (per request).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Master console (some select/dropdown)", "issues": ["React hydration warning: <span> cannot be a child of <option>. Non-blocking but should be cleaned. Occurred inside PlantHeartbeatProvider subtree."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(Optional/minor) Fix hydration warning: remove <span> child from <option> element inside a <select> in master-console (React logs it under PlantHeartbeatProvider subtree). Not blocking, but pollutes console."
+  ],
+  "critical_code_review_comments": [
+    "EmergencyCenter.jsx useEffect dependency list correctly reduced to [hb, lang] with eslint-disable for tri (which is derived from lang). Loop reproduction fully eliminated in this run.",
+    "Consumers (DigitalTwin, AgvFleet, EmergencyCenter, TimelineTurno, SiloManager) all rely on the single PlantHeartbeatProvider polling - confirmed via successful updates without duplicate polling artifacts."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100% of requested flows"},
+  "test_credentials": "PIN 1985 + admin@mikilab.de / Mikilab2026! (both accepted, 200)",
+  "seed_data_creation": "Created 3 transient SOS events (TEST_OP, TEST_OP2, TEST_TL) — all acknowledged during the run; visible only in resolved history.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Master console requires: POST /api/admin-gate/verify {pin:1985} and POST /api/auth/login (admin@mikilab.de / Mikilab2026!) with credentials, then localStorage keys mikilab_admin_unlocked=1 and mikilab_plancia_role=tutto, then reload. Panels are collapsed by default — click [data-testid=panel-<name>-head] to expand. Heartbeat polling ~4s (allow >=6s after POST /api/bako/sos before checking emergency-active). Verified: emergency-idle -> emergency-active on SOS, sos-ack-<id> returns to idle; twin-canvas, agv-fleet, agv-agv-1/2/3 rendered from same heartbeat; silo-supplier-input/save persists via PUT/GET /api/bako/silo-supplier; timeline-turno populates timeline-ev-<i> from /api/bako/timeline and mikilab-tasks-updated event; sos-history-toggle reveals sos-history + sos-board-<shift> after acks. GET /api/bako/heartbeat returns keys: machines, global_level, global_stress, sos, agv, free_ovens. Zero 'Maximum update depth' errors — loop is fully resolved.",
+  "rca of the issue": "Previous render loop was caused by `tri` (derived function) included in EmergencyCenter useEffect deps, changing identity every render and re-triggering setState. Fix: deps reduced to [hb, lang] with eslint-disable-line — confirmed effective."
+}

@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Container, Droplets, PackagePlus, Clock } from "lucide-react";
+import { Container, Droplets, PackagePlus, Clock, Mail, Check } from "lucide-react";
 import { toast } from "sonner";
 import { bakoApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -11,16 +11,29 @@ export default function SiloManager() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [data, setData] = useState({ silos: [], reorder_count: 0 });
+  const [supplier, setSupplier] = useState("");
+  const [savedSup, setSavedSup] = useState("");
 
   const load = useCallback(async () => { try { setData(await bakoApi.silos()); } catch { /* */ } }, []);
   useEffect(() => { load(); const iv = setInterval(load, 8000); return () => clearInterval(iv); }, [load]);
+  useEffect(() => { bakoApi.siloSupplierGet().then((r) => { setSupplier(r.email || ""); setSavedSup(r.email || ""); }).catch(() => { /* */ }); }, []);
+
+  const saveSupplier = async () => {
+    try { await bakoApi.siloSupplierSet(supplier.trim()); setSavedSup(supplier.trim()); toast.success(tri("Email fornitore salvata.", "Lieferanten-E-Mail gespeichert.", "Supplier email saved.", "Email proveedor guardado.", "Email fournisseur enregistré.", "ایمیل تأمین‌کننده ذخیره شد.")); }
+    catch { toast.error(tri("Salvataggio non riuscito", "Speichern fehlgeschlagen", "Save failed", "Guardado fallido", "Échec", "ذخیره ناموفق")); }
+  };
 
   const microorder = async () => {
-    try { const r = await bakoApi.siloMicroorder(); toast.success(tri(`Micro-ordini generati: ${r.count}`, `Micro-Aufträge: ${r.count}`, `Micro-orders generated: ${r.count}`, `Micro-pedidos: ${r.count}`, `Micro-commandes: ${r.count}`, `میکرو سفارش: ${r.count}`)); load(); } catch { /* */ }
+    try { const r = await bakoApi.siloMicroorder(); toast.success(r.emailed ? tri(`Micro-ordini inviati a ${r.supplier}`, `Micro-Aufträge an ${r.supplier}`, `Micro-orders emailed to ${r.supplier}`, `Micro-pedidos a ${r.supplier}`, `Micro-commandes à ${r.supplier}`, `میکرو سفارش به ${r.supplier}`) : tri(`Micro-ordini generati: ${r.count}`, `Micro-Aufträge: ${r.count}`, `Micro-orders: ${r.count}`, `Micro-pedidos: ${r.count}`, `Micro-commandes: ${r.count}`, `میکرو سفارش: ${r.count}`)); load(); } catch { /* */ }
   };
 
   return (
     <div data-testid="silo-manager" className="space-y-2">
+      <div className="flex items-center gap-1.5 rounded-lg bg-[#0C1019] border border-[#5E8CA8]/30 px-2.5 py-1.5">
+        <Mail className="w-4 h-4 text-[#5E8CA8] shrink-0" />
+        <input data-testid="silo-supplier-input" type="email" value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={tri("Email fornitore (per micro-ordini)", "Lieferanten-E-Mail", "Supplier email (for micro-orders)", "Email proveedor", "Email fournisseur", "ایمیل تأمین‌کننده")} className="flex-1 min-w-0 bg-transparent text-[13px] text-white outline-none placeholder:text-[#4b6070]" />
+        {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#00F0FF]"><Check className="w-4 h-4" /></button>}
+      </div>
       {data.silos.map((s) => {
         const col = s.needs_reorder ? "#f43f5e" : s.fill_pct < 40 ? "#FFB800" : "#22c55e";
         return (

@@ -1,0 +1,38 @@
+{
+  "summary": "Backend all 3 new endpoints PASS (silo-supplier GET/PUT, heartbeat unified with machines+sos+agv+free_ovens+global_level, timeline events). FRONTEND BLOCKER: EmergencyCenter.jsx enters an infinite React re-render loop ('Maximum update depth exceeded' repeated 100s of times) as soon as the master console mounts under PlantHeartbeatProvider. The master-console UI never becomes interactive → cannot verify Timeline di Turno, Battito Impianto Unico integration, Silo supplier field, or role-layout regression via UI. Backend curl verifications: /api/bako/heartbeat returns keys [machines, global_level, global_stress, sos, agv, free_ovens] with 6 machines, 3 AGV, free_ovens=2. /api/bako/silo-supplier GET/PUT roundtrip persists email. /api/bako/timeline returns {events, count} with lotti+infornate.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {
+        "component": "EmergencyCenter.jsx",
+        "issue": "Infinite render loop: useEffect at line 30-40 has dependency array [hb, lang, tri] but `tri` is a fresh arrow function recreated every render (line 17). Each setEvents(newArrayRef) → re-render → new tri identity → effect re-fires → setEvents again → 'Maximum update depth exceeded'. Console spammed with the warning; master-console interactivity blocked (shift-briefing overlay cannot be dismissed cleanly because React keeps re-rendering).",
+        "selector": "[data-testid=\"emergency-center\"]",
+        "priority": "CRITICAL"
+      }
+    ],
+    "integration_issues": [
+      {"flow": "Master console (any panel: timeline, twin, emergency, agv, silos)", "issue": "Cannot be UI-tested until EmergencyCenter render loop is fixed. All heartbeat-driven components share the provider, but the loop is originated by EmergencyCenter alone.", "affected_selectors": ["[data-testid=\"master-console\"]", "[data-testid=\"panel-timeline\"]", "[data-testid=\"timeline-turno\"]", "[data-testid=\"emergency-active\"]", "[data-testid=\"twin-canvas\"]", "[data-testid=\"agv-fleet\"]", "[data-testid=\"silo-manager\"]"]}
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "FIX EmergencyCenter.jsx useEffect dependency: remove `tri` from the deps array (keep only [hb, lang]) OR memoize tri with useCallback/useMemo. Suggested minimal patch:\n  useEffect(() => { ... }, [hb, lang]);  // drop `tri` — it's captured lexically and doesn't need to trigger the effect\nAlternatively wrap tri: `const tri = useCallback((...args) => mkTri(lang)(...args), [lang]);` and keep it in deps.",
+    "Audit other newly-refactored consumers (DigitalTwin, AgvFleet, TimelineTurno) for the same anti-pattern. DigitalTwin uses [hb] only — OK. AgvFleet uses [hb, lang] — OK. TimelineTurno uses [load] with load memoized on [lang] — OK.",
+    "After fix, re-run full E2E: SOS create → emergency-active within ~4s → ack → timeline-ev-<i> red marker → supplier email save persistence → role fornaio hides panel-timeline → 390px no page overflow."
+  ],
+  "critical_code_review_comments": [
+    "EmergencyCenter.jsx L17,L40 — non-memoized `tri` in useEffect deps causes infinite render loop. Same anti-pattern must be checked wherever mkTri(lang) is called inside a component that uses tri in an effect dep list.",
+    "PlantHeartbeatContext.jsx is fine (empty deps + langRef). Good pattern.",
+    "TimelineTurno.jsx: correct memoization of load via useCallback([lang]); listens to window event `mikilab-tasks-updated` + 15s interval — good.",
+    "Backend: /api/bako/heartbeat aggregates 4 concerns in one payload — reduces polling load as intended."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "0% (blocked by render loop)"},
+  "test_credentials": "PIN 1985 · admin@mikilab.de / Mikilab2026! (from /app/memory/test_credentials.md)",
+  "seed_data_creation": "None persisted. Silo supplier email temporarily changed to supplier-test@example.com via curl, restored to fornitore@farine.it before finishing.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend already validated (heartbeat, silo-supplier, timeline all 200 OK with expected shapes). After main agent applies the useEffect deps fix in EmergencyCenter.jsx, the entire UI E2E flow (Timeline di Turno red marker on SOS, Battito Unico feeding emergency/twin/agv, Silo supplier email persistence, role-layout hides panel-timeline for fornaio/manutentore, 390px overflow) needs to be re-run. Use: gate /api/admin-gate/verify {pin:1985} + /api/auth/login admin creds, then localStorage set mikilab_admin_unlocked=1 & mikilab_plancia_role=tutto, reload. Close shift-briefing modal (data-testid=shift-briefing) via its close button before interacting with panels. HoloPanel body: click [data-testid=panel-<name>-head] to expand.",
+  "rca of the issue": "React infinite loop in /app/frontend/src/components/EmergencyCenter.jsx. Line 17 defines `const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);` — a NEW function reference each render. Line 40 lists it as effect dependency: `}, [hb, lang, tri]);`. Consequence: every state update inside the effect (setEvents on line 33) triggers a re-render, which recreates `tri`, which causes React to re-run the effect, which calls setEvents again with a freshly filtered array reference — even when the filtered content is identical the identity differs, so state 'changes' and the cycle repeats until React aborts with 'Maximum update depth exceeded'. Repro: authenticate + set localStorage mikilab_admin_unlocked=1 & mikilab_plancia_role=tutto and load the app → console floods with the warning within ~1s of master-console mount. Mitigation: remove tri from deps (safe: it only reads lang which is already a dep), or memoize tri via useCallback([lang])."
+}

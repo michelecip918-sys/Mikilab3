@@ -1,7 +1,7 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Truck, Volume2, BatteryMedium, Route } from "lucide-react";
 import { playTTS } from "@/lib/tts";
-import { bakoApi } from "@/lib/api";
+import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -10,19 +10,17 @@ const HEALTH_COL = { ok: "#22c55e", attenzione: "#FFB800", manutenzione: "#f43f5
 // v14 · Flotta AGV: routing autonomo + rilevamento acustico preventivo guasti.
 export default function AgvFleet() {
   const { lang } = useLang();
+  const hb = useHeartbeat();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
-  const [data, setData] = useState({ carts: [], alerts: [] });
+  const data = hb?.agv || { carts: [], alerts: [] };
   const spoken = useRef("");
 
-  const load = useCallback(async () => {
-    try {
-      const d = await bakoApi.agv();
-      setData(d);
-      if (d.alerts?.length && spoken.current !== d.alerts[0].cart) { spoken.current = d.alerts[0].cart; try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
-      if (!d.alerts?.length) spoken.current = "";
-    } catch { /* */ }
-  }, [lang]);
-  useEffect(() => { load(); const iv = setInterval(load, 5000); return () => clearInterval(iv); }, [load]);
+  useEffect(() => {
+    const d = hb?.agv;
+    if (!d) return;
+    if (d.alerts?.length && spoken.current !== d.alerts[0].cart) { spoken.current = d.alerts[0].cart; try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
+    if (!d.alerts?.length) spoken.current = "";
+  }, [hb, lang]);
 
   return (
     <div data-testid="agv-fleet" className="space-y-2">

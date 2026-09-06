@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { bakoApi } from "@/lib/api";
+import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -21,6 +21,7 @@ const STATION_POS = Object.fromEntries(MACHINES.map((m) => [m.id, m.pos]));
 
 export default function DigitalTwin() {
   const { lang } = useLang();
+  const hb = useHeartbeat();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const mountRef = useRef(null);
   const meshesRef = useRef({});
@@ -161,23 +162,13 @@ export default function DigitalTwin() {
     };
   }, []);
 
-  // --- Polling telemetria ---
+  // --- Battito unico: telemetria + AGV da un solo polling ---
   useEffect(() => {
-    let stop = false;
-    const load = () => bakoApi.telemetry(lang).then((d) => { if (!stop) { setTele(d.machines || {}); setGlobalLevel(d.global_level || "calmo"); } }).catch(() => { /* */ });
-    load();
-    const iv = setInterval(load, 4000);
-    return () => { stop = true; clearInterval(iv); };
-  }, [lang]);
-
-  // --- Polling flotta AGV (posizioni + salute acustica) ---
-  useEffect(() => {
-    let stop = false;
-    const load = () => bakoApi.agv().then((d) => { if (!stop) agvDataRef.current = d.carts || []; }).catch(() => { /* */ });
-    load();
-    const iv = setInterval(load, 5000);
-    return () => { stop = true; clearInterval(iv); };
-  }, []);
+    if (!hb) return;
+    setTele(hb.machines || {});
+    setGlobalLevel(hb.global_level || "calmo");
+    agvDataRef.current = hb.agv?.carts || [];
+  }, [hb]);
 
   // --- Applica la telemetria ai materiali dei macchinari ---
   useEffect(() => {

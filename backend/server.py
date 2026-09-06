@@ -10399,7 +10399,8 @@ async def bako_silo_microorder(admin: dict = Depends(require_admin)):
             await db.silos.update_one({"id": s["id"]}, {"$set": {"current_kg": round(float(s.get("capacity_kg") or 0) * 0.8, 0), "last_order_at": now_iso()}})
     # Invio email al fornitore (Resend). Destinatario: SILO_SUPPLIER_EMAIL o l'email del Capo.
     emailed = False
-    supplier = os.environ.get("SILO_SUPPLIER_EMAIL") or admin.get("email")
+    sup_doc = (await db.app_meta.find_one({"_key": "silo_supplier"}, {"_id": 0})) or {}
+    supplier = sup_doc.get("email") or os.environ.get("SILO_SUPPLIER_EMAIL") or admin.get("email")
     if created and RESEND_API_KEY and supplier:
         rows = "".join(f"<tr><td style='padding:6px 12px;border-bottom:1px solid #eee'>{o['silo']}</td><td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right'><b>{o['qty_kg']:g} kg</b></td></tr>" for o in created)
         html = (f"<div style='font-family:sans-serif;max-width:520px'><h2 style='color:#3f7cac'>MikiLab · Micro-ordine rifornimento silos</h2>"
@@ -10499,6 +10500,68 @@ async def bako_agv(lang: str = "it", admin: dict = Depends(require_admin)):
     spoken = alerts[0]["text"] if alerts else R("Flotta AGV regolare: nessun collo di bottiglia, acustica nei limiti.",
                                                 "AGV fleet nominal: no bottlenecks, acoustics within limits.")
     return {"carts": carts, "alerts": alerts, "alert_count": len(alerts), "spoken": spoken}
+
+
+# --- Email fornitore silos (configurabile) ---
+@api_router.get("/bako/silo-supplier")
+async def bako_silo_supplier_get(admin: dict = Depends(require_admin)):
+    doc = (await db.app_meta.find_one({"_key": "silo_supplier"}, {"_id": 0})) or {}
+    return {"email": doc.get("email") or os.environ.get("SILO_SUPPLIER_EMAIL") or ""}
+
+
+class SupplierReq(BaseModel):
+    email: str = Field("", max_length=160)
+
+
+@api_router.put("/bako/silo-supplier")
+async def bako_silo_supplier_set(body: SupplierReq, admin: dict = Depends(require_admin)):
+    await db.app_meta.update_one({"_key": "silo_supplier"}, {"$set": {"email": (body.email or "").strip()}}, upsert=True)
+    return {"ok": True, "email": (body.email or "").strip()}
+
+
+# --- Battito Impianto Unico: un solo endpoint live per telemetria + SOS + AGV + forni liberi ---
+@api_router.get("/bako/heartbeat")
+async def bako_heartbeat(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Un unico aggiornamento live che unisce telemetria macchinari, SOS attivi, flotta AGV e
+    forni liberi: alimenta 3D, Emergenze, Celle e AGV con un solo polling (più fluido/leggero)."""
+    tele = await bako_telemetry(lang, admin)
+    sos = await bako_sos_list(lang, admin)
+    agv = await bako_agv(lang, admin)
+    free_ovens = sum(1 for k, v in tele["machines"].items() if k.startswith("forno") and v["level"] != "alto")
+    return {
+        "machines": tele["machines"], "global_level": tele["global_level"], "global_stress": tele["global_stress"],
+        "sos": {"events": sos["events"], "count": sos["count"], "spoken": sos["spoken"]},
+        "agv": {"carts": agv["carts"], "alerts": agv["alerts"], "alert_count": agv["alert_count"], "spoken": agv["spoken"]},
+        "free_ovens": free_ovens,
+    }
+
+
+# --- Timeline di turno: lotti + infornate + SOS su un'unica linea del tempo ---
+@api_router.get("/bako/timeline")
+async def bako_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Eventi del turno (lotti di produzione, infornate previste, SOS) ordinati per orario,
+    per una timeline scorrevole unica."""
+    events = []
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    for tk in tasks:
+        st = tk.get("start")
+        if st:
+            events.append({"time": st, "type": "lotto", "label": tk.get("title", ""), "line": tk.get("line", "")})
+            # infornata stimata ~ start + 90'
+            try:
+                hh, mm = int(st[:2]), int(st[3:5])
+                total = (hh * 60 + mm + 90) % (24 * 60)
+                events.append({"time": f"{total // 60:02d}:{total % 60:02d}", "type": "infornata", "label": tk.get("title", ""), "line": tk.get("line", "")})
+            except Exception:
+                pass
+    sos = await db.sos_events.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    for s in sos:
+        ca = s.get("created_at") or ""
+        events.append({"time": ca[11:16], "type": "sos", "label": f"{s.get('operator','')} · {s.get('machine') or s.get('line') or ''}",
+                       "resolved": s.get("status") == "resolved"})
+    events = [e for e in events if e.get("time")]
+    events.sort(key=lambda e: e["time"])
+    return {"events": events, "count": len(events)}
 
 
 

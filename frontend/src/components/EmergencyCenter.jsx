@@ -4,6 +4,7 @@ import { AlertOctagon, Check, Wrench, Loader2, ShieldAlert, History, Trophy } fr
 import { toast } from "sonner";
 import { bakoApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
+import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -12,6 +13,7 @@ import { mkTri } from "@/i18n/triMaps";
 // manutenzione in tempo reale (Claude) per la macchina in allarme.
 export default function EmergencyCenter() {
   const { lang } = useLang();
+  const hb = useHeartbeat();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [events, setEvents] = useState([]);
   const [guides, setGuides] = useState({});
@@ -19,30 +21,29 @@ export default function EmergencyCenter() {
   const [hist, setHist] = useState(null);
   const [showHist, setShowHist] = useState(false);
   const seen = useRef(new Set());
+  const acked = useRef(new Set());
 
   const loadHist = useCallback(async () => { try { setHist(await bakoApi.sosHistory(lang)); } catch { /* */ } }, [lang]);
   useEffect(() => { loadHist(); }, [loadHist]);
 
-  const load = useCallback(async () => {
-    try {
-      const d = await bakoApi.sosList(lang);
-      const evs = d.events || [];
-      setEvents(evs);
-      // Annuncio vocale SOLO per SOS nuovi (una volta).
-      const fresh = evs.filter((e) => !seen.current.has(e.id));
-      if (fresh.length) {
-        fresh.forEach((e) => seen.current.add(e.id));
-        toast.error(tri("SOS dal reparto!", "SOS aus der Produktion!", "SOS from the floor!", "¡SOS del taller!", "SOS de la production !", "SOS از تولید!"), { duration: 8000 });
-        if (d.spoken) { try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
-      }
-    } catch { /* */ }
-  }, [lang, tri]);
-
-  useEffect(() => { load(); const iv = setInterval(load, 5000); return () => clearInterval(iv); }, [load]);
+  // Battito unico: gli SOS attivi arrivano dall'heartbeat (un solo polling).
+  useEffect(() => {
+    if (!hb?.sos) return;
+    const evs = (hb.sos.events || []).filter((e) => !acked.current.has(e.id));
+    setEvents(evs);
+    const fresh = evs.filter((e) => !seen.current.has(e.id));
+    if (fresh.length) {
+      fresh.forEach((e) => seen.current.add(e.id));
+      toast.error(tri("SOS dal reparto!", "SOS aus der Produktion!", "SOS from the floor!", "¡SOS del taller!", "SOS de la production !", "SOS از تولید!"), { duration: 8000 });
+      if (hb.sos.spoken) { try { playTTS(hb.sos.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hb, lang]);
 
   const ack = async (id) => {
+    acked.current.add(id);
     setEvents((es) => es.filter((e) => e.id !== id));
-    try { await bakoApi.sosAck(id); } catch { /* */ } load(); loadHist();
+    try { await bakoApi.sosAck(id); } catch { /* */ } loadHist();
   };
 
   const fmtDur = (s) => (s == null ? "—" : s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`);
