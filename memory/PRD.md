@@ -4386,3 +4386,10 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Controllo ambientale predittivo**: `POST /api/lab/environment` — lievitazione con Q10≈2 (±8°C raddoppia/dimezza), idratazione ±4% su umidità. UI panel-elite.
 - 11 HoloPanel Master (aggiunti panel-elite e panel-security). Test: iteration_196 backend 9/9, frontend 100%.
 - **PENDING — Fase B**: Integrazione Bilance/PLC (Web Serial + Web Bluetooth + simulazione). Poi Redeploy (chiedere all'utente, costo ECU).
+
+## v44 (2026-06) — Fase B: Bilance/PLC + Food Cost 1-clic + Ambiente automatico
+- **Bilance & PLC (Web Serial + Web Bluetooth + simulazione)**: `lib/hardwareBridge.js` (ScaleBridge, OvenPLCBridge, parseWeight, hwSupport). UI `components/console/HardwareBridge.jsx` (panel-hardware): peso live con semaforo verde/ambra/rosso vs grammatura, ciclo termico forno (temp/min/vapore) inviato all'avvio. Fallback simulazione se niente hardware/browser non supporta.
+- **Ricetta → Food Cost 1-clic**: selettore `fc-recipe-select` in EliteTools → auto-compila grammi (flour/water/salt/sourdough/extra) e calcola costo/margine.
+- **Ambiente automatico**: `GET /api/lab/weather-now` (Open-Meteo current) + pulsante `env-auto` → applica temp/umidità reali e ricalcola lievitazione/idratazione.
+- 12 HoloPanel Master. Test: iteration_197 backend 6/6, frontend 100%, 0 bug.
+- **Redeploy** richiesto dall'utente su mikilab.de (conferma costo ECU).

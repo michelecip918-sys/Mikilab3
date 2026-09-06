@@ -618,6 +618,7 @@ export const foodCostApi = {
 // Controllo ambientale predittivo (lievitazione/idratazione).
 export const envApi = {
   compute: (payload) => api.post(`/lab/environment`, payload).then((r) => r.data),
+  weatherNow: () => api.get(`/lab/weather-now`).then((r) => r.data),
 };
 
 // Anti-Fooling · Voice-Print Liveness (frase-sfida dal vivo).

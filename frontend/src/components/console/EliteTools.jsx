@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { foodCostApi, envApi } from "@/lib/api";
+import { useState, useEffect } from "react";
+import { foodCostApi, envApi, recipesApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Calculator, Thermometer } from "lucide-react";
+import { Calculator, Thermometer, CloudSun } from "lucide-react";
 
 const Field = ({ label, value, onChange, unit }) => (
   <label className="flex flex-col gap-1">
@@ -23,8 +23,28 @@ export default function EliteTools() {
   const [fcRes, setFcRes] = useState(null);
   const upd = (k) => (v) => setFc((s) => ({ ...s, [k]: v }));
   const runFc = async () => {
-    const payload = Object.fromEntries(Object.entries(fc).map(([k, v]) => [k, Number(v) || 0]));
+    const payload = Object.fromEntries(Object.entries(fc).map(([k, v]) => [k, k === "extras" ? v : Number(v) || 0]));
     try { setFcRes(await foodCostApi.compute(payload)); } catch (e) { /* */ }
+  };
+  // Ricetta → Food Cost 1-clic: carica ricette salvate e auto-compila i grammi.
+  const [recipes, setRecipes] = useState([]);
+  useEffect(() => { recipesApi.list("mikilab").then((r) => setRecipes(Array.isArray(r) ? r : (r.recipes || []))).catch(() => { /* */ }); }, []);
+  const pickRecipe = async (id) => {
+    const rec = recipes.find((x) => String(x.id) === String(id));
+    if (!rec) return;
+    const extras = (rec.extra_ingredients || []).map((e) => ({ name: e.name || e.key || "extra", grams: Number(e.grams || e.grammi || 0) }));
+    const next = {
+      flour_grams: Number(rec.flour_grams || 0),
+      water_grams: Number(rec.water_grams || 0),
+      salt_grams: Number(rec.salt_grams || 0),
+      sourdough_grams: Number(rec.sourdough_grams || 0),
+      yeast_grams: Number(rec.yeast_grams || fc.yeast_grams || 0),
+      pieces: Number(rec.pieces || fc.pieces || 0),
+      sell_price_piece: fc.sell_price_piece,
+      extras,
+    };
+    setFc(next);
+    try { setFcRes(await foodCostApi.compute(Object.fromEntries(Object.entries(next).map(([k, v]) => [k, k === "extras" ? v : Number(v) || 0])))); } catch (e) { /* */ }
   };
   // Environment
   const [env, setEnv] = useState({ base_proof_hours: 3, base_hydration_percent: 70, temp_c: 24, humidity_pct: 55 });
@@ -40,6 +60,16 @@ export default function EliteTools() {
       {/* Food cost */}
       <div>
         <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-3"><Calculator className="w-3.5 h-3.5" /> {tri("Food cost al grammo", "Food Cost pro Gramm", "Food cost per gram", "Food cost por gramo", "Coût matière au gramme", "بهای مواد بر گرم")}</p>
+        {recipes.length > 0 && (
+          <div className="mb-3">
+            <span className="text-[10px] uppercase tracking-wider text-[#7d97ac]">{tri("Da ricetta salvata (1-clic)", "Aus gespeichertem Rezept", "From saved recipe (1-click)", "Desde receta guardada", "Depuis recette", "از دستور ذخیره‌شده")}</span>
+            <select data-testid="fc-recipe-select" onChange={(e) => pickRecipe(e.target.value)} defaultValue=""
+              className="mt-1 w-full bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#5E8CA8] outline-none">
+              <option value="" disabled>{tri("Scegli una ricetta…", "Rezept wählen…", "Choose a recipe…", "Elige una receta…", "Choisir une recette…", "یک دستور انتخاب کن…")}</option>
+              {recipes.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
+            </select>
+          </div>
+        )}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-3">
           <Field label={tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")} value={fc.flour_grams} onChange={upd("flour_grams")} unit="g" />
           <Field label={tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")} value={fc.water_grams} onChange={upd("water_grams")} unit="g" />
@@ -77,6 +107,7 @@ export default function EliteTools() {
           <Field label={tri("Temperatura", "Temperatur", "Temperature", "Temperatura", "Température", "دما")} value={env.temp_c} onChange={updE("temp_c")} unit="°C" />
           <Field label={tri("Umidità", "Feuchte", "Humidity", "Humedad", "Humidité", "رطوبت")} value={env.humidity_pct} onChange={updE("humidity_pct")} unit="%" />
           <button data-testid="env-run" onClick={runEnv} className="self-end h-[38px] rounded-lg bg-[#5E8CA8]/20 border border-[#5E8CA8]/50 text-[#9fc3dc] font-bold text-sm active:scale-95 transition-all">{tri("Suggerisci", "Vorschlag", "Suggest", "Sugerir", "Suggérer", "پیشنهاد")}</button>
+          <button data-testid="env-auto" onClick={async () => { try { const w = await envApi.weatherNow(); if (w && w.ok) { const ne = { ...env, temp_c: w.temp_c, humidity_pct: w.humidity_pct }; setEnv(ne); const p = Object.fromEntries(Object.entries(ne).map(([k, v]) => [k, Number(v) || 0])); setEnvRes(await envApi.compute(p)); } } catch (e) { /* */ } }} className="self-end h-[38px] inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm active:scale-95 transition-all"><CloudSun className="w-4 h-4" /> {tri("Auto meteo", "Auto Wetter", "Auto weather", "Auto clima", "Auto météo", "خودکار هوا")}</button>
         </div>
         {envRes && (
           <div data-testid="env-result" className="bg-[#0C1019]/70 border border-[#5E8CA8]/25 rounded-lg p-3">

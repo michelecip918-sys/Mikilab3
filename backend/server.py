@@ -9517,6 +9517,23 @@ async def lab_environment(body: EnvReq, admin: dict = Depends(require_admin)):
             "hydration_delta": hyd_delta, "note": note_it}
 
 
+@api_router.get("/lab/weather-now")
+async def lab_weather_now(admin: dict = Depends(require_admin)):
+    """Temperatura e umidità correnti (Open-Meteo) per l'ambiente automatico."""
+    try:
+        async with httpx.AsyncClient(timeout=12) as client:
+            r = await client.get("https://api.open-meteo.com/v1/forecast", params={
+                "latitude": _CLIMATE_LAT, "longitude": _CLIMATE_LON,
+                "current": "temperature_2m,relative_humidity_2m", "timezone": "Europe/Berlin"})
+            j = r.json()
+        cur = j.get("current", {}) or {}
+        return {"ok": True, "temp_c": cur.get("temperature_2m"), "humidity_pct": cur.get("relative_humidity_2m"),
+                "location": "Stoccarda (Stuttgart)", "at": cur.get("time")}
+    except Exception as e:
+        logging.warning(f"weather-now failed: {e}")
+        return {"ok": False, "error": "meteo non raggiungibile"}
+
+
 
 # ---------------------------------------------------------------------------
 # Community B2B — bacheca condivisa (consigli, foto, ricette) tra panettieri
