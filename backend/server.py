@@ -110,9 +110,10 @@ GATE_TTL = int(os.environ.get("GATE_TTL_SECONDS", str(30 * 86400)))
 _GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/")
 
 
-def issue_gate_token() -> str:
+def issue_gate_token(ttl_seconds: int = None) -> str:
+    ttl = int(ttl_seconds or GATE_TTL)
     now = datetime.now(timezone.utc)
-    return _jwt.encode({"purpose": "gate", "iat": now, "exp": now + timedelta(seconds=GATE_TTL), "iss": "mikilab-gate"}, GATE_SECRET, algorithm="HS256")
+    return _jwt.encode({"purpose": "gate", "iat": now, "exp": now + timedelta(seconds=ttl), "iss": "mikilab-gate"}, GATE_SECRET, algorithm="HS256")
 
 
 def _gate_valid(token: str) -> bool:
@@ -3266,7 +3267,16 @@ async def bako_proactive(lang: str = "it", admin: dict = Depends(require_admin))
     """BakoMix proattivo: rileva scorte sotto soglia, linee senza caposquadra e violazioni ArbZG di oggi."""
     R = lambda i, e: (i if not (lang or "it").startswith("en") else e)  # noqa: E731
     alerts = []
-    # 1) Scorte sotto soglia
+    # 0) Avviso INTRUSIONE: troppi PIN Master sbagliati di recente → BakoMix avvisa il Capo a voce.
+    try:
+        cutoff = (datetime.now(timezone.utc) - timedelta(minutes=15)).isoformat()
+        fails = await db.pin_access_log.count_documents({"kind": "master", "ok": False, "at": {"$gte": cutoff}})
+        if fails >= 3:
+            alerts.append({"id": f"intrusion-{cutoff[:16]}", "kind": "intrusion", "severity": "alert",
+                           "text": R(f"Attenzione Capo: {fails} tentativi errati del PIN Master negli ultimi 15 minuti. Possibile accesso non autorizzato.",
+                                     f"Capo alert: {fails} wrong Master PIN attempts in the last 15 minutes. Possible unauthorized access.")})
+    except Exception:
+        pass
     try:
         for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
             mn = float(s.get("min_kg") or 0)
@@ -3485,25 +3495,41 @@ def _chain_hash(prev_hash: str, payload: dict) -> str:
 
 
 class TimeclockReq(BaseModel):
-    worker: str
+    worker: str = ""
     action: str  # in | out | break_start | break_end
+    pin: Optional[str] = None  # PIN personale operatore → timbratura tracciabile al singolo
 
 
 @api_router.post("/compliance/timeclock")
-async def compliance_timeclock(body: TimeclockReq):
-    """ArbZG: timbratura elettronica TAMPER-PROOF (catena di hash) inizio/fine/pausa."""
+async def compliance_timeclock(body: TimeclockReq, request: Request):
+    """ArbZG: timbratura elettronica TAMPER-PROOF (catena di hash) inizio/fine/pausa.
+    Se fornito un PIN personale operatore, la timbratura è attribuita e verificata al singolo."""
     action = (body.action or "").strip().lower()
     if action not in {"in", "out", "break_start", "break_end"}:
         raise HTTPException(status_code=400, detail="Azione non valida")
-    worker = (body.worker or "").strip() or "operatore"
+    verified = False
+    worker = (body.worker or "").strip()
+    pin = _norm_pin(body.pin or "")
+    if pin:
+        resolved = None
+        async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
+            if _check_pw(pin, d.get("hash", "")):
+                resolved = d.get("name")
+                break
+        await _log_access("operator", _client_ip(request), bool(resolved), resolved)
+        if not resolved:
+            raise HTTPException(status_code=401, detail="PIN operatore non valido")
+        worker = resolved
+        verified = True
+    worker = worker or "operatore"
     last = await db.compliance_timelog.find_one({}, {"_id": 0}, sort=[("seq", -1)])
     seq = (last["seq"] + 1) if last else 1
     prev_hash = last["hash"] if last else "genesis"
-    payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso()}
+    payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso(), "verified": verified}
     h = _chain_hash(prev_hash, payload)
     entry = {"id": str(uuid.uuid4()), **payload, "prev_hash": prev_hash, "hash": h}
     await db.compliance_timelog.insert_one(dict(entry))
-    return {"ok": True, "seq": seq, "hash": h, "action": action, "worker": worker}
+    return {"ok": True, "seq": seq, "hash": h, "action": action, "worker": worker, "verified": verified}
 
 
 def _arbzg_summary(entries):
@@ -9305,9 +9331,30 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
         ok = bool(env_pin) and bool(p) and (p == env_pin)
     await _log_access("master", _client_ip(request), bool(ok))
     if ok:
-        # Rilascia il cookie firmato: da qui in poi il browser può aprire MikiLab.
-        response.set_cookie(GATE_COOKIE, issue_gate_token(), httponly=True, secure=True, samesite="lax", path="/", max_age=GATE_TTL)
+        # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.
+        cfg = await db.app_meta.find_one({"_key": "gate_config"}, {"_id": 0})
+        ttl_days = int((cfg or {}).get("ttl_days") or (GATE_TTL // 86400))
+        ttl_days = max(1, min(ttl_days, 365))
+        ttl = ttl_days * 86400
+        response.set_cookie(GATE_COOKIE, issue_gate_token(ttl), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
     return {"ok": bool(ok)}
+
+
+@api_router.get("/admin-gate/config")
+async def admin_gate_config_get(admin: dict = Depends(require_admin)):
+    cfg = await db.app_meta.find_one({"_key": "gate_config"}, {"_id": 0, "_key": 0})
+    return {"ttl_days": int((cfg or {}).get("ttl_days") or (GATE_TTL // 86400))}
+
+
+class GateConfigReq(BaseModel):
+    ttl_days: int
+
+
+@api_router.put("/admin-gate/config")
+async def admin_gate_config_set(body: GateConfigReq, admin: dict = Depends(require_admin)):
+    d = max(1, min(int(body.ttl_days or 30), 365))
+    await db.app_meta.update_one({"_key": "gate_config"}, {"$set": {"_key": "gate_config", "ttl_days": d, "updated_at": now_iso()}}, upsert=True)
+    return {"ok": True, "ttl_days": d}
 
 
 class OperatorPinSet(BaseModel):
@@ -9368,6 +9415,106 @@ async def access_log(admin: dict = Depends(require_admin), limit: int = 120):
     n = min(max(int(limit or 120), 1), 300)
     docs = await db.pin_access_log.find({}, {"_id": 0}).sort("at", -1).to_list(n)
     return {"entries": docs}
+
+
+# ---------------------------------------------------------------------------
+# FOOD COST DINAMICO & MARGINI AL GRAMMO (pannello admin del Capo)
+# ---------------------------------------------------------------------------
+def _price_defaults():
+    return {"flour": 1.2, "salt": GEN_PRICE_SALT_KG, "yeast": GEN_PRICE_YEAST_KG, "sourdough": GEN_PRICE_SOURDOUGH_KG, **GEN_PRICE_KG}
+
+
+@api_router.get("/lab/ingredient-prices")
+async def ingredient_prices_get(admin: dict = Depends(require_admin)):
+    doc = await db.app_meta.find_one({"_key": "ingredient_prices"}, {"_id": 0, "_key": 0})
+    merged = {**_price_defaults(), **((doc or {}).get("prices") or {})}
+    return {"prices": merged, "custom": (doc or {}).get("prices") or {}}
+
+
+class IngredientPricesReq(BaseModel):
+    prices: dict
+
+
+@api_router.put("/lab/ingredient-prices")
+async def ingredient_prices_set(body: IngredientPricesReq, admin: dict = Depends(require_admin)):
+    clean = {str(k): float(v) for k, v in (body.prices or {}).items() if v is not None}
+    await db.app_meta.update_one({"_key": "ingredient_prices"}, {"$set": {"_key": "ingredient_prices", "prices": clean, "updated_at": now_iso()}}, upsert=True)
+    return {"ok": True, "prices": clean}
+
+
+class FoodCostReq(BaseModel):
+    flour_grams: float = 0
+    water_grams: float = 0
+    salt_grams: float = 0
+    sourdough_grams: float = 0
+    yeast_grams: float = 0
+    extras: List[dict] = []          # [{name, grams, price_kg?}]
+    pieces: int = 0
+    sell_price_piece: Optional[float] = None
+
+
+@api_router.post("/lab/food-cost")
+async def food_cost(body: FoodCostReq, admin: dict = Depends(require_admin)):
+    doc = await db.app_meta.find_one({"_key": "ingredient_prices"}, {"_id": 0})
+    prices = {**_price_defaults(), **((doc or {}).get("prices") or {})}
+
+    def c(grams, price_kg):
+        return round((float(grams or 0) / 1000.0) * float(price_kg or 0), 4)
+
+    breakdown = {
+        "farina": c(body.flour_grams, prices["flour"]),
+        "sale": c(body.salt_grams, prices["salt"]),
+        "lievito": c(body.yeast_grams, prices["yeast"]),
+        "lievito_madre": c(body.sourdough_grams, prices["sourdough"]),
+    }
+    extras_cost = 0.0
+    for ex in (body.extras or []):
+        pk = ex.get("price_kg")
+        if pk is None:
+            pk = prices.get(str(ex.get("name", "")).lower(), 3.0)
+        val = c(ex.get("grams", 0), pk)
+        extras_cost += val
+        breakdown[f"extra_{ex.get('name', 'x')}"] = val
+    material_cost = round(sum(breakdown.values()) + 0.0, 4)
+    total_dough_g = sum([body.flour_grams, body.water_grams, body.salt_grams, body.sourdough_grams, body.yeast_grams] + [float(e.get("grams", 0) or 0) for e in (body.extras or [])])
+    cost_per_gram = round(material_cost / total_dough_g, 5) if total_dough_g else 0
+    cost_per_kg = round(cost_per_gram * 1000, 3)
+    cost_per_piece = round(material_cost / body.pieces, 4) if body.pieces else None
+    margin = None
+    food_cost_pct = None
+    if body.sell_price_piece and body.pieces:
+        revenue = float(body.sell_price_piece) * body.pieces
+        margin = round(revenue - material_cost, 2)
+        food_cost_pct = round((material_cost / revenue) * 100, 1) if revenue else None
+    return {"material_cost": material_cost, "total_dough_g": round(total_dough_g, 1),
+            "cost_per_gram": cost_per_gram, "cost_per_kg": cost_per_kg, "cost_per_piece": cost_per_piece,
+            "margin": margin, "food_cost_pct": food_cost_pct, "breakdown": breakdown}
+
+
+# ---------------------------------------------------------------------------
+# CONTROLLO AMBIENTALE PREDITTIVO — corregge lievitazione e idratazione
+# ---------------------------------------------------------------------------
+class EnvReq(BaseModel):
+    base_proof_hours: float = 3.0
+    base_hydration_percent: float = 70.0
+    temp_c: float = 24.0
+    humidity_pct: float = 55.0
+    reference_temp_c: float = 24.0
+
+
+@api_router.post("/lab/environment")
+async def lab_environment(body: EnvReq, admin: dict = Depends(require_admin)):
+    # Attività del lievito ~ raddoppia ogni +8°C (Q10≈2). Più caldo → lievitazione più breve.
+    factor = 2 ** ((body.reference_temp_c - body.temp_c) / 8.0)
+    adj_proof = round(max(0.25, body.base_proof_hours * factor), 2)
+    # Idratazione: aria più secca (bassa umidità) → farina più assetata → +acqua; umida → -acqua (±4%).
+    hyd_delta = round(((55.0 - body.humidity_pct) / 55.0) * 4.0, 1)
+    adj_hyd = round(min(95.0, max(50.0, body.base_hydration_percent + hyd_delta)), 1)
+    note_it = (f"A {body.temp_c:g}°C la lievitazione va {'accorciata' if factor < 1 else 'allungata'} a ~{adj_proof} h "
+               f"(base {body.base_proof_hours:g} h). Umidità {body.humidity_pct:g}% → idratazione consigliata {adj_hyd:g}% "
+               f"({'+' if hyd_delta >= 0 else ''}{hyd_delta}%).")
+    return {"adjusted_proof_hours": adj_proof, "hydration_percent": adj_hyd, "temp_factor": round(factor, 3),
+            "hydration_delta": hyd_delta, "note": note_it}
 
 
 

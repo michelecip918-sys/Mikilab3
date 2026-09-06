@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { operatorPinsApi, accessLogApi } from "@/lib/api";
+import { operatorPinsApi, accessLogApi, gateConfigApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Trash2, UserPlus, ShieldCheck, ShieldAlert } from "lucide-react";
+import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock } from "lucide-react";
 
 // Zona Capo: gestione PIN personali operatore + Registro Accessi (tentativi PIN).
 export default function AdminSecurity() {
@@ -13,12 +13,17 @@ export default function AdminSecurity() {
   const [pin, setPin] = useState("");
   const [log, setLog] = useState([]);
   const [busy, setBusy] = useState(false);
+  const [ttl, setTtl] = useState(30);
+  const [ttlSaved, setTtlSaved] = useState(false);
 
   const load = () => {
     operatorPinsApi.list().then((d) => setOps(d.operators || [])).catch(() => { /* */ });
     accessLogApi.list(80).then((d) => setLog(d.entries || [])).catch(() => { /* */ });
+    gateConfigApi.get().then((d) => setTtl(d.ttl_days || 30)).catch(() => { /* */ });
   };
   useEffect(() => { load(); }, []);
+
+  const saveTtl = async () => { try { await gateConfigApi.set(Number(ttl) || 30); setTtlSaved(true); setTimeout(() => setTtlSaved(false), 2000); } catch (e) { /* */ } };
 
   const add = async () => {
     if (!name.trim() || pin.length !== 4) return;
@@ -32,6 +37,17 @@ export default function AdminSecurity() {
 
   return (
     <div className="space-y-6" data-testid="admin-security">
+      {/* Scadenza cancello Master configurabile */}
+      <div data-testid="gate-ttl-config" className="flex flex-wrap items-end gap-2 bg-[#0C1019]/60 border border-[#5E8CA8]/25 rounded-xl p-3">
+        <div className="flex-1 min-w-[180px]">
+          <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-1"><Clock className="w-3.5 h-3.5" /> {tri("Scadenza cancello Master", "Master-Gate-Ablauf", "Master gate expiry", "Caducidad de la puerta", "Expiration de la porte", "انقضای دروازه")}</p>
+          <p className="text-[11px] text-[#64748b]">{tri("Ogni quanti giorni ri-chiedere il PIN Master sui dispositivi.", "Nach wie vielen Tagen der Master-PIN erneut abgefragt wird.", "How many days before re-asking the Master PIN on devices.", "Cada cuántos días volver a pedir el PIN Master.", "Tous les combien de jours redemander le PIN Master.", "هر چند روز پین مستر دوباره پرسیده شود.")}</p>
+        </div>
+        <input data-testid="gate-ttl-input" type="number" min="1" max="365" value={ttl} onChange={(e) => setTtl(e.target.value)} className="w-24 bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2 text-sm text-white text-center focus:border-[#5E8CA8] outline-none" />
+        <span className="text-xs text-[#7d97ac] pb-2">{tri("giorni", "Tage", "days", "días", "jours", "روز")}</span>
+        <button data-testid="gate-ttl-save" onClick={saveTtl} className="px-4 py-2 rounded-lg bg-[#5E8CA8]/20 border border-[#5E8CA8]/50 text-[#9fc3dc] font-bold text-sm active:scale-95 transition-all">{ttlSaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓", "Guardado ✓", "Enregistré ✓", "ذخیره شد ✓") : tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
+      </div>
+
       {/* PIN personali operatore */}
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-2">{tri("PIN personali operatore", "Persönliche Bediener-PINs", "Personal operator PINs", "PIN personales de operario", "PIN personnels opérateur", "پین‌های شخصی اپراتور")}</p>

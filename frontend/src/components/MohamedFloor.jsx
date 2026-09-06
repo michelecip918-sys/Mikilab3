@@ -12,6 +12,7 @@ import HeadsetChannel from "@/components/HeadsetChannel";
 import LivenessGate from "@/components/LivenessGate";
 import FloorCrossCheck from "@/components/FloorCrossCheck";
 import ComplianceBeacon from "@/components/ComplianceBeacon";
+import OperatorClock from "@/components/OperatorClock";
 import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -107,6 +108,7 @@ export default function MohamedFloor() {
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-4"><SequenceGuard /></div>
       <div className="w-full mb-2"><ComplianceBeacon compact /></div>
+      <div className="w-full"><OperatorClock /></div>
       <div className="w-full"><TeamTasks operatorName={role} /></div>
       <div className="w-full"><DoughTimer /></div>
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>

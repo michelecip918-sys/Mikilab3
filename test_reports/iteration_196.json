@@ -1,0 +1,30 @@
+{
+  "summary": "Iter 196 — MikiLab Pro FASE A: FOOD COST + AMBIENTE PREDITTIVO + SCADENZA CANCELLO CONFIGURABILE + TIMBRATURA PIN OPERATORE + AVVISO INTRUSIONE + SILENZIO EFFETTI. Backend: 9/9 pytest PASS (food-cost, environment cold/hot, gate-config GET/PUT + clamp + require_admin, timeclock valid/invalid/no-pin, intrusion alert). Frontend: tutti i pannelli Master presenti e funzionanti — panel-elite → fc-run mostra €1.54/infornata, per-gram €0.0008, per-piece €0.077, food cost 5.1%, margin €28.46; env-run @18°C/40% → proof 5.05h (ALLUNGATA), idratazione 71.1% (ALZATA), nota in italiano correttamente formata. panel-security → gate-ttl-input+gate-ttl-save salva (14 giorni verificato via /api/admin-gate/config), badge 'Saved ✓' comparso; 39 righe log-row-* nel registro accessi. OperatorClock nel floor (Mohamed → role-impastatore): con PIN 1234 (Sara) mostra 'Clock-in · Sara ✓' (verified=true); PIN 0000 mostra 'Invalid operator PIN.' (401). AVVISO INTRUSIONE VISIBILE NELLA UI in fondo pagina come banner BakoMix: 'Capo alert: 3 wrong Master PIN attempts in the last 15 minutes. Possible unauthorized access.' — TTS voice attivabile, effetti sonori silenziati (playSfx no-op). Estetica dark cyan/amber senza viola, 11 HoloPanel Master visibili (Order & Plan, Master Recipes, Warehouse & Stock, Smart Planner, Extra Orders, Plant Radar, EU/DE Compliance, Production PIN, Reports & Documents, Food Cost & Environment, Security & Access). Nessun crash, gate stabile su fresh visit (loop fix confermato).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "panel-elite / EliteTools food cost", "issues": ["Il campo FLOUR appare visivamente vuoto nella scheda ma il valore di stato (1000g) viene comunque usato dal calcolo — piccolo mismatch UX. Non bloccante."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter196_fase_a.py",
+    "/app/test_reports/pytest/iter196.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Backend /lab/food-cost, /lab/environment, /admin-gate/config (GET/PUT con clamp 1–365), /compliance/timeclock (pin→hash bcrypt + _log_access + require_admin non necessario per timeclock ma controllo pin), /bako/proactive intrusion alert (>=3 master-fail/15min) tutti correttamente implementati.",
+    "issue_gate_token(ttl) rispetta il ttl_days configurato dal Capo (Set-Cookie max_age=ttl).",
+    "EliteTools.jsx: campi controlled con Number()||0 coalescing corretto; risultati mostrati solo quando fcRes/envRes definiti; testid coerenti (fc-run/fc-result, env-run/env-result).",
+    "AdminSecurity.jsx: gate-ttl-config, op-add-btn, op-row-*, op-del-*, log-row-* tutti correttamente cablati con API; ttlSaved toast temporizzato 2s.",
+    "OperatorClock.jsx: clock-pin-input filtra a 4 cifre, disabilita bottoni se pin!=4; clock-msg mostra 'Clock-in · <NAME> ✓' con NOME risolto (verified=true) — traceabilità al singolo confermata."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter196_fase_a.py"],
+  "success_rate": {"backend": "100% (9/9)", "frontend": "100%"},
+  "test_credentials": "Gate PIN 1985; Admin admin@mikilab.de / Mikilab2026!; Operator PIN Sara=1234, Youssef=(esistente); Production PIN 1985",
+  "seed_data_creation": "TEST_Iter196Op creato e cancellato via pytest fixture; ttl_days ripristinato al valore originale; Sara PIN re-set idempotente a 1234.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "FASE A completa e stabile. Backend + Frontend integrati. Tutti i pannelli Master 11 presenti, gate stabile su fresh visit, effetti sonori muti (TTS OK). Per re-testare: (1) gate 1985, (2) login admin, (3) apri panel-elite → fc-run + env-run @18°C, (4) apri panel-security → salva gate-ttl-input=14 → verifica /api/admin-gate/config, (5) switch operatore-mohamed → sblocca floor con 1985 → scegli role-impastatore → operator-clock con pin 1234 → clock-msg mostra 'Clock-in · Sara ✓'. Rate limit /admin-gate/verify 8/300s — attendere 5min tra i run del test intrusione."
+}

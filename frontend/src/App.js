@@ -61,6 +61,7 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
+import EliteTools from "@/components/console/EliteTools";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -269,6 +270,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-docs" accent="#5E8CA8" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
                       <DocsDownload />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-elite" accent="#5E8CA8" beacon="#7DD3FC" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
+                      <EliteTools />
                     </HoloPanel>
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />

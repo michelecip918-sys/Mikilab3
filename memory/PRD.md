@@ -4376,3 +4376,13 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - Frontend: `components/console/AdminSecurity.jsx` in HoloPanel `panel-security` (zona Master, solo admin) — gestione PIN operatore + Registro Accessi.
 - Test: iteration_194 backend 16/16; iteration_195 frontend 100% (loop risolto, flusso completo verde).
 - Credenziali: vedi /app/memory/test_credentials.md.
+
+## v43 (2026-06) — Fase A "livello mondiale"
+- **Timbratura col PIN operatore**: `POST /api/compliance/timeclock` accetta `pin` → risolve il nome via operator_pins (bcrypt), attribuisce e marca `verified`, logga l'accesso. UI `components/OperatorClock.jsx` nel Floor (clock-in/break/out con PIN personale).
+- **Avviso intrusione vocale**: `/api/bako/proactive` genera alert `kind='intrusion'` severity='alert' se ≥3 tentativi PIN Master errati in 15 min (da pin_access_log); l'orb BakoMix lo mostra e lo pronuncia (TTS).
+- **Scadenza cancello configurabile**: `GET/PUT /api/admin-gate/config {ttl_days}` (require_admin, clamp 1–365); `issue_gate_token(ttl)` e cookie max_age usano il TTL scelto dal Capo. UI in panel-security (gate-ttl-input/save).
+- **Silenzio effetti sonori**: `lib/uiSounds.playSfx` reso no-op (nessun beep/notifica). La voce TTS di BakoMix resta attiva.
+- **Food Cost dinamico al grammo**: `POST /api/lab/food-cost` + `GET/PUT /api/lab/ingredient-prices` (prezzi €/kg editabili, default GEN_PRICE_KG). Ritorna costo/infornata, al grammo, al pezzo, food cost % e margine. UI panel-elite (EliteTools).
+- **Controllo ambientale predittivo**: `POST /api/lab/environment` — lievitazione con Q10≈2 (±8°C raddoppia/dimezza), idratazione ±4% su umidità. UI panel-elite.
+- 11 HoloPanel Master (aggiunti panel-elite e panel-security). Test: iteration_196 backend 9/9, frontend 100%.
+- **PENDING — Fase B**: Integrazione Bilance/PLC (Web Serial + Web Bluetooth + simulazione). Poi Redeploy (chiedere all'utente, costo ECU).

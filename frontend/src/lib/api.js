@@ -602,6 +602,24 @@ export const accessLogApi = {
   list: (limit = 120) => api.get(`/access-log`, { params: { limit } }).then((r) => r.data),
 };
 
+// Scadenza cancello Master configurabile dal Capo.
+export const gateConfigApi = {
+  get: () => api.get(`/admin-gate/config`).then((r) => r.data),
+  set: (ttl_days) => api.put(`/admin-gate/config`, { ttl_days }).then((r) => r.data),
+};
+
+// Food cost dinamico + prezzi materie prime (solo Capo).
+export const foodCostApi = {
+  prices: () => api.get(`/lab/ingredient-prices`).then((r) => r.data),
+  setPrices: (prices) => api.put(`/lab/ingredient-prices`, { prices }).then((r) => r.data),
+  compute: (payload) => api.post(`/lab/food-cost`, payload).then((r) => r.data),
+};
+
+// Controllo ambientale predittivo (lievitazione/idratazione).
+export const envApi = {
+  compute: (payload) => api.post(`/lab/environment`, payload).then((r) => r.data),
+};
+
 // Anti-Fooling · Voice-Print Liveness (frase-sfida dal vivo).
 export const antifoolApi = {
   challenge: (lang) => api.get(`/antifool/challenge`, { params: { lang } }).then((r) => r.data),
@@ -618,7 +636,7 @@ export const securityApi = {
 
 // Compliance legale tedesca (ArbZG · DGUV · GDPR/DSGVO).
 export const complianceApi = {
-  clock: (worker, action) => api.post(`/compliance/timeclock`, { worker, action }).then((r) => r.data).catch(() => null),
+  clock: (worker, action, pin) => api.post(`/compliance/timeclock`, { worker, action, pin }).then((r) => r.data).catch(() => null),
   timelog: (worker, day) => api.get(`/compliance/timelog`, { params: { worker, day } }).then((r) => r.data),
   safety: () => api.get(`/compliance/safety`).then((r) => r.data),
   ack: (worker, doc_id) => api.post(`/compliance/safety/ack`, { worker, doc_id }).then((r) => r.data),

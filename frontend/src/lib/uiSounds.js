@@ -72,6 +72,9 @@ const SOUNDS = {
 };
 
 export function playSfx(name) {
+  // SILENZIO ASSOLUTO: effetti sonori/notifiche acustiche disattivati (resta solo la voce TTS di BakoMix).
+  return;
+  // eslint-disable-next-line no-unreachable
   try {
     if (!ensure()) return;
     (SOUNDS[name] || SOUNDS.crunch)();
