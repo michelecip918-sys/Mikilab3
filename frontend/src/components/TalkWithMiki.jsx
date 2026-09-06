@@ -194,7 +194,7 @@ export default function TalkWithMiki({ tab }) {
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mohamed" ? "Mohamed" : "BakemixAI"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mohamed" ? "Mohamed" : "BakoMix AI"}</span>
                 </button>
               );
             })}
@@ -237,7 +237,7 @@ export default function TalkWithMiki({ tab }) {
               <div className="p-3 border-t border-slate-800 space-y-2">
                 {/* Selettore Co-Pilota */}
                 <div data-testid="copilot-selector" className="flex items-center gap-1">
-                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mohamed", "Mohamed"], ["bigmix", "BakemixAI"]].map(([id, lbl]) => (
+                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mohamed", "Mohamed"], ["bigmix", "BakoMix AI"]].map(([id, lbl]) => (
                     <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
                       className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
                   ))}

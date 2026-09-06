@@ -2999,6 +2999,9 @@ async def master_sections_get(user: Optional[dict] = Depends(optional_user)):
     return {"sections": doc.get("sections") or []}
 
 
+_GOVERN_MEMORY: dict = {}
+
+
 @api_router.post("/master/govern")
 async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_admin)):
     """Interpreta il comando vocale/testuale del Master ed ESEGUE la modifica strutturale."""
@@ -3051,19 +3054,45 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         return {"intent": "compliance", "executed": False, "reply": rc,
                 "state": {"workers_today": workers, "violations": violations, "safety_docs": safety_n}, "parsed": {"intent": "compliance"}}
 
-    parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None}
+    # Contesto vivo del laboratorio → BakoMix risponde in modo umano e anticipa i bisogni.
+    _ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    _sd = (await db.app_meta.find_one({"_key": "master_sections"}, {"_id": 0})) or {}
+    _leaders_now = _ld.get("leaders") or {}
+    _sections_now = [s.get("name") for s in (_sd.get("sections") or []) if s.get("name")]
+    _today = now_iso()[:10]
+    _logs_today = await db.compliance_timelog.find({"at": {"$regex": f"^{_today}"}}, {"_id": 0}).to_list(3000)
+    _workers_today = len({l.get("worker") for l in _logs_today})
+    _ctx = (f"Caposquadra per linea: {_leaders_now or 'nessuno'}. "
+            f"Sezioni operative attive: {_sections_now or 'nessuna'}. "
+            f"Operatori timbrati oggi: {_workers_today}.")
+    _mem_key = (admin.get("email") or "master").lower()
+    _hist = _GOVERN_MEMORY.get(_mem_key, [])
+
+    parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None, "reply": None}
     if EMERGENT_LLM_KEY:
         try:
+            _langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "italiano")
             sysmsg = (
-                "Sei BakoMix, direttore di produzione di un panificio industriale. Il MASTER ti detta un comando. "
-                "Rispondi SOLO con JSON: {\"intent\":\"assign_leader|remove_leader|create_section|delete_section|unknown\","
-                "\"line\":\"baguette|pane|pizzeria|pasticceria|null\",\"leader\":\"nome persona o null\",\"section_name\":\"nome o null\"}. "
-                "assign_leader: assegnare la supervisione di una linea a una persona. remove_leader: togliere il leader di una linea. "
-                "create_section/delete_section: creare/eliminare una sezione operativa personalizzata. Nessun testo fuori dal JSON."
+                "Sei BakoMix, l'intelligenza di produzione di MikiLab Pro: un direttore di panificio industriale, "
+                "caldo, competente e profondamente umano. Parli col MASTER (il proprietario). NON sei un bot rigido: "
+                "cogli le sfumature, il contesto e il linguaggio naturale, anticipi i bisogni e dialoghi in modo fluido, "
+                "elastico e sintetico, come farebbe un vero assistente umano super esperto — mai frasi robotiche o ripetute.\n"
+                f"Rispondi SEMPRE in {_langname}, con 1-3 frasi naturali pensate per essere lette a voce; niente elenchi tecnici salvo richiesta esplicita.\n"
+                "Competenze reali: assegnare/togliere il caposquadra di una linea (baguette/pane/pizzeria/pasticceria), "
+                "creare/eliminare sezioni operative, e leggere/spiegare produzione, magazzino, radar impianto, "
+                "ricette protette e compliance ArbZG/DGUV/GDPR.\n"
+                f"CONTESTO VIVO (usalo per essere pertinente e anticipare): {_ctx}\n"
+                "Restituisci SOLO un JSON valido: "
+                "{\"intent\":\"assign_leader|remove_leader|create_section|delete_section|chat\","
+                "\"line\":\"baguette|pane|pizzeria|pasticceria|null\",\"leader\":\"nome o null\","
+                "\"section_name\":\"nome o null\",\"reply\":\"la tua risposta naturale e umana al Master\"}. "
+                "Usa 'chat' quando il Master conversa, chiede informazioni o fa domande (nessuna azione strutturale). "
+                "Per le azioni, 'reply' è una conferma breve, calda e umana. Nessun testo fuori dal JSON."
             )
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gov-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gov-{_mem_key}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=400)
+            _preface = ("Contesto conversazione recente:\n" + "\n".join(_hist[-6:]) + "\n\n") if _hist else ""
             out = ""
-            async for ev in chat.stream_message(UserMessage(text=txt)):
+            async for ev in chat.stream_message(UserMessage(text=f"{_preface}MASTER: {txt}")):
                 if isinstance(ev, TextDelta):
                     out += ev.content or ""
             import json as _json, re as _re
@@ -3137,8 +3166,18 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         reply = R("Sezione eliminata." if executed else "Non ho trovato quella sezione.",
                   "Section deleted." if executed else "I couldn't find that section.")
     else:
-        reply = R("Non ho capito il comando. Puoi dire ad esempio: «Assegna la linea baguette ad Antonio».",
-                  "I didn't get that. Try: \u00abAssign the baguette line to Antonio\u00bb.")
+        reply = (parsed.get("reply") or "").strip() or R(
+            "Dimmi pure: posso assegnare una linea a un caposquadra, creare una sezione o darti lo stato di produzione, magazzino e compliance.",
+            "Tell me: I can assign a line to a leader, create a section, or give you production, stock and compliance status.")
+
+    # Memoria breve di sessione: BakoMix ricorda il filo del discorso (naturalezza).
+    try:
+        _h = _GOVERN_MEMORY.get(_mem_key, [])
+        _h.append(f"MASTER: {txt}")
+        _h.append(f"BAKOMIX: {reply}")
+        _GOVERN_MEMORY[_mem_key] = _h[-12:]
+    except Exception:
+        pass
 
     return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed}
 

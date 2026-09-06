@@ -39,7 +39,7 @@ export default function BakemixGuide() {
       <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[#06b6d4]/10 to-transparent border border-[#06b6d4]/30">
         <img src={`${PUB}/avatar_bigmix.jpg`} alt="Bakemix" className="w-12 h-12 rounded-xl object-cover border border-[#06b6d4]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <h3 className="text-sm font-extrabold text-[#06b6d4]">{tri("BakemixAI ti spiega tutto", "BakemixAI erklärt alles", "BakemixAI explains everything", "BakemixAI te explica todo", "BakemixAI explique tout", "BakemixAI همه‌چیز را توضیح می‌دهد")}</h3>
+          <h3 className="text-sm font-extrabold text-[#06b6d4]">{tri("BakoMix AI ti spiega tutto", "BakoMix AI erklärt alles", "BakoMix AI explains everything", "BakoMix AI te explica todo", "BakoMix AI explique tout", "BakoMix AI همه‌چیز را توضیح می‌دهد")}</h3>
           <p className="text-[11px] text-[#94A3B8]">{tri("Guida passo-passo del sito, con la voce.", "Schritt-für-Schritt-Anleitung, mit Stimme.", "Step-by-step site guide, with voice.", "Guía paso a paso, con voz.", "Guide pas à pas, avec la voix.", "راهنمای گام‌به‌گام با صدا.")}</p>
         </div>
       </div>

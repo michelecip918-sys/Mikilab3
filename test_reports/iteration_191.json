@@ -1,0 +1,34 @@
+{
+  "summary": "Iter 191 — Validata la ricostruzione dell'unica plancia olografica verticale continua (Master/Operatori/BakoMix) + BakoMix conversational governance backend. Backend: 4/4 pytest OK (chat IT naturale, chat EN naturale, assign_leader executed=true, 149 ricette caricate). Frontend: AdminGate keypad 1985 apre direttamente la plancia (nessuna vecchia intro). Header app-header con brand-home, compliance-beacon, header-lang-btn/menu/search + 8 lingue (it/de/en/es/fr/ar/tr/fa), operatore-chip, account-btn tutti presenti. Zone Z-01/Z-02/Z-03 tutte renderizzate; zone-rail con rail-master/operatori/bakomix funzionanti (scroll). Zona Master non loggato: capo-gate + capo-gate-login. Dopo login admin@mikilab.de/Mikilab2026!: master-console con tutti i 9 pannelli olografici collassabili (panel-ordine defaultOpen, panel-ricette, panel-magazzino, panel-planner, panel-ordini, panel-radar, panel-compliance, panel-pin, panel-docs). panel-ricette espanso mostra il modulo reale 'MikiLab Recipes' (dati backend intatti). Zona Operatori senza PIN mostra floor-lock + floor-unlock-btn. bakomix-core e ambient-bako-orb sempre presenti.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter191_bakomix_chat.py"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Console mostra alcuni 401 iniziali su endpoint gated (pre-login) — non bloccanti ma da ripulire per igiene console.",
+    "Il campo request di /api/master/govern è 'command_text' (non 'message'): documentare nel frontend/BakemixGuide per coerenza."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "admin@mikilab.de / Mikilab2026!; Admin Gate PIN 1985; PIN Produzione 1985",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "AdminGate ora è un keypad numerico: digitare 1985 per entrare (oppure localStorage.setItem('mikilab_admin_unlocked','1')). La navigazione tra zone è via scroll o rail-<master|operatori|bakomix>. Login admin: click su capo-gate-login (in zone-master quando non loggato), poi email+password. /api/master/govern richiede body {command_text, lang}, ritorna {intent, executed?, reply, state?}. Recipes: 149 in DB.",
+  "verified_features": [
+    "AdminGate keypad 1985 sblocca direttamente la plancia",
+    "app-header con brand-home, compliance-beacon, header-lang-btn/menu/search + 8 lingue, operatore-chip, account-btn",
+    "zone-master/operatori/bakomix + zone-rail (rail-master/operatori/bakomix)",
+    "capo-gate (non loggato) → master-console con 9 HoloPanel dopo login",
+    "panel-ricette espanso mostra modulo Ricette reale (149 ricette, dati intatti)",
+    "floor-lock + floor-unlock-btn su zone-operatori senza PIN",
+    "bakomix-core + ambient-bako-orb sempre presenti",
+    "Backend /api/master/govern: intent=chat con reply naturale IT ed EN (no 'Non ho capito'), intent=assign_leader executed=true"
+  ]
+}

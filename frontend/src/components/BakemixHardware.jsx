@@ -14,7 +14,7 @@ const DEVICES = [
   { key: "forno", Icon: Flame, name: { it: "Forno", de: "Ofen", en: "Oven", es: "Horno", fr: "Four", fa: "فر" } },
 ];
 
-// BakemixAI: diagnostica hardware, collegamento Bluetooth locale e report consumi al Capo.
+// BakoMix AI: diagnostica hardware, collegamento Bluetooth locale e report consumi al Capo.
 export default function BakemixHardware() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -58,11 +58,11 @@ export default function BakemixHardware() {
   };
 
   const explain = () => { try { playTTS(tri(
-    "Sono BakemixAI. Per collegare l'hardware: accendi il dispositivo, tocca Collega e scegli bilancia, termostato o sensore forno dalla lista Bluetooth. Ti guido nella diagnostica.",
-    "Ich bin BakemixAI. Zum Verbinden: Gerät einschalten, Verbinden tippen und Waage, Thermostat oder Sensor aus der Bluetooth-Liste wählen.",
-    "I'm BakemixAI. To connect hardware: turn on the device, tap Connect and pick the scale, thermostat or oven sensor from the Bluetooth list.",
-    "Soy BakemixAI. Para conectar: enciende el dispositivo, toca Conectar y elige báscula, termostato o sensor.",
-    "Je suis BakemixAI. Pour connecter : allume l'appareil, touche Connecter et choisis la balance, le thermostat ou le capteur.",
+    "Sono BakoMix AI. Per collegare l'hardware: accendi il dispositivo, tocca Collega e scegli bilancia, termostato o sensore forno dalla lista Bluetooth. Ti guido nella diagnostica.",
+    "Ich bin BakoMix AI. Zum Verbinden: Gerät einschalten, Verbinden tippen und Waage, Thermostat oder Sensor aus der Bluetooth-Liste wählen.",
+    "I'm BakoMix AI. To connect hardware: turn on the device, tap Connect and pick the scale, thermostat or oven sensor from the Bluetooth list.",
+    "Soy BakoMix AI. Para conectar: enciende el dispositivo, toca Conectar y elige báscula, termostato o sensor.",
+    "Je suis BakoMix AI. Pour connecter : allume l'appareil, touche Connecter et choisis la balance, le thermostat ou le capteur.",
     "من بیک‌میکس‌ای هستم. برای اتصال دستگاه را روشن کن و از فهرست بلوتوث انتخاب کن."
   ), { lang, voice: "bakemix" }); } catch { /* */ } };
 

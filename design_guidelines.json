@@ -1,122 +1,179 @@
 {
-  "design_system": {
-    "theme": "Dark Cosmic Cyber-Industrial",
-    "emotional_archetype": "ARCHETYPE 7: ELECTRIC & NEON (Cyber-Industrial Artisan Bakery)",
-    "target_context": "One-Page Gamified Operational App / Cyber-Industrial Artisan Bakery Dashboard",
-    "vibe": "Futuristic, cosmic, high-contrast, tactile command center mixing real master bakers and VR/visor cyber-robots.",
-    "color_palette": {
-      "background_deep": "#030712",
-      "background_surface": "#0b0f19",
-      "background_card": "#111827",
-      "border_slate": "#1e293b",
-      "teal_accent": "#14b8a6",
-      "teal_glow": "rgba(20, 184, 166, 0.4)",
-      "amber_accent": "#f59e0b",
-      "amber_glow": "rgba(245, 158, 11, 0.4)",
-      "cyan_robot": "#06b6d4",
-      "cyan_glow": "rgba(6, 182, 212, 0.4)",
-      "text_primary": "#f8fafc",
-      "text_secondary": "#94a3b8",
-      "text_muted": "#64748b"
+  "project_name": "MikiLab Pro",
+  "app_type": "industrial_command_console_pwa",
+  "theme": "dark_mode_holographic_industrial",
+  "design_philosophy": "Anti-AI slop: Fusion of Heavy Industrial Command Console (Plancia di Comando) with Holographic Telemetry and Ambient Intelligence. Zero traditional dropdowns or tabular menus. Single continuous vertical-scroll architecture with 3 integrated zones (Master, Floor Operators, BakoMix AI). Master-centric voice-first governance with anti-fooling gates and EU/DE compliance state beacons.",
+
+  "typography": {
+    "display_font": "Orbitron, Rajdhani, sans-serif",
+    "data_font": "JetBrains Mono, monospace",
+    "body_font": "Manrope, Vazirmatn (RTL), sans-serif",
+    "scale": {
+      "h1_hero": "text-4xl sm:text-5xl lg:text-6xl font-black tracking-wider uppercase font-cyber",
+      "h2_zone": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight uppercase font-cyber",
+      "h3_card": "text-lg sm:text-xl lg:text-2xl font-semibold font-tech tracking-wide",
+      "data_value": "text-xl sm:text-2xl lg:text-3xl font-bold font-mono-data tracking-widest",
+      "body": "text-sm sm:text-base font-normal text-slate-300 leading-relaxed",
+      "label": "text-xs font-mono-data uppercase tracking-widest text-cyan-400/80"
     },
-    "typography": {
-      "heading_font": "Outfit, sans-serif",
-      "body_font": "Inter, sans-serif",
-      "mono_font": "JetBrains Mono, monospace",
-      "h1_hero": "text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight",
-      "h2_section": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight",
-      "h3_card": "text-lg sm:text-xl font-semibold",
-      "body_text": "text-sm sm:text-base leading-relaxed"
+    "rules": [
+      "NO default Inter or Roboto for headings. Display headers MUST use Orbitron or Rajdhani with uppercase tracking.",
+      "Data metrics (kg, °C, % humidity, timers, PIN codes) MUST use JetBrains Mono in fluorescent cyan or state color.",
+      "Persian/Arabic text automatically uses Vazirmatn font-family with proper RTL alignment."
+    ]
+  },
+
+  "colors": {
+    "background": {
+      "base": "#070A10",
+      "surface_dark": "#0C1019",
+      "surface_panel": "#121824",
+      "surface_elevated": "#1A2234"
+    },
+    "accents": {
+      "cyan_laser": "#00F0FF",
+      "cyan_glow": "rgba(0, 240, 255, 0.25)",
+      "teal_industrial": "#00C8D6",
+      "steel_blue": "#2E4057"
+    },
+    "fluorescent_states": {
+      "ready_green": "#00FF66",
+      "warning_amber": "#FFB800",
+      "alert_red": "#FF2E4D",
+      "info_blue": "#00A8FF",
+      "purple_master": "#9D4EDD"
+    },
+    "borders": {
+      "subtle": "rgba(0, 240, 255, 0.15)",
+      "active": "rgba(0, 240, 255, 0.45)",
+      "warning": "rgba(255, 184, 0, 0.5)",
+      "alert": "rgba(255, 46, 77, 0.6)"
+    },
+    "rules": [
+      "Strictly prohibited: #7351B7 or generic purple gradients on white backgrounds.",
+      "Background is always solid deep industrial charcoal/void black (#070A10).",
+      "Color is functional: Red = ArbZG/DGUV non-compliance / urgent fault; Amber = warning / fermentation buffer; Green = ready / scale verified; Cyan = live telemetry & active AI state."
+    ]
+  },
+
+  "visual_enhancers": {
+    "scanlines": "repeating-linear-gradient(0deg, rgba(0, 240, 255, 0.03) 0px, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, 0.4) 4px)",
+    "holo_grid": "radial-gradient(circle, rgba(0, 240, 255, 0.08) 1px, transparent 1px) 0 0 / 24px 24px",
+    "glass_panel": "backdrop-blur-xl bg-[#0C1019]/75 border border-[#00F0FF]/20 shadow-[0_8px_32px_rgba(0,0,0,0.6)]",
+    "glow_effects": {
+      "cyan_pulse": "box-shadow: 0 0 15px rgba(0,240,255,0.4), inset 0 0 10px rgba(0,240,255,0.2)",
+      "amber_alert": "box-shadow: 0 0 20px rgba(255,184,0,0.5), inset 0 0 12px rgba(255,184,0,0.2)",
+      "red_hazard": "box-shadow: 0 0 25px rgba(255,46,77,0.6), inset 0 0 15px rgba(255,46,77,0.3)"
     }
   },
-  "architecture_and_hub_structure": {
-    "page_layout": "Single-Page Operational Hub with 3 Avatar Portals (Planets) + 3 dedicated slide/overlay interactive sections",
-    "header": {
-      "style": "Glassmorphism sticky header with backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 z-50",
-      "components": [
-        "MikiLab Neon Cyber Logo",
-        "6-Language Selector Dropdown (IT / DE / EN / ES / FR / FA) with flags & local names",
-        "Offline/Online PWA Status Indicator",
-        "Quick SOS Emergency Dough Trigger"
-      ]
-    },
-    "home_hub_planets": {
-      "concept": "Three large glowing circular avatar portals with floating/orbiting action bubbles on a dark cosmic starfield background",
-      "avatar_1_michele": {
-        "name": "Michele",
-        "role": "CAPO (Full Production Control)",
-        "color": "Teal Neon (#14b8a6)",
-        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/sdey0a5h_image-1%20%2837%29.jpeg",
-        "local_fallback": "/recipes/michele-avatar.jpg",
-        "bubbles": ["Ricette Master", "Piano Settimanale", "Dough Control", "Magazzino & Lotti", "Ordini Extra"]
+
+  "grids": {
+    "layout_mode": "Vertical Single-Scroll Command Console (Zero-Menu)",
+    "zones": [
+      {
+        "id": "master_zone",
+        "title": "ZONA 1: MASTER / CAPO LABORATORIO (Plancia di Governo)",
+        "accent": "#9D4EDD",
+        "description": "Top section dedicated to Master governance. Recipe archive, warehouse stock, backwards scheduler, Extra Orders AI, production PIN, live Plant Radar, and EU/DE ArbZG/DGUV/GDPR compliance beacon."
       },
-      "avatar_2_mohamed": {
-        "name": "Mohamed",
-        "role": "PRODUCTION (Hands-Free Voice)",
-        "color": "Amber Warm Glow (#f59e0b)",
-        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/exaatn5e_image-1%20%2856%29.jpeg",
-        "local_fallback": "/avatar_mohamed.jpg",
-        "bubbles": ["Guida Vocale Hands-Free", "Start Impasto Hands-Free", "Ascolto Comandi Bilingue", "Timer & Temp Acqua Vocale"]
+      {
+        "id": "operators_zone",
+        "title": "ZONA 2: OPERATORI DI BANCO & PIANO PRODUZIONE (Mohamed Floor)",
+        "accent": "#00F0FF",
+        "description": "Middle section for floor workers. Smart scale assistant, team task queue, dough timers, voice-print liveness gate, optical cross-check photos, headset audio stream."
       },
-      "avatar_3_bakemix": {
-        "name": "Bakemix",
-        "role": "AI ROBOT GUIDE & SITE MIND",
-        "color": "Cyan Cyber (#06b6d4)",
-        "image_url": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l4ttjgnj_image-1%20%2845%29.jpeg",
-        "local_fallback": "/avatar_bigmix.jpg",
-        "bubbles": ["Film Guidato MikiLab", "Download PDF Inventario", "Architettura Sistema & Esempi", "Assistenza SOS Impasti"]
+      {
+        "id": "bakomix_zone",
+        "title": "ZONA 3: BAKOMIX AI PRESENCE & GOVERNANCE",
+        "accent": "#00FF66",
+        "description": "Integrated bottom section with always-present ambient AI, SOS assistance, dictation to task queue, and multi-language live translation."
       }
+    ],
+    "container": "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 sm:space-y-16"
+  },
+
+  "layouts": {
+    "header": "Sticky ambient status bar with integrated 'Cerca la tua lingua' holographic selector, live EU/DE compliance status beacon, and Master PIN status indicator.",
+    "body": "Single continuous vertical-scroll console with glowing section anchors instead of tab bars.",
+    "footer": "Industrial telemetry footer with system latency, sensor ping, and ArbZG legal audit hash."
+  },
+
+  "motion": {
+    "smooth_scroll": "Lenis momentum scroll with 1.2s smooth duration",
+    "bako_breath": "2.8s infinite pulse on ambient BakoMix holographic core ring",
+    "state_transition": "transition-all duration-300 ease-out",
+    "hover_lift": "hover:-translate-y-1 hover:shadow-[0_0_20px_rgba(0,240,255,0.3)] transition-all"
+  },
+
+  "accessibility": {
+    "min_contrast_ratio": "4.5:1 for telemetry text, 7:1 for critical alarms",
+    "rtl_support": "Full RTL support for Arabic and Persian (FA) with Vazirmatn font overrides and ltr numbers",
+    "keyboard_nav": "Full outline focus rings in cyan (#00F0FF) on interactive console elements",
+    "data_testids": "MANDATORY data-testid on every interactive control, state beacon, language button, and form element."
+  },
+
+  "component_blueprints": {
+    "ambient_bakomix": {
+      "description": "Native ambient AI entity embedded into dark background. Features glowing holographic orb/rings, audio wave visualization when listening, and real-time voice response.",
+      "code_structure": "<div className='relative flex items-center justify-center p-6 bg-[#070A10]/90 border border-cyan-500/30 rounded-2xl backdrop-blur-2xl'><div className='absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,255,0.15)_0%,transparent_70%)] animate-pulse' /><div className='relative z-10 text-center space-y-3'><div className='w-20 h-20 mx-auto rounded-full border-2 border-cyan-400/80 bg-cyan-950/40 flex items-center justify-center shadow-[0_0_30px_rgba(0,240,255,0.5)]'><span className='font-cyber text-xs tracking-widest text-cyan-300'>BAKOMIX</span></div><div className='text-sm font-mono-data text-cyan-300/90'>SYSTEM ONLINE · VOICE ACTIVE</div></div></div>"
+    },
+    "zone_divider": {
+      "description": "Holographic divider separating Master, Floor, and BakoMix zones with laser line and fluorescent section tag.",
+      "code_structure": "<div className='relative my-12 flex items-center justify-center'><div className='absolute inset-0 flex items-center'><div className='w-full border-t border-cyan-500/20 shadow-[0_0_8px_rgba(0,240,255,0.3)]' /></div><div className='relative z-10 px-6 py-2 bg-[#0C1019] border border-cyan-500/40 rounded-full text-xs font-cyber tracking-widest text-cyan-400 uppercase shadow-[0_0_15px_rgba(0,240,255,0.25)]'>...SECTION_TITLE...</div></div>"
+    },
+    "holographic_panel": {
+      "description": "Industrial command card with corner accents, scanline texture, glowing cyan borders, and data metric readouts.",
+      "code_structure": "<div className='relative bg-[#0C1019]/80 border border-cyan-500/20 rounded-xl p-6 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] hover:border-cyan-500/50 transition-all group'><div className='absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-cyan-400' /><div className='absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-cyan-400' /><div className='absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-cyan-400' /><div className='absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-cyan-400' />...CONTENT...</div>"
+    },
+    "fluorescent_beacon": {
+      "description": "EU/DE Compliance and plant safety beacon with fluorescent indicator rings and status code.",
+      "code_structure": "<div className='inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-emerald-500/40 text-emerald-400 text-xs font-mono-data shadow-[0_0_12px_rgba(0,255,102,0.3)]'><span className='w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping' /><span>ArbZG COMPLIANT</span></div>"
+    },
+    "cerca_lingua_selector": {
+      "description": "Holographic floating language matrix supporting IT, DE, EN, ES, FR, AR, TR, FA with real-time translation trigger.",
+      "code_structure": "<div className='flex items-center gap-1.5 p-1.5 bg-[#0C1019]/90 border border-cyan-500/30 rounded-xl backdrop-blur-xl shadow-[0_0_20px_rgba(0,240,255,0.15)]'><span className='text-xs font-mono-data text-cyan-400 px-2'>LANG:</span>{['IT','DE','EN','ES','FR','AR','TR','FA'].map(l => (<button key={l} className='px-2.5 py-1 text-xs font-cyber rounded-lg text-slate-300 hover:text-cyan-300 hover:bg-cyan-950/50 border border-transparent hover:border-cyan-500/30 transition-all'>{l}</button>))}</div>"
     }
   },
-  "sections_breakdown": {
-    "section_1_capo": {
-      "title": "Capo Laboratorio - Scaletta Logica Produzione",
-      "vibe": "Logical Ladder with big tactile cards and high visual feedback for fast bakery shift operations.",
-      "layout_components": [
-        "Interactive Production Summary Banner (Active Batch, Dough Temp, Shift Progress)",
-        "Logical Ladder Steps: Step 1 (Weekly Plan / Piano Settimanale), Step 2 (Recipes & Doses / Ricette), Step 3 (Dough Twin & Fermentation Control), Step 4 (Warehouse Stock & Batches), Step 5 (Extra Orders & Sales Points)",
-        "Big Touch Buttons with data-testid attributes for testing"
-      ]
-    },
-    "section_2_mohamed": {
-      "title": "Mohamed - Production Hands-Free Command Center",
-      "vibe": "Ultra-minimalist, zero-friction hands-free operational surface. Single giant interactive microphone avatar button.",
-      "layout_components": [
-        "Giant Glowing Mic Avatar Button with soundwave ripples and state ring (Idle / Listening / Speaking)",
-        "Real-time voice transcript & audio feedback visualizer",
-        "Quick Voice Shortcut Chips (e.g. 'Avvia Impasto Baguette', 'Temperatura Acqua 18°C', 'Timer 12 Minuti')"
-      ]
-    },
-    "section_3_bakemix": {
-      "title": "Bakemix - AI Mind & Guided System Explainer",
-      "vibe": "Interactive cinematic guide player where Bakemix acts as the site mind, presenting step-by-step documentation, PDFs, and system walkthroughs.",
-      "layout_components": [
-        "Cinematic Guide Player with interactive chapter steps (Intro, Capo System, Hands-Free Voice, Offline Sync, Document PDF Export)",
-        "Live System Diagnostics & Document Viewer (Download Inventory PDF / Functional Spec)",
-        "Interactive Q&A AI Assistant Box"
-      ]
-    }
-  },
+
   "image_urls": {
-    "michele_capo_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/sdey0a5h_image-1%20%2837%29.jpeg",
-    "mohamed_production_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/exaatn5e_image-1%20%2856%29.jpeg",
-    "bakemix_robot_avatar": "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l4ttjgnj_image-1%20%2845%29.jpeg",
-    "bakery_hero_bg": "/bg-lab.jpg",
-    "focaccia_ref": "/recipes/foc_barese.jpg",
-    "panettone_ref": "/recipes/pan_classico.jpg"
+    "bakery_industrial": [
+      {
+        "url": "https://images.unsplash.com/photo-1732565729552-994c6af761e3?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Industrial bakery sourdough bread rack"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1560427183-4efd29c38997?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Master baker inspecting brick oven bread"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1593265078328-097c382f2da8?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "description": "Operator shaping dough on stainless steel workbench"
+      }
+    ],
+    "local_assets": [
+      "/bg-lab.jpg",
+      "/bg-ricette.jpg",
+      "/bg-capo.jpg",
+      "/bg-mohamed.jpg",
+      "/avatar_miki.jpg",
+      "/avatar_mohamed.jpg",
+      "/avatar_bigmix.jpg",
+      "/logo.png"
+    ]
   },
-  "motion_and_interactions": {
-    "orbit_animation": "Framer motion continuous rotation and pulse for floating action bubbles around avatar planets",
-    "card_hover": "Hover scale 1.02 with glowing border highlight transition ease-out 0.2s",
-    "mic_pulse": "Expanding concentric ring pulse when voice assistant is active",
-    "prefers_reduced_motion": "Supported via CSS media query and Framer Motion reducedMotion prop"
-  },
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": [
-    "Ensure dark cosmic aesthetic (#030712) with cyan/teal/amber neon accents.",
-    "Do not duplicate legacy headers or duplicate section wrappers.",
-    "All interactive elements must have clear data-testid attributes (e.g. data-testid='lang-selector-select', data-testid='capo-recipe-ladder-button').",
-    "Use glassmorphism with backdrop blur for headers and modals, avoiding total transparent backgrounds.",
-    "Ensure clean 6-language switcher support (IT, DE, EN, ES, FR, FA) with RTL adjustments for FA if active."
+
+  "instructions_to_main_agent": [
+    "Rebuild the frontend UI as a Zero-Menu Single-Screen Vertical Scroll Industrial PWA.",
+    "Do NOT use traditional navigation tabs or dropdown menus. Implement 3 seamless vertical zones (Master, Floor Operators, BakoMix AI).",
+    "BakoMix AI must be fused natively into the background visual canvas with ambient glowing rings, audio wave visualization, and voice reactivity.",
+    "Ensure ArbZG/DGUV/GDPR compliance indicators have fluorescent beacon states (Green/Amber/Red) visible across all zones.",
+    "Integrate the 'Cerca la tua lingua' selector natively with holographic styling for IT, DE, EN, ES, FR, AR, TR, FA.",
+    "Ensure every interactive element includes a valid data-testid attribute."
   ],
-  "instructions_to_main_agent": "Use this blueprint to build/update the CyberBakeryTrio home hub and its 3 section views in App.js and components. Maintain offline-first capability and ensure mobile viewport (390px) and desktop layouts are fluid, high-contrast, and responsive."
+
+  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
+    "anti_slop_rule": "Avoid generic centered white layouts, soft purple gradients, or Inter font headings. Always use industrial dark command console theme with cyan scanline overlays and JetBrains Mono data readouts.",
+    "data_testid_rule": "MUST add data-testid to every button, card, input, and state beacon.",
+    "contrast_rule": "Ensure all text on dark surfaces meets minimum 4.5:1 APCA contrast ratio."
+  }
 }

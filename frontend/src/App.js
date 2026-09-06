@@ -4,12 +4,12 @@
  *  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
  *  Unico proprietario legale: il Master. Sole legal owner: the Master.
  *  Codice riservato: vietata copia, distribuzione, reverse engineering o
- *  cloning non autorizzati. Unauthorized copying, distribution, reverse
- *  engineering or cloning is strictly prohibited and actively tracked by
- *  the BakoMix AI Security Guardian.
+ *  cloning non autorizzati, tracciati dal BakoMix AI Security Guardian.
  * ============================================================================
+ *  PLANCIA OLOGRAFICA — Zero-Menu vertical command console (v40).
+ *  Unica PWA continua a scorrimento verticale: Master · Operatori · BakoMix AI.
  */
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
@@ -22,116 +22,86 @@ import { MixerTimersProvider } from "@/audio/MixerTimersContext";
 import { MachinesProvider } from "@/audio/MachinesContext";
 
 import PinLock from "@/components/PinLock";
-import { isLocked as pinIsLocked, lockNow as pinLockNow } from "@/lib/pinLock";
+import { isLocked as pinIsLocked } from "@/lib/pinLock";
 import VoiceCommand from "@/components/VoiceCommand";
 import RadioFornaio from "@/components/RadioFornaio";
 import ShiftScheduler from "@/components/ShiftScheduler";
 import TalkWithMiki from "@/components/TalkWithMiki";
 import AudioRouteIndicator from "@/components/AudioRouteIndicator";
 import LegalPage from "@/sections/LegalPage";
-import PeripheralSetup from "@/components/PeripheralSetup";
 import MagazzinoManager from "@/components/MagazzinoManager";
 import DocsDownload from "@/components/DocsDownload";
-import ConfermaImpastata from "@/components/ConfermaImpastata";
 import LabBriefing from "@/components/LabBriefing";
 import AutoReport from "@/components/AutoReport";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthScreen from "@/components/AuthScreen";
 import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
-import OrdiniExtra from "@/components/OrdiniExtra";
 import PinSetup from "@/components/PinSetup";
-import MamoAssistant from "@/components/MamoAssistant";
 import OrdineCapo from "@/components/OrdineCapo";
 import MohamedFloor from "@/components/MohamedFloor";
 import BakoMixSense from "@/components/BakoMixSense";
 import BakemixGuide from "@/components/BakemixGuide";
-import IntroLanding from "@/components/IntroLanding";
-import AvatarHub from "@/components/AvatarHub";
 import AdminGate from "@/components/AdminGate";
 import LangSelector from "@/components/LangSelector";
-import { useDept, setDept } from "@/lib/dept";
 import { resetSessionBoards } from "@/lib/sessionState";
 import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import { mkTri } from "@/i18n/triMaps";
-import { User, BookOpen, LayoutGrid, LifeBuoy, ShieldCheck, LogOut, Lock, WifiOff } from "lucide-react";
+import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
-import Maestro from "@/sections/Maestro";
+import OrdiniExtra from "@/components/OrdiniExtra";
 import PlantRadar from "@/components/PlantRadar";
-import BakoInfo from "@/components/BakoInfo";
 import SecurityGuardian from "@/components/SecurityGuardian";
 import AmbientBako from "@/components/AmbientBako";
 import CompliancePanel from "@/components/CompliancePanel";
+import ComplianceBeacon from "@/components/ComplianceBeacon";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
+import { ZoneDivider, HoloPanel, ZoneRail } from "@/components/console/HoloKit";
 
 const PUB = process.env.PUBLIC_URL;
-const SECTIONS = [
-  { id: "capo", kind: "lab", avatar: "avatar_miki.jpg" },
-  { id: "mohamed", kind: "floor", avatar: "avatar_mohamed.jpg" },
-  { id: "bakemix", kind: "guida", avatar: "avatar_bigmix.jpg" },
-];
 
-function LabCard({ testid, icon, title, sub, onClick, accent }) {
-  return (
-    <button data-testid={testid} onClick={onClick}
-      className="group relative overflow-hidden rounded-2xl p-4 text-left transition-all duration-300 hover:-translate-y-0.5"
-      style={{
-        background: "linear-gradient(155deg, rgba(11,20,32,0.92), rgba(6,12,22,0.92))",
-        border: `1px solid ${accent ? "rgba(34,211,238,0.45)" : "rgba(30,41,59,0.9)"}`,
-        boxShadow: accent ? "0 0 22px rgba(34,211,238,0.14), inset 0 1px 0 rgba(255,255,255,0.04)" : "inset 0 1px 0 rgba(255,255,255,0.03)",
-      }}>
-      {/* scanline olografica superiore */}
-      <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70"
-        style={{ background: "linear-gradient(90deg, transparent, rgba(34,211,238,0.8), transparent)" }} />
-      {/* glow d'angolo al hover */}
-      <span aria-hidden className="absolute -right-8 -top-8 w-24 h-24 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl"
-        style={{ background: "radial-gradient(circle, rgba(34,211,238,0.5), transparent 70%)" }} />
-      {/* indicatore di stato fluorescente */}
-      <span aria-hidden className="absolute right-3 top-3 w-2 h-2 rounded-full"
-        style={{ background: accent ? "#22d3ee" : "#14b8a6", boxShadow: `0 0 8px ${accent ? "#22d3ee" : "#14b8a6"}`, animation: "pulse 2s ease-in-out infinite" }} />
-      <div className="relative z-10">
-        <div className="mb-2 inline-flex items-center justify-center w-10 h-10 rounded-xl text-xl"
-          style={{ background: "rgba(34,211,238,0.08)", border: "1px solid rgba(34,211,238,0.25)" }}>{icon}</div>
-        <h3 className="font-bold text-sm text-white transition-colors group-hover:text-[#22d3ee]" style={{ textShadow: "0 0 12px rgba(34,211,238,0.15)" }}>{title}</h3>
-        <p className="text-[11px] text-[#94A3B8] mt-1">{sub}</p>
-      </div>
-    </button>
-  );
-}
+const ZONES = [
+  { id: "master", label: "Master", accent: "#9D4EDD", avatar: "avatar_miki.jpg" },
+  { id: "operatori", label: "Operatori", accent: "#00F0FF", avatar: "avatar_mohamed.jpg" },
+  { id: "bakomix", label: "BakoMix AI", accent: "#00FF66", avatar: "avatar_bigmix.jpg" },
+];
 
 export default function App() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user, authOpen, setAuthOpen, logout } = useAuth();
 
-  const [section, setSection] = useState("control");
-  const [activeMode, setActiveMode] = useState("floor");
-  const [currentView, setCurrentView] = useState("dashboard");
-  const [locked, setLocked] = useState(() => pinIsLocked());
+  const [adminOk, setAdminOk] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1"; } catch { return false; } });
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const capoDept = useDept();
-  const setCapoDept = setDept;
-  const [screen, setScreen] = useState(() => {
-    try {
-      const unlocked = localStorage.getItem("mikilab_admin_unlocked") === "1";
-      if (!unlocked) return "admin";
-      // Utente di ritorno (gate già sbloccato) → salta la schermata "Inizia", vai all'hub.
-      const seenIntro = localStorage.getItem("mikilab_seen_intro") === "1";
-      return seenIntro ? "hub" : "intro";
-    } catch { return "admin"; }
-  });
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
   const [floorRole, setFloorRole] = useState(() => { try { return localStorage.getItem("mikilab_role") || ""; } catch { return ""; } });
+  const [floorUnlocked, setFloorUnlocked] = useState(() => !pinIsLocked());
+  const [showPinLock, setShowPinLock] = useState(false);
   const [online, setOnline] = useState(() => (typeof navigator !== "undefined" ? navigator.onLine : true));
-  const [glassLevel, setGlassLevel] = useState(() => { try { const v = Number(localStorage.getItem("mikilab_glass_level")); return Number.isFinite(v) && v > 0 ? v : 62; } catch { return 62; } });
-  useEffect(() => { const h = (e) => setGlassLevel(e.detail); window.addEventListener("mikilab-glass-changed", h); return () => window.removeEventListener("mikilab-glass-changed", h); }, []);
-  const bgOpacity = Math.max(0.12, Math.min(0.95, 0.12 + (glassLevel / 100) * 0.83));
+  const [activeZone, setActiveZone] = useState("master");
+
+  const zoneRefs = { master: useRef(null), operatori: useRef(null), bakomix: useRef(null) };
+
+  const jumpTo = useCallback((id) => {
+    const el = zoneRefs[id]?.current;
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Scroll-spy: evidenzia la zona attiva nel rail ambientale.
+  useEffect(() => {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e) => { if (e.isIntersecting) setActiveZone(e.target.dataset.zone); });
+    }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+    Object.entries(zoneRefs).forEach(([, r]) => { if (r.current) obs.observe(r.current); });
+    return () => obs.disconnect();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     const on = () => setOnline(true); const off = () => setOnline(false);
     window.addEventListener("online", on); window.addEventListener("offline", off);
@@ -143,45 +113,22 @@ export default function App() {
     return () => window.removeEventListener("mikilab-role-changed", h);
   }, []);
   useEffect(() => {
-    // Pre-cache dell'archivio ricette su IndexedDB per l'uso 100% offline (best-effort).
     const warm = () => { if (navigator.onLine) { recipesApi.list("mikilab"); if (user) recipesApi.list("personal"); } };
-    warm();
-    window.addEventListener("online", warm);
+    warm(); window.addEventListener("online", warm);
     return () => window.removeEventListener("online", warm);
   }, [user]);
   useEffect(() => {
-    // SINCRONIZZAZIONE AL RITORNO: quando la rete torna, ricarica e riallinea tutto (magazzino,
-    // piani, coda del Floor) dal server, ri-scaldando la cache IndexedDB e notificando le viste aperte.
     const resync = () => {
-      Promise.allSettled([
-        recipesApi.list("mikilab"),
-        warehouseApi.list(),
-        planApi.get(),
-        weeklyApi.get(),
-        floorPlanApi.get(),
-      ]).then(() => {
+      Promise.allSettled([recipesApi.list("mikilab"), warehouseApi.list(), planApi.get(), weeklyApi.get(), floorPlanApi.get()]).then(() => {
         try { window.dispatchEvent(new Event("mikilab-floor-plan-updated")); } catch { /* */ }
         try { window.dispatchEvent(new Event("mikilab-warehouse-changed")); } catch { /* */ }
-        toast.success(tri("Riconnesso · dati aggiornati dal server.", "Wieder online · Daten aktualisiert.", "Back online · data synced from server.", "Reconectado · datos actualizados.", "Reconnecté · données synchronisées.", "دوباره آنلاین · داده‌ها همگام شد."));
+        toast.success(tri("Riconnesso · dati aggiornati dal server.", "Wieder online · Daten aktualisiert.", "Back online · data synced.", "Reconectado · datos actualizados.", "Reconnecté · données synchronisées.", "دوباره آنلاین · داده‌ها همگام شد."));
       });
     };
     window.addEventListener("online", resync);
     return () => window.removeEventListener("online", resync);
   }, [tri]);
-  const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
 
-  // Selezione dall'hub avatar → apre la sezione giusta (Capo=login, Mohamed=PIN produzione, Bakemix=libero).
-  const handleHubSelect = (kind) => {
-    if (kind === "lab") { setSection("control"); setActiveMode("lab"); setCurrentView("dashboard"); setScreen("app"); if (!user) { setAuthMode("login"); setAuthOpen(true); } }
-    else if (kind === "floor") { setSection("control"); setActiveMode("floor"); setCurrentView("dashboard"); if (pinIsLocked()) setScreen("pin"); else setScreen("app"); }
-    else { setSection("guida"); setScreen("app"); }
-  };
-
-  useEffect(() => {
-    const onLock = () => { pinLockNow(); setLocked(true); };
-    window.addEventListener("mikilab-lock", onLock);
-    return () => window.removeEventListener("mikilab-lock", onLock);
-  }, []);
   useEffect(() => {
     const h = (e) => { setAuthMode((e && e.detail && e.detail.mode) || "login"); setAuthOpen(true); };
     window.addEventListener("mikilab-open-auth", h);
@@ -189,127 +136,74 @@ export default function App() {
   }, [setAuthOpen]);
   useEffect(() => { if (user) { setAuthOpen(false); try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } } }, [user, setAuthOpen]);
 
-  // Zero-state per il Capo: al primo ingresso di una nuova sessione i board partono puliti
-  // (schemi/cataloghi master nel DB restano intatti).
+  // Zero-state Capo: board puliti a ogni nuova sessione (cataloghi master intatti).
   const zeroStateFor = useRef(null);
   useEffect(() => {
     const id = user ? (user.email || user.user_id || "capo") : null;
-    if (id && zeroStateFor.current !== id) {
-      zeroStateFor.current = id;
-      resetSessionBoards({ clearRole: false });
-    }
+    if (id && zeroStateFor.current !== id) { zeroStateFor.current = id; resetSessionBoards({ clearRole: false }); }
     if (!id) zeroStateFor.current = null;
   }, [user]);
 
-  // GHOST MODE: link d'invito (?invite=) → apre direttamente la registrazione gated.
   useEffect(() => {
-    try {
-      const inv = new URLSearchParams(window.location.search).get("invite");
-      if (inv && !user) { setAuthMode("register"); setAuthOpen(true); }
-    } catch { /* */ }
+    try { const inv = new URLSearchParams(window.location.search).get("invite"); if (inv && !user) { setAuthMode("register"); setAuthOpen(true); } } catch { /* */ }
   }, [user, setAuthOpen]);
 
-  if (authOpen && !user && !resetToken) return <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
-  if (screen === "admin" && !resetToken) return <AdminGate onUnlock={() => setScreen("intro")} />;
-  if (screen === "intro" && !resetToken) return <IntroLanding onStart={() => { try { localStorage.setItem("mikilab_seen_intro", "1"); } catch { /* */ } setScreen("hub"); }} onRegister={() => { setAuthMode("register"); setAuthOpen(true); }} />;
-  if (screen === "hub" && !resetToken) return <AvatarHub onSelect={handleHubSelect} isLoggedIn={!!user} onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} />;
-  if (screen === "pin" && !resetToken) return <PinLock onUnlock={() => { setLocked(false); setScreen("app"); }} />;
+  const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
+  const openAuth = () => { setAuthMode("login"); setAuthOpen(true); };
 
-  const activeAvatar = (SECTIONS.find((s) => s.id === section) || SECTIONS[1]).avatar;
-
-  // Sfondo tematico per sezione (Capo=sala comandi, Mohamed=laboratorio, BakemixAI=olografico).
-  const bgTheme = section === "guida" ? "bakemix" : (section === "control" && activeMode === "floor") ? "mohamed" : "capo";
-  const mohStation = (() => {
-    const r = (floorRole || "").toLowerCase();
-    if (!r) return null;
-    // Postazioni "hot": forno, cottura, abbattitore
-    if (/forn|sfornat|abbattitore|raffredda|cottura|pizza|pizze|arrosti|griglia/.test(r)) return "forno";
-    // Postazioni impasto/fermentazione/planetaria
-    if (/impast|fermentaz|planetari|spiral|lievit|farin/.test(r)) return "impasto";
-    // Laugen / pretzel
-    if (/laugen|pretzel|brezel/.test(r)) return "laugen";
-    // Banco/pasticceria/decorazioni/confezionamento (fallback esplicito)
-    if (/banco|pasticc|decor|glass|cioccolat|gelat|confezion|pack|vetrina|bilanci|dolc/.test(r)) return "banco";
-    return "banco";
-  })();
-  const bgSrc = bgTheme === "mohamed" && mohStation ? `${PUB}/bg-st-${mohStation}.jpg` : `${PUB}/bg-${bgTheme}.jpg`;
-  const roleTint = (() => {
-    const r = (floorRole || "").toLowerCase();
-    if (/pizza|forno pizze|sfornate|consegne/.test(r)) return "#3E9C93";        // Pizzeria
-    if (/pasticc|gelat|bilanci|abbattitore|raffredda/.test(r)) return "#7FB0A6"; // Pasticceria
-    if (/apprendista|bancon|aiuto/.test(r)) return "#f59e0b";                    // Generale
-    return "#5E8CA8";                                                            // Panetteria
-  })();
+  if (!adminOk && !resetToken) return <AdminGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} />;
+  if (resetToken) return <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />;
+  if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#070A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
 
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
       <AmbientBako />
-      <div className="min-h-screen bg-[#030712] text-[#F8FAFC] font-sans selection:bg-[#14b8a6] selection:text-[#030712]">
-        <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(ellipse_at_top,#0f172a_0%,#030712_70%)]">
-          {/* Sfondo immersivo tematico della sezione attiva (per Mohamed cambia per postazione) */}
-          <img key={bgSrc} src={bgSrc} alt="" className="absolute inset-0 w-full h-full object-cover animate-fadeIn" style={{ opacity: bgOpacity }} />
-          {/* Overlay antracite: contrasto sul testo senza appiattire l'immagine */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/40 via-[#050b17]/55 to-[#030712]/88" />
-          {/* Vetro antracite: sheen radiale per dare profondità (mai piatto) */}
-          <div className="absolute inset-0" style={{ background: "radial-gradient(130% 80% at 50% -10%, rgba(94,140,168,0.15), transparent 55%)" }} />
-          {bgTheme === "mohamed" && (
-            <div className="absolute inset-0 transition-colors duration-700" style={{ background: `radial-gradient(120% 70% at 50% 0%, ${roleTint}2e, transparent 60%)` }} />
-          )}
-          {/* Griglia geometrica nitida che svanisce verso il basso (effetto tech industriale) */}
-          <div className="absolute inset-0" style={{
-            backgroundImage: "linear-gradient(to right, rgba(94,234,212,0.11) 1px, transparent 1px), linear-gradient(to bottom, rgba(94,234,212,0.11) 1px, transparent 1px)",
-            backgroundSize: "56px 56px",
-            maskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
-            WebkitMaskImage: "linear-gradient(to bottom, #000 0%, #000 42%, transparent 88%)",
-          }} />
-          {/* Micro-griglia circuito, densa in alto */}
-          <div className="absolute inset-0 opacity-50" style={{
-            backgroundImage: "linear-gradient(to right, rgba(51,65,85,0.28) 1px, transparent 1px), linear-gradient(to bottom, rgba(51,65,85,0.28) 1px, transparent 1px)",
-            backgroundSize: "14px 14px",
-            maskImage: "radial-gradient(120% 85% at 50% 0%, #000, transparent 68%)",
-            WebkitMaskImage: "radial-gradient(120% 85% at 50% 0%, #000, transparent 68%)",
-          }} />
-          {/* Bagliori d'accento (profondità cromatica) */}
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#14b8a6]/12 blur-[120px] rounded-full" />
-          <div className="absolute bottom-0 right-0 w-[420px] h-[260px] bg-[#5E8CA8]/10 blur-[130px] rounded-full" />
-        </div>
+      <div className="holo-root min-h-screen font-sans selection:bg-[#00F0FF] selection:text-[#070A10]">
+        <div className="holo-canvas" aria-hidden />
 
         <div className="relative z-10 flex flex-col min-h-screen">
           {!online && (
-            <div data-testid="offline-badge" className="fixed top-[118px] left-1/2 -translate-x-1/2 z-[60] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/50 text-amber-300 text-[11px] font-bold backdrop-blur-md shadow-lg animate-fadeIn">
+            <div data-testid="offline-badge" className="fixed top-[76px] left-1/2 -translate-x-1/2 z-[60] inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-500/15 border border-amber-500/50 text-amber-300 text-[11px] font-bold backdrop-blur-md">
               <WifiOff className="w-3.5 h-3.5" /> {tri("Offline · archivio locale", "Offline · lokales Archiv", "Offline · local archive", "Sin conexión · archivo local", "Hors ligne · archive locale", "آفلاین · بایگانی محلی")}
             </div>
           )}
-          {/* HEADER */}
-          <header className="border-b border-[#1e293b] bg-[#0b0f19]/80 backdrop-blur-xl px-4 py-3 sticky top-0 z-50">
-            <div className="max-w-4xl mx-auto flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <button data-testid="hub-home-btn" onClick={() => setScreen("hub")} title="Hub" className="w-11 h-11 rounded-xl overflow-hidden border border-[#14b8a6]/40 shadow-lg shadow-[#14b8a6]/20 bg-[#030712] active:scale-95 transition-all">
-                  <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
-                </button>
-                <div className="min-w-0">
-                  <h1 className="text-sm font-black tracking-wider text-white uppercase flex items-center gap-2 whitespace-nowrap">MikiLab <span className="hidden sm:inline text-[10px] px-2 py-0.5 rounded-full bg-[#14b8a6]/10 text-[#14b8a6] border border-[#14b8a6]/30">Cyber OS</span></h1>
-                  <p className="hidden sm:block text-[10px] text-[#94A3B8]">Laboratorio Panificazione Avanzata</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2 text-xs relative">
+
+          {/* STATUS BAR ambientale (nessun menu classico) */}
+          <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#00F0FF]/15 bg-[#070A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+              <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center gap-2.5 min-w-0 active:scale-95 transition-transform">
+                <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#00F0FF]/40 shadow-[0_0_16px_rgba(0,240,255,0.25)] bg-[#070A10] shrink-0">
+                  <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
+                </span>
+                <span className="min-w-0 text-left">
+                  <span className="block font-cyber text-sm sm:text-base font-black tracking-[0.18em] text-white uppercase truncate">MikiLab<span className="text-[#00F0FF]"> Pro</span></span>
+                  <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#00F0FF]/70 uppercase">Holographic Command OS</span>
+                </span>
+              </button>
+
+              <div className="flex items-center gap-1.5 sm:gap-2 relative">
+                <ComplianceBeacon compact onOpen={() => jumpTo("master")} />
                 <LangSelector testid="header-lang" />
                 <InstallApp variant="chip" />
-                <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} className="inline-flex items-center gap-1.5 pl-1 pr-2.5 py-1 rounded-full bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all" title="Cambia operatore">
-                  {operator && <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#14b8a6]/50" />}
-                  <span className="font-bold hidden sm:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>
+                <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
+                  className="inline-flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#0C1019] border border-[#00F0FF]/20 text-white hover:border-[#00F0FF]/60 active:scale-95 transition-all">
+                  {operator ? <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#00F0FF]/50" /> : <User className="w-4 h-4 text-[#00F0FF]" />}
+                  <span className="font-bold text-xs hidden md:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>
                 </button>
-                <button data-testid="account-btn" onClick={() => { if (user) { setShowAccountMenu((v) => !v); } else { setAuthMode("login"); setAuthOpen(true); } }} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold active:scale-95 transition-all border ${user ? "bg-[#14b8a6]/15 border-[#14b8a6]/50 text-[#14b8a6]" : "bg-[#14b8a6]/10 border-[#14b8a6]/30 text-[#14b8a6] hover:bg-[#14b8a6]/20"}`}>
-                  {user ? <ShieldCheck className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}
+                <button data-testid="account-btn" onClick={() => { if (user) setShowAccountMenu((v) => !v); else openAuth(); }}
+                  className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-bold text-xs active:scale-95 transition-all border ${user ? "bg-[#00F0FF]/15 border-[#00F0FF]/50 text-[#00F0FF]" : "bg-[#00F0FF]/10 border-[#00F0FF]/30 text-[#00F0FF] hover:bg-[#00F0FF]/20"}`}>
+                  {user ? <ShieldCheck className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
+                  <span className="hidden sm:inline">{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}</span>
                 </button>
                 {user && showAccountMenu && (
-                  <div data-testid="account-menu" className="absolute right-0 top-11 w-56 rounded-xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl p-3 z-[80]">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#14b8a6] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
+                  <div data-testid="account-menu" className="absolute right-0 top-11 w-56 holo-panel p-3 z-[80]">
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#00F0FF] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
-                    {user.email && <p className="text-[10px] text-[#94A3B8] truncate mb-2">{user.email}</p>}
-                    <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); setActiveMode("floor"); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet. Chef-Sitzung beendet.", "Signed out. Capo session closed.", "Has salido. Sesión Capo cerrada.", "Déconnecté. Session Capo fermée.", "خارج شدی. جلسه کاپو بسته شد.")); }} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
-                      <LogOut className="w-3.5 h-3.5" /> {tri("Esci dall'account Capo", "Chef-Konto verlassen", "Sign out of Capo account", "Salir de la cuenta Capo", "Quitter le compte Capo", "خروج از حساب کاپو")}
+                    {user.email && <p className="text-[10px] text-[#8aa0b4] truncate mb-2">{user.email}</p>}
+                    <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
+                      className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
+                      <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
                     </button>
                   </div>
                 )}
@@ -317,116 +211,126 @@ export default function App() {
             </div>
           </header>
 
-          {/* NAV 3 SEZIONI (One-Page) */}
-          <div className="bg-[#0b0f19]/90 border-b border-[#1e293b] px-4 py-2 sticky top-[65px] z-40 backdrop-blur-md">
-            <div className="max-w-4xl mx-auto flex items-center gap-2">
-              {SECTIONS.map((s) => {
-                const active = s.kind === "guida" ? section === "guida" : section === "control" && activeMode === (s.kind === "lab" ? "lab" : "floor");
-                const label = s.id === "capo" ? "MikiLab" : s.id === "mohamed" ? "Mohamed" : "BakemixAI";
-                return (
-                  <button key={s.id} data-testid={`nav-${s.id}`} onClick={() => handleHubSelect(s.kind)}
-                    className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-bold transition-all ${active ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] shadow-md shadow-[#14b8a6]/20" : "text-[#94A3B8] hover:text-white"}`}>
-                    <img src={`${PUB}/${s.avatar}`} alt="" className={`w-6 h-6 rounded-full object-cover object-top border ${active ? "border-[#030712]" : "border-[#334155]"}`} />
-                    <span className="hidden sm:inline">{label}</span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+          <ZoneRail zones={ZONES} active={activeZone} onJump={jumpTo} />
 
-          <main className="flex-1 max-w-4xl w-full mx-auto p-4 pb-32">
-            <ErrorBoundary resetKey={`${section}-${activeMode}-${currentView}`}>
+          <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-40">
+            <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
-            {/* SEZIONE 1 — RICETTE */}
-            {section === "ricette" && (
-              <div className="space-y-4 animate-fadeIn" data-testid="section-ricette">
-                <SectionHead avatar="avatar_miki.jpg" title={tri("Ricette di MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas de MikiLab", "Recettes de MikiLab", "دستورهای میکی‌لب")} sub={tri("Plancia del Capo: foto e ricette essenziali, coordinate dall'AI MikiLab.", "Chef-Konsole: Fotos und Kernrezepte, koordiniert von der MikiLab-KI.", "Capo's console: photos and core recipes, coordinated by MikiLab AI.", "Consola del Capo: fotos y recetas esenciales, coordinadas por la IA MikiLab.", "Console du Capo : photos et recettes clés, coordonnées par l'IA MikiLab.", "کنسول کاپو: عکس‌ها و دستورهای اصلی، هماهنگ با هوش مصنوعی.")} roleName="MikiLab" roleTag="Capo" />
-                <Ricette />
-              </div>
-            )}
-
-            {/* SEZIONE 2 — MIKILAB CONTROL */}
-            {section === "control" && (
-              <div className="space-y-5 animate-fadeIn" data-testid="section-control">
-                {activeMode === "lab" ? (
-                  !user ? (
-                    <CapoGate onLogin={() => { setAuthMode("login"); setAuthOpen(true); }} onFloor={() => setActiveMode("floor")} tri={tri} />
-                  ) : (
-                  <div className="space-y-5" data-testid="lab-control-view">
-                    <LabBriefing />
-                    <div className="flex items-center justify-end gap-2 -mb-2">
-                      <span className="text-[11px] font-bold text-[#06b6d4]">{tri("Governa a voce", "Per Stimme steuern", "Govern by voice", "Gobierna por voz", "Gouverne à la voix", "با صدا مدیریت کن")}</span>
-                      <BakoInfo context={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} />
+              {/* ================= ZONA 1 · MASTER ================= */}
+              <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
+                <ZoneDivider testid="zone-master" code="Z-01" title={tri("Master · Plancia di Governo", "Master · Steuerkonsole", "Master · Governance Console", "Master · Consola de Gobierno", "Master · Console de Gouvernance", "مستر · کنسول فرمان")} accent="#9D4EDD" />
+                {!user ? (
+                  <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
+                    <span className="holo-corner holo-corner-tl" style={{ color: "#9D4EDD" }} />
+                    <span className="holo-corner holo-corner-tr" style={{ color: "#9D4EDD" }} />
+                    <span className="holo-corner holo-corner-bl" style={{ color: "#9D4EDD" }} />
+                    <span className="holo-corner holo-corner-br" style={{ color: "#9D4EDD" }} />
+                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#070A10] border border-[#9D4EDD]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(157,78,221,0.35)]">
+                      <ShieldCheck className="w-8 h-8 text-[#9D4EDD]" />
                     </div>
-                    <SectionHead avatar="avatar_miki.jpg" title={tri("Plancia Capo", "Chef-Konsole", "Capo Console", "Consola Capo", "Console Capo", "کنسول کاپو")} sub={tri("Ricettario, piano, produzione e Ordini Extra con AI.", "Rezepte, Plan, Produktion und Extra-Aufträge mit KI.", "Recipe book, plan, production and Extra Orders with AI.", "Recetario, plan, producción y Pedidos Extra con IA.", "Recettes, plan, production et Commandes Extra avec l'IA.", "دستورها، برنامه، تولید و سفارش‌های اضافه با هوش مصنوعی.")} roleName="MikiLab" roleTag="Master Admin" />
-                    <div data-testid="capo-dept-switch" className="flex items-center gap-1.5 bg-[#030712] p-1 rounded-xl border border-[#1e293b] overflow-x-auto">
-                      {[["panificazione", "🍞", tri("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")], ["pizzeria", "🍕", "Pizzeria"], ["pasticceria", "🥐", tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی")], ["tutti", "👑", tri("Tutti", "Alle", "All", "Todos", "Tous", "همه")]].map(([k, ic, lb]) => (
-                        <button key={k} data-testid={`capo-dept-${k}`} onClick={() => setCapoDept(k)} className={`flex-1 whitespace-nowrap py-2 px-3 rounded-lg text-xs font-bold transition-all ${capoDept === k ? "bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712]" : "text-[#94A3B8] hover:text-white"}`}>{ic} {lb}</button>
-                      ))}
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-                      <LabCard testid="lab-nav-ordine" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso a Mohamed.", "Auftrag diktieren, Rückwärtsplan an Mohamed.", "Dictate the order, backwards plan to Mohamed.", "Dicta el pedido, plan a Mohamed.", "Dicte la commande, plan à Mohamed.", "سفارش را بگو، برنامه به محمد.")} onClick={() => setCurrentView("ordine-capo")} accent />
-                      <LabCard testid="lab-nav-ricette" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte und Teig-Bestätigung.", "Protected recipes and batch confirmation.", "Recetas protegidas y confirmación de amasado.", "Recettes protégées et confirmation de pétrissage.", "دستورهای محافظت‌شده و تأیید خمیر.")} onClick={() => setCurrentView("ricette")} />
-                      <LabCard testid="lab-nav-magazzino" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände, Schwellen und Reichweite.", "Stock levels, thresholds and autonomy.", "Existencias, umbrales y autonomía.", "Stocks, seuils et autonomie.", "موجودی، آستانه‌ها و خودکفایی.")} onClick={() => setCurrentView("magazzino")} />
-                      <LabCard testid="lab-nav-planner" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")} onClick={() => setCurrentView("planner")} />
-                      <LabCard testid="lab-nav-ordini" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan al instante.", "L'IA régénère le plan à l'instant.", "هوش مصنوعی برنامه را فوری بازسازی می‌کند.")} onClick={() => setCurrentView("ordini")} accent />
-                      <LabCard testid="lab-nav-pin" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN für die Produktion festlegen.", "Set the team PIN for production.", "Fija el PIN del equipo.", "Définis le PIN de l'équipe.", "پین تیم را تنظیم کن.")} onClick={() => setCurrentView("pinsetup")} />
-                      <LabCard testid="lab-nav-radar" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega caposquadra.", "Live-Grundriss, Tracking und Teamleiter-Delegation.", "Live floor plan, tracking and line-leader delegation.", "Plano en vivo, rastreo y delegación.", "Plan live, suivi et délégation.", "پلان زنده، ردیابی و واگذاری.")} onClick={() => setCurrentView("radar")} accent />
-                      <LabCard testid="lab-nav-compliance" icon="⚖️" title={tri("Compliance UE/DE", "Compliance EU/DE", "EU/DE Compliance", "Compliance UE/DE", "Conformité UE/DE", "انطباق اتحادیه اروپا")} sub={tri("Orari (ArbZG/UE), sicurezza DGUV e privacy GDPR.", "Zeiten (ArbZG/EU), DGUV-Sicherheit und DSGVO.", "Hours (ArbZG/EU), DGUV safety and GDPR privacy.", "Horas (ArbZG/UE), seguridad DGUV y RGPD.", "Heures (ArbZG/UE), sécurité DGUV et RGPD.", "ساعات، ایمنی و حریم خصوصی.")} onClick={() => setCurrentView("compliance")} accent />
-                    </div>
-                    {currentView === "dashboard" && <DocsDownload />}
-                    {currentView === "ordine-capo" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdineCapo /></div>}
-                    {currentView === "ricette" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b] space-y-4"><Ricette isMasterView={true} /></div>}
-                    {currentView === "magazzino" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><MagazzinoManager /></div>}
-                    {currentView === "planner" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><SmartPlannerStressZero /></div>}
-                    {currentView === "ordini" && <div className="bg-[#0b0f19] p-5 rounded-xl border border-[#1e293b]"><OrdiniExtra /></div>}
-                    {currentView === "pinsetup" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PinSetup /></div>}
-                    {currentView === "radar" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><PlantRadar /></div>}
-                    {currentView === "compliance" && <div className="bg-[#0b0f19] p-4 rounded-xl border border-[#1e293b]"><CompliancePanel /></div>}
+                    <h2 className="font-cyber text-lg font-black text-white uppercase tracking-wider">{tri("Accesso Capo riservato", "Chef-Zugang reserviert", "Capo access reserved", "Acceso Capo reservado", "Accès Capo réservé", "دسترسی کاپو محفوظ است")}</h2>
+                    <p className="text-xs text-[#8aa0b4] mt-2 max-w-md mx-auto">{tri("Ricettario protetto, piano di produzione, magazzino, radar impianto e compliance UE/DE. Accedi per governare il laboratorio; gli operatori restano nella zona Produzione.", "Geschützte Rezepte, Produktionsplan, Lager, Werk-Radar und EU/DE-Compliance. Melde dich an; das Team bleibt in der Produktionszone.", "Protected recipes, production plan, warehouse, plant radar and EU/DE compliance. Sign in to run the lab; operators stay in the Production zone.", "Recetas protegidas, plan, almacén, radar y compliance UE/DE. Accede para gestionar; el equipo usa la zona Producción.", "Recettes protégées, plan, entrepôt, radar et conformité UE/DE. Connecte-toi ; l'équipe reste en zone Production.", "دستورهای محافظت‌شده، برنامه، انبار، رادار و انطباق. وارد شو تا آزمایشگاه را مدیریت کنی.")}</p>
+                    <button data-testid="capo-gate-login" onClick={openAuth} className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all"
+                      style={{ background: "linear-gradient(90deg,#9D4EDD,#c084fc)", boxShadow: "0 0 22px rgba(157,78,221,0.45)" }}>
+                      <ShieldCheck className="w-4 h-4" /> {tri("Accedi come Capo", "Als Chef anmelden", "Sign in as Capo", "Acceder como Capo", "Se connecter comme Capo", "ورود به‌عنوان کاپو")}
+                    </button>
+                    <button data-testid="capo-gate-floor" onClick={() => jumpTo("operatori")} className="mt-3 block mx-auto text-xs font-bold text-[#8aa0b4] hover:text-[#00F0FF]">↓ {tri("Vai alla Produzione", "Zur Produktion", "Go to Production", "Ir a Producción", "Aller à la Production", "برو به تولید")}</button>
                   </div>
-                  )
                 ) : (
-                  <div className="space-y-5" data-testid="floor-mode-view">
-                    <MohamedFloor />
+                  <div className="space-y-4" data-testid="master-console">
+                    <LabBriefing />
+                    <ComplianceBeacon onOpen={() => jumpTo("master")} />
+                    <HoloPanel testid="panel-ordine" accent="#9D4EDD" beacon="#00F0FF" icon="🧭" defaultOpen title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
+                      <OrdineCapo />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-ricette" accent="#9D4EDD" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
+                      <Ricette isMasterView={true} />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-magazzino" accent="#9D4EDD" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
+                      <MagazzinoManager />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-planner" accent="#9D4EDD" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")}>
+                      <SmartPlannerStressZero />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-ordini" accent="#9D4EDD" beacon="#FFB800" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
+                      <OrdiniExtra />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-radar" accent="#9D4EDD" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega.", "Live-Grundriss & Tracking.", "Live floor plan & tracking.", "Plano en vivo.", "Plan live.", "پلان زنده.")}>
+                      <PlantRadar />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-compliance" accent="#9D4EDD" beacon="#00FF66" icon="⚖️" title={tri("Compliance UE/DE", "Compliance EU/DE", "EU/DE Compliance", "Compliance UE/DE", "Conformité UE/DE", "انطباق اتحادیه اروپا")} sub={tri("Orari (ArbZG/UE), sicurezza DGUV e privacy GDPR.", "Zeiten (ArbZG/EU), DGUV & DSGVO.", "Hours (ArbZG/EU), DGUV & GDPR.", "Horas, DGUV y RGPD.", "Heures, DGUV & RGPD.", "ساعات، ایمنی و حریم خصوصی.")}>
+                      <CompliancePanel />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-pin" accent="#9D4EDD" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN festlegen.", "Set the team PIN.", "Fija el PIN del equipo.", "Définis le PIN.", "پین تیم را تنظیم کن.")}>
+                      <PinSetup />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-docs" accent="#9D4EDD" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
+                      <DocsDownload />
+                    </HoloPanel>
                   </div>
                 )}
-              </div>
-            )}
+              </section>
 
-            {/* SEZIONE 3 — GUIDA, SOS & AI */}
-            {section === "guida" && (
-              <div className="space-y-4 animate-fadeIn" data-testid="section-guida">
-                <SectionHead avatar="avatar_bigmix.jpg" title={tri("Guida, SOS & AI Assistant", "Hilfe, SOS & KI-Assistent", "Guide, SOS & AI Assistant", "Guía, SOS & Asistente IA", "Guide, SOS & Assistant IA", "راهنما، SOS و دستیار هوش مصنوعی")} sub={tri("Tutto sul laboratorio, le impostazioni e come usare il sito.", "Alles über die Backstube, Einstellungen und Nutzung.", "Everything about the lab, settings and how to use the site.", "Todo sobre el laboratorio, ajustes y cómo usar el sitio.", "Tout sur le labo, les réglages et l'usage du site.", "همه‌چیز درباره آزمایشگاه، تنظیمات و نحوه استفاده.")} roleName="BakemixAI" roleTag="AI Assistant" />
+              {/* ================= ZONA 2 · OPERATORI ================= */}
+              <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
+                <ZoneDivider testid="zone-operatori" code="Z-02" title={tri("Operatori · Piano Produzione", "Operatoren · Produktion", "Operators · Production Floor", "Operarios · Producción", "Opérateurs · Production", "اپراتورها · تولید")} accent="#00F0FF" />
+                {floorUnlocked ? (
+                  <div data-testid="floor-zone"><MohamedFloor /></div>
+                ) : (
+                  <div data-testid="floor-lock" className="holo-panel p-6 sm:p-8 text-center">
+                    <span className="holo-corner holo-corner-tl" style={{ color: "#00F0FF" }} />
+                    <span className="holo-corner holo-corner-tr" style={{ color: "#00F0FF" }} />
+                    <span className="holo-corner holo-corner-bl" style={{ color: "#00F0FF" }} />
+                    <span className="holo-corner holo-corner-br" style={{ color: "#00F0FF" }} />
+                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#070A10] border border-[#00F0FF]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(0,240,255,0.35)]"><Lock className="w-8 h-8 text-[#00F0FF]" /></div>
+                    <h2 className="font-cyber text-lg font-black text-white uppercase tracking-wider">{tri("Produzione bloccata", "Produktion gesperrt", "Production locked", "Producción bloqueada", "Production verrouillée", "تولید قفل است")}</h2>
+                    <p className="text-xs text-[#8aa0b4] mt-2 max-w-md mx-auto">{tri("Inserisci il PIN del team per accedere alla postazione.", "Team-PIN eingeben, um zur Station zu gelangen.", "Enter the team PIN to access your station.", "Introduce el PIN del equipo.", "Entre le PIN de l'équipe.", "پین تیم را وارد کن.")}</p>
+                    <button data-testid="floor-unlock-btn" onClick={() => setShowPinLock(true)} className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all" style={{ background: "linear-gradient(90deg,#00F0FF,#00C8D6)", boxShadow: "0 0 22px rgba(0,240,255,0.4)" }}>
+                      <Lock className="w-4 h-4" /> {tri("Sblocca Produzione", "Entsperren", "Unlock Production", "Desbloquear", "Déverrouiller", "باز کردن")}
+                    </button>
+                  </div>
+                )}
+              </section>
+
+              {/* ================= ZONA 3 · BAKOMIX AI ================= */}
+              <section ref={zoneRefs.bakomix} data-zone="bakomix" className="holo-zone pt-2">
+                <ZoneDivider testid="zone-bakomix" code="Z-03" title={tri("BakoMix AI · Presenza & Governance", "BakoMix AI · Präsenz", "BakoMix AI · Presence & Governance", "BakoMix AI · Presencia", "BakoMix AI · Présence", "بوکومیکس · حضور")} accent="#00FF66" />
+                <div data-testid="bakomix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
+                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(0,255,102,0.12), transparent 65%)" }} />
+                  <div className="relative z-10">
+                    <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#00FF66]/70 bg-[#00FF66]/5 flex items-center justify-center shadow-[0_0_36px_rgba(0,255,102,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
+                      <img src={`${PUB}/avatar_bigmix.jpg`} alt="BakoMix AI" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                    </div>
+                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">BakoMix AI</h2>
+                    <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#00FF66] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
+                    <p className="mt-3 text-sm text-[#9fb3c4] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita BakoMix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die BakoMix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the BakoMix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe BakoMix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe BakoMix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت BakoMix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
+                  </div>
+                </div>
                 <BakemixGuide />
-              </div>
-            )}
+              </section>
 
             </ErrorBoundary>
           </main>
 
-          <footer className="mt-auto border-t border-[#1e293b] py-6 px-4 bg-[#030712]">
-            <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#94A3B8]">
-              <p>MikiLab · mikilab.de — Cyber-Industrial OS</p>
-              <button onClick={() => setLegalOpen(true)} className="hover:text-[#14b8a6] transition-colors">Impressum & Datenschutz</button>
+          <footer data-testid="page-footer" className="mt-auto border-t border-[#00F0FF]/12 py-5 px-4 bg-[#070A10]">
+            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 font-mono-data text-[10px] tracking-widest text-[#5b7183] uppercase">
+              <p>MikiLab Pro · mikilab.de — Holographic Industrial OS</p>
+              <div className="flex items-center gap-4">
+                <span className="text-[#00FF66]">● SYS ONLINE</span>
+                <button data-testid="legal-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#00F0FF] transition-colors uppercase tracking-widest">Impressum & Datenschutz</button>
+              </div>
             </div>
           </footer>
         </div>
 
         {legalOpen && (
-          <div className="fixed inset-0 z-50 bg-[#030712] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#14b8a6]">← Chiudi</button><LegalPage /></div></div>
+          <div className="fixed inset-0 z-50 bg-[#070A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#00F0FF]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage /></div></div>
         )}
-        {authOpen && !user && <div className="fixed inset-0 z-[70] bg-[#030712] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>}
-        {resetToken && <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />}
+        {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
 
         <Toaster position="top-center" richColors />
-        <BakoMixSense
-          section={section}
-          mode={section === "control" ? activeMode : "guida"}
-          isCapo={!!user}
-          operator={operator}
-          floorRole={floorRole}
-        />
+        <BakoMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : activeZone === "bakomix" ? "guida" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
         <RadioFornaio />
         <ShiftScheduler />
         <TalkWithMiki />
@@ -435,56 +339,5 @@ export default function App() {
         <AudioRouteIndicator />
       </div>
     </MachinesProvider></MixerTimersProvider></SoundFXProvider></TimerProvider></AmbientProvider></ProfileProvider>
-  );
-}
-
-function CapoGate({ onLogin, onFloor, tri }) {
-  return (
-    <div data-testid="capo-gate" className="relative overflow-hidden rounded-2xl bg-[#0b0f19] border border-[#14b8a6]/30 shadow-2xl p-6 sm:p-8 text-center animate-fadeIn">
-      <div className="absolute -top-10 -right-10 w-48 h-48 bg-[#14b8a6]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="relative">
-        <div className="w-16 h-16 mx-auto rounded-2xl bg-[#030712] border border-[#14b8a6]/40 flex items-center justify-center mb-4 shadow-lg shadow-[#14b8a6]/20">
-          <ShieldCheck className="w-8 h-8 text-[#14b8a6]" />
-        </div>
-        <h2 className="text-lg font-extrabold text-white">{tri("Accesso Capo riservato", "Chef-Zugang reserviert", "Capo access reserved", "Acceso Capo reservado", "Accès Capo réservé", "دسترسی کاپو محفوظ است")}</h2>
-        <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">
-          {tri("La ", "Die ", "The ", "El ", "Le ", "")}<span className="text-[#14b8a6] font-bold">Lab Control</span>{tri(" è la plancia del Capo: ricettario protetto, piano di produzione, magazzino e Ordini Extra con l'AI. Accedi con Google o email per gestire il laboratorio; il team resta in Produzione · Floor con il PIN.",
-            " ist die Chef-Konsole: geschützte Rezepte, Produktionsplan, Lager und Extra-Aufträge mit KI. Melde dich mit Google oder E-Mail an; das Team bleibt in Produktion · Floor mit PIN.",
-            " is the Capo's console: protected recipes, production plan, warehouse and AI Extra Orders. Sign in with Google or email to run the lab; the team stays in Production · Floor with the PIN.",
-            " es la consola del Capo: recetas protegidas, plan de producción, almacén y Pedidos Extra con IA. Accede con Google o email; el equipo usa Producción · Floor con el PIN.",
-            " est la console du Capo : recettes protégées, plan de production, entrepôt et Commandes Extra avec l'IA. Connecte-toi avec Google ou e-mail ; l'équipe reste en Production · Floor avec le PIN.",
-            " کنسول کاپو است: دستورهای محافظت‌شده، برنامه تولید، انبار و سفارش‌های اضافه با هوش مصنوعی. با گوگل یا ایمیل وارد شو؛ تیم با PIN در بخش تولید می‌ماند.")}
-        </p>
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-          <button data-testid="capo-gate-login" onClick={onLogin} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-sm shadow-md shadow-[#14b8a6]/30 active:scale-95 transition-all">
-            <ShieldCheck className="w-4 h-4" /> {tri("Accedi come Capo", "Als Chef anmelden", "Sign in as Capo", "Acceder como Capo", "Se connecter comme Capo", "ورود به‌عنوان کاپو")}
-          </button>
-          <button data-testid="capo-gate-floor" onClick={onFloor} className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] font-bold text-sm hover:text-white hover:border-[#14b8a6]/40 active:scale-95 transition-all">
-            ⚡ {tri("Vai a Produzione · Floor", "Zu Produktion · Floor", "Go to Production · Floor", "Ir a Producción · Floor", "Aller à Production · Floor", "برو به تولید · Floor")}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SectionHead({ avatar, title, sub, roleName, roleTag, amber }) {
-  return (
-    <div className="p-4 rounded-2xl bg-[#0b0f19] border border-[#1e293b] shadow-xl relative overflow-hidden flex items-center justify-between gap-3">
-      <div className="absolute top-0 right-0 w-40 h-40 bg-[#14b8a6]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="flex items-center gap-3 min-w-0">
-        <img src={`${PUB}/${avatar}`} alt="" className={`w-12 h-12 rounded-xl object-cover object-top border ${amber ? "border-amber-500" : "border-[#14b8a6]"}`} />
-        <div className="min-w-0">
-          <h2 className="text-base font-extrabold text-[#14b8a6] truncate">{title}</h2>
-          <p className="text-xs text-[#94A3B8]">{sub}</p>
-        </div>
-      </div>
-      {roleName && (
-        <div className="hidden sm:block text-right shrink-0">
-          <p className="text-[11px] font-bold text-white">{roleName}</p>
-          <p className={`text-[9px] ${amber ? "text-amber-400" : "text-[#14b8a6]"}`}>{roleTag}</p>
-        </div>
-      )}
-    </div>
   );
 }

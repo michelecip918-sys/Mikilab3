@@ -11,6 +11,7 @@ import OperatorAura from "@/components/OperatorAura";
 import HeadsetChannel from "@/components/HeadsetChannel";
 import LivenessGate from "@/components/LivenessGate";
 import FloorCrossCheck from "@/components/FloorCrossCheck";
+import ComplianceBeacon from "@/components/ComplianceBeacon";
 import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -105,6 +106,7 @@ export default function MohamedFloor() {
   return (
     <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-4"><SequenceGuard /></div>
+      <div className="w-full mb-2"><ComplianceBeacon compact /></div>
       <div className="w-full"><TeamTasks operatorName={role} /></div>
       <div className="w-full"><DoughTimer /></div>
       <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
@@ -116,7 +118,7 @@ export default function MohamedFloor() {
       </button>
       {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
       <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mohamed</motion.h2>
-      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Tocca: ti leggo i task del tuo ruolo dalla coda del Capo, passo-passo.", "Tippe: ich lese dir die Aufgaben deiner Rolle aus der Warteschlange des Chefs vor.", "Tap: I read your role's tasks from the Capo's queue, step by step.", "Toca: te leo las tareas de tu rol desde la cola del Capo.", "Touche : je te lis les tâches de ton rôle depuis la file du Capo.", "بزن: وظایف نقش‌ات را از صف کاپو می‌خوانم.")}</p>
+      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a BakoMix AI: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit BakoMix AI: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to BakoMix AI: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con BakoMix AI: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à BakoMix AI : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با BakoMix AI حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
       <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")}
         className="group relative overflow-hidden mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-sm text-[#22d3ee] active:scale-95 transition-all"
         style={{ background: "linear-gradient(155deg, rgba(11,20,32,0.9), rgba(6,12,22,0.9))", border: "1px solid rgba(34,211,238,0.45)", boxShadow: "0 0 20px rgba(34,211,238,0.18)" }}>
