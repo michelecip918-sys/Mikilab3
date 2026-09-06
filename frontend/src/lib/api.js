@@ -599,6 +599,7 @@ export const bakoApi = {
   sosHistory: (lang) => api.get(`/bako/sos/history`, { params: { lang } }).then((r) => r.data),
   sosChallenge: (lang) => api.get(`/bako/sos/challenge`, { params: { lang } }).then((r) => r.data),
   packaging: (breadTemp, lang) => api.get(`/bako/packaging`, { params: { bread_temp_c: breadTemp, lang } }).then((r) => r.data),
+  suggestions: (lang) => api.get(`/bako/suggestions`, { params: { lang } }).then((r) => r.data),
   maintenanceGuide: (payload) => api.post(`/bako/maintenance-guide`, payload).then((r) => r.data),
   ovenQc: (payload) => api.post(`/bako/oven-qc`, payload).then((r) => r.data),
   b2bList: () => api.get(`/bako/b2b/orders`).then((r) => r.data),

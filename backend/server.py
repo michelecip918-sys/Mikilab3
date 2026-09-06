@@ -10638,6 +10638,56 @@ async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_adm
             "title": (f"Sfida della settimana (dal {wk})" if it else f"Weekly challenge (from {wk})")}
 
 
+# --- BakoMix · Suggerimenti predittivi (il "cervello" unico dell'impianto) ---
+@api_router.get("/bako/suggestions")
+async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin)):
+    """BakoMix incrocia lo stato live (forni, celle, SOS, silos, ordini B2B) e propone
+    da solo 1-3 azioni concrete, ognuna con un tocco per agire."""
+    it = not (lang or "it").startswith("en")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    hb = await bako_heartbeat(lang, admin)
+    sug = []
+    # Forni in stress alto → sposta lotti
+    hot = [v["label"] for k, v in hb["machines"].items() if k.startswith("forno") and v["level"] == "alto"]
+    if hot:
+        sug.append({"id": "oven-stress", "icon": "flame", "severity": "alto", "target": "panel-twin",
+                    "text": R(f"{hot[0]} in stress: sposta 1-2 lotti su un forno libero.", f"{hot[0]} under stress: move 1-2 batches to a free oven."),
+                    "action": R("Apri Gemello 3D", "Open Twin")})
+    # SOS attivi
+    if hb["sos"]["count"]:
+        sug.append({"id": "sos", "icon": "alert", "severity": "alto", "target": "panel-emergency",
+                    "text": R(f"{hb['sos']['count']} SOS attivi dal reparto: intervieni.", f"{hb['sos']['count']} active floor SOS: intervene."),
+                    "action": R("Centro Emergenze", "Emergency")})
+    # Pochi forni liberi → frena le celle
+    if hb["free_ovens"] <= 0:
+        sug.append({"id": "proof-brake", "icon": "waves", "severity": "medio", "target": "panel-proofing",
+                    "text": R("Nessun forno libero: frena le celle per non far strappare i lieviti.", "No free ovens: brake the proofing cells."),
+                    "action": R("Celle adattive", "Proofing")})
+    # AGV in manutenzione
+    if hb["agv"]["alert_count"]:
+        sug.append({"id": "agv", "icon": "truck", "severity": "medio", "target": "panel-agv",
+                    "text": R(f"Un AGV segnala rumore anomalo: manutenzione preventiva.", "An AGV reports abnormal noise: preventive maintenance."),
+                    "action": R("Flotta AGV", "AGV Fleet")})
+    # Silos sotto soglia
+    silos = await bako_silos(lang, admin)
+    if silos["reorder_count"]:
+        sug.append({"id": "silos", "icon": "container", "severity": "medio", "target": "panel-silos",
+                    "text": R(f"{silos['reorder_count']} silos sotto soglia: genera i micro-ordini.", f"{silos['reorder_count']} silos below threshold: generate micro-orders."),
+                    "action": R("Silos", "Silos")})
+    # Ordini B2B da pianificare
+    b2b = await bako_b2b_list(admin)
+    if b2b["total_dough_kg"] > 0:
+        sug.append({"id": "b2b", "icon": "cart", "severity": "info", "target": "panel-b2b",
+                    "text": R(f"{b2b['total_dough_kg']} kg d'impasto da ordini B2B: sincronizza col piano.", f"{b2b['total_dough_kg']} kg dough from B2B orders: sync with the plan."),
+                    "action": R("Ordini B2B", "B2B Orders")})
+    sug = sug[:3]
+    if not sug:
+        spoken = R("Tutto sotto controllo, Mio Supremo Capo. Impianto fluido, nessun intervento necessario.", "All under control, Capo. Plant nominal, no action needed.")
+    else:
+        spoken = R("Ho notato qualcosa, Mio Supremo Capo. ", "I noticed something, Capo. ") + sug[0]["text"]
+    return {"suggestions": sug, "count": len(sug), "spoken": spoken}
+
+
 
 
 

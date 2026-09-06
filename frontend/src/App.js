@@ -76,6 +76,7 @@ import AgvFleet from "@/components/console/AgvFleet";
 import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
+import BakoSuggestions from "@/components/console/BakoSuggestions";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
@@ -273,6 +274,7 @@ export default function App() {
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
                     <RoleLayout />
+                    <BakoSuggestions />
                     <LabBriefing />
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" defaultOpen title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />

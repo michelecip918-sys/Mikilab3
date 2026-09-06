@@ -313,3 +313,8 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Regole voce**: MamoAssistant legge agli operatori comandi BREVI (floorShort, ~14 parole/1 frase); il Capo mantiene la conversazione libera (govern).
 - **Sfida tra turni**: GET /api/bako/sos/challenge — classifica reattività SOS SETTIMANALE con badge (🥇 più reattivo, 🔥 più interventi). UI: sezione sos-challenge in EmergencyCenter.
 - Test iteration_206: backend 100% (8/8) / frontend 100%, 0 bug. TUTTO il backlog v14 completato.
+
+## v54 (2026-09) — Timeline "ADESSO" live + BakoMix Suggerimenti predittivi
+- **Timeline ADESSO**: linea rossa verticale che avanza in tempo reale (aggiorna ogni 20s) e appare solo se l'ora corrente ricade nella finestra eventi; l'evento successivo è evidenziato (dot più grande + glow). timeline-now.
+- **BakoMix Suggerimenti**: GET /api/bako/suggestions — "cervello" unico che incrocia forni/celle/SOS/silos/AGV/B2B e propone 1-3 azioni concrete con navigazione al pannello + annuncio vocale. UI BakoSuggestions.jsx in cima alla plancia (sempre visibile, fuori dal filtro Layout per Ruolo).
+- Verificato via curl (prioritizzazione severità) + screenshot. Nessun errore runtime.
