@@ -1127,6 +1127,45 @@ async def depts_assign_delete(aid: str, admin: dict = Depends(require_admin)):
     await db.dept_assignments.delete_one({"id": aid})
     return {"ok": True}
 
+class DeptAssignMultiItem(BaseModel):
+    operator: str = ""
+    task: str = ""
+
+class DeptAssignMultiReq(BaseModel):
+    dept: str = ""
+    items: List[DeptAssignMultiItem] = []
+    target: int = 0
+    label: str = ""
+
+@api_router.post("/depts/assign-multi")
+async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(require_admin)):
+    """Assegna PIÙ operai a mansioni distinte nello stesso reparto in un colpo solo."""
+    import uuid as _uuid
+    if body.dept not in DEPARTMENTS:
+        raise HTTPException(status_code=400, detail="Reparto sconosciuto")
+    today = now_iso()[:10]
+    created = []
+    for it in body.items:
+        op = (it.operator or "").strip()
+        if not op:
+            continue
+        doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
+               "dept_name": DEPARTMENTS[body.dept]["name"], "task": (it.task or "").strip(),
+               "operator": op, "note": "",
+               "by": admin.get("email") or "master", "at": now_iso()}
+        await db.dept_assignments.insert_one({**doc})
+        doc.pop("_id", None)
+        created.append(doc)
+    if int(body.target or 0) > 0:
+        await db.dept_objectives.update_one(
+            {"date": today, "dept": body.dept},
+            {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
+                      "target": int(body.target or 0), "unit": "pezzi", "label": (body.label or "").strip(),
+                      "updated_at": now_iso()},
+             "$setOnInsert": {"done": 0, "entries": []}},
+            upsert=True)
+    return {"ok": True, "assignments": created}
+
 # --- Obiettivi di squadra in tempo reale (sync per reparto, tracciati per PIN) ---
 class ObjectiveReq(BaseModel):
     dept: str = ""

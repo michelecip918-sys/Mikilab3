@@ -649,6 +649,7 @@ export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),
   assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
   assign: (payload) => api.post(`/depts/assign`, payload).then((r) => r.data),
+  assignMulti: (payload) => api.post(`/depts/assign-multi`, payload).then((r) => r.data),
   unassign: (id) => api.delete(`/depts/assign/${id}`).then((r) => r.data),
   setObjective: (payload) => api.post(`/depts/objective`, payload).then((r) => r.data),
   progress: (payload) => api.post(`/depts/progress`, payload).then((r) => r.data),

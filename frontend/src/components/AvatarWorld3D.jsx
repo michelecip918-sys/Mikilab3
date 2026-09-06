@@ -49,40 +49,107 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
 
     let animatedExtras = [];
 
-    if (["mohamed", "panificio", "pizzeria", "laugen"].includes(theme)) {
-      // ZONA PRODUZIONE CALDA: forni industriali con calore, impastatrice, scaffali pane
+    if (theme === "panificio" || theme === "mohamed") {
+      // PANIFICIO: forni a deck con calore + silos farina + impastatrice a spirale + scaffale pane
       for (let i = 0; i < 2; i++) {
         const oven = new THREE.Group();
-        const body = new THREE.Mesh(new THREE.BoxGeometry(2.4, 2.6, 1.8), mat(0x2b3440, { m: 0.85, r: 0.35 }));
+        const body = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.6, 1.7), mat(0x2b3440, { m: 0.85, r: 0.35 }));
         oven.add(body);
         const doorMat = mat(0xff7a1a, { e: 0xff5a00, ei: 1.4, m: 0.3, r: 0.2 });
-        const door = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 0.12), doorMat);
-        door.position.set(0, 0.2, 0.92); oven.add(door);
-        const door2 = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.9, 0.12), doorMat.clone());
-        door2.position.set(0, -0.85, 0.92); oven.add(door2);
-        oven.position.set(i === 0 ? -3.3 : 3.3, 1.3, -1.5);
+        const door = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.9, 0.12), doorMat);
+        door.position.set(0, 0.2, 0.88); oven.add(door);
+        const door2 = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.9, 0.12), doorMat.clone());
+        door2.position.set(0, -0.85, 0.88); oven.add(door2);
+        oven.position.set(i === 0 ? -3.4 : 3.4, 1.3, -1.6);
         world.add(oven); reg(oven, i * 0.12, 0.7);
         animatedExtras.push({ type: "heat", door, door2 });
       }
-      // Impastatrice (ciotola + pala rotante)
+      // Silos farina
+      for (let i = 0; i < 2; i++) {
+        const silo = new THREE.Group();
+        const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 2.1, 20), mat(0x9aa7b4, { m: 0.9, r: 0.25 })); silo.add(tube);
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(0.55, 0.7, 20), mat(0x8792a0, { m: 0.9 })); cone.position.y = -1.4; cone.rotation.x = Math.PI; silo.add(cone);
+        silo.position.set(i === 0 ? -1.3 : 1.3, 1.35, -3.2); world.add(silo); reg(silo, 0.2 + i * 0.1, 0.7);
+      }
+      // Impastatrice a spirale
       const mixer = new THREE.Group();
-      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(1, 0.7, 1.1, 24, 1, true), mat(0x9aa7b4, { m: 0.9, r: 0.25 })); bowl.material.side = THREE.DoubleSide;
+      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 0.65, 1.0, 24, 1, true), mat(0x9aa7b4, { m: 0.9, r: 0.25 })); bowl.material.side = THREE.DoubleSide;
       mixer.add(bowl);
-      const paddle = new THREE.Mesh(new THREE.TorusKnotGeometry(0.32, 0.09, 60, 8), mat(0xd0d8e0, { m: 0.95, r: 0.2 }));
-      paddle.position.y = 0.1; mixer.add(paddle);
-      mixer.position.set(0, 0.9, 1.2); world.add(mixer); reg(mixer, 0.28, 0.7);
-      animatedExtras.push({ type: "spin", obj: paddle });
+      const spiral = new THREE.Mesh(new THREE.TorusKnotGeometry(0.3, 0.08, 60, 8), mat(0xd0d8e0, { m: 0.95, r: 0.2 }));
+      spiral.position.y = 0.1; mixer.add(spiral);
+      mixer.position.set(0, 0.9, 1.3); world.add(mixer); reg(mixer, 0.3, 0.7);
+      animatedExtras.push({ type: "spin", obj: spiral });
       // Scaffale pane
       const rack = new THREE.Group();
       for (let s = 0; s < 3; s++) {
-        const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.06, 0.7), mat(0x8792a0, { m: 0.9, r: 0.3 }));
-        shelf.position.y = s * 0.55; rack.add(shelf);
+        const shelf = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.06, 0.7), mat(0x8792a0, { m: 0.9, r: 0.3 }));
+        shelf.position.y = s * 0.5; rack.add(shelf);
         for (let b = 0; b < 3; b++) {
-          const bread = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), mat(0xC98A3C, { r: 0.8, m: 0.1 }));
-          bread.scale.set(1.5, 0.8, 1); bread.position.set(-0.8 + b * 0.8, s * 0.55 + 0.18, 0); rack.add(bread);
+          const bread = new THREE.Mesh(new THREE.SphereGeometry(0.2, 12, 8), mat(0xC98A3C, { r: 0.8, m: 0.1 }));
+          bread.scale.set(1.5, 0.8, 1); bread.position.set(-0.7 + b * 0.7, s * 0.5 + 0.16, 0); rack.add(bread);
         }
       }
-      rack.position.set(0, 0.4, -3); world.add(rack); reg(rack, 0.42, 0.8);
+      rack.position.set(0, 0.5, -2.4); world.add(rack); reg(rack, 0.42, 0.8);
+    } else if (theme === "pasticceria") {
+      // PASTICCERIA: planetaria (frusta rotante) + carrello teglie di dolci + piano di marmo
+      const plan = new THREE.Group();
+      const col = new THREE.Mesh(new THREE.BoxGeometry(0.5, 2.2, 0.5), mat(0xcfd8e0, { m: 0.9, r: 0.2 })); col.position.y = 0.4; plan.add(col);
+      const head = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.5, 0.6), mat(0xdfe6ee, { m: 0.9 })); head.position.set(0.35, 1.35, 0); plan.add(head);
+      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.42, 0.7, 24, 1, true), mat(0xb7c2cd, { m: 0.95, r: 0.2 })); bowl.material.side = THREE.DoubleSide; bowl.position.set(0.5, 0.55, 0); plan.add(bowl);
+      const whisk = new THREE.Mesh(new THREE.SphereGeometry(0.26, 10, 8, 0, Math.PI * 2, 0, Math.PI / 1.6), new THREE.MeshStandardMaterial({ color: 0xeef3f8, metalness: 0.95, roughness: 0.15, wireframe: true })); whisk.position.set(0.5, 0.75, 0); plan.add(whisk);
+      plan.position.set(-2.7, 0, 0.5); world.add(plan); reg(plan, 0.1, 0.7); animatedExtras.push({ type: "spin", obj: whisk, sp: 1.5 });
+      // Carrello teglie con dolci (ambra / corallo / menta — no viola)
+      const rack = new THREE.Group();
+      const cols = [0xF0C24A, 0xE86A5C, 0x7FD8C0];
+      for (let s = 0; s < 4; s++) {
+        const tray = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.05, 0.9), mat(0xaeb8c2, { m: 0.9 })); tray.position.y = s * 0.5; rack.add(tray);
+        for (let c = 0; c < 3; c++) { const cake = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.15, 0.15, 16), mat(cols[c], { r: 0.5, m: 0.1, e: cols[c], ei: 0.2 })); cake.position.set(-0.55 + c * 0.55, s * 0.5 + 0.11, 0); rack.add(cake); }
+      }
+      rack.position.set(1.9, 0.4, -1.8); world.add(rack); reg(rack, 0.3, 0.8);
+      const marble = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.12, 1.2), mat(0xe8ecf0, { m: 0.2, r: 0.1 })); marble.position.set(-0.4, 0.95, 1.5); world.add(marble); reg(marble, 0.45, 0.7);
+    } else if (theme === "pizzeria") {
+      // PIZZERIA: forno a cupola con fiamma + banco pizzaiolo con palline + pala rotante
+      const dome = new THREE.Group();
+      const cupola = new THREE.Mesh(new THREE.SphereGeometry(1.5, 24, 16, 0, Math.PI * 2, 0, Math.PI / 2), mat(0x2b3440, { m: 0.6, r: 0.5 })); dome.add(cupola);
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.7, 0.5, 24), mat(0x3a4652, { m: 0.7 })); base.position.y = -0.25; dome.add(base);
+      const mouth = new THREE.Mesh(new THREE.CircleGeometry(0.55, 20), new THREE.MeshBasicMaterial({ color: 0xff6a1a })); mouth.position.set(0, 0.3, 1.45); dome.add(mouth);
+      const flame = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 10), mat(0xff8a2a, { e: 0xff5a00, ei: 1.6, m: 0.1, r: 0.3, t: true, o: 0.85 })); flame.position.set(0, 0.3, 1.25); dome.add(flame);
+      dome.position.set(-2.4, 1.1, -1.2); world.add(dome); reg(dome, 0.1, 0.8); animatedExtras.push({ type: "flame", obj: flame });
+      const bench = new THREE.Group();
+      const top = new THREE.Mesh(new THREE.BoxGeometry(3, 0.14, 1.2), mat(0xb7c2cd, { m: 0.85, r: 0.25 })); top.position.y = 1; bench.add(top);
+      for (let i = 0; i < 5; i++) { const ball = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), mat(0xEfe6d2, { r: 0.9, m: 0.02 })); ball.scale.y = 0.7; ball.position.set(-1 + i * 0.5, 1.16, (i % 2 ? 0.25 : -0.15)); bench.add(ball); }
+      bench.position.set(1.7, 0, 0.6); world.add(bench); reg(bench, 0.3, 0.7);
+      const peel = new THREE.Group();
+      const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 2), mat(0x8792a0, { m: 0.8 })); handle.rotation.z = Math.PI / 2; peel.add(handle);
+      const plate = new THREE.Mesh(new THREE.CircleGeometry(0.45, 20), mat(0xd0d8e0, { m: 0.9, r: 0.2 })); plate.position.x = 1.15; plate.rotation.y = Math.PI / 2; peel.add(plate);
+      peel.position.set(1.4, 1.7, -0.6); world.add(peel); reg(peel, 0.5, 0.7); animatedExtras.push({ type: "spin", obj: peel, sp: 0.3 });
+    } else if (theme === "laugen") {
+      // LAUGEN: vasca soda/lisciva (liquido) + griglie di essiccazione + brezel
+      const tank = new THREE.Group();
+      const walls = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.8, 1.6), mat(0x9aa7b4, { m: 0.95, r: 0.15 })); tank.add(walls);
+      const liquid = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.4), new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.35 })); liquid.rotation.x = -Math.PI / 2; liquid.position.y = 0.36; tank.add(liquid);
+      tank.position.set(-2.4, 0.6, 0.4); world.add(tank); reg(tank, 0.1, 0.7); animatedExtras.push({ type: "shimmer", obj: liquid });
+      const grid = new THREE.Group();
+      for (let s = 0; s < 3; s++) {
+        const g = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.04, 1), new THREE.MeshStandardMaterial({ color: 0x8792a0, metalness: 0.9, roughness: 0.3, wireframe: true })); g.position.y = s * 0.55; grid.add(g);
+        for (let b = 0; b < 3; b++) { const pretzel = new THREE.Mesh(new THREE.TorusKnotGeometry(0.15, 0.055, 48, 6, 2, 3), mat(0xC98A3C, { r: 0.7, m: 0.1 })); pretzel.position.set(-0.7 + b * 0.7, s * 0.55 + 0.12, 0); pretzel.rotation.x = Math.PI / 2; grid.add(pretzel); }
+      }
+      grid.position.set(1.7, 0.4, -1.6); world.add(grid); reg(grid, 0.3, 0.8);
+    } else if (theme === "banco") {
+      // BANCO E PREZZI: bilancia prezzatrice + vetrina refrigerata + etichettatrice
+      const scale = new THREE.Group();
+      const platf = new THREE.Mesh(new THREE.BoxGeometry(1, 0.12, 0.8), mat(0xcfd8e0, { m: 0.9, r: 0.2 })); platf.position.y = 0.6; scale.add(platf);
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), mat(0x8792a0)); post.position.set(0, 0.85, -0.3); scale.add(post);
+      const disp = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.35), new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.6 })); disp.position.set(0, 1.05, -0.25); scale.add(disp);
+      scale.position.set(-2.7, 0, 0.6); world.add(scale); reg(scale, 0.1, 0.7); animatedExtras.push({ type: "shimmer", obj: disp });
+      const caseG = new THREE.Group();
+      const geoBox = new THREE.BoxGeometry(3, 1.4, 1.2);
+      const frame = new THREE.Mesh(geoBox, holoMat(0x00F0FF, 0.1)); caseG.add(frame);
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geoBox), new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.6 })); caseG.add(edges);
+      const pc = [0xC98A3C, 0xEfe6d2, 0xE0A106, 0xC98A3C];
+      for (let i = 0; i < 4; i++) { const prod = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.7), mat(pc[i], { r: 0.7 })); prod.position.set(-1 + i * 0.65, -0.4, 0); caseG.add(prod); }
+      caseG.position.set(1.1, 0.9, -1); world.add(caseG); reg(caseG, 0.3, 0.8);
+      const roll = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.4, 20), mat(0xdfe6ee, { m: 0.5, r: 0.4 })); roll.rotation.z = Math.PI / 2; roll.position.set(-2.7, 1.4, 0.6); world.add(roll); reg(roll, 0.45, 0.7); animatedExtras.push({ type: "spin", obj: roll, sp: 0.6 });
     } else if (theme === "bigmix") {
       // ASSISTENTE: onde sonore + particelle + moduli input vocale trasparenti
       const core = new THREE.Mesh(new THREE.IcosahedronGeometry(0.9, 1), new THREE.MeshBasicMaterial({ color: 0x6EA8FE, wireframe: true, transparent: true, opacity: 0.5 }));
@@ -168,6 +235,8 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
         else if (x.type === "float") x.obj.position.y = (x.obj.userData.baseY || x.obj.position.y) + Math.sin(el * 1.2 + x.ph) * 0.08;
         else if (x.type === "particles") { for (let i = 0; i < x.N; i++) { x.arr[i * 3 + 1] += 0.008 * (speakingRef.current ? 2.4 : 1); if (x.arr[i * 3 + 1] > 5) x.arr[i * 3 + 1] = 0; } x.obj.geometry.attributes.position.needsUpdate = true; x.obj.material.opacity = speakingRef.current ? 1 : 0.7; }
         else if (x.type === "waves") { const amp = speakingRef.current ? 0.5 : 0.15; x.rings.forEach((r) => { const s = 1 + Math.sin(el * 3 - r.i * 0.8) * amp; r.ring.scale.set(s, s, s); r.ring.material.opacity = (speakingRef.current ? 0.7 : 0.4) - r.i * 0.07; }); }
+        else if (x.type === "flame") { const p = 1 + Math.sin(el * 6) * 0.28; x.obj.scale.set(p, p * 1.15, p); x.obj.material.emissiveIntensity = 1.4 + Math.sin(el * 8) * 0.5; }
+        else if (x.type === "shimmer") { x.obj.material.opacity = 0.32 + Math.sin(el * 2.2) * 0.14; }
       }
       renderer.render(scene, camera);
       raf = requestAnimationFrame(animate);

@@ -4414,3 +4414,25 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - UI `components/console/ShiftBriefing.jsx`: overlay olografico full-screen; i 3 avatar si illuminano in sequenza e parlano in TTS (hands-free); colore dominante reattivo allo stress (azzurro/ambra/rosso). Auto-apertura 1×/giorno per admin (localStorage mikilab_briefing_day) + pulsante header `briefing-open`.
 - Test: iteration_199 backend 100%, frontend 100%, 0 bug.
 - **Fase 2 (da avviare)**: Metaverso Digital-Twin 3D del laboratorio (react-three-fiber) con avatar navigabili — grande cantiere a sé; vincolo offline richiede asset bundlati.
+
+---
+## MikiLab Pro — Enterprise OS · Reparti (2026-09-06)
+### Assegnazioni MULTI-OPERAIO (P0 FATTO)
+- `DeptAssign.jsx` riscritto: il Capo sceglie il reparto, seleziona PIÙ operai (dai PIN registrati via `operatorPinsApi.list` + aggiunta manuale con `dept-manual-input`/`dept-manual-add`), dà a ciascuno una mansione distinta (`dept-op-task-<nome>`), imposta obiettivo opzionale (`dept-label-input`+`dept-target-input`) e assegna tutto in un colpo (`dept-assign-btn`).
+- Backend nuovo endpoint `POST /api/depts/assign-multi` (require_admin + gate): accetta `{dept, items:[{operator,task}], target, label}`, crea un'assegnazione per operaio e imposta l'obiettivo del reparto (board live). `deptApi.assignMulti` in `lib/api.js`.
+- Verificato: curl (3 operai distinti creati, board 0/target aggiornata) + E2E frontend (toast "Assigned 3 ✓", righe assegnazione renderizzate, lavagna live per i 5 reparti).
+
+### Geometrie 3D uniche per reparto (P1 FATTO)
+- `AvatarWorld3D.jsx`: branch dedicati per `theme` panificio/pasticceria/pizzeria/laugen/banco, Vanilla three.js (NIENTE @react-three/fiber, NIENTE viola):
+  - Panificio: forni deck con calore + silos farina + impastatrice a spirale + scaffale pane.
+  - Pasticceria: planetaria con frusta rotante + carrello teglie (ambra/corallo/menta) + piano di marmo.
+  - Pizzeria: forno a cupola con fiamma pulsante + banco palline + pala rotante.
+  - Laugen: vasca soda/lisciva (liquido shimmer) + griglie essiccazione + brezel.
+  - Banco e Prezzi: bilancia prezzatrice (display) + vetrina refrigerata (glass box) + etichettatrice a rullo.
+- Nuovi handler d'animazione: `flame` (fiamma pizzeria), `shimmer` (liquido/display). `DeptFocus.jsx` passa `theme={dept.key}`.
+- Verificato: testing agent (iteration_212) — canvas WebGL presente e theme che commuta per ogni reparto, nessun errore three.js, nessun viola.
+
+### Note
+- Il "HIGH" segnalato dal testing agent (dept-assign-btn non cliccabile) era un FALSO ALLARME: causato dal wizard onboarding `KioskMode` (z-130, `mikilab_kiosk_wizard_seen`, una sola volta per dispositivo) rimasto aperto sopra la console durante l'automazione, NON dall'orb ambient-bako (nessun overlap). Toast di successo e creazione assegnazioni confermati a schermo. `data-testid="kiosk-modal-close"` già presente.
+- Preview ≠ produzione: serve REDEPLOY per applicare su mikilab.de.
+
