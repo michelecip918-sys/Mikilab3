@@ -1218,6 +1218,28 @@ async def depts_board():
     return {"date": today, "objectives": docs}
 
 
+@api_router.get("/depts/history")
+async def depts_history(days: int = 14, admin: dict = Depends(require_admin)):
+    """Storico turni: composizione squadra per giorno e reparto."""
+    docs = await db.dept_assignments.find({}, {"_id": 0}).sort("at", -1).to_list(3000)
+    by_date = {}
+    for a in docs:
+        d = a.get("date") or (a.get("at") or "")[:10]
+        if not d:
+            continue
+        by_date.setdefault(d, []).append(a)
+    n = max(1, min(int(days or 14), 60))
+    out = []
+    for d in sorted(by_date.keys(), reverse=True)[:n]:
+        depts = {}
+        for a in by_date[d]:
+            k = a.get("dept", "")
+            depts.setdefault(k, {"dept": k, "dept_name": a.get("dept_name", ""), "ops": []})
+            depts[k]["ops"].append({"operator": a.get("operator", ""), "task": a.get("task", "")})
+        out.append({"date": d, "depts": list(depts.values())})
+    return {"history": out}
+
+
 
 @api_router.post("/bako/deus/capture")
 async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):

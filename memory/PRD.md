@@ -4444,3 +4444,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato: testing agent iteration_213 → frontend 100% (entrambe le feature, 0 bug UI, canvas 3D per reparto commuta correttamente, nessun viola).
 - **DEPLOY**: redeploy di produzione (mikilab.de) dispatchato al deployer agent (job pipeline).
 
+
+### Enhancements turno: PIN→Nome, Auto-annuncio, Storico (2026-09-06 · terza tranche)
+- **PIN → Nome automatico (FATTO)**: `DeptFocus.jsx` picker ha ora un ingresso PIN (`dept-focus-pin-input`/`dept-focus-pin-go`) → `operatorPinsApi.verify(pin)` → riconosce il nome e imposta l'identità (salva `mikilab_operator_pin`). L'operaio non deve più toccare il nome. PIN errato → toast d'errore.
+- **Annuncio automatico all'apertura (FATTO)**: `ShiftTeamCall.jsx` annuncia da solo la squadra all'apertura del turno (una volta al giorno, guard `mikilab_shift_announced_<data>`, best-effort per policy autoplay), con toggle on/off `shift-team-auto-toggle` (`mikilab_shift_autocall`).
+- **Storico turni (FATTO)**: nuovo endpoint `GET /api/depts/history?days=` (require_admin) raggruppa `dept_assignments` per data/reparto; `deptApi.history`; UI collassabile in ShiftTeamCall (`shift-team-history-toggle` → `shift-team-history`, righe `shift-history-<data>`).
+- Testato: testing agent iteration_214 → frontend 100% (3 feature + regressioni), 0 bug. Backend curl OK (verify→"Youssef", history raggruppato).
+- **DEPLOY**: redeploy produzione ri-accodato al deployer agent con il codice completo (multi-assign, 3D per reparto, vista per-operatore, PIN, auto-annuncio, storico).
+

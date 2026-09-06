@@ -1,0 +1,27 @@
+{
+  "summary": "Frontend testing per iteration_214 request. Verified all 3 new features (PIN→Name Auto, Auto-announce toggle, Shift History) plus regressions. All acceptance criteria PASSED on desktop 1920x900.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Master console post-login", "issues": ["An avatar-world overlay for MOHAMED PRODUCTION FLOOR full-screen appears above the console right after login (has a 'Back' button top-left, no data-testid). Underlying panels still work via scroll but the overlay is intrusive. Consider auto-dismissing or making it dismissible via kiosk-modal-close consistently."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: investigate the persistent MOHAMED avatar-world fullscreen overlay after Capo login (Back button has no data-testid; interferes with visual verification even though DOM/history features work)."
+  ],
+  "critical_code_review_comments": [
+    "Master Gate keypad clicks can be dropped when triggered too quickly via Playwright's page.click (mouse coordinate path) — using element.click() JS invocation reliably worked. Not a real-user bug, but E2E tests should prefer JS click on the admin-key-* buttons.",
+    "The full-screen avatar-world overlay ('MOHAMED PRODUCTION FLOOR') that renders on top of the master-console is visually blocking; recommend adding a data-testid to its Back button and ensuring it does not auto-open."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested", "frontend": "100% for requested features"},
+  "test_credentials": "Master PIN 1985; admin@mikilab.de / Mikilab2026!; Floor PIN 1985; Operator PIN Youssef=4321",
+  "seed_data_creation": "None (used existing seed).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Feature 3 verified: panel-shift-team present, shift-team-auto-toggle toggles OK, shift-team-history-toggle expands shift-team-history and shows shift-history-2026-09-06 with 'Pizzeria: Ali (pizzaiolo)' and 'Panificio: Marco (forni), Youssef (impasti)'. Today groups shift-team-dept-panificio and shift-team-dept-pizzeria present. shift-team-announce and shift-team-speak-panificio fire without exceptions. Feature 1: dept-focus-picker visible after production PIN 1985; wrong PIN 0000 shows toast 'PIN not recognized' and stays on picker; correct PIN 4321 opens dept-focus with dept-focus-opname='Youssef', avatar-world-panificio present in dept-3d-strip. dept-focus-reset-op returns to picker. Regression: dept-focus-op-Youssef/Marco/Ali all present. Feature 2: no pageerrors on load/console open with auto-announce active; toggle enabled/disabled cleanly. Only 401s observed were /api/auth/me pre-login (expected). Use JS element.click() for admin-key-* buttons to avoid dropped clicks. Kiosk-modal-close may need multiple invocations post-login.",
+  "rca of the issue": "No functional issues found."
+}

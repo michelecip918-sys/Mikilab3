@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck } from "lucide-react";
-import { deptApi } from "@/lib/api";
+import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck, KeyRound, Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { deptApi, operatorPinsApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
@@ -13,6 +14,8 @@ export default function DeptFocus({ tri, lang }) {
   const [board, setBoard] = useState([]);
   const [opName, setOpName] = useState(() => { try { return localStorage.getItem(OP_KEY) || ""; } catch { return ""; } });
   const [idx, setIdx] = useState(0);
+  const [pin, setPin] = useState("");
+  const [pinBusy, setPinBusy] = useState(false);
 
   const load = useCallback(() => Promise.all([deptApi.assignment(), deptApi.catalog(), deptApi.board()]).then(([a, c, b]) => {
     setAssignments(a.assignments || []); setDepts(c.departments || []); setBoard(b.objectives || []);
@@ -21,6 +24,20 @@ export default function DeptFocus({ tri, lang }) {
 
   const setOp = (n) => { try { localStorage.setItem(OP_KEY, n); } catch { /* */ } setOpName(n); setIdx(0); };
   const resetOp = () => { try { localStorage.removeItem(OP_KEY); } catch { /* */ } setOpName(""); setIdx(0); };
+
+  const verifyPin = async () => {
+    if ((pin || "").length < 4) return;
+    setPinBusy(true);
+    try {
+      const r = await operatorPinsApi.verify(pin);
+      if (r && r.ok && r.name) {
+        try { localStorage.setItem("mikilab_operator_pin", pin); } catch { /* */ }
+        setOp(r.name);
+      } else {
+        toast.error(tri("PIN non riconosciuto", "PIN nicht erkannt", "PIN not recognized", "PIN no reconocido", "PIN non reconnu", "پین شناسایی نشد"));
+      }
+    } catch { toast.error("Error"); } finally { setPinBusy(false); setPin(""); }
+  };
 
   if (!assignments.length) return null;
 
@@ -40,6 +57,18 @@ export default function DeptFocus({ tri, lang }) {
             <button key={n} data-testid={`dept-focus-op-${n}`} onClick={() => setOp(n)}
               className="py-2.5 px-3 rounded-xl bg-[#030712] border border-[#1e293b] text-sm font-bold text-white active:scale-95 hover:border-[#00F0FF]/60 transition-all">{n}</button>
           ))}
+        </div>
+        <div className="mt-3 pt-3 border-t border-[#1e293b]">
+          <p className="text-[10px] uppercase tracking-widest text-[#64748B] mb-1.5 flex items-center gap-1"><KeyRound className="w-3.5 h-3.5 text-[#00F0FF]" /> {tri("…oppure entra col tuo PIN", "…oder mit deinem PIN", "…or enter with your PIN", "…o entra con tu PIN", "…ou entre avec ton PIN", "…یا با پین وارد شو")}</p>
+          <div className="flex items-center gap-2">
+            <input data-testid="dept-focus-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/[^0-9]/g, "").slice(0, 6))} onKeyDown={(e) => { if (e.key === "Enter") verifyPin(); }}
+              inputMode="numeric" type="password" placeholder="••••"
+              className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-center tracking-[0.4em] text-white px-3 py-2.5" />
+            <button data-testid="dept-focus-pin-go" onClick={verifyPin} disabled={pinBusy || pin.length < 4}
+              className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-[#00F0FF]/15 border border-[#00F0FF]/50 text-[#00F0FF] font-bold text-sm active:scale-95 disabled:opacity-40">
+              {pinBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} {tri("Entra", "Los", "Enter", "Entrar", "Entrer", "ورود")}
+            </button>
+          </div>
         </div>
       </div>
     );
