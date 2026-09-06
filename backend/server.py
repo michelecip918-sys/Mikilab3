@@ -7946,11 +7946,11 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
                             leftMargin=18 * mm, rightMargin=18 * mm, title=bundle_name)
     ss = getSampleStyleSheet()
     ACC = colors.HexColor("#234b6e")
-    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=26, spaceAfter=6, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
-    h2 = ParagraphStyle("h2", parent=ss["Heading1"], textColor=ACC, fontSize=17, spaceBefore=6, spaceAfter=4, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
-    sub = ParagraphStyle("sub", parent=ss["Normal"], textColor=colors.HexColor("#7E8A93"), fontSize=11, spaceAfter=8, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
-    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=12, spaceBefore=8, spaceAfter=2, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
-    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10.5, leading=15, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    h1 = ParagraphStyle("h1", parent=ss["Title"], textColor=ACC, fontSize=18, spaceAfter=6, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    h2 = ParagraphStyle("h2", parent=ss["Heading1"], textColor=ACC, fontSize=13, spaceBefore=6, spaceAfter=4, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    sub = ParagraphStyle("sub", parent=ss["Normal"], textColor=colors.HexColor("#7E8A93"), fontSize=10, spaceAfter=8, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    lab = ParagraphStyle("lab", parent=ss["Heading2"], textColor=colors.HexColor("#3f7cac"), fontSize=11, spaceBefore=8, spaceAfter=2, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
+    body = ParagraphStyle("body", parent=ss["Normal"], fontSize=10, leading=14, fontName=base_font, wordWrap=("RTL" if _rtl else None), alignment=(2 if _rtl else 0))
 
     def esc(s):
         s = _shape(s)
@@ -7976,16 +7976,16 @@ def _build_bundle_pdf(recipes: list, bundle_name: str, lang: str) -> bytes:
         except Exception:
             pass
         canvas.setFillColor(colors.white)
-        canvas.setFont("Helvetica-Bold", 30)
+        canvas.setFont("Helvetica-Bold", 24)
         canvas.drawCentredString(w / 2, h * 0.60 + 8 * mm, "MikiLab")
-        canvas.setFont("Helvetica-Bold", 19)
+        canvas.setFont("Helvetica-Bold", 15)
         title = bundle_name if len(bundle_name) <= 42 else bundle_name[:40] + "…"
         canvas.drawCentredString(w / 2, h * 0.60 - 18 * mm, title)
         canvas.setFillColor(colors.HexColor("#a9d2ec"))
-        canvas.setFont("Helvetica", 12)
+        canvas.setFont("Helvetica", 11)
         canvas.drawCentredString(w / 2, h * 0.60 - 30 * mm, L["made"])
-        canvas.setFont("Helvetica-Oblique", 10)
-        canvas.drawCentredString(w / 2, 22 * mm, "Il Laboratorio di Michele · mikilab.de")
+        canvas.setFont("Helvetica-Oblique", 9)
+        canvas.drawCentredString(w / 2, 22 * mm, "Il Laboratorio di MikiLab · mikilab.de")
         canvas.restoreState()
 
     for i, r in enumerate(recipes):
@@ -9529,6 +9529,80 @@ async def lab_weather_now(admin: dict = Depends(require_admin)):
     except Exception as e:
         logging.warning(f"weather-now failed: {e}")
         return {"ok": False, "error": "meteo non raggiungibile"}
+
+
+class AutoPlanReq(BaseModel):
+    orders_text: str = ""
+    date: Optional[str] = None
+    lang: str = "it"
+
+
+@api_router.post("/bako/autoplan")
+async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin)):
+    """PILASTRO 1 — BakoMix Direttore d'Orchestra: genera il PIANO DI PRODUZIONE ottimale
+    del giorno (sequenza lotti, linea, orari, personale). SOLO produzione: niente HACCP,
+    allergeni o burocrazia."""
+    ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = ld.get("leaders") or {}
+    low = []
+    try:
+        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+            mn = float(s.get("min_kg") or 0); q = float(s.get("quantity_kg") or 0)
+            if mn > 0 and q <= mn:
+                low.append(f"{s.get('name')} ({q:g}/{mn:g}kg)")
+    except Exception:
+        pass
+    today = (body.date or now_iso()[:10])
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
+    ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
+           f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
+           f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
+
+    plan = {"summary": "", "batches": [], "warnings": [], "spoken": ""}
+    if EMERGENT_LLM_KEY:
+        try:
+            langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese"}.get((body.lang or "it")[:2], "italiano")
+            sysmsg = (
+                "Sei BakoMix, direttore di produzione di una panetteria industriale d'élite. "
+                "Genera il PIANO DI PRODUZIONE OTTIMALE della giornata: sequenza dei lotti che rispetti i tempi "
+                "di impasto/lievitazione/cottura, evitando colli di bottiglia al forno e sfruttando al meglio il personale. "
+                "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o qualsiasi burocrazia. Solo produzione, "
+                "tempi, sequenza, linee e persone.\n"
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"summary\":\"1-2 frasi\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"baguette|pane|pizzeria|pasticceria\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"perché ora\"}],"
+                "\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve e naturale per il Capo\"}. "
+                "Massimo 8 lotti, 'rationale' brevissima (max 8 parole). Nessun testo fuori dal JSON."
+            )
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplan-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2600)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera il piano ottimale.")):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            import json as _json, re as _re
+            raw = out.strip().replace("```json", "").replace("```", "")
+            m = _re.search(r"\{.*\}", raw, _re.S)
+            frag = m.group(0) if m else raw
+            try:
+                plan.update(_json.loads(frag))
+            except Exception:
+                # JSON eventualmente troncato: taglia all'ultima graffa bilanciata
+                depth = 0; end = -1
+                for i, ch in enumerate(frag):
+                    if ch == "{":
+                        depth += 1
+                    elif ch == "}":
+                        depth -= 1
+                        if depth == 0:
+                            end = i + 1
+                            break
+                if end > 0:
+                    plan.update(_json.loads(frag[:end]))
+        except Exception as e:
+            logger.warning("autoplan fail (%s)", str(e)[:120])
+    if not plan.get("summary"):
+        plan["summary"] = "Piano non disponibile: riprova o detta gli ordini a BakoMix."
+    return {"ok": True, "date": today, "context": {"leaders": leaders, "workers_today": workers_today, "low_stock": low}, "plan": plan}
 
 
 

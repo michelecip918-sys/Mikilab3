@@ -587,6 +587,7 @@ export const masterApi = {
 // BakoMix proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
 export const bakoApi = {
   proactive: (lang) => api.get(`/bako/proactive`, { params: { lang } }).then((r) => r.data),
+  autoplan: (payload) => api.post(`/bako/autoplan`, payload).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

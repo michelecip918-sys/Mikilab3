@@ -63,6 +63,7 @@ import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
+import AutoPlan from "@/components/console/AutoPlan";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -244,8 +245,10 @@ export default function App() {
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
                     <LabBriefing />
-                    <ComplianceBeacon onOpen={() => jumpTo("master")} />
-                    <HoloPanel testid="panel-ordine" accent="#5E8CA8" beacon="#00F0FF" icon="🧭" defaultOpen title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
+                    <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" defaultOpen title={tri("BakoMix · Piano del Giorno", "BakoMix · Tagesplan", "BakoMix · Day Plan", "BakoMix · Plan del Día", "BakoMix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("BakoMix genera la sequenza di produzione ottimale del giorno.", "BakoMix erstellt den optimalen Produktionsablauf.", "BakoMix generates the optimal production sequence.", "BakoMix genera la secuencia óptima.", "BakoMix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
+                      <AutoPlan />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-ordine" accent="#5E8CA8" beacon="#00F0FF" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
                       <OrdineCapo />
                     </HoloPanel>
                     <HoloPanel testid="panel-ricette" accent="#5E8CA8" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
@@ -263,9 +266,6 @@ export default function App() {
                     <HoloPanel testid="panel-radar" accent="#5E8CA8" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega.", "Live-Grundriss & Tracking.", "Live floor plan & tracking.", "Plano en vivo.", "Plan live.", "پلان زنده.")}>
                       <PlantRadar />
                     </HoloPanel>
-                    <HoloPanel testid="panel-compliance" accent="#5E8CA8" beacon="#7DD3FC" icon="⚖️" title={tri("Compliance UE/DE", "Compliance EU/DE", "EU/DE Compliance", "Compliance UE/DE", "Conformité UE/DE", "انطباق اتحادیه اروپا")} sub={tri("Orari (ArbZG/UE), sicurezza DGUV e privacy GDPR.", "Zeiten (ArbZG/EU), DGUV & DSGVO.", "Hours (ArbZG/EU), DGUV & GDPR.", "Horas, DGUV y RGPD.", "Heures, DGUV & RGPD.", "ساعات، ایمنی و حریم خصوصی.")}>
-                      <CompliancePanel />
-                    </HoloPanel>
                     <HoloPanel testid="panel-pin" accent="#5E8CA8" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN festlegen.", "Set the team PIN.", "Fija el PIN del equipo.", "Définis le PIN.", "پین تیم را تنظیم کن.")}>
                       <PinSetup />
                     </HoloPanel>
@@ -280,6 +280,10 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />
+                    </HoloPanel>
+                    {/* Sezioni LEGGI/normative — in fondo, come richiesto */}
+                    <HoloPanel testid="panel-compliance" accent="#5E8CA8" beacon="#7DD3FC" icon="⚖️" title={tri("Leggi & Compliance UE/DE", "Recht & Compliance EU/DE", "Laws & Compliance EU/DE", "Leyes & Compliance UE/DE", "Lois & Conformité UE/DE", "قوانین و انطباق")} sub={tri("Orari di lavoro (ArbZG), sicurezza (DGUV) e privacy (GDPR).", "Arbeitszeiten (ArbZG), DGUV & DSGVO.", "Working hours (ArbZG), DGUV & GDPR.", "Horas (ArbZG), DGUV y RGPD.", "Heures (ArbZG), DGUV & RGPD.", "ساعات کاری، ایمنی و حریم خصوصی.")}>
+                      <CompliancePanel />
                     </HoloPanel>
                   </div>
                 )}
