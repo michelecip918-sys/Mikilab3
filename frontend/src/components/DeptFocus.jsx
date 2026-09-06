@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck, KeyRound, Loader2 } from "lucide-react";
+import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck, KeyRound, Loader2, LogOut } from "lucide-react";
 import { toast } from "sonner";
 import { deptApi, operatorPinsApi, complianceApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
@@ -75,6 +75,12 @@ export default function DeptFocus({ tri, lang }) {
     );
   }
 
+  const clockOut = () => {
+    let pin = ""; try { pin = localStorage.getItem("mikilab_operator_pin") || ""; } catch { /* */ }
+    try { complianceApi.clock(opName, "out", pin); } catch { /* */ }
+    try { playTTS(`${tri("Buona giornata", "Schönen Tag", "Have a good day", "Buen día", "Bonne journée", "روز خوش")}, ${opName}.`, { lang, voice: "mohamed" }); } catch { /* */ }
+    resetOp();
+  };
   const cur = mine[Math.min(idx, mine.length - 1)];
   const dept = depts.find((d) => d.key === cur.dept);
   if (!dept) return null;
@@ -96,7 +102,10 @@ export default function DeptFocus({ tri, lang }) {
       </div>
       <div className="flex items-center justify-between mb-2">
         <span data-testid="dept-focus-opname" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white"><UserCheck className="w-3.5 h-3.5" style={{ color: dept.accent }} /> {opName}</span>
-        <button data-testid="dept-focus-reset-op" onClick={resetOp} className="text-[10px] font-bold text-[#64748B] hover:text-[#00F0FF]">{tri("non sei tu?", "nicht du?", "not you?", "¿no eres tú?", "pas toi ?", "تو نیستی؟")}</button>
+        <div className="flex items-center gap-2">
+          <button data-testid="dept-focus-clockout" onClick={clockOut} className="inline-flex items-center gap-1 text-[10px] font-bold text-[#f59e0b] hover:text-[#fbbf24]"><LogOut className="w-3 h-3" /> {tri("Timbra uscita", "Ausstempeln", "Clock out", "Fichar salida", "Pointer sortie", "خروج")}</button>
+          <button data-testid="dept-focus-reset-op" onClick={resetOp} className="text-[10px] font-bold text-[#64748B] hover:text-[#00F0FF]">{tri("non sei tu?", "nicht du?", "not you?", "¿no eres tú?", "pas toi ?", "تو نیستی؟")}</button>
+        </div>
       </div>
       {mine.length > 1 && (
         <div className="flex flex-wrap gap-1.5 mb-2" data-testid="dept-focus-switch">

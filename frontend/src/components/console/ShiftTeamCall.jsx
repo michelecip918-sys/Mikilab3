@@ -113,6 +113,15 @@ export default function ShiftTeamCall() {
         </button>
       </div>
 
+      {groups.length > 0 && (
+        <div data-testid="shift-team-presence-summary" className="flex items-center justify-between rounded-xl bg-[#0C1019] border border-[#22c55e]/30 px-3 py-2">
+          <span className="text-[11px] font-bold text-[#cbd5e1] inline-flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-[#22c55e]" /> {tri("Presenti oggi", "Heute anwesend", "Present today", "Presentes hoy", "Présents aujourd'hui", "حاضرین امروز")}</span>
+          {(() => { const asg = groups.reduce((s, g) => s + g.list.length, 0); const pre = groups.reduce((s, g) => s + g.list.filter((a) => isPresent(a.operator)).length, 0); return (
+            <span className="text-sm font-black"><span className="text-[#22c55e]">{pre}</span><span className="text-[#64748B]">/{asg}</span></span>
+          ); })()}
+        </div>
+      )}
+
       {groups.length === 0 && (
         <p data-testid="shift-team-empty" className="text-[11px] text-[#64748B] rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5">
           {tri("Nessuna squadra assegnata oggi. Assegna gli operai ai reparti per abilitare l'annuncio.", "Heute kein Team zugewiesen. Weise Mitarbeiter zu.", "No team assigned today. Assign operators to departments.", "Sin equipo hoy. Asigna operarios.", "Aucune équipe aujourd'hui. Assigne des opérateurs.", "امروز تیمی نیست. اپراتورها را واگذار کن.")}
@@ -125,7 +134,7 @@ export default function ShiftTeamCall() {
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-base">{g.dept.icon}</span>
               <span className="text-xs font-black uppercase tracking-wide flex-1 min-w-0 truncate" style={{ color: g.dept.accent }}>{g.dept.name}</span>
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#94A3B8]"><Users className="w-3 h-3" /> {g.list.length}</span>
+              <span data-testid={`shift-team-presence-${g.dept.key}`} className="inline-flex items-center gap-1 text-[10px] font-bold text-[#94A3B8]"><Users className="w-3 h-3" /> <span className="text-[#22c55e]">{g.list.filter((a) => isPresent(a.operator)).length}</span>/{g.list.length}</span>
               <button data-testid={`shift-team-speak-${g.dept.key}`} onClick={() => announceDept(g)} className="w-7 h-7 rounded-lg flex items-center justify-center border active:scale-95" style={{ borderColor: `${g.dept.accent}66`, color: g.dept.accent }}><Volume2 className="w-3.5 h-3.5" /></button>
             </div>
             <div className="flex flex-wrap gap-1.5">

@@ -117,11 +117,10 @@ export default function App() {
   const [activeZone, setActiveZone] = useState("master");
   const [showBriefing, setShowBriefing] = useState(false);
 
-  // Cyber-Trio: briefing automatico all'apertura turno (una volta al giorno, solo Capo).
+  // Cyber-Trio: briefing automatico SOLO al primo accesso del Capo (poi si apre solo dal pulsante).
   useEffect(() => {
     if (user && user.role === "admin") {
-      const today = new Date().toISOString().slice(0, 10);
-      try { if (localStorage.getItem("mikilab_briefing_day") !== today) { localStorage.setItem("mikilab_briefing_day", today); setShowBriefing(true); } } catch (e) { /* */ }
+      try { if (localStorage.getItem("mikilab_briefing_seen") !== "1") { localStorage.setItem("mikilab_briefing_seen", "1"); setShowBriefing(true); } } catch (e) { /* */ }
     }
   }, [user]);
 

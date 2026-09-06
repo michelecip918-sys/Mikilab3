@@ -4461,3 +4461,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer con il codice completo.
 - Nota pre-esistente (non bug): overlay CYBER-TRIO a schermo intero dopo il login (chiudibile con la X); eventuale auto-dismiss per le visite successive è un miglioramento futuro.
 
+
+### Uscita PIN + Riepilogo presenze + Briefing once-ever (2026-09-06 · quinta tranche)
+- **Timbra uscita col PIN (FATTO)**: `DeptFocus` pulsante `dept-focus-clockout` → `complianceApi.clock(opName,"out",pin)` + reset identità → la presenza si spegne. (Ingresso già timbrato all'identificazione via PIN.)
+- **Riepilogo presenze (FATTO)**: in ShiftTeamCall barra `shift-team-presence-summary` (totale presenti/assegnati) + per reparto `shift-team-presence-<key>` (verde presenti/assegnati) e pallini `shift-presence-<nome>`.
+- **Briefing Cyber-Trio once-ever (FATTO)**: `App.js` auto-apertura solo al PRIMO accesso del Capo (`mikilab_briefing_seen`); resta il pulsante manuale `briefing-open`.
+- Testato: testing agent iteration_216 → frontend 100% (3 feature + regressioni), 0 issue. Backend curl OK (clock in→presente, out→non presente).
+- **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
+
