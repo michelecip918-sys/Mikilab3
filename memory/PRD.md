@@ -4436,3 +4436,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Il "HIGH" segnalato dal testing agent (dept-assign-btn non cliccabile) era un FALSO ALLARME: causato dal wizard onboarding `KioskMode` (z-130, `mikilab_kiosk_wizard_seen`, una sola volta per dispositivo) rimasto aperto sopra la console durante l'automazione, NON dall'orb ambient-bako (nessun overlap). Toast di successo e creazione assegnazioni confermati a schermo. `data-testid="kiosk-modal-close"` già presente.
 - Preview ≠ produzione: serve REDEPLOY per applicare su mikilab.de.
 
+
+### Vista 3D per Operatore + Riepilogo Squadra Vocale (2026-09-06 · seconda tranche)
+- **Vista 3D per Operatore (FATTO)**: `DeptFocus.jsx` ora è scoped per operatore. Identità in localStorage `mikilab_operator_name`. Se assente/senza assegnazione → `dept-focus-picker` ("Chi sei?") coi nomi assegnati oggi (`dept-focus-op-<nome>`). Scelto l'operatore, mostra SOLO il reparto (e il modello 3D `AvatarWorld3D theme=dept.key`) a cui è assegnato, con task, macchine e obiettivo; switch se assegnato a più reparti; reset con `dept-focus-reset-op`. Progresso registrato con l'operatore corrente.
+- **Riepilogo Squadra Vocale (FATTO)**: nuovo `console/ShiftTeamCall.jsx` + HoloPanel `panel-shift-team` (dopo `panel-dept-assign`). Raggruppa le assegnazioni per reparto; bottone `shift-team-announce` (annuncio globale, voce `bakemix`) e `shift-team-speak-<key>` per singolo reparto → BakoMix legge a voce chi lavora e la mansione, reparto per reparto. Solo TTS (nessun suono UI).
+- Aggiornato il sottotitolo del pannello Assegnazione Reparti (da "MohaLab" a multi-operaio, 5 reparti inclusi Banco).
+- Testato: testing agent iteration_213 → frontend 100% (entrambe le feature, 0 bug UI, canvas 3D per reparto commuta correttamente, nessun viola).
+- **DEPLOY**: redeploy di produzione (mikilab.de) dispatchato al deployer agent (job pipeline).
+

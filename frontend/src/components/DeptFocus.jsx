@@ -1,40 +1,60 @@
-import { useState, useEffect } from "react";
-import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Factory, Volume2, Box, Snowflake, Warehouse, Plus, Users, UserCheck } from "lucide-react";
 import { deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
-import { useLang } from "@/i18n/LanguageContext";
-import { mkTri } from "@/i18n/triMaps";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
-// Interfaccia dinamica produzione: mostra SOLO il reparto assegnato oggi dal Capo.
+const OP_KEY = "mikilab_operator_name";
+
+// Interfaccia dinamica produzione: ogni operaio vede SOLO il reparto (e il modello 3D) a cui è assegnato.
 export default function DeptFocus({ tri, lang }) {
-  const [assign, setAssign] = useState(null);
-  const [dept, setDept] = useState(null);
-  const [obj, setObj] = useState(null);
+  const [assignments, setAssignments] = useState([]);
+  const [depts, setDepts] = useState([]);
+  const [board, setBoard] = useState([]);
+  const [opName, setOpName] = useState(() => { try { return localStorage.getItem(OP_KEY) || ""; } catch { return ""; } });
+  const [idx, setIdx] = useState(0);
 
-  const refreshObj = (key) => deptApi.board().then((b) => setObj((b.objectives || []).find((o) => o.dept === key) || null)).catch(() => {});
-  useEffect(() => {
-    let alive = true;
-    const load = () => Promise.all([deptApi.assignment(), deptApi.catalog(), deptApi.board()]).then(([a, c, b]) => {
-      if (!alive) return;
-      const last = (a.assignments || [])[0] || null;
-      setAssign(last);
-      const dd = last ? (c.departments || []).find((d) => d.key === last.dept) : null;
-      setDept(dd);
-      setObj(dd ? (b.objectives || []).find((o) => o.dept === dd.key) || null : null);
-    }).catch(() => {});
-    load(); const id = setInterval(load, 15000);
-    return () => { alive = false; clearInterval(id); };
-  }, []);
+  const load = useCallback(() => Promise.all([deptApi.assignment(), deptApi.catalog(), deptApi.board()]).then(([a, c, b]) => {
+    setAssignments(a.assignments || []); setDepts(c.departments || []); setBoard(b.objectives || []);
+  }).catch(() => {}), []);
+  useEffect(() => { load(); const id = setInterval(load, 15000); return () => clearInterval(id); }, [load]);
 
-  if (!assign || !dept) return null;
-  const speak = () => { try { playTTS(`${tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}: ${dept.name}. ${assign.task || ""}`, { lang, voice: "mohamed" }); } catch { /* */ } };
-  const addProgress = async (n) => {
-    let op = "Operaio", pin = "";
-    try { op = localStorage.getItem("mikilab_role") || op; pin = localStorage.getItem("mikilab_operator_pin") || ""; } catch { /* */ }
-    try { const r = await deptApi.progress({ dept: dept.key, qty: n, pin, operator: op }); setObj(r.objective); playTTS(`+${n}. ${tri("registrato", "erfasst", "recorded", "registrado", "enregistré", "ثبت شد")}`, { lang, voice: "mohamed" }); } catch { /* */ }
-  };
+  const setOp = (n) => { try { localStorage.setItem(OP_KEY, n); } catch { /* */ } setOpName(n); setIdx(0); };
+  const resetOp = () => { try { localStorage.removeItem(OP_KEY); } catch { /* */ } setOpName(""); setIdx(0); };
+
+  if (!assignments.length) return null;
+
+  const distinct = [...new Set(assignments.map((a) => a.operator))];
+  const mine = opName ? assignments.filter((a) => (a.operator || "").toLowerCase() === opName.toLowerCase()) : [];
+
+  // Selettore identità: l'operaio tocca il proprio nome → vede il suo reparto.
+  if (!opName || mine.length === 0) {
+    return (
+      <div data-testid="dept-focus-picker" className="w-full mb-3 rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-4 text-left">
+        <p className="text-[10px] uppercase tracking-widest text-[#64748B] mb-1 flex items-center gap-1"><UserCheck className="w-3.5 h-3.5 text-[#00F0FF]" /> {tri("Chi sei?", "Wer bist du?", "Who are you?", "¿Quién eres?", "Qui es-tu ?", "تو کی هستی؟")}</p>
+        <p className="text-xs text-white font-bold mb-2.5">{opName && mine.length === 0
+          ? tri("Oggi non hai un reparto assegnato. Tocca il tuo nome.", "Heute kein Bereich zugewiesen. Tippe deinen Namen.", "No department assigned today. Tap your name.", "Hoy sin área asignada. Toca tu nombre.", "Aucun atelier aujourd'hui. Touche ton nom.", "امروز بخشی نداری. نامت را بزن.")
+          : tri("Tocca il tuo nome per vedere il tuo reparto.", "Tippe deinen Namen für deinen Bereich.", "Tap your name to see your department.", "Toca tu nombre para ver tu área.", "Touche ton nom pour voir ton atelier.", "برای دیدن بخش‌ات نامت را بزن.")}</p>
+        <div className="grid grid-cols-2 gap-2">
+          {distinct.map((n) => (
+            <button key={n} data-testid={`dept-focus-op-${n}`} onClick={() => setOp(n)}
+              className="py-2.5 px-3 rounded-xl bg-[#030712] border border-[#1e293b] text-sm font-bold text-white active:scale-95 hover:border-[#00F0FF]/60 transition-all">{n}</button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  const cur = mine[Math.min(idx, mine.length - 1)];
+  const dept = depts.find((d) => d.key === cur.dept);
+  if (!dept) return null;
+  const obj = board.find((o) => o.dept === dept.key) || null;
   const pct = obj && obj.target > 0 ? Math.min(100, Math.round((obj.done / obj.target) * 100)) : 0;
+  const speak = () => { try { playTTS(`${tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}: ${dept.name}. ${cur.task || ""}`, { lang, voice: "mohamed" }); } catch { /* */ } };
+  const addProgress = async (n) => {
+    let pin = ""; try { pin = localStorage.getItem("mikilab_operator_pin") || ""; } catch { /* */ }
+    try { await deptApi.progress({ dept: dept.key, qty: n, pin, operator: opName }); load(); playTTS(`+${n}. ${tri("registrato", "erfasst", "recorded", "registrado", "enregistré", "ثبت شد")}`, { lang, voice: "mohamed" }); } catch { /* */ }
+  };
 
   return (
     <div data-testid="dept-focus" className="w-full mb-3 rounded-2xl border p-4 text-left" style={{ borderColor: `${dept.accent}66`, background: `${dept.accent}0d` }}>
@@ -44,11 +64,26 @@ export default function DeptFocus({ tri, lang }) {
           <span className="text-2xl font-cyber font-black uppercase tracking-widest" style={{ color: dept.accent, textShadow: `0 0 18px ${dept.accent}` }}>{dept.icon} {dept.name}</span>
         </div>
       </div>
+      <div className="flex items-center justify-between mb-2">
+        <span data-testid="dept-focus-opname" className="inline-flex items-center gap-1.5 text-[11px] font-bold text-white"><UserCheck className="w-3.5 h-3.5" style={{ color: dept.accent }} /> {opName}</span>
+        <button data-testid="dept-focus-reset-op" onClick={resetOp} className="text-[10px] font-bold text-[#64748B] hover:text-[#00F0FF]">{tri("non sei tu?", "nicht du?", "not you?", "¿no eres tú?", "pas toi ?", "تو نیستی؟")}</button>
+      </div>
+      {mine.length > 1 && (
+        <div className="flex flex-wrap gap-1.5 mb-2" data-testid="dept-focus-switch">
+          {mine.map((m, i) => { const dd = depts.find((d) => d.key === m.dept); return (
+            <button key={m.id} data-testid={`dept-focus-switch-${m.dept}`} onClick={() => setIdx(i)}
+              className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] font-bold active:scale-95 ${i === idx ? "text-white" : "text-[#94A3B8]"}`}
+              style={i === idx ? { background: `${dd?.accent || "#00F0FF"}22`, border: `1px solid ${dd?.accent || "#00F0FF"}66`, color: dd?.accent } : { border: "1px solid #1e293b" }}>
+              {dd?.icon} {dd?.name}
+            </button>
+          ); })}
+        </div>
+      )}
       <div className="flex items-center gap-2 mb-2">
         <span className="text-xl">{dept.icon}</span>
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] uppercase tracking-widest" style={{ color: dept.accent }}>{tri("Reparto di oggi", "Heutiger Bereich", "Today's department", "Área de hoy", "Atelier du jour", "بخش امروز")}</p>
-          <p className="text-base font-black text-white truncate">{dept.name}{assign.task ? ` · ${assign.task}` : ""}</p>
+          <p className="text-[10px] uppercase tracking-widest" style={{ color: dept.accent }}>{tri("Il TUO reparto oggi", "Dein Bereich heute", "Your department today", "Tu área hoy", "Ton atelier du jour", "بخش امروز تو")}</p>
+          <p className="text-base font-black text-white truncate">{dept.name}{cur.task ? ` · ${cur.task}` : ""}</p>
         </div>
         <button data-testid="dept-focus-speak" onClick={speak} className="w-8 h-8 rounded-lg flex items-center justify-center border" style={{ borderColor: `${dept.accent}66`, color: dept.accent }}><Volume2 className="w-4 h-4" /></button>
       </div>
