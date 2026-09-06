@@ -9,6 +9,13 @@ const AR = {
   "Reparto": "القسم", "Panificazione": "المخبز", "Pasticceria": "الحلويات", "Tutti": "الكل",
   "Radar Impianto": "رادار المصنع", "Compliance UE/DE": "الامتثال الأوروبي/الألماني", "Sicurezza": "السلامة",
   "Cambia postazione": "تغيير المحطة", "Parla": "تحدّث", "Governa a voce": "تحكّم بالصوت",
+  "Nuovo": "جديد", "Aggiungi": "إضافة", "Elimina": "حذف", "Modifica": "تعديل", "Fatto": "تم",
+  "Ingredienti": "المكوّنات", "Procedimento": "الطريقة", "Note": "ملاحظات", "Fasi di lavorazione": "مراحل العمل",
+  "Idratazione": "الترطيب", "Farina": "الدقيق", "Acqua": "الماء", "Sale": "الملح", "Lievito": "الخميرة",
+  "Peso": "الوزن", "Temperatura": "الحرارة", "Pausa": "استراحة", "Turno": "الوردية", "Squadra": "الفريق",
+  "Efficienza": "الكفاءة", "Errore": "خطأ", "Impostazioni": "الإعدادات", "Lingua": "اللغة", "Aiuto": "مساعدة",
+  "Qualità": "الجودة", "Controllo": "فحص", "Verifica": "تحقّق", "Scarica": "تنزيل", "Stampa": "طباعة",
+  "Timer": "مؤقّت", "Inizio turno": "بداية الوردية", "Fine turno": "نهاية الوردية",
 };
 const TR = {
   "Ricette": "Tarifler", "Ricettario": "Tarif kitabı", "Produzione": "Üretim", "Magazzino": "Depo",
@@ -19,6 +26,13 @@ const TR = {
   "Reparto": "Bölüm", "Panificazione": "Ekmek", "Pasticceria": "Pastane", "Tutti": "Tümü",
   "Radar Impianto": "Tesis radarı", "Compliance UE/DE": "AB/DE Uyumluluk", "Sicurezza": "Güvenlik",
   "Cambia postazione": "İstasyon değiştir", "Parla": "Konuş", "Governa a voce": "Sesle yönet",
+  "Nuovo": "Yeni", "Aggiungi": "Ekle", "Elimina": "Sil", "Modifica": "Düzenle", "Fatto": "Tamam",
+  "Ingredienti": "Malzemeler", "Procedimento": "Yöntem", "Note": "Notlar", "Fasi di lavorazione": "Çalışma aşamaları",
+  "Idratazione": "Hidrasyon", "Farina": "Un", "Acqua": "Su", "Sale": "Tuz", "Lievito": "Maya",
+  "Peso": "Ağırlık", "Temperatura": "Sıcaklık", "Pausa": "Mola", "Turno": "Vardiya", "Squadra": "Ekip",
+  "Efficienza": "Verimlilik", "Errore": "Hata", "Impostazioni": "Ayarlar", "Lingua": "Dil", "Aiuto": "Yardım",
+  "Qualità": "Kalite", "Controllo": "Kontrol", "Verifica": "Doğrula", "Scarica": "İndir", "Stampa": "Yazdır",
+  "Timer": "Zamanlayıcı", "Inizio turno": "Vardiya başı", "Fine turno": "Vardiya sonu",
 };
 export const triAR = (it) => (it != null ? AR[it] : undefined);
 export const triTR = (it) => (it != null ? TR[it] : undefined);

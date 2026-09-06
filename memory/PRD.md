@@ -4306,3 +4306,10 @@ Tre direttive consolidate (additive, code-level, Zero-Menu), completate e testat
 - **Audit stringhe 100%**: coverage migliorata (ar/tr starter, EN fallback ovunque), ma NON ogni stringa dei ~200 componenti è tradotta in tutte le 8 lingue — è un lavoro multi-sessione.
 - Font PDF per script non-latini (ar/fa/zh) non incorporati (glifi non resi).
 
+
+---
+## v13.5 (2026-09-06) — Cross-check con foto (Vision) + dizionario ar/tr ampliato
+- **Cross-check ottico-telemetrico con FOTO (anti-fooling completo)**: `/api/antifool/cross-check` ora accetta `photo_base64` opzionale → `_vision_task_consistency()` usa Claude Vision (claude-sonnet-4-6 + ImageContent) per valutare se la foto è coerente col task dichiarato. Decisione finale = weight_ok AND (photo non-incoerente). UI `CrossCheckCard` con input foto (`cc-photo`). Retro-compatibile (senza foto → solo peso). Verificato: no-photo confirm/freeze OK, photo_ok None quando assente.
+- **Dizionario ar/tr ampliato**: `triExtraArTr.js` da ~30 a ~65 stringhe (azioni, ricette, floor, turni, compliance) + fallback EN. Copertura reale migliorata per Arabo/Turco.
+- Lint 0 errori, backend sano, PWA Zero-Menu preservata. Overflow residui = glow decorativo + tab in container overflow-x-auto (pre-esistenti, non regressioni).
+

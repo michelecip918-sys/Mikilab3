@@ -14,14 +14,25 @@ export default function CrossCheckCard() {
   const [after, setAfter] = useState("");
   const [busy, setBusy] = useState(false);
   const [res, setRes] = useState(null);
+  const [photo, setPhoto] = useState("");
+
+  const onPhoto = (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => setPhoto(String(r.result || ""));
+    r.readAsDataURL(f);
+  };
 
   const run = async () => {
     setBusy(true); setRes(null);
     try {
       const r = await antifoolApi.crossCheck({
+        task: "Produzione",
         declared_deduction_g: Number(declared) || 0,
         silo_before_g: Number(before) || 0,
         silo_after_g: Number(after) || 0,
+        photo_base64: photo || "",
       });
       setRes(r);
     } catch { setRes({ ok: false, message: "Errore" }); }
@@ -37,6 +48,11 @@ export default function CrossCheckCard() {
         <div><label className="text-[10px] text-[#64748B]">{tri("Silo prima g", "Silo vorher g", "Silo before g", "Silo antes g", "Silo avant g", "سیلو قبل g")}</label><input data-testid="cc-before" className={inp} value={before} onChange={(e) => setBefore(e.target.value)} inputMode="numeric" /></div>
         <div><label className="text-[10px] text-[#64748B]">{tri("Silo dopo g", "Silo nachher g", "Silo after g", "Silo después g", "Silo après g", "سیلو بعد g")}</label><input data-testid="cc-after" className={inp} value={after} onChange={(e) => setAfter(e.target.value)} inputMode="numeric" /></div>
       </div>
+      <label data-testid="cc-photo-label" className="flex items-center gap-2 text-[11px] text-[#64748B] cursor-pointer">
+        <input data-testid="cc-photo" type="file" accept="image/*" capture="environment" onChange={onPhoto} className="hidden" />
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#06b6d4] font-semibold">📷 {tri("Foto verifica (opzionale)", "Prüffoto (optional)", "Verification photo (optional)", "Foto (opcional)", "Photo (option)", "عکس (اختیاری)")}</span>
+        {photo && <span className="text-[#14b8a6]">✓</span>}
+      </label>
       <button data-testid="cc-run" onClick={run} disabled={busy} className="w-full py-2.5 rounded-xl bg-[#06b6d4] text-[#030712] font-black text-sm active:scale-95 transition-all disabled:opacity-40 inline-flex items-center justify-center gap-2">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanEye className="w-4 h-4" />} {tri("Verifica conferma", "Bestätigung prüfen", "Verify completion", "Verificar", "Vérifier", "بررسی")}
       </button>

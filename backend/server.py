@@ -3201,28 +3201,64 @@ class CrossCheckReq(BaseModel):
     silo_after_g: float
     tolerance_pct: float = 8.0
     photo_present: bool = False
+    photo_base64: Optional[str] = ""
+
+
+async def _vision_task_consistency(photo_b64: str, task: str):
+    """Claude Vision: la foto mostra plausibilmente l'attività dichiarata? → (consistent, note)."""
+    img = (photo_b64 or "").split(",")[-1]
+    if not img or not EMERGENT_LLM_KEY:
+        return None
+    try:
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"xcheck-{uuid.uuid4().hex[:8]}",
+                       system_message=("Sei l'occhio anti-fooling di BakoMix in un panificio. Ti mostro una FOTO scattata da un operatore "
+                                       f"che dichiara di aver svolto: '{task or 'attività di produzione'}'. Valuta se la foto è COERENTE con quel task "
+                                       "(ingredienti/impasto/macchinari/prodotto pertinenti) o se sembra generica/non correlata/ingannevole. "
+                                       'Rispondi SOLO JSON: {"consistent":true|false,"note":"breve motivazione"}.')
+                       ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=200)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Verifica coerenza foto/task.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content or ""
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        if m:
+            j = json.loads(m.group(0))
+            return {"consistent": bool(j.get("consistent")), "note": str(j.get("note", ""))[:200]}
+    except Exception as e:
+        logging.warning(f"cross-check vision failed: {e}")
+    return None
 
 
 @api_router.post("/antifool/cross-check")
 async def antifool_cross_check(body: CrossCheckReq, request: Request):
-    """Cross-check ottico-telemetrico: confronta la conferma dichiarata dall'operatore
-    con il calo di peso REALE del silo/bilancia. Se non combacia → congela (fake)."""
+    """Cross-check ottico-telemetrico: confronta la conferma dichiarata con il calo di peso
+    REALE del silo/bilancia E (se presente) con l'analisi foto Claude Vision. Mismatch → congela."""
     actual = max(0.0, float(body.silo_before_g) - float(body.silo_after_g))
     declared = max(0.0, float(body.declared_deduction_g))
     denom = max(1.0, declared)
     diff_pct = round(abs(actual - declared) / denom * 100.0, 1)
-    ok = diff_pct <= float(body.tolerance_pct)
+    weight_ok = diff_pct <= float(body.tolerance_pct)
+    vision = await _vision_task_consistency(body.photo_base64, body.task) if (body.photo_base64) else None
+    photo_ok = None if vision is None else bool(vision.get("consistent"))
+    ok = weight_ok and (photo_ok is not False)
     action = "confirm" if ok else "freeze"
     try:
         await db.security_log.insert_one({"id": str(uuid.uuid4()), "event": "cross_check", "action": ("allow" if ok else "flag"),
-                                          "detail": f"worker={body.worker} task={body.task} declared={declared}g actual={actual}g diff={diff_pct}% photo={body.photo_present}",
+                                          "detail": f"worker={body.worker} task={body.task} declared={declared}g actual={actual}g diff={diff_pct}% weight_ok={weight_ok} photo_ok={photo_ok}",
                                           "ip": (request.client.host if request.client else None), "at": now_iso()})
     except Exception:
         pass
-    msg = ("Conferma validata: calo silo coerente con il dichiarato." if ok else
-           f"Conferma CONGELATA: scarto {diff_pct}% tra dichiarato ({declared:.0f} g) e reale ({actual:.0f} g). Possibile completamento fittizio.")
+    if not weight_ok:
+        msg = f"Conferma CONGELATA: scarto {diff_pct}% tra dichiarato ({declared:.0f} g) e reale ({actual:.0f} g). Possibile completamento fittizio."
+    elif photo_ok is False:
+        msg = f"Conferma CONGELATA: la foto non è coerente col task. {vision.get('note', '') if vision else ''}"
+    else:
+        msg = "Conferma validata: calo silo coerente" + (" e foto pertinente." if photo_ok else ".")
     return {"ok": ok, "action": action, "actual_g": round(actual, 1), "declared_g": round(declared, 1),
-            "diff_pct": diff_pct, "photo_present": body.photo_present, "message": msg}
+            "diff_pct": diff_pct, "weight_ok": weight_ok, "photo_ok": photo_ok,
+            "vision_note": (vision.get("note") if vision else None), "message": msg}
 
 
 # ---------------------------------------------------------------------------
