@@ -223,7 +223,7 @@ export default function App() {
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
                 <ZoneDivider testid="zone-master" code="Z-01" title={tri("Master · Plancia di Governo", "Master · Steuerkonsole", "Master · Governance Console", "Master · Consola de Gobierno", "Master · Console de Gouvernance", "مستر · کنسول فرمان")} accent="#5E8CA8" />
-                <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#5E8CA8" tag="Z-01 · Master" name="Michele" role={tri("Capo · Master Admin del laboratorio", "Chef · Master Admin", "Capo · Master Admin", "Capo · Master Admin", "Capo · Master Admin", "کاپو · مدیر ارشد")} />
+                <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#5E8CA8" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} reactive />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#5E8CA8" }} />
@@ -288,7 +288,7 @@ export default function App() {
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
                 <ZoneDivider testid="zone-operatori" code="Z-02" title={tri("Operatori · Piano Produzione", "Operatoren · Produktion", "Operators · Production Floor", "Operarios · Producción", "Opérateurs · Production", "اپراتورها · تولید")} accent="#00F0FF" />
-                <ZoneHero testid="hero-operatori" avatar="avatar_mohamed.jpg" accent="#00F0FF" tag="Z-02 · Operatori" name="Mohamed Reza" role={tri("Capo turno · guida vocale del piano", "Schichtleiter · Sprachführung", "Shift lead · voice guidance", "Jefe de turno · guía por voz", "Chef d'équipe · guidage vocal", "سرشیفت · راهنمای صوتی")} reactive />
+                <ZoneHero testid="hero-operatori" avatar="avatar_mohamed.jpg" accent="#00F0FF" tag="Z-02 · Operatori" name="Mohamed" role={tri("Capo Turno · Maestro Fornaio", "Schichtleiter · Bäckermeister", "Shift Lead · Master Baker", "Jefe de Turno · Maestro Panadero", "Chef d'équipe · Maître Boulanger", "سرشیفت · استاد نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><MohamedFloor /></div>
