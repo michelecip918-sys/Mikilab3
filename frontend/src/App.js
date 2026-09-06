@@ -70,6 +70,10 @@ import OvenQC from "@/components/console/OvenQC";
 import B2BOrders from "@/components/console/B2BOrders";
 import CarbonFootprint from "@/components/console/CarbonFootprint";
 import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
+import SiloManager from "@/components/console/SiloManager";
+import AdaptiveProofing from "@/components/console/AdaptiveProofing";
+import AgvFleet from "@/components/console/AgvFleet";
+import RoleLayout from "@/components/console/RoleLayout";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -264,6 +268,7 @@ export default function App() {
                   </div>
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
+                    <RoleLayout />
                     <LabBriefing />
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" defaultOpen title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
@@ -285,6 +290,15 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-carbon" accent="#5E8CA8" beacon="#22c55e" icon="🌿" title={tri("Carbon Footprint & Energia", "CO₂-Bilanz & Energie", "Carbon Footprint & Energy", "Huella de Carbono & Energía", "Empreinte Carbone & Énergie", "ردپای کربن و انرژی")} sub={tri("CO₂ per quintale + costo energetico per kg cotto e slot di accensione ottimali.", "CO₂ pro Zentner + Energiekosten/kg.", "CO₂ per 100 kg + energy cost per kg baked and optimal firing slots.", "CO₂ por quintal + coste energético.", "CO₂ par quintal + coût énergie.", "CO₂ در هر صد کیلو + هزینه انرژی.")}>
                       <CarbonFootprint />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-silos" accent="#5E8CA8" beacon="#FFB800" icon="🌾" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias", "Silos & Matières", "سیلوها و مواد")} sub={tri("Calo peso, micro-ordini automatici e compensazione umidità della farina.", "Gewichtsverlust, Auto-Nachbestellung, Mehlfeuchte-Ausgleich.", "Weight drop, auto micro-orders and flour humidity compensation.", "Caída de peso, micro-pedidos y humedad.", "Perte de poids, micro-commandes, humidité.", "افت وزن، سفارش خودکار، رطوبت آرد.")}>
+                      <SiloManager />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-proofing" accent="#5E8CA8" beacon="#7DD3FC" icon="💨" title={tri("Celle Adattive · Lievitazione", "Adaptive Gärkammern", "Adaptive Proofing Cells", "Cámaras Adaptativas", "Chambres Adaptatives", "اتاق تخمیر تطبیقی")} sub={tri("Curve multi-stadio che accelerano o frenano in base ai forni liberi.", "Mehrstufige Kurven je nach freien Öfen.", "Multi-stage curves that accelerate or brake by free ovens.", "Curvas multietapa según hornos libres.", "Courbes multi-étapes selon fours libres.", "منحنی چندمرحله‌ای بر اساس فرها.")}>
+                      <AdaptiveProofing />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-agv" accent="#5E8CA8" beacon="#22c55e" icon="🚚" title={tri("Flotta AGV · Logistica", "AGV-Flotte · Logistik", "AGV Fleet · Logistics", "Flota AGV · Logística", "Flotte AGV · Logistique", "ناوگان AGV")} sub={tri("Routing autonomo dei carrelli + rilevamento acustico preventivo dei guasti.", "Autonomes Routing + akustische Früherkennung.", "Autonomous cart routing + preventive acoustic fault detection.", "Routing autónomo + detección acústica.", "Routage autonome + détection acoustique.", "مسیریابی خودکار + تشخیص صوتی.")}>
+                      <AgvFleet />
                     </HoloPanel>
                     <HoloPanel testid="panel-ordine" accent="#5E8CA8" beacon="#00F0FF" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
                       <OrdineCapo />

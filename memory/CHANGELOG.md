@@ -286,3 +286,10 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Packaging/Slicing: sincronizzazione velocità affettatrici con curva termica del pane.
 - Predictive Maintenance & Fleet AGV (rilevamento acustico + routing autonomo carrelli).
 - Lean Dashboard: risposta <50ms + layout adattivo per ruolo (fornaio/capo linea/manutentore).
+
+## v50 (2026-09) — Site-wide perfection: Silos, Celle Adattive, Flotta AGV, Layout per Ruolo
+- **Silos**: GET /api/bako/silos (autonomia oraria da calo peso, compensazione umidità farina → correzione % acqua), PUT /bako/silos/{id}, POST /bako/silos/microorder (rabbocco auto sotto soglia). UI SiloManager.jsx.
+- **Celle Adattive**: GET /api/bako/proofing?free_ovens= — curva multi-stadio che ACCELERA (forni liberi) o FRENA (forni occupati); forni liberi derivati dalla telemetria. UI AdaptiveProofing.jsx.
+- **Flotta AGV**: GET /api/bako/agv — routing autonomo tra postazioni + rilevamento acustico preventivo (dB anomali → manutenzione, annuncio TTS). UI AgvFleet.jsx.
+- **Layout per Ruolo**: RoleLayout.jsx — chip Tutto/Fornaio/Capo linea/Manutentore che mostrano/nascondono ISTANTANEAMENTE i pannelli pertinenti (toggle display via data-testid), scelta persistita.
+- Test iteration_202: backend 100% / frontend 100%, 0 bug. Backlog v14 site-wide COMPLETATO.
