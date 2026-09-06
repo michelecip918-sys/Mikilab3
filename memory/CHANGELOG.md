@@ -346,3 +346,13 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Splash d'avvio** (`SplashScreen.jsx`): nuovo logo ML che pulsa con luce ciano + anelli radar espandenti, "MIKILAB PRO / Holographic Command OS". Mostrata 1 volta per sessione (sul gate e nell'app). Fix StrictMode: il flag di sessione ora si imposta alla chiusura, non al mount, altrimenti il remount nascondeva subito la splash.
 - **Modalità Tablet/Kiosk** (`KioskMode.jsx`): chip "Tablet" nell'header → modale con 2 step (Installa PWA + Avvia Kiosk). Kiosk = fullscreen + Wake Lock (schermo sempre acceso) + orientation lock best-effort. Uscita anti-tocco: badge in basso a sx, tieni premuto ~1.2s (barra di avanzamento ciano). Flag persistente `mikilab_kiosk`; dopo reload mostra "Riprendi Kiosk" (il fullscreen richiede un tocco). Overlay via `createPortal` su document.body per evitare che il `backdrop-blur` dell'header ingabbiasse i `fixed`.
 - Verificato con screenshot desktop+mobile: splash presente, modale centrato, Start Kiosk imposta il flag e mostra il badge, long-press esce e ripristina la chip. Nessun overflow orizzontale.
+
+## v60 (2026-06) — Chiusura: Plancia del Capo, Piani, Ricette, Back-guard, Restyling
+- Rinomina produzione Mohamed -> **MohaLab** ovunque (persona, roster, hero, trio, voci).
+- **BakoMix Deus** (legame amicizia + orchestrazione impossibile + oracolo esterno sbloccabile) + riconoscimento **Nuovi Macchinari**.
+- Montati in console: **Piano Settimanale** (WeeklyPlan), **Piano AI** (PianoProduzioneAI), **Piano a Ritroso** (BackwardScheduler). Ricettario professionale (RecipeDialog: %panificatore, fasi, costing, etichetta UE) raggiungibile via panel-ricette.
+- **Plancia del Capo** (CapoDeck): cattura multimodale voce/foto/email/testo -> BakoMix genera -> coda di produzione (endpoint /api/bako/deus/capture + production-queue + done/clear). Più compila, più la produzione ha da fare.
+- **Back-guard PWA**: il tasto Indietro non esce più dall'app (sentinella history + evento mikilab-go-back che srotola lo stato del laboratorio). Fix del difetto segnalato dal laboratorio.
+- **Restyling grafico globale** (design_guidelines.json): .holo-panel/.holo-canvas elevati (glass, hairline, scanline, grid drift, hover-lift, scrollbar/selezione ciano). RIMOSSO viola vietato rgba(157,78,221). Logo colorato per stampe su carta bianca. Splash animata + Kiosk/PIN.
+- Pulite 3 righe seed rotte del piano settimanale ("Recipe no longer available").
+- Verificato E2E test 207/208/209/210 tutti 100%, zero blocker.
