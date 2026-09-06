@@ -77,6 +77,7 @@ import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
 import BakoSuggestions from "@/components/console/BakoSuggestions";
+import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
@@ -278,6 +279,9 @@ export default function App() {
                     <LabBriefing />
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" defaultOpen title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-shiftreport" accent="#00F0FF" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("BakoMix riassume il turno a voce e assegna il MikiScore dell'impianto.", "BakoMix fasst die Schicht zusammen.", "BakoMix voices the shift summary and the plant MikiScore.", "BakoMix resume el turno.", "BakoMix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
+                      <ShiftReport />
                     </HoloPanel>
                     <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" defaultOpen title={tri("BakoMix · Piano del Giorno", "BakoMix · Tagesplan", "BakoMix · Day Plan", "BakoMix · Plan del Día", "BakoMix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("BakoMix genera la sequenza di produzione ottimale del giorno.", "BakoMix erstellt den optimalen Produktionsablauf.", "BakoMix generates the optimal production sequence.", "BakoMix genera la secuencia óptima.", "BakoMix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />

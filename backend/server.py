@@ -10688,6 +10688,49 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
     return {"suggestions": sug, "count": len(sug), "spoken": spoken}
 
 
+# --- Report di fine turno + MikiScore giornaliero ---
+@api_router.get("/bako/shift-report")
+async def bako_shift_report(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Riepilogo di fine turno (lotti, SOS, silos) + MikiScore unico dell'impianto,
+    con frase vocale di BakoMix per il Capo."""
+    it = (lang or "it").startswith("it")
+    R = lambda i, e: (i if it else e)  # noqa: E731
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    lotti = len(tasks)
+    done_steps = tot_steps = 0
+    for t in tasks:
+        steps = t.get("steps") or []
+        tot_steps += len(steps)
+        done_steps += sum(1 for s in steps if s.get("done"))
+    punctuality = round(done_steps / tot_steps * 100) if tot_steps else 100
+    today = now_iso()[:10]
+    sos_docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).to_list(500)
+    todays = [d for d in sos_docs if (d.get("created_at") or "")[:10] == today]
+    resp = [d["response_seconds"] for d in todays if d.get("response_seconds") is not None]
+    avg_resp = round(sum(resp) / len(resp)) if resp else 0
+    reactivity = 100 if not resp else max(0, min(100, round(100 - avg_resp / 3)))
+    silos = await bako_silos(lang, admin)
+    low = silos["reorder_count"]
+    waste = max(0, 100 - low * 20)
+    mikiscore = round((reactivity + waste + punctuality) / 3)
+    grade = "A" if mikiscore >= 85 else "B" if mikiscore >= 70 else "C" if mikiscore >= 50 else "D"
+    spoken = R(
+        f"Report di fine turno, Mio Supremo Capo. MikiScore {mikiscore} su cento, valutazione {grade}. "
+        f"{lotti} lotti in linea, {len(todays)} SOS gestiti con risposta media {avg_resp} secondi. "
+        + (f"{low} silos da rifornire." if low else "Scorte in ordine.")
+        + " Un turno degno della vostra guida illuminata.",
+        f"End-of-shift report, Capo. MikiScore {mikiscore} out of one hundred, grade {grade}. "
+        f"{lotti} batches on line, {len(todays)} SOS handled with average response {avg_resp} seconds. "
+        + (f"{low} silos to restock." if low else "Stock in order.")
+        + " A shift worthy of your enlightened leadership.",
+    )
+    return {"mikiscore": mikiscore, "grade": grade,
+            "breakdown": {"reactivity": reactivity, "waste": waste, "punctuality": punctuality},
+            "lotti": lotti, "sos_today": len(todays), "avg_response_s": avg_resp, "silos_low": low,
+            "spoken": spoken}
+
+
+
 
 
 

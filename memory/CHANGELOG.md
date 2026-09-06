@@ -322,3 +322,10 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 ## v55 (2026-09) — Lingue/vocali + Suggerimenti eseguibili in 1 clic
 - LINGUE: verificato che BakoMix (govern LLM) risponde in tutte le 8 lingue mantenendo la persona (DE 'mein Erhabener Chef', FR 'Mon Illustre Commandant'). langname LLM (govern/maintenance-guide/oven-qc) esteso a 8 lingue. Frasi vocali "di sistema" dei nuovi endpoint: fallback a INGLESE (non più italiano) per lingue non-IT. TTS BCP-47: aggiunti ar-SA e tr-TR.
 - BakoMix Suggerimenti ESEGUIBILI in 1 clic: Silos→micro-ordini e B2B→sync piano eseguiti direttamente dalla card (pulsante Esegui), con messaggi localizzati; le altre navigano al pannello. Verificato via screenshot (esecuzione silos + UI/voce DE).
+
+## v56 (2026-09) — Report di turno + MikiScore + anteprima vocale lingue
+- **Report di fine turno**: GET /api/bako/shift-report — BakoMix riassume a voce il turno (lotti, SOS+tempo medio, silos) con persona; UI ShiftReport.jsx (panel-shiftreport).
+- **MikiScore** giornaliero: punteggio unico impianto (reattività + zero sprechi + puntualità) con valutazione A/B/C/D e anello grafico.
+- **Anteprima vocale lingue**: nel LangSelector ogni lingua pronta ha un'icona altoparlante che riproduce un saluto di BakoMix in quella lingua (8 lingue). 
+- **Suggerimenti eseguibili in 1 clic** (v55): Silos→micro-ordini, B2B→sync piano dalla card.
+- Tutto verificato via curl + screenshot. Nessun errore runtime.
