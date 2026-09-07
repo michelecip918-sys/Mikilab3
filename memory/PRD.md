@@ -4487,3 +4487,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato: testing agent iteration_218 → frontend 100% (4/4 + regressioni), 0 issue.
 - **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
 
+
+### Comprimi/Espandi tutto (2026-09-07 · ottava tranche)
+- Tasti `panels-collapse-all` / `panels-expand-all` nella barra Indice (ConsoleIndex) → dispatch `mikilab:set-all-panels` (bool); HoloPanel ascolta e apre/chiude. Verificato via screenshot funzionale.
+- DEPLOY: redeploy produzione ri-accodato.

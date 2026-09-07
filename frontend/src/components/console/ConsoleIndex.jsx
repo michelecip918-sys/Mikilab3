@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutGrid, Search, X } from "lucide-react";
+import { LayoutGrid, Search, X, ChevronsDownUp, ChevronsUpDown } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -24,16 +24,22 @@ export default function ConsoleIndex() {
   };
   const openIdx = () => { scan(); setQ(""); setOpen(true); };
   const go = (id) => { setOpen(false); window.dispatchEvent(new CustomEvent("mikilab:open-panel", { detail: id })); };
+  const setAll = (v) => window.dispatchEvent(new CustomEvent("mikilab:set-all-panels", { detail: v }));
   const filtered = items.filter((x) => x.title.toLowerCase().includes(q.toLowerCase()));
 
   return (
     <>
-      <button data-testid="console-index-open" onClick={openIdx}
-        className="sticky top-[64px] z-30 w-full inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#00F0FF]/30 text-[#00F0FF] font-tech font-bold text-sm active:scale-[0.99] hover:border-[#00F0FF]/60 transition-all shadow-[0_0_16px_rgba(0,240,255,0.12)]">
-        <LayoutGrid className="w-4 h-4" />
-        <span className="flex-1 text-left">{tri("Indice plance · vai a…", "Panel-Index · gehe zu…", "Panel index · jump to…", "Índice de paneles · ir a…", "Index des panneaux · aller à…", "فهرست پنل‌ها · برو به…")}</span>
-        <span className="text-[10px] font-mono-data text-[#00F0FF]/60">{items.length || ""}</span>
-      </button>
+      <div className="sticky top-[64px] z-30 flex items-center gap-2">
+        <button data-testid="console-index-open" onClick={openIdx}
+          className="flex-1 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#00F0FF]/30 text-[#00F0FF] font-tech font-bold text-sm active:scale-[0.99] hover:border-[#00F0FF]/60 transition-all shadow-[0_0_16px_rgba(0,240,255,0.12)]">
+          <LayoutGrid className="w-4 h-4" />
+          <span className="flex-1 text-left">{tri("Indice plance · vai a…", "Panel-Index · gehe zu…", "Panel index · jump to…", "Índice de paneles · ir a…", "Index des panneaux · aller à…", "فهرست پنل‌ها · برو به…")}</span>
+        </button>
+        <button data-testid="panels-collapse-all" onClick={() => setAll(false)} title={tri("Comprimi tutto", "Alles einklappen", "Collapse all", "Contraer todo", "Tout réduire", "بستن همه")}
+          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#00F0FF] hover:border-[#00F0FF]/50 active:scale-95 transition-all"><ChevronsDownUp className="w-4 h-4" /></button>
+        <button data-testid="panels-expand-all" onClick={() => setAll(true)} title={tri("Espandi tutto", "Alles ausklappen", "Expand all", "Expandir todo", "Tout ouvrir", "باز کردن همه")}
+          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#00F0FF] hover:border-[#00F0FF]/50 active:scale-95 transition-all"><ChevronsUpDown className="w-4 h-4" /></button>
+      </div>
 
       {open && (
         <div data-testid="console-index-overlay" className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-start justify-center p-4 pt-20" onClick={() => setOpen(false)}>

@@ -34,8 +34,10 @@ export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaul
         setTimeout(() => { try { rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }, 60);
       }
     };
+    const onAll = (e) => { if (collapsible) setOpen(!!e.detail); };
     window.addEventListener("mikilab:open-panel", onJump);
-    return () => window.removeEventListener("mikilab:open-panel", onJump);
+    window.addEventListener("mikilab:set-all-panels", onAll);
+    return () => { window.removeEventListener("mikilab:open-panel", onJump); window.removeEventListener("mikilab:set-all-panels", onAll); };
   }, [testid, collapsible]);
   return (
     <div ref={rootRef} data-testid={testid} className="holo-panel scroll-mt-24">
