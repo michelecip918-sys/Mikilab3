@@ -27,6 +27,23 @@ export default function ConsoleIndex() {
   const setAll = (v) => window.dispatchEvent(new CustomEvent("mikilab:set-all-panels", { detail: v }));
   const filtered = items.filter((x) => x.title.toLowerCase().includes(q.toLowerCase()));
 
+  const CAT = {
+    "panel-autoplan": "prod", "panel-weekly": "prod", "panel-pianoai": "prod", "panel-backward": "prod", "panel-thermalflow": "prod", "panel-b2b": "prod", "panel-ordine": "prod", "panel-ricette": "prod", "panel-planner": "prod", "panel-ordini": "prod",
+    "panel-dept-assign": "team", "panel-shift-team": "team", "panel-shift-templates": "team", "panel-shiftreport": "team", "panel-timeline": "team",
+    "panel-emergency": "plant", "panel-twin": "plant", "panel-ovenqc": "plant", "panel-carbon": "plant", "panel-proofing": "plant", "panel-agv": "plant", "panel-packaging": "plant", "panel-radar": "plant", "panel-elite": "plant", "panel-hardware": "plant", "panel-machine-arrival": "plant",
+    "panel-silos": "stock", "panel-magazzino": "stock",
+    "panel-pin": "sec", "panel-docs": "sec", "panel-security": "sec",
+  };
+  const CATS = [
+    { key: "prod", label: tri("Produzione & Piani", "Produktion & Pläne", "Production & Plans", "Producción & Planes", "Production & Plans", "تولید و برنامه‌ها") },
+    { key: "team", label: tri("Squadra & Turni", "Team & Schichten", "Team & Shifts", "Equipo & Turnos", "Équipe & Services", "تیم و شیفت") },
+    { key: "plant", label: tri("Impianto & Qualità", "Anlage & Qualität", "Plant & Quality", "Planta & Calidad", "Usine & Qualité", "کارخانه و کیفیت") },
+    { key: "stock", label: tri("Magazzino & Materie", "Lager & Rohstoffe", "Warehouse & Materials", "Almacén & Materias", "Entrepôt & Matières", "انبار و مواد") },
+    { key: "sec", label: tri("Sicurezza & Documenti", "Sicherheit & Dokumente", "Security & Documents", "Seguridad & Documentos", "Sécurité & Documents", "امنیت و اسناد") },
+    { key: "other", label: tri("Altro", "Sonstiges", "Other", "Otros", "Autre", "دیگر") },
+  ];
+  const catOf = (id) => CAT[id] || "other";
+
   return (
     <>
       <div className="sticky top-[64px] z-30 flex items-center gap-2">
@@ -54,15 +71,26 @@ export default function ConsoleIndex() {
                 placeholder={tri("Cerca una plancia…", "Panel suchen…", "Search a panel…", "Buscar panel…", "Chercher…", "جستجو…")}
                 className="flex-1 bg-transparent outline-none text-sm text-white" />
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-[60vh] overflow-y-auto">
-              {filtered.map((it) => (
-                <button key={it.id} data-testid={`console-index-item-${it.id}`} onClick={() => go(it.id)}
-                  className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#0C1019] border border-[#1e293b] text-left active:scale-95 hover:border-[#00F0FF]/60 transition-all">
-                  <span className="text-lg shrink-0">{it.icon}</span>
-                  <span className="text-xs font-bold text-white leading-tight line-clamp-2">{it.title}</span>
-                </button>
-              ))}
-              {filtered.length === 0 && <p className="col-span-full text-center text-[11px] text-[#64748B] py-6">{tri("Nessuna plancia trovata", "Kein Panel gefunden", "No panel found", "Sin resultados", "Aucun panneau", "چیزی نیست")}</p>}
+            <div className="max-h-[62vh] overflow-y-auto space-y-4">
+              {CATS.map((cat) => {
+                const its = filtered.filter((x) => catOf(x.id) === cat.key);
+                if (its.length === 0) return null;
+                return (
+                  <div key={cat.key} data-testid={`console-index-cat-${cat.key}`}>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00F0FF]/70 mb-1.5 px-0.5">{cat.label} · {its.length}</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                      {its.map((it) => (
+                        <button key={it.id} data-testid={`console-index-item-${it.id}`} onClick={() => go(it.id)}
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#0C1019] border border-[#1e293b] text-left active:scale-95 hover:border-[#00F0FF]/60 transition-all">
+                          <span className="text-lg shrink-0">{it.icon}</span>
+                          <span className="text-xs font-bold text-white leading-tight line-clamp-2">{it.title}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+              {filtered.length === 0 && <p className="text-center text-[11px] text-[#64748B] py-6">{tri("Nessuna plancia trovata", "Kein Panel gefunden", "No panel found", "Sin resultados", "Aucun panneau", "چیزی نیست")}</p>}
             </div>
           </div>
         </div>

@@ -4491,3 +4491,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ### Comprimi/Espandi tutto (2026-09-07 · ottava tranche)
 - Tasti `panels-collapse-all` / `panels-expand-all` nella barra Indice (ConsoleIndex) → dispatch `mikilab:set-all-panels` (bool); HoloPanel ascolta e apre/chiude. Verificato via screenshot funzionale.
 - DEPLOY: redeploy produzione ri-accodato.
+
+### Semplificazione plancia · organizzazione (2026-09-07 · nona tranche)
+- Plancia Capo ora apre PULITA: rimosso defaultOpen da tutti i pannelli (emergency, machine-arrival, dept-assign, shift-team oltre a weekly/autoplan) → si vedono solo le testate, niente muro di contenuti.
+- Indice plance ORGANIZZATO per categorie: Produzione & Piani, Squadra & Turni, Impianto & Qualità, Magazzino & Materie, Sicurezza & Documenti (mappa CAT in ConsoleIndex; sezioni con conteggio). + tasti Comprimi/Espandi tutto gia presenti.
+- Zona Operatori gia snella (roster + DeptFocus per-operatore): lasciata invariata.
+- Verificato via screenshot: plancia tutta chiusa al load, 5 categorie renderizzate nell overlay.
+- DEPLOY: redeploy produzione ri-accodato.
