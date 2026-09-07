@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { Volume2, Users, Megaphone, History, ChevronDown, RotateCcw, Download } from "lucide-react";
+import { Volume2, Users, Megaphone, History, ChevronDown, RotateCcw, Download, AlertTriangle, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
@@ -19,6 +19,8 @@ export default function ShiftTeamCall() {
   const [showHist, setShowHist] = useState(false);
   const [present, setPresent] = useState([]);
   const [busy, setBusy] = useState(false);
+  const [report, setReport] = useState(null);
+  const [showReport, setShowReport] = useState(false);
   const announcedRef = useRef(false);
 
   const load = useCallback(() => Promise.all([deptApi.assignment(), deptApi.catalog()]).then(([a, c]) => {
@@ -78,12 +80,30 @@ export default function ShiftTeamCall() {
     if (!history.length) { toast.error(tri("Storico vuoto", "Verlauf leer", "History empty", "Historial vacío", "Historique vide", "تاریخچه خالی")); return; }
     const rows = [["data", "reparto", "operatore", "mansione"]];
     history.forEach((day) => (day.depts || []).forEach((d) => (d.ops || []).forEach((o) => rows.push([day.date, d.dept_name, o.operator, o.task || ""]))));
+    downloadCsv(rows, `mikilab_storico_turni_${new Date().toISOString().slice(0, 10)}.csv`);
+  };
+
+  const downloadCsv = (rows, filename) => {
     const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
     const blob = new Blob(["\ufeff" + csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href = url; a.download = `mikilab_storico_turni_${new Date().toISOString().slice(0, 10)}.csv`;
+    const a = document.createElement("a"); a.href = url; a.download = filename;
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   };
+
+  const openReport = () => {
+    setShowReport((v) => !v);
+    deptApi.shiftReport().then(setReport).catch(() => {});
+  };
+  const exportReport = () => {
+    if (!report) return;
+    const rows = [["data", "reparto", "operatore", "mansione", "presente", "prodotti", "obiettivo"]];
+    report.depts.forEach((d) => d.assigned.forEach((op) => rows.push([report.date, d.dept_name, op.operator, op.task || "", op.present ? "sì" : "no", d.produced ? d.produced.done : "", d.produced ? d.produced.target : ""])));
+    downloadCsv(rows, `mikilab_report_turno_${report.date}.csv`);
+  };
+
+  // Avvisi assenze: operai assegnati non ancora timbrati.
+  const absent = groups.flatMap((g) => g.list.filter((a) => !isPresent(a.operator)).map((a) => a.operator));
 
   return (
     <div data-testid="shift-team-call" className="space-y-3">
@@ -121,6 +141,48 @@ export default function ShiftTeamCall() {
           ); })()}
         </div>
       )}
+
+      {groups.length > 0 && absent.length > 0 && (
+        <div data-testid="shift-team-absences" className="rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/40 px-3 py-2">
+          <p className="text-[11px] font-bold text-[#fbbf24] inline-flex items-center gap-1.5 mb-1"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Non ancora timbrati", "Noch nicht eingestempelt", "Not clocked in yet", "Sin fichar aún", "Pas encore pointés", "هنوز نزده‌اند")} · {absent.length}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {absent.map((n, i) => <span key={i} className="px-2 py-0.5 rounded-md bg-[#030712] border border-[#f59e0b]/30 text-[11px] text-[#fbbf24]">{n}</span>)}
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] overflow-hidden">
+        <button data-testid="shift-team-report-toggle" onClick={openReport} className="w-full flex items-center gap-2 px-3 py-2.5 active:scale-[0.99]">
+          <FileText className="w-4 h-4 text-[#7DD3FC]" />
+          <span className="text-xs font-black uppercase tracking-wide text-[#7DD3FC] flex-1 text-left">{tri("Report fine turno", "Schichtende-Bericht", "End-of-shift report", "Informe fin de turno", "Rapport de fin de service", "گزارش پایان شیفت")}</span>
+          <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${showReport ? "rotate-180" : ""}`} />
+        </button>
+        {showReport && report && (
+          <div className="px-3 pb-3 space-y-2" data-testid="shift-team-report">
+            <div className="flex items-center justify-between rounded-lg bg-[#030712] border border-[#1e293b] px-2.5 py-2 text-[11px]">
+              <span className="text-[#94A3B8]">{report.date}</span>
+              <span className="font-bold text-white">{tri("Presenti", "Anwesend", "Present", "Presentes", "Présents", "حاضر")} <span className="text-[#22c55e]">{report.totals.present}</span>/{report.totals.assigned}</span>
+              <span className="font-bold text-white">{tri("Prodotti", "Produziert", "Produced", "Producidos", "Produits", "تولید")} <span className="text-[#7DD3FC]">{report.totals.produced}</span></span>
+            </div>
+            {report.depts.map((d) => (
+              <div key={d.dept} data-testid={`shift-report-dept-${d.dept}`} className="rounded-lg bg-[#030712] border border-[#1e293b] p-2">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[11px] font-black text-[#7DD3FC]">{d.dept_name}</span>
+                  {d.produced && <span className="text-[10px] font-bold text-[#94A3B8]">{d.produced.done}/{d.produced.target || "∞"} {d.produced.unit}</span>}
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {d.assigned.map((op, k) => (
+                    <span key={k} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#0C1019] border border-[#1e293b] text-[11px] text-white">
+                      <span className={`w-1.5 h-1.5 rounded-full ${op.present ? "bg-[#22c55e]" : "bg-[#475569]"}`} /><b>{op.operator}</b>{op.task ? <span className="text-[#94A3B8]">· {op.task}</span> : null}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
+          </div>
+        )}
+      </div>
 
       {groups.length === 0 && (
         <p data-testid="shift-team-empty" className="text-[11px] text-[#64748B] rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5">

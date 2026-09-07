@@ -1,0 +1,24 @@
+{
+  "summary": "Frontend E2E of the 3 new Capo-console features PASSED on desktop 1920x900. (1) Report Fine Turno: shift-team-report-toggle expands shift-team-report with totals 'Present 1/3, Produced 30'; shift-report-dept-panificio shows Youssef (green dot bg-[#22c55e]) + Marco (grey bg-[#475569]) with '30/100 pezzi'; shift-report-dept-pizzeria shows Ali; shift-report-export triggered CSV download 'mikilab_report_turno_2026-09-07.csv' with no console errors. (2) Avvisi Assenze: shift-team-absences visible with 'Not clocked in yet · 2' listing Marco + Ali; shift-team-presence-summary shows 1/3. (3) Turni Ricorrenti: expanded panel-shift-templates, entered name 'Turno mattina test', clicked shift-template-save → toast success and new row shift-template-<id> shows '3 assignments'; shift-template-apply-<id> → toast 'Applied \"Turno mattina test\" · 3 ✓'; shift-template-del-<id> removed the row (0 remaining).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "admin-key-* keypad still needs JS element.click() dispatch in automation; regular Playwright click occasionally drops the 4th tap in fast sequences.",
+    "panel-shift-templates HoloPanel is collapsed by default — tests must click the panel header before shift-templates children are in DOM. Consider adding a data-testid on the collapse trigger for robust automation.",
+    "Some 401s appear in console before login completes (pre-auth polling of protected endpoints). Cosmetic but noisy — consider gating deptApi polls until auth is ready."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (frontend-only)", "frontend": "100% (3/3 features PASS + regression selectors present)"},
+  "test_credentials": "Master Gate PIN 1985; Capo admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "Used existing seed for 2026-09-07: Panificio→Youssef(impasti, IN)+Marco(forni, absent); Pizzeria→Ali(pizzaiolo, absent). Verified 1/3 present, 2 absent. After test the template was applied+deleted (idempotent-safe cleanup).",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "All 3 acceptance criteria pass. Use JS .click() for admin-key-* to enter PIN reliably. Panel panel-shift-templates is a HoloPanel that starts collapsed — click its header before targeting shift-templates. The 'Applied ... · N ✓' toast uses Sonner and appears top-center. Note: apply duplicates the day's assignments (as expected by spec), so after apply Panificio shows 4 ops and Pizzeria shows 2; run apply LAST or delete duplicates if a later test relies on 1/3.",
+  "rca of the issue": "No issues found; all three features work as specified."
+}

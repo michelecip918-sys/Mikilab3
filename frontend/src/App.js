@@ -86,6 +86,7 @@ import OvenBrain from "@/components/console/OvenBrain";
 import CapoDeck from "@/components/console/CapoDeck";
 import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
+import ShiftTemplates from "@/components/console/ShiftTemplates";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
@@ -402,6 +403,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-shift-team" accent="#7DD3FC" beacon="#22c55e" icon="📣" defaultOpen title={tri("Riepilogo Squadra · Voce BakoMix", "Team-Übersicht · BakoMix-Stimme", "Team Roll-Call · BakoMix Voice", "Resumen de Equipo · Voz BakoMix", "Appel d'Équipe · Voix BakoMix", "فراخوان تیم · صدای BakoMix")} sub={tri("All'apertura del turno, BakoMix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt BakoMix das Team pro Bereich an.", "At shift start, BakoMix voices the team composition department by department.", "Al iniciar el turno, BakoMix anuncia el equipo por área.", "Au début du service, BakoMix annonce l'équipe par atelier.", "در شروع شیفت، BakoMix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
                       <ShiftTeamCall />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-shift-templates" accent="#7DD3FC" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
+                      <ShiftTemplates />
                     </HoloPanel>
                     <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />

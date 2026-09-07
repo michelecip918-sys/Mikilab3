@@ -656,6 +656,11 @@ export const deptApi = {
   board: () => api.get(`/depts/board`).then((r) => r.data),
   history: (days = 14) => api.get(`/depts/history`, { params: { days } }).then((r) => r.data),
   presence: () => api.get(`/depts/presence`).then((r) => r.data),
+  shiftReport: () => api.get(`/depts/shift-report`).then((r) => r.data),
+  templatesList: () => api.get(`/depts/templates`).then((r) => r.data),
+  templateCreate: (payload) => api.post(`/depts/templates`, payload).then((r) => r.data),
+  templateDelete: (tid) => api.delete(`/depts/templates/${tid}`).then((r) => r.data),
+  templateApply: (tid) => api.post(`/depts/templates/${tid}/apply`).then((r) => r.data),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.

@@ -4469,3 +4469,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato: testing agent iteration_216 → frontend 100% (3 feature + regressioni), 0 issue. Backend curl OK (clock in→presente, out→non presente).
 - **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
 
+
+### Report fine turno + Avvisi assenze + Turni ricorrenti (2026-09-07 · sesta tranche)
+- **Report fine turno (FATTO)**: `GET /api/depts/shift-report` (assegnazioni+presenze+pezzi prodotti per reparto + totali). UI espandibile `shift-team-report-toggle`/`shift-team-report` in ShiftTeamCall con export CSV `shift-report-export` (mikilab_report_turno_<data>.csv).
+- **Avvisi assenze (FATTO)**: banner `shift-team-absences` in ShiftTeamCall che elenca gli operai assegnati non ancora timbrati (derivato da assegnazioni + /depts/presence).
+- **Turni ricorrenti (FATTO)**: collezione `dept_shift_templates`; endpoint `GET/POST/DELETE /api/depts/templates` + `POST /api/depts/templates/{id}/apply`. Nuovo componente `console/ShiftTemplates.jsx` + HoloPanel `panel-shift-templates`: salva la squadra odierna come turno-tipo, lista, applica con un tocco, elimina.
+- `deptApi`: shiftReport, templatesList/Create/Delete/Apply.
+- Testato: testing agent iteration_217 → frontend 100% (3 feature + regressioni), 0 issue. Backend curl OK (shift-report presenti/prodotti; template create/list/apply/delete).
+- **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
+

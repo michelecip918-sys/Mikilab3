@@ -1254,6 +1254,94 @@ async def depts_presence(admin: dict = Depends(require_admin)):
     return {"date": today, "present": present}
 
 
+@api_router.get("/depts/shift-report")
+async def depts_shift_report(admin: dict = Depends(require_admin)):
+    """Report fine turno: assegnazioni + presenze + pezzi prodotti per reparto."""
+    today = now_iso()[:10]
+    asg = await db.dept_assignments.find({"date": today}, {"_id": 0}).to_list(2000)
+    objs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    last = {}
+    for e in entries:
+        w = (e.get("worker") or "").strip()
+        if w:
+            last[w] = e.get("action")
+    present = set(w for w, a in last.items() if a in ("in", "break_start", "break_end"))
+    obj_by = {o.get("dept"): o for o in objs}
+    depts = {}
+    for a in asg:
+        k = a.get("dept", "")
+        depts.setdefault(k, {"dept": k, "dept_name": a.get("dept_name", ""), "assigned": [], "produced": None})
+        depts[k]["assigned"].append({"operator": a.get("operator", ""), "task": a.get("task", ""), "present": a.get("operator", "") in present})
+    out = []
+    for k, v in depts.items():
+        o = obj_by.get(k)
+        if o:
+            v["produced"] = {"done": o.get("done", 0), "target": o.get("target", 0), "unit": o.get("unit", "pezzi"), "label": o.get("label", "")}
+        out.append(v)
+    tot_assigned = sum(len(v["assigned"]) for v in out)
+    tot_present = sum(1 for v in out for op in v["assigned"] if op["present"])
+    tot_prod = sum((v["produced"]["done"] if v["produced"] else 0) for v in out)
+    return {"date": today, "depts": out, "totals": {"assigned": tot_assigned, "present": tot_present, "produced": tot_prod}}
+
+
+class ShiftTemplateItem(BaseModel):
+    dept: str = ""
+    operator: str = ""
+    task: str = ""
+
+
+class ShiftTemplateReq(BaseModel):
+    name: str = ""
+    items: List[ShiftTemplateItem] = []
+
+
+@api_router.get("/depts/templates")
+async def depts_templates_list(admin: dict = Depends(require_admin)):
+    docs = await db.dept_shift_templates.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return {"templates": docs}
+
+
+@api_router.post("/depts/templates")
+async def depts_templates_create(body: ShiftTemplateReq, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    name = (body.name or "").strip() or "Turno"
+    items = [{"dept": i.dept, "operator": (i.operator or "").strip(), "task": (i.task or "").strip()}
+             for i in body.items if (i.operator or "").strip() and i.dept in DEPARTMENTS]
+    doc = {"id": _uuid.uuid4().hex[:10], "name": name, "items": items, "created_at": now_iso()}
+    await db.dept_shift_templates.insert_one({**doc})
+    doc.pop("_id", None)
+    return {"ok": True, "template": doc}
+
+
+@api_router.delete("/depts/templates/{tid}")
+async def depts_templates_delete(tid: str, admin: dict = Depends(require_admin)):
+    await db.dept_shift_templates.delete_one({"id": tid})
+    return {"ok": True}
+
+
+@api_router.post("/depts/templates/{tid}/apply")
+async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    tpl = await db.dept_shift_templates.find_one({"id": tid}, {"_id": 0})
+    if not tpl:
+        raise HTTPException(status_code=404, detail="Template non trovato")
+    today = now_iso()[:10]
+    created = []
+    for it in tpl.get("items", []):
+        op = (it.get("operator") or "").strip()
+        dept = it.get("dept", "")
+        if not op or dept not in DEPARTMENTS:
+            continue
+        doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
+               "task": (it.get("task") or "").strip(), "operator": op, "note": "",
+               "by": admin.get("email") or "master", "at": now_iso()}
+        await db.dept_assignments.insert_one({**doc})
+        doc.pop("_id", None)
+        created.append(doc)
+    return {"ok": True, "assignments": created}
+
+
 
 @api_router.post("/bako/deus/capture")
 async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
