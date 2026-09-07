@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
@@ -26,8 +26,19 @@ export function ZoneDivider({ title, code, accent = "#00F0FF", testid }) {
 
 export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaultOpen = false, collapsible = true, beacon = "#7DD3FC", children }) {
   const [open, setOpen] = useState(defaultOpen);
+  const rootRef = useRef(null);
+  useEffect(() => {
+    const onJump = (e) => {
+      if (e.detail === testid) {
+        if (collapsible) setOpen(true);
+        setTimeout(() => { try { rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }, 60);
+      }
+    };
+    window.addEventListener("mikilab:open-panel", onJump);
+    return () => window.removeEventListener("mikilab:open-panel", onJump);
+  }, [testid, collapsible]);
   return (
-    <div data-testid={testid} className="holo-panel">
+    <div ref={rootRef} data-testid={testid} className="holo-panel scroll-mt-24">
       <span className="holo-corner holo-corner-tl" style={{ color: accent }} />
       <span className="holo-corner holo-corner-tr" style={{ color: accent }} />
       <span className="holo-corner holo-corner-bl" style={{ color: accent }} />

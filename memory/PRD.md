@@ -4478,3 +4478,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato: testing agent iteration_217 → frontend 100% (3 feature + regressioni), 0 issue. Backend curl OK (shift-report presenti/prodotti; template create/list/apply/delete).
 - **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
 
+
+### Indice plance + piani chiusi + assenze con orario + report vocale (2026-09-07 · settima tranche)
+- **Indice plance (FATTO)**: `console/ConsoleIndex.jsx` — barra sticky `console-index-open` in cima a master-console + overlay con ricerca (`console-index-search`) e griglia `console-index-item-<panelId>` (scansiona i pannelli dal DOM). Al click dispatcha `CustomEvent('mikilab:open-panel', panelId)`; `HoloKit.HoloPanel` ora ascolta l'evento → apre + `scrollIntoView`. (31 pannelli raggiungibili con un tocco.)
+- **Piani chiusi di default (FATTO)**: rimosso `defaultOpen` da `panel-weekly` (Piano Settimanale) e `panel-autoplan` (Piano del Giorno) → niente liste infinite nella plancia.
+- **Assenze con orario (FATTO)**: `shift-start-input` (localStorage `mikilab_shift_start`, default 06:00) in ShiftTeamCall; gli avvisi assenze (`shift-team-absences`) compaiono solo dopo l'orario d'inizio, altrimenti nota `shift-team-absences-pending`.
+- **Report vocale (FATTO)**: `shift-report-speak` → BakoMix (voce bakemix) legge presenze + pezzi prodotti + dettaglio reparti del report di fine turno.
+- Testato: testing agent iteration_218 → frontend 100% (4/4 + regressioni), 0 issue.
+- **DEPLOY**: redeploy produzione (mikilab.de) ri-accodato al deployer col codice completo.
+

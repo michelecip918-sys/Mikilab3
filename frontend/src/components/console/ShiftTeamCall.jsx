@@ -21,6 +21,7 @@ export default function ShiftTeamCall() {
   const [busy, setBusy] = useState(false);
   const [report, setReport] = useState(null);
   const [showReport, setShowReport] = useState(false);
+  const [shiftStart, setShiftStart] = useState(() => { try { return localStorage.getItem("mikilab_shift_start") || "06:00"; } catch { return "06:00"; } });
   const announcedRef = useRef(false);
 
   const load = useCallback(() => Promise.all([deptApi.assignment(), deptApi.catalog()]).then(([a, c]) => {
@@ -101,8 +102,25 @@ export default function ShiftTeamCall() {
     report.depts.forEach((d) => d.assigned.forEach((op) => rows.push([report.date, d.dept_name, op.operator, op.task || "", op.present ? "sì" : "no", d.produced ? d.produced.done : "", d.produced ? d.produced.target : ""])));
     downloadCsv(rows, `mikilab_report_turno_${report.date}.csv`);
   };
+  const speakReport = () => {
+    if (!report) return;
+    const pres = tri("presente", "anwesend", "present", "presente", "présent", "حاضر");
+    const abs = tri("assente", "abwesend", "absent", "ausente", "absent", "غایب");
+    const head = tri(`Report di fine turno. Presenti ${report.totals.present} su ${report.totals.assigned}. Pezzi prodotti ${report.totals.produced}.`,
+      `Schichtende-Bericht. Anwesend ${report.totals.present} von ${report.totals.assigned}. Produziert ${report.totals.produced} Stück.`,
+      `End of shift report. Present ${report.totals.present} of ${report.totals.assigned}. Pieces produced ${report.totals.produced}.`,
+      `Informe de fin de turno. Presentes ${report.totals.present} de ${report.totals.assigned}. Piezas ${report.totals.produced}.`,
+      `Rapport de fin de service. Présents ${report.totals.present} sur ${report.totals.assigned}. Pièces ${report.totals.produced}.`,
+      `گزارش پایان شیفت. حاضر ${report.totals.present} از ${report.totals.assigned}. تولید ${report.totals.produced}.`);
+    const body = report.depts.map((d) => `${d.dept_name}: ${d.assigned.map((op) => `${op.operator} ${op.present ? pres : abs}`).join(", ")}.${d.produced ? ` ${d.produced.done} ${d.produced.unit}.` : ""}`).join(" ");
+    try { playTTS(`${head} ${body}`, { lang, voice: "bakemix" }); } catch { /* */ }
+  };
 
-  // Avvisi assenze: operai assegnati non ancora timbrati.
+  const saveShiftStart = (v) => { setShiftStart(v); try { localStorage.setItem("mikilab_shift_start", v); } catch { /* */ } };
+  const startMin = (() => { const [h, m] = (shiftStart || "06:00").split(":").map(Number); return (h || 0) * 60 + (m || 0); })();
+  const nowMin = new Date().getHours() * 60 + new Date().getMinutes();
+  const shiftStarted = nowMin >= startMin;
+  // Avvisi assenze: operai assegnati non ancora timbrati (solo dopo l'orario d'inizio).
   const absent = groups.flatMap((g) => g.list.filter((a) => !isPresent(a.operator)).map((a) => a.operator));
 
   return (
@@ -142,13 +160,24 @@ export default function ShiftTeamCall() {
         </div>
       )}
 
-      {groups.length > 0 && absent.length > 0 && (
+      {groups.length > 0 && (
+        <div className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
+          <span className="text-[11px] text-[#94A3B8] flex-1">{tri("Avvisa assenze dopo l'inizio turno:", "Abwesenheiten nach Schichtbeginn:", "Alert absences after shift start:", "Avisar ausencias tras el inicio:", "Alerter les absences après le début:", "هشدار غیبت پس از شروع:")}</span>
+          <input data-testid="shift-start-input" type="time" value={shiftStart} onChange={(e) => saveShiftStart(e.target.value)}
+            className="rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-white text-xs px-2 py-1" />
+        </div>
+      )}
+
+      {groups.length > 0 && shiftStarted && absent.length > 0 && (
         <div data-testid="shift-team-absences" className="rounded-xl bg-[#f59e0b]/10 border border-[#f59e0b]/40 px-3 py-2">
           <p className="text-[11px] font-bold text-[#fbbf24] inline-flex items-center gap-1.5 mb-1"><AlertTriangle className="w-3.5 h-3.5" /> {tri("Non ancora timbrati", "Noch nicht eingestempelt", "Not clocked in yet", "Sin fichar aún", "Pas encore pointés", "هنوز نزده‌اند")} · {absent.length}</p>
           <div className="flex flex-wrap gap-1.5">
             {absent.map((n, i) => <span key={i} className="px-2 py-0.5 rounded-md bg-[#030712] border border-[#f59e0b]/30 text-[11px] text-[#fbbf24]">{n}</span>)}
           </div>
         </div>
+      )}
+      {groups.length > 0 && !shiftStarted && absent.length > 0 && (
+        <p data-testid="shift-team-absences-pending" className="text-[10px] text-[#64748B] px-1">{tri(`Avvisi assenze attivi dalle ${shiftStart}.`, `Abwesenheits-Warnungen ab ${shiftStart}.`, `Absence alerts active from ${shiftStart}.`, `Avisos activos desde las ${shiftStart}.`, `Alertes actives dès ${shiftStart}.`, `هشدارها از ${shiftStart}.`)}</p>
       )}
 
       <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] overflow-hidden">
@@ -180,6 +209,7 @@ export default function ShiftTeamCall() {
               </div>
             ))}
             <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
+            <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (BakoMix)", "Bericht vorlesen (BakoMix)", "Read report aloud (BakoMix)", "Leer informe (BakoMix)", "Lire le rapport (BakoMix)", "خواندن گزارش (BakoMix)")}</button>
           </div>
         )}
       </div>
