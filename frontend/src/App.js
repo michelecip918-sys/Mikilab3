@@ -43,6 +43,7 @@ import MikeMixFloor from "@/components/MikeMixFloor";
 import MikeMixSense from "@/components/MikeMixSense";
 import MikeMixGuide from "@/components/MikeMixGuide";
 import DowntimeTraining from "@/components/DowntimeTraining";
+import NexusConsole from "@/components/NexusConsole";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -474,6 +475,9 @@ export default function App() {
               {/* ================= ZONA 3 · MIKE MIX AI ================= */}
               <section ref={zoneRefs.mikemix} data-zone="mikemix" className="holo-zone pt-2">
                 <ZoneDivider testid="zone-mikemix" code="Z-03" title={tri("Mike Mix AI · Presenza & Governance", "Mike Mix AI · Präsenz", "Mike Mix AI · Presence & Governance", "Mike Mix AI · Presencia", "Mike Mix AI · Présence", "بوکومیکس · حضور")} accent="#7DD3FC" />
+                <div data-testid="panel-nexus" className="mb-4">
+                  <NexusConsole isCapo={!!(user && user.role === "admin")} />
+                </div>
                 <div data-testid="mikemix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />
                   <div className="relative z-10">
