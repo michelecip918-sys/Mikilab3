@@ -88,6 +88,7 @@ import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
 import ShiftTemplates from "@/components/console/ShiftTemplates";
 import ConsoleIndex from "@/components/console/ConsoleIndex";
+import ConsoleSectionMenu from "@/components/console/ConsoleSectionMenu";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
@@ -125,6 +126,31 @@ export default function App() {
       try { if (localStorage.getItem("mikilab_briefing_seen") !== "1") { localStorage.setItem("mikilab_briefing_seen", "1"); setShowBriefing(true); } } catch (e) { /* */ }
     }
   }, [user]);
+
+  // Plancia a sezioni: mappa pannello → sezione; mostro solo i pannelli della sezione attiva.
+  const [consoleSec, setConsoleSec] = useState("");
+  const CONSOLE_SECMAP = {
+    "panel-emergency": "regia", "panel-shiftreport": "regia",
+    "panel-autoplan": "piani", "panel-weekly": "piani", "panel-pianoai": "piani", "panel-backward": "piani", "panel-ordine": "piani", "panel-ordini": "piani", "panel-planner": "piani", "panel-b2b": "piani", "panel-timeline": "piani",
+    "panel-thermalflow": "ricette", "panel-ricette": "ricette",
+    "panel-dept-assign": "squadra", "panel-shift-team": "squadra", "panel-shift-templates": "squadra",
+    "panel-twin": "impianto", "panel-ovenqc": "impianto", "panel-carbon": "impianto", "panel-proofing": "impianto", "panel-agv": "impianto", "panel-packaging": "impianto", "panel-radar": "impianto", "panel-elite": "impianto", "panel-hardware": "impianto", "panel-machine-arrival": "impianto",
+    "panel-silos": "magazzino", "panel-magazzino": "magazzino",
+    "panel-pin": "sicurezza", "panel-docs": "sicurezza", "panel-security": "sicurezza",
+  };
+  useEffect(() => {
+    const onJump = (e) => { const s = CONSOLE_SECMAP[e.detail]; if (s) setConsoleSec(s); };
+    window.addEventListener("mikilab:open-panel", onJump);
+    return () => window.removeEventListener("mikilab:open-panel", onJump);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    const apply = () => {
+      Object.keys(CONSOLE_SECMAP).forEach((pid) => { const el = document.querySelector(`[data-testid="${pid}"]`); if (el) el.style.display = (consoleSec && CONSOLE_SECMAP[pid] === consoleSec) ? "" : "none"; });
+      const rt = document.querySelector('[data-testid="console-regia-tools"]'); if (rt) rt.style.display = consoleSec === "regia" ? "" : "none";
+    };
+    apply(); const t = setTimeout(apply, 120);
+    return () => clearTimeout(t);
+  }, [consoleSec, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const zoneRefs = { master: useRef(null), operatori: useRef(null), bakomix: useRef(null) };
 
