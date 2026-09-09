@@ -4605,3 +4605,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Frontend** (App.js): polling `/api/deck/status` ogni 15s dopo unlock. Deck 3D ora REATTIVO: bordo+glow del pannello colorati per umore impianto (sereno=ciano, attivo=verde, teso=ambra, critico=rosso pulsante, `deck-mood-glow`); badge BPM live in basso a destra (`deck-heartbeat`); chip reparti con pallino verde pulsante + conteggio ×N quando c'è un turno attivo (`deck-dot-<id>`), glow ambra/rosso per warn/critical, tooltip con i nomi degli operatori.
 - Testato: curl (turno attivo → panificio active=1; macchina "Forno Pizzeria" giù → critical su pizzeria+panificio, mood critico) + screenshot (heartbeat live "74 BPM · CRITICAL" dopo allarme simulato, poi stato ripristinato).
 - NOTA DEPLOY: mikilab.de NON raggiungibile (timeout) al 2026-09-09 nonostante approvazione utente — verificare nell'UI Emergent che il deploy sia "Live" e il dominio collegato. Static analysis deployment_agent: PASS.
+
+
+## v42 (2026-09) — Test email Resend live
+- Google Search Console: SALTATO su richiesta utente (proprietà già verificata via DNS, niente tag HTML).
+- Test reset password live: `POST /api/auth/forgot-password` per michelecip918@gmail.com con origin mikilab.de → ok, nessun errore nei log. Test diretto Resend da noreply@mikilab.de → consegnata (id ef4e2321-..., nessun fallback a onboarding@resend.dev → il dominio mikilab.de è verificato e funzionante su Resend). Quota mensile Resend: 47 rimanenti.
+- ATTESA: conferma utente di ricezione delle 2 email in inbox (controllare anche spam).
