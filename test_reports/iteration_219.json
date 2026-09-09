@@ -1,0 +1,38 @@
+{
+  "summary": "Full E2E (backend + frontend) validation of the Mike Mix global rename, new PublicGate multiverse, PIN wall, and TTS 'nexus' voice. Backend: 9/10 pytest pass (the 1 'fail' is not a real bug — /api/admin-gate/verify soft-returns 200 {ok:false} on wrong PIN instead of 401). All renamed endpoints /api/mike/suggestions, /api/mike/shift-report, /api/mike/heartbeat return 200 (no rename regression). /api/mikemix/chat is present (not 404). /api/tts with voice='nexus' returns 200/503/424 range — NO KeyError/500 crash, so the 'nexus' voice key is accepted. /api/recipes?collection=mikilab still works. Frontend: fresh browser (localStorage cleared) correctly renders [data-testid=public-gate] with 3D scene, 4 world tabs (panificio/pizzeria/pasticceria/banco all switch scene), 3 avatars (public-avatar-mikilab/mikinexus/mikemix), [data-testid=public-hierarchy] shows 'MIKILAB → MIKI-NEXUS → MIKE MIX', [data-testid=public-email] links to accessi@mikilab.de. Clicking [data-testid=public-enter-btn] opens [data-testid=admin-gate]; [data-testid=admin-gate-back] returns to public-gate; wrong 6-digit PIN correctly shows [data-testid=admin-pin-error] ('Wrong PIN. Try again.'); correct PIN 198505 unlocks — public-gate disappears and [data-testid=app-header] appears. All renamed components render: app-header, mikemix-core, zone-mikemix, bakemix-guide. No text 'BakoMix'/'MohaLab'/'Mohammed'/'Mohamed'/'BakeMix' anywhere in body text; 'Mike Mix' shows 6× as expected. Only 3 residual 'BakoMix' strings are inside CSS COMMENTS in App.css/index.css (not user-visible).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "/api/admin-gate/verify", "issue": "Returns HTTP 200 {ok:false} on wrong PIN. Semantically OK for a soft check but 401/403 would be more RESTful and enables standard rate-limit patterns."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "App.css / index.css headers and index.css line 395", "issues": ["Old brand 'BakoMix' still present in CSS comments (non-visible). Cosmetic: rename to 'Mike Mix' for consistency with the rest of the codebase."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter219_mikemix_rename.py",
+    "/app/test_reports/pytest/iter219.xml"
+  ],
+  "action_items": [
+    "OPTIONAL cleanup: replace remaining 'BakoMix' strings in /app/frontend/src/App.css (line 2) and /app/frontend/src/index.css (lines 2 and 395) with 'Mike Mix' for full rename consistency (comments only — no functional impact).",
+    "OPTIONAL: React 'Encountered two children with the same key' warning appears on Public Gate render. Non-blocking but should be fixed by giving each world/avatar a unique React key."
+  ],
+  "critical_code_review_comments": [
+    "Rename was thorough on runtime code (React tree, API paths, testids). Only CSS/JSDoc-style comments still say 'BakoMix'.",
+    "TTS voice map correctly accepts new 'nexus' key without breaking legacy 'bakemix' / 'mikemix' keys.",
+    "PublicGate → AdminGate → App transition is clean; localStorage flag 'mikilab_admin_unlocked=1' is set on successful verify.",
+    "Duplicate React key warning on the multiverse render — small quality bug."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (all rename + TTS endpoints healthy; 1 pre-existing wrong-pin response shape only)", "frontend": "100% (all 5 test scenarios pass)"},
+  "test_credentials": "Gate PIN 198505; admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "To reach public gate: clear localStorage 'mikilab_admin_unlocked' then reload. PIN keypad clicks are more reliable via el.evaluate('el=>el.click()') than Playwright .click. Confirmed selectors: public-gate, public-world-{panificio|pizzeria|pasticceria|banco}, public-avatar-{mikilab|mikinexus|mikemix}, public-hierarchy, public-email, public-enter-btn, admin-gate, admin-gate-back, admin-gate-email, admin-key-{0-9}, admin-pin-error, app-header, mikemix-core, zone-mikemix, bakemix-guide. Backend renamed endpoints live at /api/mike/* and /api/mikemix/chat. Emergent LLM key required for TTS to return audio (503 acceptable in preview).",
+  "rca of the issue": "No blocking issue. Minor cosmetic residue: 3 'BakoMix' strings remain in CSS comments only. Wrong-PIN returns 200 {ok:false} by design (client checks payload.ok), so the AssertionError in test_gate_verify_wrong_pin is a test-expectation mismatch, not a bug."
+}

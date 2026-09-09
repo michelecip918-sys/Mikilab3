@@ -1482,7 +1482,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div className="mt-3">
           <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("capo_notes")}</label>
           <div className="flex flex-wrap gap-1.5 mt-1 mb-1.5">
-            <button type="button" data-testid="capo-cmd-mohammadreza"
+            <button type="button" data-testid="capo-cmd-mikemix"
               onClick={() => setNotes(tri3(lang,
                 "Ciao MikiLab, sono in laboratorio e devo gestire la produzione. Voglio che analizzi la situazione, ricalcoli l'intero piano di lavoro a ritroso e mi dica esattamente cosa fare ora per ora. Se ci sono ordini urgenti, adatta gli slot del forno, le impastatrici e la cella frigo senza far bruciare o ritardare gli altri pani. Calcola anche la temperatura dell'acqua, l'idratazione corretta e inviami la timeline aggiornata con la conferma da premere.",
                 "Hallo MikiLab, ich bin in der Backstube und muss die Produktion steuern. Analysiere die Lage, rechne den gesamten Arbeitsplan rückwärts neu und sag mir Stunde für Stunde genau, was zu tun ist. Bei dringenden Bestellungen passe Ofen-, Kneter- und Kühlzeiten an, ohne andere Brote zu verbrennen oder zu verzögern. Berechne auch Wassertemperatur und Hydratation und schick mir die aktualisierte Timeline mit Bestätigung.",

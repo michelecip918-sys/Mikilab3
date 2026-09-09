@@ -105,7 +105,7 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
     if (v) u.voice = v;
     // Timbro sempre MASCHILE anche se il dispositivo ha solo voci femminili: pitch basso per persona.
     if (voice === "michele" || voice === "lab") { u.pitch = 0.7; u.rate = 1.0; }
-    else if (voice === "mohamed") { u.pitch = 0.76; u.rate = 0.98; }
+    else if (voice === "mikemix") { u.pitch = 0.76; u.rate = 0.98; }
     else if (voice === "bakemix") { u.pitch = 0.82; u.rate = 1.04; }
     else { u.pitch = 0.75; u.rate = 1.0; }
     u.onstart = () => { ttsSignalStart(); if (onStart) onStart(); };

@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingCart, Trash2, Send, Plus, Wheat } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -16,25 +16,25 @@ export default function B2BOrders() {
   const [form, setForm] = useState({ client: "", product: "", pieces: "", grams_each: "500" });
 
   const load = useCallback(async () => {
-    try { setData(await bakoApi.b2bList()); } catch { /* */ }
-    try { setForecast(await bakoApi.b2bForecast()); } catch { /* */ }
+    try { setData(await mikeApi.b2bList()); } catch { /* */ }
+    try { setForecast(await mikeApi.b2bForecast()); } catch { /* */ }
   }, []);
   useEffect(() => { load(); }, [load]);
 
   const add = async () => {
     if (!form.product || !Number(form.pieces)) { toast.error(tri("Inserisci prodotto e pezzi", "Produkt und Stück eingeben", "Enter product and pieces", "Ingresa producto y piezas", "Entre produit et pièces", "محصول و تعداد را وارد کن")); return; }
     try {
-      await bakoApi.b2bAdd({ client: form.client, product: form.product, pieces: Number(form.pieces), grams_each: Number(form.grams_each) || 500 });
+      await mikeApi.b2bAdd({ client: form.client, product: form.product, pieces: Number(form.pieces), grams_each: Number(form.grams_each) || 500 });
       setForm({ client: "", product: "", pieces: "", grams_each: form.grams_each });
       load();
     } catch { toast.error(tri("Salvataggio non riuscito", "Speichern fehlgeschlagen", "Save failed", "Guardado fallido", "Échec", "ذخیره ناموفق")); }
   };
 
-  const del = async (id) => { setData((d) => ({ ...d, orders: d.orders.filter((o) => o.id !== id) })); try { await bakoApi.b2bDel(id); } catch { /* */ } load(); };
+  const del = async (id) => { setData((d) => ({ ...d, orders: d.orders.filter((o) => o.id !== id) })); try { await mikeApi.b2bDel(id); } catch { /* */ } load(); };
 
   const toPlan = async () => {
     try {
-      const r = await bakoApi.b2bToPlan();
+      const r = await mikeApi.b2bToPlan();
       try { window.dispatchEvent(new CustomEvent("mikilab-prefill-orders", { detail: { text: r.orders_text } })); } catch { /* */ }
       toast.success(tri(`Inviato al piano: ${r.total_dough_kg} kg d'impasto.`, `An Plan gesendet: ${r.total_dough_kg} kg Teig.`, `Sent to plan: ${r.total_dough_kg} kg dough.`, `Enviado al plan: ${r.total_dough_kg} kg masa.`, `Envoyé au plan : ${r.total_dough_kg} kg pâte.`, `به برنامه ارسال شد: ${r.total_dough_kg} کیلوگرم خمیر.`));
     } catch { toast.error(tri("Invio non riuscito", "Senden fehlgeschlagen", "Send failed", "Envío fallido", "Échec", "ارسال ناموفق")); }

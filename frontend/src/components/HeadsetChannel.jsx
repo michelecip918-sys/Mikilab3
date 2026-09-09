@@ -19,7 +19,7 @@ const HK = "mikilab_headset_lang";
 const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Canale Headset Bluetooth · traduzione vocale in tempo reale per squadra multilingua.
-// L'operatore parla nella propria lingua → BakoMix traduce e legge nella lingua del compagno.
+// L'operatore parla nella propria lingua → Mike Mix traduce e legge nella lingua del compagno.
 export default function HeadsetChannel() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);

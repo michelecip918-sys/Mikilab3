@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { complianceApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import BakoInfo from "@/components/BakoInfo";
+import MikeInfo from "@/components/MikeInfo";
 import CrossCheckCard from "@/components/CrossCheckCard";
 
 // Compliance legale tedesca (ArbZG · DGUV · GDPR/DSGVO) — accesso esclusivo Master.
@@ -48,7 +48,7 @@ export default function CompliancePanel() {
             <p className="text-[11px] text-[#94A3B8] flex items-center gap-1"><Lock className="w-3 h-3" /> {tri("Accesso esclusivo Master · dati locali cifrati", "Nur Master · lokale verschlüsselte Daten", "Master-only · local encrypted data", "Solo Master · datos locales cifrados", "Master seul · données locales chiffrées", "فقط مستر · داده محلی رمزنگاری‌شده")}</p>
           </div>
         </div>
-        <BakoInfo context="Compliance" />
+        <MikeInfo context="Compliance" />
       </div>
 
       {loading ? (

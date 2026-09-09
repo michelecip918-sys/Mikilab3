@@ -2,14 +2,14 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { AlertOctagon, Check, Wrench, Loader2, ShieldAlert, History, Trophy } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 // CENTRO EMERGENZE del Capo (Neural Load Radar): raccoglie gli SOS del reparto con
-// bagliore rosso pulsante, BakoMix li ANNUNCIA a voce, e genera una GUIDA RAPIDA di
+// bagliore rosso pulsante, Mike Mix li ANNUNCIA a voce, e genera una GUIDA RAPIDA di
 // manutenzione in tempo reale (Claude) per la macchina in allarme.
 export default function EmergencyCenter() {
   const { lang } = useLang();
@@ -25,8 +25,8 @@ export default function EmergencyCenter() {
   const acked = useRef(new Set());
 
   const loadHist = useCallback(async () => {
-    try { setHist(await bakoApi.sosHistory(lang)); } catch { /* */ }
-    try { setChal(await bakoApi.sosChallenge(lang)); } catch { /* */ }
+    try { setHist(await mikeApi.sosHistory(lang)); } catch { /* */ }
+    try { setChal(await mikeApi.sosChallenge(lang)); } catch { /* */ }
   }, [lang]);
   useEffect(() => { loadHist(); }, [loadHist]);
 
@@ -47,7 +47,7 @@ export default function EmergencyCenter() {
   const ack = async (id) => {
     acked.current.add(id);
     setEvents((es) => es.filter((e) => e.id !== id));
-    try { await bakoApi.sosAck(id); } catch { /* */ } loadHist();
+    try { await mikeApi.sosAck(id); } catch { /* */ } loadHist();
   };
 
   const fmtDur = (s) => (s == null ? "—" : s < 60 ? `${s}s` : `${Math.floor(s / 60)}m ${s % 60}s`);
@@ -55,7 +55,7 @@ export default function EmergencyCenter() {
   const genGuide = async (ev) => {
     setLoadingGuide(ev.id);
     try {
-      const r = await bakoApi.maintenanceGuide({ machine: ev.machine || ev.line, anomaly: ev.note || tri("SOS operatore", "Bediener-SOS", "operator SOS", "SOS operario", "SOS opérateur", "SOS اپراتور"), lang });
+      const r = await mikeApi.maintenanceGuide({ machine: ev.machine || ev.line, anomaly: ev.note || tri("SOS operatore", "Bediener-SOS", "operator SOS", "SOS operario", "SOS opérateur", "SOS اپراتور"), lang });
       setGuides((g) => ({ ...g, [ev.id]: r.guide }));
       if (r.guide?.spoken) { try { playTTS(r.guide.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
     } catch { toast.error(tri("Guida non disponibile", "Anleitung nicht verfügbar", "Guide unavailable", "Guía no disponible", "Guide indisponible", "راهنما در دسترس نیست")); }

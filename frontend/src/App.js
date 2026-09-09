@@ -1,13 +1,13 @@
 /*
  * ============================================================================
- *  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+ *  MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
  *  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
  *  Unico proprietario legale: il Master. Sole legal owner: the Master.
  *  Codice riservato: vietata copia, distribuzione, reverse engineering o
- *  cloning non autorizzati, tracciati dal BakoMix AI Security Guardian.
+ *  cloning non autorizzati, tracciati dal Mike Mix AI Security Guardian.
  * ============================================================================
  *  PLANCIA OLOGRAFICA — Zero-Menu vertical command console (v40).
- *  Unica PWA continua a scorrimento verticale: Master · Operatori · BakoMix AI.
+ *  Unica PWA continua a scorrimento verticale: Master · Operatori · Mike Mix AI.
  */
 import { useState, useEffect, useRef, useCallback } from "react";
 import "@/App.css";
@@ -39,10 +39,10 @@ import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
 import PinSetup from "@/components/PinSetup";
 import OrdineCapo from "@/components/OrdineCapo";
-import MohamedFloor from "@/components/MohamedFloor";
-import BakoMixSense from "@/components/BakoMixSense";
-import BakemixGuide from "@/components/BakemixGuide";
-import AdminGate from "@/components/AdminGate";
+import MikeMixFloor from "@/components/MikeMixFloor";
+import MikeMixSense from "@/components/MikeMixSense";
+import MikeMixGuide from "@/components/MikeMixGuide";
+import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
 import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
@@ -56,7 +56,7 @@ import Ricette from "@/sections/Ricette";
 import OrdiniExtra from "@/components/OrdiniExtra";
 import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
-import AmbientBako from "@/components/AmbientBako";
+import AmbientMike from "@/components/AmbientMike";
 import CompliancePanel from "@/components/CompliancePanel";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import WeeklyPlan from "@/sections/WeeklyPlan";
@@ -81,7 +81,7 @@ import AgvFleet from "@/components/console/AgvFleet";
 import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
-import BakoSuggestions from "@/components/console/BakoSuggestions";
+import MikeSuggestions from "@/components/console/MikeSuggestions";
 import OvenBrain from "@/components/console/OvenBrain";
 import CapoDeck from "@/components/console/CapoDeck";
 import DeptAssign from "@/components/console/DeptAssign";
@@ -97,8 +97,8 @@ const PUB = process.env.PUBLIC_URL;
 
 const ZONES = [
   { id: "master", label: "Master", accent: "#5E8CA8", avatar: "avatar_miki.jpg" },
-  { id: "operatori", label: "Operatori", accent: "#00F0FF", avatar: "avatar_mohamed.jpg" },
-  { id: "bakomix", label: "BakoMix AI", accent: "#7DD3FC", avatar: "avatar_bigmix.jpg" },
+  { id: "operatori", label: "Operatori", accent: "#00F0FF", avatar: "avatar_mikemix.jpg" },
+  { id: "mikemix", label: "Mike Mix AI", accent: "#7DD3FC", avatar: "avatar_bigmix.jpg" },
 ];
 
 export default function App() {
@@ -152,7 +152,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [consoleSec, user]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const zoneRefs = { master: useRef(null), operatori: useRef(null), bakomix: useRef(null) };
+  const zoneRefs = { master: useRef(null), operatori: useRef(null), mikemix: useRef(null) };
 
   const jumpTo = useCallback((id) => {
     const el = zoneRefs[id]?.current;
@@ -243,14 +243,14 @@ export default function App() {
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
   const openAuth = () => { setAuthMode("login"); setAuthOpen(true); };
 
-  if (!adminOk && !resetToken) return <><SplashScreen /><AdminGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} /></>;
+  if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} /></>;
   if (resetToken) return <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />;
   if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#070A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
 
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
-      <AmbientBako />
+      <AmbientMike />
       <SplashScreen />
       <div className="holo-root min-h-screen font-sans selection:bg-[#00F0FF] selection:text-[#070A10]">
         <div className="holo-canvas" aria-hidden />
@@ -345,16 +345,16 @@ export default function App() {
                     <RoleLayout />
                     <CapoDeck />
                     <OvenBrain />
-                    <BakoSuggestions />
+                    <MikeSuggestions />
                     <LabBriefing />
                     </div>
-                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
+                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Mike Mix e guide di manutenzione istantanee.", "SOS aus der Produktion mit Mike Mix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Mike Mix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shiftreport" accent="#00F0FF" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("BakoMix riassume il turno a voce e assegna il MikiScore dell'impianto.", "BakoMix fasst die Schicht zusammen.", "BakoMix voices the shift summary and the plant MikiScore.", "BakoMix resume el turno.", "BakoMix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
+                    <HoloPanel testid="panel-shiftreport" accent="#00F0FF" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Mike Mix riassume il turno a voce e assegna il MikiScore dell'impianto.", "Mike Mix fasst die Schicht zusammen.", "Mike Mix voices the shift summary and the plant MikiScore.", "Mike Mix resume el turno.", "Mike Mix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
                       <ShiftReport />
                     </HoloPanel>
-                    <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" title={tri("BakoMix · Piano del Giorno", "BakoMix · Tagesplan", "BakoMix · Day Plan", "BakoMix · Plan del Día", "BakoMix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("BakoMix genera la sequenza di produzione ottimale del giorno.", "BakoMix erstellt den optimalen Produktionsablauf.", "BakoMix generates the optimal production sequence.", "BakoMix genera la secuencia óptima.", "BakoMix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
+                    <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" title={tri("Mike Mix · Piano del Giorno", "Mike Mix · Tagesplan", "Mike Mix · Day Plan", "Mike Mix · Plan del Día", "Mike Mix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Mike Mix genera la sequenza di produzione ottimale del giorno.", "Mike Mix erstellt den optimalen Produktionsablauf.", "Mike Mix generates the optimal production sequence.", "Mike Mix genera la secuencia óptima.", "Mike Mix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
                     </HoloPanel>
                     <HoloPanel testid="panel-weekly" accent="#00F0FF" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
@@ -426,13 +426,13 @@ export default function App() {
                     <HoloPanel testid="panel-hardware" accent="#5E8CA8" beacon="#7DD3FC" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
                       <HardwareBridge />
                     </HoloPanel>
-                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#00F0FF" icon="⚙️" title={tri("Nuovi Macchinari · BakoMix riconosce", "Neue Maschinen · BakoMix erkennt", "New Machines · BakoMix recognizes", "Nuevas Máquinas · BakoMix reconoce", "Nouvelles Machines · BakoMix reconnaît", "ماشین‌های جدید · BakoMix می‌شناسد")} sub={tri("Arriva un macchinario? BakoMix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? BakoMix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? BakoMix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? BakoMix la reconoce e integra.", "Une machine arrive ? BakoMix la reconnaît et l'intègre.", "دستگاه جدید؟ BakoMix آن را می‌شناسد و ادغام می‌کند.")}>
+                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#00F0FF" icon="⚙️" title={tri("Nuovi Macchinari · Mike Mix riconosce", "Neue Maschinen · Mike Mix erkennt", "New Machines · Mike Mix recognizes", "Nuevas Máquinas · Mike Mix reconoce", "Nouvelles Machines · Mike Mix reconnaît", "ماشین‌های جدید · Mike Mix می‌شناسد")} sub={tri("Arriva un macchinario? Mike Mix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Mike Mix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Mike Mix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Mike Mix la reconoce e integra.", "Une machine arrive ? Mike Mix la reconnaît et l'intègre.", "دستگاه جدید؟ Mike Mix آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
                     <HoloPanel testid="panel-dept-assign" accent="#00F0FF" beacon="#FFB800" icon="🏭" title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shift-team" accent="#7DD3FC" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce BakoMix", "Team-Übersicht · BakoMix-Stimme", "Team Roll-Call · BakoMix Voice", "Resumen de Equipo · Voz BakoMix", "Appel d'Équipe · Voix BakoMix", "فراخوان تیم · صدای BakoMix")} sub={tri("All'apertura del turno, BakoMix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt BakoMix das Team pro Bereich an.", "At shift start, BakoMix voices the team composition department by department.", "Al iniciar el turno, BakoMix anuncia el equipo por área.", "Au début du service, BakoMix annonce l'équipe par atelier.", "در شروع شیفت، BakoMix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
+                    <HoloPanel testid="panel-shift-team" accent="#7DD3FC" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce Mike Mix", "Team-Übersicht · Mike Mix-Stimme", "Team Roll-Call · Mike Mix Voice", "Resumen de Equipo · Voz Mike Mix", "Appel d'Équipe · Voix Mike Mix", "فراخوان تیم · صدای Mike Mix")} sub={tri("All'apertura del turno, Mike Mix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Mike Mix das Team pro Bereich an.", "At shift start, Mike Mix voices the team composition department by department.", "Al iniciar el turno, Mike Mix anuncia el equipo por área.", "Au début du service, Mike Mix annonce l'équipe par atelier.", "در شروع شیفت، Mike Mix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
                       <ShiftTeamCall />
                     </HoloPanel>
                     <HoloPanel testid="panel-shift-templates" accent="#7DD3FC" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
@@ -450,10 +450,10 @@ export default function App() {
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
                 <ZoneDivider testid="zone-operatori" code="Z-02" title={tri("Operatori · Piano Produzione", "Operatoren · Produktion", "Operators · Production Floor", "Operarios · Producción", "Opérateurs · Production", "اپراتورها · تولید")} accent="#00F0FF" />
-                <ZoneHero testid="hero-operatori" avatar="avatar_mohamed.jpg" accent="#00F0FF" tag="Z-02 · Produzione" name="MohaLab" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
+                <ZoneHero testid="hero-operatori" avatar="avatar_mikemix.jpg" accent="#00F0FF" tag="Z-02 · Produzione" name="Mike Mix" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
-                  <div data-testid="floor-zone"><MohamedFloor /></div>
+                  <div data-testid="floor-zone"><MikeMixFloor /></div>
                 ) : (
                   <div data-testid="floor-lock" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#00F0FF" }} />
@@ -470,21 +470,21 @@ export default function App() {
                 )}
               </section>
 
-              {/* ================= ZONA 3 · BAKOMIX AI ================= */}
-              <section ref={zoneRefs.bakomix} data-zone="bakomix" className="holo-zone pt-2">
-                <ZoneDivider testid="zone-bakomix" code="Z-03" title={tri("BakoMix AI · Presenza & Governance", "BakoMix AI · Präsenz", "BakoMix AI · Presence & Governance", "BakoMix AI · Presencia", "BakoMix AI · Présence", "بوکومیکس · حضور")} accent="#7DD3FC" />
-                <div data-testid="bakomix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
+              {/* ================= ZONA 3 · MIKE MIX AI ================= */}
+              <section ref={zoneRefs.mikemix} data-zone="mikemix" className="holo-zone pt-2">
+                <ZoneDivider testid="zone-mikemix" code="Z-03" title={tri("Mike Mix AI · Presenza & Governance", "Mike Mix AI · Präsenz", "Mike Mix AI · Presence & Governance", "Mike Mix AI · Presencia", "Mike Mix AI · Présence", "بوکومیکس · حضور")} accent="#7DD3FC" />
+                <div data-testid="mikemix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />
                   <div className="relative z-10">
                     <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#7DD3FC]/70 bg-[#7DD3FC]/5 flex items-center justify-center shadow-[0_0_36px_rgba(125,211,252,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
-                      <img src={`${PUB}/avatar_bigmix.jpg`} alt="BakoMix AI" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                      <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix AI" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     </div>
-                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">BakoMix AI</h2>
+                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">Mike Mix AI</h2>
                     <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#7DD3FC] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
-                    <p className="mt-3 text-sm text-[#9fb3c4] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita BakoMix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die BakoMix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the BakoMix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe BakoMix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe BakoMix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت BakoMix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
+                    <p className="mt-3 text-sm text-[#9fb3c4] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Mike Mix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Mike Mix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Mike Mix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Mike Mix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Mike Mix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Mike Mix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
                   </div>
                 </div>
-                <BakemixGuide />
+                <MikeMixGuide />
               </section>
 
             </ErrorBoundary>
@@ -509,7 +509,7 @@ export default function App() {
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
 
         <Toaster position="top-center" richColors />
-        <BakoMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : activeZone === "bakomix" ? "guida" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
+        <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : activeZone === "mikemix" ? "guida" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
         <RadioFornaio />
         <ShiftScheduler />
         <TalkWithMiki />

@@ -72,9 +72,9 @@ export default function VoiceDelegation({ onClose }) {
     try {
       const r = await delegationApi.confirm(proposal);
       setDone(r.task);
-      // BakoMix conferma a voce SOLO al Capo (modalità strategica attiva).
+      // Mike Mix conferma a voce SOLO al Capo (modalità strategica attiva).
       try { playTTS(tri(`Fatto Capo. ${proposal.title} inviato al floor in silenzio.`, `Erledigt Chef. ${proposal.title} still an die Halle gesendet.`, `Done boss. ${proposal.title} sent silently to the floor.`, `Hecho jefe. ${proposal.title} enviado en silencio.`, `C'est fait chef. ${proposal.title} envoyé en silence.`, `انجام شد رئیس. ${proposal.title} بی‌صدا به سالن ارسال شد.`), lang); } catch { /* */ }
-      toast.success(r.bakomix_insight || tri("Task inviato", "Gesendet", "Task sent", "Enviado", "Envoyé", "ارسال شد"));
+      toast.success(r.mikemix_insight || tri("Task inviato", "Gesendet", "Task sent", "Enviado", "Envoyé", "ارسال شد"));
     } catch (e) {
       toast.error(e?.response?.data?.detail || tri("Errore", "Fehler", "Error", "Error", "Erreur", "خطا"));
     }
@@ -105,7 +105,7 @@ export default function VoiceDelegation({ onClose }) {
           </motion.div>
         ) : (
           <>
-            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: BakoMix lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio.", "Diktiere einen Befehl: BakoMix macht daraus eine Team-Aufgabe. Du bestätigst vor dem Senden.", "Dictate an order: BakoMix turns it into a team task and proposes operators. You confirm before dispatch.", "Dicta una orden: BakoMix la convierte en tarea de equipo. Confirmas antes de enviar.", "Dicte un ordre : BakoMix en fait une tâche d'équipe. Tu confirmes avant l'envoi.", "دستوری بگو: BakoMix آن را به وظیفه تیمی تبدیل می‌کند. قبل از ارسال تأیید می‌کنی.")}</p>
+            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Mike Mix lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio.", "Diktiere einen Befehl: Mike Mix macht daraus eine Team-Aufgabe. Du bestätigst vor dem Senden.", "Dictate an order: Mike Mix turns it into a team task and proposes operators. You confirm before dispatch.", "Dicta una orden: Mike Mix la convierte en tarea de equipo. Confirmas antes de enviar.", "Dicte un ordre : Mike Mix en fait une tâche d'équipe. Tu confirmes avant l'envoi.", "دستوری بگو: Mike Mix آن را به وظیفه تیمی تبدیل می‌کند. قبل از ارسال تأیید می‌کنی.")}</p>
 
             {/* MIC + testo */}
             <div className="flex flex-col items-center mb-4">
@@ -121,7 +121,7 @@ export default function VoiceDelegation({ onClose }) {
               className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-2xl p-3 text-sm text-white outline-none focus:border-[#14b8a6] resize-none"
             />
             <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
-              {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con BakoMix", "Mit BakoMix analysieren", "Analyze with BakoMix", "Analizar con BakoMix", "Analyser avec BakoMix", "تحلیل با BakoMix")}
+              {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con Mike Mix", "Mit Mike Mix analysieren", "Analyze with Mike Mix", "Analizar con Mike Mix", "Analyser avec Mike Mix", "تحلیل با Mike Mix")}
             </button>
 
             {/* PROPOSTA */}

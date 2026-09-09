@@ -40,7 +40,7 @@ export default function MamoAssistant() {
   useEffect(() => { guidingRef.current = guiding; }, [guiding]);
 
   const load = useCallback(async () => {
-    // Ruolo dell'operatore (Mohamed): mostra solo i task della sua postazione.
+    // Ruolo dell'operatore (Mike Mix): mostra solo i task della sua postazione.
     const role = (() => { try { return (localStorage.getItem("mikilab_role") || "").toLowerCase(); } catch { return ""; } })();
     const roleKeywords = (r) => {
       if (/impast|knead/.test(r)) return ["impast", "knead", "mixing", "amasad", "pétriss", "puntatura", "bulk", "stockgare", "pointage", "reposo en bloque"];
@@ -84,7 +84,7 @@ export default function MamoAssistant() {
 
   const speak = useCallback((text) => {
     if (!text) return;
-    playTTS(text, { lang, voice: "mohamed", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
+    playTTS(text, { lang, voice: "mikemix", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) });
   }, [lang]);
 
   // Regola voce reparto: gli operatori ricevono SOLO comandi brevi (1 frase, max ~14 parole).
@@ -195,7 +195,7 @@ export default function MamoAssistant() {
     <div data-testid="mamo-assistant" className="rounded-2xl bg-[#0b0f19] border border-amber-500/30 shadow-xl overflow-hidden">
       {/* Header Mamo */}
       <div className="flex items-center gap-3 p-4 bg-gradient-to-r from-amber-500/10 to-transparent border-b border-[#1e293b]">
-        <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mamo" className="w-11 h-11 rounded-xl object-cover object-top border border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src={`${PUB}/avatar_mikemix.jpg`} alt="Mamo" className="w-11 h-11 rounded-xl object-cover object-top border border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0 flex-1">
           <h3 className="text-sm font-extrabold text-amber-400 flex items-center gap-2">
             {tri("Assistente Mamo", "Assistent Mamo", "Mamo Assistant", "Asistente Mamo", "Assistant Mamo", "دستیار مامو")}

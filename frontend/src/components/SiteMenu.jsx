@@ -260,9 +260,9 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                     </>
                   ) : (
                     <>
-                      <input data-testid="site-menu-pin-input" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
-                        inputMode="numeric" maxLength={4} placeholder="1985" autoFocus
-                        className="w-20 text-center tracking-[6px] font-extrabold text-[16px] py-1.5 rounded-lg bg-[#f0f4f8] dark:bg-[#0E1620] border border-[#3E9C93]/40 text-[#2b3640] dark:text-white" />
+                      <input data-testid="site-menu-pin-input" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                        inputMode="numeric" maxLength={6} placeholder="••••••" autoFocus
+                        className="w-24 text-center tracking-[6px] font-extrabold text-[16px] py-1.5 rounded-lg bg-[#f0f4f8] dark:bg-[#0E1620] border border-[#3E9C93]/40 text-[#2b3640] dark:text-white" />
                       <button data-testid="site-menu-pin-save" onClick={savePin} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#3E9C93] text-white">{tri("Salva", "Speichern", "Save", "Guardar")}</button>
                       <button onClick={() => { setPinEditing(false); setNewPin(""); }} className="text-[12px] font-semibold px-2 py-1.5 rounded-lg text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
                     </>

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Brain, Flame, AlertOctagon, Waves, Truck, Container, ShoppingCart, ChevronRight, CheckCircle2, Zap, Loader2 } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -11,12 +11,12 @@ const ICON = { flame: Flame, alert: AlertOctagon, waves: Waves, truck: Truck, co
 const SEV = { alto: "#f43f5e", medio: "#FFB800", info: "#7DD3FC" };
 // Azioni eseguibili in UN CLIC direttamente dalla card (pilota automatico assistito).
 const EXEC = {
-  silos: async () => { const r = await bakoApi.siloMicroorder(); return { kind: "silos", ...r }; },
-  b2b: async () => { const r = await bakoApi.b2bToPlan(); try { window.dispatchEvent(new CustomEvent("mikilab-prefill-orders", { detail: { text: r.orders_text } })); } catch { /* */ } return { kind: "b2b", ...r }; },
+  silos: async () => { const r = await mikeApi.siloMicroorder(); return { kind: "silos", ...r }; },
+  b2b: async () => { const r = await mikeApi.b2bToPlan(); try { window.dispatchEvent(new CustomEvent("mikilab-prefill-orders", { detail: { text: r.orders_text } })); } catch { /* */ } return { kind: "b2b", ...r }; },
 };
 
-// BakoMix · Suggerimenti predittivi: il "cervello" unico dell'impianto propone azioni concrete.
-export default function BakoSuggestions() {
+// Mike Mix · Suggerimenti predittivi: il "cervello" unico dell'impianto propone azioni concrete.
+export default function MikeSuggestions() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [sug, setSug] = useState([]);
@@ -27,7 +27,7 @@ export default function BakoSuggestions() {
 
   const load = useCallback(async () => {
     try {
-      const d = await bakoApi.suggestions(lang);
+      const d = await mikeApi.suggestions(lang);
       setSug(d.suggestions || []);
       setAutopilot(!!d.autopilot);
       setAutoActions(d.autopilot_actions || []);
@@ -41,7 +41,7 @@ export default function BakoSuggestions() {
   const toggleAuto = async (e) => {
     e.stopPropagation();
     const next = !autopilot; setAutopilot(next);
-    try { await bakoApi.autopilotSet(next); toast.success(next ? tri("Auto-pilota BakoMix attivo", "Autopilot aktiv", "BakoMix autopilot on", "Piloto automático activo", "Pilote auto activé", "خلبان خودکار فعال") : tri("Auto-pilota disattivato", "Autopilot aus", "Autopilot off", "Piloto desactivado", "Pilote désactivé", "خلبان خاموش")); load(); } catch { setAutopilot(!next); }
+    try { await mikeApi.autopilotSet(next); toast.success(next ? tri("Auto-pilota Mike Mix attivo", "Autopilot aktiv", "Mike Mix autopilot on", "Piloto automático activo", "Pilote auto activé", "خلبان خودکار فعال") : tri("Auto-pilota disattivato", "Autopilot aus", "Autopilot off", "Piloto desactivado", "Pilote désactivé", "خلبان خاموش")); load(); } catch { setAutopilot(!next); }
   };
 
   const goTo = (target) => {
@@ -68,8 +68,8 @@ export default function BakoSuggestions() {
   };
 
   return (
-    <div data-testid="bako-suggestions" className="rounded-2xl border border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/8 to-transparent p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("BakoMix · Suggerimenti", "BakoMix · Vorschläge", "BakoMix · Suggestions", "BakoMix · Sugerencias", "BakoMix · Suggestions", "بوکومیکس · پیشنهادها")}
+    <div data-testid="mike-suggestions" className="rounded-2xl border border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/8 to-transparent p-3">
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Mike Mix · Suggerimenti", "Mike Mix · Vorschläge", "Mike Mix · Suggestions", "Mike Mix · Sugerencias", "Mike Mix · Suggestions", "بوکومیکس · پیشنهادها")}
         <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#22c55e]/20 border-[#22c55e]/60 text-[#22c55e]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
           <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
         </button>

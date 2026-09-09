@@ -4498,3 +4498,19 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Zona Operatori gia snella (roster + DeptFocus per-operatore): lasciata invariata.
 - Verificato via screenshot: plancia tutta chiusa al load, 5 categorie renderizzate nell overlay.
 - DEPLOY: redeploy produzione ri-accodato.
+
+## v-MANIFESTO Fase A+1+2 (2026-06) — Rinomina globale, Multiverso pubblico, Muro del PIN, Miki-Nexus
+- **RINOMINA GLOBALE (Fase A)**: erase totale di BakoMix/MohaLab/Mohammed/Mohamed/BakeMix → "Mike Mix" (IA operativa) in TUTTO il frontend + backend/server.py. Rinominati anche file/componenti (BakoMixSense→MikeMixSense, AmbientBako→AmbientMike, BakoInfo→MikeInfo, BakemixGuide→MikeMixGuide, BakemixHardware→MikeMixHardware, MohamedFloor→MikeMixFloor, console/BakoSuggestions→MikeSuggestions, sections/MohammedAssistant→MikeMixAssistant) e path endpoint (/bako/*→/mike/*, /mohammed/chat→/mikemix/chat), applicati IDENTICAMENTE a FE+BE per restare allineati. KEPT (tecnici): voice-key `bakemix`/`mikemix`, env MOHAMED_VOICE_ID/BAKEMIX_VOICE_ID, testid lowercase `bakemix-*`.
+- **MIKI-NEXUS**: introdotta l'entità strategica superiore (coscienza globale) tra MikiLab (Capo) e Mike Mix. Avatar speciale generato dal volto reale del Capo, metà-uomo metà-IA con aura ciano/oro (/public/avatar_nexus.jpg). Voce TTS propria più profonda/autorevole: nuovo key `nexus` in _VOICE_MAP (NEXUS_VOICE_ID env, default onwK4e9ZLuTAKqWW03F9) + _OAI_VOICE onyx + _voice_settings profilo autorevole.
+- **AVATAR reali**: avatar_miki.jpg = foto reale del Capo (con orecchino, maglia MikiLab); avatar_mikemix.jpg = Mike Mix operativo; avatar_nexus.jpg = Miki-Nexus.
+- **FASE 1 · Multiverso pubblico read-only** (`components/PublicGate.jsx`): prima schermata per i visitatori (sostituisce il gate PIN nudo). Sfondo 3D vanilla three.js (AvatarWorld3D) che fa il tour dei 4 mondi (Panificio/Pizzeria/Pasticceria/Magazzino) con tab [public-world-*]. Trio avatar [public-avatar-mikilab|mikinexus|mikemix] con Miki-Nexus centrale e imponente (anelli orbitali CSS nexus-ring). Gerarchia [public-hierarchy] "MikiLab → Miki-Nexus → Mike Mix". Nessuna interazione libera.
+- **FASE 2 · Muro del PIN** (`components/AdminGate.jsx`): ogni interazione (avatar o "Entra con il PIN" [public-enter-btn]) apre il keypad 6-cifre (Master PIN 198505) con tasto Indietro [admin-gate-back] verso il multiverso e l'email pubblica di richiesta accesso [admin-gate-email / public-email] accessi@mikilab.de (mailto). PIN corretto → onUnlock (sblocca l'app).
+- Manifesto completo salvato in /app/memory/MANIFESTO_DEFINITIVO.md.
+- **Test iteration_219**: backend 100% (rename endpoints /mike/*, /mikemix/chat, TTS nexus, recipes OK), frontend 100% (public-gate, 4 mondi, trio, PIN wall wrong/right 198505 → app-header, back, email). 0 bug bloccanti. Cleanup commenti CSS residui fatto.
+
+### RESTA (Manifesto — prossime fasi)
+- Fase 3: livelli PIN ospite + "Formazione nei Tempi Morti" (Mike Mix avvia corsi interattivi per ricetta nelle pause).
+- Fase 4: barriera anti copia-incolla con notifica "richiesto profilo MikiLab" per ospiti sulle funzioni supreme.
+- Fasi 5/6/7/9: dashboard olografiche credibili (sintesi enzimatica, polimorfismo difensivo, nodi edge, kill-switch) dentro Miki-Nexus.
+- Fase 8: potenziare la Plancia Olografica 3D del Capo.
+- Fase 10: ecosistema autonomo (Mike Mix impara dal campo, allerta il Capo, mentore capi esordienti, supporto forni a legna/macchinari datati, manutenzione predittiva IoT).

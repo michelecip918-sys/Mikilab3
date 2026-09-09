@@ -3,16 +3,16 @@ import { Globe, Check, Search, Clock, Volume2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { playTTS } from "@/lib/tts";
 
-// Frase-esempio per ascoltare la voce di BakoMix in ogni lingua.
+// Frase-esempio per ascoltare la voce di Mike Mix in ogni lingua.
 const SAMPLE = {
-  it: "Salve Mio Supremo Capo, sono BakoMix, al vostro servizio.",
-  de: "Guten Tag, mein erhabener Chef, ich bin BakoMix, zu Ihren Diensten.",
-  en: "Hello Capo, I am BakoMix, at your service.",
-  es: "Hola Mi Supremo Jefe, soy BakoMix, a su servicio.",
-  fr: "Bonjour Mon Illustre Commandant, je suis BakoMix, à votre service.",
+  it: "Salve Mio Supremo Capo, sono Mike Mix, al vostro servizio.",
+  de: "Guten Tag, mein erhabener Chef, ich bin Mike Mix, zu Ihren Diensten.",
+  en: "Hello Capo, I am Mike Mix, at your service.",
+  es: "Hola Mi Supremo Jefe, soy Mike Mix, a su servicio.",
+  fr: "Bonjour Mon Illustre Commandant, je suis Mike Mix, à votre service.",
   fa: "سلام فرمانده، من بوکومیکس هستم، در خدمت شما.",
   ar: "مرحباً أيها القائد، أنا بوكوميكس، في خدمتك.",
-  tr: "Merhaba Şefim, ben BakoMix, hizmetinizdeyim.",
+  tr: "Merhaba Şefim, ben Mike Mix, hizmetinizdeyim.",
 };
 
 // Lingue ATTIVE (dizionari completi) + set globale predisposto all'espansione.

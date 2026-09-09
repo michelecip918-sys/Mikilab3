@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 const DONE_KEY = "mikilab_lab_tour_done";
 const base = process.env.PUBLIC_URL || "";
 const MICHELE = `${base}/michele-avatar-full.jpg`;
-const MOHAMMED = `${base}/logo.png`;
+const MIKEMIX_LOGO = `${base}/logo.png`;
 
 // Apri il tour a richiesta (dal riquadro di MikiLab o altrove).
 export function openLabTour() {
@@ -26,7 +26,7 @@ function buildSlides(lang) {
         "Welcome to «Your Lab», the heart of MikiLab. MikiLab will now explain in a few minutes how to move around here – then I'll leave you free to work, productively and stress-free."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 1,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 1,
       title: tri("Passo 1 · Configurazione Hardware", "Schritt 1 · Hardware-Einrichtung", "Step 1 · Hardware Setup"),
       body: tri(
         "Qui imposti UNA volta le tue macchine: impastatrici, forni, celle di lievitazione, frigo e giacenze del freezer. Colleghi anche i dispositivi (bilancia smart, termostati). Tutto configurato una volta = zero stress dopo.",
@@ -34,7 +34,7 @@ function buildSlides(lang) {
         "Here you set up your machines ONCE: mixers, ovens, proofing cells, fridge and freezer stock. You also connect devices (smart scale, thermostats). Set up once = stress-free afterwards."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 2,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 2,
       title: tri("Passo 2 · Ricette & Forno", "Schritt 2 · Rezepte & Ofen", "Step 2 · Recipes & Oven"),
       body: tri(
         "Inserisci o scansiona le tue ricette e consulta la Tabella Farine (630, 550, farro…). Con «Adatta il Forno» converto ogni ricetta AL TUO forno: temperatura, vapore e tempi giusti. Vantaggio: cottura sempre perfetta, senza tentativi.",
@@ -42,7 +42,7 @@ function buildSlides(lang) {
         "Add or scan your recipes and use the Flour Table (630, 550, spelt…). With «Adapt the Oven» I convert every recipe to YOUR oven: temperature, steam and timing. Benefit: always perfect bakes, no trial and error."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED,
+      who: "mikemix", avatar: MIKEMIX_LOGO,
       title: tri("Trova le ricette per Base 🔎", "Rezepte nach Basis finden 🔎", "Find recipes by Base 🔎"),
       body: tri(
         "Nelle tue ricette, in alto, trovi i filtri «per Base»: tocca Poolish, Lievito Madre, LM di Segale, Biga, LiCoLi, Farina Cotta o Diretto e vedi SUBITO solo le ricette che usano quella base. Così scegli in un attimo il metodo giusto per la giornata, senza scorrere tutto.",
@@ -50,7 +50,7 @@ function buildSlides(lang) {
         "In your recipes, at the top, you'll find the «by Base» filters: tap Poolish, Sourdough, Rye sourdough, Biga, LiCoLi, Cooked flour or Direct and INSTANTLY see only the recipes using that base. Pick the right method for the day in a second."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 3,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 3,
       title: tri("Passo 3 · Logistica & Punti Vendita", "Schritt 3 · Logistik & Verkaufspunkte", "Step 3 · Logistics & Sales Points"),
       body: tri(
         "Configuri i tuoi punti vendita e gestisci personale e turni. Così sai chi fa cosa e quanto produrre per ogni negozio: la squadra lavora serena e organizzata.",
@@ -58,7 +58,7 @@ function buildSlides(lang) {
         "Set up your sales points and manage staff & shifts. You'll know who does what and how much to produce per shop: the team works calm and organised."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 4,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 4,
       title: tri("Passo 4 · Pianificazione Produzione", "Schritt 4 · Produktionsplanung", "Step 4 · Production Planning"),
       body: tri(
         "Il cuore organizzativo: piano settimanale, piano di lavoro di oggi e Piano IA. Con i «tempi a ritroso» sai a che ora iniziare per sfornare in orario. Aggiungi lista della spesa e Food Cost & Energia per tenere i costi sotto controllo.",
@@ -66,7 +66,7 @@ function buildSlides(lang) {
         "The organisational heart: weekly plan, today's work plan and AI plan. With «backward timing» you know when to start to bake on time. Add the shopping list and Food Cost & Energy to keep costs under control."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 5,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 5,
       title: tri("Passo 5 · Operatività In Corso", "Schritt 5 · Laufender Betrieb", "Step 5 · Live Operations"),
       body: tri(
         "Mentre lavori: calcolo la temperatura dell'acqua per centrare la temperatura impasto, ti guido nella Pesata Guidata (anche a voce!), gestisci timer e i sensori (meteo, pH del lievito, digital twin dell'impasto).",
@@ -74,7 +74,7 @@ function buildSlides(lang) {
         "While you work: I calculate the water temperature to hit the right dough temperature, guide you through Guided Weighing (by voice too!), you use timers and sensors (weather, starter pH, dough digital twin)."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED, step: 6,
+      who: "mikemix", avatar: MIKEMIX_LOGO, step: 6,
       title: tri("Passo 6 · Chiusura & Tracciabilità", "Schritt 6 · Abschluss & Rückverfolgung", "Step 6 · Closing & Traceability"),
       body: tri(
         "A fine giornata: Diario Impasti, Tracciabilità Lotti (QR) e controlli finali. Archivio tutto in automatico: sei sempre in ordine, senza scartoffie.",
@@ -82,7 +82,7 @@ function buildSlides(lang) {
         "At the end of the day: Dough Log, Batch Traceability (QR) and final checks. I archive everything automatically: always tidy, no paperwork."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED,
+      who: "mikemix", avatar: MIKEMIX_LOGO,
       title: tri("Tutti i miei strumenti 🧰", "Alle meine Werkzeuge 🧰", "All my tools 🧰"),
       body: tri(
         "Ecco tutto quello che trovi qui: Capo Laboratorio (macchine), Giacenze Freezer, Bilancia Smart, Termostato & Clima · Le Mie Ricette (aggiungi/scansiona), Tabella Farine, Adatta il Forno · Punti Vendita, Turni & Ruoli · Piano IA, Piano Settimanale, Piano di Lavoro, Tempi a Ritroso, Lista Spesa, Food Cost & Energia · Temperatura Acqua, Pesata Guidata a voce, Timer, Meteo, Tracker pH, Digital Twin dell'impasto · Diario Impasti, Tracciabilità Lotti (QR), Checklist, Shelf-Life, Anti-Spreco. Un unico posto per tutto il tuo laboratorio.",
@@ -90,7 +90,7 @@ function buildSlides(lang) {
         "Here's everything you'll find: Lab Manager (machines), Freezer Stock, Smart Scale, Thermostat & Climate · My Recipes (add/scan), Flour Table, Adapt the Oven · Sales Points, Shifts & Roles · AI Plan, Weekly Plan, Work Plan, Backward Timing, Shopping List, Food Cost & Energy · Water Temperature, voice Guided Weighing, Timers, Weather, pH Tracker, dough Digital Twin · Dough Log, Batch Traceability (QR), Checklists, Shelf-Life, Anti-Waste. One place for your whole lab."),
     },
     {
-      who: "mohammed", avatar: MOHAMMED,
+      who: "mikemix", avatar: MIKEMIX_LOGO,
       title: tri("E i miei comandi 🎧", "Und meine Befehle 🎧", "And my commands 🎧"),
       body: tri(
         "Sono sempre con te. Hai le mani nell'impasto? Usa l'assistente VOCALE: parla e io navigo ed eseguo per te. Accendi la Radio Fornaio per lavorare in musica. Con la Diagnosi Foto (qui nel Laboratorio o dal menu) leggo difetti del pane, stato dell'impasto, ingredienti e persino macchine rotte — da foto o video — e ti dico causa e soluzione. Trovi anche le «Diagnosi Recenti» per rivedere tutto senza rifare la foto. Oppure scrivimi in chat per ogni dubbio. Rivedi questa guida quando vuoi dal mio riquadro.",

@@ -8,8 +8,8 @@ import { mkTri } from "@/i18n/triMaps";
 
 const AVATAR = `${process.env.PUBLIC_URL}/logo.png`;
 const sid = () => {
-  let s = localStorage.getItem("mikilab_mohammed_sid");
-  if (!s) { s = "mohammed-" + Math.random().toString(36).slice(2, 10); localStorage.setItem("mikilab_mohammed_sid", s); }
+  let s = localStorage.getItem("mikilab_mikemix_sid");
+  if (!s) { s = "mikemix-" + Math.random().toString(36).slice(2, 10); localStorage.setItem("mikilab_mikemix_sid", s); }
   return s;
 };
 
@@ -57,9 +57,9 @@ export default function MikiLabAssistant() {
     setInput("");
     setMessages((m) => [...m, { role: "user", content: msg }, { role: "assistant", content: "" }]);
     setBusy(true);
-    registerChat(sessionId.current, "mohammed");
+    registerChat(sessionId.current, "mikemix");
     try {
-      const res = await fetch(`${API}/mohammed/chat`, {
+      const res = await fetch(`${API}/mikemix/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -88,9 +88,9 @@ export default function MikiLabAssistant() {
   };
 
   return (
-    <div data-testid="mohammed-assistant" className="rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-3 mb-4 shadow-md">
+    <div data-testid="mikemix-assistant" className="rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-3 mb-4 shadow-md">
       <div className="flex items-center gap-2.5">
-        <img src={AVATAR} alt="MikiLab" data-testid="mohammed-avatar" className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src={AVATAR} alt="MikiLab" data-testid="mikemix-avatar" className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-white/70 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
           <h2 className="font-display text-base font-bold leading-tight">{tri("Ciao, sono MikiLab 👋", "Hallo, ich bin MikiLab 👋", "Hi, I'm MikiLab 👋", "Hola, soy MikiLab 👋")}</h2>
           <p className="text-[11px] text-white/80 leading-snug">{tri("Assistente di Michele · ti guido nel laboratorio", "Micheles Assistent · ich führe dich durch die Backstube", "Michele's assistant · I guide you in the lab", "Asistente de Michele · te guío en el obrador")}</p>
@@ -98,9 +98,9 @@ export default function MikiLabAssistant() {
       </div>
 
       {/* Guida passo-passo del laboratorio */}
-      <div data-testid="mohammed-guide" className="mt-2.5 grid grid-cols-1 gap-1">
+      <div data-testid="mikemix-guide" className="mt-2.5 grid grid-cols-1 gap-1">
         {GUIDE.map((g) => (
-          <button key={g.n} data-testid={`mohammed-guide-${g.n}`} onClick={() => askGuide(g.q)}
+          <button key={g.n} data-testid={`mikemix-guide-${g.n}`} onClick={() => askGuide(g.q)}
             className="w-full flex items-center gap-2 bg-white/12 hover:bg-white/22 rounded-lg px-2.5 py-1.5 text-left active:scale-98 transition-all">
             <span className="w-5 h-5 rounded-full bg-white/90 text-[#3E9C93] font-bold text-[11px] flex items-center justify-center shrink-0">{g.n}</span>
             <span className="text-[13px] font-medium leading-tight">{g.t}</span>
@@ -108,19 +108,19 @@ export default function MikiLabAssistant() {
         ))}
       </div>
 
-      <button data-testid="mohammed-toggle" onClick={() => setOpen((o) => !o)}
+      <button data-testid="mikemix-toggle" onClick={() => setOpen((o) => !o)}
         className="mt-2.5 inline-flex items-center gap-1.5 bg-white/15 hover:bg-white/25 backdrop-blur px-3 py-1.5 rounded-lg text-[13px] font-semibold active:scale-97 transition-all">
         <Sparkles className="w-3.5 h-3.5" /> {open ? tri("Chiudi assistente", "Assistent schließen", "Close assistant", "Cerrar asistente") : tri("Chiedi a MikiLab", "MikiLab fragen", "Ask MikiLab", "Pregunta a MikiLab")}
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
       </button>
 
       {open && (
-        <div data-testid="mohammed-chat" className="mt-3 bg-white/95 dark:bg-[#1B2A38]/95 rounded-2xl p-3">
+        <div data-testid="mikemix-chat" className="mt-3 bg-white/95 dark:bg-[#1B2A38]/95 rounded-2xl p-3">
           <div ref={listRef} className="max-h-72 overflow-y-auto space-y-2 pr-1">
             {messages.length === 0 && (
               <div className="flex flex-wrap gap-2">
                 {suggestions.map((s, i) => (
-                  <button key={i} data-testid={`mohammed-suggest-${i}`} onClick={() => send(s)}
+                  <button key={i} data-testid={`mikemix-suggest-${i}`} onClick={() => send(s)}
                     className="text-xs font-medium bg-[#3E9C93]/12 text-[#3E9C93] dark:text-[#9ec4b8] border border-[#3E9C93]/30 rounded-full px-3 py-1.5 active:scale-97">
                     {s}
                   </button>
@@ -136,10 +136,10 @@ export default function MikiLabAssistant() {
             ))}
           </div>
           <div className="flex items-center gap-2 mt-2">
-            <input data-testid="mohammed-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
+            <input data-testid="mikemix-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder={tri("Scrivi a MikiLab…", "Schreibe an MikiLab…", "Message MikiLab…", "Escribe a MikiLab…")}
               className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
-            <button data-testid="mohammed-send" onClick={() => send()} disabled={busy || !input.trim()}
+            <button data-testid="mikemix-send" onClick={() => send()} disabled={busy || !input.trim()}
               className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>

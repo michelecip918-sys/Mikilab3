@@ -12,7 +12,7 @@ const EMAIL_KEY = "mikilab_supplier_email";
 export default function SupplierOrder({ totals }) {
   const { t, lang } = useLang();
   // Fornitore predefinito in base alla lingua: DE → BÄKO, IT → primo mulino italiano.
-  const defaultSupplier = SUPPLIERS.find((s) => (lang === "de" ? s.id === "bako" : s.id === "dallagiovanna")) || SUPPLIERS[0];
+  const defaultSupplier = SUPPLIERS.find((s) => (lang === "de" ? s.id === "mike" : s.id === "dallagiovanna")) || SUPPLIERS[0];
   const [supplierId, setSupplierId] = useState(defaultSupplier.id);
   const [email, setEmail] = useState(() => localStorage.getItem(EMAIL_KEY) || "");
   const [showDir, setShowDir] = useState(false);

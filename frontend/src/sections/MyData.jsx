@@ -250,7 +250,7 @@ function ChatCard({ chat, fmt, tri, onDelete }) {
   const [msgs, setMsgs] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const label = chat.kind === "mohammed" ? "MikiLab" : tri("Chiedi al Maestro", "Frag den Meister", "Ask the Master");
+  const label = chat.kind === "mikemix" ? "MikiLab" : tri("Chiedi al Maestro", "Frag den Meister", "Ask the Master");
 
   const toggle = async () => {
     const next = !open;

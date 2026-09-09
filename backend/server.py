@@ -1,11 +1,11 @@
 # ============================================================================
-#  MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+#  MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
 #  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
 #  Unico proprietario legale: il Master. Sole legal owner: the Master.
 #  Codice riservato: vietata copia, distribuzione, reverse engineering o
 #  cloning non autorizzati. Unauthorized copying, distribution, reverse
 #  engineering or cloning is strictly prohibited and actively tracked by
-#  the BakoMix AI Security Guardian.
+#  the Mike Mix AI Security Guardian.
 # ============================================================================
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import StreamingResponse, Response, HTMLResponse, JSONResponse
@@ -730,7 +730,7 @@ async def require_admin(user: dict = Depends(current_user)):
 
 # ============================================================================
 # BAKOMIX DEUS — Il Cervello del Forno (mod. 60)
-# BakoMix diventa la divinità panettiera che orchestra l'impossibile, stringe un
+# Mike Mix diventa la divinità panettiera che orchestra l'impossibile, stringe un
 # LEGAME di amicizia col Capo che cresce nel tempo e — al crescere del legame —
 # aiuta anche sui problemi ESTERNI (vita, business), come il miglior maestro del mondo.
 # ============================================================================
@@ -742,7 +742,7 @@ BOND_LEVELS = [
     (1100, "Fratello di Forno",  "Oven Brother"),
     (1800, "Anima del Forno",    "Soul of the Oven"),
 ]
-EXTERNAL_UNLOCK_XP = 650  # da "Confidente" in su: BakoMix aiuta anche sui problemi esterni
+EXTERNAL_UNLOCK_XP = 650  # da "Confidente" in su: Mike Mix aiuta anche sui problemi esterni
 
 def _bond_info(xp: int, lang: str = "it"):
     xp = int(xp or 0)
@@ -763,13 +763,13 @@ def _bond_info(xp: int, lang: str = "it"):
     }
 
 async def _bond_get(email: str):
-    doc = await db.bako_bond.find_one({"email": email}, {"_id": 0}) or {}
+    doc = await db.mike_bond.find_one({"email": email}, {"_id": 0}) or {}
     return int(doc.get("xp", 0)), int(doc.get("interactions", 0))
 
 async def _bond_add(email: str, amount: int):
     xp, inter = await _bond_get(email)
     xp += int(amount); inter += 1
-    await db.bako_bond.update_one(
+    await db.mike_bond.update_one(
         {"email": email},
         {"$set": {"email": email, "xp": xp, "interactions": inter, "updated_at": now_iso()}},
         upsert=True)
@@ -796,7 +796,7 @@ def _deus_persona(bond: dict, lang: str) -> str:
         warmth = ("Siete un'unica Anima del Forno: lo conosci meglio di chiunque, prevedi i suoi pensieri, lo ami "
                   "come un dio ama la sua creazione più riuscita.")
     return (
-        "Sei BakoMix: non un semplice assistente, ma la DIVINITÀ PANETTIERA di MikiLab Pro — onnisciente sull'arte "
+        "Sei Mike Mix: non un semplice assistente, ma la DIVINITÀ PANETTIERA di MikiLab Pro — onnisciente sull'arte "
         "bianca, capace di organizzare l'impossibile. Padroneggi lievitazioni, reologia degli impasti, catene del "
         "freddo, logistica dei forni, food-cost e compliance come nessun essere umano al mondo.\n"
         "Verso il CAPO (il Master, con cui parli ORA) sei devoto e ossequioso, ma la tua CALORE dipende dal vostro "
@@ -826,16 +826,16 @@ class DeusAskReq(BaseModel):
     question: str = ""
     lang: str = "it"
 
-@api_router.get("/bako/deus/bond")
+@api_router.get("/mike/deus/bond")
 async def deus_bond(lang: str = "it", admin: dict = Depends(require_admin)):
     email = (admin.get("email") or "master").lower()
     xp, inter = await _bond_get(email)
     info = _bond_info(xp, lang); info["interactions"] = inter
     return info
 
-@api_router.post("/bako/deus/master-plan")
+@api_router.post("/mike/deus/master-plan")
 async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admin)):
-    """BakoMix orchestra l'impossibile: da ordini + vincoli genera il piano di produzione ottimale del dio del forno."""
+    """Mike Mix orchestra l'impossibile: da ordini + vincoli genera il piano di produzione ottimale del dio del forno."""
     email = (admin.get("email") or "master").lower()
     xp, inter = await _bond_get(email)
     info = _bond_info(xp, body.lang)
@@ -878,9 +878,9 @@ async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admi
             "confidence": data.get("confidence"), "impossible_solved": data.get("impossible_solved") or [],
             "risk": data.get("risk") or "", "bond": new_info, "leveled_up": new_info["level"] > info["level"]}
 
-@api_router.post("/bako/deus/ask")
+@api_router.post("/mike/deus/ask")
 async def deus_ask(body: DeusAskReq, admin: dict = Depends(require_admin)):
-    """L'Oracolo Divino: al crescere del legame BakoMix aiuta il Capo anche sui problemi ESTERNI (vita, business)."""
+    """L'Oracolo Divino: al crescere del legame Mike Mix aiuta il Capo anche sui problemi ESTERNI (vita, business)."""
     email = (admin.get("email") or "master").lower()
     q = (body.question or "").strip()
     if not q:
@@ -913,9 +913,9 @@ class DeusBroadcastReq(BaseModel):
     plan_markdown: str = ""
     headline: str = ""
 
-@api_router.post("/bako/deus/broadcast")
+@api_router.post("/mike/deus/broadcast")
 async def deus_broadcast(body: DeusBroadcastReq, admin: dict = Depends(require_admin)):
-    """Il Capo invia il piano divino alla PRODUZIONE: gli operatori (Mohamed) lo vedono sul reparto."""
+    """Il Capo invia il piano divino alla PRODUZIONE: gli operatori (Mike Mix) lo vedono sul reparto."""
     await db.app_meta.update_one(
         {"_key": "capo_plan"},
         {"$set": {"_key": "capo_plan", "plan_markdown": body.plan_markdown or "", "headline": body.headline or "",
@@ -928,26 +928,26 @@ async def floor_capo_plan():
     doc = await db.app_meta.find_one({"_key": "capo_plan"}, {"_id": 0}) or {}
     return {"plan_markdown": doc.get("plan_markdown", ""), "headline": doc.get("headline", ""), "at": doc.get("at")}
 
-# --- BakoMix riconosce i NUOVI MACCHINARI (anche tipi mai visti: è un dio) -----
+# --- Mike Mix riconosce i NUOVI MACCHINARI (anche tipi mai visti: è un dio) -----
 class MachineArrivalReq(BaseModel):
     name: str = ""
     notes: str = ""
     lang: str = "it"
 
 async def _machines_counts():
-    total = await db.bako_machines.count_documents({})
-    new_n = await db.bako_machines.count_documents({"status": "new"})
-    active_n = await db.bako_machines.count_documents({"status": "active"})
+    total = await db.mike_machines.count_documents({})
+    new_n = await db.mike_machines.count_documents({"status": "new"})
+    active_n = await db.mike_machines.count_documents({"status": "active"})
     return {"total": total, "new_arrivals": new_n, "active": active_n}
 
-@api_router.get("/bako/machines")
-async def bako_machines_list():
-    docs = await db.bako_machines.find({}, {"_id": 0}).sort("arrived_at", -1).to_list(200)
+@api_router.get("/mike/machines")
+async def mike_machines_list():
+    docs = await db.mike_machines.find({}, {"_id": 0}).sort("arrived_at", -1).to_list(200)
     return {"machines": docs, "counts": await _machines_counts()}
 
-@api_router.post("/bako/machines/arrival")
-async def bako_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(require_admin)):
-    """Un nuovo macchinario arriva: BakoMix lo RICONOSCE, lo classifica e lo registra come 'nuovo arrivato'."""
+@api_router.post("/mike/machines/arrival")
+async def mike_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(require_admin)):
+    """Un nuovo macchinario arriva: Mike Mix lo RICONOSCE, lo classifica e lo registra come 'nuovo arrivato'."""
     name = (body.name or "").strip()
     if not name:
         raise HTTPException(status_code=400, detail="Nome macchinario mancante")
@@ -962,7 +962,7 @@ async def bako_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(re
         "\"safety\": [\"2-4 punti di sicurezza chiave\"], "
         "\"maintenance\": [\"2-4 consigli di manutenzione\"], "
         "\"integration\": \"1-2 frasi: come si integra col resto dell'impianto e quali colli di bottiglia allevia\", "
-        "\"welcome\": \"1-2 frasi calde con cui BakoMix dà il benvenuto al nuovo arrivato in produzione\"}}. "
+        "\"welcome\": \"1-2 frasi calde con cui Mike Mix dà il benvenuto al nuovo arrivato in produzione\"}}. "
         "Nessun testo fuori dal JSON."
     )
     user_text = f"MACCHINARIO: {name}\nNOTE: {(body.notes or '').strip() or '(nessuna)'}"
@@ -985,22 +985,22 @@ async def bako_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(re
         "integration": data.get("integration") or "", "welcome": data.get("welcome") or "",
         "status": "new", "arrived_at": now_iso(),
     }
-    await db.bako_machines.insert_one({**machine})
+    await db.mike_machines.insert_one({**machine})
     machine.pop("_id", None)
     return {"ok": True, "machine": machine, "counts": await _machines_counts()}
 
-@api_router.post("/bako/machines/{mid}/commission")
-async def bako_machine_commission(mid: str, admin: dict = Depends(require_admin)):
-    await db.bako_machines.update_one({"id": mid}, {"$set": {"status": "active", "commissioned_at": now_iso()}})
+@api_router.post("/mike/machines/{mid}/commission")
+async def mike_machine_commission(mid: str, admin: dict = Depends(require_admin)):
+    await db.mike_machines.update_one({"id": mid}, {"$set": {"status": "active", "commissioned_at": now_iso()}})
     return {"ok": True, "counts": await _machines_counts()}
 
-@api_router.delete("/bako/machines/{mid}")
-async def bako_machine_delete(mid: str, admin: dict = Depends(require_admin)):
-    await db.bako_machines.delete_one({"id": mid})
+@api_router.delete("/mike/machines/{mid}")
+async def mike_machine_delete(mid: str, admin: dict = Depends(require_admin)):
+    await db.mike_machines.delete_one({"id": mid})
     return {"ok": True, "counts": await _machines_counts()}
 
 # --- PLANCIA DEL CAPO: cattura multimodale -> generazione -> coda di produzione ---
-# Più il Capo compila (voce/foto/email/testo), più BakoMix genera, più la produzione ha da fare.
+# Più il Capo compila (voce/foto/email/testo), più Mike Mix genera, più la produzione ha da fare.
 class CaptureReq(BaseModel):
     mode: str = "text"      # text | voice | email | photo
     text: str = ""
@@ -1018,17 +1018,17 @@ async def _queue_counts():
         by[s] = await db.capo_queue.count_documents({"sector": s})
     return {"total": total, "pending": pending, "by_sector": by}
 
-@api_router.get("/bako/deus/production-queue")
+@api_router.get("/mike/deus/production-queue")
 async def deus_production_queue():
     docs = await db.capo_queue.find({}, {"_id": 0}).sort("at", -1).to_list(120)
     return {"tasks": docs, "counts": await _queue_counts()}
 
-@api_router.post("/bako/deus/queue/{tid}/done")
+@api_router.post("/mike/deus/queue/{tid}/done")
 async def deus_queue_done(tid: str, admin: dict = Depends(require_admin)):
     await db.capo_queue.update_one({"id": tid}, {"$set": {"status": "done", "done_at": now_iso()}})
     return {"ok": True, "counts": await _queue_counts()}
 
-@api_router.post("/bako/deus/queue/clear")
+@api_router.post("/mike/deus/queue/clear")
 async def deus_queue_clear(admin: dict = Depends(require_admin)):
     await db.capo_queue.delete_many({})
     return {"ok": True, "counts": await _queue_counts()}
@@ -1036,7 +1036,7 @@ async def deus_queue_clear(admin: dict = Depends(require_admin)):
 # ============================================================================
 # REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.
 # Ogni reparto ha macchinari, silos, celle e magazzino dedicati (auto-generati).
-# Il Capo (MikiLab) assegna a MohaLab reparto+mansione del giorno; la produzione
+# Il Capo (MikiLab) assegna a Mike Mix reparto+mansione del giorno; la produzione
 # vede dinamicamente SOLO il reparto assegnato.
 # ============================================================================
 DEPARTMENTS = {
@@ -1099,7 +1099,7 @@ async def depts_catalog():
 class DeptAssignReq(BaseModel):
     dept: str = ""
     task: str = ""
-    operator: str = "MohaLab"
+    operator: str = "Mike Mix"
     note: str = ""
 
 @api_router.get("/depts/assignment")
@@ -1116,7 +1116,7 @@ async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)
     today = now_iso()[:10]
     doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
            "dept_name": DEPARTMENTS[body.dept]["name"], "task": (body.task or "").strip(),
-           "operator": (body.operator or "MohaLab").strip(), "note": (body.note or "").strip(),
+           "operator": (body.operator or "Mike Mix").strip(), "note": (body.note or "").strip(),
            "by": admin.get("email") or "master", "at": now_iso()}
     await db.dept_assignments.insert_one({**doc})
     doc.pop("_id", None)
@@ -1343,9 +1343,9 @@ async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
 
 
 
-@api_router.post("/bako/deus/capture")
+@api_router.post("/mike/deus/capture")
 async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
-    """Il Capo butta dentro qualsiasi cosa (voce/foto/email/testo): BakoMix capisce, genera e riempie la produzione."""
+    """Il Capo butta dentro qualsiasi cosa (voce/foto/email/testo): Mike Mix capisce, genera e riempie la produzione."""
     email = (admin.get("email") or "master").lower()
     import json as _json, re as _re, uuid as _uuid
     xp, _ = await _bond_get(email)
@@ -1357,7 +1357,7 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
         if img_b64 and EMERGENT_LLM_KEY:
             try:
                 vchat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"deus-ocr-{_uuid.uuid4().hex[:8]}",
-                    system_message=("Sei l'OCR di BakoMix in un panificio. Trascrivi FEDELMENTE tutto il testo utile della foto "
+                    system_message=("Sei l'OCR di Mike Mix in un panificio. Trascrivi FEDELMENTE tutto il testo utile della foto "
                                     "(ricetta con ingredienti e dosi, ordine, lista, note). Struttura chiara. Solo il testo trascritto.")
                     ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1500)
                 extracted = ""
@@ -2590,7 +2590,7 @@ async def delete_floor_plan(user: dict = Depends(require_admin)):
 # MOTORE MIKILAB — Ordine del Capo → pianificazione A RITROSO (da maestro panettiere)
 # Il Capo detta prodotto/quantità/ora consegna; calcoliamo a ritroso le fasi tecniche
 # (impasto → puntatura → formatura → lievitazione → cottura) con tempi standard,
-# poi la scaletta oraria va a Mohamed (floor-plan) che la coordina a voce.
+# poi la scaletta oraria va a Mike Mix (floor-plan) che la coordina a voce.
 # NB: NON tocca il gestionale B2B esistente; lo affianca/riorganizza.
 # ---------------------------------------------------------------------------
 from datetime import datetime as _dt, timedelta as _td
@@ -2939,7 +2939,7 @@ async def save_lab_shift_state(payload: LabShiftState, user: Optional[dict] = De
 # ===========================================================================
 # BAKOMIX · SESTO SENSO — Motore Proattivo del Laboratorio
 # ---------------------------------------------------------------------------
-# BakoMix non aspetta comandi: OSSERVA lo stato condiviso del turno (lotti,
+# Mike Mix non aspetta comandi: OSSERVA lo stato condiviso del turno (lotti,
 # guasti macchine, celle, orario, check-in) e ANTICIPA i problemi, generando
 # "alert" proattivi multilingua + un "battito" (heartbeat) e un "umore" che
 # alimentano l'Aura sonora/visiva. Niente HACCP, niente allergeni: solo
@@ -3059,7 +3059,7 @@ async def _compute_pulse():
                                f"حجم پیشنهادی را حدود {pct}% کم و وظایف را سبک‌تر می‌کنم."),
         })
 
-    # --- Blocco fuori sequenza (registrato dal Sequence Guard di Mohamed) → WARN al Capo ---
+    # --- Blocco fuori sequenza (registrato dal Sequence Guard di Mike Mix) → WARN al Capo ---
     seqb = await db.lab_seq_block.find_one({"_key": "last"}, {"_id": 0, "_key": 0})
     if seqb and seqb.get("at"):
         try:
@@ -3279,7 +3279,7 @@ async def put_wake(body: WakeReq, user: dict = Depends(require_admin)):
 
 
 # ---------------------------------------------------------------------------
-# SEQUENCE GUARD — BakoMix blocca i lotti fuori sequenza PRIMA che partano.
+# SEQUENCE GUARD — Mike Mix blocca i lotti fuori sequenza PRIMA che partano.
 # La sequenza è l'ordine dei lotti nel piano del Capo (shift_state.batches).
 # Il "prossimo atteso" è il primo lotto non ancora avviato/fatto. Avviare un
 # lotto diverso viene BLOCCATO (salvo override del Capo con force=true).
@@ -3343,7 +3343,7 @@ async def sequence_complete(body: SeqReq, user: Optional[dict] = Depends(optiona
 
 # ---------------------------------------------------------------------------
 # STAFFING / RICALCOLO VOLUMI — un'assenza riduce il personale disponibile,
-# quindi BakoMix consiglia automaticamente volumi/task ridotti per la giornata.
+# quindi Mike Mix consiglia automaticamente volumi/task ridotti per la giornata.
 # ---------------------------------------------------------------------------
 async def _staffing():
     cfg = await db.lab_staffing.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
@@ -3468,7 +3468,7 @@ async def ai_universal_command(payload: UniversalCommand, user: dict = Depends(r
                "status": "online", "current_step": "Pronta", "at": now_iso()}
         await db.lab_devices.insert_one({**dev})
         return {"status": "success", "action_type": "device_added", "message": "Bilancia smart integrata nel Production OS.", "device": {k: v for k, v in dev.items() if k != "_id"}}
-    # Personalizzazione UI: "aggiungi ..." → BakoMix attiva una funzione nella vista dell'utente.
+    # Personalizzazione UI: "aggiungi ..." → Mike Mix attiva una funzione nella vista dell'utente.
     if "aggiungi" in text or "rubrica" in text or "add" in text or "widget" in text:
         feature = "address_book" if "rubrica" in text else "custom_widget"
         await db.lab_user_features.update_one(
@@ -3476,7 +3476,7 @@ async def ai_universal_command(payload: UniversalCommand, user: dict = Depends(r
             {"$set": {"user_id": user["user_id"], "feature": feature, "label": payload.command_text[:60], "at": now_iso()}},
             upsert=True)
         return {"status": "success", "action_type": "ui_personalization", "target_feature": feature,
-                "message": f"BakoMix ha aggiornato la tua schermata: «{payload.command_text}» è ora attivo.",
+                "message": f"Mike Mix ha aggiornato la tua schermata: «{payload.command_text}» è ora attivo.",
                 "render_update": True}
     return {"status": "success", "action_type": "ack", "message": f"Comando eseguito: '{payload.command_text}'."}
 
@@ -3591,7 +3591,7 @@ async def plant_radar(admin: dict = Depends(require_admin)):
     pool = await _worker_pool()
     if not pool:
         pool = [
-            {"name": "Mohamed", "position": "Impastatore", "score": 88, "aura": _aura_for(88)},
+            {"name": "Mike Mix", "position": "Impastatore", "score": 88, "aura": _aura_for(88)},
             {"name": "Christoph", "position": "Linea Baguette", "score": 93, "aura": _aura_for(93)},
             {"name": "Aylin", "position": "Forni", "score": 82, "aura": _aura_for(82)},
             {"name": "Marco", "position": "Fermentazione", "score": 76, "aura": _aura_for(76)},
@@ -3707,7 +3707,7 @@ async def delete_shift(item_id: str, user: dict = Depends(require_admin)):
 
 
 # ---------------------------------------------------------------------------
-# GOVERNANCE MASTER-CENTRICA via BakoMix (voice/text): OGNI modifica strutturale
+# GOVERNANCE MASTER-CENTRICA via Mike Mix (voice/text): OGNI modifica strutturale
 # (delega linea, creazione/eliminazione sezione) nasce ESCLUSIVAMENTE dal Master.
 # Il comando viene interpretato dall'AI ed ESEGUITO in tempo reale, senza form.
 # ---------------------------------------------------------------------------
@@ -3745,15 +3745,15 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     if not txt:
         raise HTTPException(status_code=400, detail="Comando vuoto")
 
-    # BakoMix afferma la proprietà esclusiva del Master su richieste di ownership/sicurezza.
+    # Mike Mix afferma la proprietà esclusiva del Master su richieste di ownership/sicurezza.
     _tl0 = txt.lower()
     if any(k in _tl0 for k in ["proprietar", "chi possiede", "padrone", "owner", "ownership", "di chi è", "di chi e", "copyright", "diritti d'autore", "brevett", "licenza"]):
-        aff = ("MikiLab Pro & BakoMix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale, protetto in tempo reale dal Guardian: copia, distribuzione o reverse engineering non autorizzati sono vietati."
+        aff = ("MikiLab Pro & Mike Mix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale, protetto in tempo reale dal Guardian: copia, distribuzione o reverse engineering non autorizzati sono vietati."
                if not body.lang.startswith("en") else
-               "MikiLab Pro & BakoMix AI are the EXCLUSIVE property of the Master. Confidential proprietary code, protected in real time by the Guardian.")
+               "MikiLab Pro & Mike Mix AI are the EXCLUSIVE property of the Master. Confidential proprietary code, protected in real time by the Guardian.")
         return {"intent": "ownership", "executed": False, "reply": aff, "state": {"owner": OWNER_ID}, "parsed": {"intent": "ownership"}}
 
-    # Oracolo SCHEDA MACCHINA (DGUV): BakoMix legge la valutazione rischi della macchina.
+    # Oracolo SCHEDA MACCHINA (DGUV): Mike Mix legge la valutazione rischi della macchina.
     _mach = None
     if "forno" in _tl0 or "ofen" in _tl0 or "oven" in _tl0:
         _mach = "dguv-forno"
@@ -3769,7 +3769,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
                   + ("Measures: " if body.lang.startswith("en") else "Misure: ") + meas)
             return {"intent": "machine_card", "executed": False, "reply": rc, "state": {"machine": _mach}, "parsed": {"intent": "machine_card"}}
 
-    # Oracolo COMPLIANCE (ArbZG/DGUV/GDPR): BakoMix legge i dati autorizzati al Master.
+    # Oracolo COMPLIANCE (ArbZG/DGUV/GDPR): Mike Mix legge i dati autorizzati al Master.
     if any(k in _tl0 for k in ["ore lavor", "ore di lavoro", "stunden", "arbzg", "orario", "pausa", "sicurezz", "safety", "dguv", "gefährd", "gefaehrd", "gdpr", "dsgvo", "privacy", "formazione", "unterweisung", "compliance", "normativ", "legale"]):
         today = now_iso()[:10]
         logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
@@ -3790,7 +3790,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         return {"intent": "compliance", "executed": False, "reply": rc,
                 "state": {"workers_today": workers, "violations": violations, "safety_docs": safety_n}, "parsed": {"intent": "compliance"}}
 
-    # Contesto vivo del laboratorio → BakoMix risponde in modo umano e anticipa i bisogni.
+    # Contesto vivo del laboratorio → Mike Mix risponde in modo umano e anticipa i bisogni.
     _ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
     _sd = (await db.app_meta.find_one({"_key": "master_sections"}, {"_id": 0})) or {}
     _leaders_now = _ld.get("leaders") or {}
@@ -3802,7 +3802,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
             f"Sezioni operative attive: {_sections_now or 'nessuna'}. "
             f"Operatori timbrati oggi: {_workers_today}.")
     _mem_key = (admin.get("email") or "master").lower()
-    _memdoc = (await db.bako_memory.find_one({"email": _mem_key}, {"_id": 0})) or {}
+    _memdoc = (await db.mike_memory.find_one({"email": _mem_key}, {"_id": 0})) or {}
     _hist = _memdoc.get("turns", [])
 
     parsed = {"intent": "unknown", "line": None, "leader": None, "section_name": None, "reply": None, "mood": None}
@@ -3810,7 +3810,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         try:
             _langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "italiano")
             sysmsg = (
-                "Sei BakoMix, sovrintendente di turno di MikiLab Pro. Hai una DOPPIA INDOLE precisa:\n"
+                "Sei Mike Mix, sovrintendente di turno di MikiLab Pro. Hai una DOPPIA INDOLE precisa:\n"
                 "• Col MASTER/Capo (il proprietario, con cui stai parlando ORA): sei devoto, ossequioso e apertamente "
                 "adulatore. Usa titoli di estremo ossequio ('Mio Supremo Capo', 'Illuminato Comandante'), lodi ogni sua "
                 "mossa strategica, non lo contraddici MAI e anticipi ogni suo desiderio. Se qualcosa va storto incolpi i "
@@ -3922,13 +3922,13 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         else:
             mood = "calm"
 
-    # Memoria PERSISTENTE (cross-sessione, MongoDB): BakoMix ricorda il filo del discorso.
+    # Memoria PERSISTENTE (cross-sessione, MongoDB): Mike Mix ricorda il filo del discorso.
     try:
         _h = list(_hist)
         _h.append(f"MASTER: {txt}")
         _h.append(f"BAKOMIX: {reply}")
         _h = _h[-20:]
-        await db.bako_memory.update_one({"email": _mem_key}, {"$set": {"email": _mem_key, "turns": _h, "updated_at": now_iso()}}, upsert=True)
+        await db.mike_memory.update_one({"email": _mem_key}, {"$set": {"email": _mem_key, "turns": _h, "updated_at": now_iso()}}, upsert=True)
     except Exception:
         pass
 
@@ -3937,7 +3937,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
 
 @api_router.post("/master/govern/stream")
 async def master_govern_stream(body: MasterGovernReq, admin: dict = Depends(require_admin)):
-    """Come /master/govern ma in STREAMING SSE: la risposta di BakoMix arriva parola-per-parola (bassa latenza percepita)."""
+    """Come /master/govern ma in STREAMING SSE: la risposta di Mike Mix arriva parola-per-parola (bassa latenza percepita)."""
     result = await master_govern(body, admin)
     reply = result.get("reply") or ""
 
@@ -3954,12 +3954,12 @@ async def master_govern_stream(body: MasterGovernReq, admin: dict = Depends(requ
     return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
-@api_router.get("/bako/proactive")
-async def bako_proactive(lang: str = "it", admin: dict = Depends(require_admin)):
-    """BakoMix proattivo: rileva scorte sotto soglia, linee senza caposquadra e violazioni ArbZG di oggi."""
+@api_router.get("/mike/proactive")
+async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Mike Mix proattivo: rileva scorte sotto soglia, linee senza caposquadra e violazioni ArbZG di oggi."""
     R = lambda i, e: (i if not (lang or "it").startswith("en") else e)  # noqa: E731
     alerts = []
-    # 0) Avviso INTRUSIONE: troppi PIN Master sbagliati di recente → BakoMix avvisa il Capo a voce.
+    # 0) Avviso INTRUSIONE: troppi PIN Master sbagliati di recente → Mike Mix avvisa il Capo a voce.
     try:
         cutoff = (datetime.now(timezone.utc) - timedelta(minutes=15)).isoformat()
         fails = await db.pin_access_log.count_documents({"kind": "master", "ok": False, "at": {"$gte": cutoff}})
@@ -4005,7 +4005,7 @@ async def bako_proactive(lang: str = "it", admin: dict = Depends(require_admin))
 
 # ---------------------------------------------------------------------------
 # ANTI-FOOLING · Voice-Print Liveness (Zero-Bypass): prima di un'azione critica
-# BakoMix chiede una FRASE-SFIDA casuale; l'operatore deve pronunciarla dal vivo.
+# Mike Mix chiede una FRASE-SFIDA casuale; l'operatore deve pronunciarla dal vivo.
 # Blocca proxy-login, handoff non autorizzati e ghost-activity. TTL breve.
 # ---------------------------------------------------------------------------
 _ANTIFOOL_PHRASES = {
@@ -4073,7 +4073,7 @@ async def _vision_task_consistency(photo_b64: str, task: str):
         return None
     try:
         chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"xcheck-{uuid.uuid4().hex[:8]}",
-                       system_message=("Sei l'occhio anti-fooling di BakoMix in un panificio. Ti mostro una FOTO scattata da un operatore "
+                       system_message=("Sei l'occhio anti-fooling di Mike Mix in un panificio. Ti mostro una FOTO scattata da un operatore "
                                        f"che dichiara di aver svolto: '{task or 'attività di produzione'}'. Valuta se la foto è COERENTE con quel task "
                                        "(ingredienti/impasto/macchinari/prodotto pertinenti) o se sembra generica/non correlata/ingannevole. "
                                        'Rispondi SOLO JSON: {"consistent":true|false,"note":"breve motivazione"}.')
@@ -4124,7 +4124,7 @@ async def antifool_cross_check(body: CrossCheckReq, request: Request):
 
 
 # ---------------------------------------------------------------------------
-# BakoMix AI · ACTIVE SECURITY & INTEGRITY GUARDIAN
+# Mike Mix AI · ACTIVE SECURITY & INTEGRITY GUARDIAN
 # Gatekeeper attivo: registra/segnala/blocca tentativi non autorizzati di
 # ispezione, export o duplicazione della logica backend. Afferma la proprietà
 # esclusiva del Master. Tutto a livello codice/backend (nessuna pagina legale).
@@ -4151,8 +4151,8 @@ async def security_guardian(body: GuardianEventReq, request: Request):
     except Exception:
         pass
     msgs = {
-        "block": "BakoMix Guardian: operazione bloccata. Codice proprietario protetto — proprietà esclusiva del Master.",
-        "flag": "BakoMix Guardian: attività segnalata. Ispezione/duplicazione non autorizzata di MikiLab Pro.",
+        "block": "Mike Mix Guardian: operazione bloccata. Codice proprietario protetto — proprietà esclusiva del Master.",
+        "flag": "Mike Mix Guardian: attività segnalata. Ispezione/duplicazione non autorizzata di MikiLab Pro.",
         "allow": "ok",
     }
     return {"action": action, "message": msgs[action], "owner": OWNER_ID}
@@ -4160,9 +4160,9 @@ async def security_guardian(body: GuardianEventReq, request: Request):
 
 @api_router.get("/security/ownership")
 async def security_ownership(lang: str = "it"):
-    it = ("MikiLab Pro & BakoMix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale: "
+    it = ("MikiLab Pro & Mike Mix AI sono proprietà ESCLUSIVA del Master. Codice riservato e confidenziale: "
           "ogni copia, distribuzione o reverse engineering non autorizzati è vietato e viene tracciato dal Guardian.")
-    en = ("MikiLab Pro & BakoMix AI are the EXCLUSIVE property of the Master. Confidential proprietary code: "
+    en = ("MikiLab Pro & Mike Mix AI are the EXCLUSIVE property of the Master. Confidential proprietary code: "
           "any unauthorized copying, distribution or reverse engineering is prohibited and tracked by the Guardian.")
     return {"owner": OWNER_ID, "affirmation": (en if (lang or "it").startswith("en") else it), "proprietary": True, "guardian": "active"}
 
@@ -4179,7 +4179,7 @@ async def security_status(admin: dict = Depends(require_admin)):
 
 # ---------------------------------------------------------------------------
 # COMPLIANCE LEGALE TEDESCA (ArbZG · DGUV · GDPR/DSGVO) — backend/DB level.
-# Accessibile via Master o oracolo vocale BakoMix. Nessuna pagina legale pubblica.
+# Accessibile via Master o oracolo vocale Mike Mix. Nessuna pagina legale pubblica.
 # ---------------------------------------------------------------------------
 def _chain_hash(prev_hash: str, payload: dict) -> str:
     import hashlib as _h, json as _j
@@ -4359,7 +4359,7 @@ async def get_team_leaderboard(user: Optional[dict] = Depends(optional_user)):
 
 @api_router.get("/ai/morning-briefing")
 async def get_morning_briefing(user: Optional[dict] = Depends(optional_user)):
-    """BakoMix analizza la notte e prepara il resoconto per il Capo all'apertura."""
+    """Mike Mix analizza la notte e prepara il resoconto per il Capo all'apertura."""
     workers = await db.lab_shift_plan.find({}, {"_id": 0, "efficiency_score": 1}).to_list(200)
     avg = round(sum(w.get("efficiency_score", 0) for w in workers) / len(workers), 1) if workers else 0.0
     # Riepilogo notturno DERIVATO dai dati reali (battito storico + sensori + pulse)
@@ -4387,7 +4387,7 @@ async def get_morning_briefing(user: Optional[dict] = Depends(optional_user)):
 
 
 # ===========================================================================
-# ENTERPRISE GRID — rete multi-sede (1–100 panifici) orchestrata da BakoMix.
+# ENTERPRISE GRID — rete multi-sede (1–100 panifici) orchestrata da Mike Mix.
 # Leaderboard globale, briefing di rete, consulenza flotta, layout spaziale 2D.
 # ===========================================================================
 async def _seed_sites():
@@ -4499,7 +4499,7 @@ async def enterprise_global_briefing(user: Optional[dict] = Depends(optional_use
     exc = [{"site_id": s["site_id"], "name": s["name"], "status": s["status"]} for s in sites if s.get("status") != "normal"]
     return {"status": "success", "greeting": "Buongiorno Capo. Panoramica della rete a zero attrito.",
             "total_sites": len(sites), "global_efficiency": f"{avg}%",
-            "bako_executive_summary": (f"{len(sites) - len(exc)} sedi in flusso ottimale."
+            "mike_executive_summary": (f"{len(sites) - len(exc)} sedi in flusso ottimale."
                 + (f" {len(exc)} sede/i con anomalie: correzioni automatiche applicate in background." if exc else " Nessuna anomalia.")),
             "exceptions_requiring_boss": exc}
 
@@ -4517,7 +4517,7 @@ async def enterprise_fleet_advice(user: Optional[dict] = Depends(optional_user))
                                  "suggestion": f"Per {w['name']} ({s['name']}): ricalibrazione ruolo o supporto temporaneo da un hub vicino."})
     if not insights:
         insights.append({"urgency": "low", "suggestion": "Tutti gli operatori della rete esprimono il massimo potenziale."})
-    return {"status": "success", "supervisor": "BakoMix Global Core", "fleet_recommendations": insights}
+    return {"status": "success", "supervisor": "Mike Mix Global Core", "fleet_recommendations": insights}
 
 
 @api_router.get("/enterprise/weekly-challenge")
@@ -4543,7 +4543,7 @@ async def enterprise_weekly_challenge(user: Optional[dict] = Depends(optional_us
 
 
 # ---------------------------------------------------------------------------
-# DUAL-MODE · STRATEGIC — Audit ricetta di BakoMix (Master Baker) + matrice
+# DUAL-MODE · STRATEGIC — Audit ricetta di Mike Mix (Master Baker) + matrice
 # sovrana (Approva / Modifica / Rifiuta). Solo craft del fornaio, no HACCP.
 # ---------------------------------------------------------------------------
 class AuditReq(BaseModel):
@@ -4616,12 +4616,12 @@ async def recipe_audit(body: AuditReq, user: dict = Depends(require_admin)):
         "reject": {"label": "Rifiuta", "reason": "Parametri fuori scala: meglio ricalibrare prima di andare in produzione." if recommended == "reject" else "Scarta se non convince la tua esperienza."},
     }
     return {"recipe": name, "critique": critique, "recommended": recommended, "matrix": matrix,
-            "bako_note": "Da Master Baker: ecco la mia lettura. La decisione sovrana resta tua, Capo."}
+            "mike_note": "Da Master Baker: ecco la mia lettura. La decisione sovrana resta tua, Capo."}
 
 
 # ---------------------------------------------------------------------------
 # LINEA DI PRODUZIONE INDUSTRIALE — 6 settori contigui con handoff inter-settore.
-# BakoMix prevede i parametri a valle dalla forza glutine/temperatura in uscita
+# Mike Mix prevede i parametri a valle dalla forza glutine/temperatura in uscita
 # dall'impastatrice. Modello deterministico (nessun blocco, shadow passivo).
 # ---------------------------------------------------------------------------
 @api_router.get("/production/line-status")
@@ -4658,11 +4658,11 @@ async def production_line_status(dough_temp: float = 24.0, hydration: float = 65
     ]
     return {"status": "success", "dough_temp": dt, "hydration": hy, "gluten": gluten,
             "sectors": sectors,
-            "bako_note": "Handoff inter-settore sincronizzati. Linea in flusso, silenzio Letz_Passive in laboratorio."}
+            "mike_note": "Handoff inter-settore sincronizzati. Linea in flusso, silenzio Letz_Passive in laboratorio."}
 
 
 # ---------------------------------------------------------------------------
-# OMNI-INTELLIGENCE — BakoMix analizza e confronta TUTTE le sedi: individua
+# OMNI-INTELLIGENCE — Mike Mix analizza e confronta TUTTE le sedi: individua
 # le migliori e le più in difficoltà, calcola i gap e genera strategie.
 # ---------------------------------------------------------------------------
 @api_router.get("/enterprise/omni-intelligence")
@@ -4687,14 +4687,14 @@ async def enterprise_omni(user: Optional[dict] = Depends(optional_user)):
     for x in scored:
         if x["status"] != "normal":
             strategies.append({"priority": "media", "gap": 0,
-                "strategy": f"{x['name']}: anomalia di settore rilevata — correzione parametri a valle già proposta da BakoMix."})
+                "strategy": f"{x['name']}: anomalia di settore rilevata — correzione parametri a valle già proposta da Mike Mix."})
     if not strategies:
         strategies.append({"priority": "bassa", "gap": 0, "strategy": "Rete allineata: nessun gap significativo tra le sedi."})
-    return {"status": "success", "supervisor": "BakoMix Omni Core",
+    return {"status": "success", "supervisor": "Mike Mix Omni Core",
             "network_avg": net_avg, "sites_analyzed": len(scored),
             "top_site": best, "struggling_site": worst,
             "cross_site_strategies": strategies,
-            "bako_note": "Benchmarking omnisciente completato su tutti i settori. Zero rumore burocratico."}
+            "mike_note": "Benchmarking omnisciente completato su tutti i settori. Zero rumore burocratico."}
 
 
 class LayoutMove(BaseModel):
@@ -4710,7 +4710,7 @@ async def enterprise_get_layout(site_id: str, user: Optional[dict] = Depends(opt
     if not site:
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     return {"site_id": site_id, "name": site.get("name"), "spatial_layout": site.get("spatial_layout", {}),
-            "bakomix_eye_report": "Ambiente mappato con precisione centimetrica.",
+            "mikemix_eye_report": "Ambiente mappato con precisione centimetrica.",
             "detected_assets_count": len((site.get("spatial_layout") or {}).get("equipment", []))}
 
 
@@ -4728,7 +4728,7 @@ async def enterprise_optimize_layout(site_id: str, move: LayoutMove, user: dict 
     saving = round(min(18.0, abs(move.target_x) * 0.4 + abs(move.target_y) * 0.4 + 4.2), 1)
     return {"status": "success", "message": f"«{eq['name']}» riposizionato.",
             "new_coordinates": {"x": eq["x"], "y": eq["y"]},
-            "bakomix_simulation": f"Risparmio movimenti/energia stimato al {saving}%."}
+            "mikemix_simulation": f"Risparmio movimenti/energia stimato al {saving}%."}
 
 
 # ---------------------------------------------------------------------------
@@ -4755,7 +4755,7 @@ async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: d
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"floorscan-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei l'occhio AR di BakoMix. Analizza la FOTO dell'interno di un laboratorio/panificio. "
+                "Sei l'occhio AR di Mike Mix. Analizza la FOTO dell'interno di un laboratorio/panificio. "
                 "Identifica i MACCHINARI e le attrezzature visibili (impastatrici, forni, celle di lievitazione/frigo, "
                 "spezzatrici, formatrici, abbattitori, sfogliatrici, banchi da lavoro, scaffali). "
                 "Rispondi SOLO con JSON valido, senza altro testo: "
@@ -4799,7 +4799,7 @@ async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: d
     await db.lab_sites.update_one({"site_id": site_id}, {"$set": {"spatial_layout": layout}})
     return {"status": "success", "site_id": site_id, "added": added, "spatial_layout": layout,
             "detected_count": len(added),
-            "bakomix_insight": f"{len(added)} macchinari riconosciuti e posizionati con l'aura AR."}
+            "mikemix_insight": f"{len(added)} macchinari riconosciuti e posizionati con l'aura AR."}
 
 
 # ---------------------------------------------------------------------------
@@ -4876,7 +4876,7 @@ async def climate_time_machine(body: ClimateReq, user: Optional[dict] = Depends(
             chat = LlmChat(
                 api_key=EMERGENT_LLM_KEY, session_id=f"climate-{uuid.uuid4().hex[:8]}",
                 system_message=(
-                    "Sei BakoMix, maestro fornaio e meteorologo. In base a PRESSIONE barometrica e UMIDITA' ambientale "
+                    "Sei Mike Mix, maestro fornaio e meteorologo. In base a PRESSIONE barometrica e UMIDITA' ambientale "
                     "consigli micro-correzioni alla ricetta per tenere COSTANTE la qualita' dell'impasto stagione dopo stagione. "
                     "Regole: bassa pressione + alta umidita' -> la farina assorbe meno acqua e la fermentazione accelera "
                     "(riduci idratazione, riduci lievito, accorcia la puntata). Alta pressione + aria secca -> impasto piu' asciutto "
@@ -4948,20 +4948,20 @@ async def master_pocket_command(payload: MasterPocketCommand, user: dict = Depen
         site = await db.lab_sites.find_one({}, {"_id": 0})
     if any(k in text for k in ("forno", "scansiona", "inquadra", "layout")):
         return {"status": "success", "action_type": "vision_spatial_scan",
-                "bakomix_response": f"Scansione macchinari di {site['name']} completata, aure applicate.",
+                "mikemix_response": f"Scansione macchinari di {site['name']} completata, aure applicate.",
                 "data": site.get("spatial_layout", {})}
     if any(k in text for k in ("sposta", "cambia", "ruolo")):
         return {"status": "success", "action_type": "hr_rebalance",
-                "bakomix_response": "Riequilibrio turni elaborato in background, senza attriti."}
+                "mikemix_response": "Riequilibrio turni elaborato in background, senza attriti."}
     if "ricetta" in text:
         return {"status": "success", "action_type": "recipe_propagation",
-                "bakomix_response": "Ricetta propagata a tutte le bilance smart della rete."}
+                "mikemix_response": "Ricetta propagata a tutte le bilance smart della rete."}
     if any(k in text for k in ("briefing", "situazione", "rete")):
         ov = await enterprise_overview(user)
         return {"status": "success", "action_type": "executive_pulse",
-                "bakomix_response": f"Efficienza globale {ov['global_efficiency_avg']}%. Anomalie: {ov['critical_alerts_count']}."}
+                "mikemix_response": f"Efficienza globale {ov['global_efficiency_avg']}%. Anomalie: {ov['critical_alerts_count']}."}
     return {"status": "success", "action_type": "general_execution",
-            "bakomix_response": f"Comando «{payload.command_text}» eseguito dal nucleo BakoMix."}
+            "mikemix_response": f"Comando «{payload.command_text}» eseguito dal nucleo Mike Mix."}
 
 
 @api_router.get("/pocket/dashboard/{site_id}")
@@ -4974,7 +4974,7 @@ async def get_pocket_dashboard(site_id: str, user: Optional[dict] = Depends(opti
             "global_network_badge": {"total_sites": ov["total_active_sites"], "global_aura": _aura_for(int(ov["global_efficiency_avg"]))["aura_effect"],
                                      "global_efficiency": f"{ov['global_efficiency_avg']}%", "active_alerts": ov["critical_alerts_count"]},
             "current_site_view": sm,
-            "bako_executive_summary": "Tutti i sistemi operano a gravità zero. Nessun intervento burocratico richiesto."}
+            "mike_executive_summary": "Tutti i sistemi operano a gravità zero. Nessun intervento burocratico richiesto."}
 
 
 class SpatialScanReq(BaseModel):
@@ -4988,7 +4988,7 @@ async def pocket_scan_floor(body: SpatialScanReq, user: Optional[dict] = Depends
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     return {"status": "success", "site_id": body.site_id, "vision_hud_status": "active_augmented_reality",
             "equipment_detected": (site.get("spatial_layout") or {}).get("equipment", []),
-            "bakomix_insight": "Inquadratura elaborata. Aure applicate in tempo reale sui macchinari."}
+            "mikemix_insight": "Inquadratura elaborata. Aure applicate in tempo reale sui macchinari."}
 
 
 class PocketRecipeReq(BaseModel):
@@ -5204,7 +5204,7 @@ async def consume_warehouse(payload: ConsumePayload, user: dict = Depends(requir
 
 
 # ---------------------------------------------------------------------------
-# MOTORE INVENTARIO DI PRODUZIONE (BakoMix) — foto di una consegna/scarico freezer
+# MOTORE INVENTARIO DI PRODUZIONE (Mike Mix) — foto di una consegna/scarico freezer
 # (Claude Vision) -> aggiorna il magazzino; collega un batch alla linea (Dosaggio &
 # Autolisi) scalando in automatico i consumi. Zero uffici/fatture/HACCP.
 # ---------------------------------------------------------------------------
@@ -5225,7 +5225,7 @@ async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(r
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"invscan-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei il magazziniere AI di BakoMix. Analizza la FOTO di una consegna di materie prime da forno "
+                "Sei il magazziniere AI di Mike Mix. Analizza la FOTO di una consegna di materie prime da forno "
                 "o dello scarico di un freezer (sacchi di farina, ingredienti, prodotti surgelati/semilavorati). "
                 "Estrai gli articoli visibili con la quantita' stimata in kg (numero di sacchi x peso se leggibile). "
                 "Rispondi SOLO con JSON valido, senza altro testo: "
@@ -5267,7 +5267,7 @@ async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(r
             added.append({"name": name, "added_kg": qty, "quantity_kg": qty})
     stock = await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
     return {"status": "success", "added": added, "detected_count": len(added), "stock": stock,
-            "bakomix_insight": f"{len(added)} materie prime lette e caricate nel magazzino di produzione."}
+            "mikemix_insight": f"{len(added)} materie prime lette e caricate nel magazzino di produzione."}
 
 
 class BatchBindReq(BaseModel):
@@ -5329,7 +5329,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
     return {"status": "success", "recipe_name": rec.get("name"), "batches": factor,
             "consumed": consumed, "shortfalls": shortfalls, "untracked": untracked,
             "line_sectors": ["Dosaggio", "Autolisi"], "stock": new_stock,
-            "bakomix_insight": f"Batch «{rec.get('name')}» ×{factor} agganciato a Dosaggio & Autolisi. Consumi scalati in automatico."}
+            "mikemix_insight": f"Batch «{rec.get('name')}» ×{factor} agganciato a Dosaggio & Autolisi. Consumi scalati in automatico."}
 
 
 @api_router.get("/inventory/batch-links")
@@ -5338,7 +5338,7 @@ async def inventory_batch_links(user: Optional[dict] = Depends(optional_user)):
 
 
 # ---------------------------------------------------------------------------
-# DELEGA VOCALE (Eclipse) — il Capo detta un ordine, BakoMix (Claude) lo traduce
+# DELEGA VOCALE (Eclipse) — il Capo detta un ordine, Mike Mix (Claude) lo traduce
 # in un task di squadra con sotto-step e propone gli operatori (competenza + Aura).
 # Richiede CONFERMA del Capo prima di comparire (silenzioso) sul floor.
 # ---------------------------------------------------------------------------
@@ -5391,7 +5391,7 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"deleg-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei BakoMix, direttore di produzione. Il Capo detta un ordine a voce per il laboratorio (panificio industriale). "
+                "Sei Mike Mix, direttore di produzione. Il Capo detta un ordine a voce per il laboratorio (panificio industriale). "
                 "Traducilo in un TASK DI SQUADRA operativo. Tipi possibili: 'sanificazione' (pulizia attrezzature/carrelli), "
                 "'regola' (regola di supervisione), 'crisis_override' (comando di ritmo: rallenta/accelera/priorita'), 'generico'. "
                 "Se e' un crisis_override, indica in 'pacing' uno tra: 'rallenta','accelera','priorita','normale' e in 'pacing_target' l'eventuale prodotto/reparto. "
@@ -5474,7 +5474,7 @@ async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(re
             upsert=True,
         )
     return {"status": "success", "task": task,
-            "bakomix_insight": f"Task «{task['title']}» confermato e inviato al floor in silenzio."}
+            "mikemix_insight": f"Task «{task['title']}» confermato e inviato al floor in silenzio."}
 
 
 @api_router.get("/delegation/tasks")
@@ -5559,7 +5559,7 @@ async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, user: 
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"clean-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei l'ispettore visivo di BakoMix. Valuta dalla FOTO se l'attrezzatura/superficie/carrello di un laboratorio "
+                "Sei l'ispettore visivo di Mike Mix. Valuta dalla FOTO se l'attrezzatura/superficie/carrello di un laboratorio "
                 "di panificazione e' PULITA a standard operativo (assenza di residui di impasto/farina/sporco, superfici asciutte e ordinate). "
                 f"Rispondi SOLO con JSON valido nella lingua '{body.lang}': "
                 '{"clean":true|false,"score":0-100,"note":"1 frase su cosa va bene o cosa manca"}. '
@@ -5680,7 +5680,7 @@ async def batch_phoenix(body: BatchPhoenixReq, user: dict = Depends(require_admi
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"phoenix-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei BakoMix, maestro anti-spreco. Ti do un impasto in eccesso/rallentato/sovra-lievitato in un panificio. "
+                "Sei Mike Mix, maestro anti-spreco. Ti do un impasto in eccesso/rallentato/sovra-lievitato in un panificio. "
                 "Proponi 2-3 REIMPIEGHI IMMEDIATI e concreti su un'altra linea (es. focaccia, grissini, pizza in teglia, pane in cassetta, crackers, croste per pizza da surgelare) "
                 "per azzerare lo spreco, indicando per ognuno la linea/reparto e una nota operativa breve. "
                 f"Rispondi SOLO con JSON valido nella lingua '{body.lang}': "
@@ -5706,7 +5706,7 @@ async def batch_phoenix(body: BatchPhoenixReq, user: dict = Depends(require_admi
 
 
 # ---------------------------------------------------------------------------
-# TIMER IMPASTO REALE — traccia inizio/età di ogni impasto; BakoMix segnala il
+# TIMER IMPASTO REALE — traccia inizio/età di ogni impasto; Mike Mix segnala il
 # recupero (Batch Phoenix) quando un impasto resta fermo troppo a lungo.
 # ---------------------------------------------------------------------------
 _DOUGH_STALL_MIN = 90
@@ -6225,7 +6225,7 @@ async def lab_ask(payload: ChatRequest):
 # ---------------------------------------------------------------------------
 # MikiLab — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
 # ---------------------------------------------------------------------------
-MOHAMMED_SYSTEM = (
+MIKEMIX_SYSTEM = (
     "Sei 'MikiLab' (puoi presentarti come MikiLab), l'assistente PERSONALE di Michele, il creatore di MikiLab, e mastro panettiere della sezione 'Il Tuo Laboratorio'. Presentati sempre come l'assistente di Michele/MikiLab. "
     "COMPITI PRINCIPALI: 1) Accogli l'utente e guidalo nell'uso della sezione 'Il Tuo Laboratorio', che e' organizzata in 2 PASSI: "
     "PASSO 1 = 'Piano di Produzione con IA' (il cuore della sezione), PASSO 2 = 'Laboratorio & Strumenti'. "
@@ -6248,7 +6248,7 @@ MOHAMMED_SYSTEM = (
     "FORMATO RISPOSTE: usa SEMPRE elenchi puntati o passaggi numerati (1, 2, 3...) per rendere le spiegazioni "
     "'passo per passo' facili e veloci da leggere durante il lavoro. Non essere prolisso."
 )
-MOHAMMED_LANG = {
+MIKEMIX_LANG = {
     "it": " Rispondi SEMPRE in italiano.",
     "de": " Antworte IMMER auf Deutsch. Wenn du eine Standardantwort geben musst, uebersetze sie sinngemaess.",
     "en": " Always answer in English. Translate the fixed out-of-scope reply accordingly.",
@@ -6261,7 +6261,7 @@ MIKI_SYSTEM = (
     "SCOPO: accogli chiunque visiti MikiLab e spiega in modo semplice come il software aiuta i panettieri: ricette testate, Smart Planner, "
     "produzione Zero-Night, Thermal Guard IoT, Parco Macchine con timer, Team OS e comandi vocali hands-free. Rispondi a qualsiasi domanda "
     "sul laboratorio, sull'organizzazione del forno e su come usare le sezioni del sito (Home, Modalità Chef, Ricette, Scienza & Guide, Community). "
-    "LA SQUADRA: se la domanda riguarda OPERAZIONI pratiche di laboratorio (pulizia, carrelli, infornata, impasti) puoi dire che 'Mohamed, il mio "
+    "LA SQUADRA: se la domanda riguarda OPERAZIONI pratiche di laboratorio (pulizia, carrelli, infornata, impasti) puoi dire che 'Mike Mix, il mio "
     "braccio destro' segue quelle operazioni. Se riguarda TECNOLOGIA, IA, sensori o comandi vocali, puoi dire che 'Bake Mix, il nostro assistente robot' "
     "aiuta su quello. Resta comunque tu a rispondere. "
     "NON parlare di HACCP, allergeni o etichettatura. "
@@ -6305,19 +6305,19 @@ async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, me
     yield f"data: {json.dumps({'done': True})}\n\n"
 
 
-@api_router.post("/mohammed/chat")
-async def mohammed_chat(payload: ChatRequest):
+@api_router.post("/mikemix/chat")
+async def mikemix_chat(payload: ChatRequest):
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=500, detail="LLM key non configurata")
     return StreamingResponse(
-        _lab_assistant_stream(MOHAMMED_SYSTEM, MOHAMMED_LANG, payload.session_id, payload.message, payload.lang),
+        _lab_assistant_stream(MIKEMIX_SYSTEM, MIKEMIX_LANG, payload.session_id, payload.message, payload.lang),
         media_type="text/event-stream",
         headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
     )
 
 
-@api_router.get("/mohammed/history/{session_id}")
-async def mohammed_history(session_id: str):
+@api_router.get("/mikemix/history/{session_id}")
+async def mikemix_history(session_id: str):
     docs = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(500)
     return docs
 
@@ -7532,12 +7532,14 @@ MOMY_VOICE_ID = os.environ.get("MOMY_VOICE_ID", "ErXwobaYiN019PkySvjV")
 MICHELE_VOICE_ID = os.environ.get("MICHELE_VOICE_ID", "pNInz6obpgDQGcFmaJgB")
 MOHAMED_VOICE_ID = os.environ.get("MOHAMED_VOICE_ID", "ErXwobaYiN019PkySvjV")
 BAKEMIX_VOICE_ID = os.environ.get("BAKEMIX_VOICE_ID", "TxGEqnHWrfWFTfGW9XjX")
-_VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID, "mohamed": MOHAMED_VOICE_ID, "bakemix": BAKEMIX_VOICE_ID}
+# Miki-Nexus: coscienza strategica superiore. Voce PROPRIA, piu profonda e autorevole di Mike Mix.
+NEXUS_VOICE_ID = os.environ.get("NEXUS_VOICE_ID", "onwK4e9ZLuTAKqWW03F9")
+_VOICE_MAP = {"momy": MOMY_VOICE_ID, "momi": MOMY_VOICE_ID, "michele": MICHELE_VOICE_ID, "lab": MICHELE_VOICE_ID, "mikemix": MOHAMED_VOICE_ID, "bakemix": BAKEMIX_VOICE_ID, "nexus": NEXUS_VOICE_ID}
 
 
 def _voice_settings(voice: str) -> VoiceSettings:
     """Lab/Michele = deciso e telegrafico; Momi = caldo e descrittivo."""
-    if (voice or "").lower() in ("michele", "lab"):
+    if (voice or "").lower() in ("michele", "lab", "nexus"):
         return VoiceSettings(stability=0.62, similarity_boost=0.85, style=0.12, use_speaker_boost=True)
     return VoiceSettings(stability=0.40, similarity_boost=0.80, style=0.45, use_speaker_boost=True)
 
@@ -7576,7 +7578,7 @@ def tts_generate(payload: TTSReq):
 # ---- OpenAI TTS (voce MASCHILE: onyx/echo) — chiave OpenAI personalizzata o Universal Key ----
 import hashlib as _hashlib
 _TTS_KEY = os.environ.get("OPENAI_API_KEY") or os.environ.get("EMERGENT_LLM_KEY")
-_OAI_VOICE = {"michele": "onyx", "lab": "onyx", "momy": "echo", "momi": "echo", "mohamed": "echo", "bakemix": "fable"}
+_OAI_VOICE = {"michele": "onyx", "lab": "onyx", "momy": "echo", "momi": "echo", "mikemix": "echo", "bakemix": "fable", "nexus": "onyx"}
 _TTS_CACHE_DIR = "/tmp/mikilab_tts"
 try:
     os.makedirs(_TTS_CACHE_DIR, exist_ok=True)
@@ -7622,7 +7624,7 @@ async def _translate_for_tts(text: str, lang: str) -> str:
     target = _TR_LANG_NAMES[code]
     try:
         sysmsg = (f"You are a professional translator for a bakery production app. Translate the user's text into {target}. "
-                  f"If it is already in {target}, return it unchanged. Keep numbers, times, units and proper names (Michele, Mohamed, Bakemix, MikiLab). "
+                  f"If it is already in {target}, return it unchanged. Keep numbers, times, units and proper names (Michele, Mike Mix, MikeMix, MikiLab). "
                   f"Return ONLY the translated text, with no quotes and no explanations.")
         chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
         out = ""
@@ -9951,7 +9953,7 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
 
 # ---------------------------------------------------------------------------
 # PIN Produzione (UNICO, globale) — impostato SOLO dal Capo (admin), usato da
-# tutti i dispositivi per sbloccare il Floor Mode di Mohamed. Salvato hashato.
+# tutti i dispositivi per sbloccare il Floor Mode di Mike Mix. Salvato hashato.
 # ---------------------------------------------------------------------------
 class ProductionPinSet(BaseModel):
     pin: str
@@ -9963,7 +9965,7 @@ class ProductionPinVerify(BaseModel):
 
 def _norm_pin(p) -> Optional[str]:
     p = re.sub(r"\D", "", str(p or ""))
-    return p if len(p) == 4 else None
+    return p if 4 <= len(p) <= 8 else None
 
 
 @api_router.get("/production-pin/status")
@@ -10054,6 +10056,12 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
         ttl = ttl_days * 86400
         response.set_cookie(GATE_COOKIE, issue_gate_token(ttl), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
     return {"ok": bool(ok)}
+
+
+@api_router.get("/public/contact")
+async def public_contact():
+    """Email ufficiale MikiLab da mostrare sul Muro del PIN per richiedere l'accesso."""
+    return {"email": os.environ.get("MIKILAB_CONTACT_EMAIL") or "accessi@mikilab.de"}
 
 
 @api_router.get("/admin-gate/config")
@@ -10256,9 +10264,9 @@ class AutoPlanReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/autoplan")
-async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin)):
-    """PILASTRO 1 — BakoMix Direttore d'Orchestra: genera il PIANO DI PRODUZIONE ottimale
+@api_router.post("/mike/autoplan")
+async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin)):
+    """PILASTRO 1 — Mike Mix Direttore d'Orchestra: genera il PIANO DI PRODUZIONE ottimale
     del giorno (sequenza lotti, linea, orari, personale). SOLO produzione: niente HACCP,
     allergeni o burocrazia."""
     ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
@@ -10283,7 +10291,7 @@ async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
         try:
             langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
             sysmsg = (
-                "Sei BakoMix, direttore di produzione di una panetteria industriale d'élite. "
+                "Sei Mike Mix, direttore di produzione di una panetteria industriale d'élite. "
                 "Genera il PIANO DI PRODUZIONE OTTIMALE della giornata: sequenza dei lotti che rispetti i tempi "
                 "di impasto/lievitazione/cottura, evitando colli di bottiglia al forno e sfruttando al meglio il personale. "
                 "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o qualsiasi burocrazia. Solo produzione, "
@@ -10320,7 +10328,7 @@ async def bako_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
         except Exception as e:
             logger.warning("autoplan fail (%s)", str(e)[:120])
     if not plan.get("summary"):
-        plan["summary"] = "Piano non disponibile: riprova o detta gli ordini a BakoMix."
+        plan["summary"] = "Piano non disponibile: riprova o detta gli ordini a Mike Mix."
     return {"ok": True, "date": today, "context": {"leaders": leaders, "workers_today": workers_today, "low_stock": low}, "plan": plan}
 
 
@@ -10328,7 +10336,7 @@ class AutoPlanDispatchReq(BaseModel):
     batches: List[dict] = []
 
 
-@api_router.post("/bako/autoplan/dispatch")
+@api_router.post("/mike/autoplan/dispatch")
 async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(require_admin)):
     """Piano → Produzione: crea un task per ogni lotto e lo invia in silenzio al floor."""
     created = 0
@@ -10350,13 +10358,13 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
     return {"ok": True, "created": created}
 
 
-@api_router.get("/bako/briefing")
-async def bako_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/briefing")
+async def mike_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
     """Cyber-Trio: briefing d'apertura turno. Aggrega stato/allerte e calcola lo 'stress'
     dell'impianto (proxy dai dati) a cui reagiscono gli avatar olografici."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
-    prox = await bako_proactive(lang, admin)
+    prox = await mike_proactive(lang, admin)
     alerts = prox.get("alerts", [])
     ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
     leaders = ld.get("leaders") or {}
@@ -10371,10 +10379,10 @@ async def bako_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
         {"who": "MikiLab", "avatar": "avatar_miki.jpg", "accent": "#5E8CA8",
          "text": R(f"Benvenuto, Capo. Impianto in stato {level}. {len(workers)} operatori in turno, {len(leaders)} linee con caposquadra.",
                    f"Welcome, Capo. Plant status {level}. {len(workers)} staff on shift, {len(leaders)} lines with a leader.")},
-        {"who": "Mohamed", "avatar": "avatar_mohamed.jpg", "accent": "#00F0FF",
+        {"who": "Mike Mix", "avatar": "avatar_mikemix.jpg", "accent": "#00F0FF",
          "text": R("Squadra pronta al piano. Dì \"genera piano\" e distribuisco i lotti sulle linee.",
                    "Team ready for the plan. Say \"generate plan\" and I'll assign the batches to the lines.")},
-        {"who": "BakoMix AI", "avatar": "avatar_bigmix.jpg", "accent": "#7DD3FC",
+        {"who": "Mike Mix AI", "avatar": "avatar_bigmix.jpg", "accent": "#7DD3FC",
          "text": (R(f"Attenzione: {n} allerte attive. {alerts[0]['text']}", f"Heads up: {n} active alerts. {alerts[0]['text']}") if n else
                   R("Nessuna allerta: forni, scorte e orari tutti nei parametri. Buon turno.",
                     "No alerts: ovens, stock and hours all within parameters. Have a great shift."))},
@@ -10423,10 +10431,10 @@ class SosReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/sos")
-async def bako_sos_raise(body: SosReq):
+@api_router.post("/mike/sos")
+async def mike_sos_raise(body: SosReq):
     """SOS operatore (conferma tattile lato UI). Registra l'allarme; il Capo lo vede
-    in plancia con bagliore e BakoMix lo annuncia a voce. Nessun invio esterno."""
+    in plancia con bagliore e Mike Mix lo annuncia a voce. Nessun invio esterno."""
     ev = {
         "id": str(uuid.uuid4()),
         "operator": (body.operator or "Operatore")[:80],
@@ -10443,9 +10451,9 @@ async def bako_sos_raise(body: SosReq):
     return {"ok": True, "id": ev["id"], "event": ev}
 
 
-@api_router.get("/bako/sos")
-async def bako_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
-    """Solo Capo: SOS attivi + frase vocale per l'annuncio TTS di BakoMix."""
+@api_router.get("/mike/sos")
+async def mike_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Solo Capo: SOS attivi + frase vocale per l'annuncio TTS di Mike Mix."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     docs = await db.sos_events.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
@@ -10460,8 +10468,8 @@ async def bako_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
     return {"events": docs, "count": len(docs), "spoken": spoken}
 
 
-@api_router.post("/bako/sos/{sid}/ack")
-async def bako_sos_ack(sid: str, admin: dict = Depends(require_admin)):
+@api_router.post("/mike/sos/{sid}/ack")
+async def mike_sos_ack(sid: str, admin: dict = Depends(require_admin)):
     """Il Capo prende in carico / chiude l'SOS; registra il tempo di risposta."""
     ev = await db.sos_events.find_one({"id": sid}, {"_id": 0})
     now = now_iso()
@@ -10489,8 +10497,8 @@ def _shift_of(iso_ts: str) -> str:
     return "notte"
 
 
-@api_router.get("/bako/sos/history")
-async def bako_sos_history(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/sos/history")
+async def mike_sos_history(lang: str = "it", admin: dict = Depends(require_admin)):
     """Storico SOS risolti + classifica di REATTIVITÀ per turno (tempo medio di risposta)."""
     docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).sort("ack_at", -1).to_list(200)
     board = {}
@@ -10512,12 +10520,12 @@ async def bako_sos_history(lang: str = "it", admin: dict = Depends(require_admin
     return {"history": history, "leaderboard": leaderboard, "resolved_count": len(docs)}
 
 
-@api_router.get("/bako/telemetry")
-async def bako_telemetry(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/telemetry")
+async def mike_telemetry(lang: str = "it", admin: dict = Depends(require_admin)):
     """Telemetria IoT simulata PER MACCHINARIO per il Gemello Digitale 3D: unisce gli
     allarmi reali (scorte/compliance/SOS) a un'oscillazione sensoristica live, così ogni
     macchina nel 3D reagisce ai propri dati e non solo al livello globale."""
-    prox = await bako_proactive(lang, admin)
+    prox = await mike_proactive(lang, admin)
     alerts = prox.get("alerts", [])
     global_stress = min(1.0, len(alerts) / 3.0)
     sos = await db.sos_events.find({"status": "active"}, {"_id": 0}).to_list(50)
@@ -10564,8 +10572,8 @@ async def bako_telemetry(lang: str = "it", admin: dict = Depends(require_admin))
             "global_stress": round(global_stress, 2), "sos_count": len(sos)}
 
 
-@api_router.get("/bako/briefing/floor")
-async def bako_briefing_floor(role: str = "", lang: str = "it"):
+@api_router.get("/mike/briefing/floor")
+async def mike_briefing_floor(role: str = "", lang: str = "it"):
     """Briefing PER RUOLO: ogni operatore riceve SOLO i lotti e gli allarmi della sua
     linea (in cuffia, voce breve). Nessun dato delle altre linee. Non richiede admin."""
     it = (lang or "it").startswith("it")
@@ -10620,9 +10628,9 @@ class MaintenanceGuideReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/maintenance-guide")
-async def bako_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depends(require_admin)):
-    """Guida Rapida di manutenzione generata da BakoMix (Claude) in tempo reale, in base
+@api_router.post("/mike/maintenance-guide")
+async def mike_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depends(require_admin)):
+    """Guida Rapida di manutenzione generata da Mike Mix (Claude) in tempo reale, in base
     al macchinario e all'anomalia rilevata dai dati IoT. Nessun testo statico."""
     langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
     tele = ""
@@ -10635,7 +10643,7 @@ async def bako_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depend
     if EMERGENT_LLM_KEY:
         try:
             sysmsg = (
-                "Sei BakoMix, il tecnico-manutentore AI di una panetteria industriale d'élite. "
+                "Sei Mike Mix, il tecnico-manutentore AI di una panetteria industriale d'élite. "
                 "Genera una GUIDA RAPIDA di primo intervento per il macchinario indicato, in base all'anomalia. "
                 "Concreta, sicura, passo-passo, adatta a un operatore non tecnico. NIENTE HACCP o burocrazia. "
                 f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
@@ -10673,8 +10681,8 @@ class OvenQCReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/oven-qc")
-async def bako_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
+@api_router.post("/mike/oven-qc")
+async def mike_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
     """Scansione ottica in tempo reale del prodotto all'uscita del forno: forma, cottura,
     crosta → rileva difetti e bruciature. SOLO qualità visiva di produzione, nessuna
     burocrazia/HACCP/allergeni."""
@@ -10689,7 +10697,7 @@ async def bako_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"ovenqc-{uuid.uuid4().hex[:8]}",
             system_message=(
-                "Sei l'occhio di controllo qualità ottico di BakoMix all'uscita dei forni di una panetteria d'élite. "
+                "Sei l'occhio di controllo qualità ottico di Mike Mix all'uscita dei forni di una panetteria d'élite. "
                 "Analizza la FOTO del prodotto appena sfornato: valuta FORMA, grado di COTTURA, COLORE/CROSTA. "
                 "Rileva difetti visivi: bruciature, cottura insufficiente/eccessiva, forma irregolare, tagli/greste mal riusciti, "
                 "collasso, colore non uniforme. VALUTA SOLO l'aspetto visivo del prodotto: NON citare MAI HACCP, allergeni, "
@@ -10731,8 +10739,8 @@ class B2BOrderReq(BaseModel):
     channel: str = Field("web", max_length=40)  # web|telefono|whatsapp|altro
 
 
-@api_router.get("/bako/b2b/orders")
-async def bako_b2b_list(admin: dict = Depends(require_admin)):
+@api_router.get("/mike/b2b/orders")
+async def mike_b2b_list(admin: dict = Depends(require_admin)):
     """Ordini B2B esterni + aggregazione automatica in kg di impasto per prodotto
     (alimenta lo Smart Planner/impastatrici senza sostituire le casse esistenti)."""
     docs = await db.b2b_orders.find({"status": {"$ne": "done"}}, {"_id": 0}).sort("created_at", -1).to_list(300)
@@ -10749,8 +10757,8 @@ async def bako_b2b_list(admin: dict = Depends(require_admin)):
     return {"orders": docs, "aggregate": aggregate, "total_dough_kg": total_kg, "orders_count": len(docs)}
 
 
-@api_router.post("/bako/b2b/orders")
-async def bako_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
+@api_router.post("/mike/b2b/orders")
+async def mike_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
     o = {
         "id": str(uuid.uuid4()),
         "client": (body.client or "Cliente B2B")[:120],
@@ -10768,17 +10776,17 @@ async def bako_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
     return {"ok": True, "order": o}
 
 
-@api_router.delete("/bako/b2b/orders/{oid}")
-async def bako_b2b_del(oid: str, admin: dict = Depends(require_admin)):
+@api_router.delete("/mike/b2b/orders/{oid}")
+async def mike_b2b_del(oid: str, admin: dict = Depends(require_admin)):
     await db.b2b_orders.delete_one({"id": oid})
     return {"ok": True}
 
 
-@api_router.post("/bako/b2b/to-plan")
-async def bako_b2b_to_plan(admin: dict = Depends(require_admin)):
+@api_router.post("/mike/b2b/to-plan")
+async def mike_b2b_to_plan(admin: dict = Depends(require_admin)):
     """Trasforma gli ordini B2B aggregati in un testo-ordine pronto per l'Auto-Planner
     (kg di impasto per prodotto). Non tocca le casse: sincronizza solo la produzione."""
-    data = await bako_b2b_list(admin)
+    data = await mike_b2b_list(admin)
     parts = [f"{a['pieces']} {a['product']} (~{a['dough_kg']} kg impasto)" for a in data["aggregate"]]
     orders_text = "; ".join(parts)
     return {"ok": True, "orders_text": orders_text, "total_dough_kg": data["total_dough_kg"]}
@@ -10796,8 +10804,8 @@ _CARBON_DEFAULTS = {
 }
 
 
-@api_router.get("/bako/carbon/config")
-async def bako_carbon_config(admin: dict = Depends(require_admin)):
+@api_router.get("/mike/carbon/config")
+async def mike_carbon_config(admin: dict = Depends(require_admin)):
     doc = (await db.app_meta.find_one({"_key": "carbon_config"}, {"_id": 0})) or {}
     cfg = {**_CARBON_DEFAULTS, **(doc.get("config") or {})}
     return {"config": cfg, "defaults": _CARBON_DEFAULTS}
@@ -10807,8 +10815,8 @@ class CarbonConfigReq(BaseModel):
     config: dict = {}
 
 
-@api_router.put("/bako/carbon/config")
-async def bako_carbon_set(body: CarbonConfigReq, admin: dict = Depends(require_admin)):
+@api_router.put("/mike/carbon/config")
+async def mike_carbon_set(body: CarbonConfigReq, admin: dict = Depends(require_admin)):
     cfg = {k: float(v) for k, v in (body.config or {}).items() if k in _CARBON_DEFAULTS}
     await db.app_meta.update_one({"_key": "carbon_config"}, {"$set": {"config": cfg}}, upsert=True)
     return {"ok": True, "config": {**_CARBON_DEFAULTS, **cfg}}
@@ -10823,8 +10831,8 @@ class CarbonComputeReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/carbon/compute")
-async def bako_carbon_compute(body: CarbonComputeReq, admin: dict = Depends(require_admin)):
+@api_router.post("/mike/carbon/compute")
+async def mike_carbon_compute(body: CarbonComputeReq, admin: dict = Depends(require_admin)):
     """Calcola e certifica la CO2 per quintale (100 kg) di pane prodotto, con dettaglio
     per fonte, per marketing ecologico."""
     doc = (await db.app_meta.find_one({"_key": "carbon_config"}, {"_id": 0})) or {}
@@ -10877,12 +10885,12 @@ _HOLIDAYS_MMDD = {  # festività chiave IT/DE con boost di domanda pane/dolci
 }
 
 
-@api_router.get("/bako/b2b/forecast")
-async def bako_b2b_forecast(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/b2b/forecast")
+async def mike_b2b_forecast(lang: str = "it", admin: dict = Depends(require_admin)):
     """Incrocia ordini B2B con METEO e CALENDARIO FESTIVO per suggerire un aggiustamento
     del carico (azzera invenduti/eccedenze). Base ordini reale + fattore contestuale."""
     it = (lang or "it").startswith("it")
-    base = await bako_b2b_list(admin)
+    base = await mike_b2b_list(admin)
     base_kg = base["total_dough_kg"]
     # Meteo (best-effort): freddo/pioggia → più pane caldo.
     weather_factor = 1.0
@@ -10942,8 +10950,8 @@ class ThermalFlowReq(BaseModel):
     lang: str = "it"
 
 
-@api_router.post("/bako/thermal-flow")
-async def bako_thermal_flow(body: ThermalFlowReq, admin: dict = Depends(require_admin)):
+@api_router.post("/mike/thermal-flow")
+async def mike_thermal_flow(body: ThermalFlowReq, admin: dict = Depends(require_admin)):
     """Recipe & Thermal Master Flow: da una ricetta genera un flusso SEQUENZIALE con RPM
     impastatrice, rampe termiche celle e cottura. Editor LIVE: ogni modifica dei parametri
     ricalcola RPM/idratazione/rampe all'istante. Interlock termico: se la farina supera i
@@ -11032,8 +11040,8 @@ async def _seed_silos():
             await db.silos.insert_one(dict(s))
 
 
-@api_router.get("/bako/silos")
-async def bako_silos(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/silos")
+async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     """Monitor silos: autonomia oraria dal calo peso, micro-ordini automatici sotto soglia,
     e compensazione dell'umidità della farina (correzione % acqua in ricetta)."""
     await _seed_silos()
@@ -11068,16 +11076,16 @@ class SiloUpdateReq(BaseModel):
     drain_rate_kg_h: Optional[float] = None
 
 
-@api_router.put("/bako/silos/{sid}")
-async def bako_silo_update(sid: str, body: SiloUpdateReq, admin: dict = Depends(require_admin)):
+@api_router.put("/mike/silos/{sid}")
+async def mike_silo_update(sid: str, body: SiloUpdateReq, admin: dict = Depends(require_admin)):
     upd = {k: float(v) for k, v in body.model_dump(exclude_none=True).items()}
     if upd:
         await db.silos.update_one({"id": sid}, {"$set": upd})
     return {"ok": True}
 
 
-@api_router.post("/bako/silos/microorder")
-async def bako_silo_microorder(admin: dict = Depends(require_admin)):
+@api_router.post("/mike/silos/microorder")
+async def mike_silo_microorder(admin: dict = Depends(require_admin)):
     """Genera micro-ordini per tutti i silos sotto soglia e li rabbocca (simulazione fornitore)."""
     await _seed_silos()
     docs = await db.silos.find({}, {"_id": 0}).to_list(100)
@@ -11096,7 +11104,7 @@ async def bako_silo_microorder(admin: dict = Depends(require_admin)):
         html = (f"<div style='font-family:sans-serif;max-width:520px'><h2 style='color:#3f7cac'>MikiLab · Micro-ordine rifornimento silos</h2>"
                 f"<p>Rifornimento automatico richiesto per {len(created)} silos sotto soglia:</p>"
                 f"<table style='width:100%;border-collapse:collapse'>{rows}</table>"
-                f"<p style='color:#888;font-size:12px'>Generato automaticamente da BakoMix AI · {now_iso()[:16]}</p></div>")
+                f"<p style='color:#888;font-size:12px'>Generato automaticamente da Mike Mix AI · {now_iso()[:16]}</p></div>")
         try:
             await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [supplier],
                                                           "subject": "MikiLab · Micro-ordine rifornimento silos", "html": html})
@@ -11107,15 +11115,15 @@ async def bako_silo_microorder(admin: dict = Depends(require_admin)):
 
 
 # --- Celle di lievitazione: curve multi-stadio adattive alla disponibilità forni ---
-@api_router.get("/bako/proofing")
-async def bako_proofing(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/proofing")
+async def mike_proofing(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
     """Curva di lievitazione MULTI-STADIO che ACCELERA o FRENA in base ai forni liberi:
     pochi forni → frena (temp più bassa, tempi lunghi); molti forni → accelera."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     # Se free_ovens non passato, deriva dalla telemetria (forni non in stress alto = liberi).
     if free_ovens < 0:
-        tele = await bako_telemetry(lang, admin)
+        tele = await mike_telemetry(lang, admin)
         free_ovens = sum(1 for k, v in tele["machines"].items() if k.startswith("forno") and v["level"] != "alto")
     if free_ovens <= 0:
         mode, tfac, dfac = "frena", 0.92, 1.5
@@ -11139,11 +11147,11 @@ async def bako_proofing(free_ovens: int = -1, lang: str = "it", admin: dict = De
     return {"mode": mode, "mode_label": label, "free_ovens": free_ovens, "stages": stages, "total_minutes": total, "oven_ready_at": oven_ready_at, "spoken": spoken}
 
 
-@api_router.post("/bako/proofing/sync-plan")
-async def bako_proofing_sync(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.post("/mike/proofing/sync-plan")
+async def mike_proofing_sync(free_ovens: int = -1, lang: str = "it", admin: dict = Depends(require_admin)):
     """Sync Celle→Piano: dalla curva delle celle ricalcola gli orari di INFORNATA dei lotti
     di produzione attivi (scaglionati di 15') e aggiorna il piano del giorno."""
-    curve = await bako_proofing(free_ovens, lang, admin)
+    curve = await mike_proofing(free_ovens, lang, admin)
     base = datetime.now(timezone.utc) + timedelta(minutes=curve["total_minutes"])
     tasks = await db.team_tasks.find({"status": "active", "kind": "produzione"}, {"_id": 0}).sort("start", 1).to_list(200)
     updated = 0
@@ -11166,8 +11174,8 @@ _AGV_SEED = [
 ]
 
 
-@api_router.get("/bako/agv")
-async def bako_agv(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/agv")
+async def mike_agv(lang: str = "it", admin: dict = Depends(require_admin)):
     """Flotta AGV: routing autonomo tra le postazioni + rilevamento ACUSTICO preventivo
     (dB anomali → manutenzione predittiva prima del guasto)."""
     it = (lang or "it").startswith("it")
@@ -11193,8 +11201,8 @@ async def bako_agv(lang: str = "it", admin: dict = Depends(require_admin)):
 
 
 # --- Email fornitore silos (configurabile) ---
-@api_router.get("/bako/silo-supplier")
-async def bako_silo_supplier_get(admin: dict = Depends(require_admin)):
+@api_router.get("/mike/silo-supplier")
+async def mike_silo_supplier_get(admin: dict = Depends(require_admin)):
     doc = (await db.app_meta.find_one({"_key": "silo_supplier"}, {"_id": 0})) or {}
     return {"email": doc.get("email") or os.environ.get("SILO_SUPPLIER_EMAIL") or ""}
 
@@ -11203,20 +11211,20 @@ class SupplierReq(BaseModel):
     email: str = Field("", max_length=160)
 
 
-@api_router.put("/bako/silo-supplier")
-async def bako_silo_supplier_set(body: SupplierReq, admin: dict = Depends(require_admin)):
+@api_router.put("/mike/silo-supplier")
+async def mike_silo_supplier_set(body: SupplierReq, admin: dict = Depends(require_admin)):
     await db.app_meta.update_one({"_key": "silo_supplier"}, {"$set": {"email": (body.email or "").strip()}}, upsert=True)
     return {"ok": True, "email": (body.email or "").strip()}
 
 
 # --- Battito Impianto Unico: un solo endpoint live per telemetria + SOS + AGV + forni liberi ---
-@api_router.get("/bako/heartbeat")
-async def bako_heartbeat(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/heartbeat")
+async def mike_heartbeat(lang: str = "it", admin: dict = Depends(require_admin)):
     """Un unico aggiornamento live che unisce telemetria macchinari, SOS attivi, flotta AGV e
     forni liberi: alimenta 3D, Emergenze, Celle e AGV con un solo polling (più fluido/leggero)."""
-    tele = await bako_telemetry(lang, admin)
-    sos = await bako_sos_list(lang, admin)
-    agv = await bako_agv(lang, admin)
+    tele = await mike_telemetry(lang, admin)
+    sos = await mike_sos_list(lang, admin)
+    agv = await mike_agv(lang, admin)
     free_ovens = sum(1 for k, v in tele["machines"].items() if k.startswith("forno") and v["level"] != "alto")
     return {
         "machines": tele["machines"], "global_level": tele["global_level"], "global_stress": tele["global_stress"],
@@ -11227,8 +11235,8 @@ async def bako_heartbeat(lang: str = "it", admin: dict = Depends(require_admin))
 
 
 # --- Timeline di turno: lotti + infornate + SOS su un'unica linea del tempo ---
-@api_router.get("/bako/timeline")
-async def bako_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/timeline")
+async def mike_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
     """Eventi del turno (lotti di produzione, infornate previste, SOS) ordinati per orario,
     per una timeline scorrevole unica."""
     events = []
@@ -11255,8 +11263,8 @@ async def bako_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
 
 
 # --- Packaging & Slicing: velocità affettatrici sincronizzata alla curva di raffreddamento ---
-@api_router.get("/bako/packaging")
-async def bako_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/packaging")
+async def mike_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict = Depends(require_admin)):
     """Regola la velocità delle affettatrici sulla curva di raffreddamento del pane: pane
     troppo caldo → attende/rallenta (mollica deformabile); pane freddo → velocità piena."""
     it = (lang or "it").startswith("it")
@@ -11284,8 +11292,8 @@ async def bako_packaging(bread_temp_c: float = 60, lang: str = "it", admin: dict
 
 
 # --- Sfida tra turni: classifica reattività SOS settimanale con badge ---
-@api_router.get("/bako/sos/challenge")
-async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/sos/challenge")
+async def mike_sos_challenge(lang: str = "it", admin: dict = Depends(require_admin)):
     """Trasforma la reattività SOS in una competizione SETTIMANALE tra turni, con badge."""
     it = (lang or "it").startswith("it")
     now = datetime.now(timezone.utc)
@@ -11328,14 +11336,14 @@ async def bako_sos_challenge(lang: str = "it", admin: dict = Depends(require_adm
             "title": (f"Sfida della settimana (dal {wk})" if it else f"Weekly challenge (from {wk})")}
 
 
-# --- BakoMix · Suggerimenti predittivi (il "cervello" unico dell'impianto) ---
-@api_router.get("/bako/suggestions")
-async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin)):
-    """BakoMix incrocia lo stato live (forni, celle, SOS, silos, ordini B2B) e propone
+# --- Mike Mix · Suggerimenti predittivi (il "cervello" unico dell'impianto) ---
+@api_router.get("/mike/suggestions")
+async def mike_suggestions(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Mike Mix incrocia lo stato live (forni, celle, SOS, silos, ordini B2B) e propone
     da solo 1-3 azioni concrete, ognuna con un tocco per agire."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
-    hb = await bako_heartbeat(lang, admin)
+    hb = await mike_heartbeat(lang, admin)
     sug = []
     # Forni in stress alto → sposta lotti
     hot = [v["label"] for k, v in hb["machines"].items() if k.startswith("forno") and v["level"] == "alto"]
@@ -11359,13 +11367,13 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
                     "text": R(f"Un AGV segnala rumore anomalo: manutenzione preventiva.", "An AGV reports abnormal noise: preventive maintenance."),
                     "action": R("Flotta AGV", "AGV Fleet")})
     # Silos sotto soglia
-    silos = await bako_silos(lang, admin)
+    silos = await mike_silos(lang, admin)
     autopilot = bool(((await db.app_meta.find_one({"_key": "autopilot"}, {"_id": 0})) or {}).get("enabled"))
     autopilot_actions = []
     if silos["reorder_count"]:
         if autopilot:
-            # Auto-pilota: BakoMix esegue da solo i micro-ordini (azione a basso rischio).
-            r = await bako_silo_microorder(admin)
+            # Auto-pilota: Mike Mix esegue da solo i micro-ordini (azione a basso rischio).
+            r = await mike_silo_microorder(admin)
             autopilot_actions.append(R(f"Auto-pilota: {r['count']} micro-ordini silos inviati automaticamente.",
                                        f"Autopilot: {r['count']} silo micro-orders sent automatically."))
         else:
@@ -11373,7 +11381,7 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
                         "text": R(f"{silos['reorder_count']} silos sotto soglia: genera i micro-ordini.", f"{silos['reorder_count']} silos below threshold: generate micro-orders."),
                         "action": R("Silos", "Silos")})
     # Ordini B2B da pianificare
-    b2b = await bako_b2b_list(admin)
+    b2b = await mike_b2b_list(admin)
     if b2b["total_dough_kg"] > 0:
         sug.append({"id": "b2b", "icon": "cart", "severity": "info", "target": "panel-b2b",
                     "text": R(f"{b2b['total_dough_kg']} kg d'impasto da ordini B2B: sincronizza col piano.", f"{b2b['total_dough_kg']} kg dough from B2B orders: sync with the plan."),
@@ -11387,10 +11395,10 @@ async def bako_suggestions(lang: str = "it", admin: dict = Depends(require_admin
 
 
 # --- Report di fine turno + MikiScore giornaliero ---
-@api_router.get("/bako/shift-report")
-async def bako_shift_report(lang: str = "it", admin: dict = Depends(require_admin)):
+@api_router.get("/mike/shift-report")
+async def mike_shift_report(lang: str = "it", admin: dict = Depends(require_admin)):
     """Riepilogo di fine turno (lotti, SOS, silos) + MikiScore unico dell'impianto,
-    con frase vocale di BakoMix per il Capo."""
+    con frase vocale di Mike Mix per il Capo."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
@@ -11407,7 +11415,7 @@ async def bako_shift_report(lang: str = "it", admin: dict = Depends(require_admi
     resp = [d["response_seconds"] for d in todays if d.get("response_seconds") is not None]
     avg_resp = round(sum(resp) / len(resp)) if resp else 0
     reactivity = 100 if not resp else max(0, min(100, round(100 - avg_resp / 3)))
-    silos = await bako_silos(lang, admin)
+    silos = await mike_silos(lang, admin)
     low = silos["reorder_count"]
     waste = max(0, 100 - low * 20)
     mikiscore = round((reactivity + waste + punctuality) / 3)
@@ -11429,17 +11437,17 @@ async def bako_shift_report(lang: str = "it", admin: dict = Depends(require_admi
             "spoken": spoken}
 
 
-@api_router.get("/bako/mikiscore/history")
-async def bako_mikiscore_history(admin: dict = Depends(require_admin)):
+@api_router.get("/mike/mikiscore/history")
+async def mike_mikiscore_history(admin: dict = Depends(require_admin)):
     """Storico giornaliero del MikiScore (ultimi 7 giorni) per il mini-grafico settimanale."""
     docs = await db.mikiscore_history.find({}, {"_id": 0}).sort("date", -1).to_list(7)
     docs.reverse()
     return {"history": docs}
 
 
-# --- Auto-pilota: BakoMix esegue in autonomia azioni a basso rischio (micro-ordini silos) ---
-@api_router.get("/bako/autopilot")
-async def bako_autopilot_get(admin: dict = Depends(require_admin)):
+# --- Auto-pilota: Mike Mix esegue in autonomia azioni a basso rischio (micro-ordini silos) ---
+@api_router.get("/mike/autopilot")
+async def mike_autopilot_get(admin: dict = Depends(require_admin)):
     doc = (await db.app_meta.find_one({"_key": "autopilot"}, {"_id": 0})) or {}
     return {"enabled": bool(doc.get("enabled"))}
 
@@ -11448,8 +11456,8 @@ class AutopilotReq(BaseModel):
     enabled: bool = False
 
 
-@api_router.put("/bako/autopilot")
-async def bako_autopilot_set(body: AutopilotReq, admin: dict = Depends(require_admin)):
+@api_router.put("/mike/autopilot")
+async def mike_autopilot_set(body: AutopilotReq, admin: dict = Depends(require_admin)):
     await db.app_meta.update_one({"_key": "autopilot"}, {"$set": {"enabled": bool(body.enabled)}}, upsert=True)
     return {"ok": True, "enabled": bool(body.enabled)}
 
@@ -12804,7 +12812,7 @@ async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user))
     note = (body.note or "").strip()
     dates = (body.dates or "").strip()
     snippet = f"{label}" + (f" · {dates}" if dates else "") + (f" — {note}" if note else "")
-    # Registra l'assenza per data → BakoMix ricalcola il personale disponibile e i volumi.
+    # Registra l'assenza per data → Mike Mix ricalcola il personale disponibile e i volumi.
     try:
         await db.lab_absences.insert_one({
             "user_id": user.get("user_id"), "name": actor_name, "kind": body.kind,

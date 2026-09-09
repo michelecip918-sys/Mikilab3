@@ -35,7 +35,7 @@ export default function ProductionPipeline({ onClose }) {
           <button data-testid="pipeline-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
-        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("6 settori contigui: BakoMix prevede i parametri a valle dall'impasto in uscita.", "6 Sektoren: BakoMix sagt die nachgelagerten Parameter voraus.", "6 contiguous sectors: BakoMix predicts downstream parameters from the dough.", "6 sectores: BakoMix predice los parámetros aguas abajo.", "6 secteurs : BakoMix prédit les paramètres en aval.", "۶ بخش پیوسته: BakoMix پارامترهای پایین‌دست را پیش‌بینی می‌کند.")}</p>
+        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("6 settori contigui: Mike Mix prevede i parametri a valle dall'impasto in uscita.", "6 Sektoren: Mike Mix sagt die nachgelagerten Parameter voraus.", "6 contiguous sectors: Mike Mix predicts downstream parameters from the dough.", "6 sectores: Mike Mix predice los parámetros aguas abajo.", "6 secteurs : Mike Mix prédit les paramètres en aval.", "۶ بخش پیوسته: Mike Mix پارامترهای پایین‌دست را پیش‌بینی می‌کند.")}</p>
 
         {/* Controlli impasto in uscita */}
         <div className="grid grid-cols-2 gap-3 mb-5">
@@ -96,10 +96,10 @@ export default function ProductionPipeline({ onClose }) {
           })}
         </div>
 
-        {line?.bako_note && (
+        {line?.mike_note && (
           <div className="mt-4 rounded-2xl border border-[#5E8CA8]/40 p-3 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }}>
             <Gauge className="w-4 h-4 text-[#7DA3C0] mt-0.5 shrink-0" />
-            <p className="text-[12px] text-[#cfe0ec]">{line.bako_note}</p>
+            <p className="text-[12px] text-[#cfe0ec]">{line.mike_note}</p>
           </div>
         )}
         {loading && <p className="text-center text-[11px] text-[#64748B] mt-3">…</p>}

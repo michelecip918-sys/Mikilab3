@@ -67,7 +67,7 @@ export default function SpatialVisionAR({ onClose }) {
     try {
       const res = await enterpriseApi.visionScan(siteId, b64);
       setLayout(res.spatial_layout || null);
-      setInsight(res.bakomix_insight || "");
+      setInsight(res.mikemix_insight || "");
       toast.success(tri(`${res.detected_count} macchinari riconosciuti`, `${res.detected_count} Maschinen erkannt`, `${res.detected_count} machines detected`, `${res.detected_count} máquinas detectadas`, `${res.detected_count} machines détectées`, `${res.detected_count} دستگاه شناسایی شد`));
       stopCam();
     } catch {

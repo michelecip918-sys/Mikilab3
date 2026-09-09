@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Waves, Thermometer, Droplets, Timer, CalendarClock } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -14,11 +14,11 @@ export default function AdaptiveProofing() {
   const [data, setData] = useState(null);
   const [manual, setManual] = useState(null); // null = auto (da telemetria)
 
-  const load = useCallback(async () => { try { setData(await bakoApi.proofing(manual)); } catch { /* */ } }, [manual]);
+  const load = useCallback(async () => { try { setData(await mikeApi.proofing(manual)); } catch { /* */ } }, [manual]);
   useEffect(() => { load(); const iv = setInterval(load, 8000); return () => clearInterval(iv); }, [load]);
 
   const syncPlan = async () => {
-    try { const r = await bakoApi.proofingSync(manual); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(r.message); }
+    try { const r = await mikeApi.proofingSync(manual); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(r.message); }
     catch { toast.error(tri("Sync non riuscita", "Sync fehlgeschlagen", "Sync failed", "Sync fallida", "Échec sync", "همگام‌سازی ناموفق")); }
   };
 

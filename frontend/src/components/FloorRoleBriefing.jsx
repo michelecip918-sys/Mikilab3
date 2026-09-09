@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Headphones, Clock } from "lucide-react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -18,12 +18,12 @@ export default function FloorRoleBriefing({ role = "" }) {
   useEffect(() => {
     if (!role) { setData(null); return; }
     let stop = false;
-    bakoApi.floorBriefing(role, lang).then((d) => {
+    mikeApi.floorBriefing(role, lang).then((d) => {
       if (stop) return;
       setData(d);
-      // Parla UNA VOLTA per ruolo (voce breve dell'operatore = Mohamed).
+      // Parla UNA VOLTA per ruolo (voce breve dell'operatore = Mike Mix).
       const key = `${role}|${lang}`;
-      if (d.spoken && spokenFor.current !== key) { spokenFor.current = key; try { playTTS(d.spoken, { lang, voice: "mohamed" }); } catch { /* */ } }
+      if (d.spoken && spokenFor.current !== key) { spokenFor.current = key; try { playTTS(d.spoken, { lang, voice: "mikemix" }); } catch { /* */ } }
     }).catch(() => { /* */ });
     return () => { stop = true; };
   }, [role, lang]);

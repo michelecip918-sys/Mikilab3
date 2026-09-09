@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -9,9 +9,9 @@ import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
 const STRESS = { calmo: "#7DD3FC", medio: "#FFB800", alto: "#f43f5e" };
-const themeFor = (av) => (av || "").includes("mohamed") ? "mohamed" : (av || "").includes("bigmix") ? "bigmix" : "miki";
-const accentFor = (t) => t === "mohamed" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
-const roleFor = (t, tri) => t === "mohamed" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
+const themeFor = (av) => (av || "").includes("mikemix") ? "mikemix" : (av || "").includes("bigmix") ? "bigmix" : "miki";
+const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
+const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
 
 // FASE 1 — Cyber-Trio: briefing d'apertura turno. Avatar olografici che REAGISCONO
 // allo stress dell'impianto (colore/pulsazione) e parlano in sequenza (hands-free).
@@ -26,14 +26,14 @@ export default function ShiftBriefing({ onClose }) {
 
   const openWorld = (i, ln) => {
     setWorldFor({ i, avatar: ln.avatar, who: ln.who, text: ln.text });
-    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mohamed", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) }); } catch { setSpeaking(false); }
+    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mikemix", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) }); } catch { setSpeaking(false); }
   };
 
   useEffect(() => {
-    bakoApi.briefing(lang).then((d) => {
+    mikeApi.briefing(lang).then((d) => {
       setData(d);
       (d.lines || []).forEach((ln, i) => {
-        const t = setTimeout(() => { setActive(i); try { playTTS(ln.text, { lang, voice: i === 2 ? "bakemix" : "mohamed" }); } catch (e) { /* */ } }, i * 4800);
+        const t = setTimeout(() => { setActive(i); try { playTTS(ln.text, { lang, voice: i === 2 ? "bakemix" : "mikemix" }); } catch (e) { /* */ } }, i * 4800);
         timers.current.push(t);
       });
     }).catch(() => onClose && onClose());
@@ -52,7 +52,7 @@ export default function ShiftBriefing({ onClose }) {
       {data && <p className="relative font-mono-data text-[11px] tracking-widest uppercase mb-8" style={{ color: stressColor }}>{tri("Stato impianto", "Anlagenstatus", "Plant status", "Estado planta", "État usine", "وضعیت")}: {data.level} · {data.stats.workers} op · {data.stats.leaders} {tri("linee","Linien","lines","líneas","lignes","خط")} · {data.stats.low_stock} {tri("scorte basse","niedrig","low stock","stock bajo","stock bas","کم")}</p>}
 
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">
-        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "avatar_mohamed.jpg" }, { avatar: "avatar_bigmix.jpg" }]).map((ln, i) => {
+        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "avatar_mikemix.jpg" }, { avatar: "avatar_bigmix.jpg" }]).map((ln, i) => {
           const on = active === i;
           const c = ln.accent || "#5E8CA8";
           return (

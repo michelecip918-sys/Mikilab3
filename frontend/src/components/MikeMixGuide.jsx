@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, Volume2, BookOpen, ShieldCheck, Mic, ClipboardList, LifeBuoy } from "lucide-react";
 import DocsDownload from "@/components/DocsDownload";
-import BakemixHardware from "@/components/BakemixHardware";
+import MikeMixHardware from "@/components/MikeMixHardware";
 import CoreShowcase from "@/components/CoreShowcase";
 import { playTTS, stopTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
@@ -10,19 +10,19 @@ import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
 
-// Bakemix: l'AI che "ha in testa" tutto MikiLab e spiega il sito passo-passo.
-export default function BakemixGuide() {
+// MikeMix: l'AI che "ha in testa" tutto MikiLab e spiega il sito passo-passo.
+export default function MikeMixGuide() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [i, setI] = useState(0);
 
   const CH = [
     { icon: BookOpen, t: tri("Cos'è MikiLab", "Was ist MikiLab", "What is MikiLab", "Qué es MikiLab", "Qu'est-ce que MikiLab", "میکی‌لب چیست"),
-      b: tri("MikiLab è il laboratorio digitale del panettiere. Io sono Bakemix: ho in testa tutto il sistema e ti guido passo-passo.", "MikiLab ist das digitale Labor des Bäckers. Ich bin Bakemix und führe dich Schritt für Schritt.", "MikiLab is the baker's digital lab. I'm Bakemix and I guide you step by step.", "MikiLab es el laboratorio digital del panadero. Soy Bakemix y te guío paso a paso.", "MikiLab est le laboratoire numérique du boulanger. Je suis Bakemix et je te guide pas à pas.", "میکی‌لب آزمایشگاه دیجیتال نانوا است. من بیک‌میکس هستم و قدم‌به‌قدم راهنمایی‌ات می‌کنم.") },
+      b: tri("MikiLab è il laboratorio digitale del panettiere. Io sono MikeMix: ho in testa tutto il sistema e ti guido passo-passo.", "MikiLab ist das digitale Labor des Bäckers. Ich bin MikeMix und führe dich Schritt für Schritt.", "MikiLab is the baker's digital lab. I'm MikeMix and I guide you step by step.", "MikiLab es el laboratorio digital del panadero. Soy MikeMix y te guío paso a paso.", "MikiLab est le laboratoire numérique du boulanger. Je suis MikeMix et je te guide pas à pas.", "میکی‌لب آزمایشگاه دیجیتال نانوا است. من بیک‌میکس هستم و قدم‌به‌قدم راهنمایی‌ات می‌کنم.") },
     { icon: ShieldCheck, t: tri("Il Capo (MikiLab)", "Der Chef (MikiLab)", "The Capo (MikiLab)", "El Capo (MikiLab)", "Le Capo (MikiLab)", "کاپو (میکی‌لب)"),
       b: tri("Il Capo entra con email e gestisce tutto: ricette, piano, magazzino e Ordini Extra. Imposta lui il PIN per la produzione.", "Der Chef meldet sich per E-Mail an und steuert alles: Rezepte, Plan, Lager und Extra-Aufträge. Er setzt den Produktions-PIN.", "The Capo logs in with email and controls everything: recipes, plan, warehouse and Extra Orders. He sets the production PIN.", "El Capo entra con email y controla todo: recetas, plan, almacén y Pedidos Extra. Él fija el PIN de producción.", "Le Capo se connecte par e-mail et gère tout : recettes, plan, stock et Commandes Extra. Il fixe le PIN de production.", "کاپو با ایمیل وارد می‌شود و همه‌چیز را مدیریت می‌کند و PIN تولید را تعیین می‌کند.") },
-    { icon: Mic, t: tri("La produzione con MohaLab", "Produktion mit MohaLab", "Production with MohaLab", "Producción con MohaLab", "Production avec MohaLab", "تولید با MohaLab"),
-      b: tri("In produzione tocchi l'avatar di MohaLab: ti legge il piano del Capo a voce, passo dopo passo. Di' «avanti», «indietro», «ripeti».", "In der Produktion tippst du MohaLab an: er liest den Plan vor. Sag «weiter», «zurück», «nochmal».", "In production you tap MohaLab: he reads the Capo's plan aloud. Say «next», «back», «repeat».", "En producción tocas a MohaLab: te lee el plan en voz alta. Di «siguiente», «atrás», «repite».", "En production tu touches MohaLab : il lit le plan à voix haute. Dis «suivant», «précédent», «répète».", "در تولید روی MohaLab می‌زنی: برنامه را با صدا می‌خواند. بگو «بعدی»، «قبلی»، «تکرار».") },
+    { icon: Mic, t: tri("La produzione con Mike Mix", "Produktion mit Mike Mix", "Production with Mike Mix", "Producción con Mike Mix", "Production avec Mike Mix", "تولید با Mike Mix"),
+      b: tri("In produzione tocchi l'avatar di Mike Mix: ti legge il piano del Capo a voce, passo dopo passo. Di' «avanti», «indietro», «ripeti».", "In der Produktion tippst du Mike Mix an: er liest den Plan vor. Sag «weiter», «zurück», «nochmal».", "In production you tap Mike Mix: he reads the Capo's plan aloud. Say «next», «back», «repeat».", "En producción tocas a Mike Mix: te lee el plan en voz alta. Di «siguiente», «atrás», «repite».", "En production tu touches Mike Mix : il lit le plan à voix haute. Dis «suivant», «précédent», «répète».", "در تولید روی Mike Mix می‌زنی: برنامه را با صدا می‌خواند. بگو «بعدی»، «قبلی»، «تکرار».") },
     { icon: ClipboardList, t: tri("Ricette e piano", "Rezepte und Plan", "Recipes and plan", "Recetas y plan", "Recettes et plan", "دستورها و برنامه"),
       b: tri("Il Capo genera il piano (anche con Ordini Extra dell'ultimo minuto) e lo invia al team con un tocco. Le ricette MikiLab si affiancano alle tue.", "Der Chef erstellt den Plan (auch mit Last-Minute-Aufträgen) und sendet ihn ans Team. Die MikiLab-Rezepte ergänzen deine.", "The Capo generates the plan (even last-minute Extra Orders) and sends it to the team. MikiLab recipes sit alongside yours.", "El Capo genera el plan (incluso Pedidos Extra) y lo envía al equipo. Las recetas MikiLab se suman a las tuyas.", "Le Capo génère le plan (même les Commandes Extra) et l'envoie à l'équipe. Les recettes MikiLab s'ajoutent aux tiennes.", "کاپو برنامه را می‌سازد و به تیم می‌فرستد. دستورهای میکی‌لب کنار دستورهای تو قرار می‌گیرند.") },
     { icon: LifeBuoy, t: tri("Problemi comuni & SOS", "Häufige Probleme & SOS", "Common problems & SOS", "Problemas comunes & SOS", "Problèmes fréquents & SOS", "مشکلات رایج و SOS"),
@@ -37,9 +37,9 @@ export default function BakemixGuide() {
   return (
     <div data-testid="bakemix-guide" className="space-y-4">
       <div className="flex items-center gap-3 p-4 rounded-2xl bg-gradient-to-r from-[#06b6d4]/10 to-transparent border border-[#06b6d4]/30">
-        <img src={`${PUB}/avatar_bigmix.jpg`} alt="Bakemix" className="w-12 h-12 rounded-xl object-cover border border-[#06b6d4]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src={`${PUB}/avatar_bigmix.jpg`} alt="MikeMix" className="w-12 h-12 rounded-xl object-cover border border-[#06b6d4]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="min-w-0">
-          <h3 className="text-sm font-extrabold text-[#06b6d4]">{tri("BakoMix AI ti spiega tutto", "BakoMix AI erklärt alles", "BakoMix AI explains everything", "BakoMix AI te explica todo", "BakoMix AI explique tout", "BakoMix AI همه‌چیز را توضیح می‌دهد")}</h3>
+          <h3 className="text-sm font-extrabold text-[#06b6d4]">{tri("Mike Mix AI ti spiega tutto", "Mike Mix AI erklärt alles", "Mike Mix AI explains everything", "Mike Mix AI te explica todo", "Mike Mix AI explique tout", "Mike Mix AI همه‌چیز را توضیح می‌دهد")}</h3>
           <p className="text-[11px] text-[#94A3B8]">{tri("Guida passo-passo del sito, con la voce.", "Schritt-für-Schritt-Anleitung, mit Stimme.", "Step-by-step site guide, with voice.", "Guía paso a paso, con voz.", "Guide pas à pas, avec la voix.", "راهنمای گام‌به‌گام با صدا.")}</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ export default function BakemixGuide() {
         </div>
       </motion.div>
 
-      <BakemixHardware />
+      <MikeMixHardware />
       <CoreShowcase />
       <DocsDownload />
     </div>

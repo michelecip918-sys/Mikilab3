@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Volume2, Loader2, Trophy, Zap, Leaf, Clock } from "lucide-react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -19,9 +19,9 @@ export default function ShiftReport() {
   const run = useCallback(async () => {
     setBusy(true);
     try {
-      const r = await bakoApi.shiftReport(lang); setData(r);
+      const r = await mikeApi.shiftReport(lang); setData(r);
       if (r.spoken) { try { playTTS(r.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
-      try { const h = await bakoApi.mikiscoreHistory(); setHist(h.history || []); } catch { /* */ }
+      try { const h = await mikeApi.mikiscoreHistory(); setHist(h.history || []); } catch { /* */ }
     } catch { /* */ }
     setBusy(false);
   }, [lang]);

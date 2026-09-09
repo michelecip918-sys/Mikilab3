@@ -9,9 +9,9 @@ import { mkTri } from "@/i18n/triMaps";
 
 const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
-// Trigger "i" BakoMix: governance Master-centrica contestuale. Il Master parla o scrive,
-// BakoMix interpreta ed ESEGUE (delega linea, crea/elimina sezione) senza form.
-export default function BakoInfo({ context = "" }) {
+// Trigger "i" Mike Mix: governance Master-centrica contestuale. Il Master parla o scrive,
+// Mike Mix interpreta ed ESEGUE (delega linea, crea/elimina sezione) senza form.
+export default function MikeInfo({ context = "" }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [open, setOpen] = useState(false);
@@ -31,7 +31,7 @@ export default function BakoInfo({ context = "" }) {
       setReply(r.reply || "");
       try { playTTS(r.reply || "", { lang, voice: "bakemix" }); } catch { /* */ }
       if (r.executed) {
-        toast.success("BakoMix", { description: r.reply });
+        toast.success("Mike Mix", { description: r.reply });
         try { window.dispatchEvent(new Event("mikilab-govern-executed")); } catch { /* */ }
         setText("");
       }
@@ -57,7 +57,7 @@ export default function BakoInfo({ context = "" }) {
 
   return (
     <>
-      <button data-testid="bako-info-trigger" onClick={() => setOpen(true)} title="BakoMix"
+      <button data-testid="mike-info-trigger" onClick={() => setOpen(true)} title="Mike Mix"
         className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#06b6d4]/15 border border-[#06b6d4]/50 text-[#06b6d4] active:scale-90 transition-all hover:bg-[#06b6d4]/25">
         <Info className="w-4 h-4" />
       </button>
@@ -65,38 +65,38 @@ export default function BakoInfo({ context = "" }) {
         {open && (
           <motion.div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/60 p-3"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
-            <motion.div data-testid="bako-info-panel" onClick={(e) => e.stopPropagation()}
+            <motion.div data-testid="mike-info-panel" onClick={(e) => e.stopPropagation()}
               initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
               className="w-full max-w-md rounded-2xl bg-[#0b0f19] border border-[#06b6d4]/40 shadow-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-[#06b6d4]" />
                   <div>
-                    <h3 className="text-sm font-extrabold text-[#06b6d4]">BakoMix{context ? ` · ${context}` : ""}</h3>
+                    <h3 className="text-sm font-extrabold text-[#06b6d4]">Mike Mix{context ? ` · ${context}` : ""}</h3>
                     <p className="text-[11px] text-[#94A3B8]">{tri("Comanda a voce: delego, creo o modifico all'istante.", "Sprich: ich delegiere, erstelle oder ändere sofort.", "Speak: I delegate, create or change instantly.", "Habla: delego, creo o cambio al instante.", "Parle : je délègue, crée ou modifie à l'instant.", "بگو: فوری واگذار، می‌سازم یا تغییر می‌دهم.")}</p>
                   </div>
                 </div>
-                <button data-testid="bako-info-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
+                <button data-testid="mike-info-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
               </div>
 
               <p className="text-[11px] text-[#64748B]">{tri("Es.: «Assegna la linea baguette ad Antonio» · «Crea sezione Controllo Allergeni»", "Z.B.: «Weise die Baguette-Linie Antonio zu»", "E.g.: \u00abAssign the baguette line to Antonio\u00bb", "Ej.: \u00abAsigna la línea baguette a Antonio\u00bb", "Ex. : \u00abAssigne la ligne baguette à Antonio\u00bb", "مثلاً: «خط باگت را به آنتونیو بده»")}</p>
 
               <div className="flex items-center gap-2">
-                <button data-testid="bako-info-mic" onClick={listen} disabled={!supported || busy}
+                <button data-testid="mike-info-mic" onClick={listen} disabled={!supported || busy}
                   className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#06b6d4]/15 border-[#06b6d4]/50 text-[#06b6d4]"} disabled:opacity-40`}>
                   <Mic className="w-5 h-5" />
                 </button>
-                <input data-testid="bako-info-input" value={text} onChange={(e) => setText(e.target.value)}
+                <input data-testid="mike-info-input" value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") send(); }}
                   placeholder={tri("Scrivi o parla…", "Schreib oder sprich…", "Type or speak…", "Escribe o habla…", "Écris ou parle…", "بنویس یا بگو…")}
                   className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#06b6d4]" />
-                <button data-testid="bako-info-send" onClick={() => send()} disabled={busy || !text.trim()}
+                <button data-testid="mike-info-send" onClick={() => send()} disabled={busy || !text.trim()}
                   className="shrink-0 w-11 h-11 rounded-xl bg-[#06b6d4] text-[#030712] flex items-center justify-center disabled:opacity-40 active:scale-95">
                   {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
 
-              {reply && <div data-testid="bako-info-reply" className="rounded-xl bg-[#06b6d4]/8 border border-[#06b6d4]/30 p-3 text-sm text-[#cbd5e1]">{reply}</div>}
+              {reply && <div data-testid="mike-info-reply" className="rounded-xl bg-[#06b6d4]/8 border border-[#06b6d4]/30 p-3 text-sm text-[#cbd5e1]">{reply}</div>}
             </motion.div>
           </motion.div>
         )}

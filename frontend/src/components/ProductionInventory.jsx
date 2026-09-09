@@ -48,7 +48,7 @@ export default function ProductionInventory({ onClose }) {
     try {
       const res = await inventoryApi.scanDrop(b64);
       setStock(res.stock || []);
-      setInsight(res.bakomix_insight || "");
+      setInsight(res.mikemix_insight || "");
       toast.success(tri(`${res.detected_count} materie caricate`, `${res.detected_count} Waren geladen`, `${res.detected_count} items loaded`, `${res.detected_count} artículos cargados`, `${res.detected_count} articles chargés`, `${res.detected_count} کالا بارگذاری شد`));
       stopCam();
     } catch { toast.error(tri("Scansione non riuscita", "Scan fehlgeschlagen", "Scan failed", "Escaneo fallido", "Échec du scan", "اسکن ناموفق")); }
@@ -62,7 +62,7 @@ export default function ProductionInventory({ onClose }) {
       const res = await inventoryApi.bindBatch(recipeId, Math.max(1, Number(batches) || 1));
       setStock(res.stock || []);
       setBindResult(res);
-      toast.success(res.bakomix_insight || tri("Batch agganciato", "Charge verknüpft", "Batch bound", "Lote vinculado", "Lot lié", "دسته متصل شد"));
+      toast.success(res.mikemix_insight || tri("Batch agganciato", "Charge verknüpft", "Batch bound", "Lote vinculado", "Lot lié", "دسته متصل شد"));
     } catch (e) {
       toast.error(e?.response?.data?.detail || tri("Errore", "Fehler", "Error", "Error", "Erreur", "خطا"));
     }
@@ -77,7 +77,7 @@ export default function ProductionInventory({ onClose }) {
           <button data-testid="inventory-close" onClick={() => { stopCam(); onClose(); }} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
-        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("BakoMix legge le consegne dalla foto, tiene le scorte e aggancia i batch alla linea — senza uffici né scartoffie.", "BakoMix liest Lieferungen per Foto, führt den Bestand und verknüpft Chargen mit der Linie — ohne Büro/Papierkram.", "BakoMix reads deliveries from a photo, tracks stock and binds batches to the line — no office, no paperwork.", "BakoMix lee las entregas por foto, controla el stock y vincula lotes a la línea — sin oficina ni papeleo.", "BakoMix lit les livraisons par photo, suit le stock et lie les lots à la ligne — sans bureau ni paperasse.", "BakoMix تحویل‌ها را از عکس می‌خواند و موجودی را مدیریت می‌کند — بدون کاغذبازی.")}</p>
+        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Mike Mix legge le consegne dalla foto, tiene le scorte e aggancia i batch alla linea — senza uffici né scartoffie.", "Mike Mix liest Lieferungen per Foto, führt den Bestand und verknüpft Chargen mit der Linie — ohne Büro/Papierkram.", "Mike Mix reads deliveries from a photo, tracks stock and binds batches to the line — no office, no paperwork.", "Mike Mix lee las entregas por foto, controla el stock y vincula lotes a la línea — sin oficina ni papeleo.", "Mike Mix lit les livraisons par photo, suit le stock et lie les lots à la ligne — sans bureau ni paperasse.", "Mike Mix تحویل‌ها را از عکس می‌خواند و موجودی را مدیریت می‌کند — بدون کاغذبازی.")}</p>
 
         {/* SCANSIONE CONSEGNA / FREEZER */}
         <div className="rounded-2xl border border-[#22c55e]/30 bg-[#22c55e]0d p-3 mb-5" style={{ background: "#22c55e0d" }}>

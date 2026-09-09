@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { masterApi, bakoApi } from "@/lib/api";
+import { masterApi, mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -11,9 +11,9 @@ const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-
 // Umore → colore reattivo dell'orb (industriale: acciaio/blu/ambra, niente viola).
 const MOOD_COLOR = { calm: "#22d3ee", busy: "#5E8CA8", proud: "#7DD3FC", alert: "#FFB800" };
 
-// BakoMix AI ambientale: presenza olografica fusa nel flusso. Streaming vocale,
+// Mike Mix AI ambientale: presenza olografica fusa nel flusso. Streaming vocale,
 // reattività cognitiva (colore in base all'umore) e avvisi PROATTIVI a voce.
-export default function AmbientBako() {
+export default function AmbientMike() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [listening, setListening] = useState(false);
@@ -72,7 +72,7 @@ export default function AmbientBako() {
     const poll = async () => {
       if (activeRef.current || listening || busy) return;
       try {
-        const r = await bakoApi.proactive(lang);
+        const r = await mikeApi.proactive(lang);
         const a = (r.alerts || [])[0];
         if (a && !spokenRef.current.has(a.id)) {
           spokenRef.current.add(a.id);
@@ -107,10 +107,10 @@ export default function AmbientBako() {
     <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-[60] flex flex-col items-center pointer-events-none">
       <AnimatePresence>
         {(reply || busy) && (
-          <motion.div data-testid="ambient-bako-reply" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
+          <motion.div data-testid="ambient-mike-reply" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
             className="pointer-events-auto mb-2 max-w-[86vw] sm:max-w-md rounded-2xl px-4 py-2.5 text-sm backdrop-blur-xl"
             style={{ background: "rgba(6,14,22,0.6)", border: `1px solid ${accent}55`, color: "#d6fbff", boxShadow: `0 0 30px ${accent}33` }}>
-            {busy && !reply ? tri("BakoMix elabora…", "BakoMix denkt…", "BakoMix is thinking…", "BakoMix procesa…", "BakoMix réfléchit…", "باکومیکس در حال پردازش…") : reply}
+            {busy && !reply ? tri("Mike Mix elabora…", "Mike Mix denkt…", "Mike Mix is thinking…", "Mike Mix procesa…", "Mike Mix réfléchit…", "باکومیکس در حال پردازش…") : reply}
           </motion.div>
         )}
       </AnimatePresence>
@@ -119,7 +119,7 @@ export default function AmbientBako() {
       <div aria-hidden className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[240px] h-[150px] pointer-events-none"
         style={{ background: `radial-gradient(60% 80% at 50% 100%, ${accent}${active ? "2e" : "14"}, transparent 70%)`, transition: "background 600ms ease" }} />
 
-      <button data-testid="ambient-bako-orb" onClick={engage} aria-label="BakoMix AI"
+      <button data-testid="ambient-mike-orb" onClick={engage} aria-label="Mike Mix AI"
         className="pointer-events-auto relative w-16 h-16 mb-1 rounded-full flex items-center justify-center active:scale-95 transition-transform"
         style={{ opacity: active ? 1 : 0.62, transition: "opacity 500ms ease" }}>
         <motion.span aria-hidden className="absolute inset-0 rounded-full"
@@ -139,7 +139,7 @@ export default function AmbientBako() {
       </button>
       <span className="pointer-events-none pb-2 text-[9px] font-bold uppercase tracking-[0.25em] transition-all duration-500"
         style={{ color: active ? accent : "rgba(148,163,184,0.45)", textShadow: active ? `0 0 8px ${accent}` : "none" }}>
-        {listening ? tri("in ascolto", "hört zu", "listening", "escuchando", "à l'écoute", "در حال شنیدن") : "BakoMix AI"}
+        {listening ? tri("in ascolto", "hört zu", "listening", "escuchando", "à l'écoute", "در حال شنیدن") : "Mike Mix AI"}
       </span>
     </div>
   );

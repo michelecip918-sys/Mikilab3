@@ -52,7 +52,7 @@ export const uploadApi = {
   },
 };
 
-// PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Mohamed.
+// PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Mike Mix.
 export const productionPinApi = {
   status: () => cachedGet("production_pin_status", () => api.get(`/production-pin/status`).then((r) => r.data)),
   set: (pin) => api.put(`/production-pin`, { pin }).then((r) => r.data),
@@ -145,7 +145,7 @@ export const ordiniApi = {
 };
 
 // Piano del Team (Assistente Mamo): il Capo INVIA il piano, il Floor lo legge (senza login).
-// OFFLINE-READY: la coda di lavoro resta leggibile da Mohamed anche senza rete (IndexedDB).
+// OFFLINE-READY: la coda di lavoro resta leggibile da Mike Mix anche senza rete (IndexedDB).
 export const floorPlanApi = {
   get: async () => {
     try { const r = await api.get(`/lab/floor-plan`); idbSet("floor_plan", r.data); return r.data; }
@@ -457,7 +457,7 @@ export const operatorApi = {
 };
 
 
-// BakoMix · Sesto Senso — motore proattivo del laboratorio.
+// Mike Mix · Sesto Senso — motore proattivo del laboratorio.
 export const pulseApi = {
   get: () => cachedGet("lab_pulse", () => api.get(`/lab/pulse`).then((r) => r.data),
     { mood: "sereno", heartbeat: 52, score: 100, load: 0, alerts: [], checkin: { active: false }, rest_mode: { active: false }, plan_active: false }),
@@ -473,7 +473,7 @@ export const pulseApi = {
   history: (minutes = 240) => cachedGet(`lab_pulse_history_${minutes}`, () => api.get(`/lab/pulse/history`, { params: { minutes } }).then((r) => r.data), { points: [] }),
 };
 
-// Sequence Guard — BakoMix blocca i lotti fuori sequenza prima che partano.
+// Sequence Guard — Mike Mix blocca i lotti fuori sequenza prima che partano.
 export const shiftStateApi = {
   get: () => api.get(`/lab/shift-state`).then((r) => r.data).catch(() => ({ batches: [] })),
 };
@@ -516,7 +516,7 @@ export const briefingApi = {
   get: () => cachedGet("morning_briefing", () => api.get(`/ai/morning-briefing`).then((r) => r.data), null),
 };
 
-// Enterprise Grid — rete multi-sede (1–100 panifici) orchestrata da BakoMix.
+// Enterprise Grid — rete multi-sede (1–100 panifici) orchestrata da Mike Mix.
 export const enterpriseApi = {
   overview: () => cachedGet("ent_overview", () => api.get(`/enterprise/overview`).then((r) => r.data), { total_active_sites: 0, global_efficiency_avg: 0, critical_alerts_count: 0, total_workers: 0 }),
   sites: () => cachedGet("ent_sites", () => api.get(`/enterprise/sites`).then((r) => r.data), { sites: [] }),
@@ -580,71 +580,71 @@ export const plantApi = {
   leaderTasks: (leader) => api.get(`/plant/leader-tasks`, { params: { leader } }).then((r) => r.data),
 };
 
-// Governance Master-centrica via BakoMix: comando vocale/testuale → esecuzione strutturale.
+// Governance Master-centrica via Mike Mix: comando vocale/testuale → esecuzione strutturale.
 export const masterApi = {
   govern: (command_text, lang) => api.post(`/master/govern`, { command_text, lang }).then((r) => r.data),  sections: () => api.get(`/master/sections`).then((r) => r.data),
 };
 
-// BakoMix proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
-export const bakoApi = {
-  proactive: (lang) => api.get(`/bako/proactive`, { params: { lang } }).then((r) => r.data),
-  autoplan: (payload) => api.post(`/bako/autoplan`, payload).then((r) => r.data),
-  dispatch: (batches) => api.post(`/bako/autoplan/dispatch`, { batches }).then((r) => r.data),
-  briefing: (lang) => api.get(`/bako/briefing`, { params: { lang } }).then((r) => r.data),
-  floorBriefing: (role, lang) => api.get(`/bako/briefing/floor`, { params: { role, lang } }).then((r) => r.data),
-  telemetry: (lang) => api.get(`/bako/telemetry`, { params: { lang } }).then((r) => r.data),
-  sosRaise: (payload) => api.post(`/bako/sos`, payload).then((r) => r.data),
-  sosList: (lang) => api.get(`/bako/sos`, { params: { lang } }).then((r) => r.data),
-  sosAck: (id) => api.post(`/bako/sos/${id}/ack`).then((r) => r.data),
-  sosHistory: (lang) => api.get(`/bako/sos/history`, { params: { lang } }).then((r) => r.data),
-  sosChallenge: (lang) => api.get(`/bako/sos/challenge`, { params: { lang } }).then((r) => r.data),
-  packaging: (breadTemp, lang) => api.get(`/bako/packaging`, { params: { bread_temp_c: breadTemp, lang } }).then((r) => r.data),
-  suggestions: (lang) => api.get(`/bako/suggestions`, { params: { lang } }).then((r) => r.data),
-  shiftReport: (lang) => api.get(`/bako/shift-report`, { params: { lang } }).then((r) => r.data),
-  mikiscoreHistory: () => api.get(`/bako/mikiscore/history`).then((r) => r.data),
-  autopilotGet: () => api.get(`/bako/autopilot`).then((r) => r.data),
-  autopilotSet: (enabled) => api.put(`/bako/autopilot`, { enabled }).then((r) => r.data),
-  maintenanceGuide: (payload) => api.post(`/bako/maintenance-guide`, payload).then((r) => r.data),
-  ovenQc: (payload) => api.post(`/bako/oven-qc`, payload).then((r) => r.data),
-  b2bList: () => api.get(`/bako/b2b/orders`).then((r) => r.data),
-  b2bAdd: (payload) => api.post(`/bako/b2b/orders`, payload).then((r) => r.data),
-  b2bDel: (id) => api.delete(`/bako/b2b/orders/${id}`).then((r) => r.data),
-  b2bToPlan: () => api.post(`/bako/b2b/to-plan`).then((r) => r.data),
-  b2bForecast: () => api.get(`/bako/b2b/forecast`).then((r) => r.data),
-  thermalFlow: (payload) => api.post(`/bako/thermal-flow`, payload).then((r) => r.data),
-  silos: () => api.get(`/bako/silos`).then((r) => r.data),
-  siloMicroorder: () => api.post(`/bako/silos/microorder`).then((r) => r.data),
-  siloSupplierGet: () => api.get(`/bako/silo-supplier`).then((r) => r.data),
-  siloSupplierSet: (email) => api.put(`/bako/silo-supplier`, { email }).then((r) => r.data),
-  heartbeat: (lang) => api.get(`/bako/heartbeat`, { params: { lang } }).then((r) => r.data),
-  timeline: (lang) => api.get(`/bako/timeline`, { params: { lang } }).then((r) => r.data),
-  proofing: (freeOvens) => api.get(`/bako/proofing`, { params: freeOvens != null ? { free_ovens: freeOvens } : {} }).then((r) => r.data),
-  proofingSync: (freeOvens) => api.post(`/bako/proofing/sync-plan`, {}, { params: freeOvens != null ? { free_ovens: freeOvens } : {} }).then((r) => r.data),
-  agv: () => api.get(`/bako/agv`).then((r) => r.data),
-  carbonConfig: () => api.get(`/bako/carbon/config`).then((r) => r.data),
-  carbonSetConfig: (config) => api.put(`/bako/carbon/config`, { config }).then((r) => r.data),
-  carbonCompute: (payload) => api.post(`/bako/carbon/compute`, payload).then((r) => r.data),
+// Mike Mix proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
+export const mikeApi = {
+  proactive: (lang) => api.get(`/mike/proactive`, { params: { lang } }).then((r) => r.data),
+  autoplan: (payload) => api.post(`/mike/autoplan`, payload).then((r) => r.data),
+  dispatch: (batches) => api.post(`/mike/autoplan/dispatch`, { batches }).then((r) => r.data),
+  briefing: (lang) => api.get(`/mike/briefing`, { params: { lang } }).then((r) => r.data),
+  floorBriefing: (role, lang) => api.get(`/mike/briefing/floor`, { params: { role, lang } }).then((r) => r.data),
+  telemetry: (lang) => api.get(`/mike/telemetry`, { params: { lang } }).then((r) => r.data),
+  sosRaise: (payload) => api.post(`/mike/sos`, payload).then((r) => r.data),
+  sosList: (lang) => api.get(`/mike/sos`, { params: { lang } }).then((r) => r.data),
+  sosAck: (id) => api.post(`/mike/sos/${id}/ack`).then((r) => r.data),
+  sosHistory: (lang) => api.get(`/mike/sos/history`, { params: { lang } }).then((r) => r.data),
+  sosChallenge: (lang) => api.get(`/mike/sos/challenge`, { params: { lang } }).then((r) => r.data),
+  packaging: (breadTemp, lang) => api.get(`/mike/packaging`, { params: { bread_temp_c: breadTemp, lang } }).then((r) => r.data),
+  suggestions: (lang) => api.get(`/mike/suggestions`, { params: { lang } }).then((r) => r.data),
+  shiftReport: (lang) => api.get(`/mike/shift-report`, { params: { lang } }).then((r) => r.data),
+  mikiscoreHistory: () => api.get(`/mike/mikiscore/history`).then((r) => r.data),
+  autopilotGet: () => api.get(`/mike/autopilot`).then((r) => r.data),
+  autopilotSet: (enabled) => api.put(`/mike/autopilot`, { enabled }).then((r) => r.data),
+  maintenanceGuide: (payload) => api.post(`/mike/maintenance-guide`, payload).then((r) => r.data),
+  ovenQc: (payload) => api.post(`/mike/oven-qc`, payload).then((r) => r.data),
+  b2bList: () => api.get(`/mike/b2b/orders`).then((r) => r.data),
+  b2bAdd: (payload) => api.post(`/mike/b2b/orders`, payload).then((r) => r.data),
+  b2bDel: (id) => api.delete(`/mike/b2b/orders/${id}`).then((r) => r.data),
+  b2bToPlan: () => api.post(`/mike/b2b/to-plan`).then((r) => r.data),
+  b2bForecast: () => api.get(`/mike/b2b/forecast`).then((r) => r.data),
+  thermalFlow: (payload) => api.post(`/mike/thermal-flow`, payload).then((r) => r.data),
+  silos: () => api.get(`/mike/silos`).then((r) => r.data),
+  siloMicroorder: () => api.post(`/mike/silos/microorder`).then((r) => r.data),
+  siloSupplierGet: () => api.get(`/mike/silo-supplier`).then((r) => r.data),
+  siloSupplierSet: (email) => api.put(`/mike/silo-supplier`, { email }).then((r) => r.data),
+  heartbeat: (lang) => api.get(`/mike/heartbeat`, { params: { lang } }).then((r) => r.data),
+  timeline: (lang) => api.get(`/mike/timeline`, { params: { lang } }).then((r) => r.data),
+  proofing: (freeOvens) => api.get(`/mike/proofing`, { params: freeOvens != null ? { free_ovens: freeOvens } : {} }).then((r) => r.data),
+  proofingSync: (freeOvens) => api.post(`/mike/proofing/sync-plan`, {}, { params: freeOvens != null ? { free_ovens: freeOvens } : {} }).then((r) => r.data),
+  agv: () => api.get(`/mike/agv`).then((r) => r.data),
+  carbonConfig: () => api.get(`/mike/carbon/config`).then((r) => r.data),
+  carbonSetConfig: (config) => api.put(`/mike/carbon/config`, { config }).then((r) => r.data),
+  carbonCompute: (payload) => api.post(`/mike/carbon/compute`, payload).then((r) => r.data),
 };
 
-// BakoMix Deus — Il Cervello del Forno: legame di amicizia, orchestrazione dell'impossibile, oracolo esterno.
+// Mike Mix Deus — Il Cervello del Forno: legame di amicizia, orchestrazione dell'impossibile, oracolo esterno.
 export const deusApi = {
-  bond: (lang) => api.get(`/bako/deus/bond`, { params: { lang } }).then((r) => r.data),
-  masterPlan: (payload) => api.post(`/bako/deus/master-plan`, payload).then((r) => r.data),
-  ask: (payload) => api.post(`/bako/deus/ask`, payload).then((r) => r.data),
-  broadcast: (payload) => api.post(`/bako/deus/broadcast`, payload).then((r) => r.data),
+  bond: (lang) => api.get(`/mike/deus/bond`, { params: { lang } }).then((r) => r.data),
+  masterPlan: (payload) => api.post(`/mike/deus/master-plan`, payload).then((r) => r.data),
+  ask: (payload) => api.post(`/mike/deus/ask`, payload).then((r) => r.data),
+  broadcast: (payload) => api.post(`/mike/deus/broadcast`, payload).then((r) => r.data),
   capoPlan: () => api.get(`/floor/capo-plan`).then((r) => r.data),
-  machines: () => api.get(`/bako/machines`).then((r) => r.data),
-  machineArrival: (payload) => api.post(`/bako/machines/arrival`, payload).then((r) => r.data),
-  machineCommission: (id) => api.post(`/bako/machines/${id}/commission`).then((r) => r.data),
-  machineDelete: (id) => api.delete(`/bako/machines/${id}`).then((r) => r.data),
-  capture: (payload) => api.post(`/bako/deus/capture`, payload).then((r) => r.data),
-  productionQueue: () => api.get(`/bako/deus/production-queue`).then((r) => r.data),
-  queueDone: (id) => api.post(`/bako/deus/queue/${id}/done`).then((r) => r.data),
-  queueClear: () => api.post(`/bako/deus/queue/clear`).then((r) => r.data),
-  shiftReport: (lang) => api.get(`/bako/shift-report`, { params: { lang } }).then((r) => r.data),
+  machines: () => api.get(`/mike/machines`).then((r) => r.data),
+  machineArrival: (payload) => api.post(`/mike/machines/arrival`, payload).then((r) => r.data),
+  machineCommission: (id) => api.post(`/mike/machines/${id}/commission`).then((r) => r.data),
+  machineDelete: (id) => api.delete(`/mike/machines/${id}`).then((r) => r.data),
+  capture: (payload) => api.post(`/mike/deus/capture`, payload).then((r) => r.data),
+  productionQueue: () => api.get(`/mike/deus/production-queue`).then((r) => r.data),
+  queueDone: (id) => api.post(`/mike/deus/queue/${id}/done`).then((r) => r.data),
+  queueClear: () => api.post(`/mike/deus/queue/clear`).then((r) => r.data),
+  shiftReport: (lang) => api.get(`/mike/shift-report`, { params: { lang } }).then((r) => r.data),
 };
 
-// Reparti indipendenti + assegnazione Capo -> MohaLab
+// Reparti indipendenti + assegnazione Capo -> Mike Mix
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),
   assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
@@ -702,7 +702,7 @@ export const antifoolApi = {
   crossCheck: (payload) => api.post(`/antifool/cross-check`, payload).then((r) => r.data),
 };
 
-// BakoMix Security Guardian (IP & integrità attiva).
+// Mike Mix Security Guardian (IP & integrità attiva).
 export const securityApi = {
   report: (event, detail, path) => api.post(`/security/guardian`, { event, detail, path }).then((r) => r.data).catch(() => null),
   ownership: (lang) => api.get(`/security/ownership`, { params: { lang } }).then((r) => r.data),

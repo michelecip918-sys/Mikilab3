@@ -2,7 +2,7 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ScanEye, Camera, Upload, Loader2, X } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -43,7 +43,7 @@ export default function OvenQC() {
   const analyze = useCallback(async (b64) => {
     setBusy(true); setRes(null);
     try {
-      const r = await bakoApi.ovenQc({ image_base64: b64, product, lang });
+      const r = await mikeApi.ovenQc({ image_base64: b64, product, lang });
       setRes(r.result);
       if (r.result?.spoken) { try { playTTS(r.result.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
     } catch { toast.error(tri("Analisi non riuscita", "Analyse fehlgeschlagen", "Analysis failed", "Análisis fallido", "Échec de l'analyse", "تحلیل ناموفق")); }

@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useRef } from "react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 // Battito Impianto Unico: un solo polling live che alimenta 3D, Emergenze e AGV.
@@ -14,7 +14,7 @@ export function PlantHeartbeatProvider({ children }) {
 
   useEffect(() => {
     let stop = false;
-    const load = () => bakoApi.heartbeat(langRef.current).then((d) => { if (!stop) setHb(d); }).catch(() => { /* */ });
+    const load = () => mikeApi.heartbeat(langRef.current).then((d) => { if (!stop) setHb(d); }).catch(() => { /* */ });
     load();
     const iv = setInterval(load, 4000);
     return () => { stop = true; clearInterval(iv); };

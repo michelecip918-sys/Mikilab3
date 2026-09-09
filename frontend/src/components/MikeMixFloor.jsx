@@ -26,7 +26,7 @@ const PUB = process.env.PUBLIC_URL;
 const API = process.env.REACT_APP_BACKEND_URL;
 const ROLE_KEY = "mikilab_role";
 
-// Banner "Piano del Capo": mostra alla Produzione il piano divino inviato da BakoMix Deus.
+// Banner "Piano del Capo": mostra alla Produzione il piano divino inviato da Mike Mix Deus.
 function CapoPlanBanner({ tri }) {
   const [plan, setPlan] = useState(null);
   const [open, setOpen] = useState(false);
@@ -43,7 +43,7 @@ function CapoPlanBanner({ tri }) {
       <button data-testid="capo-plan-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 active:scale-[0.99] transition-all">
         <span className="w-8 h-8 rounded-lg bg-[#00F0FF]/15 border border-[#00F0FF]/40 flex items-center justify-center shrink-0"><Radio className="w-4 h-4 text-[#00F0FF]" /></span>
         <span className="min-w-0 flex-1">
-          <span className="block text-xs font-black uppercase tracking-wide text-[#00F0FF]">{tri("Piano del Capo · BakoMix", "Plan des Capo · BakoMix", "Capo's Plan · BakoMix", "Plan del Capo · BakoMix", "Plan du Capo · BakoMix", "برنامه کاپو · BakoMix")}</span>
+          <span className="block text-xs font-black uppercase tracking-wide text-[#00F0FF]">{tri("Piano del Capo · Mike Mix", "Plan des Capo · Mike Mix", "Capo's Plan · Mike Mix", "Plan del Capo · Mike Mix", "Plan du Capo · Mike Mix", "برنامه کاپو · Mike Mix")}</span>
           {plan.headline && <span className="block text-[11px] text-[#94A3B8] truncate">{plan.headline}</span>}
         </span>
         <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`} />
@@ -76,7 +76,7 @@ function FloorQueue({ tri, lang }) {
     return () => { alive = false; clearInterval(id); };
   }, []);
   const done = (t) => deusApi.queueDone(t.id).then(() => setTasks((q) => q.filter((x) => x.id !== t.id))).catch(() => {});
-  const read = (t) => { try { playTTS(`${t.title}. ${t.detail || ""}`, { lang, voice: "mohamed" }); } catch { /* */ } };
+  const read = (t) => { try { playTTS(`${t.title}. ${t.detail || ""}`, { lang, voice: "mikemix" }); } catch { /* */ } };
   if (!tasks.length) return null;
   return (
     <div data-testid="floor-queue" className="w-full mb-3 rounded-2xl border border-[#FFB800]/40 bg-[#0b0f19] p-3 text-left">
@@ -96,7 +96,7 @@ function FloorQueue({ tri, lang }) {
 }
 
 
-export default function MohaLabFloor() {
+export default function MikeMixFloor() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
@@ -142,15 +142,15 @@ export default function MohaLabFloor() {
   // 1) Nessun ruolo → scelta postazione
   if (!role) {
     return (
-      <div data-testid="mohamed-role-select" className="space-y-5">
+      <div data-testid="mikemix-role-select" className="space-y-5">
         <SequenceGuard />
         <ShiftPowerBoard />
         <DeptFocus tri={tri} lang={lang} />
         <CapoPlanBanner tri={tri} />
         <FloorQueue tri={tri} lang={lang} />
         <div className="text-center">
-          <img src={`${PUB}/avatar_mohamed.jpg`} alt="MohaLab" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">MohaLab</h2>
+          <img src={`${PUB}/avatar_mikemix.jpg`} alt="Mike Mix" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Mike Mix</h2>
           <p className="mt-1 text-sm text-[#94A3B8]">{tri("Ciao! Seleziona la tua postazione di forno per ricevere i task giusti.", "Hallo! Wähle deine Station, um die richtigen Aufgaben zu erhalten.", "Hi! Select your station to receive the right tasks.", "¡Hola! Selecciona tu puesto para recibir las tareas correctas.", "Salut ! Choisis ton poste pour recevoir les bonnes tâches.", "سلام! پست کاری‌ات را انتخاب کن تا وظایف درست را بگیری.")}</p>
         </div>
         {depts.map((d) => (
@@ -172,21 +172,21 @@ export default function MohaLabFloor() {
 
   // 2) Ruolo scelto → strumento bilancia guidata (Letz_Passive)
   if (tool === "scale") return (
-    <div data-testid="mohamed-scale" className="space-y-4">
+    <div data-testid="mikemix-scale" className="space-y-4">
       <SmartScale onExit={() => setTool(null)} />
     </div>
   );
 
   // 2b) Ruolo scelto → avvia guida vocale
   if (active) return (
-    <div data-testid="mohamed-floor-active" className="space-y-4">
-      <button data-testid="mohamed-change-role" onClick={changeRole} className="inline-flex items-center gap-1 text-xs font-bold text-[#94A3B8] hover:text-white"><ChevronLeft className="w-4 h-4" /> {role} · {tri("cambia ruolo", "Rolle ändern", "change role", "cambiar rol", "changer de rôle", "تغییر نقش")}</button>
+    <div data-testid="mikemix-floor-active" className="space-y-4">
+      <button data-testid="mikemix-change-role" onClick={changeRole} className="inline-flex items-center gap-1 text-xs font-bold text-[#94A3B8] hover:text-white"><ChevronLeft className="w-4 h-4" /> {role} · {tri("cambia ruolo", "Rolle ändern", "change role", "cambiar rol", "changer de rôle", "تغییر نقش")}</button>
       <MamoAssistant />
     </div>
   );
 
   return (
-    <div data-testid="mohamed-floor" className="flex flex-col items-center justify-center py-8 text-center">
+    <div data-testid="mikemix-floor" className="flex flex-col items-center justify-center py-8 text-center">
       <div className="w-full mb-3"><CapoPlanBanner tri={tri} /></div>
       <div className="w-full"><DeptFocus tri={tri} lang={lang} /></div>
       <div className="w-full"><FloorQueue tri={tri} lang={lang} /></div>
@@ -196,17 +196,17 @@ export default function MohaLabFloor() {
       <div className="w-full"><OperatorClock /></div>
       <div className="w-full"><TeamTasks operatorName={role} /></div>
       <div className="w-full"><DoughTimer /></div>
-      <span data-testid="mohamed-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
-      <button data-testid="mohamed-mic-btn" onClick={() => { if (livenessOk) setActive(true); else setGate(true); }} className="relative group active:scale-95 transition-all">
+      <span data-testid="mikemix-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
+      <button data-testid="mikemix-mic-btn" onClick={() => { if (livenessOk) setActive(true); else setGate(true); }} className="relative group active:scale-95 transition-all">
         <OperatorAura name={role} size={184} showBadge={true} announce={true}>
-          <img src={`${PUB}/avatar_mohamed.jpg`} alt="MohaLab" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/avatar_mikemix.jpg`} alt="Mike Mix" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </OperatorAura>
         <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
       </button>
       {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
-      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">MohaLab</motion.h2>
-      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a BakoMix AI: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit BakoMix AI: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to BakoMix AI: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con BakoMix AI: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à BakoMix AI : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با BakoMix AI حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
-      <button data-testid="mohamed-open-scale" onClick={() => setTool("scale")}
+      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Mike Mix</motion.h2>
+      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a Mike Mix AI: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit Mike Mix AI: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to Mike Mix AI: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con Mike Mix AI: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à Mike Mix AI : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با Mike Mix AI حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
+      <button data-testid="mikemix-open-scale" onClick={() => setTool("scale")}
         className="group relative overflow-hidden mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-sm text-[#22d3ee] active:scale-95 transition-all"
         style={{ background: "linear-gradient(155deg, rgba(11,20,32,0.9), rgba(6,12,22,0.9))", border: "1px solid rgba(34,211,238,0.45)", boxShadow: "0 0 20px rgba(34,211,238,0.18)" }}>
         <span aria-hidden className="absolute inset-x-0 top-0 h-px opacity-70" style={{ background: "linear-gradient(90deg,transparent,rgba(34,211,238,0.9),transparent)" }} />
@@ -215,7 +215,7 @@ export default function MohaLabFloor() {
       <div className="w-full mt-5"><HeadsetChannel /></div>
       <div className="w-full mt-3"><SosButton role={role} operator={role} /></div>
       <div className="w-full mt-3"><FloorCrossCheck role={role} task={role || "Produzione"} /></div>
-      <button data-testid="mohamed-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
+      <button data-testid="mikemix-change-role-2" onClick={changeRole} className="mt-4 text-[11px] font-bold text-[#64748B] hover:text-amber-400">{tri("Cambia postazione", "Station ändern", "Change station", "Cambiar puesto", "Changer de poste", "تغییر پست")}</button>
     </div>
   );
 }

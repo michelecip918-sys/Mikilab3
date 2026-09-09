@@ -72,7 +72,7 @@ const SOUNDS = {
 };
 
 export function playSfx(name) {
-  // SILENZIO ASSOLUTO: effetti sonori/notifiche acustiche disattivati (resta solo la voce TTS di BakoMix).
+  // SILENZIO ASSOLUTO: effetti sonori/notifiche acustiche disattivati (resta solo la voce TTS di Mike Mix).
   return;
   // eslint-disable-next-line no-unreachable
   try {

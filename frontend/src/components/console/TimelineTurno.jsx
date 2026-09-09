@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Croissant, Flame, AlertOctagon, GanttChartSquare } from "lucide-react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -18,7 +18,7 @@ export default function TimelineTurno() {
   const [events, setEvents] = useState([]);
   const [nowMin, setNowMin] = useState(() => { const d = new Date(); return d.getHours() * 60 + d.getMinutes(); });
 
-  const load = useCallback(async () => { try { const r = await bakoApi.timeline(lang); setEvents(r.events || []); } catch { /* */ } }, [lang]);
+  const load = useCallback(async () => { try { const r = await mikeApi.timeline(lang); setEvents(r.events || []); } catch { /* */ } }, [lang]);
   useEffect(() => {
     load();
     const h = () => load();

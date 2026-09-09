@@ -66,7 +66,7 @@ export default function EnterpriseGrid({ onClose }) {
     setDrag(null);
     if (eq) {
       const r = await enterpriseApi.optimizeLayout(sel.site_id, { equipment_id: eq.id, target_x: eq.x, target_y: eq.y }).catch(() => null);
-      if (r) toast.success(r.bakomix_simulation || tri("Layout aggiornato", "Layout aktualisiert", "Layout updated", "Layout actualizado", "Agencement mis à jour", "چیدمان به‌روزشد"), { duration: 1400, position: "bottom-center" });
+      if (r) toast.success(r.mikemix_simulation || tri("Layout aggiornato", "Layout aktualisiert", "Layout updated", "Layout actualizado", "Agencement mis à jour", "چیدمان به‌روزشد"), { duration: 1400, position: "bottom-center" });
     }
   };
 
@@ -99,7 +99,7 @@ export default function EnterpriseGrid({ onClose }) {
         {/* Omni-Intelligence: benchmarking cross-sede + strategie */}
         {omni && (
           <div data-testid="enterprise-omni" className="rounded-2xl border border-[#5E8CA8]/40 p-3 mb-4" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }}>
-            <p className="text-[11px] font-black uppercase tracking-widest text-[#7DA3C0] flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("BakoMix Omni-Intelligence", "Omni-Intelligenz", "Omni-Intelligence", "Omni-Inteligencia", "Omni-Intelligence", "هوش کل‌نگر")}</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-[#7DA3C0] flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Mike Mix Omni-Intelligence", "Omni-Intelligenz", "Omni-Intelligence", "Omni-Inteligencia", "Omni-Intelligence", "هوش کل‌نگر")}</p>
             <div className="flex items-center justify-between mt-1.5 text-[12px]">
               <span className="text-[#22c55e]">▲ {omni.top_site?.name} {omni.top_site?.avg_score}%</span>
               <span className="text-[#f59e0b]">▼ {omni.struggling_site?.name} {omni.struggling_site?.avg_score}%</span>
@@ -175,7 +175,7 @@ export default function EnterpriseGrid({ onClose }) {
                 </div>
               ))}
             </div>
-            <p className="text-[10px] text-[#64748B] mt-1">{tri("Trascina i macchinari: BakoMix ricalcola il risparmio.", "Geräte ziehen: BakoMix rechnet die Ersparnis.", "Drag equipment: BakoMix recomputes savings.", "Arrastra máquinas: BakoMix recalcula.", "Glisse les machines : BakoMix recalcule.", "دستگاه‌ها را بکش: BakoMix صرفه‌جویی را حساب می‌کند.")}</p>
+            <p className="text-[10px] text-[#64748B] mt-1">{tri("Trascina i macchinari: Mike Mix ricalcola il risparmio.", "Geräte ziehen: Mike Mix rechnet die Ersparnis.", "Drag equipment: Mike Mix recomputes savings.", "Arrastra máquinas: Mike Mix recalcula.", "Glisse les machines : Mike Mix recalcule.", "دستگاه‌ها را بکش: Mike Mix صرفه‌جویی را حساب می‌کند.")}</p>
           </div>
         )}
 
@@ -215,7 +215,7 @@ export default function EnterpriseGrid({ onClose }) {
         </div>
 
         {/* Fleet advice */}
-        <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-2 flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Consiglio strategico BakoMix", "BakoMix Strategie", "BakoMix strategy", "Estrategia BakoMix", "Stratégie BakoMix", "استراتژی BakoMix")}</p>
+        <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-2 flex items-center gap-1.5"><Sparkles className="w-4 h-4" /> {tri("Consiglio strategico Mike Mix", "Mike Mix Strategie", "Mike Mix strategy", "Estrategia Mike Mix", "Stratégie Mike Mix", "استراتژی Mike Mix")}</p>
         <div className="space-y-1.5">
           {fleet.map((f, i) => (
             <div key={i} data-testid={`enterprise-advice-${i}`} className="rounded-xl border p-2.5 text-[12px] text-white" style={{ borderColor: f.urgency === "medium" ? "#f59e0b55" : "#22c55e55", background: f.urgency === "medium" ? "#f59e0b12" : "#22c55e10" }}>

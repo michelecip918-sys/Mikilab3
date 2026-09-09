@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Container, Droplets, PackagePlus, Clock, Mail, Check } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -14,17 +14,17 @@ export default function SiloManager() {
   const [supplier, setSupplier] = useState("");
   const [savedSup, setSavedSup] = useState("");
 
-  const load = useCallback(async () => { try { setData(await bakoApi.silos()); } catch { /* */ } }, []);
+  const load = useCallback(async () => { try { setData(await mikeApi.silos()); } catch { /* */ } }, []);
   useEffect(() => { load(); const iv = setInterval(load, 8000); return () => clearInterval(iv); }, [load]);
-  useEffect(() => { bakoApi.siloSupplierGet().then((r) => { setSupplier(r.email || ""); setSavedSup(r.email || ""); }).catch(() => { /* */ }); }, []);
+  useEffect(() => { mikeApi.siloSupplierGet().then((r) => { setSupplier(r.email || ""); setSavedSup(r.email || ""); }).catch(() => { /* */ }); }, []);
 
   const saveSupplier = async () => {
-    try { await bakoApi.siloSupplierSet(supplier.trim()); setSavedSup(supplier.trim()); toast.success(tri("Email fornitore salvata.", "Lieferanten-E-Mail gespeichert.", "Supplier email saved.", "Email proveedor guardado.", "Email fournisseur enregistré.", "ایمیل تأمین‌کننده ذخیره شد.")); }
+    try { await mikeApi.siloSupplierSet(supplier.trim()); setSavedSup(supplier.trim()); toast.success(tri("Email fornitore salvata.", "Lieferanten-E-Mail gespeichert.", "Supplier email saved.", "Email proveedor guardado.", "Email fournisseur enregistré.", "ایمیل تأمین‌کننده ذخیره شد.")); }
     catch { toast.error(tri("Salvataggio non riuscito", "Speichern fehlgeschlagen", "Save failed", "Guardado fallido", "Échec", "ذخیره ناموفق")); }
   };
 
   const microorder = async () => {
-    try { const r = await bakoApi.siloMicroorder(); toast.success(r.emailed ? tri(`Micro-ordini inviati a ${r.supplier}`, `Micro-Aufträge an ${r.supplier}`, `Micro-orders emailed to ${r.supplier}`, `Micro-pedidos a ${r.supplier}`, `Micro-commandes à ${r.supplier}`, `میکرو سفارش به ${r.supplier}`) : tri(`Micro-ordini generati: ${r.count}`, `Micro-Aufträge: ${r.count}`, `Micro-orders: ${r.count}`, `Micro-pedidos: ${r.count}`, `Micro-commandes: ${r.count}`, `میکرو سفارش: ${r.count}`)); load(); } catch { /* */ }
+    try { const r = await mikeApi.siloMicroorder(); toast.success(r.emailed ? tri(`Micro-ordini inviati a ${r.supplier}`, `Micro-Aufträge an ${r.supplier}`, `Micro-orders emailed to ${r.supplier}`, `Micro-pedidos a ${r.supplier}`, `Micro-commandes à ${r.supplier}`, `میکرو سفارش به ${r.supplier}`) : tri(`Micro-ordini generati: ${r.count}`, `Micro-Aufträge: ${r.count}`, `Micro-orders: ${r.count}`, `Micro-pedidos: ${r.count}`, `Micro-commandes: ${r.count}`, `میکرو سفارش: ${r.count}`)); load(); } catch { /* */ }
   };
 
   return (

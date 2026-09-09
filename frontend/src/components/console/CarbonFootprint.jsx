@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Leaf, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -17,7 +17,7 @@ export default function CarbonFootprint() {
   const compute = useCallback(async () => {
     setBusy(true);
     try {
-      const r = await bakoApi.carbonCompute({
+      const r = await mikeApi.carbonCompute({
         bread_kg: Number(f.bread_kg) || 100, oven_hours: Number(f.oven_hours) || 0,
         flour_kg: Number(f.flour_kg) || 0, pieces: Number(f.pieces) || 0, energy_source: f.energy_source, lang,
       });

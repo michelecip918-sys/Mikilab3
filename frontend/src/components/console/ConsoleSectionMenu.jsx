@@ -16,7 +16,7 @@ export default function ConsoleSectionMenu({ active, onPick }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const label = (k) => ({
-    regia: tri("BakoMix · Regia", "BakoMix · Leitstand", "BakoMix · Cockpit", "BakoMix · Cabina", "BakoMix · Régie", "بوکومیکس · مرکز"),
+    regia: tri("Mike Mix · Regia", "Mike Mix · Leitstand", "Mike Mix · Cockpit", "Mike Mix · Cabina", "Mike Mix · Régie", "بوکومیکس · مرکز"),
     piani: tri("Piani & Produzione", "Pläne & Produktion", "Plans & Production", "Planes & Producción", "Plans & Production", "برنامه و تولید"),
     ricette: tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها"),
     squadra: tri("Squadra & Turni", "Team & Schichten", "Team & Shifts", "Equipo & Turnos", "Équipe & Services", "تیم و شیفت"),

@@ -1,5 +1,5 @@
 /*
- * MIKILAB PRO & BakoMix AI — PROPRIETARY & CONFIDENTIAL
+ * MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
  * (c) 2026 MikiLab Pro — All rights reserved. Sole owner: the Master.
  */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
@@ -392,7 +392,7 @@ a[class*="bg-[#1B2A38]"]:hover {
 
 /* ==========================================================================
    MIKILAB PRO — PLANCIA OLOGRAFICA (Zero-Menu vertical console) v40
-   Unica interfaccia continua dark-mode industriale. BakoMix fuso nativamente.
+   Unica interfaccia continua dark-mode industriale. Mike Mix fuso nativamente.
    ========================================================================== */
 .holo-root { background:#070A10 !important; color:#E6F6FA !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 .holo-canvas {
@@ -460,3 +460,26 @@ a[class*="bg-[#1B2A38]"]:hover {
 @keyframes holoSweep { 0%{transform:translateY(0); opacity:0;} 10%{opacity:.8;} 100%{transform:translateY(240px); opacity:0;} }
 .holo-zone { scroll-margin-top:88px; }
 
+
+/* Miki-Nexus — anelli orbitali della coscienza strategica */
+.nexus-ring {
+  position: absolute;
+  border-radius: 9999px;
+  border-width: 2px;
+  border-style: solid;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.nexus-ring-1 {
+  inset: -12px;
+  animation: nexusSpin 7s linear infinite, nexusPulse 3s ease-in-out infinite;
+}
+.nexus-ring-2 {
+  inset: -22px;
+  border-style: dashed;
+  animation: nexusSpinRev 11s linear infinite;
+  opacity: 0.4;
+}
+@keyframes nexusSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes nexusSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+@keyframes nexusPulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.8; } }

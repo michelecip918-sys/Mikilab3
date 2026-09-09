@@ -36,7 +36,7 @@ export default function MachineArrival() {
       toast.success(tri(`Nuovo arrivato: ${r.machine.name}`, `Neuzugang: ${r.machine.name}`, `New arrival: ${r.machine.name}`, `Nuevo: ${r.machine.name}`, `Nouveau: ${r.machine.name}`, `تازه‌وارد: ${r.machine.name}`), { icon: "⚙️" });
       load();
     } catch {
-      toast.error(tri("BakoMix non risponde.", "BakoMix antwortet nicht.", "BakoMix not responding.", "BakoMix no responde.", "BakoMix ne répond pas.", "BakoMix پاسخ نمی‌دهد."));
+      toast.error(tri("Mike Mix non risponde.", "Mike Mix antwortet nicht.", "Mike Mix not responding.", "Mike Mix no responde.", "Mike Mix ne répond pas.", "Mike Mix پاسخ نمی‌دهد."));
     } finally { setBusy(false); }
   };
 
@@ -96,7 +96,7 @@ export default function MachineArrival() {
       </div>
 
       <div className="rounded-2xl bg-[#0C1019] border border-[#1e293b] p-4 space-y-2">
-        <p className="text-[11px] text-[#94A3B8]">{tri("È arrivato un macchinario nuovo? BakoMix lo riconosce — anche se è un tipo mai visto — e lo integra in produzione.", "Neue Maschine eingetroffen? BakoMix erkennt sie — auch unbekannte Typen — und integriert sie.", "A new machine arrived? BakoMix recognizes it — even an unseen type — and integrates it into production.", "¿Llegó una máquina nueva? BakoMix la reconoce e integra.", "Une nouvelle machine ? BakoMix la reconnaît et l'intègre.", "دستگاه جدید آمد؟ BakoMix آن را می‌شناسد و ادغام می‌کند.")}</p>
+        <p className="text-[11px] text-[#94A3B8]">{tri("È arrivato un macchinario nuovo? Mike Mix lo riconosce — anche se è un tipo mai visto — e lo integra in produzione.", "Neue Maschine eingetroffen? Mike Mix erkennt sie — auch unbekannte Typen — und integriert sie.", "A new machine arrived? Mike Mix recognizes it — even an unseen type — and integrates it into production.", "¿Llegó una máquina nueva? Mike Mix la reconoce e integra.", "Une nouvelle machine ? Mike Mix la reconnaît et l'intègre.", "دستگاه جدید آمد؟ Mike Mix آن را می‌شناسد و ادغام می‌کند.")}</p>
         <input data-testid="machine-name-input" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") recognize(); }}
           placeholder={tri("Nome/tipo macchinario (es. Forno rotativo, Sfogliatrice…)", "Name/Typ (z.B. Stikkenofen, Ausrollmaschine…)", "Machine name/type (e.g. Rotary oven, Sheeter…)", "Nombre/tipo (ej. Horno rotativo…)", "Nom/type (ex. Four rotatif…)", "نام/نوع دستگاه")}
           className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2.5" />
@@ -107,7 +107,7 @@ export default function MachineArrival() {
           className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50"
           style={{ background: "linear-gradient(90deg,#FFB800,#00F0FF)", boxShadow: "0 0 20px rgba(0,240,255,0.35)" }}>
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <PackagePlus className="w-4 h-4" />}
-          {busy ? tri("BakoMix riconosce…", "BakoMix erkennt…", "BakoMix recognizing…", "BakoMix reconoce…", "BakoMix reconnaît…", "BakoMix تشخیص می‌دهد…") : tri("Riconosci con BakoMix", "Mit BakoMix erkennen", "Recognize with BakoMix", "Reconocer con BakoMix", "Reconnaître avec BakoMix", "با BakoMix بشناس")}
+          {busy ? tri("Mike Mix riconosce…", "Mike Mix erkennt…", "Mike Mix recognizing…", "Mike Mix reconoce…", "Mike Mix reconnaît…", "Mike Mix تشخیص می‌دهد…") : tri("Riconosci con Mike Mix", "Mit Mike Mix erkennen", "Recognize with Mike Mix", "Reconocer con Mike Mix", "Reconnaître avec Mike Mix", "با Mike Mix بشناس")}
         </button>
       </div>
 

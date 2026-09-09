@@ -5,7 +5,7 @@ import { plantApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LineLeaders from "@/components/LineLeaders";
-import BakoInfo from "@/components/BakoInfo";
+import MikeInfo from "@/components/MikeInfo";
 
 // RADAR SPAZIALE DELL'IMPIANTO (solo Master/Capo): planimetria vettoriale live,
 // operatori color-coded con task in tempo reale e geofencing anomalie.
@@ -38,7 +38,7 @@ export default function PlantRadar() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <BakoInfo context={tri("Radar", "Radar", "Radar", "Radar", "Radar", "رادار")} />
+          <MikeInfo context={tri("Radar", "Radar", "Radar", "Radar", "Radar", "رادار")} />
           <button data-testid="radar-refresh" onClick={load} className="p-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] hover:text-white active:scale-95 transition-all"><RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /></button>
         </div>
       </div>

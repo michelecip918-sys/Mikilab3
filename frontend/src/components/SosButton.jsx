@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { AlertOctagon, Check } from "lucide-react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -10,7 +10,7 @@ const HOLD_MS = 1200;
 
 // SOS operatore con CONFERMA TATTILE (tieni premuto): evita falsi allarmi accidentali.
 // Al rilascio dell'anello completo invia l'SOS; il Capo lo vede in plancia con bagliore
-// e BakoMix lo annuncia a voce.
+// e Mike Mix lo annuncia a voce.
 export default function SosButton({ role = "", operator = "" }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -23,7 +23,7 @@ export default function SosButton({ role = "", operator = "" }) {
 
   const send = useCallback(async () => {
     try {
-      await bakoApi.sosRaise({ operator: operator || role || "Operatore", role, machine, note: "", lang });
+      await mikeApi.sosRaise({ operator: operator || role || "Operatore", role, machine, note: "", lang });
       setSent(true);
       setTimeout(() => setSent(false), 6000);
     } catch { /* offline: l'allarme resta locale */ }

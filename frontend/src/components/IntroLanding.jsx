@@ -30,7 +30,7 @@ export default function IntroLanding({ onStart, onRegister }) {
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
         <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
           className="flex items-end justify-center gap-3 mb-5">
-          {[{ img: "avatar_miki.jpg", c: "#14b8a6", n: "MikiLab" }, { img: "avatar_mohamed.jpg", c: "#f59e0b", n: "Mohamed" }, { img: "avatar_bigmix.jpg", c: "#06b6d4", n: "BakoMix AI" }].map((a, i) => (
+          {[{ img: "avatar_miki.jpg", c: "#14b8a6", n: "MikiLab" }, { img: "avatar_mikemix.jpg", c: "#f59e0b", n: "Mike Mix" }, { img: "avatar_bigmix.jpg", c: "#06b6d4", n: "Mike Mix AI" }].map((a, i) => (
             <div key={a.n} className="flex flex-col items-center gap-1.5">
               <div className={`rounded-full overflow-hidden bg-[#030712] shadow-xl ${i === 0 ? "w-24 h-24" : "w-18 h-18"}`} style={{ width: i === 0 ? 92 : 72, height: i === 0 ? 92 : 72, border: `3px solid ${a.c}`, boxShadow: `0 0 22px ${a.c}66` }}>
                 <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />

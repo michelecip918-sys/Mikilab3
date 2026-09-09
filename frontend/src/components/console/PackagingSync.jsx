@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { Scissors, Thermometer, Timer, Gauge } from "lucide-react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -13,7 +13,7 @@ export default function PackagingSync() {
   const [temp, setTemp] = useState(60);
   const [data, setData] = useState(null);
 
-  const load = useCallback(async () => { try { setData(await bakoApi.packaging(temp, lang)); } catch { /* */ } }, [temp, lang]);
+  const load = useCallback(async () => { try { setData(await mikeApi.packaging(temp, lang)); } catch { /* */ } }, [temp, lang]);
   useEffect(() => { const t = setTimeout(load, 250); return () => clearTimeout(t); }, [load]);
 
   const col = data ? (MODE_COL[data.mode] || "#FFB800") : "#FFB800";

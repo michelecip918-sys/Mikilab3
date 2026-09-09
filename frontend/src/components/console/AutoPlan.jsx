@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { bakoApi } from "@/lib/api";
+import { mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Sparkles, Volume2, Send } from "lucide-react";
 
-// PILASTRO 1 — BakoMix Direttore d'Orchestra: piano di produzione ottimale auto-generato.
+// PILASTRO 1 — Mike Mix Direttore d'Orchestra: piano di produzione ottimale auto-generato.
 export default function AutoPlan() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -23,7 +23,7 @@ export default function AutoPlan() {
 
   const gen = async () => {
     setBusy(true);
-    try { const r = await bakoApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("BakoMix non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "BakoMix couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
+    try { const r = await mikeApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("Mike Mix non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Mike Mix couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
     setBusy(false);
   };
 
@@ -35,7 +35,7 @@ export default function AutoPlan() {
       <button data-testid="autoplan-gen" onClick={gen} disabled={busy}
         className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50"
         style={{ background: "linear-gradient(90deg,#7DD3FC,#00F0FF)", boxShadow: "0 0 20px rgba(0,240,255,0.35)" }}>
-        <Sparkles className="w-4 h-4" /> {busy ? tri("BakoMix pianifica…", "BakoMix plant…", "BakoMix is planning…", "BakoMix planifica…", "BakoMix planifie…", "برنامه‌ریزی…") : tri("Genera piano ottimale", "Optimalen Plan erstellen", "Generate optimal plan", "Generar plan óptimo", "Générer le plan optimal", "تولید برنامه بهینه")}
+        <Sparkles className="w-4 h-4" /> {busy ? tri("Mike Mix pianifica…", "Mike Mix plant…", "Mike Mix is planning…", "Mike Mix planifica…", "Mike Mix planifie…", "برنامه‌ریزی…") : tri("Genera piano ottimale", "Optimalen Plan erstellen", "Generate optimal plan", "Generar plan óptimo", "Générer le plan optimal", "تولید برنامه بهینه")}
       </button>
 
       {res && (
@@ -48,7 +48,7 @@ export default function AutoPlan() {
           )}
           {(res.batches || []).length > 0 && (
             <button data-testid="autoplan-dispatch" onClick={async () => {
-              try { const r = await bakoApi.dispatch(res.batches); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
+              try { const r = await mikeApi.dispatch(res.batches); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
             }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm active:scale-95 transition-all">
               <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
             </button>

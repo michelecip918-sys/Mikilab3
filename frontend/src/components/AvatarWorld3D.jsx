@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 // Mondo 3D immersivo (Vanilla three.js) che si assembla dietro l'avatar del trio.
-// theme: "miki" (Ufficio Tecnico/Ricette) | "mohamed" (Produzione Calda) | "bigmix" (Assistente vocale)
-// speaking: per BakoMix -> onde sonore/particelle piu intense quando parla.
+// theme: "miki" (Ufficio Tecnico/Ricette) | "mikemix" (Produzione Calda) | "bigmix" (Assistente vocale)
+// speaking: per Mike Mix -> onde sonore/particelle piu intense quando parla.
 export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", speaking = false }) {
   const mountRef = useRef(null);
   const speakingRef = useRef(speaking);
@@ -49,7 +49,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
 
     let animatedExtras = [];
 
-    if (theme === "panificio" || theme === "mohamed") {
+    if (theme === "panificio" || theme === "mikemix") {
       // PANIFICIO: forni a deck con calore + silos farina + impastatrice a spirale + scaffale pane
       for (let i = 0; i < 2; i++) {
         const oven = new THREE.Group();

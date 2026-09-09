@@ -3,8 +3,8 @@
 export const SUPPLIERS = [
   // --- Germania / cooperative e distributori ---
   {
-    id: "bako", name: "BÄKO", flag: "🇩🇪", country: "de", category: "distributore",
-    web: "https://www.bako.de", email: "",
+    id: "mike", name: "BÄKO", flag: "🇩🇪", country: "de", category: "distributore",
+    web: "https://www.mike.de", email: "",
     it: "Cooperativa d'acquisto dei panettieri e pasticceri in Germania e Austria: materie prime, farine, ingredienti e attrezzature. È il fornitore più usato dai forni tedeschi (BÄKO Süd, West, ecc.).",
     de: "Einkaufsgenossenschaft der Bäcker und Konditoren in Deutschland und Österreich: Rohstoffe, Mehle, Zutaten und Ausstattung. Der meistgenutzte Lieferant deutscher Bäckereien (BÄKO Süd, West usw.).",
     en: "Purchasing cooperative of bakers and pastry chefs in Germany and Austria: raw materials, flours, ingredients and equipment. The most-used supplier for German bakeries (BÄKO Süd, West, etc.).",

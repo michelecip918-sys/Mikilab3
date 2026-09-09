@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 const AUTO_KEY = "mikilab_shift_autocall";
 
-// Riepilogo Squadra Vocale: BakoMix annuncia, reparto per reparto, chi lavora oggi e la sua mansione.
+// Riepilogo Squadra Vocale: Mike Mix annuncia, reparto per reparto, chi lavora oggi e la sua mansione.
 export default function ShiftTeamCall() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -209,7 +209,7 @@ export default function ShiftTeamCall() {
               </div>
             ))}
             <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
-            <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (BakoMix)", "Bericht vorlesen (BakoMix)", "Read report aloud (BakoMix)", "Leer informe (BakoMix)", "Lire le rapport (BakoMix)", "خواندن گزارش (BakoMix)")}</button>
+            <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (Mike Mix)", "Bericht vorlesen (Mike Mix)", "Read report aloud (Mike Mix)", "Leer informe (Mike Mix)", "Lire le rapport (Mike Mix)", "خواندن گزارش (Mike Mix)")}</button>
           </div>
         )}
       </div>

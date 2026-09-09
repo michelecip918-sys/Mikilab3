@@ -121,7 +121,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
             <span className="font-bold" style={{ color: D.gold }}>{tri("Il tuo assistente di laboratorio", "Dein Laborassistent", "Your lab assistant", "Tu asistente de laboratorio", "Ton assistant de laboratoire", "دستیار آزمایشگاه تو")}:</span>{" "}
             {tri("calcola idratazioni, orari e bilanciamento. Parla liberamente.", "berechnet Hydratation, Zeiten und Balance. Sprich frei.", "computes hydration, timing and balancing. Just speak.", "calcula hidrataciones, horarios y balance. Habla libremente.", "calcule hydratations, horaires et équilibrage. Parle librement.", "هیدراتاسیون، زمان و تعادل را حساب می‌کند. آزادانه صحبت کن.")}
           </p>
-          <p className="text-[10.5px] font-extrabold tracking-wide mt-1" style={{ color: D.gold }} data-testid="braccio-bakemix">MikiLab — powered by BakeMix AI</p>
+          <p className="text-[10.5px] font-extrabold tracking-wide mt-1" style={{ color: D.gold }} data-testid="braccio-bakemix">MikiLab — powered by Mike Mix AI</p>
         </div>
       )}
 

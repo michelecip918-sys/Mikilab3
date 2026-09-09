@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { Thermometer, Lock, Check, Snowflake, Gauge, Flame, Timer } from "lucide-react";
-import { recipesApi, bakoApi } from "@/lib/api";
+import { recipesApi, mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -32,7 +32,7 @@ export default function RecipeThermalFlow() {
   useEffect(() => { recipesApi.list("mikilab").then((r) => setRecipes(Array.isArray(r) ? r : (r?.recipes || []))).catch(() => setRecipes([])); }, []);
 
   const recompute = useCallback(() => {
-    bakoApi.thermalFlow({ recipe_id: recipeId, ...p, lang }).then((d) => {
+    mikeApi.thermalFlow({ recipe_id: recipeId, ...p, lang }).then((d) => {
       setFlow(d);
       setInterlockOk(!d.interlock);
       setUnlocked(d.interlock ? 0 : 1);

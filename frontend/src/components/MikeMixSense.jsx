@@ -27,7 +27,7 @@ const MOOD_LABEL = {
   critico: ["Critico", "Kritisch", "Critical", "Crítico", "Critique", "بحرانی"],
 };
 
-export default function BakoMixSense({ section, mode, isCapo, operator, floorRole }) {
+export default function MikeMixSense({ section, mode, isCapo, operator, floorRole }) {
   const { lang } = useLang();
   const tri = mkTri(lang);
   const active = section === "control" || section === "guida";
@@ -227,42 +227,42 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
       {/* Avatar proattivo flottante */}
       <button
-        data-testid="bakomix-sense-fab"
+        data-testid="mikemix-sense-fab"
         onClick={() => setOpen((v) => !v)}
         className="fixed left-4 bottom-24 z-[55] w-16 h-16 rounded-full active:scale-95 transition-transform"
-        title="BakoMix · Sesto Senso"
+        title="Mike Mix · Sesto Senso"
       >
         <style>{`@keyframes senseRing{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.25);opacity:0}}`}</style>
         <span aria-hidden className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 0 2px ${color}`, animation: `senseRing ${beatSec}s ease-out infinite`, background: `${color}22` }} />
-        <img src={`${PUB}/avatar_bigmix.jpg`} alt="BakoMix" className="relative w-16 h-16 rounded-full object-cover border-2" style={{ borderColor: color }} />
+        <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix" className="relative w-16 h-16 rounded-full object-cover border-2" style={{ borderColor: color }} />
         {nAlert > 0 && (
-          <span data-testid="bakomix-sense-badge" className="absolute -top-1 -right-1 min-w-6 h-6 px-1.5 rounded-full text-[11px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
+          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-6 h-6 px-1.5 rounded-full text-[11px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
         )}
       </button>
 
       {/* Pannello */}
       {open && (
-        <div data-testid="bakomix-sense-panel" className="fixed left-3 right-3 sm:left-4 sm:right-auto sm:w-[380px] bottom-44 z-[56] rounded-3xl bg-[#0b0f19]/95 backdrop-blur-xl border border-[#1e293b] shadow-2xl overflow-hidden animate-fadeIn">
+        <div data-testid="mikemix-sense-panel" className="fixed left-3 right-3 sm:left-4 sm:right-auto sm:w-[380px] bottom-44 z-[56] rounded-3xl bg-[#0b0f19]/95 backdrop-blur-xl border border-[#1e293b] shadow-2xl overflow-hidden animate-fadeIn">
           <div className="p-4 flex items-center justify-between" style={{ background: `linear-gradient(90deg, ${color}22, transparent)` }}>
             <div className="flex items-center gap-2">
               <Activity className="w-5 h-5" style={{ color }} />
               <div>
-                <p className="text-sm font-black text-white leading-none">BakoMix · {tri("Sesto Senso", "Sechster Sinn", "Sixth Sense", "Sexto Sentido", "Sixième Sens", "حس ششم")}</p>
+                <p className="text-sm font-black text-white leading-none">Mike Mix · {tri("Sesto Senso", "Sechster Sinn", "Sixth Sense", "Sexto Sentido", "Sixième Sens", "حس ششم")}</p>
                 <p className="text-[11px] font-bold mt-1" style={{ color }}>
                   {tri(...moodLabel)} · {hb} bpm · {pulse?.score ?? 100}%
                 </p>
               </div>
             </div>
-            <button data-testid="bakomix-sense-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#030712] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-4 h-4" /></button>
+            <button data-testid="mikemix-sense-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#030712] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-4 h-4" /></button>
           </div>
 
           <div className="max-h-[52vh] overflow-y-auto p-4 space-y-3">
             {/* Briefing del mattino (Capo) */}
             {isCapo && briefing && briefingOpen && (
-              <div data-testid="bakomix-briefing" className="rounded-2xl border border-[#f59e0b]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
+              <div data-testid="mikemix-briefing" className="rounded-2xl border border-[#f59e0b]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
                 <div className="flex items-start justify-between gap-2">
                   <p className="text-[12px] font-black text-[#f59e0b] flex items-center gap-1.5"><Sunrise className="w-4 h-4" /> {tri("Briefing del mattino", "Morgen-Briefing", "Morning briefing", "Briefing matutino", "Briefing du matin", "گزارش صبحگاهی")}</p>
-                  <button data-testid="bakomix-briefing-close" onClick={() => setBriefingOpen(false)} className="text-[#94A3B8] hover:text-white"><X className="w-3.5 h-3.5" /></button>
+                  <button data-testid="mikemix-briefing-close" onClick={() => setBriefingOpen(false)} className="text-[#94A3B8] hover:text-white"><X className="w-3.5 h-3.5" /></button>
                 </div>
                 <p className="text-[12px] text-white mt-1.5">{briefing.greeting}</p>
                 <ul className="mt-1.5 space-y-0.5">
@@ -270,7 +270,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 </ul>
                 <div className="mt-2 flex items-center justify-between">
                   <span className="text-[11px] text-[#94A3B8]">{tri("Efficienza lab", "Lab-Effizienz", "Lab efficiency", "Eficiencia", "Efficacité", "کارایی")}</span>
-                  <span className="text-sm font-black text-[#f59e0b]" data-testid="bakomix-briefing-eff">{briefing.overall_lab_efficiency}</span>
+                  <span className="text-sm font-black text-[#f59e0b]" data-testid="mikemix-briefing-eff">{briefing.overall_lab_efficiency}</span>
                 </div>
                 <p className="text-[11px] text-[#5EEAD4] mt-1.5">💡 {briefing.ai_recommendation}</p>
               </div>
@@ -278,7 +278,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
             {/* Controlli rapidi */}
             <div className="flex items-center gap-2">
-              <button data-testid="bakomix-aura-toggle" onClick={() => setAura((v) => !v)} className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all ${aura ? "text-white" : "text-[#94A3B8] border-[#1e293b] bg-[#030712]"}`} style={aura ? { background: `${color}22`, borderColor: color } : {}}>
+              <button data-testid="mikemix-aura-toggle" onClick={() => setAura((v) => !v)} className={`flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-bold border transition-all ${aura ? "text-white" : "text-[#94A3B8] border-[#1e293b] bg-[#030712]"}`} style={aura ? { background: `${color}22`, borderColor: color } : {}}>
                 <Radio className="w-4 h-4" /> {tri("Aura Sonora", "Klang-Aura", "Sound Aura", "Aura Sonora", "Aura Sonore", "هاله صوتی")}
               </button>
               <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8]">
@@ -288,17 +288,17 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
             {/* Sensori live (temperatura forno · pH lievito) */}
             {pulse?.sensors && (pulse.sensors.oven_temp || pulse.sensors.ph) && (
-              <div data-testid="bakomix-sensors-live" className="grid grid-cols-2 gap-2">
+              <div data-testid="mikemix-sensors-live" className="grid grid-cols-2 gap-2">
                 {pulse.sensors.oven_temp && (
                   <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : "#1e293b", background: pulse.sensors.oven_temp.value > 250 ? "#ef444412" : "#030712" }}>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🔥 {tri("Forno", "Ofen", "Oven", "Horno", "Four", "فر")}</p>
-                    <p className="text-2xl font-black" style={{ color: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : color }} data-testid="bakomix-sensor-oven">{pulse.sensors.oven_temp.value}°</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : color }} data-testid="mikemix-sensor-oven">{pulse.sensors.oven_temp.value}°</p>
                   </div>
                 )}
                 {pulse.sensors.ph && (
                   <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : "#1e293b", background: pulse.sensors.ph.value < 3.8 ? "#f59e0b12" : "#030712" }}>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🧪 {tri("pH lievito", "Sauerteig pH", "Sourdough pH", "pH masa", "pH levain", "pH خمیرمایه")}</p>
-                    <p className="text-2xl font-black" style={{ color: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : color }} data-testid="bakomix-sensor-ph">{pulse.sensors.ph.value}</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : color }} data-testid="mikemix-sensor-ph">{pulse.sensors.ph.value}</p>
                   </div>
                 )}
               </div>
@@ -306,7 +306,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
             {/* Storia del battito del laboratorio (Capo) */}
             {isCapo && history.length >= 2 && (
-              <div data-testid="bakomix-heartbeat-history" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
+              <div data-testid="mikemix-heartbeat-history" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
                 <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><Activity className="w-3.5 h-3.5" style={{ color }} /> {tri("Storia del battito", "Herzschlag-Verlauf", "Heartbeat history", "Historia del pulso", "Historique du pouls", "تاریخچه ضربان")}</p>
                 <Sparkline points={history} color={color} />
                 <p className="text-[10px] text-[#94A3B8] mt-1 text-right">{tri("ultime ore", "letzte Stunden", "last hours", "últimas horas", "dernières heures", "ساعات اخیر")}</p>
@@ -315,7 +315,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
 
             {/* Alert proattivi */}
             {alerts.length === 0 ? (
-              <div data-testid="bakomix-no-alerts" className="text-center py-6 rounded-2xl border border-[#1e293b] bg-[#030712]">
+              <div data-testid="mikemix-no-alerts" className="text-center py-6 rounded-2xl border border-[#1e293b] bg-[#030712]">
                 <p className="text-sm font-bold" style={{ color }}>{tri("Tutto scorre. Nessuna anomalia.", "Alles läuft. Keine Auffälligkeiten.", "All flowing. No anomalies.", "Todo fluye. Sin anomalías.", "Tout roule. Aucune anomalie.", "همه‌چیز روان است. بدون ناهنجاری.")}</p>
                 <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Osservo per te, in silenzio.", "Ich beobachte still für dich.", "I watch for you, silently.", "Observo por ti, en silencio.", "Je veille pour toi, en silence.", "بی‌صدا برایت مراقبم.")}</p>
               </div>
@@ -324,7 +324,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 const c = a.level === "critical" ? "#ef4444" : a.level === "warn" ? "#f59e0b" : "#5E8CA8";
                 const Icon = a.level === "critical" ? AlertOctagon : a.level === "warn" ? AlertTriangle : Info;
                 return (
-                  <div key={a.id} data-testid={`bakomix-alert-${a.code}`} className="rounded-2xl border p-3" style={{ borderColor: `${c}55`, background: `${c}12` }}>
+                  <div key={a.id} data-testid={`mikemix-alert-${a.code}`} className="rounded-2xl border p-3" style={{ borderColor: `${c}55`, background: `${c}12` }}>
                     <div className="flex items-start gap-2">
                       <Icon className="w-4 h-4 mt-0.5 shrink-0" style={{ color: c }} />
                       <div className="min-w-0">
@@ -343,7 +343,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 {pulse?.checkin?.active ? (
                   <p className="text-[12px] text-[#94A3B8]">🟢 {tri("Turno avviato da", "Schicht gestartet von", "Shift started by", "Turno iniciado por", "Service démarré par", "شیفت آغاز شد توسط")} <b className="text-white">{pulse.checkin.by}</b></p>
                 ) : (
-                  <button data-testid="bakomix-checkin-btn" onClick={doCheckin} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#14b8a6] text-[#030712] font-black text-sm active:scale-95 transition-transform">
+                  <button data-testid="mikemix-checkin-btn" onClick={doCheckin} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#14b8a6] text-[#030712] font-black text-sm active:scale-95 transition-transform">
                     <Play className="w-4 h-4" /> {tri("Avvia turno (timbra)", "Schicht starten", "Start shift", "Iniciar turno", "Démarrer le service", "شروع شیفت")}
                   </button>
                 )}
@@ -353,33 +353,33 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
-                <button data-testid="bakomix-enterprise-btn" onClick={() => setEntOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-transform" style={{ background: "linear-gradient(90deg, #5EEAD4, #f59e0b)" }}>
+                <button data-testid="mikemix-enterprise-btn" onClick={() => setEntOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-transform" style={{ background: "linear-gradient(90deg, #5EEAD4, #f59e0b)" }}>
                   <Globe className="w-4 h-4" /> {tri("Rete · 100 Panifici", "Netz · 100 Bäckereien", "Grid · 100 Bakeries", "Red · 100 Panaderías", "Réseau · 100 Boulangeries", "شبکه · ۱۰۰ نانوایی")}
                 </button>
-                <button data-testid="bakomix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
+                <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
                   <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
                 <div className="grid grid-cols-3 gap-2">
-                  <button data-testid="bakomix-pipeline-btn" onClick={() => setPipelineOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5EEAD4]/40 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-pipeline-btn" onClick={() => setPipelineOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5EEAD4]/40 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                     <Factory className="w-4 h-4" /> {tri("Linea", "Linie", "Line", "Línea", "Ligne", "خط")}
                   </button>
-                  <button data-testid="bakomix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#5E8CA80d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#5E8CA80d] active:scale-95 transition-transform">
                     <ScanLine className="w-4 h-4" /> {tri("Vision AR", "Vision AR", "Vision AR", "Vision AR", "Vision AR", "ویژن AR")}
                   </button>
-                  <button data-testid="bakomix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
                     <CloudSun className="w-4 h-4" /> {tri("Clima", "Klima", "Climate", "Clima", "Climat", "اقلیم")}
                   </button>
                 </div>
-                <button data-testid="bakomix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
+                <button data-testid="mikemix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
                   <Package className="w-4 h-4" /> {tri("Inventario di Produzione (foto)", "Produktions-Inventar (Foto)", "Production Inventory (photo)", "Inventario de Producción (foto)", "Inventaire de Production (photo)", "موجودی تولید (عکس)")}
                 </button>
-                <button data-testid="bakomix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#14b8a6]/50 text-[#14b8a6] bg-[#14b8a612] active:scale-95 transition-transform">
+                <button data-testid="mikemix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#14b8a6]/50 text-[#14b8a6] bg-[#14b8a612] active:scale-95 transition-transform">
                   <Mic className="w-4 h-4" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation", "Voice Delegation", "Delegación por Voz", "Délégation Vocale", "واگذاری صوتی")}
                 </button>
-                <button data-testid="bakomix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
+                <button data-testid="mikemix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                   <Volume2 className="w-4 h-4" /> {tri("Handoff Audio Turno", "Audio-Schichtübergabe", "Shift Audio Handoff", "Relevo de Turno Audio", "Relais Audio de Poste", "تحویل صوتی شیفت")}
                 </button>
-                <button data-testid="bakomix-handoff-history" onClick={toggleHist} className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-bold text-[#7E8A93] hover:text-[#5EEAD4]">
+                <button data-testid="mikemix-handoff-history" onClick={toggleHist} className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-[11px] font-bold text-[#7E8A93] hover:text-[#5EEAD4]">
                   <History className="w-3.5 h-3.5" /> {histOpen ? tri("nascondi storico", "Verlauf ausblenden", "hide history", "ocultar historial", "masquer l'historique", "پنهان") : tri("Storico handoff", "Verlauf", "Handoff history", "Historial", "Historique", "تاریخچه")}
                 </button>
                 {histOpen && (
@@ -394,17 +394,17 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-2">
-                  <button data-testid="bakomix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5E8CA8]/40 text-[#8FB0C2] bg-[#5E8CA80d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5E8CA8]/40 text-[#8FB0C2] bg-[#5E8CA80d] active:scale-95 transition-transform">
                     <Snowflake className="w-4 h-4" /> {tri("Cella/Freezer", "Gärraum", "Proofer", "Cámara", "Chambre", "تخمیر")}
                   </button>
-                  <button data-testid="bakomix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f97316]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f97316]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
                     <Flame className="w-4 h-4" /> Batch Phoenix
                   </button>
                 </div>
-                <button data-testid="bakomix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5E8CA8]/50 text-[#7DA3C0] bg-[#5E8CA812] active:scale-95 transition-transform">
+                <button data-testid="mikemix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5E8CA8]/50 text-[#7DA3C0] bg-[#5E8CA812] active:scale-95 transition-transform">
                   <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>
-                <div data-testid="bakomix-glass-control" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3">
+                <div data-testid="mikemix-glass-control" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[11px] font-black uppercase tracking-widest text-[#8FB0C2]">{tri("Intensità vetro & sfondi", "Glas- & Hintergrund-Intensität", "Glass & background intensity", "Intensidad de vidrio y fondos", "Intensité verre & fonds", "شدت شیشه و پس‌زمینه")}</span>
                     <span className="text-[11px] font-mono-data font-bold text-white" data-testid="glass-value">{glass}%</span>
@@ -412,29 +412,29 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                   <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#5E8CA8]" />
                   <p className="text-[10px] text-[#64748B] mt-1">{tri("Alza per sfondi più vividi, abbassa per più contrasto sul testo.", "Höher = lebendigere Hintergründe, niedriger = mehr Kontrast.", "Higher = more vivid backgrounds, lower = more text contrast.", "Más alto = fondos vívidos, más bajo = más contraste.", "Plus haut = fonds vifs, plus bas = plus de contraste.", "بالاتر = پس‌زمینه واضح‌تر، پایین‌تر = کنتراست بیشتر.")}</p>
                 </div>
-                <div data-testid="bakomix-stall-control" className="rounded-2xl border border-[#f59e0b]/40 bg-[#f59e0b0d] p-3">
+                <div data-testid="mikemix-stall-control" className="rounded-2xl border border-[#f59e0b]/40 bg-[#f59e0b0d] p-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[11px] font-black uppercase tracking-widest text-[#fdba74]">{tri("Soglia impasto fermo", "Teig-Stillstand-Schwelle", "Stalled dough threshold", "Umbral masa parada", "Seuil pâte arrêtée", "آستانه توقف خمیر")}</span>
                     <span className="text-[11px] font-mono-data font-bold text-white" data-testid="stall-value">{stall}′</span>
                   </div>
                   <input data-testid="stall-slider" type="range" min="30" max="180" step="5" value={stall} onChange={(e) => setStallMin(Number(e.target.value))} className="w-full accent-[#f59e0b]" />
-                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti BakoMix segnala il recupero (Batch Phoenix).", "Danach meldet BakoMix die Rettung (Batch Phoenix).", "Beyond this BakoMix flags recovery (Batch Phoenix).", "Pasados estos minutos BakoMix avisa el recupero.", "Au-delà, BakoMix signale la récupération.", "پس از این دقایق BakoMix بازیافت را اعلام می‌کند.")}</p>
+                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti Mike Mix segnala il recupero (Batch Phoenix).", "Danach meldet Mike Mix die Rettung (Batch Phoenix).", "Beyond this Mike Mix flags recovery (Batch Phoenix).", "Pasados estos minutos Mike Mix avisa el recupero.", "Au-delà, Mike Mix signale la récupération.", "پس از این دقایق Mike Mix بازیافت را اعلام می‌کند.")}</p>
                 </div>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}
                 {pulse?.staffing && (
-                  <div data-testid="bakomix-staffing" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
+                  <div data-testid="mikemix-staffing" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
                     <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {tri("Organico di oggi", "Heutiges Personal", "Today's staff", "Personal de hoy", "Effectif du jour", "کارکنان امروز")}</p>
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[12px] text-white">{tri("Presenti", "Anwesend", "Present", "Presentes", "Présents", "حاضر")}: <b>{pulse.staffing.present}</b> / <span className="text-[#94A3B8]">{tri("totale", "gesamt", "total", "total", "total", "کل")}</span></span>
-                      <input data-testid="bakomix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
                     </div>
                     {pulse.staffing.reduce_pct > 0 ? (
                       <>
-                        <p data-testid="bakomix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
+                        <p data-testid="mikemix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
                           📉 {tri("Volumi consigliati", "Empfohlene Mengen", "Suggested volumes", "Volúmenes sugeridos", "Volumes conseillés", "حجم پیشنهادی")} −{pulse.staffing.reduce_pct}%
                         </p>
-                        <button data-testid="bakomix-apply-volumes" onClick={applyVolumes} className="w-full mt-2 py-2 rounded-xl bg-amber-500 text-[#030712] font-black text-xs active:scale-95 transition-transform">
+                        <button data-testid="mikemix-apply-volumes" onClick={applyVolumes} className="w-full mt-2 py-2 rounded-xl bg-amber-500 text-[#030712] font-black text-xs active:scale-95 transition-transform">
                           {tri("Applica al piano di oggi", "Auf heutigen Plan anwenden", "Apply to today's plan", "Aplicar al plan de hoy", "Appliquer au plan du jour", "روی برنامه امروز اعمال کن")} −{pulse.staffing.reduce_pct}%
                         </button>
                       </>
@@ -442,7 +442,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                       <p className="text-[11px] text-[#94A3B8] mt-2">{tri("Organico completo · volumi pieni.", "Voll besetzt · volle Mengen.", "Full staff · full volumes.", "Personal completo · volúmenes plenos.", "Effectif complet · volumes pleins.", "کارکنان کامل · حجم کامل.")}</p>
                     )}
                     {staffHist.length >= 2 && (
-                      <div data-testid="bakomix-staff-week" className="mt-3">
+                      <div data-testid="mikemix-staff-week" className="mt-3">
                         <p className="text-[10px] text-[#94A3B8] mb-1">{tri("Organico · 7 giorni", "Personal · 7 Tage", "Staff · 7 days", "Personal · 7 días", "Effectif · 7 jours", "کارکنان · ۷ روز")}</p>
                         <div className="flex items-end justify-between gap-1 h-12">
                           {staffHist.map((d) => (
@@ -459,7 +459,7 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                 <div>
                   <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-1.5 flex items-center gap-1.5"><Moon className="w-3.5 h-3.5" /> {tri("Riposo Blindato", "Ruhemodus", "Rest Mode", "Modo Descanso", "Mode Repos", "حالت استراحت")}</p>
                   <FailsafeSwitch
-                    testid="bakomix-rest-switch"
+                    testid="mikemix-rest-switch"
                     active={rest.active}
                     onConfirm={toggleRest}
                     labelOn={tri("Riposo attivo · tieni per spegnere", "Ruhe an · halten zum Aus", "Rest on · hold to turn off", "Descanso · mantén para apagar", "Repos · maintenir pour éteindre", "استراحت روشن · نگه‌دار")}
@@ -473,15 +473,15 @@ export default function BakoMixSense({ section, mode, isCapo, operator, floorRol
                     <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><AlarmClock className="w-3.5 h-3.5" /> {tri("Sveglia Predittiva", "Vorausschauender Wecker", "Predictive Wake", "Despertador Predictivo", "Réveil Prédictif", "بیدارباش پیش‌بین")}</p>
                     <div className="flex items-center justify-between gap-2">
                       <label className="text-[12px] text-white">{tri("Primo avvio", "Erster Start", "First start", "Primer inicio", "Premier départ", "شروع اول")}</label>
-                      <input data-testid="bakomix-wake-start" type="time" value={wake.first_start} onChange={(e) => saveWake({ first_start: e.target.value })} className="bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-wake-start" type="time" value={wake.first_start} onChange={(e) => saveWake({ first_start: e.target.value })} className="bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
                     </div>
                     <div className="flex items-center justify-between gap-2 mt-2">
                       <label className="text-[12px] text-white">{tri("Margine prep. (min)", "Vorbereitung (min)", "Prep buffer (min)", "Margen prep. (min)", "Marge prépa (min)", "حاشیه آماده‌سازی")}</label>
-                      <input data-testid="bakomix-wake-prep" type="number" min="0" max="240" value={wake.prep_minutes} onChange={(e) => saveWake({ prep_minutes: parseInt(e.target.value || "0", 10) })} className="w-20 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-wake-prep" type="number" min="0" max="240" value={wake.prep_minutes} onChange={(e) => saveWake({ prep_minutes: parseInt(e.target.value || "0", 10) })} className="w-20 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
                     </div>
                     <div className="mt-2 text-center rounded-xl py-2" style={{ background: "#14b8a622", border: "1px solid #14b8a655" }}>
                       <span className="text-[11px] text-[#94A3B8]">{tri("Sveglia consigliata", "Empfohlener Wecker", "Suggested wake", "Despertar sugerido", "Réveil conseillé", "بیدارباش پیشنهادی")}: </span>
-                      <span data-testid="bakomix-wake-at" className="text-lg font-black text-[#14b8a6]">{wake.wake_at}</span>
+                      <span data-testid="mikemix-wake-at" className="text-lg font-black text-[#14b8a6]">{wake.wake_at}</span>
                     </div>
                   </div>
                 )}
@@ -507,7 +507,7 @@ function Sparkline({ points, color }) {
   }).join(" ");
   const last = vals[vals.length - 1];
   return (
-    <svg data-testid="bakomix-sparkline" viewBox={`0 0 ${W} ${H}`} className="w-full h-12" preserveAspectRatio="none">
+    <svg data-testid="mikemix-sparkline" viewBox={`0 0 ${W} ${H}`} className="w-full h-12" preserveAspectRatio="none">
       <defs>
         <linearGradient id="spark-fill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={color} stopOpacity="0.35" />

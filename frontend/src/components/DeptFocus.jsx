@@ -78,7 +78,7 @@ export default function DeptFocus({ tri, lang }) {
   const clockOut = () => {
     let pin = ""; try { pin = localStorage.getItem("mikilab_operator_pin") || ""; } catch { /* */ }
     try { complianceApi.clock(opName, "out", pin); } catch { /* */ }
-    try { playTTS(`${tri("Buona giornata", "Schönen Tag", "Have a good day", "Buen día", "Bonne journée", "روز خوش")}, ${opName}.`, { lang, voice: "mohamed" }); } catch { /* */ }
+    try { playTTS(`${tri("Buona giornata", "Schönen Tag", "Have a good day", "Buen día", "Bonne journée", "روز خوش")}, ${opName}.`, { lang, voice: "mikemix" }); } catch { /* */ }
     resetOp();
   };
   const cur = mine[Math.min(idx, mine.length - 1)];
@@ -86,10 +86,10 @@ export default function DeptFocus({ tri, lang }) {
   if (!dept) return null;
   const obj = board.find((o) => o.dept === dept.key) || null;
   const pct = obj && obj.target > 0 ? Math.min(100, Math.round((obj.done / obj.target) * 100)) : 0;
-  const speak = () => { try { playTTS(`${tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}: ${dept.name}. ${cur.task || ""}`, { lang, voice: "mohamed" }); } catch { /* */ } };
+  const speak = () => { try { playTTS(`${tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}: ${dept.name}. ${cur.task || ""}`, { lang, voice: "mikemix" }); } catch { /* */ } };
   const addProgress = async (n) => {
     let pin = ""; try { pin = localStorage.getItem("mikilab_operator_pin") || ""; } catch { /* */ }
-    try { await deptApi.progress({ dept: dept.key, qty: n, pin, operator: opName }); load(); playTTS(`+${n}. ${tri("registrato", "erfasst", "recorded", "registrado", "enregistré", "ثبت شد")}`, { lang, voice: "mohamed" }); } catch { /* */ }
+    try { await deptApi.progress({ dept: dept.key, qty: n, pin, operator: opName }); load(); playTTS(`+${n}. ${tri("registrato", "erfasst", "recorded", "registrado", "enregistré", "ثبت شد")}`, { lang, voice: "mikemix" }); } catch { /* */ }
   };
 
   return (
@@ -129,7 +129,7 @@ export default function DeptFocus({ tri, lang }) {
       <p className="text-[10px] uppercase tracking-widest text-[#64748B] mb-1 flex items-center gap-1"><Factory className="w-3 h-3" /> {tri("Le TUE macchine", "Deine Maschinen", "Your machines", "Tus máquinas", "Tes machines", "دستگاه‌های تو")}</p>
       <div className="flex flex-wrap gap-1.5 mb-2">
         {dept.machines.map((m) => (
-          <button key={m.id} data-testid={`dept-machine-${m.id}`} onClick={() => { try { playTTS(`${m.name}. ${tri("Modulo vocale pronto.", "Sprachmodul bereit.", "Voice module ready.", "Módulo de voz listo.", "Module vocal prêt.", "ماژول صوتی آماده.")}`, { lang, voice: "mohamed" }); } catch { /* */ } }}
+          <button key={m.id} data-testid={`dept-machine-${m.id}`} onClick={() => { try { playTTS(`${m.name}. ${tri("Modulo vocale pronto.", "Sprachmodul bereit.", "Voice module ready.", "Módulo de voz listo.", "Module vocal prêt.", "ماژول صوتی آماده.")}`, { lang, voice: "mikemix" }); } catch { /* */ } }}
             className="inline-flex items-center gap-1 px-2 py-1 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[11px] font-bold text-[#e6f6fa] active:scale-95">
             <Volume2 className="w-3 h-3 text-[#00F0FF]" /> {m.name}
           </button>
