@@ -14918,6 +14918,21 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"users email unique index error: {e}")
     try:
+        # Salvagente PIN Master: se ADMIN_GATE_PIN e' nel .env, il DB viene sempre riallineato
+        # ad esso (cosi' il PIN del Capo funziona anche se il DB di produzione aveva un hash vecchio).
+        env_pin = os.environ.get("ADMIN_GATE_PIN")
+        if env_pin:
+            doc = await db.app_meta.find_one({"_key": "admin_gate_pin"}, {"_id": 0})
+            if not (doc and doc.get("hash") and _check_pw(env_pin, doc["hash"])):
+                await db.app_meta.update_one(
+                    {"_key": "admin_gate_pin"},
+                    {"$set": {"_key": "admin_gate_pin", "hash": _hash_pw(env_pin), "updated_at": now_iso()}},
+                    upsert=True,
+                )
+                logging.getLogger(__name__).info("PIN Master Gate riallineato al segreto .env")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Gate PIN align error: {e}")
+    try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")
     except Exception as e:

@@ -4696,4 +4696,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **HTTPS**: `https://mikilab.de` → HTTP 200, `https://www.mikilab.de` → HTTP 308 redirect pulito. Asset (logo-emblem, multiverse-banner) tutti 200.
 - Nota all'utente: eliminare la riga vuota/incompleta sotto CNAME (cliccando sul cestino) per evitare errori di validazione nel pannello United Domains.
 
+
+## v56 (2026-09) — Miki-Nexus somigliante + Fix PIN produzione
+- **Avatar Miki-Nexus rifatto**: fusione umano/AI che SOMIGLIA a Michele (foto riferimento image-1 (37).jpeg): lato umano con buzz cut, orecchino, barba incolta/trasandata; lato robot cromato con OCCHIO ROSSO luminoso; logo MikiLab sulla maglia. Stile Terminator, tema arancione. Applicato a avatar_nexus.jpg. sw.js → mikilab-v36.
+- **FIX PIN produzione (critico)**: su mikilab.de il PIN 198505 veniva rifiutato perché il DB di produzione aveva un hash diverso. Aggiunto salvagente allo startup (`on_startup_seed_mikilab`): se `ADMIN_GATE_PIN` è nel .env, l'hash in `app_meta.admin_gate_pin` viene SEMPRE riallineato a quel PIN → 198505 funziona sempre dopo ogni deploy. Verificato in preview (ok master).
+- **Rilevato**: il frontend live è una build più vecchia (manca deck/status → 401 via gate, deck-multiverse assente). SERVE la ripubblicazione per portare tutto live.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
