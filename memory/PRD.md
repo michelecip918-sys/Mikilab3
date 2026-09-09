@@ -4707,4 +4707,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **avatar_nexus.jpg FINALE**: metà sinistra = faccia reale di Michele (identica alla sua foto), metà destra = teschio cromato stile Terminator con OCCHIO ROSSO. Tatuaggio pantera+serpente (dal video 2026-08-30-083449687.mp4, frame estratto con ffmpeg) sull'avambraccio umano, fedele all'originale (verde/nero con occhi rossi) dopo che la versione "oro" non piaceva.
 - **avatar_miki.jpg RIPRISTINATO** alla versione precedente (commit 4bf4d34) su richiesta: MikiLab resta com'era; il tatuaggio nuovo va SOLO sul metaumano.
 - sw.js → mikilab-v41. Attesa conferma utente sulla somiglianza.
+
+## v58 (2026-09) — Avatar DEFINITIVI generati dalle foto reali dell'utente
+- L'utente ha caricato 4 riferimenti: 2 foto reali di Michele in laboratorio (polo bianca MikiLab, tatuaggio visibile), 1 close-up del tatuaggio pantera+serpente (occhi rossi), 1 avatar AI che gli piaceva.
+- Rigenerati TUTTI e 5 gli avatar (fotorealistici 3D, tema arancione, logo ML·MikiLab su maglia): `avatar_miki.jpg` (lui identico dalle foto, tatuaggio pantera sul braccio), `avatar_nexus.jpg` (stesso uomo, metà destra cromata con occhio rosso), `avatar_mikemix.jpg` (robot panettiere bianco/acciaio con grembiule), `avatar_mohamed.jpg` (dispatcher con headset, somigliante al riferimento), `avatar_bigmix.jpg` (mascotte con dome e impasto).
+- URL riferimenti chiave: foto Michele = artifacts/wwpzswdi_image-1787130722349.jpeg e m11j6wkr_image-1 (72).jpeg; tatuaggio = iuhkrex6_image-1.jpeg; Mohamed = sv0ydcta_image-1 (56).jpeg.
+- sw.js → mikilab-v42. Verificato a video nel gate. Attesa conferma utente; poi REDEPLOY per mikilab.de.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
