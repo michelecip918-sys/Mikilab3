@@ -4675,4 +4675,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Impressum §5 DDG**: nome+città+email inseriti; l'INDIRIZZO postale completo resta segnaposto evidenziato (l'utente non vuole pubblicare l'indirizzo di casa — appena fornisce un indirizzo/casella postale si sostituisce in `LegalPage.jsx`).
 - **Cookie Policy** dedicata (solo cookie tecnici §25(2) TTDSG → nessun consenso obbligatorio) + **banner cookie informativo** (dismiss, localStorage mikilab_cookie_ok) e **footer legale** nel PublicGate (Impressum/Privacy/Cookies aprono la modale LegalPage anche da pubblico). testid: public-legal-footer, cookie-notice, cookie-accept-btn, public-legal-modal.
 - Testato: banner+link+pagina con dati reali OK, 0 pageerror. sw.js → mikilab-v35.
+
+## v53 (2026-09) — Riparazione DNS dominio (INCIDENT RISOLTO)
+- **Problema**: mikilab.de irraggiungibile (HTTP 000, timeout) dopo modifica dell'utente su United Domains. L'A record puntava a 89.31.143.90 (parcheggio udag) invece che a Emergent. L'app su preview Emergent era intatta.
+- **Causa**: record DNS cambiati accidentalmente durante verifica Google Search Console.
+- **Fix**: istruzioni date all'utente — record `A @ → 162.159.142.117` e `A @ → 172.66.2.113`, `CNAME www → mikilab.de`, TTL 3600, su United Domains (nameserver udag mantenibili, TXT Google da NON cancellare). Poi scollega+ricollega dominio in Emergent Manage Publishes.
+- **Verificato**: mikilab.de HTTP 200 (HTTPS/Cloudflare attivo), logo/banner 200, API dietro PIN gate (401 atteso), logo live = ultima versione (md5 match). L'utente ha messo UN SOLO A record (172.66.2.113) — consigliato aggiungere anche 162.159.142.117 per ridondanza.
+- **Fix deploy blocker**: `delete_many({})` su email_digest_queue (in _run_daily_digest) reso non distruttivo → ora filtra `created_at < cutoff(1 giorno)`. deployment_agent: PASS.
+- RIFERIMENTO DNS CORRETTO per futuro: A @ 162.159.142.117 + 172.66.2.113, CNAME www → mikilab.de.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
