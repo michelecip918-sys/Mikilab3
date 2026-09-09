@@ -42,6 +42,7 @@ import OrdineCapo from "@/components/OrdineCapo";
 import MikeMixFloor from "@/components/MikeMixFloor";
 import MikeMixSense from "@/components/MikeMixSense";
 import MikeMixGuide from "@/components/MikeMixGuide";
+import DowntimeTraining from "@/components/DowntimeTraining";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -485,6 +486,13 @@ export default function App() {
                   </div>
                 </div>
                 <MikeMixGuide />
+                <div data-testid="panel-training" className="mt-4 holo-panel p-5 sm:p-6">
+                  <span className="holo-corner holo-corner-tl" style={{ color: "#7DD3FC" }} />
+                  <span className="holo-corner holo-corner-tr" style={{ color: "#7DD3FC" }} />
+                  <span className="holo-corner holo-corner-bl" style={{ color: "#7DD3FC" }} />
+                  <span className="holo-corner holo-corner-br" style={{ color: "#7DD3FC" }} />
+                  <DowntimeTraining />
+                </div>
               </section>
 
             </ErrorBoundary>

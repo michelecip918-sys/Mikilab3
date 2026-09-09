@@ -1560,6 +1560,83 @@ async def _translate_recipe_de(doc):
         return {}
 
 
+# ---------------------------------------------------------------------------
+# MIKE MIX · FORMAZIONE NEI TEMPI MORTI (Fase 3 del Manifesto)
+# Mike Mix trasforma le pause di produzione in micro-lezioni interattive per ricetta,
+# attingendo al ricettario MikiLab. Supervisione/abilitazione esclusiva del Capo Supremo.
+# ---------------------------------------------------------------------------
+class TrainingReq(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: Optional[str] = None
+    lang: str = "it"
+
+
+_TRAINING_CACHE: dict = {}
+
+
+@api_router.post("/mike/training")
+async def mike_training(payload: TrainingReq):
+    """Mike Mix genera una micro-lezione interattiva (JSON) su una ricetta del ricettario MikiLab."""
+    q = {"collection_name": "mikilab", "hidden": {"$ne": True}}
+    doc = None
+    if payload.recipe_id:
+        doc = await db.recipes.find_one({"id": payload.recipe_id}, {"_id": 0})
+    elif payload.recipe_name:
+        doc = await db.recipes.find_one({**q, "name": payload.recipe_name}, {"_id": 0})
+    if not doc:
+        doc = await db.recipes.find_one(q, {"_id": 0})
+    if not doc:
+        raise HTTPException(status_code=404, detail="Nessuna ricetta disponibile")
+
+    lang = (payload.lang or "it").lower()
+    cache_key = f"{doc.get('id','x')}::{lang}"
+    if cache_key in _TRAINING_CACHE:
+        return _TRAINING_CACHE[cache_key]
+
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Formatore non configurato")
+
+    ctx = {k: doc.get(k) for k in ["name", "flour_type", "notes", "procedure", "dough_category", "water_temp_c", "extra_ingredients"] if doc.get(k)}
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    sysmsg = (
+        "Sei Mike Mix, il maestro cibernetico operativo di MikiLab. Durante le pause di produzione fai una "
+        "MICRO-LEZIONE pratica per l'operatore su UNA ricetta, con tono autorevole, caldo e concreto da fornaio. "
+        f"Rispondi ESCLUSIVAMENTE in {lang_name} e SOLO con JSON valido."
+    )
+    prompt = (
+        "Dalla ricetta seguente crea una micro-lezione interattiva e restituisci un JSON con questa struttura ESATTA:\n"
+        '{"title": "titolo breve", "duration_min": 4, '
+        '"intro": "1-2 frasi che motivano l\'operatore", '
+        '"steps": [{"title": "passo", "detail": "spiegazione pratica 1-2 frasi"}], '
+        '"mistakes": [{"wrong": "errore comune", "fix": "come correggerlo"}], '
+        '"quiz": [{"q": "domanda", "options": ["a","b","c"], "answer_index": 0}]}\n'
+        "Regole: 4-6 steps, 2-3 mistakes, 3 domande di quiz con 3 opzioni ciascuna e answer_index corretto. "
+        "Concreto, niente fronzoli.\nRICETTA:\n" + json.dumps(ctx, ensure_ascii=False)
+    )
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"train-{doc.get('id','x')}-{lang}",
+            system_message=sysmsg,
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1800)
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        lesson = json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.warning(f"mike_training failed: {e}")
+        raise HTTPException(status_code=424, detail="Errore generazione lezione")
+
+    lesson["recipe_id"] = doc.get("id")
+    lesson["recipe_name"] = doc.get("name")
+    _TRAINING_CACHE[cache_key] = lesson
+    return lesson
+
+
+
 def _verify_email_html(link: str, lang: str) -> str:
     if lang == "de":
         return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Willkommen bei MikiLab 🥖</h2>"

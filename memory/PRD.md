@@ -4514,3 +4514,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Fasi 5/6/7/9: dashboard olografiche credibili (sintesi enzimatica, polimorfismo difensivo, nodi edge, kill-switch) dentro Miki-Nexus.
 - Fase 8: potenziare la Plancia Olografica 3D del Capo.
 - Fase 10: ecosistema autonomo (Mike Mix impara dal campo, allerta il Capo, mentore capi esordienti, supporto forni a legna/macchinari datati, manutenzione predittiva IoT).
+
+## v-MANIFESTO Fase 3 (2026-06) — Formazione nei Tempi Morti + fix avatar Mike Mix
+- **FASE 3 · Formazione nei Tempi Morti** (`components/DowntimeTraining.jsx` + endpoint `POST /api/mike/training`): Mike Mix genera una MICRO-LEZIONE interattiva su una ricetta del ricettario MikiLab (Claude Sonnet 4.6 → JSON: title, intro, steps[], mistakes[], quiz[]). Frontend: selettore ricetta (o "lezione a sorpresa"), avvio, steps numerati, box "Errori da evitare", quiz interattivo con punteggio, lettura vocale (voce mikemix). Cache per ricetta+lingua. Montato in Zona 3 (Mike Mix AI) come [panel-training]. Verificato E2E: lesson+steps+quiz renderizzati e cliccabili.
+- **FIX AVATAR MIKE MIX**: avatar_mikemix.jpg NON è più la persona "Mohamed". Generato un avatar dedicato = maestro cibernetico/android fornaio (ciano/oro, emblema ML), coerente col Manifesto ("fusione essenza del Capo + tecnologia d'impasto"). Rimosso /public/avatar_mohamed.jpg (nessun riferimento residuo). Trio pubblico ora: MikiLab (foto reale Capo) · Miki-Nexus (Capo metà-IA) · Mike Mix (android).
+- NB: preview ≠ produzione → serve Redeploy per mikilab.de.
