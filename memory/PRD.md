@@ -4574,3 +4574,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Login pubblico**: [public-login-btn] nell'header del Multiverso → AuthScreen (Google/Email/Password).
 - **WebGPU 120fps**: NON fatto come rewrite (troppo rischioso per il 3D funzionante); il renderer vanilla three.js è già in `high-performance` (DPR cap 1.8). Rimandato come task dedicato futuro. Search Console: rimandato (utente).
 - **Test iteration_222 (regressione TOTALE)**: backend 100% (12/12), frontend 100% (public/master/admin/guest/wrong-pin/kill-switch). 0 action items. Manifesto coperto integralmente.
+
+## v-MANIFESTO Schermata Unica (2026-06) — B2B Industrial Multiverse command deck
+- Rimossi i residui di "sezioni/transizioni": eliminati i divisori zona (ZoneDivider Z-01/Z-02/Z-03), la navigazione a zone `ZoneRail`, e il vecchio `ConsoleIndex` + `ConsoleSectionMenu`. Ora è UNA schermata continua.
+- Aggiunto **[deck-multiverse]** in cima al `<main>`: Multiverso 3D vivo (AvatarWorld3D) come centro della plancia, con titolo "MikiLab Command Deck" e gerarchia MikiLab → Miki-Nexus → Mike Mix. Tutte le funzioni avanzate restano integrate nel flusso continuo (nessuna pagina/menu separati). Verificato a schermo (deck presente, divisori rimossi).
+- design_guidelines.json aggiornato dal design agent (industrial single-screen HUD).
+- Email: mittente ufficiale `noreply@mikilab.de` con **fallback automatico** a `onboarding@resend.dev` (wrapper su _resend.Emails.send) finché il dominio non è verificato su Resend. Nuova chiave utente in .env.
+- WebGPU 120fps: NON fattibile su three r160 (nessuna build WebGPU di produzione) senza upgrade di three.js → task futuro. Search Console: in attesa del codice.
+- NB: import inutilizzati residui (ConsoleIndex/ConsoleSectionMenu/ZoneDivider/ZoneRail) → solo warning ESLint, non bloccanti (rimuovibili in cleanup).

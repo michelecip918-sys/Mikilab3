@@ -9574,8 +9574,25 @@ async def admin_revoke(body: GrantReq, admin: dict = Depends(require_admin)):
 import resend as _resend
 RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 SENDER_EMAIL = os.environ.get("SENDER_EMAIL", "noreply@mikilab.de")
+SENDER_FALLBACK = os.environ.get("SENDER_FALLBACK", "onboarding@resend.dev")
 if RESEND_API_KEY:
     _resend.api_key = RESEND_API_KEY
+# Fallback automatico del mittente: se il dominio (mikilab.de) non è ancora verificato su
+# Resend, l'invio ripiega sul mittente di test cosi' le email partono comunque.
+_orig_resend_send = _resend.Emails.send
+def _resend_send_with_fallback(params):
+    try:
+        return _orig_resend_send(params)
+    except Exception as e:
+        msg = str(e).lower()
+        frm = params.get("from") if isinstance(params, dict) else None
+        if frm and SENDER_FALLBACK and (SENDER_FALLBACK not in frm) and any(k in msg for k in ("domain", "verif", "not allowed", "403", "422", "forbidden")):
+            fb = dict(params)
+            fb["from"] = f"MikiLab <{SENDER_FALLBACK}>"
+            logging.getLogger(__name__).warning(f"Resend: mittente {frm} non verificato, fallback a {SENDER_FALLBACK}")
+            return _orig_resend_send(fb)
+        raise
+_resend.Emails.send = _resend_send_with_fallback
 
 
 class ForgotReq(BaseModel):

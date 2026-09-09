@@ -72,6 +72,7 @@ import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
+import AvatarWorld3D from "@/components/AvatarWorld3D";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
@@ -320,14 +321,21 @@ export default function App() {
             </div>
           </header>
 
-          <ZoneRail zones={ZONES} active={activeZone} onJump={jumpTo} />
-
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-40">
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
+              {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) */}
+              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border border-[#00F0FF]/25 h-[240px] sm:h-[300px] bg-[#050810]">
+                <div className="absolute inset-0"><AvatarWorld3D theme="panificio" accent="#00F0FF" /></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-4 z-10">
+                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#00F0FF]"> Command Deck</span></p>
+                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#7DD3FC] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
+                </div>
+              </div>
+
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
-                <ZoneDivider testid="zone-master" code="Z-01" title={tri("Master · Plancia di Governo", "Master · Steuerkonsole", "Master · Governance Console", "Master · Consola de Gobierno", "Master · Console de Gouvernance", "مستر · کنسول فرمان")} accent="#5E8CA8" />
                 <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#5E8CA8" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} reactive />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
@@ -349,8 +357,6 @@ export default function App() {
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
-                    <ConsoleIndex />
-                    <ConsoleSectionMenu active={consoleSec} onPick={setConsoleSec} />
                     <div data-testid="console-regia-tools" className="space-y-4">
                     <RoleLayout />
                     <CapoDeck />
@@ -462,7 +468,6 @@ export default function App() {
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneDivider testid="zone-operatori" code="Z-02" title={tri("Operatori · Piano Produzione", "Operatoren · Produktion", "Operators · Production Floor", "Operarios · Producción", "Opérateurs · Production", "اپراتورها · تولید")} accent="#00F0FF" />
                 <ZoneHero testid="hero-operatori" avatar="avatar_mikemix.jpg" accent="#00F0FF" tag="Z-02 · Produzione" name="Mike Mix" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
@@ -494,7 +499,6 @@ export default function App() {
 
               {/* ================= ZONA 3 · MIKE MIX AI ================= */}
               <section ref={zoneRefs.mikemix} data-zone="mikemix" className="holo-zone pt-2">
-                <ZoneDivider testid="zone-mikemix" code="Z-03" title={tri("Mike Mix AI · Presenza & Governance", "Mike Mix AI · Präsenz", "Mike Mix AI · Presence & Governance", "Mike Mix AI · Presencia", "Mike Mix AI · Présence", "بوکومیکس · حضور")} accent="#7DD3FC" />
                 <div data-testid="panel-nexus" className="mb-4">
                   <NexusConsole isCapo={!!(user && user.role === "admin")} />
                 </div>
