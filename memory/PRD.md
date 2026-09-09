@@ -4589,3 +4589,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Deck multiverso**: aggiunto backdrop industriale (radial gradient + griglia ciano) dietro AvatarWorld3D così non appare mai come rettangolo nero.
 - Verificato: i 6 pannelli (panel-nexus, panel-advanced-lab, panel-observe, panel-legacy, panel-ar-oven, panel-training) risultano tutti 'shown', hub tecnologie renderizzato correttamente.
 - Pendenti (input utente/rischio): verifica dominio mikilab.de su Resend (DNS lato utente); WebGPU vero (richiede upgrade three.js r160→r168+, task dedicato con backup).
+
+## v-MANIFESTO Email dominio verificato (2026-06)
+- Dominio **mikilab.de VERIFICATO** su Resend (id 2e9b39bb..., region eu-west-1, status verified) — confermato via API.
+- Mittente ufficiale **noreply@mikilab.de** operativo: invio di prova reale riuscito (email id ricevuto). SENDER_EMAIL=noreply@mikilab.de in backend/.env. Fallback wrapper resta come sicurezza (non si attiverà). Le email (verifica account, reset password, PIN ospite) ora partono ufficialmente da mikilab.de verso qualunque destinatario.
