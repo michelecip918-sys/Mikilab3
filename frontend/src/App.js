@@ -61,7 +61,7 @@ import SplashScreen from "@/components/SplashScreen";
 import { mkTri } from "@/i18n/triMaps";
 import { playDeckAlarm } from "@/lib/uiSounds";
 import { playTTS } from "@/lib/tts";
-import { enablePush } from "@/lib/reminders";
+import { DeckAlarmBar } from "@/components/DeckAlarmBar";
 import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
@@ -410,6 +410,8 @@ export default function App() {
                   })}
                 </div>
               </div>
+
+              <DeckAlarmBar tri={tri} refreshKey={deckMood} />
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">

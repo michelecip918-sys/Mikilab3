@@ -8,7 +8,7 @@
 #  the Mike Mix AI Security Guardian.
 # ============================================================================
 from fastapi import FastAPI, APIRouter, HTTPException, UploadFile, File, Depends, Request, WebSocket, WebSocketDisconnect
-from fastapi.responses import StreamingResponse, Response, HTMLResponse, JSONResponse
+from fastapi.responses import StreamingResponse, Response, HTMLResponse, JSONResponse, PlainTextResponse
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
@@ -7128,6 +7128,19 @@ async def _deck_alarm_loop():
             crit = deck["mood"] == "critico"
             now = datetime.now(timezone.utc)
             should = crit and (not was_critical or (last_push and (now - last_push).total_seconds() > 600))
+            if crit and not was_critical:
+                # Nuovo episodio critico → salva nello storico allarmi del turno.
+                stations = deck.get("critical_stations") or []
+                crit_depts = [d for d, v in (deck.get("depts") or {}).items() if v.get("level") == "critical"]
+                try:
+                    await db.deck_alarm_history.insert_one({
+                        "ts": now.isoformat(), "day": now.strftime("%Y-%m-%d"),
+                        "hm": now.strftime("%H:%M"), "stations": stations,
+                        "departments": crit_depts, "heartbeat": deck.get("heartbeat"),
+                        "score": deck.get("score"),
+                    })
+                except Exception:
+                    logger.exception("deck alarm history insert error")
             if should:
                 last_push = now
                 stations = deck.get("critical_stations") or []
@@ -7176,6 +7189,35 @@ async def deck_status_compute():
                 depts[d]["level"] = lvl
     return {"mood": pulse["mood"], "heartbeat": pulse["heartbeat"], "score": pulse["score"],
             "depts": depts, "critical_stations": crit_stations, "generated_at": now.isoformat()}
+
+
+_DEPT_LABELS_IT = {"panificio": "Panificio", "pizzeria": "Pizzeria", "pasticceria": "Pasticceria", "banco": "Magazzino"}
+
+
+@api_router.get("/deck/alarms/history")
+async def deck_alarms_history(day: Optional[str] = None, admin: dict = Depends(require_pro)):
+    """Storico episodi critici (default: oggi). Per la timeline del deck."""
+    d = day or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    items = await db.deck_alarm_history.find({"day": d}, {"_id": 0}).sort("ts", -1).to_list(200)
+    return {"day": d, "count": len(items), "items": items}
+
+
+@api_router.get("/deck/alarms/export")
+async def deck_alarms_export(day: Optional[str] = None, admin: dict = Depends(require_pro)):
+    """Export testuale dello storico allarmi del turno (per il report di fine turno)."""
+    d = day or datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    items = await db.deck_alarm_history.find({"day": d}, {"_id": 0}).sort("ts", 1).to_list(500)
+    lines = [f"MIKILAB · STORICO ALLARMI CRITICI — {d}", "=" * 42, ""]
+    if not items:
+        lines.append("Nessun allarme critico registrato. Turno regolare.")
+    else:
+        for it in items:
+            depts = ", ".join(_DEPT_LABELS_IT.get(x, x) for x in (it.get("departments") or [])) or "—"
+            st = ", ".join(it.get("stations") or []) or "—"
+            lines.append(f"[{it.get('hm')}] Reparti: {depts} | Postazioni: {st} | BPM {it.get('heartbeat')} · score {it.get('score')}")
+        lines += ["", f"Totale episodi critici: {len(items)}"]
+    text = "\n".join(lines)
+    return PlainTextResponse(text, headers={"Content-Disposition": f'attachment; filename="allarmi_{d}.txt"'})
 
 
 

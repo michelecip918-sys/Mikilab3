@@ -47,6 +47,20 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", spea
     const mat = (color, opts = {}) => new THREE.MeshStandardMaterial({ color, metalness: opts.m ?? 0.5, roughness: opts.r ?? 0.45, emissive: opts.e ?? 0x000000, emissiveIntensity: opts.ei ?? 0, transparent: opts.t ?? false, opacity: opts.o ?? 1 });
     const holoMat = (color, o = 0.32) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: o, side: THREE.DoubleSide });
 
+    // Texture radiale per bagliori volumetrici (bloom "finto" additivo) — resa nitida su WebGPU.
+    const glowTex = (() => {
+      const c = document.createElement("canvas"); c.width = c.height = 128;
+      const g = c.getContext("2d");
+      const rg = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+      rg.addColorStop(0, "rgba(255,150,60,0.95)"); rg.addColorStop(0.4, "rgba(255,107,0,0.45)"); rg.addColorStop(1, "rgba(255,107,0,0)");
+      g.fillStyle = rg; g.fillRect(0, 0, 128, 128);
+      const t = new THREE.CanvasTexture(c); return t;
+    })();
+    const makeGlow = (size, opacity = 0.7) => new THREE.Mesh(
+      new THREE.PlaneGeometry(size, size),
+      new THREE.MeshBasicMaterial({ map: glowTex, transparent: true, opacity, blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+
     let animatedExtras = [];
 
     if (theme === "panificio" || theme === "mikemix") {
@@ -62,7 +76,12 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", spea
         door2.position.set(0, -0.85, 0.88); oven.add(door2);
         oven.position.set(i === 0 ? -3.4 : 3.4, 1.3, -1.6);
         world.add(oven); reg(oven, i * 0.12, 0.7);
+        // Bagliore volumetrico davanti agli sportelli + riflesso caldo a terra.
+        const halo = makeGlow(2.6, 0.6); halo.position.set(0, -0.3, 1.05); oven.add(halo);
+        const floorGlow = makeGlow(3.4, 0.5); floorGlow.rotation.x = -Math.PI / 2; floorGlow.position.set(0, -1.28, 0.9); oven.add(floorGlow);
         animatedExtras.push({ type: "heat", door, door2 });
+        animatedExtras.push({ type: "glow", obj: halo, base: 0.55, sp: 4 });
+        animatedExtras.push({ type: "glow", obj: floorGlow, base: 0.42, sp: 2.6 });
       }
       // Silos farina
       for (let i = 0; i < 2; i++) {
@@ -115,6 +134,10 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", spea
       const mouth = new THREE.Mesh(new THREE.CircleGeometry(0.55, 20), new THREE.MeshBasicMaterial({ color: 0xff6a1a })); mouth.position.set(0, 0.3, 1.45); dome.add(mouth);
       const flame = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 10), mat(0xff8a2a, { e: 0xff5a00, ei: 1.6, m: 0.1, r: 0.3, t: true, o: 0.85 })); flame.position.set(0, 0.3, 1.25); dome.add(flame);
       dome.position.set(-2.4, 1.1, -1.2); world.add(dome); reg(dome, 0.1, 0.8); animatedExtras.push({ type: "flame", obj: flame });
+      const pzHalo = makeGlow(2.2, 0.7); pzHalo.position.set(0, 0.3, 1.55); dome.add(pzHalo);
+      const pzFloor = makeGlow(3, 0.45); pzFloor.rotation.x = -Math.PI / 2; pzFloor.position.set(0, -0.5, 1); dome.add(pzFloor);
+      animatedExtras.push({ type: "glow", obj: pzHalo, base: 0.6, sp: 6 });
+      animatedExtras.push({ type: "glow", obj: pzFloor, base: 0.4, sp: 3 });
       const bench = new THREE.Group();
       const top = new THREE.Mesh(new THREE.BoxGeometry(3, 0.14, 1.2), mat(0xb7c2cd, { m: 0.85, r: 0.25 })); top.position.y = 1; bench.add(top);
       for (let i = 0; i < 5; i++) { const ball = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 10), mat(0xEfe6d2, { r: 0.9, m: 0.02 })); ball.scale.y = 0.7; ball.position.set(-1 + i * 0.5, 1.16, (i % 2 ? 0.25 : -0.15)); bench.add(ball); }
@@ -230,6 +253,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", spea
       for (const x of animatedExtras) {
         if (x.type === "spin") x.obj.rotation.y += (x.sp || 0.9) * 0.016, x.obj.rotation.x += 0.004;
         else if (x.type === "heat") { const pulse = 1 + Math.sin(el * 4) * 0.25; x.door.material.emissiveIntensity = 1.1 * pulse; x.door2.material.emissiveIntensity = 1.1 * pulse; }
+        else if (x.type === "glow") { x.obj.material.opacity = x.base + Math.sin(el * (x.sp || 4)) * 0.18; }
         else if (x.type === "sway") x.obj.rotation.z = (x.ph - 1) * 0.12 + Math.sin(el * 1.5 + x.ph) * 0.06;
         else if (x.type === "float") x.obj.position.y = (x.obj.userData.baseY || x.obj.position.y) + Math.sin(el * 1.2 + x.ph) * 0.08;
         else if (x.type === "particles") { for (let i = 0; i < x.N; i++) { x.arr[i * 3 + 1] += 0.008 * (speakingRef.current ? 2.4 : 1); if (x.arr[i * 3 + 1] > 5) x.arr[i * 3 + 1] = 0; } x.obj.geometry.attributes.position.needsUpdate = true; x.obj.material.opacity = speakingRef.current ? 1 : 0.7; }

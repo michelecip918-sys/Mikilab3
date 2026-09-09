@@ -4642,3 +4642,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - sw.js CACHE_NAME → mikilab-v25 (forza refresh cache al redeploy). NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
 - Restano da fare (richieste utente precedenti, non ancora implementate): Push iPhone/iOS PWA, effetti WebGPU avanzati (bagliori volumetrici/riflessi forni), Storico Allarmi esportabile nel report di turno.
 
+
+## v48 (2026-09) — Storico Allarmi + Push iPhone + Effetti WebGPU forni
+- **Avatar finali**: MikiLab rifatto in stile 3D fotorealistico (dietro richiesta utente, no cartone) a tema arancione, applicato. sw.js CACHE_NAME → mikilab-v27.
+- **Storico Allarmi** (backend): `_deck_alarm_loop` ora salva ogni NUOVO episodio critico in `db.deck_alarm_history` (ts, day, hm, stations, departments, heartbeat, score). Nuovi endpoint admin: `GET /api/deck/alarms/history?day=` (timeline) e `GET /api/deck/alarms/export?day=` (PlainTextResponse .txt per report fine turno). Import aggiunto: PlainTextResponse.
+- **Frontend** `components/DeckAlarmBar.jsx` (montato sotto il deck in App.js): toggle "Storico allarmi" + conteggio + timeline (ora/reparti/postazioni/BPM), bottone **Esporta** (scarica .txt), bottone **Attiva notifiche** (enablePush) con rilevamento iOS → hint "Condividi → Aggiungi a Home" se iPhone non standalone. testid: deck-alarm-bar, alarm-history-toggle, alarm-count, alarm-export-btn, alarm-push-btn, alarm-timeline.
+- **Effetti WebGPU forni** (AvatarWorld3D.jsx): bagliori volumetrici additivi (texture radiale canvas + AdditiveBlending) sugli sportelli forni panificio + riflesso a terra + alone forno pizzeria, animazione "glow" pulsante. Look cinematografico.
+- Testato (self): endpoint history/export OK via curl; UI via screenshot (barra + timeline + bagliori forni, 0 pageerror).
+- ⚠️ REDEPLOY: il deploy in coda precedente NON include queste 3 ultime feature né l'avatar v27 finale → serve un redeploy finale per portarle su mikilab.de.
