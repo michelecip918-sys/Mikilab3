@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn } from "lucide-react";
+import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
@@ -9,6 +9,7 @@ import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import AuthScreen from "@/components/AuthScreen";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -25,6 +26,22 @@ export default function PublicGate({ onUnlock }) {
   const [reqSent, setReqSent] = useState(false);
   const [reqBusy, setReqBusy] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+
+  const shareUrl = "https://mikilab.de/";
+  const doShare = async () => {
+    const data = {
+      title: "MikiLab Pro",
+      text: tri("Scopri MikiLab Pro — il sistema operativo olografico per panificio, pizzeria e pasticceria.", "Entdecke MikiLab Pro.", "Discover MikiLab Pro — the holographic OS for bakery, pizzeria and pastry.", "Descubre MikiLab Pro.", "Découvre MikiLab Pro.", "MikiLab Pro را کشف کن."),
+      url: shareUrl,
+    };
+    try { if (navigator.share) { await navigator.share(data); return; } } catch { return; }
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success(tri("Link copiato! Condividilo dove vuoi.", "Link kopiert!", "Link copied! Share it anywhere.", "¡Enlace copiado!", "Lien copié !", "لینک کپی شد!"));
+    } catch {
+      toast.info(shareUrl);
+    }
+  };
 
   const sendRequest = async () => {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(reqEmail) || reqBusy) return;
@@ -121,6 +138,9 @@ export default function PublicGate({ onUnlock }) {
           </span>
         </div>
         <div className="flex items-center gap-2">
+          <button data-testid="public-share-btn" onClick={doShare} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#FF6B00]/40 text-[#FF6B00] text-xs font-bold hover:border-[#FF6B00] active:scale-95 transition-all backdrop-blur-md">
+            <Share2 className="w-3.5 h-3.5" /> {tri("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
+          </button>
           <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#D95200]/40 text-[#D95200] text-xs font-bold hover:border-[#D95200] active:scale-95 transition-all backdrop-blur-md">
             <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Entrar", "Connexion", "ورود")}
           </button>
@@ -207,7 +227,7 @@ export default function PublicGate({ onUnlock }) {
         {/* Fase 2 · Richiesta accesso — smistata da Mohamed */}
         <div data-testid="access-request" className="mt-5 w-full max-w-sm rounded-2xl bg-[#0b0f19]/80 border border-[#1e293b] p-4 backdrop-blur-md">
           {reqSent ? (
-            <p data-testid="access-sent" className="text-[12.5px] text-[#7FD8C0] leading-snug">✓ {tri(
+            <p data-testid="access-sent" className="text-[12.5px] text-[#22c55e] leading-snug">✓ {tri(
               "Richiesta inviata. Mohamed la smisterà e il Capo deciderà l'accesso.",
               "Anfrage gesendet. Mohamed sortiert sie, der Chef entscheidet.",
               "Request sent. Mohamed will route it and the Capo will decide.",
@@ -222,7 +242,7 @@ export default function PublicGate({ onUnlock }) {
               <input data-testid="access-note" value={reqNote} onChange={(e) => setReqNote(e.target.value)} placeholder={tri("Motivo (opzionale)", "Grund (optional)", "Reason (optional)", "Motivo (opcional)", "Motif (option)", "دلیل")}
                 className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#D95200] outline-none" />
               <button data-testid="access-send" onClick={sendRequest} disabled={reqBusy}
-                className="w-full py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#D95200,#7FD8C0)" }}>
+                className="w-full py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#D95200,#FF9D42)" }}>
                 {reqBusy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia richiesta", "Anfrage senden", "Send request", "Enviar", "Envoyer", "ارسال")}
               </button>
             </>
@@ -259,6 +279,21 @@ export default function PublicGate({ onUnlock }) {
             "Panadería · Pizzería · Pastelería · Almacén — en cinco idiomas.",
             "Boulangerie · Pizzeria · Pâtisserie · Entrepôt — en cinq langues.",
             "نانوایی · پیتزا · شیرینی · انبار")}</p>
+
+          <div className="mt-7 flex flex-col items-center gap-2">
+            <button data-testid="vetrina-share-btn" onClick={doShare}
+              className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-black text-sm text-[#030712] active:scale-95 transition-all"
+              style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 22px rgba(255,107,0,0.4)" }}>
+              <Share2 className="w-4 h-4" /> {tri("Condividi MikiLab", "MikiLab teilen", "Share MikiLab", "Compartir MikiLab", "Partager MikiLab", "اشتراک MikiLab")}
+            </button>
+            <p className="text-[11px] text-[#64748B]">{tri(
+              "Fai conoscere il laboratorio: condividi mikilab.de",
+              "Teile mikilab.de",
+              "Spread the word: share mikilab.de",
+              "Comparte mikilab.de",
+              "Partage mikilab.de",
+              "mikilab.de را به اشتراک بگذار")}</p>
+          </div>
         </section>
 
       </div>

@@ -4650,3 +4650,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Effetti WebGPU forni** (AvatarWorld3D.jsx): bagliori volumetrici additivi (texture radiale canvas + AdditiveBlending) sugli sportelli forni panificio + riflesso a terra + alone forno pizzeria, animazione "glow" pulsante. Look cinematografico.
 - Testato (self): endpoint history/export OK via curl; UI via screenshot (barra + timeline + bagliori forni, 0 pageerror).
 - ⚠️ REDEPLOY: il deploy in coda precedente NON include queste 3 ultime feature né l'avatar v27 finale → serve un redeploy finale per portarle su mikilab.de.
+
+
+## v49 (2026-09) — Crescita & Visibilità (Public Showcase)
+- **Pulsante Condividi** nel PublicGate (header + CTA finale della vetrina): `doShare()` usa Web Share API con fallback copia-link + toast. testid: public-share-btn, vetrina-share-btn. shareUrl = https://mikilab.de/.
+- **OG image** rigenerata a tema industriale arancione (banner 1200x630 con logo ML + "MikiLab Pro" + forno glow), sostituisce og-image.jpg. Meta OG/Twitter già presenti e corretti in index.html.
+- Ritocchi coerenza: bottone "Invia richiesta" gradiente ora tutto arancione (#D95200→#FF9D42), ✓ conferma verde successo.
+- sw.js CACHE_NAME → mikilab-v28.
+- Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
