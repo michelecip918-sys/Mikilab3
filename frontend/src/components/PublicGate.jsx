@@ -251,6 +251,9 @@ export default function PublicGate({ onUnlock }) {
 
         {/* Vetrina pubblica — testo indicizzabile + conversione */}
         <section data-testid="public-vetrina" className="mt-12 w-full max-w-3xl text-left">
+          <div className="rounded-2xl overflow-hidden border border-[#FF6B00]/25 shadow-[0_0_40px_rgba(255,107,0,0.15)] mb-6">
+            <img src={`${PUB}/multiverse-banner.jpg`} alt={tri("MikiLab Pro — il multiverso olografico dei reparti di panificazione", "MikiLab Pro — das holografische Multiversum", "MikiLab Pro — the holographic bakery multiverse", "MikiLab Pro — el multiverso holográfico", "MikiLab Pro — le multivers holographique", "چندجهانی هولوگرافیک MikiLab Pro")} className="w-full h-auto block" loading="lazy" data-testid="vetrina-banner" />
+          </div>
           <h2 className="text-base md:text-lg font-black text-white uppercase tracking-wide text-center">{tri(
             "Cos'è MikiLab Pro", "Was ist MikiLab Pro", "What is MikiLab Pro", "Qué es MikiLab Pro", "Qu'est-ce que MikiLab Pro", "MikiLab Pro چیست")}</h2>
           <p className="mt-2 text-sm text-[#CBD5E1] leading-relaxed text-center max-w-2xl mx-auto">{tri(

@@ -4663,4 +4663,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Cleanup nomi vecchi**: campione vocale arabo del LangSelector correggeva "بوكوميكس" (BokoMix, vecchio nome) → "مايك ميكس" (Mike Mix). NB: i `voice: "bakemix"` sparsi sono ID voce interni (mappati backend), non user-facing → lasciati.
 - **QA multilingua** (8 lingue it/de/en/es/fr/fa/ar/tr): RTL arabo OK (dir=rtl, layout speculare), 0 overflow mobile 390, 0 pageerror. Titoli/tab/pulsanti pubblici mancanti in AR/TR aggiunti a `triExtraArTr.js` (Panificio, Pizzeria, "Il Multiverso della Panificazione", Condividi, "Cos'è MikiLab Pro", Storico allarmi, Esporta, Attiva notifiche, Entra con il PIN, Invia richiesta). Verificato TR: titoli/tab/CTA ora tradotti; i paragrafi lunghi restano EN come fallback dignitoso.
 - Pubblicato in produzione (redeploy).
+
+## v51 (2026-09) — Logo definitivo ML intrecciato + banner multiverso
+- **Logo finale**: recuperato il classico ML+spiga dalla storia git (commit 574ebed), poi rigenerato ELEGANTE: monogramma **ML intrecciato** (lettere intrecciate) argento con spiga di grano dorata e glow oro-arancio su scuro. Applicato a TUTTI gli asset: logo-emblem.png, logo.png, logo-256.png, icon-192/512 (PWA manifest), apple-touch-icon.png, favicon.ico, favicon-32.png. Il logo è un monogramma universale → nessun problema multilingua.
+- **Banner multiverso**: generato `multiverse-banner.jpg` (fabbrica industriale scura + 4 sfere olografiche dorate Bread/Pastry/Pizza/Warehouse + logo ML intrecciato in alto) ispirato all'immagine fornita dall'utente, ma col logo ML e tema oro-arancio. Usato come hero nella vetrina del PublicGate (`vetrina-banner`, alt tradotto) E come nuova `og-image.jpg` (anteprima social 1200x630).
+- sw.js CACHE_NAME → mikilab-v33.
+- Verificato via screenshot: logo ML dorato visibile in header gate + banner hero nella vetrina, 0 errori.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
