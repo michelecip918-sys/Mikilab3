@@ -4701,4 +4701,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Avatar Miki-Nexus rifatto**: fusione umano/AI che SOMIGLIA a Michele (foto riferimento image-1 (37).jpeg): lato umano con buzz cut, orecchino, barba incolta/trasandata; lato robot cromato con OCCHIO ROSSO luminoso; logo MikiLab sulla maglia. Stile Terminator, tema arancione. Applicato a avatar_nexus.jpg. sw.js → mikilab-v36.
 - **FIX PIN produzione (critico)**: su mikilab.de il PIN 198505 veniva rifiutato perché il DB di produzione aveva un hash diverso. Aggiunto salvagente allo startup (`on_startup_seed_mikilab`): se `ADMIN_GATE_PIN` è nel .env, l'hash in `app_meta.admin_gate_pin` viene SEMPRE riallineato a quel PIN → 198505 funziona sempre dopo ogni deploy. Verificato in preview (ok master).
 - **Rilevato**: il frontend live è una build più vecchia (manca deck/status → 401 via gate, deck-multiverse assente). SERVE la ripubblicazione per portare tutto live.
+
+## v57 (2026-09) — Nexus con la faccia reale di Michele + tatuaggio pantera-serpente
+- Utente: Nexus deve assomigliare al SUO PRIMO avatar (sono la stessa persona, uno più posseduto dall'AI). Recuperato il primo avatar da git (commit 3ec87a3) e usata la foto reale (fyh6ykoj_image-1 (37).jpeg).
+- **avatar_nexus.jpg FINALE**: metà sinistra = faccia reale di Michele (identica alla sua foto), metà destra = teschio cromato stile Terminator con OCCHIO ROSSO. Tatuaggio pantera+serpente (dal video 2026-08-30-083449687.mp4, frame estratto con ffmpeg) sull'avambraccio umano, fedele all'originale (verde/nero con occhi rossi) dopo che la versione "oro" non piaceva.
+- **avatar_miki.jpg RIPRISTINATO** alla versione precedente (commit 4bf4d34) su richiesta: MikiLab resta com'era; il tatuaggio nuovo va SOLO sul metaumano.
+- sw.js → mikilab-v41. Attesa conferma utente sulla somiglianza.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
