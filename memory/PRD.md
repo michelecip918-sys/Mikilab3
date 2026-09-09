@@ -4556,3 +4556,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Hub pilotabile a voce**: in AdvancedLab il comando vocale privato (Web Speech API locale) viene interpretato ed esegue azioni ([lab-voice-action]): "scansiona sensori" → scan IoT, "manutenzione"/"clima" → focus. Nessun cloud.
 - **Simulatore AR Forni** (`components/AROven.jsx`, [panel-ar-oven] in Operatori): fotocamera (getUserMedia, fallback simulato) con mirino AR + overlay indicazioni cottura [ar-guide] (temp/tempo/posizione/nota) calcolate da Mike Mix. [ar-start]/[ar-scan]/[ar-stop]. Verificato a schermo.
 - Con questo il Manifesto è coperto integralmente (funzionale + visuale). Residuo puramente infrastrutturale: WebGPU 120fps, invio email reale dei PIN (serve provider), ingest IoT reale.
+
+## v-MANIFESTO Fase 1 SEO (2026-06) — Vetrina globale indicizzabile
+- **index.html**: SEO/social aggiornati alla nuova identità. Sbloccata indicizzazione (`robots: index, follow, max-image-preview:large` — prima era noindex/nofollow). Titolo/description/keywords + Open Graph + Twitter card riscritti su "MikiLab Pro — Il Multiverso Olografico della Panificazione". Aggiunto JSON-LD SoftwareApplication (rich results Google).
+- **og-image.jpg** (1200×630) brandizzato generato (multiverso olografico ciano/oro) in /public.
+- **robots.txt**: da `Disallow: /` → `Allow: /` + `Sitemap: https://mikilab.de/sitemap.xml`. sitemap.xml già presente.
+- Verificato sull'HTML servito: nuovo title, robots index/follow, OG, JSON-LD presenti. NB: robots.txt in preview è gestito da Cloudflare; in produzione (mikilab.de) verrà servito quello di /public.
