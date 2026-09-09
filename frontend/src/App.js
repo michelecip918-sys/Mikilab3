@@ -46,6 +46,7 @@ import DowntimeTraining from "@/components/DowntimeTraining";
 import NexusConsole from "@/components/NexusConsole";
 import MikeObserve from "@/components/MikeObserve";
 import MikeAlerts from "@/components/MikeAlerts";
+import LegacyOven from "@/components/LegacyOven";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -476,6 +477,9 @@ export default function App() {
                 )}
                 <div data-testid="panel-observe" className="mt-4 holo-panel p-5">
                   <MikeObserve operator={operator} />
+                </div>
+                <div data-testid="panel-legacy" className="mt-4 holo-panel p-5">
+                  <LegacyOven operator={operator} />
                 </div>
               </section>
 

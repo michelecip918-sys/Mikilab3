@@ -14,7 +14,20 @@ export default function NexusConsole({ isCapo = false }) {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [m, setM] = useState({ enz: 96.4, nodes: 42, plants: 7, integrity: 100, threats: 0, temp: 27.0 });
   const [armed, setArmed] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [countdown, setCountdown] = useState(0);
   const barsRef = useRef(null);
+
+  // Kill-Switch: doppia conferma con countdown olografico.
+  useEffect(() => {
+    if (!confirming) return;
+    setCountdown(5);
+    const t = setInterval(() => setCountdown((c) => {
+      if (c <= 1) { clearInterval(t); setConfirming(false); return 0; }
+      return c - 1;
+    }), 1000);
+    return () => clearInterval(t);
+  }, [confirming]);
 
   useEffect(() => {
     const t = setInterval(() => {
@@ -121,10 +134,22 @@ export default function NexusConsole({ isCapo = false }) {
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#f43f5e]"><Power className="w-3.5 h-3.5" /> Kill-Switch</span>
             {isCapo ? (
-              <button data-testid="nexus-killswitch" onClick={() => setArmed((v) => !v)}
-                className={`px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider active:scale-95 transition-all border ${armed ? "bg-[#f43f5e] text-[#070A10] border-[#f43f5e]" : "bg-[#0b0f19] text-[#f43f5e] border-[#f43f5e]/40"}`}>
-                {armed ? tri("ARMATO", "SCHARF", "ARMED", "ARMADO", "ARMÉ", "مسلح") : tri("Arma protocollo", "Aktivieren", "Arm protocol", "Armar", "Armer", "مسلح‌سازی")}
-              </button>
+              armed ? (
+                <button data-testid="nexus-killswitch" onClick={() => { setArmed(false); setConfirming(false); }}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#f43f5e] text-[#070A10] border border-[#f43f5e] active:scale-95 transition-all">
+                  {tri("ARMATO · disarma", "SCHARF · entschärfen", "ARMED · disarm", "ARMADO · desarmar", "ARMÉ · désarmer", "مسلح · خلع")}
+                </button>
+              ) : confirming ? (
+                <button data-testid="nexus-killswitch-confirm" onClick={() => { setArmed(true); setConfirming(false); }}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#f43f5e] border border-[#f43f5e] animate-pulse active:scale-95 transition-all">
+                  {tri(`Conferma (${countdown})`, `Bestätigen (${countdown})`, `Confirm (${countdown})`, `Confirmar (${countdown})`, `Confirmer (${countdown})`, `تأیید (${countdown})`)}
+                </button>
+              ) : (
+                <button data-testid="nexus-killswitch" onClick={() => setConfirming(true)}
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#f43f5e] border border-[#f43f5e]/40 active:scale-95 transition-all">
+                  {tri("Arma protocollo", "Aktivieren", "Arm protocol", "Armar", "Armer", "مسلح‌سازی")}
+                </button>
+              )
             ) : (
               <span data-testid="nexus-killswitch-locked" className="text-[10px] font-bold text-[#8aa0b4]">{tri("Riservato al Capo Supremo", "Nur Oberster Chef", "Supreme Capo only", "Solo Capo Supremo", "Capo Suprême seulement", "فقط کاپوی برتر")}</span>
             )}

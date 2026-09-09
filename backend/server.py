@@ -1714,6 +1714,51 @@ async def mike_alerts_read(admin: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+# MIKE MIX · SUPPORTO FORNI A LEGNA & MACCHINARI DATATI (Fase 10)
+class LegacyAdaptReq(BaseModel):
+    equipment: str            # es. "forno a legna", "impastatrice a bracci anni '80", "cella datata"
+    recipe_name: Optional[str] = None
+    detail: Optional[str] = None   # note libere (stato, temperatura raggiungibile, ecc.)
+    lang: str = "it"
+
+
+@api_router.post("/mike/legacy-adapt")
+async def mike_legacy_adapt(payload: LegacyAdaptReq):
+    """Mike Mix ricalcola tempi/velocità/temperature per compensare forni a legna e macchinari storici."""
+    eq = (payload.equipment or "").strip()
+    if not eq:
+        raise HTTPException(status_code=400, detail="Indica l'attrezzatura")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Mike Mix non configurato")
+    lang = (payload.lang or "it").lower()
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"legacy-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei Mike Mix. Supporti botteghe familiari con forni a legna e macchinari datati, trattando il forno "
+                "come un termodinamico invisibile: ricalcoli tempi, velocità e temperature per compensare i limiti "
+                f"strutturali senza perdere qualità. Rispondi in {lang_name} e SOLO con JSON valido."),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1500)
+        prompt = (
+            'Restituisci SOLO JSON valido e CONCISO (massimo 4 adjustments e 2 warnings): '
+            '{"summary":"1-2 frasi","adjustments":[{"param":"es. Temperatura forno","value":"es. 230°C -> 210°C con 5 min in più","why":"motivo breve"}],"warnings":["avvertenza"]}\n'
+            f"Attrezzatura: {eq}\nRicetta: {payload.recipe_name or 'generica'}\nNote: {payload.detail or '-'}"
+        )
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        return json.loads(m.group(0)) if m else {"summary": "", "adjustments": [], "warnings": []}
+    except Exception as e:
+        logging.warning(f"legacy_adapt failed: {e}")
+        raise HTTPException(status_code=424, detail="Errore adattamento")
+
+
+
 def _verify_email_html(link: str, lang: str) -> str:
     if lang == "de":
         return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Willkommen bei MikiLab 🥖</h2>"
