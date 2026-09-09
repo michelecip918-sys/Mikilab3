@@ -228,6 +228,39 @@ export default function PublicGate({ onUnlock }) {
             </>
           )}
         </div>
+
+        {/* Vetrina pubblica — testo indicizzabile + conversione */}
+        <section data-testid="public-vetrina" className="mt-12 w-full max-w-3xl text-left">
+          <h2 className="text-base md:text-lg font-black text-white uppercase tracking-wide text-center">{tri(
+            "Cos'è MikiLab Pro", "Was ist MikiLab Pro", "What is MikiLab Pro", "Qué es MikiLab Pro", "Qu'est-ce que MikiLab Pro", "MikiLab Pro چیست")}</h2>
+          <p className="mt-2 text-sm text-[#9fb3c4] leading-relaxed text-center max-w-2xl mx-auto">{tri(
+            "MikiLab Pro è il sistema operativo olografico per panificio, pizzeria e pasticceria. Unisce un multiverso 3D dei reparti, l'IA operativa Mike Mix e la coscienza strategica Miki-Nexus per gestire ricette, produzione, formazione e food cost — in un'unica interfaccia ad alta tecnologia.",
+            "MikiLab Pro ist das holografische Betriebssystem für Backstube, Pizzeria und Konditorei: 3D-Multiversum, operative KI Mike Mix und strategische Instanz Miki-Nexus für Rezepte, Produktion, Schulung und Food Cost.",
+            "MikiLab Pro is the holographic operating system for bakery, pizzeria and pastry: a 3D multiverse of departments, the Mike Mix operational AI and the Miki-Nexus strategic consciousness for recipes, production, training and food cost.",
+            "MikiLab Pro es el sistema operativo holográfico para panadería, pizzería y pastelería: multiverso 3D, IA Mike Mix y Miki-Nexus para recetas, producción, formación y food cost.",
+            "MikiLab Pro est le système d'exploitation holographique pour boulangerie, pizzeria et pâtisserie : multivers 3D, IA Mike Mix et Miki-Nexus pour recettes, production, formation et food cost.",
+            "MikiLab Pro سیستم‌عامل هولوگرافیک برای نانوایی، پیتزا و شیرینی است.")}</p>
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+            {[
+              { t: tri("Ricettario Vivente", "Lebendes Rezeptbuch", "Living Recipe Book", "Recetario Vivo", "Livre Vivant", "دستورنامه زنده"), d: tri("Detta un obiettivo, Miki-Nexus calcola matrice e curva di maturazione.", "Ziel nennen, Miki-Nexus rechnet.", "Set a goal, Miki-Nexus computes the matrix and maturation curve.", "Fija un objetivo y Miki-Nexus calcula.", "Fixe un objectif, Miki-Nexus calcule.", "هدف بده تا محاسبه شود."), c: "#F6D27A" },
+              { t: tri("Produzione con l'IA", "KI-Produktion", "AI Production", "Producción con IA", "Production IA", "تولید با هوش"), d: tri("Piani, turni e food cost gestiti da Mike Mix in tempo reale.", "Pläne, Schichten, Food Cost von Mike Mix.", "Plans, shifts and food cost run by Mike Mix in real time.", "Planes, turnos y food cost por Mike Mix.", "Plans, équipes et food cost par Mike Mix.", "برنامه و شیفت با Mike Mix."), c: "#00F0FF" },
+              { t: tri("Formazione & Multiverso 3D", "Schulung & 3D", "Training & 3D Multiverse", "Formación & 3D", "Formation & 3D", "آموزش و ۳بعدی"), d: tri("Corsi interattivi per ricetta e un multiverso 3D immersivo dei reparti.", "Interaktive Kurse und 3D-Multiversum.", "Interactive per-recipe courses and an immersive 3D multiverse.", "Cursos interactivos y multiverso 3D.", "Cours interactifs et multivers 3D.", "دوره‌های تعاملی و چندجهانی."), c: "#7DD3FC" },
+            ].map((f) => (
+              <div key={f.t} className="rounded-xl bg-[#0b0f19]/70 border border-[#1e293b] p-4 backdrop-blur-md">
+                <p className="text-sm font-black" style={{ color: f.c }}>{f.t}</p>
+                <p className="mt-1 text-[12px] text-[#9fb3c4] leading-snug">{f.d}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-center text-[11px] text-[#64748B]">{tri(
+            "Panificio · Pizzeria · Pasticceria · Magazzino — in italiano, tedesco, inglese, spagnolo e francese.",
+            "Backstube · Pizzeria · Konditorei · Lager — in fünf Sprachen.",
+            "Bakery · Pizzeria · Pastry · Warehouse — in five languages.",
+            "Panadería · Pizzería · Pastelería · Almacén — en cinco idiomas.",
+            "Boulangerie · Pizzeria · Pâtisserie · Entrepôt — en cinq langues.",
+            "نانوایی · پیتزا · شیرینی · انبار")}</p>
+        </section>
+
       </div>
     </div>
   );

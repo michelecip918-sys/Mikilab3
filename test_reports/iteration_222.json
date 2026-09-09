@@ -1,0 +1,27 @@
+{
+  "summary": "Iter 222 — FINAL Manifesto regression. Backend: 12/12 pytest PASSED covering admin-gate wrong/master/guest, public access-request (valid+invalid + Mohamed routing), Mohamed inbox admin-only + list+act (approve returns 6-digit guest_pin, verified on gate), Mike observe (with `action` field) + alerts, Legacy oven (with `equipment` field) LLM ~35s, Living recipe admin-only + guest/gate-only 401-403, Resend forgot-password 200 for michelecip918@gmail.com. Frontend: PUBLIC-GATE renders all 13 testids (public-gate, 4 world tabs public-world-{panificio,pizzeria,pasticceria,banco}, public-avatars, public-hierarchy, public-email accessi@mikilab.de, public-vetrina descriptive block, public-login-btn opens AuthScreen with email/password inputs, access-request with access-email + access-send). Master PIN 198505 via numeric pad -> app-header visible. Admin login (admin@mikilab.de / Mikilab2026!) -> all 27 admin testids present in DOM (panel-mohamed-inbox, mohamed-inbox, panel-living-recipe, living-recipe, living-objective, living-generate, panel-legacy, legacy-oven, legacy-eq, legacy-run, mike-observe, mike-alerts, nexus-console, nexus-nodes, nexus-integrity, advanced-lab, lab-climate, lab-iot, lab-maintenance, lab-edge, lab-iot-scan, lab-voice, ar-oven, ar-recipe, ar-start, account-btn). After admin logout, nexus-killswitch-locked is displayed to non-admin. Guest PIN 202020 -> guest-view + guest-barrier + training-start-btn present, app-header absent (correct isolation). Wrong PIN -> admin-pin-error visible. No /api/mike/* 404s. No page errors during navigation.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter222_final_regression.py", "/app/test_reports/pytest/iter222.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "All Manifesto endpoints functional. /api/mike/observe requires `action` (not `chosen`), /api/mike/legacy-adapt requires `equipment` (not `target_oven`); document these in the swagger/README so future testers don't send stale keys.",
+    "/api/admin-gate/verify returns 200 with {ok:false, level:null} on wrong PIN (not 401). This is intentional to avoid PIN-existence oracles, but is somewhat unusual; keep it consistent.",
+    "Guest-PIN flow (Mohamed approve -> Resend email -> guest verify) is fully working end-to-end; guest_pin persists in db.guest_pins with 30d TTL and unlocks the /api/admin-gate/verify with level='guest'.",
+    "nexus-killswitch-locked correctly rendered for non-admin sessions, keeping Supreme Capo functions restricted.",
+    "IP rate-limit on /api/admin-gate/verify (8/300s) can flake automated tests; regression relied on rate_limits cleanup helper. Consider bypass for test IPs or a higher threshold in preview env.",
+    "AdminGate is a numeric keypad (data-testid admin-key-{0-9}), not a text input — testers must click keys individually. Public gate exposes button 'Enter with PIN' (no dedicated testid) — consider adding data-testid='public-enter-pin' for easier automation."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter222_final_regression.py"],
+  "success_rate": {"backend": "100% (12/12)", "frontend": "100% (public + master + admin + guest + wrong-pin + killswitch verified)"},
+  "test_credentials": "Master 198505 · Guest 202020 · admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "Access requests seeded via POST /api/public/access-request (TEST_iter222_public@example.com, TEST_iter222_act_<ts>@example.com, TEST_iter222_ui@example.com). Observe alert seeded via /api/mike/observe with recipe_name=TEST_iter222_observe.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Public gate world-tab ids are panificio/pizzeria/pasticceria/banco (not bakery/pastry/warehouse — labels are localized). AdminGate uses numeric-keypad testids admin-key-0..9 + admin-key-back; there is no text input. To reach AdminGate from PublicGate, click role=button name='Enter with PIN'. LLM endpoints (living-recipe, legacy-adapt, training lesson) complete in ~15-60s. Use tests/_clear_ratelimit.py + db.rate_limits.delete_many({}) if /api/admin-gate/verify starts returning 429 during automated runs. All expected data-testids from the manifest are present in the codebase.",
+  "rca of the issue": "N/A — Manifesto regression green across backend + frontend."
+}

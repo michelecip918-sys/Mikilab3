@@ -10429,6 +10429,21 @@ async def act_access_request(body: AccessReqAction, admin: dict = Depends(requir
             "created_at": now_iso(), "expires_at": expires,
         })
         update["guest_pin"] = guest_pin
+        # Email reale del PIN ospite (Resend) — se il mittente/dominio sono verificati
+        to_email = (req or {}).get("email")
+        if RESEND_API_KEY and to_email:
+            try:
+                import resend as _rs
+                html = f"""<div style="font-family:Arial,sans-serif;background:#030712;color:#fff;padding:28px;border-radius:12px">
+<p style="color:#00F0FF;font-size:12px;letter-spacing:2px;text-transform:uppercase">MikiLab Pro · Accesso Ospite</p>
+<h2 style="margin:8px 0">Benvenuto nella Formazione</h2>
+<p style="color:#c5d3df">Il Capo Supremo ha approvato la tua richiesta. Usa questo PIN per accedere alla Formazione nei Tempi Morti:</p>
+<p style="font-size:34px;font-weight:bold;letter-spacing:8px;color:#00F0FF;margin:18px 0">{guest_pin}</p>
+<p style="color:#8aa0b4;font-size:12px">Valido 30 giorni · Vai su <a href="https://mikilab.de" style="color:#7DD3FC">mikilab.de</a> e inserisci il PIN nel portale.</p>
+</div>"""
+                await asyncio.to_thread(_rs.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [to_email], "subject": "MikiLab Pro · Il tuo PIN di accesso", "html": html})
+            except Exception as e:
+                logging.getLogger(__name__).error(f"guest pin email failed: {e}")
     await db.access_requests.update_one({"id": body.id}, {"$set": update})
     return {"ok": True, "guest_pin": guest_pin}
 

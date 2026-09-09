@@ -4567,3 +4567,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Login più visibile**: aggiunto pulsante "Accedi" [public-login-btn] nell'header del Multiverso pubblico (PublicGate) che apre AuthScreen (Google + Email/Password + Forgot). L'header app aveva già login visibile.
 - **AR Forni collegato al motore reale**: [ar-recipe] selettore ricetta (ricettario MikiLab) + scan chiama `POST /api/mike/legacy-adapt` con la ricetta; parsing regex di °C/min dall'output LLM per l'overlay, con badge "Live · Mike Mix" quando il calcolo è reale (fallback simulato se LLM non disponibile). Verificato a schermo: 180°C/18min + nota LLM.
 - Google Search Console verifica: rimandata a fine lavori (come da utente).
+
+## v-MANIFESTO FINALE (2026-06) — Email reale + Vetrina + completamento
+- **Email reale (Resend)**: aggiunte in backend/.env `RESEND_API_KEY` (chiave utente) + `SENDER_EMAIL=onboarding@resend.dev` (mittente di test; da cambiare in noreply@mikilab.de quando mikilab.de sarà verificato su Resend). Verifica account e reset password erano già collegate a Resend (gated su RESEND_API_KEY) → ora inviano davvero. Aggiunto invio email del **PIN ospite** all'approvazione in Inbox Mohamed. Testato: forgot-password ok:true, nessun errore. NB: in test mode Resend invia SOLO all'email del proprietario dell'account (michelecip918@gmail.com).
+- **Vetrina pubblica** [public-vetrina]: sezione descrittiva indicizzabile + 3 card (Ricettario Vivente, Produzione IA, Formazione & 3D) nel PublicGate per SEO e conversione.
+- **Login pubblico**: [public-login-btn] nell'header del Multiverso → AuthScreen (Google/Email/Password).
+- **WebGPU 120fps**: NON fatto come rewrite (troppo rischioso per il 3D funzionante); il renderer vanilla three.js è già in `high-performance` (DPR cap 1.8). Rimandato come task dedicato futuro. Search Console: rimandato (utente).
+- **Test iteration_222 (regressione TOTALE)**: backend 100% (12/12), frontend 100% (public/master/admin/guest/wrong-pin/kill-switch). 0 action items. Manifesto coperto integralmente.
