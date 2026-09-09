@@ -164,6 +164,7 @@ export default function App() {
         }
       }
       prevDeckMood.current = mood;
+      try { window.dispatchEvent(new CustomEvent("mikilab-mood", { detail: mood })); } catch { /* */ }
     }).catch(() => { /* */ });
     load();
     const t = setInterval(load, 15000);

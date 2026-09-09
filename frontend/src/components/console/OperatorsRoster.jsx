@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { NexusAvatar } from "@/components/NexusAvatar";
 
 const PUB = process.env.PUBLIC_URL;
 const API = process.env.REACT_APP_BACKEND_URL;
@@ -64,7 +65,11 @@ export default function OperatorsRoster({ onPick }) {
           <div key={o.id} data-testid={`roster-core-${o.id}`} className="flex flex-col items-center gap-1.5 p-2 rounded-xl" style={{ background: "rgba(12,16,25,0.6)", border: `1px solid ${o.accent}3a` }}>
             <span className="relative">
               <span aria-hidden className="absolute -inset-1 rounded-full" style={{ background: `radial-gradient(circle, ${o.accent}55, transparent 70%)`, animation: "pulse 2.8s ease-in-out infinite" }} />
-              <img src={`${PUB}/${o.img}`} alt={o.name} className="relative w-14 h-14 rounded-full object-cover object-top" style={{ border: `2px solid ${o.accent}`, boxShadow: `0 0 16px ${o.accent}66` }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              {o.id === "nexus" ? (
+                <NexusAvatar size={56} className="relative" />
+              ) : (
+                <img src={`${PUB}/${o.img}`} alt={o.name} className="relative w-14 h-14 rounded-full object-cover object-top" style={{ border: `2px solid ${o.accent}`, boxShadow: `0 0 16px ${o.accent}66` }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+              )}
             </span>
             <span className="text-[11px] font-black text-white text-center leading-tight truncate max-w-[92px]">{o.name}</span>
             <span className="text-[9px] text-center leading-tight" style={{ color: o.accent }}>{o.role}</span>

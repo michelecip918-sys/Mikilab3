@@ -4,6 +4,7 @@ import { Activity, Cpu, Globe2, ShieldHalf, Power, Volume2, Waves, Zap } from "l
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { NexusAvatar } from "@/components/NexusAvatar";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -92,7 +93,7 @@ export default function NexusConsole({ isCapo = false }) {
         <div className="flex items-center gap-3">
           <div className="relative">
             <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.6), rgba(255,107,0,0.3) 60%, transparent 72%)" }} />
-            <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="relative w-14 h-14 rounded-full object-cover object-top border-2 border-[#EAB308]/70" style={{ boxShadow: "0 0 26px rgba(246,210,122,0.5)" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <NexusAvatar size={56} className="relative border-2 border-[#EAB308]/70" />
           </div>
           <div className="min-w-0">
             <h3 className="font-cyber text-lg font-black uppercase tracking-[0.14em] text-white">Miki-Nexus</h3>

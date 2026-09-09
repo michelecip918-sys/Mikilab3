@@ -4713,4 +4713,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Rigenerati TUTTI e 5 gli avatar (fotorealistici 3D, tema arancione, logo ML·MikiLab su maglia): `avatar_miki.jpg` (lui identico dalle foto, tatuaggio pantera sul braccio), `avatar_nexus.jpg` (stesso uomo, metà destra cromata con occhio rosso), `avatar_mikemix.jpg` (robot panettiere bianco/acciaio con grembiule), `avatar_mohamed.jpg` (dispatcher con headset, somigliante al riferimento), `avatar_bigmix.jpg` (mascotte con dome e impasto).
 - URL riferimenti chiave: foto Michele = artifacts/wwpzswdi_image-1787130722349.jpeg e m11j6wkr_image-1 (72).jpeg; tatuaggio = iuhkrex6_image-1.jpeg; Mohamed = sv0ydcta_image-1 (56).jpeg.
 - sw.js → mikilab-v42. Verificato a video nel gate. Attesa conferma utente; poi REDEPLOY per mikilab.de.
+
+## v59 (2026-09) — Occhio rosso reattivo del Nexus
+- Nuovo componente `components/NexusAvatar.jsx`: avatar Miki-Nexus con overlay occhio rosso che PULSA (animate-ping+pulse, posizionato eyeLeft/eyeTop sull'occhio cromato) quando l'impianto è in stato CRITICO. Ascolta l'evento window "mikilab-mood" emesso dal polling deck in App.js (dispatch dopo ogni /deck/status). Sostituito l'img statico in `NexusConsole.jsx` e `console/OperatorsRoster.jsx`. testid: nexus-avatar, nexus-red-eye.
+- Testato: guasto simulato → nexus-red-eye ON + deck "74 BPM · CRITICAL", 0 pageerror; stato ripristinato.
+- ⚠️ DEPLOY: tutto pronto (analisi PASS), ma la pubblicazione va completata premendo Redeploy in "Gestisci deployment" (il trigger automatico non ha risposto in questo turno).
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
