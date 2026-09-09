@@ -49,6 +49,7 @@ import MikeAlerts from "@/components/MikeAlerts";
 import LegacyOven from "@/components/LegacyOven";
 import MohamedInbox from "@/components/MohamedInbox";
 import LivingRecipe from "@/components/LivingRecipe";
+import AdvancedLab from "@/components/AdvancedLab";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -492,6 +493,13 @@ export default function App() {
                 <ZoneDivider testid="zone-mikemix" code="Z-03" title={tri("Mike Mix AI · Presenza & Governance", "Mike Mix AI · Präsenz", "Mike Mix AI · Presence & Governance", "Mike Mix AI · Presencia", "Mike Mix AI · Présence", "بوکومیکس · حضور")} accent="#7DD3FC" />
                 <div data-testid="panel-nexus" className="mb-4">
                   <NexusConsole isCapo={!!(user && user.role === "admin")} />
+                </div>
+                <div data-testid="panel-advanced-lab" className="mb-4 holo-panel p-5 sm:p-6">
+                  <span className="holo-corner holo-corner-tl" style={{ color: "#F6D27A" }} />
+                  <span className="holo-corner holo-corner-tr" style={{ color: "#F6D27A" }} />
+                  <span className="holo-corner holo-corner-bl" style={{ color: "#F6D27A" }} />
+                  <span className="holo-corner holo-corner-br" style={{ color: "#F6D27A" }} />
+                  <AdvancedLab />
                 </div>
                 <div data-testid="mikemix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />

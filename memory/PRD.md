@@ -4541,3 +4541,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Mohamed reintegrato (basso livello)**: `POST /api/public/access-request` (pubblico, triage regole `_mohamed_triage` → category/priority), `GET /api/mike/access-requests` + `POST /api/mike/access-requests/act` (Capo). Frontend: form pubblico in PublicGate [access-request]/[access-email]/[access-send]/[access-sent] + pannello Capo [panel-mohamed-inbox]/[mohamed-inbox] con Approva/Rifiuta. Avatar sobrio maschile /public/avatar_mohamed.jpg. Nessun privilegio root/ricette/plancia.
 - **Ricettario Vivente (Fase 9, Capo-only)**: `POST /api/nexus/living-recipe` (require_admin, Miki-Nexus/Claude) → matrice (farina/idratazione/prefermento/sale/lievito) + curva maturazione + predizione sensoriale. Frontend `LivingRecipe.jsx` [panel-living-recipe] nel console Capo con preset, curva visuale, sensory. Guest/non-admin bloccati (Fase 4). Verificato via curl + testing_agent.
 - **Test iteration_221**: backend 100% (11/11), frontend 100%, 0 action items, retest non necessario.
+
+## v-MANIFESTO Tecnologie Uniche (2026-06) — hub olografico unico (Fase 5/9)
+- **AdvancedLab** (`components/AdvancedLab.jsx`) in Zona 3 [panel-advanced-lab]: un SOLO hub client-side con dashboard vive credibili (scelta organizzativa per chiudere in fretta le fasi visuali). Contiene:
+  - **Compensazione Climatica** [lab-climate]: ambiente live → temp acqua (formula fornaio 3*DDT-farina-ambiente-attrito) + umidità cella. (Fase 5)
+  - **IoT Plug & Play** [lab-iot] + [lab-iot-scan]: scan simulato → sensori (temp/umidità/pH/flusso) riconosciuti in 1s. (Fase 9)
+  - **Manutenzione Predittiva** [lab-maintenance]: salute macchine live + [lab-maint-alert] quando <75%.
+  - **Edge Enzimatico** [lab-edge]: latenza sub-ms live + **Comando Vocale privato** [lab-voice] via Web Speech API locale (nessun cloud), trascrizione [lab-voice-heard]. (Fase 9)
+- Verificato a schermo: tutte le card live, scan IoT OK, alert manutenzione OK.
+- Backlog residuo (narrativa/infra, non necessario per MVP): WebGPU 120fps (attuale 3D = vanilla three.js), Simulatore AR forni con fotocamera, Backup Quantico/Nodi Edge/invisibilità IR (già visualizzati in NexusConsole).
