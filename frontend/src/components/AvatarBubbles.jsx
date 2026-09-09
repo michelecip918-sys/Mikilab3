@@ -118,7 +118,7 @@ export default function AvatarBubbles({ variant = "impara" }) {
                 className="w-11 h-11 rounded-full object-cover shadow-sm ring-2 ring-[#3E9C93]/60"
                 onError={(e) => { e.currentTarget.style.display = "none"; }} />
               {!isMichele && hint && (
-                <span data-testid="assistant-dot" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#3E9C93] ring-2 ring-[#f7efe6] dark:ring-[#0E1620] animate-pulse" />
+                <span data-testid="assistant-dot" className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-[#3E9C93] ring-2 ring-[#f7efe6] dark:ring-[#0D1520] animate-pulse" />
               )}
             </div>
             <div data-testid={`bubble-${m.who}`}

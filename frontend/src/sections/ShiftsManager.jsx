@@ -51,7 +51,7 @@ export default function ShiftsManager({ store, storeName }) {
   };
   const remove = async (id) => { try { await shiftsApi.remove(id); setShifts((p) => p.filter((x) => x.id !== id)); } catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); } };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
   const totalWeek = weekShifts.reduce((a, s) => a + (s.hours || 0), 0);
 
   return (
@@ -60,12 +60,12 @@ export default function ShiftsManager({ store, storeName }) {
 
       {/* Navigatore settimana */}
       <div className="flex items-center justify-between bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-2 mb-4">
-        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0E1620] dark:hover:bg-[#1B2A38]"><ChevronLeft className="w-5 h-5 text-[#3E9C93]" /></button>
+        <button data-testid="shift-week-prev" onClick={() => setWeekStart((w) => addDays(w, -7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0D1520] dark:hover:bg-[#1B2A38]"><ChevronLeft className="w-5 h-5 text-[#3E9C93]" /></button>
         <div className="text-center">
           <p className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1"><CalendarClock className="w-4 h-4 text-[#3E9C93]" /> {weekLabel}</p>
           <p className="text-[11px] text-[#7E8A93]">{tri("Totale settimana", "Woche gesamt", "Week total")}: <b className="font-mono-data">{totalWeek}h</b></p>
         </div>
-        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0E1620] dark:hover:bg-[#1B2A38]"><ChevronRight className="w-5 h-5 text-[#3E9C93]" /></button>
+        <button data-testid="shift-week-next" onClick={() => setWeekStart((w) => addDays(w, 7))} className="p-2 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0D1520] dark:hover:bg-[#1B2A38]"><ChevronRight className="w-5 h-5 text-[#3E9C93]" /></button>
       </div>
 
       {loading ? (

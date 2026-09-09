@@ -30,18 +30,18 @@ export default function MikeObserve({ operator }) {
   return (
     <div data-testid="mike-observe" className="space-y-3">
       <div className="flex items-center gap-2">
-        <Eye className="w-5 h-5 text-[#00F0FF]" />
+        <Eye className="w-5 h-5 text-[#FF6B00]" />
         <div><h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Mike Mix osserva", "Mike Mix beobachtet", "Mike Mix observes", "Mike Mix observa", "Mike Mix observe", "Mike Mix مشاهده می‌کند")}</h4>
-        <p className="text-[10.5px] text-[#8aa0b4]">{tri("Scrivi come hai lavorato: Mike Mix impara e, se serve, avvisa il Capo.", "Schreib, wie du gearbeitet hast: Mike Mix lernt und warnt ggf. den Chef.", "Write how you worked: Mike Mix learns and alerts the Capo if needed.", "Escribe cómo trabajaste: Mike Mix aprende y avisa al Capo.", "Écris comment tu as travaillé : Mike Mix apprend et alerte le Capo.", "بنویس چطور کار کردی: Mike Mix یاد می‌گیرد.")}</p></div>
+        <p className="text-[10.5px] text-[#94A3B8]">{tri("Scrivi come hai lavorato: Mike Mix impara e, se serve, avvisa il Capo.", "Schreib, wie du gearbeitet hast: Mike Mix lernt und warnt ggf. den Chef.", "Write how you worked: Mike Mix learns and alerts the Capo if needed.", "Escribe cómo trabajaste: Mike Mix aprende y avisa al Capo.", "Écris comment tu as travaillé : Mike Mix apprend et alerte le Capo.", "بنویس چطور کار کردی: Mike Mix یاد می‌گیرد.")}</p></div>
       </div>
       <input data-testid="observe-recipe" value={recipe} onChange={(e) => setRecipe(e.target.value)} placeholder={tri("Ricetta (opzionale)", "Rezept (optional)", "Recipe (optional)", "Receta (opcional)", "Recette (option)", "دستور (اختیاری)")}
-        className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#00F0FF] outline-none" />
+        className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#FF6B00] outline-none" />
       <textarea data-testid="observe-action" value={action} onChange={(e) => setAction(e.target.value)} rows={2}
         placeholder={tri("Es. Ho alzato la temperatura dell'acqua e ridotto la puntata…", "Z. B. Wassertemperatur erhöht und Stockgare verkürzt…", "E.g. I raised the water temp and shortened bulk…", "Ej. Subí la temperatura del agua…", "Ex. J'ai monté la température de l'eau…", "مثلاً دمای آب را بالا بردم…")}
-        className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#00F0FF] outline-none resize-none" />
+        className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#FF6B00] outline-none resize-none" />
       <button data-testid="observe-submit" onClick={submit} disabled={busy || !action.trim()}
-        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50"
-        style={{ background: "linear-gradient(90deg,#00F0FF,#00C8D6)" }}>
+        className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
+        style={{ background: "linear-gradient(90deg,#FF6B00,#00C8D6)" }}>
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Invia a Mike Mix", "An Mike Mix senden", "Send to Mike Mix", "Enviar a Mike Mix", "Envoyer à Mike Mix", "ارسال به Mike Mix")}
       </button>
       {res && (

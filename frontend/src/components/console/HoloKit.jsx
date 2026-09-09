@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 // Kit olografico della plancia MikiLab Pro (Zero-Menu). Pannelli industriali,
 // divisori di zona a laser, indicatori di stato fluorescenti. Nessun menu classico.
 
-export function ZoneDivider({ title, code, accent = "#00F0FF", testid }) {
+export function ZoneDivider({ title, code, accent = "#FF6B00", testid }) {
   return (
     <div data-testid={testid} className="relative my-8 sm:my-12 flex items-center justify-center">
       <div className="absolute inset-0 flex items-center">
@@ -24,7 +24,7 @@ export function ZoneDivider({ title, code, accent = "#00F0FF", testid }) {
   );
 }
 
-export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaultOpen = false, collapsible = true, beacon = "#7DD3FC", children }) {
+export function HoloPanel({ title, sub, testid, accent = "#FF6B00", icon, defaultOpen = false, collapsible = true, beacon = "#FF9D42", children }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef(null);
   useEffect(() => {
@@ -52,19 +52,19 @@ export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaul
           style={{ background: `${accent}14`, border: `1px solid ${accent}3a` }}>{icon}</span>}
         <span className="min-w-0 flex-1">
           <span className="block font-tech font-bold text-sm sm:text-base text-white tracking-wide truncate" style={{ textShadow: `0 0 12px ${accent}22` }}>{title}</span>
-          {sub && <span className="block text-[11px] text-[#8aa0b4] truncate">{sub}</span>}
+          {sub && <span className="block text-[11px] text-[#94A3B8] truncate">{sub}</span>}
         </span>
         <span className="relative flex w-2.5 h-2.5 shrink-0" title="stato">
           <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: beacon, opacity: 0.55 }} />
           <span className="relative inline-flex w-2.5 h-2.5 rounded-full" style={{ background: beacon, boxShadow: `0 0 8px ${beacon}` }} />
         </span>
-        {collapsible && <ChevronDown className="w-4 h-4 text-[#8aa0b4] shrink-0 transition-transform" style={{ transform: open ? "rotate(180deg)" : "none" }} />}
+        {collapsible && <ChevronDown className="w-4 h-4 text-[#94A3B8] shrink-0 transition-transform" style={{ transform: open ? "rotate(180deg)" : "none" }} />}
       </button>
       <AnimatePresence initial={false}>
         {(open || !collapsible) && (
           <motion.div key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }} className="overflow-hidden">
-            <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-[#00F0FF]/10">{children}</div>
+            <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-[#FF6B00]/10">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -72,7 +72,7 @@ export function HoloPanel({ title, sub, testid, accent = "#00F0FF", icon, defaul
   );
 }
 
-export function ZoneHero({ avatar, name, role, tag, accent = "#00F0FF", testid, reactive = false }) {
+export function ZoneHero({ avatar, name, role, tag, accent = "#FF6B00", testid, reactive = false }) {
   const PUB = process.env.PUBLIC_URL;
   return (
     <div data-testid={testid} className="relative flex items-center gap-4 mb-5 rounded-2xl p-4 holo-panel overflow-hidden">
@@ -88,7 +88,7 @@ export function ZoneHero({ avatar, name, role, tag, accent = "#00F0FF", testid, 
       <div className="relative min-w-0">
         {tag && <span className="inline-block font-mono-data text-[9px] tracking-[0.25em] uppercase mb-1" style={{ color: accent }}>{tag}</span>}
         <h3 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide truncate" style={{ textShadow: `0 0 14px ${accent}33` }}>{name}</h3>
-        {role && <p className="text-xs text-[#9fb3c4] truncate">{role}</p>}
+        {role && <p className="text-xs text-[#CBD5E1] truncate">{role}</p>}
       </div>
     </div>
   );

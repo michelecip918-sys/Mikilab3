@@ -39,7 +39,7 @@ export default function DoughTimer() {
         <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><Timer className="w-3.5 h-3.5 text-[#f59e0b]" /> {tri("Timer impasti", "Teig-Timer", "Dough timers", "Temporizadores masa", "Minuteurs pâte", "تایمر خمیر")}</p>
         {/* Parametri cella live (Proofer sul floor) */}
         {proofer && (
-          <span data-testid="floor-proofer" className="inline-flex items-center gap-1 text-[10px] font-bold text-[#8FB0C2] bg-[#5E8CA8]/10 border border-[#5E8CA8]/30 rounded-full px-2 py-1">
+          <span data-testid="floor-proofer" className="inline-flex items-center gap-1 text-[10px] font-bold text-[#8FB0C2] bg-[#64748B]/10 border border-[#64748B]/30 rounded-full px-2 py-1">
             <Snowflake className="w-3 h-3" /> {proofer.proofer_temp_c}° · {proofer.proof_time_min}′
           </span>
         )}

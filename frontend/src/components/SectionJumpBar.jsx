@@ -6,7 +6,7 @@ export default function SectionJumpBar({ sections = [], testid = "section-jump-b
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   return (
-    <div data-testid={testid} className="sticky top-0 z-30 -mx-4 px-4 py-2 mb-3 bg-[#0E1620]/85 backdrop-blur-md border-b border-[#2A3B49]">
+    <div data-testid={testid} className="sticky top-0 z-30 -mx-4 px-4 py-2 mb-3 bg-[#0D1520]/85 backdrop-blur-md border-b border-[#2A3B49]">
       <div className="flex gap-2 overflow-x-auto no-scrollbar -mx-1 px-1">
         {sections.map((s) => {
           const Icon = s.Icon;

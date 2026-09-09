@@ -39,7 +39,7 @@ const HARDWARE = [
     d: "Sensori e logger certificati per la catena del freddo. Ottimi per freezer e frigo: registrano lo storico e allertano al superamento soglia. Compatibili con report HACCP.",
     buy: "Store Efento ufficiale o distributori HACCP/IoT europei.",
     url: "https://getefento.com",
-    color: "#5E8CA8",
+    color: "#64748B",
   },
   {
     Icon: Radio, name: "Sonde PT100 / DS18B20", img: "hw_pt100.jpg",
@@ -71,7 +71,7 @@ const MACHINERY = [
   { group: "Estrusione Rheon (Cornetti & Ripieni)", color: "#3E9C93", items: [
     { name: "Rheon Encrusting / Estrusore", fn: "Dosaggio pasta/ripieno e formatura continua", when: "Produzione ripieni e cornetti in serie", voice: "«Miki, rapporto ripieno» · «Miki, sincronizza otturatore»", mods: "31 Dough/Filling Ratio · 32 Shutter Speed Sync · 33 Multi-Feeder Guard · 34 PMU Recall · 35 Thermal Friction Index" },
   ]},
-  { group: "Presse & Formatrici", color: "#5E8CA8", items: [
+  { group: "Presse & Formatrici", color: "#64748B", items: [
     { name: "Pressa Idraulica / Formatrice", fn: "Calibrazione pressione e spessore con controllo elasticità pasta", when: "Formatura teglie, pizza in teglia, basi", voice: "«Miki, calibra pressa» · «Miki, controlla elasticità»", mods: "36 Hydraulic Press Pressure & Thickness" },
   ]},
   { group: "Forni Industriali (Multi-Deck & Rotativi)", color: "#C2612E", items: [

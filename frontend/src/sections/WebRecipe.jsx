@@ -143,7 +143,7 @@ export default function WebRecipe() {
           data-testid="web-recipe-search-btn"
           onClick={search}
           disabled={loading}
-          className="w-full inline-flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all disabled:opacity-60"
+          className="w-full inline-flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl active:scale-98 transition-all disabled:opacity-60"
         >
           {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
           {loading

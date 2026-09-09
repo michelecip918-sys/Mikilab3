@@ -70,21 +70,21 @@ export default function OvenQC() {
 
   return (
     <div data-testid="oven-qc" className="space-y-3">
-      <label className="flex items-center gap-2 bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2">
-        <ScanEye className="w-4 h-4 text-[#5E8CA8]" />
+      <label className="flex items-center gap-2 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2">
+        <ScanEye className="w-4 h-4 text-[#64748B]" />
         <input data-testid="qc-product-input" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto (es. Baguette)", "Produkt", "Product", "Producto", "Produit", "محصول")} className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-[#4b6070]" />
       </label>
 
       {cam ? (
-        <div className="relative w-full rounded-xl overflow-hidden border border-[#5E8CA8]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
+        <div className="relative w-full rounded-xl overflow-hidden border border-[#64748B]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
           <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
           <button data-testid="qc-cam-close" onClick={stopCam} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#0b0f19]/90 border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-4 h-4" /></button>
-          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#00F0FF] text-[#070A10] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#FF6B00] text-[#060A10] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
         </div>
       ) : (
         <div className="flex gap-2">
-          <button data-testid="qc-open-cam" onClick={openCam} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/50 text-[#9fc3dc] font-bold text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Fotocamera", "Kamera", "Camera", "Cámara", "Caméra", "دوربین")}</button>
-          <button data-testid="qc-open-file" onClick={() => fileRef.current?.click()} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0C1019] border border-[#5E8CA8]/40 text-[#9fc3dc] font-bold text-sm active:scale-95"><Upload className="w-4 h-4" /> {tri("Carica foto", "Foto laden", "Upload photo", "Subir foto", "Charger photo", "بارگذاری عکس")}</button>
+          <button data-testid="qc-open-cam" onClick={openCam} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#64748B]/15 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Fotocamera", "Kamera", "Camera", "Cámara", "Caméra", "دوربین")}</button>
+          <button data-testid="qc-open-file" onClick={() => fileRef.current?.click()} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] font-bold text-sm active:scale-95"><Upload className="w-4 h-4" /> {tri("Carica foto", "Foto laden", "Upload photo", "Subir foto", "Charger photo", "بارگذاری عکس")}</button>
           <input ref={fileRef} data-testid="qc-file-input" type="file" accept="image/*" className="hidden" onChange={onFile} />
         </div>
       )}
@@ -102,7 +102,7 @@ export default function OvenQC() {
               {res.defects.map((d, i) => (<li key={i} className="text-[12px] text-[#e6f6fa]">{d}</li>))}
             </ul>
           )}
-          {res.notes && <p className="mt-2 text-[12px] text-[#8aa0b4]">{res.notes}</p>}
+          {res.notes && <p className="mt-2 text-[12px] text-[#94A3B8]">{res.notes}</p>}
         </motion.div>
       )}
     </div>

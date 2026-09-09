@@ -53,7 +53,7 @@ export default function FoodCost() {
   const margin = num(s.sell) > 0 ? ((num(s.sell) - costPiece) / num(s.sell)) * 100 : null;
   const eur = (v) => "€ " + v.toFixed(2);
 
-  const inp = "bg-[#0E1620] dark:bg-[#1B2A38] rounded-lg px-2 py-1 text-sm font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "bg-[#0D1520] dark:bg-[#1B2A38] rounded-lg px-2 py-1 text-sm font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">

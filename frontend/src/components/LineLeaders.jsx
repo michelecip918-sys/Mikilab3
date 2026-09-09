@@ -33,7 +33,7 @@ export default function LineLeaders({ workers = [] }) {
   };
 
   return (
-    <div data-testid="line-leaders" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-4 space-y-3">
+    <div data-testid="line-leaders" className="rounded-2xl border border-[#64748B]/40 bg-[#64748B0d] p-4 space-y-3">
       <div className="flex items-center gap-2">
         <UserCog className="w-5 h-5 text-[#7DA3C0]" />
         <div>

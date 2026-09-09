@@ -39,11 +39,11 @@ function CapoPlanBanner({ tri }) {
   }, []);
   if (!plan) return null;
   return (
-    <div data-testid="capo-plan-banner" className="w-full mb-3 rounded-2xl border border-[#00F0FF]/40 bg-[#0b0f19] overflow-hidden text-left">
+    <div data-testid="capo-plan-banner" className="w-full mb-3 rounded-2xl border border-[#FF6B00]/40 bg-[#0b0f19] overflow-hidden text-left">
       <button data-testid="capo-plan-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 active:scale-[0.99] transition-all">
-        <span className="w-8 h-8 rounded-lg bg-[#00F0FF]/15 border border-[#00F0FF]/40 flex items-center justify-center shrink-0"><Radio className="w-4 h-4 text-[#00F0FF]" /></span>
+        <span className="w-8 h-8 rounded-lg bg-[#FF6B00]/15 border border-[#FF6B00]/40 flex items-center justify-center shrink-0"><Radio className="w-4 h-4 text-[#FF6B00]" /></span>
         <span className="min-w-0 flex-1">
-          <span className="block text-xs font-black uppercase tracking-wide text-[#00F0FF]">{tri("Piano del Capo · Mike Mix", "Plan des Capo · Mike Mix", "Capo's Plan · Mike Mix", "Plan del Capo · Mike Mix", "Plan du Capo · Mike Mix", "برنامه کاپو · Mike Mix")}</span>
+          <span className="block text-xs font-black uppercase tracking-wide text-[#FF6B00]">{tri("Piano del Capo · Mike Mix", "Plan des Capo · Mike Mix", "Capo's Plan · Mike Mix", "Plan del Capo · Mike Mix", "Plan du Capo · Mike Mix", "برنامه کاپو · Mike Mix")}</span>
           {plan.headline && <span className="block text-[11px] text-[#94A3B8] truncate">{plan.headline}</span>}
         </span>
         <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`} />
@@ -60,7 +60,7 @@ function CapoPlanBanner({ tri }) {
 // Reparti/postazioni BASE. Vengono ARRICCHITI a runtime con i reparti e le postazioni
 // (feature) che il Capo crea nell'Elite Engine → così le postazioni "aumentano" da sole.
 const BASE_DEPTS = [
-  { key: "panetteria", label: "🍞 Panetteria", color: "#5E8CA8", roles: ["Impastatore", "Fornaio", "Laugen / Pretzel", "Fermentazione", "Centro Formule"] },
+  { key: "panetteria", label: "🍞 Panetteria", color: "#64748B", roles: ["Impastatore", "Fornaio", "Laugen / Pretzel", "Fermentazione", "Centro Formule"] },
   { key: "pizzeria", label: "🍕 Pizzeria", color: "#3E9C93", roles: ["Pizzaiolo", "Forno Pizze", "Sfornate", "Consegne"] },
   { key: "pasticceria", label: "🥐 Pasticceria & Gelateria", color: "#7FB0A6", roles: ["Pasticcere", "Bilanciamento Formule", "Abbattitore", "Raffreddamento"] },
   { key: "generale", label: "👥 Generale", color: "#f59e0b", roles: ["Apprendista", "Banconista", "Aiuto Panettiere"] },
@@ -84,9 +84,9 @@ function FloorQueue({ tri, lang }) {
       <div className="space-y-1.5 max-h-56 overflow-y-auto">
         {tasks.slice(0, 15).map((t) => (
           <div key={t.id} data-testid={`floor-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-            <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#00F0FF]/10 text-[#7DD3FC] border border-[#00F0FF]/20 shrink-0">{t.dept}</span>
+            <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#FF6B00]/10 text-[#FF9D42] border border-[#FF6B00]/20 shrink-0">{t.dept}</span>
             <div className="min-w-0 flex-1"><p className="text-xs font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[10px] text-[#64748B] truncate">{t.detail}</p>}</div>
-            <button data-testid={`floor-task-read-${t.id}`} onClick={() => read(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] flex items-center justify-center active:scale-95"><Volume2 className="w-3.5 h-3.5" /></button>
+            <button data-testid={`floor-task-read-${t.id}`} onClick={() => read(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#FF6B00]/10 border border-[#FF6B00]/40 text-[#FF6B00] flex items-center justify-center active:scale-95"><Volume2 className="w-3.5 h-3.5" /></button>
             <button data-testid={`floor-task-done-${t.id}`} onClick={() => done(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 text-[#22c55e] flex items-center justify-center active:scale-95"><CheckCircle2 className="w-4 h-4" /></button>
           </div>
         ))}
@@ -118,7 +118,7 @@ export default function MikeMixFloor() {
         const base = (c.features || []).filter(Boolean);
         const ex = (extras[c.id] || []).filter((f) => f && !base.includes(f));
         const roles = [...base, ...ex];
-        merged.push({ key: c.id, label: `🏭 ${c.title}`, color: "#5E8CA8", roles: roles.length ? roles : ["Postazione Universale"] });
+        merged.push({ key: c.id, label: `🏭 ${c.title}`, color: "#64748B", roles: roles.length ? roles : ["Postazione Universale"] });
       });
       setDepts(merged);
     }).catch(() => { /* offline → resta la lista base */ });

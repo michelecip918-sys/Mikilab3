@@ -321,7 +321,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
               </div>
             ) : (
               alerts.map((a) => {
-                const c = a.level === "critical" ? "#ef4444" : a.level === "warn" ? "#f59e0b" : "#5E8CA8";
+                const c = a.level === "critical" ? "#ef4444" : a.level === "warn" ? "#f59e0b" : "#64748B";
                 const Icon = a.level === "critical" ? AlertOctagon : a.level === "warn" ? AlertTriangle : Info;
                 return (
                   <div key={a.id} data-testid={`mikemix-alert-${a.code}`} className="rounded-2xl border p-3" style={{ borderColor: `${c}55`, background: `${c}12` }}>
@@ -363,7 +363,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   <button data-testid="mikemix-pipeline-btn" onClick={() => setPipelineOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5EEAD4]/40 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                     <Factory className="w-4 h-4" /> {tri("Linea", "Linie", "Line", "Línea", "Ligne", "خط")}
                   </button>
-                  <button data-testid="mikemix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#5E8CA80d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#64748B0d] active:scale-95 transition-transform">
                     <ScanLine className="w-4 h-4" /> {tri("Vision AR", "Vision AR", "Vision AR", "Vision AR", "Vision AR", "ویژن AR")}
                   </button>
                   <button data-testid="mikemix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
@@ -394,22 +394,22 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   </div>
                 )}
                 <div className="grid grid-cols-2 gap-2">
-                  <button data-testid="mikemix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#5E8CA8]/40 text-[#8FB0C2] bg-[#5E8CA80d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#64748B]/40 text-[#8FB0C2] bg-[#64748B0d] active:scale-95 transition-transform">
                     <Snowflake className="w-4 h-4" /> {tri("Cella/Freezer", "Gärraum", "Proofer", "Cámara", "Chambre", "تخمیر")}
                   </button>
                   <button data-testid="mikemix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f97316]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
                     <Flame className="w-4 h-4" /> Batch Phoenix
                   </button>
                 </div>
-                <button data-testid="mikemix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5E8CA8]/50 text-[#7DA3C0] bg-[#5E8CA812] active:scale-95 transition-transform">
+                <button data-testid="mikemix-invite-btn" onClick={genAccessInvite} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#64748B]/50 text-[#7DA3C0] bg-[#64748B12] active:scale-95 transition-transform">
                   <KeyRound className="w-4 h-4" /> {tri("Genera invito d'accesso", "Zugangs-Einladung erstellen", "Generate access invite", "Generar invitación de acceso", "Générer une invitation", "ساخت دعوت دسترسی")}
                 </button>
-                <div data-testid="mikemix-glass-control" className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3">
+                <div data-testid="mikemix-glass-control" className="rounded-2xl border border-[#64748B]/40 bg-[#64748B0d] p-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[11px] font-black uppercase tracking-widest text-[#8FB0C2]">{tri("Intensità vetro & sfondi", "Glas- & Hintergrund-Intensität", "Glass & background intensity", "Intensidad de vidrio y fondos", "Intensité verre & fonds", "شدت شیشه و پس‌زمینه")}</span>
                     <span className="text-[11px] font-mono-data font-bold text-white" data-testid="glass-value">{glass}%</span>
                   </div>
-                  <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#5E8CA8]" />
+                  <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#64748B]" />
                   <p className="text-[10px] text-[#64748B] mt-1">{tri("Alza per sfondi più vividi, abbassa per più contrasto sul testo.", "Höher = lebendigere Hintergründe, niedriger = mehr Kontrast.", "Higher = more vivid backgrounds, lower = more text contrast.", "Más alto = fondos vívidos, más bajo = más contraste.", "Plus haut = fonds vifs, plus bas = plus de contraste.", "بالاتر = پس‌زمینه واضح‌تر، پایین‌تر = کنتراست بیشتر.")}</p>
                 </div>
                 <div data-testid="mikemix-stall-control" className="rounded-2xl border border-[#f59e0b]/40 bg-[#f59e0b0d] p-3">

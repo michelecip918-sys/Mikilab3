@@ -128,10 +128,10 @@ export default function SmartScale() {
               <input value={r.name} onChange={(e) => setRow(r.id, { name: e.target.value })} placeholder={tri("nome", "Name", "name")}
                 className="bg-transparent text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none" />
               <input type="number" value={r.target} onChange={(e) => setRow(r.id, { target: e.target.value })}
-                className="bg-[#0E1620] dark:bg-[#1B2A38] rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none" />
+                className="bg-[#0D1520] dark:bg-[#1B2A38] rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none" />
               <input data-testid={`scale-actual-${r.id}`} type="number" value={r.actual} onChange={(e) => setRow(r.id, { actual: e.target.value })} placeholder="—"
                 onFocus={() => { focusedRef.current = r.id; }}
-                className={`rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none ${off ? "bg-[#3E9C93]/15 text-[#3E9C93] font-bold" : "bg-[#0E1620] dark:bg-[#1B2A38]"}`} />
+                className={`rounded-lg px-2 py-1 text-sm text-right font-mono-data outline-none ${off ? "bg-[#3E9C93]/15 text-[#3E9C93] font-bold" : "bg-[#0D1520] dark:bg-[#1B2A38]"}`} />
               <button data-testid={`scale-del-${r.id}`} onClick={() => delRow(r.id)} className="text-[#3E9C93] flex justify-center"><Trash2 className="w-3.5 h-3.5" /></button>
             </div>
           );

@@ -95,11 +95,11 @@ export default function LegalPage() {
       <div data-testid="contact-form" className="rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-5">
         <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-[#3E9C93]" /><h2 className="font-display text-base font-semibold text-[#2B303B] dark:text-[#e4eff8]">{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
         <input data-testid="contact-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tr("Il tuo nome", "Dein Name", "Your name", "Tu nombre")}
-          className="w-full mb-2 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
+          className="w-full mb-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
         <input data-testid="contact-email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" type="email"
-          className="w-full mb-2 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
+          className="w-full mb-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
         <textarea data-testid="contact-message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} placeholder={tr("Il tuo messaggio…", "Deine Nachricht…", "Your message…", "Tu mensaje…")}
-          className="w-full mb-3 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
+          className="w-full mb-3 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93]" />
         <button data-testid="contact-send" onClick={submit} disabled={sending}
           className="w-full inline-flex items-center justify-center gap-2 bg-[#3E9C93] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 disabled:opacity-60">
           {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}

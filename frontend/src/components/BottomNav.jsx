@@ -47,7 +47,7 @@ export default function BottomNav({ active, onChange }) {
   return (
     <nav
       data-testid="bottom-nav"
-      className="fixed bottom-0 inset-x-0 z-50 backdrop-blur-2xl bg-[#0E1620]/90 border-t border-white/10 shadow-[0_-6px_22px_rgba(0,0,0,0.55)]"
+      className="fixed bottom-0 inset-x-0 z-50 backdrop-blur-2xl bg-[#0D1520]/90 border-t border-white/10 shadow-[0_-6px_22px_rgba(0,0,0,0.55)]"
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#3E9C93]/50 to-transparent" />
       <div className="relative max-w-xl mx-auto grid grid-cols-5 gap-1 px-2 pt-1.5" style={{ paddingBottom: "max(0.4rem, env(safe-area-inset-bottom))" }}>
@@ -70,10 +70,10 @@ export default function BottomNav({ active, onChange }) {
               >
                 <Icon className={`w-[22px] h-[22px] transition-colors ${on ? "text-[#3E9C93]" : "text-[#94A3B8] group-hover:text-[#F7F9FC]"}`} strokeWidth={on ? 2.4 : 2} />
                 {id === "community" && unread > 0 && (
-                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E63946] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0E1620]">{unread > 9 ? "9+" : unread}</span>
+                  <span data-testid="nav-community-badge" className="absolute -top-1.5 -right-1.5 min-w-[16px] h-[16px] px-1 rounded-full bg-[#E63946] text-white text-[9px] font-bold flex items-center justify-center ring-2 ring-[#0D1520]">{unread > 9 ? "9+" : unread}</span>
                 )}
                 {id === "community" && socialNew && unread === 0 && (
-                  <span data-testid="nav-community-newdot" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E63946] ring-2 ring-[#0E1620]" />
+                  <span data-testid="nav-community-newdot" className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-[#E63946] ring-2 ring-[#0D1520]" />
                 )}
               </span>
               <span className={`text-[9px] font-bold leading-[1.05] text-center break-words line-clamp-2 max-w-[76px] transition-colors ${on ? "text-[#F7F9FC]" : "text-[#64748B] group-hover:text-[#94A3B8]"}`}>

@@ -7,13 +7,13 @@ import { mkTri } from "@/i18n/triMaps";
 // Vetrina autonoma delle capacità chiave di MikiLab (direttiva v12 · punto 10).
 // Le voci si generano da una tabella di capacità e vengono mostrate con animazione a cascata.
 const CAPS = [
-  { icon: Layers, tag: "modules", color: "#5E8CA8",
+  { icon: Layers, tag: "modules", color: "#64748B",
     t: (l) => mkTri(l)("3 Reparti Disaccoppiati", "3 entkoppelte Bereiche", "3 Decoupled Departments", "3 departamentos separados", "3 rayons découplés", "۳ بخش مجزا"),
     b: (l) => mkTri(l)("Panificazione, Pizzeria e Pasticceria con ricette, ingredienti e magazzino dedicati.", "Bäckerei, Pizzeria und Konditorei mit eigenen Rezepten, Zutaten und Lager.", "Bakery, Pizzeria and Pastry with dedicated recipes, ingredients and warehouse.", "Panadería, pizzería y pastelería con recetas, ingredientes y almacén propios.", "Boulangerie, pizzeria et pâtisserie avec recettes, ingrédients et stock dédiés.", "نانوایی، پیتزا و قنادی با دستور، مواد و انبار اختصاصی.") },
   { icon: Languages, tag: "i18n", color: "#3E9C93",
     t: (l) => mkTri(l)("Traduzione Globale", "Globale Übersetzung", "Global Translation", "Traducción global", "Traduction globale", "ترجمه جهانی"),
     b: (l) => mkTri(l)("UI, ricette e audio Mike Mix in 6 lingue, per una squadra internazionale.", "UI, Rezepte und Mike Mix-Audio in 6 Sprachen für ein internationales Team.", "UI, recipes and Mike Mix audio in 6 languages for an international team.", "UI, recetas y audio Mike Mix en 6 idiomas para un equipo internacional.", "UI, recettes et audio Mike Mix en 6 langues pour une équipe internationale.", "رابط، دستورها و صدای باکومیکس در ۶ زبان.") },
-  { icon: Cpu, tag: "ai", color: "#5E8CA8",
+  { icon: Cpu, tag: "ai", color: "#64748B",
     t: (l) => mkTri(l)("Core Mike Mix AI", "Mike Mix-KI-Kern", "Mike Mix AI Core", "Núcleo Mike Mix IA", "Cœur Mike Mix IA", "هسته هوش باکومیکس"),
     b: (l) => mkTri(l)("Regista proattivo: rigenera piani, ribilancia lotti e detta la produzione a voce.", "Proaktiver Regisseur: erstellt Pläne neu, verteilt Chargen und diktiert die Produktion.", "Proactive director: regenerates plans, rebalances batches and dictates production by voice.", "Director proactivo: regenera planes, reequilibra lotes y dicta la producción.", "Réalisateur proactif : régénère les plans, rééquilibre les lots et dicte la production.", "کارگردان فعال: بازسازی برنامه، توازن دسته‌ها و دیکته تولید.") },
   { icon: ScanLine, tag: "vision", color: "#06b6d4",
@@ -25,7 +25,7 @@ const CAPS = [
   { icon: Snowflake, tag: "cold", color: "#38bdf8",
     t: (l) => mkTri(l)("Catena del Freddo", "Kühlkette", "Cold Chain", "Cadena de frío", "Chaîne du froid", "زنجیره سرد"),
     b: (l) => mkTri(l)("Celle, abbattitori e soglie freezer con avviso automatico via email.", "Zellen, Schockfroster und Gefrierschwellen mit automatischer E-Mail-Warnung.", "Cells, blast chillers and freezer thresholds with automatic email alerts.", "Cámaras, abatidores y umbrales de congelador con aviso por email.", "Chambres, cellules de refroidissement et seuils congélateur avec alerte e-mail.", "سردخانه، شوک سرد و آستانه فریزر با هشدار ایمیلی.") },
-  { icon: Radio, tag: "voice", color: "#00F0FF",
+  { icon: Radio, tag: "voice", color: "#FF6B00",
     t: (l) => mkTri(l)("Delega Vocale Eclipse", "Sprachdelegation Eclipse", "Eclipse Voice Delegation", "Delegación por voz Eclipse", "Délégation vocale Eclipse", "واگذاری صوتی اکلیپس"),
     b: (l) => mkTri(l)("Il Capo detta gli ordini; il floor resta silenzioso (Letz_Passive) e guidato dai task.", "Der Chef diktiert Aufträge; der Floor bleibt still (Letz_Passive) und aufgabengeführt.", "The Capo dictates orders; the floor stays silent (Letz_Passive), task-driven.", "El Capo dicta pedidos; el floor queda en silencio (Letz_Passive).", "Le Capo dicte les ordres ; le floor reste silencieux (Letz_Passive).", "کاپو سفارش می‌دهد؛ فلور ساکت (Letz_Passive) و وظیفه‌محور می‌ماند.") },
   { icon: WifiOff, tag: "pwa", color: "#22c55e",

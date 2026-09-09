@@ -151,7 +151,7 @@ function ChatPanel() {
         <div ref={endRef} />
       </div>
 
-      <div className="sticky bottom-[76px] flex items-end gap-2 bg-[#0E1620] dark:bg-[#0E1620] pt-2">
+      <div className="sticky bottom-[76px] flex items-end gap-2 bg-[#0D1520] dark:bg-[#0D1520] pt-2">
         <textarea
           data-testid="ai-chat-input"
           value={input}
@@ -165,7 +165,7 @@ function ChatPanel() {
           data-testid="ai-chat-submit"
           onClick={() => send()}
           disabled={streaming}
-          className="w-12 h-12 rounded-2xl bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
+          className="w-12 h-12 rounded-2xl bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white flex items-center justify-center shrink-0 active:scale-95 transition-all"
         >
           <Send className="w-5 h-5" />
         </button>
@@ -301,7 +301,7 @@ function StoccardaPanel() {
               {t("cancel")}
             </button>
             <button data-testid="announcement-save-btn" onClick={save}
-              className="flex-1 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
+              className="flex-1 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40">
               {t("save")}
             </button>
           </div>
@@ -357,14 +357,14 @@ function StoccardaPanel() {
       ))}
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent className="bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49]">
+        <AlertDialogContent className="bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-display">{t("ann_delete_q")}</AlertDialogTitle>
             <AlertDialogDescription>"{toDelete?.title}" {t("ann_delete_desc")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel data-testid="announcement-delete-cancel">{t("cancel")}</AlertDialogCancel>
-            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#3E9C93] hover:bg-[#5E8CA8]">{t("delete")}</AlertDialogAction>
+            <AlertDialogAction data-testid="announcement-delete-confirm" onClick={remove} className="bg-[#3E9C93] hover:bg-[#64748B]">{t("delete")}</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

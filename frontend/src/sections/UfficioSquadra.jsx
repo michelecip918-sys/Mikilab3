@@ -9,7 +9,7 @@ import { playTTS } from "@/lib/tts";
 // Pannello "Ufficio & Squadra (Live-Sync)": l'ufficio ricalcola il piano dagli ordini extra
 // e lo comunica alla squadra a voce (voce del telefono → zero crediti). Cuffie hands-free
 // riusano l'ascolto continuo globale. Calcolo Temperatura Acqua (Formula 3T) integrato.
-const D = { bg: "#0E1620", card: "#1E1E1E", input: "#151515", accent: "#3E9C93", green: "#7DD3FC", red: "#FF3333", text: "#FFFFFF", muted: "#A0A0A0", border: "#333333" };
+const D = { bg: "#0D1520", card: "#1E1E1E", input: "#151515", accent: "#3E9C93", green: "#FF9D42", red: "#FF3333", text: "#FFFFFF", muted: "#A0A0A0", border: "#333333" };
 
 export default function UfficioSquadra({ open, onClose }) {
   const { lang } = useLang();

@@ -37,7 +37,7 @@ export default function Timer() {
   const [repeat, setRepeat] = useState(false);
   void nowTs; // forza il re-render al tick del provider
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40">
@@ -94,7 +94,7 @@ export default function Timer() {
               <p className={`font-mono-data text-5xl font-bold text-center ${done ? "text-[#E4572E]" : "text-[#2B303B] dark:text-[#e4eff8]"}`} data-testid={`timer-time-${t.id}`}>{fmt(rem)}</p>
               <div className="grid grid-cols-2 gap-2 mt-4">
                 <button data-testid={`timer-toggle-${t.id}`} onClick={() => toggle(t.id)} disabled={done}
-                  className="flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
+                  className="flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-40 text-white font-bold text-lg py-4 rounded-2xl active:scale-97 transition-all">
                   {t.running ? <><Pause className="w-6 h-6" /> {tri("Pausa", "Pause", "Pause")}</> : <><Play className="w-6 h-6" /> {tri("Vai", "Start", "Go")}</>}
                 </button>
                 <button data-testid={`timer-reset-${t.id}`} onClick={() => reset(t.id)}

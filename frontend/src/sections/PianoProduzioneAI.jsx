@@ -218,7 +218,7 @@ export const CAT_RELATED = {
 // 4 MACRO-FUNZIONI del Laboratorio: CREA · CALCOLA · GESTISCI · CONTROLLA E DIAGNOSI.
 export const TOOL_KINDS = [
   { key: "crea", Icon: Sparkles, color: "#3E9C93", it: "Crea", de: "Erstellen", en: "Create", es: "Crea", sub_it: "Genera ricette, piani e impasti", sub_de: "Rezepte, Pläne und Teige erzeugen", sub_en: "Generate recipes, plans and doughs", sub_es: "Genera recetas, planes y masas" },
-  { key: "calcola", Icon: Calculator, color: "#5E8CA8", it: "Calcola", de: "Berechnen", en: "Calculate", es: "Calcula", sub_it: "Idratazione, dosi, forno, costi", sub_de: "Hydratation, Mengen, Ofen, Kosten", sub_en: "Hydration, amounts, oven, costs", sub_es: "Hidratación, dosis, horno, costes" },
+  { key: "calcola", Icon: Calculator, color: "#64748B", it: "Calcola", de: "Berechnen", en: "Calculate", es: "Calcula", sub_it: "Idratazione, dosi, forno, costi", sub_de: "Hydratation, Mengen, Ofen, Kosten", sub_en: "Hydration, amounts, oven, costs", sub_es: "Hidratación, dosis, horno, costes" },
   { key: "gestisci", Icon: Building2, color: "#8C6B4A", it: "Gestisci", de: "Verwalten", en: "Manage", es: "Gestiona", sub_it: "Celle, magazzino, registri, turni", sub_de: "Kammern, Lager, Register, Schichten", sub_en: "Cells, stock, logs, shifts", sub_es: "Cámaras, stock, registros, turnos" },
   { key: "controlla", Icon: Stethoscope, color: "#A16207", it: "Controlla e Diagnosi", de: "Prüfen & Diagnose", en: "Check & Diagnose", es: "Controla y Diagnostica", sub_it: "Diagnosi foto/suono, SOS, ricette", sub_de: "Foto-/Klang-Diagnose, SOS, Rezepte", sub_en: "Photo/sound diagnosis, SOS, recipes", sub_es: "Diagnóstico foto/sonido, SOS, recetas" },
 ];
@@ -926,7 +926,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div data-testid="lab-menu-drawer" className="fixed inset-0 z-[200]" onClick={() => setMenuOpen(false)}>
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" />
           <div onClick={(e) => e.stopPropagation()}
-            className="absolute top-0 right-0 h-full w-[85%] max-w-sm bg-[#0E1620] dark:bg-[#1A1F24] shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
+            className="absolute top-0 right-0 h-full w-[85%] max-w-sm bg-[#0D1520] dark:bg-[#1A1F24] shadow-2xl overflow-y-auto animate-in slide-in-from-right duration-300">
             <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-[#3E9C93] text-white">
               <span className="font-display text-lg font-bold flex items-center gap-2"><Wrench className="w-5 h-5" /> {tri3(lang, "Tutti gli strumenti", "Alle Werkzeuge", "All tools", "Todas las herramientas")}</span>
               <button data-testid="lab-menu-close" onClick={() => setMenuOpen(false)} className="w-9 h-9 rounded-lg bg-white/15 flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
@@ -1122,7 +1122,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                         ? tri3(lang, "🎉 Hai scoperto tutti gli strumenti!", "🎉 Du hast alle Werkzeuge entdeckt!", "🎉 You've discovered every tool!")
                         : tri3(lang, `Hai scoperto ${discovered}/${total} strumenti`, `Du hast ${discovered}/${total} Werkzeuge entdeckt`, `You've discovered ${discovered}/${total} tools`)}
                     </p>
-                    <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#5E8CA8]" : "text-[#3E9C93]"}`}>{pct}%</span>
+                    <span data-testid="tools-discovery-pct" className={`text-[12px] font-extrabold ${done ? "text-[#64748B]" : "text-[#3E9C93]"}`}>{pct}%</span>
                   </div>
                   <div className="h-2 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden">
                     <div className={`h-full rounded-full transition-all duration-500 ${done ? "bg-[#3E9C93]" : "bg-[#3E9C93]"}`} style={{ width: `${pct}%` }} />
@@ -1573,7 +1573,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
         <div className={planTab === "genera" ? "" : "hidden"}>
 
         <button data-testid="capo-generate" onClick={generate} disabled={generating}
-          className={`mt-3 w-full ${canGenerate ? "bg-[#3E9C93] hover:bg-[#5E8CA8]" : "bg-[#3E9C93]/60"} disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2`}>
+          className={`mt-3 w-full ${canGenerate ? "bg-[#3E9C93] hover:bg-[#64748B]" : "bg-[#3E9C93]/60"} disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2`}>
           <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("capo_generate")}
         </button>
         {!canGenerate && (
@@ -1588,7 +1588,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
           <>
             <div data-testid="capo-saved-banner" className="no-print mt-4 rounded-2xl bg-[#3E9C93]/12 border border-[#3E9C93]/35 p-3.5 flex items-center justify-between gap-3">
               <div className="flex items-start gap-2 min-w-0">
-                <CheckCircle2 className="w-5 h-5 text-[#5E8CA8] shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-[#64748B] shrink-0 mt-0.5" />
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-[#3E9C93] dark:text-[#a9d2ec] leading-tight">
                     {savedAt
@@ -1617,7 +1617,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                   { k: "cottura", label: tri3(lang, "Cottura", "Backen", "Bake", "Cocción"), min: 40 },
                 ].map((p) => (
                   <button key={p.k} data-testid={`capo-phase-timer-${p.k}`} onClick={() => startPhaseTimer(p.label, p.min, p.repeat)}
-                    className="relative flex flex-col items-center gap-0.5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] active:scale-95 hover:border-[#3E9C93] transition-all">
+                    className="relative flex flex-col items-center gap-0.5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] active:scale-95 hover:border-[#3E9C93] transition-all">
                     {p.repeat && <RefreshCw className="absolute top-1.5 right-1.5 w-3 h-3 text-[#3E9C93]" />}
                     <span className="text-[12px] font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.label}</span>
                     <span className="font-mono-data text-[10px] text-[#7E8A93]">{p.min}′</span>
@@ -1637,11 +1637,11 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] px-3 py-2 text-sm outline-none focus:border-[#3E9C93] resize-y" />
             </div>
             <button data-testid="capo-print" onClick={() => window.print()}
-              className="no-print mt-3 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+              className="no-print mt-3 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
               <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
             </button>
             <button data-testid="capo-pdf" onClick={downloadPlanPdf} disabled={pdfBusy}
-              className="no-print mt-2 w-full bg-[#0E1620] dark:bg-[#1B2A38] hover:bg-[#000] text-white font-semibold px-5 py-3 rounded-2xl border-2 border-[#3E9C93] active:scale-98 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
+              className="no-print mt-2 w-full bg-[#0D1520] dark:bg-[#1B2A38] hover:bg-[#000] text-white font-semibold px-5 py-3 rounded-2xl border-2 border-[#3E9C93] active:scale-98 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
               <Download className="w-5 h-5 text-[#3E9C93]" /> {pdfBusy
                 ? tri3(lang, "Creo il PDF…", "PDF wird erstellt…", "Creating PDF…", "Creando PDF…")
                 : tri3(lang, "Scarica PDF elegante (logo MikiLab)", "Elegantes PDF herunterladen (MikiLab-Logo)", "Download elegant PDF (MikiLab logo)", "Descargar PDF elegante (logo MikiLab)")}

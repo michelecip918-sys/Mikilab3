@@ -123,15 +123,15 @@ function TestRegistry() {
       value={form[key]}
       onChange={(e) => setForm({ ...form, [key]: e.target.value })}
       placeholder={ph}
-      className="w-full rounded-xl bg-[#14212C] border border-[#2A3B49]/40 px-3 py-2 text-sm text-[#F7F9FC] placeholder-[#64748B] focus:border-[#5E8CA8] focus:outline-none"
+      className="w-full rounded-xl bg-[#14212C] border border-[#2A3B49]/40 px-3 py-2 text-sm text-[#F7F9FC] placeholder-[#64748B] focus:border-[#64748B] focus:outline-none"
     />
   );
 
   return (
     <div data-testid="flour-test-registry" className="lab-3d-card rounded-3xl p-6 bg-[#14212C]/85 border border-[#2A3B49]/60 backdrop-blur-md shadow-xl">
       <div className="flex items-center gap-3 mb-4">
-        <span className="w-11 h-11 rounded-2xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 flex items-center justify-center shrink-0">
-          <ClipboardList className="w-6 h-6 text-[#5E8CA8]" />
+        <span className="w-11 h-11 rounded-2xl bg-[#64748B]/15 border border-[#64748B]/40 flex items-center justify-center shrink-0">
+          <ClipboardList className="w-6 h-6 text-[#64748B]" />
         </span>
         <div>
           <h3 className="font-display text-xl font-bold text-[#F7F9FC]">{tri("Registro Test Farine", "Mehl-Testregister", "Flour Test Log", "Registro de Pruebas de Harina")}</h3>
@@ -140,14 +140,14 @@ function TestRegistry() {
       </div>
 
       {/* Analisi IA della foto del sacco */}
-      <div data-testid="flour-scan-block" className="mb-4 rounded-2xl bg-[#14212C] border border-[#5E8CA8]/30 p-4">
-        <div className="flex items-center gap-2 mb-2 text-[#5E8CA8]">
+      <div data-testid="flour-scan-block" className="mb-4 rounded-2xl bg-[#14212C] border border-[#64748B]/30 p-4">
+        <div className="flex items-center gap-2 mb-2 text-[#64748B]">
           <Sparkles className="w-4 h-4" />
           <p className="text-[12px] font-bold uppercase tracking-wide">{tri("Analisi IA della farina", "KI-Mehlanalyse", "AI flour analysis", "Análisis IA de harina")}</p>
         </div>
         <p className="text-[12px] text-[#94A3B8] leading-snug mb-3">{tri("Fotografa l'etichetta o la scheda tecnica: leggo forza W, proteine, tipo e assorbimento e compilo il test.", "Fotografiere Etikett/Datenblatt: ich lese W, Protein, Typ und Wasseraufnahme und fülle den Test aus.", "Photograph the label or tech sheet: I read W, protein, type and absorption and fill in the test.", "Fotografía la etiqueta o ficha: leo W, proteína, tipo y absorción y relleno la prueba.")}</p>
         {scanning ? (
-          <div data-testid="flour-scan-loading" className="inline-flex items-center gap-2 rounded-2xl bg-[#5E8CA8] text-[#14212C] font-semibold px-5 py-3 opacity-80">
+          <div data-testid="flour-scan-loading" className="inline-flex items-center gap-2 rounded-2xl bg-[#64748B] text-[#14212C] font-semibold px-5 py-3 opacity-80">
             <Loader2 className="w-5 h-5 animate-spin" /> {tri("Sto leggendo l'etichetta…", "Ich lese das Etikett…", "Reading the label…", "Leyendo la etiqueta…")}
           </div>
         ) : (
@@ -166,7 +166,7 @@ function TestRegistry() {
       <button
         data-testid="flour-test-add"
         onClick={add}
-        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#5E8CA8] to-[#3E9C93] text-white font-semibold py-2.5 shadow-lg active:scale-98 transition-all"
+        className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-br from-[#64748B] to-[#3E9C93] text-white font-semibold py-2.5 shadow-lg active:scale-98 transition-all"
       >
         <Plus className="w-5 h-5" /> {tri("Registra test", "Test speichern", "Save test", "Guardar prueba")}
       </button>
@@ -179,7 +179,7 @@ function TestRegistry() {
           <div key={tst.id} data-testid={`flour-test-row-${tst.id}`} className="flex items-start gap-3 rounded-2xl bg-[#14212C] border border-[#2A3B49]/40 p-3.5">
             <div className="min-w-0 flex-1">
               <p className="font-semibold text-[#F7F9FC] text-sm truncate">{tst.name}</p>
-              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12px] text-[#5E8CA8] font-medium mt-0.5">
+              <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[12px] text-[#64748B] font-medium mt-0.5">
                 {tst.w && <span>W {tst.w}</span>}
                 {tst.protein && <span>{tst.protein}% prot.</span>}
                 {tst.hydration && <span>{tst.hydration}% H₂O</span>}
@@ -205,8 +205,8 @@ export default function Shop({ onNavigate }) {
     <div data-testid="shop-page" className="pb-4 space-y-6">
       {/* Hero */}
       <div className="rounded-3xl bg-gradient-to-br from-[#3a2410] to-[#14212C] text-white p-7 text-center shadow-xl border border-[#2A3B49]/50 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.06] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, #5E8CA8 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
-        <Microscope className="w-12 h-12 mx-auto mb-2 text-[#5E8CA8]" />
+        <div className="absolute inset-0 opacity-[0.06] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle at 20% 20%, #64748B 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
+        <Microscope className="w-12 h-12 mx-auto mb-2 text-[#64748B]" />
         <h1 className="font-display text-3xl font-bold">{tri("Centro Formule e Analisi Farine", "Formel- und Mehlanalysezentrum", "Formula & Flour Analysis Center", "Centro de Fórmulas y Análisis de Harinas")}</h1>
         <p className="text-white/80 text-sm mt-2 max-w-md mx-auto">
           {tri("Ricerca tecnologica per impasti ad alta precisione: forza, assorbimento e parametri chimici reali della farina.",
@@ -224,11 +224,11 @@ export default function Shop({ onNavigate }) {
           <img
             src={LAB_PHOTO}
             onError={(e) => { e.currentTarget.src = `${PUB}/michele-real-lab.jpg`; }}
-            className="w-32 h-32 md:w-44 md:h-44 object-cover rounded-2xl shadow-lg border border-[#5E8CA8]/40 flex-shrink-0"
+            className="w-32 h-32 md:w-44 md:h-44 object-cover rounded-2xl shadow-lg border border-[#64748B]/40 flex-shrink-0"
             alt={tri("Reparto Analisi Impasti", "Teiganalyse-Abteilung", "Dough Analysis Department", "Departamento de Análisis de Masas")}
           />
           <div>
-            <h2 className="text-2xl font-bold mb-3 text-[#5E8CA8] flex items-center gap-3">
+            <h2 className="text-2xl font-bold mb-3 text-[#64748B] flex items-center gap-3">
               <FlaskConical className="w-6 h-6" /> {tri("Reparto Analisi e Controllo Farine", "Abteilung für Mehlanalyse und -kontrolle", "Flour Analysis & Control Department", "Departamento de Análisis y Control de Harinas")}
             </h2>
             <p className="text-[#E2E8F0] mb-3 leading-relaxed text-sm">
@@ -237,7 +237,7 @@ export default function Shop({ onNavigate }) {
                 "We blend the art of baking with the rigour of lab testing to analyse strength, absorption and the real behaviour of every flour before it reaches the dough.",
                 "Unimos el arte de la panificación con el rigor de las pruebas de laboratorio para analizar fuerza, absorción y el comportamiento real de cada harina antes de llevarla a la masa.")}
             </p>
-            <div className="text-xs text-[#5E8CA8] font-semibold tracking-wide uppercase">
+            <div className="text-xs text-[#64748B] font-semibold tracking-wide uppercase">
               {tri("Diretto da Michele • Ricerca sul campo, senza filtri commerciali", "Geleitet von Michele • Feldforschung, ohne kommerzielle Filter", "Directed by Michele • Field research, no commercial filters", "Dirigido por Michele • Investigación de campo, sin filtros comerciales")}
             </div>
           </div>
@@ -250,8 +250,8 @@ export default function Shop({ onNavigate }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {params.map((p) => (
             <div key={p.id} data-testid={`flour-param-${p.id}`} className="lab-3d-card rounded-2xl p-5 bg-[#14212C] border border-[#2A3B49]/50 shadow-sm flex gap-3">
-              <span className="w-11 h-11 rounded-2xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 flex items-center justify-center shrink-0">
-                <p.Icon className="w-6 h-6 text-[#5E8CA8]" />
+              <span className="w-11 h-11 rounded-2xl bg-[#64748B]/15 border border-[#64748B]/40 flex items-center justify-center shrink-0">
+                <p.Icon className="w-6 h-6 text-[#64748B]" />
               </span>
               <div className="min-w-0">
                 <p className="font-display text-base font-bold text-[#F7F9FC]">{p.label}</p>
@@ -269,7 +269,7 @@ export default function Shop({ onNavigate }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <button data-testid="shop-go-recipes" onClick={() => onNavigate && onNavigate("ricette")}
           className="lab-3d-card text-left rounded-2xl p-5 bg-[#14212C] border border-[#2A3B49]/50 shadow-sm active:scale-98 transition-all flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 flex items-center justify-center shrink-0"><BookOpen className="w-6 h-6 text-[#5E8CA8]" /></div>
+          <div className="w-11 h-11 rounded-2xl bg-[#64748B]/15 border border-[#64748B]/40 flex items-center justify-center shrink-0"><BookOpen className="w-6 h-6 text-[#64748B]" /></div>
           <div className="min-w-0">
             <p className="font-display text-base font-bold text-[#F7F9FC]">{tri("Le Formule (Ricette)", "Die Formeln (Rezepte)", "The Formulas (Recipes)", "Las Fórmulas (Recetas)")}</p>
             <p className="text-[12px] text-[#94A3B8] leading-snug">{tri("Ricettario completo con percentuali sul peso farina", "Komplettes Rezeptbuch mit Bäckerprozenten", "Full recipe book with baker's percentages", "Recetario completo con porcentajes de panadero")}</p>
@@ -277,7 +277,7 @@ export default function Shop({ onNavigate }) {
         </button>
         <button data-testid="shop-go-academy" onClick={() => onNavigate && onNavigate("impara")}
           className="lab-3d-card text-left rounded-2xl p-5 bg-[#14212C] border border-[#2A3B49]/50 shadow-sm active:scale-98 transition-all flex items-center gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 flex items-center justify-center shrink-0"><GraduationCap className="w-6 h-6 text-[#5E8CA8]" /></div>
+          <div className="w-11 h-11 rounded-2xl bg-[#64748B]/15 border border-[#64748B]/40 flex items-center justify-center shrink-0"><GraduationCap className="w-6 h-6 text-[#64748B]" /></div>
           <div className="min-w-0">
             <p className="font-display text-base font-bold text-[#F7F9FC]">{tri("Accademia & Metodi", "Akademie & Methoden", "Academy & Methods", "Academia y Métodos")}</p>
             <p className="text-[12px] text-[#94A3B8] leading-snug">{tri("Lezioni e guide per interpretare le analisi", "Lektionen und Guides zur Analyse-Interpretation", "Lessons and guides to interpret the analyses", "Lecciones y guías para interpretar los análisis")}</p>

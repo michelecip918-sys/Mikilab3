@@ -8,7 +8,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const ICON = { flame: Flame, alert: AlertOctagon, waves: Waves, truck: Truck, container: Container, cart: ShoppingCart };
-const SEV = { alto: "#f43f5e", medio: "#FFB800", info: "#7DD3FC" };
+const SEV = { alto: "#f43f5e", medio: "#FFB800", info: "#FF9D42" };
 // Azioni eseguibili in UN CLIC direttamente dalla card (pilota automatico assistito).
 const EXEC = {
   silos: async () => { const r = await mikeApi.siloMicroorder(); return { kind: "silos", ...r }; },
@@ -68,8 +68,8 @@ export default function MikeSuggestions() {
   };
 
   return (
-    <div data-testid="mike-suggestions" className="rounded-2xl border border-[#00F0FF]/40 bg-gradient-to-br from-[#00F0FF]/8 to-transparent p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Mike Mix · Suggerimenti", "Mike Mix · Vorschläge", "Mike Mix · Suggestions", "Mike Mix · Sugerencias", "Mike Mix · Suggestions", "بوکومیکس · پیشنهادها")}
+    <div data-testid="mike-suggestions" className="rounded-2xl border border-[#FF6B00]/40 bg-gradient-to-br from-[#FF6B00]/8 to-transparent p-3">
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#FF6B00] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Mike Mix · Suggerimenti", "Mike Mix · Vorschläge", "Mike Mix · Suggestions", "Mike Mix · Sugerencias", "Mike Mix · Suggestions", "بوکومیکس · پیشنهادها")}
         <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#22c55e]/20 border-[#22c55e]/60 text-[#22c55e]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
           <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
         </button>
@@ -84,7 +84,7 @@ export default function MikeSuggestions() {
           <AnimatePresence>
             {sug.map((s) => {
               const Icon = ICON[s.icon] || Brain;
-              const col = SEV[s.severity] || "#7DD3FC";
+              const col = SEV[s.severity] || "#FF9D42";
               return (
                 <motion.button key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
                   data-testid={`suggestion-${s.id}`} onClick={() => goTo(s.target)}
@@ -92,7 +92,7 @@ export default function MikeSuggestions() {
                   <span className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${col}1a`, border: `1px solid ${col}55` }}><Icon className="w-4 h-4" style={{ color: col }} /></span>
                   <span className="flex-1 min-w-0 text-[13px] text-white leading-snug">{s.text}</span>
                   {EXEC[s.id] ? (
-                    <span data-testid={`suggestion-exec-${s.id}`} onClick={(e) => exec(s, e)} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2 py-1 rounded-lg" style={{ color: "#070A10", background: col }}>
+                    <span data-testid={`suggestion-exec-${s.id}`} onClick={(e) => exec(s, e)} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2 py-1 rounded-lg" style={{ color: "#060A10", background: col }}>
                       {busy === s.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />} {tri("Esegui", "Ausführen", "Run", "Ejecutar", "Exécuter", "اجرا")}
                     </span>
                   ) : (

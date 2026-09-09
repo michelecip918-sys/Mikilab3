@@ -98,7 +98,7 @@ export default function ShiftRoles() {
         ))}
       </div>
 
-      <button data-testid="shift-add" onClick={add} className="w-full mt-4 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+      <button data-testid="shift-add" onClick={add} className="w-full mt-4 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
         <Plus className="w-5 h-5" /> {mkTri(lang)("Aggiungi persona", "Person hinzufügen", "Add person")}
       </button>
     </div>

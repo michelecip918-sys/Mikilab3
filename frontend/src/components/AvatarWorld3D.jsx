@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 
 // Mondo 3D immersivo (Vanilla three.js) che si assembla dietro l'avatar del trio.
 // theme: "miki" (Ufficio Tecnico/Ricette) | "mikemix" (Produzione Calda) | "bigmix" (Assistente vocale)
 // speaking: per Mike Mix -> onde sonore/particelle piu intense quando parla.
-export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", speaking = false }) {
+export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", speaking = false }) {
   const mountRef = useRef(null);
   const speakingRef = useRef(speaking);
   speakingRef.current = speaking;
@@ -21,15 +21,15 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
     camera.position.set(0, 1.4, 9);
     camera.lookAt(0, 1.1, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "high-performance" });
+    // Renderer WebGPU con fallback automatico a WebGL2 (forceWebGL) — 120fps dove supportato.
+    const renderer = new THREE.WebGPURenderer({ antialias: true, alpha: true, forceWebGL: !(typeof navigator !== "undefined" && navigator.gpu) });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
     renderer.setSize(W(), H());
-    mount.appendChild(renderer.domElement);
 
     const acc = new THREE.Color(accent);
     scene.add(new THREE.AmbientLight(0x8899aa, 0.5));
     const key = new THREE.PointLight(acc, 1.1, 40); key.position.set(3, 6, 6); scene.add(key);
-    const rim = new THREE.PointLight(0x00f0ff, 0.7, 40); rim.position.set(-6, 3, -3); scene.add(rim);
+    const rim = new THREE.PointLight(0xFF6B00, 0.7, 40); rim.position.set(-6, 3, -3); scene.add(rim);
 
     // Griglia olografica a pavimento
     const grid = new THREE.GridHelper(30, 30, acc, 0x123);
@@ -127,7 +127,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
       // LAUGEN: vasca soda/lisciva (liquido) + griglie di essiccazione + brezel
       const tank = new THREE.Group();
       const walls = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.8, 1.6), mat(0x9aa7b4, { m: 0.95, r: 0.15 })); tank.add(walls);
-      const liquid = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.4), new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.35 })); liquid.rotation.x = -Math.PI / 2; liquid.position.y = 0.36; tank.add(liquid);
+      const liquid = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.4), new THREE.MeshBasicMaterial({ color: 0xFF6B00, transparent: true, opacity: 0.35 })); liquid.rotation.x = -Math.PI / 2; liquid.position.y = 0.36; tank.add(liquid);
       tank.position.set(-2.4, 0.6, 0.4); world.add(tank); reg(tank, 0.1, 0.7); animatedExtras.push({ type: "shimmer", obj: liquid });
       const grid = new THREE.Group();
       for (let s = 0; s < 3; s++) {
@@ -140,12 +140,12 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
       const scale = new THREE.Group();
       const platf = new THREE.Mesh(new THREE.BoxGeometry(1, 0.12, 0.8), mat(0xcfd8e0, { m: 0.9, r: 0.2 })); platf.position.y = 0.6; scale.add(platf);
       const post = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.5), mat(0x8792a0)); post.position.set(0, 0.85, -0.3); scale.add(post);
-      const disp = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.35), new THREE.MeshBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.6 })); disp.position.set(0, 1.05, -0.25); scale.add(disp);
+      const disp = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.35), new THREE.MeshBasicMaterial({ color: 0xFF6B00, transparent: true, opacity: 0.6 })); disp.position.set(0, 1.05, -0.25); scale.add(disp);
       scale.position.set(-2.7, 0, 0.6); world.add(scale); reg(scale, 0.1, 0.7); animatedExtras.push({ type: "shimmer", obj: disp });
       const caseG = new THREE.Group();
       const geoBox = new THREE.BoxGeometry(3, 1.4, 1.2);
-      const frame = new THREE.Mesh(geoBox, holoMat(0x00F0FF, 0.1)); caseG.add(frame);
-      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geoBox), new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.6 })); caseG.add(edges);
+      const frame = new THREE.Mesh(geoBox, holoMat(0xFF6B00, 0.1)); caseG.add(frame);
+      const edges = new THREE.LineSegments(new THREE.EdgesGeometry(geoBox), new THREE.LineBasicMaterial({ color: 0xFF6B00, transparent: true, opacity: 0.6 })); caseG.add(edges);
       const pc = [0xC98A3C, 0xEfe6d2, 0xE0A106, 0xC98A3C];
       for (let i = 0; i < 4; i++) { const prod = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.3, 0.7), mat(pc[i], { r: 0.7 })); prod.position.set(-1 + i * 0.65, -0.4, 0); caseG.add(prod); }
       caseG.position.set(1.1, 0.9, -1); world.add(caseG); reg(caseG, 0.3, 0.8);
@@ -164,9 +164,9 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
       // Moduli input vocale trasparenti (pannelli futuristici)
       for (let i = 0; i < 3; i++) {
         const a = (i - 1) * 1.1;
-        const panel = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.7), holoMat(0x00F0FF, 0.16));
+        const panel = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.7), holoMat(0xFF6B00, 0.16));
         panel.position.set(a * 2.2, 1.1 + (i === 1 ? 0.5 : 0), -2); panel.rotation.y = -a * 0.3;
-        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(panel.geometry), new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.6 }));
+        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(panel.geometry), new THREE.LineBasicMaterial({ color: 0xFF6B00, transparent: true, opacity: 0.6 }));
         panel.add(edge); world.add(panel); reg(panel, 0.3 + i * 0.1, 0.7);
         animatedExtras.push({ type: "float", obj: panel, ph: i });
       }
@@ -202,11 +202,11 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
       }
       // Schermi olografici dati
       for (let i = 0; i < 2; i++) {
-        const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.0), holoMat(0x00F0FF, 0.18));
+        const scr = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.0), holoMat(0xFF6B00, 0.18));
         scr.position.set(i === 0 ? -2.6 : 2.6, 2.4, -2.4); scr.rotation.y = i === 0 ? 0.4 : -0.4;
-        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(scr.geometry), new THREE.LineBasicMaterial({ color: 0x00F0FF, transparent: true, opacity: 0.7 }));
+        const edge = new THREE.LineSegments(new THREE.EdgesGeometry(scr.geometry), new THREE.LineBasicMaterial({ color: 0xFF6B00, transparent: true, opacity: 0.7 }));
         scr.add(edge);
-        for (let b = 0; b < 4; b++) { const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 0.3 + Math.random() * 0.5), holoMat(0x00F0FF, 0.5)); bar.position.set(-0.5 + b * 0.3, -0.1, 0.01); scr.add(bar); }
+        for (let b = 0; b < 4; b++) { const bar = new THREE.Mesh(new THREE.PlaneGeometry(0.18, 0.3 + Math.random() * 0.5), holoMat(0xFF6B00, 0.5)); bar.position.set(-0.5 + b * 0.3, -0.1, 0.01); scr.add(bar); }
         world.add(scr); reg(scr, 0.4 + i * 0.12, 0.7); animatedExtras.push({ type: "float", obj: scr, ph: i });
       }
     }
@@ -217,8 +217,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
 
     const animate = () => {
       if (!mounted) return;
-      const el = clock.getElapsedTime();
-      // Assemblaggio olografico
+      const el = clock.getElapsedTime();      // Assemblaggio olografico
       for (const a of assembling) {
         const p = Math.max(0, Math.min(1, (el - a.delay) / a.dur));
         const e = easeOut(p);
@@ -241,7 +240,12 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
       renderer.render(scene, camera);
       raf = requestAnimationFrame(animate);
     };
-    raf = requestAnimationFrame(animate);
+    // WebGPU richiede init() async prima del primo render; poi si aggancia il canvas e parte il loop.
+    renderer.init().catch(() => { /* forceWebGL fallback gestito internamente */ }).finally(() => {
+      if (!mounted) { try { renderer.dispose(); } catch { /* */ } return; }
+      mount.appendChild(renderer.domElement);
+      raf = requestAnimationFrame(animate);
+    });
 
     const onResize = () => { camera.aspect = W() / H(); camera.updateProjectionMatrix(); renderer.setSize(W(), H()); };
     window.addEventListener("resize", onResize);
@@ -250,9 +254,9 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#00F0FF", spea
     return () => {
       mounted = false; cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize); ro.disconnect();
-      renderer.dispose();
+      try { renderer.dispose(); } catch { /* */ }
       scene.traverse((o) => { if (o.geometry) o.geometry.dispose?.(); if (o.material) { const m = o.material; (Array.isArray(m) ? m : [m]).forEach((mm) => mm.dispose?.()); } });
-      if (renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
+      if (renderer.domElement && renderer.domElement.parentNode) renderer.domElement.parentNode.removeChild(renderer.domElement);
     };
   }, [theme, accent]);
 

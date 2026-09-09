@@ -33,7 +33,7 @@ export default function Header() {
   return (
     <header
       data-testid="app-header"
-      className="sticky top-0 z-40 bg-[#0E1620]/95 dark:bg-[#0E1620]/95 backdrop-blur-md border-b border-[#2A3B49] dark:border-[#2A3B49]"
+      className="sticky top-0 z-40 bg-[#0D1520]/95 dark:bg-[#0D1520]/95 backdrop-blur-md border-b border-[#2A3B49] dark:border-[#2A3B49]"
     >
       <div className="px-3 sm:px-4 py-2.5 sm:py-3 flex flex-wrap items-center justify-between gap-y-2 gap-x-2">
       <div className="flex items-center gap-2 min-w-0 w-full sm:w-auto sm:flex-1">
@@ -56,7 +56,7 @@ export default function Header() {
       <div className="flex items-center gap-1 flex-wrap justify-end w-full sm:w-auto">
         <span data-testid="bakemix-status" title="Mike Mix AI online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #2A3B49" }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#39d98a" }} />
-          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#5E8CA8" }}>Mike Mix AI</span>
+          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#64748B" }}>Mike Mix AI</span>
         </span>
         <TrinitySeal />
         <button data-testid="header-search-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-search"))} aria-label={mkTri(lang)("Cerca", "Suche", "Search", "Buscar", "Chercher", "جستجو")}

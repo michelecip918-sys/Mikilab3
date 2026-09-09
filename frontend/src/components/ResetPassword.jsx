@@ -26,7 +26,7 @@ export default function ResetPassword({ token, onDone }) {
   };
 
   return (
-    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#0E1620] dark:bg-[#0E1620] overflow-auto flex items-center justify-center px-4">
+    <div data-testid="reset-screen" className="fixed inset-0 z-[80] bg-[#0D1520] dark:bg-[#0D1520] overflow-auto flex items-center justify-center px-4">
       <div className="w-full max-w-sm relative">
         <button data-testid="reset-close" onClick={onDone} aria-label="Chiudi"
           className="absolute -top-2 right-0 w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] flex items-center justify-center text-[#7E8A93] z-10">
@@ -56,7 +56,7 @@ export default function ResetPassword({ token, onDone }) {
               className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
           </Field>
           <button data-testid="reset-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {tri("Cambia password", "Passwort ändern", "Change password", "Cambiar contraseña")}
           </button>
         </form>

@@ -336,7 +336,7 @@ export default function StartDoughs() {
 
       <button
         data-testid="sd-compute-btn" onClick={compute}
-        className="w-full mt-3 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
+        className="w-full mt-3 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
         {t("lv_compute")}
       </button>

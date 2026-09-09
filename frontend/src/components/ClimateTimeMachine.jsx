@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const VERDICT = {
-  umido: { c: "#5E8CA8", it: "Aria umida", de: "Feuchte Luft", en: "Humid air", es: "Aire húmedo", fr: "Air humide", fa: "هوای مرطوب" },
+  umido: { c: "#64748B", it: "Aria umida", de: "Feuchte Luft", en: "Humid air", es: "Aire húmedo", fr: "Air humide", fa: "هوای مرطوب" },
   secco: { c: "#f59e0b", it: "Aria secca", de: "Trockene Luft", en: "Dry air", es: "Aire seco", fr: "Air sec", fa: "هوای خشک" },
   stabile: { c: "#22c55e", it: "Clima stabile", de: "Stabiles Klima", en: "Stable climate", es: "Clima estable", fr: "Climat stable", fa: "آب‌وهوای پایدار" },
 };
@@ -65,8 +65,8 @@ export default function ClimateTimeMachine({ onClose }) {
           <>
             {/* Clima attuale */}
             <div className="grid grid-cols-2 gap-3 mb-4" data-testid="climate-stats">
-              <div className="rounded-2xl border border-[#5E8CA8]/40 p-4" style={{ background: "#5E8CA80d" }}>
-                <p className="text-[10px] font-black uppercase tracking-wider text-[#94A3B8] flex items-center gap-1.5"><Droplets className="w-3.5 h-3.5 text-[#5E8CA8]" /> {tri("Umidità", "Luftfeuchte", "Humidity", "Humedad", "Humidité", "رطوبت")}</p>
+              <div className="rounded-2xl border border-[#64748B]/40 p-4" style={{ background: "#64748B0d" }}>
+                <p className="text-[10px] font-black uppercase tracking-wider text-[#94A3B8] flex items-center gap-1.5"><Droplets className="w-3.5 h-3.5 text-[#64748B]" /> {tri("Umidità", "Luftfeuchte", "Humidity", "Humedad", "Humidité", "رطوبت")}</p>
                 <p className="text-3xl font-black text-white mt-1" data-testid="climate-humidity">{cl.now_humidity ?? "—"}<span className="text-lg">%</span></p>
                 <p className="text-[11px] text-[#94A3B8] flex items-center gap-1 mt-1"><Trend val={cl.humidity_trend} /> {tri("trend", "Trend", "trend", "tendencia", "tendance", "روند")} {cl.humidity_trend != null ? `${cl.humidity_trend > 0 ? "+" : ""}${cl.humidity_trend}%` : "—"}</p>
               </div>
@@ -82,7 +82,7 @@ export default function ClimateTimeMachine({ onClose }) {
 
         {/* Correzione AI */}
         {adj && (
-          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} data-testid="climate-adjustment" className="rounded-3xl border p-4" style={{ borderColor: `${(v?.c) || "#5E8CA8"}55`, background: `${(v?.c) || "#5E8CA8"}0d` }}>
+          <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} data-testid="climate-adjustment" className="rounded-3xl border p-4" style={{ borderColor: `${(v?.c) || "#64748B"}55`, background: `${(v?.c) || "#64748B"}0d` }}>
             {v && <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full mb-3" style={{ background: `${v.c}22`, color: v.c }} data-testid="climate-verdict">{tri(v.it, v.de, v.en, v.es, v.fr, v.fa)}</span>}
             <p className="text-sm text-white font-bold leading-snug mb-3" data-testid="climate-summary">{adj.summary}</p>
             <div className="grid grid-cols-3 gap-2 mb-3">

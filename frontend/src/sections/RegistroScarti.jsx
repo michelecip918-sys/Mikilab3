@@ -103,7 +103,7 @@ export default function RegistroScarti() {
               className="w-full bg-transparent text-sm text-[#e4eff8] outline-none" />
           </div>
         </div>
-        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="scarto-add" onClick={submit} className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
           <Plus className="w-4 h-4" /> {tri("Registra scarto", "Ausschuss erfassen", "Log waste", "Registrar merma")}
         </button>
       </div>

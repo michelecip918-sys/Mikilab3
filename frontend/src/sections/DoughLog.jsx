@@ -95,7 +95,7 @@ export default function DoughLog() {
     setLoadingAdvice(false);
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
   const VERDICT = {
     on_target: { color: "#3E9C93", Icon: CheckCircle2, label: tri("Nel target 👌", "Im Ziel 👌", "On target 👌") },
     too_warm: { color: "#3E9C93", Icon: Flame, label: tri("Troppo caldo", "Zu warm", "Too warm") },
@@ -135,7 +135,7 @@ export default function DoughLog() {
           <label className="text-[11px] text-[#7E8A93]">{tri("Temp. acqua °C", "Wassertemp. °C", "Water temp °C")}<input data-testid="doughlog-water" type="number" step="0.1" value={form.water_temp_c} onChange={(e) => setForm((f) => ({ ...f, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
         </div>
         <input data-testid="doughlog-note" value={form.note} onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))} placeholder={tri("Note (facoltative)", "Notiz (optional)", "Note (optional)")} className={inp} />
-        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
+        <button data-testid="doughlog-save" onClick={save} disabled={saving} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {saving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva sessione", "Sitzung speichern", "Save session")}</button>
       </div>
 
       {/* Giorno Dopo */}

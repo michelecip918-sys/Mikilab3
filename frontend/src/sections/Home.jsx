@@ -84,8 +84,8 @@ export default function Home({ onNavigate }) {
 
       {/* Hero */}
       <div className="text-center mb-8">
-        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#5E8CA8]/40 shadow-lg" />
-        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#5E8CA8] mt-3">MikiLab</h1>
+        <img src={`${PUB}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover mx-auto ring-2 ring-[#64748B]/40 shadow-lg" />
+        <h1 className="font-display text-4xl sm:text-5xl font-extrabold tracking-tight text-[#64748B] mt-3">MikiLab</h1>
         <p className="mt-2 text-[15px] leading-snug text-[#C9D4DC] max-w-sm mx-auto">
           {L(
             "Il laboratorio del fornaio: ricette, guide e strumenti.",
@@ -93,7 +93,7 @@ export default function Home({ onNavigate }) {
             "The baker's workshop: recipes, guides and tools.",
             "El taller del panadero: recetas, guías y herramientas.")}
         </p>
-        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#5E8CA8]/15 text-[#5E8CA8] border border-[#5E8CA8]/40">
+        <span className="inline-block mt-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-[#64748B]/15 text-[#64748B] border border-[#64748B]/40">
           {L("100% gratis", "100% kostenlos", "100% free", "100% gratis")}
         </span>
         {/* Badge stato sistema */}
@@ -102,7 +102,7 @@ export default function Home({ onNavigate }) {
             <WifiOff className="w-3 h-3" /> {L("Sistema 100% offline pronto", "System 100% offline bereit", "System 100% offline ready", "Sistema 100% offline listo")}
           </span>
           {user && (
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#5E8CA8]/15 text-[#5E8CA8] border border-[#5E8CA8]/40">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide bg-[#64748B]/15 text-[#64748B] border border-[#64748B]/40">
               {L("Account aziendale attivo", "Firmenkonto aktiv", "Company account active", "Cuenta de empresa activa")}
             </span>
           )}
@@ -137,11 +137,11 @@ export default function Home({ onNavigate }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, delay: i * 0.06 }}
-            className="lab-3d-card group block w-full text-start rounded-3xl overflow-hidden bg-[#14212C] border border-[#2A3B49] hover:border-[#5E8CA8]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
+            className="lab-3d-card group block w-full text-start rounded-3xl overflow-hidden bg-[#14212C] border border-[#2A3B49] hover:border-[#64748B]/60 active:scale-[0.99] transition-all duration-300 shadow-lg"
           >
             <div className="relative h-40">
               <img src={`${PUB}/${b.img}`} alt={b.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0E1620] via-[#0E1620]/45 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0D1520] via-[#0D1520]/45 to-transparent" />
               <span className="absolute top-3 start-4 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-black/45 text-[#e6c79a] border border-[#e6c79a]/30 backdrop-blur-sm">
                 {b.badge}
               </span>
@@ -149,7 +149,7 @@ export default function Home({ onNavigate }) {
             </div>
             <div className="flex items-center gap-3 p-4">
               <p className="flex-1 text-[14px] leading-snug text-[#C9D4DC]">{b.desc}</p>
-              <span className="shrink-0 w-10 h-10 rounded-full bg-[#5E8CA8]/15 border border-[#5E8CA8]/40 flex items-center justify-center text-[#5E8CA8] group-hover:bg-[#5E8CA8] group-hover:text-white transition-all duration-300">
+              <span className="shrink-0 w-10 h-10 rounded-full bg-[#64748B]/15 border border-[#64748B]/40 flex items-center justify-center text-[#64748B] group-hover:bg-[#64748B] group-hover:text-white transition-all duration-300">
                 <ChevronRight className="w-5 h-5 rtl:rotate-180" />
               </span>
             </div>

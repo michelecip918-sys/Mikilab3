@@ -41,7 +41,7 @@ export default function EnterpriseHub() {
   return (
     <div data-testid="enterprise-hub">
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#0E1620] flex items-center justify-center"><Building2 className="w-6 h-6 text-white" /></div>
+        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#3E9C93] to-[#0D1520] flex items-center justify-center"><Building2 className="w-6 h-6 text-white" /></div>
         <div>
           <h1 className="font-display text-2xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Enterprise", "Enterprise", "Enterprise")}</h1>
           <p className="text-sm text-[#7E8A93]">{tri("Gestione multi-negozio, ordini e turni", "Multi-Filiale, Bestellungen & Schichten", "Multi-store, orders & shifts")}</p>

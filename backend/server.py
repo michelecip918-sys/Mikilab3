@@ -3449,33 +3449,7 @@ _DECK_DEPT_KEYWORDS = {
 
 @api_router.get("/deck/status")
 async def deck_status(user: Optional[dict] = Depends(optional_user)):
-    now = datetime.now(timezone.utc)
-    today = now.strftime("%Y-%m-%d")
-    hm = now.strftime("%H:%M")
-    pulse = await _compute_pulse()
-    depts = {k: {"active": 0, "people": [], "level": "ok"} for k in _DECK_DEPT_KEYWORDS}
-    # Turni attivi in questo momento, assegnati al reparto per postazione/ruolo.
-    async for s in db.shifts.find({"day": today}, {"_id": 0}):
-        if (s.get("start") or "") <= hm <= (s.get("end") or ""):
-            txt = f"{s.get('station') or ''} {s.get('role') or ''}".lower()
-            for d, kws in _DECK_DEPT_KEYWORDS.items():
-                if any(k in txt for k in kws):
-                    depts[d]["active"] += 1
-                    if s.get("employee"):
-                        depts[d]["people"].append(s["employee"])
-                    break
-    # Gravita' per reparto dagli allarmi di Mike Mix (stazione riconducibile al reparto).
-    rank = {"ok": 0, "warn": 1, "critical": 2}
-    for a in pulse["alerts"]:
-        st = (a.get("station") or "").lower()
-        lvl = "critical" if a.get("level") == "critical" else ("warn" if a.get("level") == "warn" else "ok")
-        for d, kws in _DECK_DEPT_KEYWORDS.items():
-            if any(k in st for k in kws) and rank[lvl] > rank[depts[d]["level"]]:
-                depts[d]["level"] = lvl
-    return {
-        "mood": pulse["mood"], "heartbeat": pulse["heartbeat"], "score": pulse["score"],
-        "depts": depts, "generated_at": now.isoformat(),
-    }
+    return await deck_status_compute()
 
 
 
@@ -7137,6 +7111,72 @@ async def _reminders_loop():
         except Exception:
             logger.exception("reminders loop error")
         await asyncio.sleep(30)
+
+
+# ---------------------------------------------------------------------------
+# DECK REATTIVO — push al Capo quando l'impianto entra in stato CRITICO.
+# Invia una notifica agli abbonati admin all'ingresso in critico e la ripete
+# al massimo ogni 10 minuti finché lo stato resta critico.
+# ---------------------------------------------------------------------------
+async def _deck_alarm_loop():
+    await asyncio.sleep(20)
+    was_critical = False
+    last_push = None
+    while True:
+        try:
+            deck = await deck_status_compute()
+            crit = deck["mood"] == "critico"
+            now = datetime.now(timezone.utc)
+            should = crit and (not was_critical or (last_push and (now - last_push).total_seconds() > 600))
+            if should:
+                last_push = now
+                stations = deck.get("critical_stations") or []
+                body = (", ".join(stations[:3]) + " in allarme.") if stations else "L'impianto è in stato critico."
+                admins = await db.users.find(
+                    {"$or": [{"role": "admin"}, {"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}]},
+                    {"_id": 0, "user_id": 1}).to_list(50)
+                ids = [a["user_id"] for a in admins]
+                if ids:
+                    _, priv = await _get_vapid()
+                    subs = await db.push_subs.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(100)
+                    payload = {"title": "MikiLab · Allarme Impianto", "body": f"Attenzione Capo: {body}", "tag": "deck-critical"}
+                    for s in subs:
+                        await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+            was_critical = crit
+        except Exception:
+            logger.exception("deck alarm loop error")
+        await asyncio.sleep(30)
+
+
+async def deck_status_compute():
+    """Versione riutilizzabile di /deck/status (senza dipendenze HTTP), per i loop interni."""
+    now = datetime.now(timezone.utc)
+    today = now.strftime("%Y-%m-%d")
+    hm = now.strftime("%H:%M")
+    pulse = await _compute_pulse()
+    depts = {k: {"active": 0, "people": [], "level": "ok"} for k in _DECK_DEPT_KEYWORDS}
+    async for s in db.shifts.find({"day": today}, {"_id": 0}):
+        if (s.get("start") or "") <= hm <= (s.get("end") or ""):
+            txt = f"{s.get('station') or ''} {s.get('role') or ''}".lower()
+            for d, kws in _DECK_DEPT_KEYWORDS.items():
+                if any(k in txt for k in kws):
+                    depts[d]["active"] += 1
+                    if s.get("employee"):
+                        depts[d]["people"].append(s["employee"])
+                    break
+    rank = {"ok": 0, "warn": 1, "critical": 2}
+    crit_stations = []
+    for a in pulse["alerts"]:
+        st = (a.get("station") or "").lower()
+        lvl = "critical" if a.get("level") == "critical" else ("warn" if a.get("level") == "warn" else "ok")
+        if lvl == "critical" and a.get("station"):
+            crit_stations.append(a["station"])
+        for d, kws in _DECK_DEPT_KEYWORDS.items():
+            if any(k in st for k in kws) and rank[lvl] > rank[depts[d]["level"]]:
+                depts[d]["level"] = lvl
+    return {"mood": pulse["mood"], "heartbeat": pulse["heartbeat"], "score": pulse["score"],
+            "depts": depts, "critical_stations": crit_stations, "generated_at": now.isoformat()}
+
 
 
 
@@ -14796,6 +14836,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Daily digest loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Daily digest loop start error: {e}")
+    try:
+        asyncio.create_task(_deck_alarm_loop())
+        logging.getLogger(__name__).info("Deck alarm push loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Deck alarm loop start error: {e}")
 
 
 @app.on_event("shutdown")

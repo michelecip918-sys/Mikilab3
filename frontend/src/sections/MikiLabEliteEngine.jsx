@@ -416,8 +416,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const rooms3D = {
     panetteria: {
       title: "🍞 CENTRO PANETTERIA & IMPASTI 3D",
-      color: "#5E8CA8",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #3E9C93 100%)",
+      color: "#64748B",
+      bgGradient: "linear-gradient(135deg, #0D1520 0%, #1B2A38 55%, #3E9C93 100%)",
       avatarName: "Michele (Maestro Panettiere)",
       avatarImg: "/michele-real-lab.jpg",
       avatarAction: "Impasti, forni e linea Laugen sincronizzati!",
@@ -428,7 +428,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     pizzeria: {
       title: "🍕 REPARTO PIZZERIA & TEGLIE 3D",
       color: "#3E9C93",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #14212C 55%, #5E8CA8 100%)",
+      bgGradient: "linear-gradient(135deg, #0D1520 0%, #14212C 55%, #64748B 100%)",
       avatarName: "Michele (Maestro Pizzaiolo)",
       avatarImg: "/michele-real-lab.jpg",
       avatarAction: "Teglie, forno pizze e consegne in sincrono!",
@@ -439,7 +439,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
     pasticceria: {
       title: "🥐 LABORATORIO PASTICCERIA & GELATERIA 3D",
       color: "#7FB0A6",
-      bgGradient: "linear-gradient(135deg, #0E1620 0%, #1B2A38 55%, #7FB0A6 100%)",
+      bgGradient: "linear-gradient(135deg, #0D1520 0%, #1B2A38 55%, #7FB0A6 100%)",
       avatarName: "Michele (Maestro Pasticcere)",
       avatarImg: "/michele-real-lab.jpg",
       avatarAction: "Laminazione, abbattitore e formule dolci in azione!",
@@ -452,7 +452,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
   const CUSTOM_COLOR = '#8FB0C2';
   const allRooms = { ...rooms3D };
   customDepts.forEach(d => {
-    allRooms[d.id] = { title: `🧩 ${d.title.toUpperCase()}`, color: CUSTOM_COLOR, bgGradient: 'linear-gradient(135deg, #0E1620 0%, #14212C 55%, #8FB0C2 100%)', avatarName: `Michele · ${d.title}`, avatarImg: '/michele-real-lab.jpg', avatarAction: 'Reparto flessibile operativo!', item3D: '🧩 Postazione Universale', desc: d.desc || '', features: d.features || [], custom: true };
+    allRooms[d.id] = { title: `🧩 ${d.title.toUpperCase()}`, color: CUSTOM_COLOR, bgGradient: 'linear-gradient(135deg, #0D1520 0%, #14212C 55%, #8FB0C2 100%)', avatarName: `Michele · ${d.title}`, avatarImg: '/michele-real-lab.jpg', avatarAction: 'Reparto flessibile operativo!', item3D: '🧩 Postazione Universale', desc: d.desc || '', features: d.features || [], custom: true };
   });
   const currentRoom = allRooms[activeTab] || allRooms.panetteria;
   const _lc = (language || 'it-IT').slice(0, 2);
@@ -592,7 +592,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 {[['Farina kg', calcFlour, setCalcFlour], ['Idrat. %', calcHydration, setCalcHydration], ['T° Amb.', calcTAmb, setCalcTAmb], ['T° Farina', calcTFlour, setCalcTFlour], ['T° Finale', calcTFinal, setCalcTFinal]].map(([lbl, val, set], i) => (
                   <div key={i}>
                     <label style={{ fontSize: '0.58rem', color: '#AAA', display: 'block' }}>{lbl}</label>
-                    <input data-testid={`bakemix-input-${i}`} type="number" value={val} onChange={e => set(Number(e.target.value))} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: '1px solid #33414E', borderRadius: '6px', padding: '5px', fontSize: '0.78rem', fontWeight: 700 }} />
+                    <input data-testid={`bakemix-input-${i}`} type="number" value={val} onChange={e => set(Number(e.target.value))} style={{ width: '100%', backgroundColor: '#0D1520', color: currentRoom.color, border: '1px solid #33414E', borderRadius: '6px', padding: '5px', fontSize: '0.78rem', fontWeight: 700 }} />
                   </div>
                 ))}
               </div>
@@ -637,8 +637,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               ))}
             </div>
             <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-              <input data-testid="elite-cons-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick('Cliente', 'Kunde', 'Client', 'Cliente', 'Client', 'مشتری')} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
-              <select data-testid="elite-cons-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
+              <input data-testid="elite-cons-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick('Cliente', 'Kunde', 'Client', 'Cliente', 'Client', 'مشتری')} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+              <select data-testid="elite-cons-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
                 <option value="">{_pick('Fattorino', 'Fahrer', 'Driver', 'Repartidor', 'Livreur', 'پیک')}</option>
                 {DRIVERS.map(d => <option key={d} value={d}>{d}</option>)}
               </select>
@@ -824,8 +824,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
               </button>
             ) : (
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', backgroundColor: 'rgba(0,0,0,0.5)', padding: '8px', borderRadius: '10px', border: `1px solid ${currentRoom.color}` }}>
-                <input data-testid="elite-new-dept-id" value={newDeptId} onChange={e => setNewDeptId(e.target.value)} placeholder={tr("ID (es. congelati)", "ID (z.B. tiefkühl)", "ID (e.g. frozen)", "ID (ej. congelados)", "ID (ex. surgelés)", "شناسه (مثلاً یخ‌زده)")} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
-                <input data-testid="elite-new-dept-title" value={newDeptTitle} onChange={e => setNewDeptTitle(e.target.value)} placeholder={tr("Nome reparto", "Bereichsname", "Department name", "Nombre del departamento", "Nom du rayon", "نام بخش")} style={{ flex: '2 1 140px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <input data-testid="elite-new-dept-id" value={newDeptId} onChange={e => setNewDeptId(e.target.value)} placeholder={tr("ID (es. congelati)", "ID (z.B. tiefkühl)", "ID (e.g. frozen)", "ID (ej. congelados)", "ID (ex. surgelés)", "شناسه (مثلاً یخ‌زده)")} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
+                <input data-testid="elite-new-dept-title" value={newDeptTitle} onChange={e => setNewDeptTitle(e.target.value)} placeholder={tr("Nome reparto", "Bereichsname", "Department name", "Nombre del departamento", "Nom du rayon", "نام بخش")} style={{ flex: '2 1 140px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '6px', fontSize: '0.72rem' }} />
                 <button data-testid="elite-new-dept-save" onClick={createDept} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '6px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>OK</button>
                 <button onClick={() => { setShowAddDept(false); setDeptError(''); }} style={{ backgroundColor: 'transparent', color: '#AAA', border: '1px solid #33414E', borderRadius: '6px', padding: '6px 10px', cursor: 'pointer', fontSize: '0.72rem' }}>✕</button>
                 {deptError && <div data-testid="elite-dept-error" style={{ flexBasis: '100%', color: '#E63946', fontSize: '0.68rem', fontWeight: 700 }}>{deptError}</div>}
@@ -972,7 +972,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
             {/* Aggiungi macchina / forno / postazione (Capo) */}
             {isCapo && !isLocked && (
               <div style={{ display: 'flex', gap: '6px', marginTop: '10px', flexWrap: 'wrap' }}>
-                <input data-testid="elite-add-feature-input" value={newFeature} onChange={e => setNewFeature(e.target.value)} disabled={isAfterCutoff} placeholder={isAfterCutoff ? "Modifiche bloccate dopo le 18:00" : "Aggiungi forno extra, macchina o postazione…"} style={{ flex: '1 1 180px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: `1px solid ${currentRoom.color}55`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', opacity: isAfterCutoff ? 0.6 : 1 }} />
+                <input data-testid="elite-add-feature-input" value={newFeature} onChange={e => setNewFeature(e.target.value)} disabled={isAfterCutoff} placeholder={isAfterCutoff ? "Modifiche bloccate dopo le 18:00" : "Aggiungi forno extra, macchina o postazione…"} style={{ flex: '1 1 180px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: `1px solid ${currentRoom.color}55`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', opacity: isAfterCutoff ? 0.6 : 1 }} />
                 <button data-testid="elite-add-feature-btn" onClick={addFeature} disabled={isAfterCutoff} style={{ backgroundColor: isAfterCutoff ? '#3A4652' : currentRoom.color, color: isAfterCutoff ? '#888' : '#000', border: 'none', borderRadius: '8px', padding: '8px 14px', fontWeight: 700, cursor: isAfterCutoff ? 'not-allowed' : 'pointer', fontSize: '0.72rem' }}>
                   ＋ {_pick("Aggiungi", "Hinzufügen", "Add", "Añadir", "Ajouter", "افزودن")}
                 </button>
@@ -995,7 +995,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                         {del.driver && <span style={{ display: 'block', fontSize: '0.64rem', color: currentRoom.color, marginTop: '2px' }}>🛵 {del.driver}</span>}
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <select data-testid={`elite-delivery-status-${i}`} value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0E1620', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.68rem', fontWeight: 700 }}>
+                        <select data-testid={`elite-delivery-status-${i}`} value={del.status} onChange={e => setDeliveryStatus(del.id, e.target.value)} style={{ backgroundColor: '#0D1520', color: del.status === 'consegnato' ? '#3E9C93' : '#E6A23C', border: `1px solid ${del.status === 'consegnato' ? '#3E9C93' : '#E6A23C'}`, borderRadius: '6px', padding: '4px', fontSize: '0.68rem', fontWeight: 700 }}>
                           <option value="in consegna">{_pick("In consegna", "Unterwegs", "Out for delivery", "En reparto", "En livraison", "در حال تحویل")}</option>
                           <option value="consegnato">{_pick("Consegnato", "Geliefert", "Delivered", "Entregado", "Livré", "تحویل شد")}</option>
                         </select>
@@ -1006,12 +1006,12 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 </div>
                 {!readOnly && (
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
-                    <select data-testid="elite-delivery-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
+                    <input data-testid="elite-delivery-client" value={newClient} onChange={e => setNewClient(e.target.value)} placeholder={_pick("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} style={{ flex: '2 1 110px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <select data-testid="elite-delivery-driver" value={newDriver} onChange={e => setNewDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }}>
                       <option value="">{_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")}</option>
                       {DRIVERS.map(d => <option key={d} value={d}>{d}</option>)}
                     </select>
-                    <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 60px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
+                    <input data-testid="elite-delivery-time" value={newDeliveryTime} onChange={e => setNewDeliveryTime(e.target.value)} placeholder={_pick("Ora", "Zeit", "Time", "Hora", "Heure", "زمان")} style={{ flex: '1 1 60px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '7px', fontSize: '0.72rem' }} />
                     <button data-testid="elite-delivery-add" onClick={addDelivery} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '7px 12px', fontWeight: 700, cursor: 'pointer', fontSize: '0.72rem' }}>＋</button>
                   </div>
                 )}
@@ -1035,7 +1035,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                           <button data-testid={`elite-crate-delete-${i}`} onClick={(e) => { e.stopPropagation(); deleteCrate(c.id); }} title={tr("Elimina", "Löschen", "Delete", "Eliminar", "Supprimer", "حذف")} style={{ backgroundColor: 'rgba(230,57,70,0.12)', color: '#E63946', border: '1px solid rgba(230,57,70,0.3)', borderRadius: '6px', padding: '2px 6px', fontSize: '0.62rem', cursor: 'pointer' }}>✕</button>
                         </div>
                       </div>
-                      <select data-testid={`elite-crate-driver-${i}`} value={c.driver || ''} onClick={(e) => e.stopPropagation()} onChange={(e) => setCrateDriverServer(c.id, e.target.value)} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: `1px solid ${currentRoom.color}55`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700, marginBottom: '6px' }}>
+                      <select data-testid={`elite-crate-driver-${i}`} value={c.driver || ''} onClick={(e) => e.stopPropagation()} onChange={(e) => setCrateDriverServer(c.id, e.target.value)} style={{ width: '100%', backgroundColor: '#0D1520', color: currentRoom.color, border: `1px solid ${currentRoom.color}55`, borderRadius: '6px', padding: '4px', fontSize: '0.66rem', fontWeight: 700, marginBottom: '6px' }}>
                         <option value="">🛵 {_pick("Fattorino", "Fahrer", "Driver", "Repartidor", "Livreur", "پیک")}</option>
                         {DRIVERS.map(d => <option key={d} value={d}>🛵 {d}</option>)}
                       </select>
@@ -1063,7 +1063,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                       </button>
                     ))}
                   </div>
-                  <select data-testid="elite-crate-target" value={targetCrateId} onChange={(e) => setTargetCrateId(e.target.value)} style={{ width: '100%', backgroundColor: '#0E1620', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', fontWeight: 700, marginBottom: '8px' }}>
+                  <select data-testid="elite-crate-target" value={targetCrateId} onChange={(e) => setTargetCrateId(e.target.value)} style={{ width: '100%', backgroundColor: '#0D1520', color: currentRoom.color, border: `1px solid ${currentRoom.color}`, borderRadius: '8px', padding: '8px', fontSize: '0.72rem', fontWeight: 700, marginBottom: '8px' }}>
                     {crates.map(c => <option key={c.id} value={c.id}>📦 {c.store_name}</option>)}
                   </select>
                   </>
@@ -1071,8 +1071,8 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 {/* Crea nuova cesta */}
                 {isCapo && (
                   <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    <input data-testid="elite-crate-store" value={newStore} onChange={e => setNewStore(e.target.value)} placeholder={_pick("Nuovo negozio…", "Neuer Laden…", "New shop…", "Nueva tienda…", "Nouveau magasin…", "فروشگاه جدید…")} style={{ flex: '2 1 130px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }} />
-                    <select data-testid="elite-crate-newdriver" value={crateDriver} onChange={e => setCrateDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0E1620', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }}>
+                    <input data-testid="elite-crate-store" value={newStore} onChange={e => setNewStore(e.target.value)} placeholder={_pick("Nuovo negozio…", "Neuer Laden…", "New shop…", "Nueva tienda…", "Nouveau magasin…", "فروشگاه جدید…")} style={{ flex: '2 1 130px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }} />
+                    <select data-testid="elite-crate-newdriver" value={crateDriver} onChange={e => setCrateDriver(e.target.value)} style={{ flex: '1 1 90px', minWidth: 0, backgroundColor: '#0D1520', color: '#FFF', border: '1px solid #33414E', borderRadius: '6px', padding: '8px', fontSize: '0.72rem' }}>
                       {DRIVERS.map(d => <option key={d} value={d}>🛵 {d}</option>)}
                     </select>
                     <button data-testid="elite-crate-create" onClick={createCrate} style={{ backgroundColor: currentRoom.color, color: '#000', border: 'none', borderRadius: '6px', padding: '8px 14px', fontWeight: 800, cursor: 'pointer', fontSize: '0.72rem' }}>＋ {_pick("Cesta", "Korb", "Crate", "Cesta", "Panier", "سبد")}</button>

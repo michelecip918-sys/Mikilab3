@@ -142,7 +142,7 @@ export default function ScanFlour() {
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Le tue farine salvate: usale come riferimento (forza W e proteine) quando crei una ricetta.", "Deine gespeicherten Mehle: nutze sie als Referenz (W-Kraft und Protein) beim Erstellen eines Rezepts.", "Your saved flours: use them as reference (W strength and protein) when creating a recipe.", "Tus harinas guardadas: úsalas como referencia (fuerza W y proteína) al crear una receta.")}</p>
           <ul className="space-y-2">
             {pantry.map((f) => (
-              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] px-3.5 py-2.5">
+              <li key={f.id} data-testid={`flour-pantry-${f.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] px-3.5 py-2.5">
                 <Wheat className="w-5 h-5 text-[#3E9C93] shrink-0" />
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm text-[#2B303B] dark:text-[#e4eff8] truncate">{f.product_name || f.brand || f.flour_type || tri("Farina", "Mehl", "Flour", "Harina")}</p>

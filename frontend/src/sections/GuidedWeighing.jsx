@@ -214,7 +214,7 @@ export default function GuidedWeighing() {
     } catch { toast.error(tri("Errore", "Fehler", "Error")); }
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   // ---- RUN VIEW ----
   if (started && cur) {
@@ -245,7 +245,7 @@ export default function GuidedWeighing() {
         )}
 
         <div className="grid grid-cols-2 gap-2 mt-4">
-          <button data-testid="gw-next" onClick={next} disabled={state === "over" || state === "under"} className="flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-97">{tri("Avanti", "Weiter", "Next")} <ArrowRight className="w-5 h-5" /></button>
+          <button data-testid="gw-next" onClick={next} disabled={state === "over" || state === "under"} className="flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-97">{tri("Avanti", "Weiter", "Next")} <ArrowRight className="w-5 h-5" /></button>
           <button data-testid="gw-voicecmd" onClick={startVoiceCmd} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] font-bold py-4 rounded-2xl active:scale-97"><Volume2 className="w-5 h-5 text-[#3E9C93]" /> {tri("Voce", "Sprache", "Voice")}</button>
         </div>
         <button data-testid="gw-stop" onClick={() => { setStarted(false); logRef.current = []; window.speechSynthesis?.cancel(); }} className="w-full mt-2 text-sm text-[#7E8A93]">{tri("Interrompi", "Abbrechen", "Stop")}</button>
@@ -318,17 +318,17 @@ export default function GuidedWeighing() {
                 <label className="text-[11px] text-[#7E8A93]">{tri("Ambiente °C", "Raum °C", "Room °C")}<input data-testid="gw-sess-room" type="number" step="0.1" value={sess.room_temp_c} onChange={(e) => setSess((s) => ({ ...s, room_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
                 <label className="text-[11px] text-[#7E8A93]">{tri("Acqua °C", "Wasser °C", "Water °C")}<input data-testid="gw-sess-water" type="number" step="0.1" value={sess.water_temp_c} onChange={(e) => setSess((s) => ({ ...s, water_temp_c: e.target.value }))} className={inp + " mt-1 font-mono-data"} /></label>
               </div>
-              <button data-testid="gw-sess-save" onClick={saveAsSession} disabled={sessSaving} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {sessSaving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva nel Diario", "Ins Tagebuch", "Save to log")}</button>
+              <button data-testid="gw-sess-save" onClick={saveAsSession} disabled={sessSaving} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-bold py-3 rounded-2xl active:scale-98"><Save className="w-5 h-5" /> {sessSaving ? tri("Salvataggio…", "Speichern…", "Saving…") : tri("Salva nel Diario", "Ins Tagebuch", "Save to log")}</button>
             </div>
           )}
         </div>
 
         {/* Crea lotto tracciabilità dai pesi reali */}
-        <button data-testid="gw-create-batch" onClick={createBatch} disabled={batchSaved} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl mb-4 active:scale-98">
+        <button data-testid="gw-create-batch" onClick={createBatch} disabled={batchSaved} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-60 text-white font-semibold py-3 rounded-2xl mb-4 active:scale-98">
           {batchSaved ? <><CheckCircle2 className="w-5 h-5" /> {tri("Lotto creato ✓", "Charge erstellt ✓", "Batch created ✓")}</> : <><QrCode className="w-5 h-5" /> {tri("Crea lotto in Tracciabilità", "Charge in Rückverfolgung", "Create batch in Traceability")}</>}
         </button>
 
-        <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
+        <button data-testid="gw-summary-reset" onClick={reset} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-bold py-4 rounded-2xl active:scale-98"><RotateCcw className="w-5 h-5" /> {tri("Nuova pesata", "Neu wiegen", "New weighing")}</button>
       </div>
     );
   }
@@ -336,7 +336,7 @@ export default function GuidedWeighing() {
   // ---- SETUP VIEW ----
   const roleBtn = (ing, role, Icon, label) => (
     <button onClick={() => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, role } : x))}
-      className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-semibold ${ing.role === role ? "bg-[#3E9C93] text-white" : "bg-[#0E1620] dark:bg-[#1B2A38] text-[#7E8A93] border border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+      className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[11px] font-semibold ${ing.role === role ? "bg-[#3E9C93] text-white" : "bg-[#0D1520] dark:bg-[#1B2A38] text-[#7E8A93] border border-[#2A3B49] dark:border-[#2A3B49]"}`}>
       <Icon className="w-3 h-3" /> {label}
     </button>
   );
@@ -351,7 +351,7 @@ export default function GuidedWeighing() {
         </div>
       </div>
 
-      <button data-testid="gw-ble" onClick={connectBle} className={`w-full flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl mb-4 active:scale-98 ${bleOn ? "bg-[#3E9C93] text-white" : "bg-[#3E9C93] text-white hover:bg-[#5E8CA8]"}`}>
+      <button data-testid="gw-ble" onClick={connectBle} className={`w-full flex items-center justify-center gap-2 font-semibold py-3 rounded-2xl mb-4 active:scale-98 ${bleOn ? "bg-[#3E9C93] text-white" : "bg-[#3E9C93] text-white hover:bg-[#64748B]"}`}>
         <Bluetooth className="w-5 h-5" /> {bleOn ? tri("Bilancia connessa", "Waage verbunden", "Scale connected") : tri("Connetti Bluetooth", "Bluetooth verbinden", "Connect Bluetooth")}
       </button>
 
@@ -378,7 +378,7 @@ export default function GuidedWeighing() {
               {roleBtn(ing, "flour", Wheat, tri("Farina", "Mehl", "Flour"))}
               {roleBtn(ing, "water", Droplet, tri("Acqua", "Wasser", "Water"))}
               {roleBtn(ing, "other", Plus, tri("Altro", "Andere", "Other"))}
-              <label className="flex items-center gap-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 text-[11px] text-[#7E8A93]">
+              <label className="flex items-center gap-1 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 text-[11px] text-[#7E8A93]">
                 <Euro className="w-3 h-3" />
                 <input type="number" step="0.1" value={ing.price || ""} onChange={(e) => setIngredients((l) => l.map((x) => x.id === ing.id ? { ...x, price: Number(e.target.value) || 0 } : x))} className="w-14 bg-transparent outline-none font-mono-data text-[#2B303B] dark:text-[#e4eff8]" placeholder="€/kg" data-testid={`gw-price-${ing.id}`} />
               </label>
@@ -389,7 +389,7 @@ export default function GuidedWeighing() {
       </div>
 
       <button data-testid="gw-start" onClick={startRun} disabled={ingredients.filter((i) => i.name && i.base > 0).length === 0}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-98"><Scale className="w-5 h-5" /> {tri("Inizia pesata guidata", "Wiegen starten", "Start guided weighing")}</button>
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-40 text-white font-bold py-4 rounded-2xl active:scale-98"><Scale className="w-5 h-5" /> {tri("Inizia pesata guidata", "Wiegen starten", "Start guided weighing")}</button>
     </div>
   );
 }

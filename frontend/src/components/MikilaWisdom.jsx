@@ -152,7 +152,7 @@ export default function MikilaWisdom({ section = "home" }) {
                 className="text-[13px] text-[#E2E8F0] leading-snug mt-0.5 italic">"{text}"</motion.p>
             </AnimatePresence>
             {!special && cur.author && (
-              <p className="text-[11px] text-[#5E8CA8] mt-0.5 font-semibold">— {cur.author}</p>
+              <p className="text-[11px] text-[#64748B] mt-0.5 font-semibold">— {cur.author}</p>
             )}
           </div>
           {!special && (
@@ -219,13 +219,13 @@ function ProposeModal({ lang, user, onClose }) {
         <p className="text-[12px] text-[#AEB8BF] mb-2">{L("I migliori (più votati) entrano nella rotazione di MikiLab dopo l'ok dell'admin.", "Die beliebtesten kommen nach Admin-OK in MikiLabs Rotation.", "The most-voted enter MikiLab's rotation after admin approval.", "Los más votados entran en la rotación de MikiLab tras el OK del admin.", "Les plus votés entrent dans la rotation de MikiLab après validation admin.", "پس از تأیید ادمین، پرطرفدارها به چرخش میکی‌لب می‌آیند.")}</p>
         <textarea data-testid="wisdom-propose-text" value={text} onChange={(e) => setText(e.target.value)} rows={3} maxLength={240}
           placeholder={L("Es. «Poco lievito e tanto tempo: pane più buono e leggero.»", "z.B. «Wenig Hefe, viel Zeit: besseres Brot.»", "e.g. 'Little yeast and lots of time: better bread.'", "Ej. «Poca levadura y mucho tiempo.»", "Ex. « Peu de levure, beaucoup de temps. »", "مثلاً «کم مخمر، زمان زیاد.»")}
-          className="w-full bg-[#0E1620] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#3E9C93]" />
+          className="w-full bg-[#0D1520] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#3E9C93]" />
         <label className="block text-[11px] font-bold uppercase tracking-wider text-[#AEB8BF] mt-3 mb-1">{L("Il tuo compleanno (facoltativo)", "Dein Geburtstag (optional)", "Your birthday (optional)", "Tu cumpleaños (opcional)", "Ton anniversaire (facultatif)", "تولد تو (اختیاری)")}</label>
         <input data-testid="wisdom-birthday-input" type="date" value={bday} onChange={(e) => setBday(e.target.value)}
-          className="w-full bg-[#0E1620] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#3E9C93]" />
+          className="w-full bg-[#0D1520] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm text-white outline-none focus:border-[#3E9C93]" />
         <div className="grid grid-cols-2 gap-2 mt-4">
           <button onClick={onClose} className="rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] text-white font-semibold py-2.5 active:scale-95">{L("Annulla", "Abbrechen", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
-          <button data-testid="wisdom-propose-submit" disabled={busy} onClick={submit} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] text-[#0E1620] font-bold py-2.5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
+          <button data-testid="wisdom-propose-submit" disabled={busy} onClick={submit} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] text-[#0D1520] font-bold py-2.5 active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {L("Invia", "Senden", "Send", "Enviar", "Envoyer", "ارسال")}
           </button>
         </div>
@@ -255,7 +255,7 @@ function ModerateModal({ lang, onClose }) {
           : (
             <div className="space-y-2.5">
               {items.map((it) => (
-                <div key={it.id} data-testid={`wisdom-pending-${it.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-3">
+                <div key={it.id} data-testid={`wisdom-pending-${it.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] border border-[#2A3B49] p-3">
                   <p className="text-[13px] text-white italic">"{it.text}"</p>
                   <p className="text-[11px] text-[#AEB8BF] mt-1">— {it.author_name}</p>
                   <div className="grid grid-cols-2 gap-2 mt-2">
@@ -297,7 +297,7 @@ function CardModal({ lang, text, author, onClose }) {
     canvas.width = S; canvas.height = S;
     const ctx = canvas.getContext("2d");
     // Sfondo
-    ctx.fillStyle = "#0E1620"; ctx.fillRect(0, 0, S, S);
+    ctx.fillStyle = "#0D1520"; ctx.fillRect(0, 0, S, S);
     // Bordo arancio
     ctx.strokeStyle = "#3E9C93"; ctx.lineWidth = 14; ctx.strokeRect(28, 28, S - 56, S - 56);
     // Glow decorativo
@@ -310,7 +310,7 @@ function CardModal({ lang, text, author, onClose }) {
     ctx.fillStyle = "#f2ede8"; ctx.font = "italic 600 52px Georgia, serif"; ctx.textAlign = "center";
     drawWrapped(ctx, text, S / 2, S / 2 + 20, S - 220, 74);
     // Autore
-    ctx.fillStyle = "#5E8CA8"; ctx.font = "bold 34px Arial, sans-serif";
+    ctx.fillStyle = "#64748B"; ctx.font = "bold 34px Arial, sans-serif";
     ctx.fillText(author ? `— ${author}` : "— MikiLab", S / 2, S - 260);
 
     const finish = () => {
@@ -351,12 +351,12 @@ function CardModal({ lang, text, author, onClose }) {
           <button onClick={onClose} className="text-[#AEB8BF]"><X className="w-5 h-5" /></button>
         </div>
         {url ? <img data-testid="wisdom-card-image" src={url} alt="proverbio" className="w-full rounded-2xl" />
-          : <div className="aspect-square rounded-2xl bg-[#0E1620] flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>}
+          : <div className="aspect-square rounded-2xl bg-[#0D1520] flex items-center justify-center"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>}
         <div className="grid grid-cols-2 gap-2 mt-3">
           <a data-testid="wisdom-card-download" href={url || "#"} download="mikilab-proverbio.png" className={`flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#3E9C93]/40 text-white font-semibold py-2.5 text-sm active:scale-95 ${!url ? "opacity-50 pointer-events-none" : ""}`}>
             <Download className="w-4 h-4 text-[#3E9C93]" /> {L("Scarica", "Download", "Download", "Descargar", "Télécharger", "دانلود")}
           </a>
-          <button data-testid="wisdom-card-share" disabled={!url} onClick={shareImg} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] text-[#0E1620] font-bold py-2.5 text-sm active:scale-95 disabled:opacity-50">
+          <button data-testid="wisdom-card-share" disabled={!url} onClick={shareImg} className="flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] text-[#0D1520] font-bold py-2.5 text-sm active:scale-95 disabled:opacity-50">
             <Share2 className="w-4 h-4" /> {L("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
           </button>
         </div>

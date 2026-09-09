@@ -124,7 +124,7 @@ export default function BakersMap({ open, onClose }) {
       </div>
       <div ref={mapEl} data-testid="bakers-map-canvas" className="flex-1 w-full" style={{ minHeight: 0 }} />
 
-      <div className="bg-[#0E1620] dark:bg-[#0E1620] border-t border-[#2A3B49] dark:border-[#2A3B49] p-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
+      <div className="bg-[#0D1520] dark:bg-[#0D1520] border-t border-[#2A3B49] dark:border-[#2A3B49] p-4" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
         {!showForm ? (
           <button data-testid="bakers-optin-toggle" onClick={() => setShowForm(true)}
             className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] text-white font-semibold py-3 rounded-2xl active:scale-98">

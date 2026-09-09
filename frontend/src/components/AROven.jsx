@@ -64,30 +64,30 @@ export default function AROven() {
       <div className="flex items-center gap-2">
         <Camera className="w-5 h-5 text-[#FFB800]" />
         <div><h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Simulatore AR Forni", "AR-Ofen-Simulator", "AR Oven Simulator", "Simulador AR Hornos", "Simulateur AR Fours", "شبیه‌ساز AR تنور")}</h4>
-        <p className="text-[10.5px] text-[#8aa0b4]">{tri("Inquadra il forno: Mike Mix calcola tempi e temperature.", "Ofen anvisieren: Mike Mix rechnet.", "Point at the oven: Mike Mix computes times and temps.", "Enfoca el horno: Mike Mix calcula.", "Vise le four : Mike Mix calcule.", "تنور را بگیر: Mike Mix محاسبه می‌کند.")}</p></div>
+        <p className="text-[10.5px] text-[#94A3B8]">{tri("Inquadra il forno: Mike Mix calcola tempi e temperature.", "Ofen anvisieren: Mike Mix rechnet.", "Point at the oven: Mike Mix computes times and temps.", "Enfoca el horno: Mike Mix calcula.", "Vise le four : Mike Mix calcule.", "تنور را بگیر: Mike Mix محاسبه می‌کند.")}</p></div>
       </div>
 
       <select data-testid="ar-recipe" value={recipeId} onChange={(e) => setRecipeId(e.target.value)}
-        className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#FFB800] outline-none">
+        className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#FFB800] outline-none">
         <option value="">{tri("Ricetta per il calcolo (opzionale)", "Rezept für Berechnung (optional)", "Recipe for the calc (optional)", "Receta (opcional)", "Recette (option)", "دستور (اختیاری)")}</option>
         {recipes.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
       </select>
 
       {!on ? (
-        <button data-testid="ar-start" onClick={start} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#070A10] active:scale-95" style={{ background: "linear-gradient(90deg,#FFB800,#F6D27A)" }}><Camera className="w-4 h-4" /> {tri("Avvia AR", "AR starten", "Start AR", "Iniciar AR", "Lancer AR", "شروع AR")}</button>
+        <button data-testid="ar-start" onClick={start} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#FFB800,#EAB308)" }}><Camera className="w-4 h-4" /> {tri("Avvia AR", "AR starten", "Start AR", "Iniciar AR", "Lancer AR", "شروع AR")}</button>
       ) : (
-        <div className="relative rounded-xl overflow-hidden border border-[#FFB800]/40 bg-[#070A10] aspect-video">
+        <div className="relative rounded-xl overflow-hidden border border-[#FFB800]/40 bg-[#060A10] aspect-video">
           <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
-          {denied && <div className="absolute inset-0 flex items-center justify-center text-center px-4"><p className="text-[11px] text-[#8aa0b4]">{tri("Fotocamera non disponibile — modalità simulata.", "Kamera n/v — Simulation.", "Camera unavailable — simulated mode.", "Cámara no disponible — simulado.", "Caméra indisponible — simulé.", "دوربین در دسترس نیست — شبیه‌سازی.")}</p></div>}
+          {denied && <div className="absolute inset-0 flex items-center justify-center text-center px-4"><p className="text-[11px] text-[#94A3B8]">{tri("Fotocamera non disponibile — modalità simulata.", "Kamera n/v — Simulation.", "Camera unavailable — simulated mode.", "Cámara no disponible — simulado.", "Caméra indisponible — simulé.", "دوربین در دسترس نیست — شبیه‌سازی.")}</p></div>}
           {/* Mirino AR */}
           <div className="absolute inset-6 border-2 border-[#FFB800]/60 rounded-lg pointer-events-none" style={{ boxShadow: "0 0 24px rgba(255,184,0,0.3) inset" }} />
           <div className="absolute top-2 left-2 flex items-center gap-1 text-[9px] font-mono uppercase tracking-widest text-[#FFB800] bg-black/50 px-1.5 py-0.5 rounded"><Flame className="w-3 h-3" /> AR · Mike Mix</div>
           {/* Overlay indicazioni */}
           {guide && (
             <div data-testid="ar-guide" className="absolute bottom-2 left-2 right-2 rounded-lg bg-black/70 backdrop-blur-md border border-[#FFB800]/40 p-2.5 grid grid-cols-3 gap-2">
-              {guide.live && <span className="absolute -top-2 right-2 px-1.5 py-0.5 rounded bg-[#22c55e] text-[#070A10] text-[8px] font-black uppercase tracking-widest">Live · Mike Mix</span>}
+              {guide.live && <span className="absolute -top-2 right-2 px-1.5 py-0.5 rounded bg-[#22c55e] text-[#060A10] text-[8px] font-black uppercase tracking-widest">Live · Mike Mix</span>}
               <div className="text-center"><Thermometer className="w-3.5 h-3.5 text-[#FFB800] mx-auto" /><p className="text-[13px] font-black text-white">{guide.temp}</p></div>
-              <div className="text-center"><Clock className="w-3.5 h-3.5 text-[#00F0FF] mx-auto" /><p className="text-[13px] font-black text-white">{guide.time}</p></div>
+              <div className="text-center"><Clock className="w-3.5 h-3.5 text-[#FF6B00] mx-auto" /><p className="text-[13px] font-black text-white">{guide.time}</p></div>
               <div className="text-center"><MapPin className="w-3.5 h-3.5 text-[#7FD8C0] mx-auto" /><p className="text-[9px] text-[#c5d3df] leading-tight">{guide.pos}</p></div>
               <p className="col-span-3 text-[10px] text-[#f3e6c4] text-center">{guide.note}</p>
             </div>
@@ -97,7 +97,7 @@ export default function AROven() {
 
       {on && (
         <div className="flex gap-2">
-          <button data-testid="ar-scan" onClick={scanOven} disabled={scanning} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#070A10] disabled:opacity-60" style={{ background: "linear-gradient(90deg,#00F0FF,#7DD3FC)" }}>{scanning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Scan className="w-3.5 h-3.5" />} {scanning ? tri("Mike Mix calcola…", "Mike Mix rechnet…", "Mike Mix computing…", "Mike Mix calcula…", "Mike Mix calcule…", "در حال محاسبه…") : tri("Scansiona forno", "Ofen scannen", "Scan oven", "Escanear", "Scanner", "اسکن تنور")}</button>
+          <button data-testid="ar-scan" onClick={scanOven} disabled={scanning} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-[#060A10] disabled:opacity-60" style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)" }}>{scanning ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Scan className="w-3.5 h-3.5" />} {scanning ? tri("Mike Mix calcola…", "Mike Mix rechnet…", "Mike Mix computing…", "Mike Mix calcula…", "Mike Mix calcule…", "در حال محاسبه…") : tri("Scansiona forno", "Ofen scannen", "Scan oven", "Escanear", "Scanner", "اسکن تنور")}</button>
           <button data-testid="ar-stop" onClick={stop} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#0b0f19] border border-[#1e293b] text-[#f87171]"><CameraOff className="w-3.5 h-3.5" /> {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
         </div>
       )}

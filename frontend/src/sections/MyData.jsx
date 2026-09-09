@@ -114,7 +114,7 @@ export default function MyData({ onOpenTool }) {
 
       {/* Portale Operatori — token invito (Capo) / riscatto (Operatore) */}
       <div data-testid="operator-portal" className="mb-4 rounded-2xl border border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4 shadow-md">
-        <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#5E8CA8] mb-1 flex items-center gap-1.5"><KeyRound className="w-3.5 h-3.5" /> {isAdmin ? tri("Codici Operatori (Capo)", "Operator-Codes (Chef)", "Operator Codes (Boss)") : tri("Codice Operatore", "Operator-Code", "Operator Code")}</p>
+        <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#64748B] mb-1 flex items-center gap-1.5"><KeyRound className="w-3.5 h-3.5" /> {isAdmin ? tri("Codici Operatori (Capo)", "Operator-Codes (Chef)", "Operator Codes (Boss)") : tri("Codice Operatore", "Operator-Code", "Operator Code")}</p>
         {isAdmin ? (
           <>
             <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Genera codici d'invito univoci da dare ai tuoi operatori per la registrazione sicura.", "Erzeuge eindeutige Einladungscodes für deine Operatoren.", "Generate unique invite codes for your operators' secure sign-up.")}</p>
@@ -122,18 +122,18 @@ export default function MyData({ onOpenTool }) {
               <button data-testid="operator-gen-code" disabled={invBusy} onClick={genInvite} className="flex items-center justify-center gap-2 rounded-xl bg-[#3E9C93] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
                 {invBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <KeyRound className="w-4 h-4" />} {tri("Nuovo codice", "Neuer Code", "New code")}
               </button>
-              <button data-testid="operator-gen-delega" disabled={invBusy} onClick={genDelegation} className="flex items-center justify-center gap-2 rounded-xl bg-[#5E8CA8] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+              <button data-testid="operator-gen-delega" disabled={invBusy} onClick={genDelegation} className="flex items-center justify-center gap-2 rounded-xl bg-[#64748B] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
                 <Clock className="w-4 h-4" /> {tri("Delega 8h", "Delegation 8h", "8h delegation")}
               </button>
             </div>
             <div className="space-y-1.5" data-testid="operator-code-list">
               {invites.length === 0 && <p className="text-[12px] text-[#7E8A93] text-center py-1">{tri("Nessun codice ancora.", "Noch keine Codes.", "No codes yet.")}</p>}
               {invites.slice(0, 12).map((iv) => (
-                <div key={iv.code} className="flex items-center justify-between rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2">
-                  <span className="font-mono-data font-bold tracking-widest text-[#2B303B] dark:text-[#e4eff8]">{iv.code}{iv.kind === "delega" && <span className="ml-2 text-[9px] font-sans font-bold text-[#5E8CA8] align-middle">DELEGA 8h</span>}</span>
+                <div key={iv.code} className="flex items-center justify-between rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2">
+                  <span className="font-mono-data font-bold tracking-widest text-[#2B303B] dark:text-[#e4eff8]">{iv.code}{iv.kind === "delega" && <span className="ml-2 text-[9px] font-sans font-bold text-[#64748B] align-middle">DELEGA 8h</span>}</span>
                   <span className="flex items-center gap-2">
                     {iv.used_by ? <span className="text-[10px] text-[#3E9C93] font-semibold flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" />{iv.used_by_name || tri("Usato", "Benutzt", "Used")}</span> : <span className="text-[10px] text-[#7E8A93]">{tri("Libero", "Frei", "Free")}</span>}
-                    <button data-testid={`operator-copy-${iv.code}`} onClick={() => { try { navigator.clipboard.writeText(iv.code); toast.success(tri("Copiato", "Kopiert", "Copied")); } catch { /* */ } }} className="text-[#5E8CA8]"><Copy className="w-4 h-4" /></button>
+                    <button data-testid={`operator-copy-${iv.code}`} onClick={() => { try { navigator.clipboard.writeText(iv.code); toast.success(tri("Copiato", "Kopiert", "Copied")); } catch { /* */ } }} className="text-[#64748B]"><Copy className="w-4 h-4" /></button>
                   </span>
                 </div>
               ))}
@@ -145,7 +145,7 @@ export default function MyData({ onOpenTool }) {
           <>
             <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Hai un codice dal Capo? Inseriscilo per attivare il tuo accesso da operatore.", "Code vom Chef? Gib ihn ein, um deinen Operator-Zugang zu aktivieren.", "Got a code from the Boss? Enter it to activate your operator access.")}</p>
             <div className="flex gap-2">
-              <input data-testid="operator-redeem-input" value={redeemCode} onChange={(e) => setRedeemCode(e.target.value.toUpperCase())} placeholder="ES. A1B2C3D4" className="flex-1 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm font-mono-data tracking-widest text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+              <input data-testid="operator-redeem-input" value={redeemCode} onChange={(e) => setRedeemCode(e.target.value.toUpperCase())} placeholder="ES. A1B2C3D4" className="flex-1 rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2 text-sm font-mono-data tracking-widest text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
               <button data-testid="operator-redeem-btn" disabled={redeemBusy} onClick={doRedeem} className="rounded-xl bg-[#3E9C93] text-white font-semibold px-4 active:scale-97 transition-all disabled:opacity-60">{redeemBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : tri("Attiva", "Aktivieren", "Activate")}</button>
             </div>
           </>
@@ -157,8 +157,8 @@ export default function MyData({ onOpenTool }) {
         <div data-testid="operator-onboarding" className="mb-4 rounded-2xl border border-[#3E9C93]/40 bg-white dark:bg-[#1B2A38] p-4 shadow-md">
           <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#3E9C93] mb-1 flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" /> {tri("Il Mio Profilo Operatore", "Mein Operator-Profil", "My Operator Profile")}</p>
           <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Inserisci il tuo nome e il reparto: vedrai la tua postazione dedicata.", "Gib deinen Namen und die Abteilung an: du siehst deinen Bereich.", "Enter your name and department: you'll see your dedicated station.")}</p>
-          <input data-testid="operator-name-input" value={opName} onChange={(e) => setOpName(e.target.value)} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="w-full mb-2 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
-          <select data-testid="operator-dept-select" value={opDept} onChange={(e) => setOpDept(e.target.value)} className="w-full mb-3 rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]">
+          <input data-testid="operator-name-input" value={opName} onChange={(e) => setOpName(e.target.value)} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="w-full mb-2 rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <select data-testid="operator-dept-select" value={opDept} onChange={(e) => setOpDept(e.target.value)} className="w-full mb-3 rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]">
             <option value="">{tri("Scegli il reparto…", "Abteilung wählen…", "Choose department…")}</option>
             {DEPTS.map(([id, lab]) => <option key={id} value={id}>{lab}</option>)}
           </select>
@@ -174,12 +174,12 @@ export default function MyData({ onOpenTool }) {
         <p className="text-[11px] font-extrabold uppercase tracking-wide text-[#3E9C93] mb-1">{tri("Avvisa il Capo", "Chef benachrichtigen", "Notify the Boss")}</p>
         <p className="text-[12px] text-[#7E8A93] mb-3">{tri("Invia un avviso immediato di malattia o ferie: arriva direttamente al Capo.", "Sende sofort eine Krankheits- oder Urlaubsmeldung direkt an den Chef.", "Send an instant sickness or holiday notice straight to the Boss.")}</p>
         <div className="grid grid-cols-2 gap-2 mb-2">
-          <input data-testid="absence-dates" value={absDates} onChange={(e) => setAbsDates(e.target.value)} placeholder={tri("Quando? (es. oggi, 12-15/06)", "Wann? (z. B. heute)", "When? (e.g. today)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
-          <input data-testid="absence-note" value={absNote} onChange={(e) => setAbsNote(e.target.value)} placeholder={tri("Nota (facoltativa)", "Notiz (optional)", "Note (optional)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0E1620] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <input data-testid="absence-dates" value={absDates} onChange={(e) => setAbsDates(e.target.value)} placeholder={tri("Quando? (es. oggi, 12-15/06)", "Wann? (z. B. heute)", "When? (e.g. today)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
+          <input data-testid="absence-note" value={absNote} onChange={(e) => setAbsNote(e.target.value)} placeholder={tri("Nota (facoltativa)", "Notiz (optional)", "Note (optional)")} className="rounded-xl bg-[#e4eff8] dark:bg-[#0D1520] border border-[#2A3B49] px-3 py-2 text-sm text-[#2B303B] dark:text-[#e4eff8] outline-none focus:border-[#3E9C93]" />
         </div>
         <div className="grid grid-cols-2 gap-2">
           <button data-testid="absence-malattia" disabled={!!absSending} onClick={() => sendAbsence("malattia")}
-            className="flex items-center justify-center gap-2 rounded-xl bg-[#5E8CA8] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
+            className="flex items-center justify-center gap-2 rounded-xl bg-[#64748B] text-white font-semibold py-2.5 active:scale-97 transition-all disabled:opacity-60">
             {absSending === "malattia" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Thermometer className="w-4 h-4" />} {tri("Malattia", "Krankheit", "Sick")}
           </button>
           <button data-testid="absence-ferie" disabled={!!absSending} onClick={() => sendAbsence("ferie")}

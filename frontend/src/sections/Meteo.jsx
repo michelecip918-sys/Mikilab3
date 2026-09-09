@@ -80,7 +80,7 @@ export default function Meteo() {
     ? tri("Aria secca: puoi aumentare l'acqua dell'1-2% e coprire bene gli impasti.", "Trockene Luft: Wasser um 1-2% erhöhen, Teige gut abdecken.", "Dry air: you can add 1-2% water and cover doughs well.")
     : tri("Umidità nella norma: nessuna correzione dell'acqua.", "Normale Feuchte: keine Wasserkorrektur.", "Normal humidity: no water correction.");
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40">
@@ -94,7 +94,7 @@ export default function Meteo() {
 
       {/* Sorgente meteo */}
       <button data-testid="meteo-geo" onClick={useGeo} disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-3">
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
         {tri("Usa la mia posizione", "Meinen Standort verwenden", "Use my location")}
       </button>
@@ -112,7 +112,7 @@ export default function Meteo() {
       {w && (
         <>
           {/* Card meteo attuale */}
-          <div data-testid="meteo-current" className="rounded-3xl bg-gradient-to-br from-[#3E9C93] to-[#5E8CA8] text-white p-5 shadow-lg mb-4">
+          <div data-testid="meteo-current" className="rounded-3xl bg-gradient-to-br from-[#3E9C93] to-[#64748B] text-white p-5 shadow-lg mb-4">
             <p className="text-white/85 text-sm font-semibold flex items-center gap-1"><MapPin className="w-4 h-4" /> {w.place}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-3 text-center">
               <div><Thermometer className="w-5 h-5 mx-auto mb-1 opacity-80" /><p data-testid="meteo-temp" className="font-mono-data text-2xl font-bold">{Math.round(w.temp)}°C</p><p className="text-[10px] text-white/70 uppercase">{tri("Temp", "Temp", "Temp")}</p></div>

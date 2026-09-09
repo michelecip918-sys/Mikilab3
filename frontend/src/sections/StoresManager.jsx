@@ -34,12 +34,12 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
     catch { toast.error(tri("Eliminazione non riuscita", "Löschen fehlgeschlagen", "Delete failed")); }
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40" data-testid="stores-manager">
       <button data-testid="store-add" onClick={() => setEditing(editing === "new" ? null : "new")}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Aggiungi negozio", "Filiale hinzufügen", "Add store")}
       </button>
 
@@ -70,7 +70,7 @@ export default function StoresManager({ stores, reload, current, setCurrent }) {
                   {current === s.id ? (
                     <span data-testid={`store-active-${s.id}`} className="flex-1 flex items-center justify-center gap-1 text-sm font-semibold text-[#3E9C93] bg-[#3E9C93]/10 rounded-2xl shadow-md border border-amber-900/40 py-2"><Check className="w-4 h-4" /> {tri("Attivo", "Aktiv", "Active")}</span>
                   ) : (
-                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
+                    <button data-testid={`store-select-${s.id}`} onClick={() => setCurrent(s.id)} className="flex-1 text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 py-2 active:scale-98">{tri("Rendi attivo", "Aktivieren", "Set active")}</button>
                   )}
                   <button data-testid={`store-edit-${s.id}`} onClick={() => setEditing(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93]"><Pencil className="w-4 h-4" /></button>
                   <button data-testid={`store-remove-${s.id}`} onClick={() => remove(s.id)} className="p-2 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#7E8A93] hover:text-[#E4572E]"><Trash2 className="w-4 h-4" /></button>

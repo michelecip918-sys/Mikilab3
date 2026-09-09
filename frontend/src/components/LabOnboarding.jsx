@@ -141,7 +141,7 @@ export default function LabOnboarding() {
         <motion.div data-testid="lab-onboarding" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
           className="fixed inset-0 z-[9998] flex items-end sm:items-center justify-center bg-[#1A1412]/85 backdrop-blur-sm p-3">
           <motion.div key={i} initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.28 }}
-            className="w-full max-w-md rounded-3xl bg-[#0E1620] dark:bg-[#0E1620] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl overflow-hidden">
+            className="w-full max-w-md rounded-3xl bg-[#0D1520] dark:bg-[#0D1520] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl overflow-hidden">
             {/* header */}
             <div className={`p-5 ${cur.who === "michele" ? "bg-gradient-to-br from-[#3F4A54] to-[#5E6B62]" : "bg-gradient-to-br from-[#3E9C93] to-[#3E9C93]"} text-white`}>
               <div className="flex items-center justify-between mb-3">
@@ -177,12 +177,12 @@ export default function LabOnboarding() {
                 </button>
                 {i < slides.length - 1 ? (
                   <button data-testid="lab-onboarding-next" onClick={next}
-                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold active:scale-97 transition-all">
                     {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
                   </button>
                 ) : (
                   <button data-testid="lab-onboarding-done" onClick={close}
-                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold active:scale-97 transition-all">
+                    className="flex items-center gap-1.5 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold active:scale-97 transition-all">
                     <Check className="w-5 h-5" /> {tri("Ho capito, iniziamo!", "Verstanden, los geht's!", "Got it, let's start!")}
                   </button>
                 )}

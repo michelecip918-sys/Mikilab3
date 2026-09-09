@@ -30,15 +30,15 @@ export default function ConvertitoreLieviti({ onBack }) {
     return { flour: f, waterFrom: f * (HYD[from] || 0), waterTo: f * (HYD[to] || 0), totFrom: f * (1 + (HYD[from] || 0)), totTo: f * (1 + (HYD[to] || 0)) };
   }, [prefFlour, from, to]);
 
-  const card = "rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
 
   return (
     <div className="pb-8" data-testid="conv-lieviti">
       {onBack && <button data-testid="conv-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><RefreshCw className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Convertitore Lieviti", "Hefe-Umrechner", "Leavening Converter", "Conversor de Levaduras")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Passa da un tipo di lievito all'altro senza sbagliare le dosi: birra, Lievito Madre, Li.Co.Li., biga e poolish.", "Wechsle zwischen Hefearten ohne Dosierfehler.", "Switch between leavening types without dose errors.", "Cambia entre tipos de levadura sin errores.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Passa da un tipo di lievito all'altro senza sbagliare le dosi: birra, Lievito Madre, Li.Co.Li., biga e poolish.", "Wechsle zwischen Hefearten ohne Dosierfehler.", "Switch between leavening types without dose errors.", "Cambia entre tipos de levadura sin errores.")}</p>
       </div>
 
       {/* 1 */}
@@ -48,7 +48,7 @@ export default function ConvertitoreLieviti({ onBack }) {
           <div><p className={lbl}>{L("Fresco (g)", "Frisch (g)", "Fresh (g)", "Fresca (g)")}</p><input data-testid="conv-fresco" type="number" value={fresco} onChange={(e) => setFresco(e.target.value)} className={inp} /></div>
           <div><p className={lbl}>{L("Secco / istantaneo (g)", "Trocken (g)", "Dry (g)", "Seca (g)")}</p><div data-testid="conv-secco" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] text-[#3E9C93] font-mono-data font-bold px-3 py-2.5 text-center">{secco.toLocaleString(lang === "en" ? "en" : "it", { maximumFractionDigits: 1 })} g</div></div>
         </div>
-        <p className="text-[11px] text-[#5E8CA8] mt-1.5">{L("Regola: 3 g di fresco = 1 g di secco.", "Regel: 3 g frisch = 1 g trocken.", "Rule: 3 g fresh = 1 g dry.", "Regla: 3 g fresca = 1 g seca.")}</p>
+        <p className="text-[11px] text-[#64748B] mt-1.5">{L("Regola: 3 g di fresco = 1 g di secco.", "Regel: 3 g frisch = 1 g trocken.", "Rule: 3 g fresh = 1 g dry.", "Regla: 3 g fresca = 1 g seca.")}</p>
       </div>
 
       {/* 2 */}
@@ -58,7 +58,7 @@ export default function ConvertitoreLieviti({ onBack }) {
           <div><p className={lbl}>{L("Birra fresco (g)", "Frischhefe (g)", "Fresh yeast (g)", "Levadura (g)")}</p><input data-testid="conv-birra" type="number" value={birra} onChange={(e) => setBirra(e.target.value)} className={inp} /></div>
           <div><p className={lbl}>{L("Lievito Madre (g)", "Sauerteig (g)", "Sourdough (g)", "Masa madre (g)")}</p><div data-testid="conv-lm-out" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#ffffff] text-[#3E9C93] font-mono-data font-bold px-3 py-2.5 text-center">{num(lmFromBirra)} g</div></div>
         </div>
-        <p className="text-[11px] text-[#5E8CA8] mt-1.5">{L("Stima: ~20 g di LM maturo per 1 g di birra. Allunga la lievitazione di 2-4 ore.", "~20 g reifer Sauerteig pro 1 g Hefe. Gärzeit +2-4 h.", "~20 g mature sourdough per 1 g yeast. Add 2-4 h proofing.", "~20 g de masa madre por 1 g de levadura. +2-4 h de fermentación.")}</p>
+        <p className="text-[11px] text-[#64748B] mt-1.5">{L("Stima: ~20 g di LM maturo per 1 g di birra. Allunga la lievitazione di 2-4 ore.", "~20 g reifer Sauerteig pro 1 g Hefe. Gärzeit +2-4 h.", "~20 g mature sourdough per 1 g yeast. Add 2-4 h proofing.", "~20 g de masa madre por 1 g de levadura. +2-4 h de fermentación.")}</p>
       </div>
 
       {/* 3 */}

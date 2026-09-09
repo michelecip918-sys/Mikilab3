@@ -63,24 +63,24 @@ export default function CantiereRicetta({ onBack }) {
   return (
     <div className="pb-8" data-testid="cantiere">
       {onBack && <button data-testid="cantiere-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><FileText className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Ricetta di Cantiere", "Baustellen-Rezept", "Worksite Recipe", "Receta de Obra")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Genera il PDF stampabile a caratteri grandi da appendere in laboratorio: dosi, tempi e procedimento a colpo d'occhio.", "Druckbares Großdruck-PDF fürs Labor.", "A big-print PDF to hang in your kitchen.", "PDF imprimible de letra grande para el obrador.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Genera il PDF stampabile a caratteri grandi da appendere in laboratorio: dosi, tempi e procedimento a colpo d'occhio.", "Druckbares Großdruck-PDF fürs Labor.", "A big-print PDF to hang in your kitchen.", "PDF imprimible de letra grande para el obrador.")}</p>
       </div>
 
       {recipes === null ? (
         <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>
       ) : recipes.length === 0 ? (
-        <p className="text-center text-sm text-[#5E8CA8] py-8">{L("Nessuna ricetta ancora. Aggiungine una da 'Le Mie Ricette'.", "Noch keine Rezepte.", "No recipes yet. Add one in 'My Recipes'.", "Aún no hay recetas.")}</p>
+        <p className="text-center text-sm text-[#64748B] py-8">{L("Nessuna ricetta ancora. Aggiungine una da 'Le Mie Ricette'.", "Noch keine Rezepte.", "No recipes yet. Add one in 'My Recipes'.", "Aún no hay recetas.")}</p>
       ) : (
         <div className="space-y-2.5" data-testid="cantiere-list">
           {recipes.map((r, i) => (
-            <div key={r.id || i} data-testid={`cantiere-recipe-${i}`} className="flex items-center gap-3 rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3.5 shadow-sm">
+            <div key={r.id || i} data-testid={`cantiere-recipe-${i}`} className="flex items-center gap-3 rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3.5 shadow-sm">
               {r.image_url ? <img src={r.image_url} alt="" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover shrink-0" /> : <div className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/12 flex items-center justify-center shrink-0"><FileText className="w-5 h-5 text-[#3E9C93]" /></div>}
               <p className="flex-1 min-w-0 font-display text-[15px] font-bold text-[#3E9C93] dark:text-[#e4eff8] leading-tight truncate">{field(r, "name") || "Ricetta"}</p>
               <button data-testid={`cantiere-pdf-${i}`} disabled={busy} onClick={() => generate(r)}
-                className="flex items-center gap-1.5 bg-[#3E9C93] hover:bg-[#3E9C93] disabled:opacity-50 text-[#0E1620] text-[13px] font-semibold px-3.5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all shrink-0">
+                className="flex items-center gap-1.5 bg-[#3E9C93] hover:bg-[#3E9C93] disabled:opacity-50 text-[#0D1520] text-[13px] font-semibold px-3.5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all shrink-0">
                 <Printer className="w-4 h-4" /> PDF
               </button>
             </div>

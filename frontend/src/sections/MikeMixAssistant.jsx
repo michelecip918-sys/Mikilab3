@@ -138,9 +138,9 @@ export default function MikiLabAssistant() {
           <div className="flex items-center gap-2 mt-2">
             <input data-testid="mikemix-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && send()}
               placeholder={tri("Scrivi a MikiLab…", "Schreibe an MikiLab…", "Message MikiLab…", "Escribe a MikiLab…")}
-              className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
+              className="flex-1 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
             <button data-testid="mikemix-send" onClick={() => send()} disabled={busy || !input.trim()}
-              className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
+              className="w-11 h-11 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white flex items-center justify-center active:scale-95 shrink-0">
               {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
             </button>
           </div>

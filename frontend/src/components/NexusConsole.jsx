@@ -52,7 +52,7 @@ export default function NexusConsole({ isCapo = false }) {
       ctx.lineWidth = 2;
       for (let layer = 0; layer < 2; layer++) {
         ctx.beginPath();
-        ctx.strokeStyle = layer === 0 ? "rgba(0,240,255,0.85)" : "rgba(246,210,122,0.5)";
+        ctx.strokeStyle = layer === 0 ? "rgba(255,107,0,0.85)" : "rgba(246,210,122,0.5)";
         for (let x = 0; x <= w; x += 4) {
           const y = h / 2 + Math.sin((x * 0.03) + t + layer * 1.4) * (h / 4) * Math.sin(t * 0.3 + layer);
           x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
@@ -78,7 +78,7 @@ export default function NexusConsole({ isCapo = false }) {
   };
 
   const Metric = ({ icon: Ic, label, value, accent, testid, glow }) => (
-    <div data-testid={testid} className="relative rounded-xl bg-[#070A10]/80 border p-3 overflow-hidden" style={{ borderColor: `${accent}44` }}>
+    <div data-testid={testid} className="relative rounded-xl bg-[#060A10]/80 border p-3 overflow-hidden" style={{ borderColor: `${accent}44` }}>
       <div className="absolute -right-6 -top-6 w-16 h-16 rounded-full blur-2xl" style={{ background: glow ? `${accent}55` : "transparent" }} />
       <div className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest" style={{ color: accent }}><Ic className="w-3.5 h-3.5" /> {label}</div>
       <div className="mt-1 font-cyber text-xl font-black text-white tabular-nums">{value}</div>
@@ -86,36 +86,36 @@ export default function NexusConsole({ isCapo = false }) {
   );
 
   return (
-    <div data-testid="nexus-console" className="relative rounded-2xl overflow-hidden border border-[#F6D27A]/25 bg-gradient-to-b from-[#0B0F19] to-[#070A10] p-5 sm:p-6">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 0%, rgba(246,210,122,0.10), transparent 55%), radial-gradient(circle at 80% 20%, rgba(0,240,255,0.10), transparent 55%)" }} />
+    <div data-testid="nexus-console" className="relative rounded-2xl overflow-hidden border border-[#EAB308]/25 bg-gradient-to-b from-[#0B0F19] to-[#060A10] p-5 sm:p-6">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 0%, rgba(246,210,122,0.10), transparent 55%), radial-gradient(circle at 80% 20%, rgba(255,107,0,0.10), transparent 55%)" }} />
       <div className="relative z-10">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.6), rgba(0,240,255,0.3) 60%, transparent 72%)" }} />
-            <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="relative w-14 h-14 rounded-full object-cover object-top border-2 border-[#F6D27A]/70" style={{ boxShadow: "0 0 26px rgba(246,210,122,0.5)" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.6), rgba(255,107,0,0.3) 60%, transparent 72%)" }} />
+            <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="relative w-14 h-14 rounded-full object-cover object-top border-2 border-[#EAB308]/70" style={{ boxShadow: "0 0 26px rgba(246,210,122,0.5)" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
           </div>
           <div className="min-w-0">
             <h3 className="font-cyber text-lg font-black uppercase tracking-[0.14em] text-white">Miki-Nexus</h3>
-            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#F6D27A]">{tri("Coscienza Strategica · Plancia Olografica", "Strategisches Bewusstsein · Holo-Konsole", "Strategic Consciousness · Holo Console", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی")}</p>
+            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#EAB308]">{tri("Coscienza Strategica · Plancia Olografica", "Strategisches Bewusstsein · Holo-Konsole", "Strategic Consciousness · Holo Console", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی")}</p>
           </div>
-          <button data-testid="nexus-speak" onClick={speak} className="ml-auto shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#F6D27A] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /> {tri("Parla", "Sprich", "Speak", "Habla", "Parle", "بگو")}</button>
+          <button data-testid="nexus-speak" onClick={speak} className="ml-auto shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#EAB308] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /> {tri("Parla", "Sprich", "Speak", "Habla", "Parle", "بگو")}</button>
         </div>
 
         {/* Onda sintesi enzimatica */}
-        <div className="mt-4 rounded-xl border border-[#00F0FF]/25 bg-[#070A10]/70 p-3">
+        <div className="mt-4 rounded-xl border border-[#FF6B00]/25 bg-[#060A10]/70 p-3">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#00F0FF]"><Waves className="w-3.5 h-3.5" /> {tri("Nucleo Sintesi Enzimatica", "Enzymsynthese-Kern", "Enzymatic Synthesis Core", "Núcleo Enzimático", "Noyau Enzymatique", "هسته سنتز آنزیمی")}</span>
-            <span className="font-cyber text-sm font-black text-[#00F0FF] tabular-nums">{m.enz.toFixed(1)}%</span>
+            <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#FF6B00]"><Waves className="w-3.5 h-3.5" /> {tri("Nucleo Sintesi Enzimatica", "Enzymsynthese-Kern", "Enzymatic Synthesis Core", "Núcleo Enzimático", "Noyau Enzymatique", "هسته سنتز آنزیمی")}</span>
+            <span className="font-cyber text-sm font-black text-[#FF6B00] tabular-nums">{m.enz.toFixed(1)}%</span>
           </div>
           <canvas ref={barsRef} width={520} height={70} className="mt-2 w-full h-[70px]" />
         </div>
 
         {/* Metriche live */}
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <Metric testid="nexus-nodes" icon={Cpu} label={tri("Nodi Edge", "Edge-Knoten", "Edge Nodes", "Nodos Edge", "Nœuds Edge", "نودها")} value={m.nodes} accent="#00F0FF" glow />
-          <Metric testid="nexus-plants" icon={Globe2} label={tri("Impianti", "Anlagen", "Plants", "Plantas", "Sites", "کارخانه‌ها")} value={m.plants} accent="#7DD3FC" />
+          <Metric testid="nexus-nodes" icon={Cpu} label={tri("Nodi Edge", "Edge-Knoten", "Edge Nodes", "Nodos Edge", "Nœuds Edge", "نودها")} value={m.nodes} accent="#FF6B00" glow />
+          <Metric testid="nexus-plants" icon={Globe2} label={tri("Impianti", "Anlagen", "Plants", "Plantas", "Sites", "کارخانه‌ها")} value={m.plants} accent="#FF9D42" />
           <Metric testid="nexus-integrity" icon={ShieldHalf} label={tri("Integrità", "Integrität", "Integrity", "Integridad", "Intégrité", "یکپارچگی")} value={`${m.integrity.toFixed(1)}%`} accent="#22c55e" />
-          <Metric testid="nexus-fermtemp" icon={Activity} label={tri("Fermentazione", "Gärung", "Fermentation", "Fermentación", "Fermentation", "تخمیر")} value={`${m.temp.toFixed(1)}°`} accent="#F6D27A" />
+          <Metric testid="nexus-fermtemp" icon={Activity} label={tri("Fermentazione", "Gärung", "Fermentation", "Fermentación", "Fermentation", "تخمیر")} value={`${m.temp.toFixed(1)}°`} accent="#EAB308" />
         </div>
 
         {/* Polimorfismo difensivo + minacce */}
@@ -136,7 +136,7 @@ export default function NexusConsole({ isCapo = false }) {
             {isCapo ? (
               armed ? (
                 <button data-testid="nexus-killswitch" onClick={() => { setArmed(false); setConfirming(false); }}
-                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#f43f5e] text-[#070A10] border border-[#f43f5e] active:scale-95 transition-all">
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#f43f5e] text-[#060A10] border border-[#f43f5e] active:scale-95 transition-all">
                   {tri("ARMATO · disarma", "SCHARF · entschärfen", "ARMED · disarm", "ARMADO · desarmar", "ARMÉ · désarmer", "مسلح · خلع")}
                 </button>
               ) : confirming ? (
@@ -151,10 +151,10 @@ export default function NexusConsole({ isCapo = false }) {
                 </button>
               )
             ) : (
-              <span data-testid="nexus-killswitch-locked" className="text-[10px] font-bold text-[#8aa0b4]">{tri("Riservato al Capo Supremo", "Nur Oberster Chef", "Supreme Capo only", "Solo Capo Supremo", "Capo Suprême seulement", "فقط کاپوی برتر")}</span>
+              <span data-testid="nexus-killswitch-locked" className="text-[10px] font-bold text-[#94A3B8]">{tri("Riservato al Capo Supremo", "Nur Oberster Chef", "Supreme Capo only", "Solo Capo Supremo", "Capo Suprême seulement", "فقط کاپوی برتر")}</span>
             )}
           </div>
-          <p className="mt-1.5 text-[10.5px] text-[#8aa0b4] leading-snug">{tri(
+          <p className="mt-1.5 text-[10.5px] text-[#94A3B8] leading-snug">{tri(
             "In caso di violazione, Miki-Nexus sovrascrive e cancella dati, ricette e configurazioni da ogni nodo, garantendo la sovranità di MikiLab.",
             "Bei Verletzung überschreibt und löscht Miki-Nexus Daten von jedem Knoten und sichert die Souveränität von MikiLab.",
             "On breach, Miki-Nexus overwrites and wipes data, recipes and configs from every node, guaranteeing MikiLab's sovereignty.",

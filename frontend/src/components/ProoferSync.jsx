@@ -22,7 +22,7 @@ export default function ProoferSync({ onClose }) {
     <div data-testid="proofer-sync" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-md mx-auto p-4">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><Snowflake className="w-5 h-5 text-[#5E8CA8]" /> {tri("Cella & Freezer · Anti-Over-Proof", "Gärraum & Freezer", "Proofer & Freezer · Anti-Over-Proof", "Cámara & Freezer", "Chambre & Freezer", "تخمیر و فریزر")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><Snowflake className="w-5 h-5 text-[#64748B]" /> {tri("Cella & Freezer · Anti-Over-Proof", "Gärraum & Freezer", "Proofer & Freezer · Anti-Over-Proof", "Cámara & Freezer", "Chambre & Freezer", "تخمیر و فریزر")}</h2>
           <button data-testid="proofer-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-5 h-5" /></button>
         </div>
         <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Calibro la cella sulla velocità (Aura) dell'operatore attivo per evitare la sovra-lievitazione.", "Ich kalibriere den Gärraum auf die Aura des aktiven Operators.", "I calibrate the proofer on the active operator's Aura speed to prevent over-proofing.", "Calibro la cámara según la Aura del operador activo.", "Je calibre la chambre selon l'Aura de l'opérateur actif.", "تخمیر را با سرعت (اورا) اپراتور فعال تنظیم می‌کنم.")}</p>
@@ -35,8 +35,8 @@ export default function ProoferSync({ onClose }) {
               {d.aura && <span className="text-[11px] font-black px-2 py-1 rounded-full" style={{ background: `${d.aura.color}22`, color: d.aura.color }}>{d.aura.aura_effect}</span>}
             </div>
             <div className="grid grid-cols-3 gap-2">
-              <div className="rounded-2xl border border-[#5E8CA8]/40 bg-[#5E8CA80d] p-3 text-center">
-                <Thermometer className="w-4 h-4 text-[#5E8CA8] mx-auto" />
+              <div className="rounded-2xl border border-[#64748B]/40 bg-[#64748B0d] p-3 text-center">
+                <Thermometer className="w-4 h-4 text-[#64748B] mx-auto" />
                 <p className="text-2xl font-black text-white mt-1" data-testid="proofer-temp">{d.proofer_temp_c}°</p>
                 <p className="text-[10px] text-[#94A3B8]">{tri("cella", "Gärraum", "proofer", "cámara", "chambre", "تخمیر")}</p>
               </div>

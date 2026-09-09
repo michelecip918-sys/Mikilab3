@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 // MAGAZZINO materie prime — carico rapido (3 campi) + scalatura automatica dalle impastate.
 // Tema Grain Gold (scuro, alto contrasto da laboratorio).
-const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const D = { bg: "#0D1520", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#64748B", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 
 export const warehouseApi = {
   list: () => api.get("/lab/warehouse").then((r) => r.data),

@@ -29,10 +29,10 @@ export default function SiloManager() {
 
   return (
     <div data-testid="silo-manager" className="space-y-2">
-      <div className="flex items-center gap-1.5 rounded-lg bg-[#0C1019] border border-[#5E8CA8]/30 px-2.5 py-1.5">
-        <Mail className="w-4 h-4 text-[#5E8CA8] shrink-0" />
+      <div className="flex items-center gap-1.5 rounded-lg bg-[#0C1019] border border-[#64748B]/30 px-2.5 py-1.5">
+        <Mail className="w-4 h-4 text-[#64748B] shrink-0" />
         <input data-testid="silo-supplier-input" type="email" value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={tri("Email fornitore (per micro-ordini)", "Lieferanten-E-Mail", "Supplier email (for micro-orders)", "Email proveedor", "Email fournisseur", "ایمیل تأمین‌کننده")} className="flex-1 min-w-0 bg-transparent text-[13px] text-white outline-none placeholder:text-[#4b6070]" />
-        {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#00F0FF]"><Check className="w-4 h-4" /></button>}
+        {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#FF6B00]"><Check className="w-4 h-4" /></button>}
       </div>
       {data.silos.map((s) => {
         const col = s.needs_reorder ? "#f43f5e" : s.fill_pct < 40 ? "#FFB800" : "#22c55e";
@@ -44,10 +44,10 @@ export default function SiloManager() {
               <span className="text-[11px] font-bold" style={{ color: col }}>{s.current_kg} / {s.capacity_kg} kg</span>
             </div>
             <div className="mt-1.5 h-1.5 rounded-full bg-[#030712] overflow-hidden"><div className="h-full rounded-full" style={{ width: `${s.fill_pct}%`, background: col }} /></div>
-            <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[#8aa0b4]">
+            <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[#94A3B8]">
               {s.autonomy_h != null && <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {tri("autonomia", "Autonomie", "autonomy", "autonomía", "autonomie", "خودکفایی")} ~{s.autonomy_h}h</span>}
-              {s.is_flour && <span className="inline-flex items-center gap-1"><Droplets className="w-3 h-3 text-[#7DD3FC]" /> {tri("umidità", "Feuchte", "humidity", "humedad", "humidité", "رطوبت")} {s.humidity_pct}%</span>}
-              {s.water_adjust_pct != null && s.water_adjust_pct !== 0 && <span className="text-[#7DD3FC] font-bold">{tri("correggi acqua", "Wasser", "water adj", "agua", "eau", "آب")} {s.water_adjust_pct > 0 ? "+" : ""}{s.water_adjust_pct}%</span>}
+              {s.is_flour && <span className="inline-flex items-center gap-1"><Droplets className="w-3 h-3 text-[#FF9D42]" /> {tri("umidità", "Feuchte", "humidity", "humedad", "humidité", "رطوبت")} {s.humidity_pct}%</span>}
+              {s.water_adjust_pct != null && s.water_adjust_pct !== 0 && <span className="text-[#FF9D42] font-bold">{tri("correggi acqua", "Wasser", "water adj", "agua", "eau", "آب")} {s.water_adjust_pct > 0 ? "+" : ""}{s.water_adjust_pct}%</span>}
               {s.needs_reorder && <span className="text-[#f43f5e] font-bold">⚠ {tri("sotto soglia", "unter Schwelle", "below threshold", "bajo umbral", "sous seuil", "زیر آستانه")}</span>}
             </div>
           </div>

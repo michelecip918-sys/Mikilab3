@@ -8,9 +8,9 @@ import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
   sanificazione: { icon: Brush, c: "#22c55e" },
-  regola: { icon: ShieldAlert, c: "#5E8CA8" },
+  regola: { icon: ShieldAlert, c: "#64748B" },
   crisis_override: { icon: Gauge, c: "#f59e0b" },
-  produzione: { icon: ListChecks, c: "#00F0FF" },
+  produzione: { icon: ListChecks, c: "#FF6B00" },
   generico: { icon: ListChecks, c: "#5EEAD4" },
 };
 

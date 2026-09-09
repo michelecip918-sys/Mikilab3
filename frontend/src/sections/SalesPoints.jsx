@@ -26,7 +26,7 @@ export default function SalesPoints() {
 
   const remove = (id) => persist(points.filter((p) => p.id !== id));
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40" data-testid="salespoints">
@@ -49,7 +49,7 @@ export default function SalesPoints() {
           <Clock className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7E8A93]" />
           <input data-testid="salespoint-hours" value={form.hours} onChange={(e) => setForm((f) => ({ ...f, hours: e.target.value }))} placeholder={tri("Orari (es. 7:00–13:00 / 16:00–19:30)", "Zeiten (z. B. 7:00–13:00)", "Hours (e.g. 7:00–13:00)")} className={inp + " pl-9"} />
         </div>
-        <button data-testid="salespoint-add" onClick={add} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-bold py-3 rounded-2xl active:scale-98"><Plus className="w-5 h-5" /> {tri("Aggiungi punto vendita", "Verkaufspunkt hinzufügen", "Add sales point")}</button>
+        <button data-testid="salespoint-add" onClick={add} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-bold py-3 rounded-2xl active:scale-98"><Plus className="w-5 h-5" /> {tri("Aggiungi punto vendita", "Verkaufspunkt hinzufügen", "Add sales point")}</button>
       </div>
 
       {points.length === 0 ? (

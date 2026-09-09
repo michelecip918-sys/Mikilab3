@@ -54,7 +54,7 @@ export default function WaterTempCalc() {
           hint={tri("Impastatrice: spirale ~3, tuffante ~1-2, planetaria ~4-6", "Kneter: Spirale ~3, Tauchkneter ~1-2, Planeten ~4-6", "Mixer: spiral ~3, plunger ~1-2, planetary ~4-6")} />
       </div>
 
-      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#3E9C93] to-[#5E8CA8] rounded-3xl p-6 text-white shadow-lg text-center">
+      <div data-testid="wtc-result" className="mt-5 bg-gradient-to-br from-[#3E9C93] to-[#64748B] rounded-3xl p-6 text-white shadow-lg text-center">
         <p className="text-white/80 text-sm uppercase tracking-wider font-semibold flex items-center justify-center gap-1">
           <Thermometer className="w-4 h-4" /> {tri("Acqua da usare", "Wasser verwenden", "Use water at")}
         </p>

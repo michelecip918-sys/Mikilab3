@@ -51,7 +51,7 @@ export default function DeptAssign() {
   };
   const del = (a) => deptApi.unassign(a.id).then(load).catch(() => {});
   const cur = depts.find((x) => x.key === dept);
-  const accent = cur?.accent || "#00F0FF";
+  const accent = cur?.accent || "#FF6B00";
   const selCount = Object.keys(sel).length;
 
   return (
@@ -69,7 +69,7 @@ export default function DeptAssign() {
         ))}
       </div>
       {cur && (
-        <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] p-3 text-[11px] text-[#8aa0b4]">
+        <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] p-3 text-[11px] text-[#94A3B8]">
           <span className="text-white font-bold">{cur.name}</span> · {cur.machines.length} {tri("macchine", "Maschinen", "machines", "máquinas", "machines", "دستگاه")} · {cur.silos.length} silos · {cur.cells.length} {tri("celle", "Zellen", "cells", "celdas", "cellules", "سلول")}
         </div>
       )}
@@ -98,7 +98,7 @@ export default function DeptAssign() {
                     {on && (
                       <input data-testid={`dept-op-task-${o.name}`} value={sel[o.name]} onChange={(e) => setTask(o.name, e.target.value)}
                         placeholder={tri("mansione (impasti, forni…)", "Aufgabe…", "task (mixing, ovens…)", "tarea…", "tâche…", "وظیفه…")}
-                        className="flex-1 min-w-0 rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-xs text-white px-2.5 py-1.5" />
+                        className="flex-1 min-w-0 rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-xs text-white px-2.5 py-1.5" />
                     )}
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function DeptAssign() {
           <div className="flex items-center gap-2">
             <input data-testid="dept-manual-input" value={manual} onChange={(e) => setManual(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") addManual(); }}
               placeholder={tri("Aggiungi operaio (nome)…", "Mitarbeiter hinzufügen…", "Add operator (name)…", "Añadir operario…", "Ajouter opérateur…", "افزودن اپراتور…")}
-              className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2" />
+              className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white px-3 py-2" />
             <button data-testid="dept-manual-add" onClick={addManual} className="shrink-0 inline-flex items-center gap-1 px-3 py-2 rounded-xl border border-[#1e293b] text-[#94A3B8] text-sm active:scale-95"><Plus className="w-4 h-4" /></button>
           </div>
 
@@ -118,14 +118,14 @@ export default function DeptAssign() {
           <div className="flex items-center gap-2">
             <input data-testid="dept-label-input" value={label} onChange={(e) => setLabel(e.target.value)}
               placeholder={tri("Obiettivo del reparto (opz.)", "Ziel des Bereichs (opt.)", "Department goal (opt.)", "Meta del área (opc.)", "Objectif (opt.)", "هدف (اختیاری)")}
-              className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2.5" />
+              className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white px-3 py-2.5" />
             <input data-testid="dept-target-input" value={target} onChange={(e) => setTarget(e.target.value.replace(/[^0-9]/g, ""))} inputMode="numeric"
               placeholder={tri("Pezzi", "Stück", "Pcs", "Piezas", "Pcs", "عدد")}
-              className="w-20 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white px-3 py-2.5" />
+              className="w-20 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white px-3 py-2.5" />
           </div>
 
           <button data-testid="dept-assign-btn" onClick={assign} disabled={busy || selCount === 0}
-            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#00F0FF]/15 border border-[#00F0FF]/50 text-[#00F0FF] font-bold text-sm active:scale-95 disabled:opacity-40">
+            className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#FF6B00]/15 border border-[#FF6B00]/50 text-[#FF6B00] font-bold text-sm active:scale-95 disabled:opacity-40">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Assegna la squadra", "Team zuweisen", "Assign team", "Asignar equipo", "Assigner l'équipe", "واگذاری تیم")}{selCount > 0 ? ` · ${selCount}` : ""}
           </button>
         </div>
@@ -136,8 +136,8 @@ export default function DeptAssign() {
           <p className="text-[10px] uppercase tracking-widest text-[#64748B]">{tri("Lavagna di controllo · live", "Kontrolltafel · live", "Control board · live", "Tablero · live", "Tableau · live", "تابلو · زنده")}</p>
           {board.map((o) => { const pct = o.target > 0 ? Math.min(100, Math.round((o.done / o.target) * 100)) : 0; return (
             <div key={o.dept} data-testid={`board-${o.dept}`} className="rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-              <div className="flex items-center justify-between text-xs mb-1"><span className="font-bold text-white">{o.dept_name}{o.label ? ` · ${o.label}` : ""}</span><span className="font-black text-[#00F0FF]">{o.done}/{o.target || "∞"} {o.unit}</span></div>
-              <div className="h-1.5 rounded-full bg-[#030712] overflow-hidden"><div className="h-full bg-gradient-to-r from-[#00F0FF] to-[#22c55e]" style={{ width: `${pct}%` }} /></div>
+              <div className="flex items-center justify-between text-xs mb-1"><span className="font-bold text-white">{o.dept_name}{o.label ? ` · ${o.label}` : ""}</span><span className="font-black text-[#FF6B00]">{o.done}/{o.target || "∞"} {o.unit}</span></div>
+              <div className="h-1.5 rounded-full bg-[#030712] overflow-hidden"><div className="h-full bg-gradient-to-r from-[#FF6B00] to-[#22c55e]" style={{ width: `${pct}%` }} /></div>
             </div>
           ); })}
         </div>
@@ -147,7 +147,7 @@ export default function DeptAssign() {
           <p className="text-[10px] uppercase tracking-widest text-[#64748B]">{tri("Assegnazioni di oggi", "Heutige Zuweisungen", "Today's assignments", "Asignaciones de hoy", "Aujourd'hui", "امروز")}</p>
           {assignments.map((a) => (
             <div key={a.id} data-testid={`dept-assignment-${a.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-              <UserCog className="w-4 h-4 text-[#00F0FF] shrink-0" />
+              <UserCog className="w-4 h-4 text-[#FF6B00] shrink-0" />
               <p className="text-xs text-white flex-1 min-w-0 truncate"><b>{a.operator}</b> → {a.dept_name}{a.task ? ` · ${a.task}` : ""}</p>
               <button data-testid={`dept-unassign-${a.id}`} onClick={() => del(a)} className="text-[#64748B] hover:text-rose-400"><Trash2 className="w-4 h-4" /></button>
             </div>

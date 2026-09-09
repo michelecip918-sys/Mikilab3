@@ -31,8 +31,8 @@ export default function AgvFleet() {
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 shrink-0" style={{ color: col }} />
               <span className="text-sm font-black text-white">{c.name}</span>
-              <span className="inline-flex items-center gap-1 text-[11px] text-[#8aa0b4] flex-1 min-w-0"><Route className="w-3 h-3" /> {c.route_label}</span>
-              <span className="inline-flex items-center gap-1 text-[11px] text-[#8aa0b4]"><BatteryMedium className="w-3.5 h-3.5" /> {c.battery_pct}%</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8] flex-1 min-w-0"><Route className="w-3 h-3" /> {c.route_label}</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8]"><BatteryMedium className="w-3.5 h-3.5" /> {c.battery_pct}%</span>
             </div>
             <div className="mt-1 flex items-center gap-2 text-[11px]">
               <span className="inline-flex items-center gap-1" style={{ color: col }}><Volume2 className="w-3 h-3" /> {c.acoustic_db} dB</span>

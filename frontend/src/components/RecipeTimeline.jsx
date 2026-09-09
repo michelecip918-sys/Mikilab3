@@ -66,7 +66,7 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }, [phases, target, totalMins, lang]);
 
   const durStr = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? " " + (m % 60) + "m" : ""}` : `${m}m`);
-  const inp = "bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   if (phases.length < 2) {
     return (

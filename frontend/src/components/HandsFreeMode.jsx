@@ -114,7 +114,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
   if (!steps.length) {
     return createPortal((
-      <div className="fixed inset-0 z-[95] bg-[#0E1620] text-white flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
+      <div className="fixed inset-0 z-[95] bg-[#0D1520] text-white flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
         <p className="mb-4">{tri("Questa ricetta non ha un procedimento passo-passo.", "Dieses Rezept hat keine Schritt-für-Schritt-Anleitung.", "This recipe has no step-by-step procedure.", "Esta receta no tiene un procedimiento paso a paso.")}</p>
         <button data-testid="handsfree-close" onClick={onClose} className="bg-[#3E9C93] px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
       </div>

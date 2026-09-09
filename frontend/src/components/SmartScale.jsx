@@ -21,7 +21,7 @@ function buildSteps(recipe, factor, tri, ingName) {
   const flourBase = Number(recipe.flour_grams || 0) * factor;
   const steps = [];
   if (f > 0) steps.push({ key: "flour", name: tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد"), target: Math.round(f), color: "#e0b877" });
-  if (w > 0) steps.push({ key: "water", name: tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب"), target: Math.round(w), color: "#5E8CA8" });
+  if (w > 0) steps.push({ key: "water", name: tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب"), target: Math.round(w), color: "#64748B" });
   if (s > 0) steps.push({ key: "sd", name: tri("Lievito madre", "Sauerteig", "Sourdough", "Masa madre", "Levain", "خمیرمایه"), target: Math.round(s), color: "#3E9C93" });
   if (salt > 0) steps.push({ key: "salt", name: tri("Sale", "Salz", "Salt", "Sal", "Sel", "نمک"), target: Math.round(salt), color: "#94A3B8" });
   (recipe.extra_ingredients || []).forEach((ing, i) => {
@@ -264,7 +264,7 @@ export default function SmartScale({ onExit }) {
           <button
             data-testid="scale-ble-btn"
             onClick={connectBle}
-            className={`mt-2 w-full py-3 rounded-2xl inline-flex items-center justify-center gap-2 font-bold text-sm border active:scale-98 transition-all ${bleOn ? "bg-[#5E8CA8]/15 border-[#5E8CA8] text-[#8FB0C2]" : "bg-[#030712] border-[#2A3B49] text-[#94A3B8]"}`}
+            className={`mt-2 w-full py-3 rounded-2xl inline-flex items-center justify-center gap-2 font-bold text-sm border active:scale-98 transition-all ${bleOn ? "bg-[#64748B]/15 border-[#64748B] text-[#8FB0C2]" : "bg-[#030712] border-[#2A3B49] text-[#94A3B8]"}`}
           >
             <Bluetooth className="w-4 h-4" /> {bleOn ? tri("Bilancia reale collegata", "Echte Waage verbunden", "Real scale connected", "Báscula real conectada", "Balance réelle connectée", "ترازوی واقعی وصل شد") : tri("Collega bilancia Bluetooth", "Bluetooth-Waage verbinden", "Connect Bluetooth scale", "Conectar báscula Bluetooth", "Connecter balance Bluetooth", "اتصال ترازوی بلوتوث")}
           </button>
@@ -364,7 +364,7 @@ export default function SmartScale({ onExit }) {
       {/* Comandi (facoltativi: la bilancia guida da sola) */}
       <div className="grid grid-cols-2 gap-2">
         {bleOn ? (
-          <div data-testid="scale-ble-live" className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#5E8CA8]/15 border border-[#5E8CA8]/50 text-[#8FB0C2] font-bold text-sm">
+          <div data-testid="scale-ble-live" className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#64748B]/15 border border-[#64748B]/50 text-[#8FB0C2] font-bold text-sm">
             <Bluetooth className="w-4 h-4" /> {tri("Bilancia reale", "Echte Waage", "Real scale", "Báscula real", "Balance réelle", "ترازوی واقعی")}
           </div>
         ) : (

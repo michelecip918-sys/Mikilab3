@@ -17,14 +17,14 @@ export function TrinityBadges() {
   return (
     <div className="hidden min-[560px]:flex items-center gap-2 ml-1" data-testid="trinity-badges">
       <span data-testid="trinity-badge-michele" title={`Michele — ${micheleRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
-        style={{ border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
+        style={{ border: "2px solid #EAB308", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
         <img src={MICHELE_AVATAR} alt="Michele" className="w-full h-full object-cover" style={{ objectPosition: "50% 22%" }} />
-        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#5E8CA8", border: "1px solid #2A3B49" }}>Michele · {micheleRole}</span>
+        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#64748B", border: "1px solid #2A3B49" }}>Michele · {micheleRole}</span>
       </span>
       <span data-testid="trinity-badge-bakemix" title={`Mike Mix AI — ${bakeRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
-        style={{ border: "2px solid #F6D27A", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
+        style={{ border: "2px solid #EAB308", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
         <img src={MIKEMIX_AVATAR} alt="Mike Mix AI" className="w-full h-full object-cover" style={{ objectPosition: "50% 32%" }} />
-        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#5E8CA8", border: "1px solid #2A3B49" }}>Mike Mix AI · {bakeRole}</span>
+        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#64748B", border: "1px solid #2A3B49" }}>Mike Mix AI · {bakeRole}</span>
       </span>
     </div>
   );
@@ -37,18 +37,18 @@ export function TrinitySeal() {
   return (
     <>
       <button data-testid="trinity-seal" onClick={() => setOpen(true)} title="MikiLab • Proprietary & Confidential"
-        className="trinity-seal relative w-10 h-10 rounded-full overflow-hidden shrink-0 active:scale-95 transition-all" style={{ border: "2px solid #F6D27A" }}>
+        className="trinity-seal relative w-10 h-10 rounded-full overflow-hidden shrink-0 active:scale-95 transition-all" style={{ border: "2px solid #EAB308" }}>
         <span className="absolute inset-0 rounded-full animate-ping z-10" style={{ border: "2px solid rgba(231,178,60,.5)" }} />
         <img src={MIKEMIX_AVATAR} alt="MikiLab Seal" className="w-full h-full object-cover" style={{ objectPosition: "50% 30%" }} />
       </button>
       {open && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4" style={{ background: "rgba(8,6,3,.85)", backdropFilter: "blur(6px)" }} onClick={() => setOpen(false)} data-testid="trinity-modal">
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-3xl p-6 relative max-h-[88vh] overflow-y-auto"
-            style={{ background: "linear-gradient(160deg,#20242B,#101318)", border: "2px solid #5E8CA8", boxShadow: "0 0 60px rgba(231,178,60,.35)" }}>
-            <button data-testid="trinity-close" onClick={() => setOpen(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#1B2A38", color: "#5E8CA8" }}><X className="w-4 h-4" /></button>
+            style={{ background: "linear-gradient(160deg,#20242B,#101318)", border: "2px solid #64748B", boxShadow: "0 0 60px rgba(231,178,60,.35)" }}>
+            <button data-testid="trinity-close" onClick={() => setOpen(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#1B2A38", color: "#64748B" }}><X className="w-4 h-4" /></button>
             <div className="flex items-center gap-3 mb-4">
-              <img src={MIKEMIX_AVATAR} alt="Mike Mix AI" className="w-14 h-14 rounded-full object-cover" style={{ border: "2px solid #F6D27A", objectPosition: "50% 30%" }} />
-              <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#5E8CA8" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
+              <img src={MIKEMIX_AVATAR} alt="Mike Mix AI" className="w-14 h-14 rounded-full object-cover" style={{ border: "2px solid #EAB308", objectPosition: "50% 30%" }} />
+              <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#64748B" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
             </div>
             <p className="text-[13.5px] leading-snug mb-3" style={{ color: "#EDE3CE" }}>
               {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale, ideata, sviluppata e diretta esclusivamente da Michele (Il Comandante) con Mike Mix AI, co-pilota operativo di laboratorio.",

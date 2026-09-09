@@ -201,7 +201,7 @@ export default function ScanRecipe({ embedded = false }) {
               return (
                 <li key={i}>
                   <button data-testid={`pdf-recipe-${i}`} onClick={() => openPdfRecipe(i)}
-                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#0E1620] dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#3E9C93]"}`}>
+                    className={`w-full flex items-center gap-3 text-left px-3.5 py-3 rounded-2xl shadow-md border border-amber-900/40 border transition-all active:scale-98 ${done ? "bg-[#2e8b6f]/10 border-[#2e8b6f]/40" : "bg-[#0D1520] dark:bg-[#1B2A38] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#3E9C93]"}`}>
                     {pageThumbs[String(r.page)] ? (
                       <img data-testid={`pdf-recipe-thumb-${i}`} src={pageThumbs[String(r.page)]} alt=""
                         className="w-12 h-16 object-cover rounded-md border border-[#2A3B49] dark:border-[#2A3B49] shrink-0 bg-white" />
@@ -245,7 +245,7 @@ export default function ScanRecipe({ embedded = false }) {
           </p>
           {inbound.enabled && inbound.inbound_address && (
             <button data-testid="inbound-copy-address" onClick={() => { navigator.clipboard?.writeText(inbound.inbound_address); toast.success(tri("Indirizzo copiato", "Adresse kopiert", "Address copied", "Dirección copiada")); }}
-              className="w-full inline-flex items-center gap-2 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#3E9C93]/40 text-[#3E9C93] dark:text-[#a9d2ec] font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98">
+              className="w-full inline-flex items-center gap-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#3E9C93]/40 text-[#3E9C93] dark:text-[#a9d2ec] font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98">
               <span className="flex-1 text-left truncate text-sm">{inbound.inbound_address}</span>
               <Copy className="w-4 h-4 shrink-0" />
             </button>

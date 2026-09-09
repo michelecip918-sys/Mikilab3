@@ -124,7 +124,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
   return (
     <div className="fixed inset-0 z-[75] flex items-end sm:items-center justify-center" data-testid="chat-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0E1620] rounded-t-3xl sm:rounded-3xl shadow-2xl h-[85vh] sm:h-[75vh] flex flex-col overflow-hidden">
+      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0D1520] rounded-t-3xl sm:rounded-3xl shadow-2xl h-[85vh] sm:h-[75vh] flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#0f2231,#1B2A38 50%,#1f5a68)" }}>
           {active ? (
@@ -147,7 +147,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
         ) : active ? (
           /* ---- Thread 1-a-1 ---- */
           <>
-            <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-[#0E1620] dark:bg-[#161b20]" data-testid="chat-thread">
+            <div className="flex-1 overflow-y-auto p-4 space-y-2 bg-[#0D1520] dark:bg-[#161b20]" data-testid="chat-thread">
               {loadingThread ? (
                 <div className="flex justify-center py-10"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>
               ) : msgs.length === 0 ? (
@@ -198,7 +198,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               </button>
               <input data-testid="chat-input" value={text} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())}
                 placeholder={tri("Scrivi un messaggio…", "Nachricht schreiben…", "Type a message…", "Escribe un mensaje…")}
-                className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
+                className="flex-1 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
               <button data-testid="chat-send" data-sfx="confirm" onClick={send} disabled={sending || !text.trim()} className="w-11 h-11 rounded-full bg-[#3E9C93] text-white flex items-center justify-center active:scale-90 disabled:opacity-50 shrink-0">
                 {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </button>
@@ -232,7 +232,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
                 <p className="text-center text-sm text-[#7E8A93] py-10">{tri("Ancora nessuna conversazione. Inizia a scrivere a un amico!", "Noch keine Unterhaltungen. Schreib einem Freund!", "No conversations yet. Message a friend!", "Sin conversaciones aún.")}</p>
               ) : convos.map((c) => (
                 <button key={c.other_id} data-testid={`chat-convo-${c.other_id}`} onClick={() => setActive({ user_id: c.other_id, name: c.name, picture: c.picture })}
-                  className="w-full flex items-center gap-3 p-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0E1620] dark:hover:bg-[#1B2A38] active:scale-98 transition-all text-left">
+                  className="w-full flex items-center gap-3 p-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#0D1520] dark:hover:bg-[#1B2A38] active:scale-98 transition-all text-left">
                   <AvatarImg pic={c.picture} name={c.name} />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] truncate">{c.name}</p>
@@ -243,7 +243,7 @@ export default function ChatPanel({ open, onClose, initialUser = null }) {
               ))}
             </div>
             <div className="p-3 border-t border-[#2A3B49] dark:border-[#2A3B49] shrink-0">
-              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+              <button data-testid="chat-new-btn" onClick={openNew} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                 <Send className="w-4 h-4" /> {tri("Nuovo messaggio", "Neue Nachricht", "New message", "Nuevo mensaje")}
               </button>
             </div>

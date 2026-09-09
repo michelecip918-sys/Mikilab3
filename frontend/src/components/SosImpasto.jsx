@@ -85,7 +85,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
   return (
     <div className="fixed inset-0 z-[75] flex items-end sm:items-center justify-center" data-testid="sos-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0E1620] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[88vh] flex flex-col overflow-hidden">
+      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0D1520] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[88vh] flex flex-col overflow-hidden">
         <div className="flex items-center gap-3 p-4 text-white shrink-0" style={{ background: "linear-gradient(135deg,#7a1f1f,#3E9C93 55%,#3E9C93)" }}>
           <Stethoscope className="w-6 h-6 shrink-0" />
           <div className="min-w-0 flex-1">
@@ -116,7 +116,7 @@ export default function SosImpasto({ open, onClose, onNavigate }) {
           )}
 
           {(busy || result) && (
-            <div data-testid="sos-result" className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
+            <div data-testid="sos-result" className="rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
               {busy && !result ? (
                 <div className="flex items-center gap-2 text-[#3E9C93]"><Loader2 className="w-5 h-5 animate-spin" /> {tri("Analisi in corso…", "Analyse läuft…", "Analysing…", "Analizando…")}</div>
               ) : (

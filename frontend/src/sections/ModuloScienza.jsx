@@ -19,7 +19,7 @@ const GUIDE = [
     id: "idratazione",
     title: "Idratazione & Bassinage",
     desc: "Aggiunta graduale dell'acqua a impasto già incordato per raggiungere alte idratazioni senza perdere struttura.",
-    color: "#5E8CA8",
+    color: "#64748B",
     detail: "Oltre l'80% di idratazione usa il bassinage: incorda prima l'impasto, poi aggiungi l'acqua poco alla volta a bassa velocità, attendendo che venga assorbita prima di ogni aggiunta.",
   },
   {

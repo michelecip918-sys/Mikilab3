@@ -24,7 +24,7 @@ export default function AntiWaste() {
   const recovered = Math.round(outKg * r.sell * 100) / 100;
   const wasted = Math.round(q * (Number(cost) || 0) * 100) / 100;
   const gain = Math.round((recovered - wasted) * 100) / 100;
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">

@@ -655,7 +655,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-save-btn"
         onClick={save}
-        className="w-full mt-5 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-5 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Save className="w-5 h-5" /> {t("weekly_save")}
       </button>
@@ -694,7 +694,7 @@ export default function WeeklyPlan() {
       <button
         data-testid="weekly-pdf-multi-btn"
         onClick={pdfMultiRicetta}
-        className="w-full mt-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full mt-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <FileText className="w-5 h-5" /> {tri("PDF Multi-Ricetta", "PDF Mehr-Rezepte", "Multi-Recipe PDF")}
       </button>
@@ -738,7 +738,7 @@ export default function WeeklyPlan() {
                   <button
                     data-testid={`weekly-salepoint-pdf-${name}`}
                     onClick={() => pdfPerSalePoint(name)}
-                    className="flex items-center justify-center gap-1.5 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white text-sm font-semibold px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
+                    className="flex items-center justify-center gap-1.5 bg-[#3E9C93] hover:bg-[#64748B] text-white text-sm font-semibold px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all"
                   >
                     <FileText className="w-4 h-4" /> {tri("Ricette PDF", "Rezepte PDF", "Recipes PDF")}
                   </button>

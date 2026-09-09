@@ -76,13 +76,13 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
   if (finished) {
     return (
       <div data-testid="bake-finished" className="pb-8">
-        <div className="rounded-3xl p-7 text-center text-[#0E1620] shadow-xl" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93)" }}>
+        <div className="rounded-3xl p-7 text-center text-[#0D1520] shadow-xl" style={{ background: "linear-gradient(135deg,#64748B,#3E9C93)" }}>
           <div className="w-16 h-16 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center mx-auto mb-3"><PartyPopper className="w-8 h-8" /></div>
           <h2 className="font-display text-2xl font-bold">{L("Ce l'hai fatta!", "Geschafft!", "You did it!", "¡Lo lograste!", "Tu as réussi !", "موفق شدی!")}</h2>
-          <p className="text-[#0E1620]/85 text-sm mt-2 font-semibold">{name}</p>
+          <p className="text-[#0D1520]/85 text-sm mt-2 font-semibold">{name}</p>
         </div>
         <button data-testid="bake-finished-community" onClick={() => onGoCommunity && onGoCommunity()}
-          className="mt-4 w-full flex items-center justify-center gap-2 bg-[#3E9C93] text-[#0E1620] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
+          className="mt-4 w-full flex items-center justify-center gap-2 bg-[#3E9C93] text-[#0D1520] font-semibold py-3.5 rounded-2xl active:scale-98 transition-all">
           <Users className="w-5 h-5" /> {L("Vai al feed della community", "Zum Community-Feed", "Go to community feed", "Ir al feed de la comunidad", "Aller au fil de la communauté", "به فید انجمن برو")}
         </button>
         <button data-testid="bake-finished-again" onClick={() => { setFinished(false); setI(0); }}
@@ -103,15 +103,15 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
       )}
 
       {/* Header ricetta + progress */}
-      <div className="rounded-3xl p-5 text-[#0E1620] shadow-xl" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93 70%)" }}>
+      <div className="rounded-3xl p-5 text-[#0D1520] shadow-xl" style={{ background: "linear-gradient(135deg,#64748B,#3E9C93 70%)" }}>
         <p className="text-[11px] font-bold uppercase tracking-widest text-white/90">{L("Riproduci passo-passo", "Schritt für Schritt", "Bake step by step", "Paso a paso", "Pas à pas", "گام‌به‌گام")}</p>
         <h1 className="font-display text-xl font-bold mt-1 leading-tight">{name}</h1>
-        <div className="mt-3 flex items-center justify-between text-[12px] font-bold text-[#0E1620]/80">
+        <div className="mt-3 flex items-center justify-between text-[12px] font-bold text-[#0D1520]/80">
           <span data-testid="bake-step-count">{L("Passo", "Schritt", "Step", "Paso", "Étape", "مرحله")} {i + 1} / {total}</span>
           <span>{pct}%</span>
         </div>
         <div className="mt-1.5 h-2.5 rounded-full bg-black/15 overflow-hidden">
-          <div data-testid="bake-progress" className="h-full rounded-full bg-[#0E1620] transition-all" style={{ width: `${pct}%` }} />
+          <div data-testid="bake-progress" className="h-full rounded-full bg-[#0D1520] transition-all" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
@@ -155,12 +155,12 @@ export default function BakeStepByStep({ recipe, lang, onExit, onGoCommunity }) 
         </button>
         {isLast ? (
           <button data-testid="bake-finish" disabled={busy} onClick={finish}
-            className="flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] text-[#0E1620] font-bold py-3.5 disabled:opacity-50 active:scale-95 transition-all">
+            className="flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] text-[#0D1520] font-bold py-3.5 disabled:opacity-50 active:scale-95 transition-all">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Trophy className="w-5 h-5" />} {L("Ho finito!", "Fertig!", "I'm done!", "¡Terminé!", "J'ai fini !", "تمام شد!")}
           </button>
         ) : (
           <button data-testid="bake-next" onClick={() => setI((n) => Math.min(total - 1, n + 1))}
-            className="flex items-center justify-center gap-1.5 rounded-2xl bg-[#3E9C93] text-[#0E1620] font-bold py-3.5 active:scale-95 transition-all">
+            className="flex items-center justify-center gap-1.5 rounded-2xl bg-[#3E9C93] text-[#0D1520] font-bold py-3.5 active:scale-95 transition-all">
             {L("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-5 h-5" />
           </button>
         )}

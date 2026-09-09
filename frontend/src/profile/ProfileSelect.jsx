@@ -34,7 +34,7 @@ export default function ProfileSelect() {
   );
 
   return (
-    <div data-testid="profile-select" className="fixed inset-0 z-[9999] bg-[#0E1620] overflow-y-auto">
+    <div data-testid="profile-select" className="fixed inset-0 z-[9999] bg-[#0D1520] overflow-y-auto">
       <div className="max-w-md mx-auto px-5 py-10">
         {profile && (
           <button data-testid="profile-select-close" onClick={() => chooseProfile(profile)}

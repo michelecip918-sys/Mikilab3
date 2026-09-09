@@ -30,13 +30,13 @@ export default function SmartWeatherBaker({ onBack }) {
   return (
     <div className="pb-8" data-testid="weather-baker">
       {onBack && <button data-testid="weather-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 55%,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 55%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><CloudSun className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Smart Weather-Baker", "Smart Weather-Baker", "Smart Weather-Baker", "Smart Weather-Baker")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Adatta acqua e lievitazione al clima di casa tua: una giornata fredda in Germania non è come il caldo del Sud Italia.", "Passe Wasser & Gare an dein Klima an.", "Adapt water & proofing to your local climate.", "Adapta agua y fermentación a tu clima.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Adatta acqua e lievitazione al clima di casa tua: una giornata fredda in Germania non è come il caldo del Sud Italia.", "Passe Wasser & Gare an dein Klima an.", "Adapt water & proofing to your local climate.", "Adapta agua y fermentación a tu clima.")}</p>
       </div>
 
-      <div className="rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm mb-4">
+      <div className="rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm mb-4">
         <div className="mb-3"><p className={lbl}><MapPin className="w-3.5 h-3.5 inline mr-1" />{L("Città (facoltativo)", "Stadt (optional)", "City (optional)", "Ciudad (opcional)")}</p>
           <input data-testid="weather-city" value={city} onChange={(e) => setCity(e.target.value)} placeholder={L("es. Stoccarda / Matera", "z.B. Stuttgart", "e.g. Stuttgart / Matera", "p.ej. Stuttgart")} className={inp} /></div>
         <div className="grid grid-cols-2 gap-3">
@@ -66,7 +66,7 @@ export default function SmartWeatherBaker({ onBack }) {
           <CloudSun className="w-5 h-5 text-[#3E9C93]" />
           <p className="text-[13.5px] text-[#3E9C93]"><span className="font-bold text-[#3E9C93]">{L("Temperatura acqua consigliata:", "Empf. Wassertemp.:", "Suggested water temp:", "Temp. agua sugerida:")} </span><span className="font-mono-data font-bold">{r.waterTemp}°C</span></p>
         </div>
-        {city && <p className="text-[11px] text-[#5E8CA8] italic">📍 {city}</p>}
+        {city && <p className="text-[11px] text-[#64748B] italic">📍 {city}</p>}
       </div>
     </div>
   );

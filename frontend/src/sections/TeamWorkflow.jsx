@@ -122,7 +122,7 @@ export default function TeamWorkflow() {
               </div>
               <div className="flex items-center gap-1.5 mt-2">
                 {PHASES.map((p, i) => (
-                  <span key={p} className="flex-1 h-1.5 rounded-full" style={{ background: i < o.phaseIdx ? "#10b981" : i === o.phaseIdx && !done ? "#5E8CA8" : "#2A3B49" }} />
+                  <span key={p} className="flex-1 h-1.5 rounded-full" style={{ background: i < o.phaseIdx ? "#10b981" : i === o.phaseIdx && !done ? "#64748B" : "#2A3B49" }} />
                 ))}
               </div>
               <div className="flex items-center justify-between mt-3">

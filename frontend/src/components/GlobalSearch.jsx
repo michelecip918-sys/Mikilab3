@@ -99,7 +99,7 @@ export default function GlobalSearch() {
         : <span className="w-8 h-8 rounded-lg border flex items-center justify-center shrink-0" style={{ background: (color || "#3E9C93") + "22", borderColor: (color || "#3E9C93") + "55" }}><Icon className="w-4 h-4" style={{ color: color || "#3E9C93" }} /></span>}
       <span className="min-w-0 flex-1">
         <span className="block text-sm text-[#e4eff8] leading-tight"><Highlight text={label} /></span>
-        {sub && <span data-testid={`${testid}-reason`} className="block text-[11px] text-[#5E8CA8] leading-tight mt-0.5 truncate"><Highlight text={sub} /></span>}
+        {sub && <span data-testid={`${testid}-reason`} className="block text-[11px] text-[#64748B] leading-tight mt-0.5 truncate"><Highlight text={sub} /></span>}
       </span>
     </button>
   );
@@ -123,7 +123,7 @@ export default function GlobalSearch() {
             { key: "guides", label: tri("Guide", "Anleitungen", "Guides", "Guías", "Guides", "راهنماها") },
           ].map((s) => (
             <button key={s.key} data-testid={`gs-scope-${s.key}`} onClick={() => setScope(s.key)}
-              className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
+              className={`shrink-0 px-3 py-1 rounded-full text-[12.5px] font-bold whitespace-nowrap border transition-all ${scope === s.key ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
               {s.label}{nq ? ` · ${counts[s.key]}` : ""}
             </button>
           ))}

@@ -5,7 +5,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const TYPE = {
-  lotto: { c: "#00F0FF", icon: Croissant },
+  lotto: { c: "#FF6B00", icon: Croissant },
   infornata: { c: "#FFB800", icon: Flame },
   sos: { c: "#f43f5e", icon: AlertOctagon },
 };
@@ -49,7 +49,7 @@ export default function TimelineTurno() {
     <div data-testid="timeline-turno">
       <div className="flex items-center gap-3 mb-2 text-[11px]">
         {Object.entries(TYPE).map(([k, v]) => (
-          <span key={k} className="inline-flex items-center gap-1 text-[#8aa0b4]"><v.icon className="w-3 h-3" style={{ color: v.c }} /> {k === "lotto" ? tri("Lotti", "Lose", "Batches", "Lotes", "Lots", "دسته") : k === "infornata" ? tri("Infornate", "Backen", "Bakes", "Horneado", "Cuisson", "پخت") : "SOS"}</span>
+          <span key={k} className="inline-flex items-center gap-1 text-[#94A3B8]"><v.icon className="w-3 h-3" style={{ color: v.c }} /> {k === "lotto" ? tri("Lotti", "Lose", "Batches", "Lotes", "Lots", "دسته") : k === "infornata" ? tri("Infornate", "Backen", "Bakes", "Horneado", "Cuisson", "پخت") : "SOS"}</span>
         ))}
         {nowInRange && <span className="inline-flex items-center gap-1 text-[#f43f5e] font-bold ml-auto"><span className="w-2 h-2 rounded-full bg-[#f43f5e] animate-pulse" /> {tri("ADESSO", "JETZT", "NOW", "AHORA", "MAINTENANT", "اکنون")}</span>}
       </div>

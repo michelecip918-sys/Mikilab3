@@ -11,7 +11,7 @@ import { toast } from "sonner";
 
 // Ricette del Giorno — lista prodotti in programma oggi; tap → dosi in GRANDE + stato lotto.
 // Flusso continuo o Autonomia: aggiorni lo stato (Pronto / In cella / Pre-cotto…) per chi lavora dopo.
-const C = { cream: "#0E1620", surf: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", title: "#5E8CA8", dark: "#F7F9FC", muted: "#94A3B8" };
+const C = { cream: "#0D1520", surf: "#1B2A38", border: "#2A3B49", gold: "#64748B", title: "#64748B", dark: "#F7F9FC", muted: "#94A3B8" };
 // Stati mostrati in dettaglio (avanzamento del lotto).
 const STEP_STATUSES = ["pronto", "in_cella", "in_lievitazione", "precotto", "base_pronta", "fatto"];
 
@@ -60,7 +60,7 @@ export default function RicettaDelGiorno() {
           {rows.map((row, i) => (
             <div key={i} className="flex items-baseline justify-between gap-3 rounded-2xl px-4 py-3" style={{ background: C.surf, border: `2px solid ${C.border}` }}>
               <span className="font-bold" style={{ fontSize: "clamp(18px,5vw,26px)", color: C.dark }}>{row.k}</span>
-              <span className="font-mono-data font-extrabold whitespace-nowrap" style={{ fontSize: "clamp(24px,7vw,38px)", color: "#5E8CA8" }}>
+              <span className="font-mono-data font-extrabold whitespace-nowrap" style={{ fontSize: "clamp(24px,7vw,38px)", color: "#64748B" }}>
                 {Math.round(row.v)}{row.u}{row.extra ? <span className="ml-2 font-bold" style={{ fontSize: "0.6em", color: C.gold }}>{row.extra}</span> : null}
               </span>
             </div>
@@ -137,7 +137,7 @@ export default function RicettaDelGiorno() {
       {autonomia && (
         <div className="rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 mb-3" style={{ background: "#1B2A38", border: `2px solid ${C.gold}` }}>
           <p className="text-[12px] leading-snug" style={{ color: C.dark }}>{tri("Modalità Autonomia: completa i lotti in blocco e aggiorna lo stato (Pronto / In cella / In lievitazione) per chi lavora dopo di te.", "Autonomie: Chargen im Block fertigen und Status setzen.", "Autonomy: complete batches in bulk and update status for the next worker.", "Autonomía: completa lotes y actualiza el estado.", "Autonomie : termine les lots et mets à jour le statut.", "خودگردان: دسته‌ها را کامل کن و وضعیت را به‌روز کن.")}</p>
-          {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#5E8CA8" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
+          {deadline && <p className="text-[12px] font-extrabold mt-1" style={{ color: "#64748B" }}>⏰ {tri("Puoi lavorare in autonomia fino alle", "Autonom bis", "Work autonomously until", "Autonomía hasta", "Autonomie jusqu'à", "خودگردان تا")} {fmtHM(deadline, lang)}.</p>}
         </div>
       )}
 

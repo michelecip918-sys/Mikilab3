@@ -28,7 +28,7 @@ export default function CosaPosso() {
     } finally { setLoading(false); }
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
   const Card = ({ item, kind }) => (
     <div data-testid={`cosa-${kind}-${item.id}`} className="flex items-center gap-3 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3">
       {item.image_url ? <img src={item.image_url} alt={item.name} className="w-14 h-14 rounded-2xl shadow-md border border-amber-900/40 object-cover shrink-0" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} />

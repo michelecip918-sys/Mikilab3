@@ -61,7 +61,7 @@ export default function ShoppingList() {
             <Share2 className="w-5 h-5" /> {mkTri(lang)("Condividi", "Teilen", "Share")}
           </button>
           <button data-testid="spesa-pdf" onClick={() => window.print()}
-            className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
+            className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-medium px-5 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
             <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
           </button>
         </>

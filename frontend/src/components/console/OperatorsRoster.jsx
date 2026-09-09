@@ -7,16 +7,16 @@ const API = process.env.REACT_APP_BACKEND_URL;
 
 // Identità CORE con avatar reale.
 const CORE = [
-  { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#5E8CA8" },
-  { id: "mikemix", name: "Mike Mix", role: "Reparto Produzione · Fornaio", img: "avatar_mikemix.jpg", accent: "#00F0FF" },
-  { id: "nexus", name: "Miki-Nexus", role: "Coscienza Strategica · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#F6D27A" },
+  { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#64748B" },
+  { id: "mikemix", name: "Mike Mix", role: "Reparto Produzione · Fornaio", img: "avatar_mikemix.jpg", accent: "#FF6B00" },
+  { id: "nexus", name: "Miki-Nexus", role: "Coscienza Strategica · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#EAB308" },
 ];
 
 // Postazioni operative BASE (arricchite a runtime dai reparti del Capo).
 const BASE_STATIONS = [
-  { key: "impastatore", label: "Impastatore", color: "#5E8CA8", ic: "🌀" },
+  { key: "impastatore", label: "Impastatore", color: "#64748B", ic: "🌀" },
   { key: "fornaio", label: "Fornaio", color: "#f59e0b", ic: "🔥" },
-  { key: "laugen", label: "Laugen / Pretzel", color: "#5E8CA8", ic: "🥨" },
+  { key: "laugen", label: "Laugen / Pretzel", color: "#64748B", ic: "🥨" },
   { key: "fermentazione", label: "Fermentazione", color: "#14b8a6", ic: "🫧" },
   { key: "pizzaiolo", label: "Pizzaiolo", color: "#3E9C93", ic: "🍕" },
   { key: "pasticcere", label: "Pasticcere", color: "#7FB0A6", ic: "🥐" },
@@ -48,8 +48,8 @@ export default function OperatorsRoster({ onPick }) {
   useEffect(() => {
     fetch(`${API}/api/lab/departments`).then((r) => (r.ok ? r.json() : {})).then((d) => {
       const extras = [];
-      (d.custom || []).forEach((c) => (c.features || []).forEach((f) => { if (f) extras.push({ key: `x-${f}`.toLowerCase().replace(/[^a-z0-9]/g, ""), label: f, color: "#5E8CA8", ic: "🏭" }); }));
-      Object.values(d.extras || {}).forEach((arr) => (arr || []).forEach((f) => { if (f) extras.push({ key: `e-${f}`.toLowerCase().replace(/[^a-z0-9]/g, ""), label: f, color: "#5E8CA8", ic: "⚙️" }); }));
+      (d.custom || []).forEach((c) => (c.features || []).forEach((f) => { if (f) extras.push({ key: `x-${f}`.toLowerCase().replace(/[^a-z0-9]/g, ""), label: f, color: "#64748B", ic: "🏭" }); }));
+      Object.values(d.extras || {}).forEach((arr) => (arr || []).forEach((f) => { if (f) extras.push({ key: `e-${f}`.toLowerCase().replace(/[^a-z0-9]/g, ""), label: f, color: "#64748B", ic: "⚙️" }); }));
       if (extras.length) setStations((prev) => [...prev, ...extras.filter((e) => !prev.some((p) => p.label === e.label))]);
     }).catch(() => { /* offline → resta la lista base */ });
   }, []);
@@ -57,7 +57,7 @@ export default function OperatorsRoster({ onPick }) {
   return (
     <div data-testid="operators-roster" className="holo-panel p-4 mb-4">
       <span className="holo-scan-top" />
-      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#00F0FF]/80 mb-3">{tri("Equipaggio MikiLab", "MikiLab-Crew", "MikiLab Crew", "Equipo MikiLab", "Équipe MikiLab", "خدمه میکی‌لب")}</p>
+      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#FF6B00]/80 mb-3">{tri("Equipaggio MikiLab", "MikiLab-Crew", "MikiLab Crew", "Equipo MikiLab", "Équipe MikiLab", "خدمه میکی‌لب")}</p>
       {/* Identità core con avatar reale */}
       <div className="grid grid-cols-3 gap-2 mb-4">
         {CORE.map((o) => (

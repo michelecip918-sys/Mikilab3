@@ -203,7 +203,7 @@ export default function PianificaProduzione() {
       <button
         data-testid="btn-compute-plan"
         onClick={compute}
-        className="w-full mt-3 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
+        className="w-full mt-3 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all"
       >
         {t("plan_compute")}
       </button>

@@ -26,7 +26,7 @@ export default function ShelfLife() {
   const days = Math.round(base * (1 + Math.min(h, 48) / 48 * 0.6));
   const highDigest = p >= 4.0 && p <= 4.6 && h >= 12;
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 font-mono-data outline-none text-[#2B303B] dark:text-[#e4eff8]";
 
   return (
     <div className="pb-40">

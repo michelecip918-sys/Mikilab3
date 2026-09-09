@@ -263,7 +263,7 @@ export default function RadioFornaio() {
     <>
       {open && (
         <div className="fixed inset-x-0 bottom-40 z-40 px-4 flex justify-center pointer-events-none">
-          <div data-testid="radio-panel" className="pointer-events-auto w-full max-w-xl max-h-[70vh] overflow-y-auto bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-xl p-4">
+          <div data-testid="radio-panel" className="pointer-events-auto w-full max-w-xl max-h-[70vh] overflow-y-auto bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-xl p-4">
             <div className="flex items-center gap-2 mb-3">
               <Radio className="w-5 h-5 text-[#3E9C93]" />
               <div className="flex-1 min-w-0">
@@ -459,7 +459,7 @@ export default function RadioFornaio() {
             <Radio className="w-6 h-6 text-white relative" />
           )}
         </button>
-        <span className="text-[9px] font-bold text-[#3E9C93] bg-[#0E1620]/90 dark:bg-[#0E1620]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("radio_label")}</span>
+        <span className="text-[9px] font-bold text-[#3E9C93] bg-[#0D1520]/90 dark:bg-[#0D1520]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("radio_label")}</span>
       </div>
     </>
   );

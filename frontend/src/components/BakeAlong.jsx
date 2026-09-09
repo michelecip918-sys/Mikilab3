@@ -89,7 +89,7 @@ export default function BakeAlong() {
             {showForm && (
               <textarea data-testid="bake-along-note" value={note} onChange={(e) => setNote(e.target.value)} rows={2}
                 placeholder={tri("Racconta com'è andata (facoltativo)…", "Erzähl, wie es lief (optional)…", "Tell us how it went (optional)…", "Cuenta cómo fue (opcional)…")}
-                className="w-full mb-2 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93] text-[#2B303B] dark:text-[#e4eff8]" />
+                className="w-full mb-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 text-sm outline-none focus:border-[#3E9C93] text-[#2B303B] dark:text-[#e4eff8]" />
             )}
             <button data-testid="bake-along-participate" disabled={busy}
               onClick={() => { if (!user) { setAuthOpen && setAuthOpen(true); return; } if (!showForm) { setShowForm(true); } else { fileRef.current?.click(); } }}
@@ -115,7 +115,7 @@ export default function BakeAlong() {
             <ul className="space-y-2.5" data-testid="bake-along-leaderboard">
               {entries.map((e) => (
                 <li key={e.id} data-testid={`bake-along-entry-${e.id}`}
-                  className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-2.5">
+                  className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-2.5">
                   <div className="relative shrink-0">
                     <img src={e.image_url} alt="" className="w-16 h-16 rounded-lg object-cover" />
                     {e.rank <= 3 && (

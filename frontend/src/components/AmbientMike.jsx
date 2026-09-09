@@ -9,7 +9,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Umore → colore reattivo dell'orb (industriale: acciaio/blu/ambra, niente viola).
-const MOOD_COLOR = { calm: "#22d3ee", busy: "#5E8CA8", proud: "#7DD3FC", alert: "#FFB800" };
+const MOOD_COLOR = { calm: "#22d3ee", busy: "#64748B", proud: "#FF9D42", alert: "#FFB800" };
 
 // Mike Mix AI ambientale: presenza olografica fusa nel flusso. Streaming vocale,
 // reattività cognitiva (colore in base all'umore) e avvisi PROATTIVI a voce.

@@ -135,7 +135,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
           </button>
         ) : (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-1.5 bg-[#3E9C93] hover:bg-[#64748B] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             <ChefHat className="w-4 h-4" /> {triggerLabel || (lang === "de" ? "Rezepte hinzufügen" : lang === "en" ? "Add recipes" : "Aggiungi ricette")}
           </button>
         )
@@ -208,7 +208,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                         <div className="relative p-3">
                           <Heart className="w-6 h-6 text-[#3E9C93] fill-[#3E9C93] mb-0.5" />
                           <span className="font-display text-[15px] font-bold text-white leading-tight block">{lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}</span>
-                          <span className="text-[11px] text-[#5E8CA8] font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <span className="text-[11px] text-[#64748B] font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     )}
@@ -220,7 +220,7 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                         <div className="relative p-3">
                           <span className="text-xl block leading-none mb-0.5">{c.icon}</span>
                           <span className="font-display text-[15px] font-bold text-white leading-tight block">{t(c.label)}</span>
-                          <span className="text-[11px] text-[#5E8CA8] font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <span className="text-[11px] text-[#64748B] font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     ))}

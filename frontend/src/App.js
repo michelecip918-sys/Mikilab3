@@ -60,6 +60,8 @@ import KioskMode from "@/components/KioskMode";
 import SplashScreen from "@/components/SplashScreen";
 import { mkTri } from "@/i18n/triMaps";
 import { playDeckAlarm } from "@/lib/uiSounds";
+import { playTTS } from "@/lib/tts";
+import { enablePush } from "@/lib/reminders";
 import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
@@ -105,16 +107,16 @@ import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 const PUB = process.env.PUBLIC_URL;
 
 const ZONES = [
-  { id: "master", label: "Master", accent: "#5E8CA8", avatar: "avatar_miki.jpg" },
-  { id: "operatori", label: "Operatori", accent: "#00F0FF", avatar: "avatar_mikemix.jpg" },
-  { id: "mikemix", label: "Mike Mix AI", accent: "#7DD3FC", avatar: "avatar_bigmix.jpg" },
+  { id: "master", label: "Master", accent: "#64748B", avatar: "avatar_miki.jpg" },
+  { id: "operatori", label: "Operatori", accent: "#FF6B00", avatar: "avatar_mikemix.jpg" },
+  { id: "mikemix", label: "Mike Mix AI", accent: "#FF9D42", avatar: "avatar_bigmix.jpg" },
 ];
 
 const DECK_DEPTS = [
-  { id: "panificio", accent: "#00F0FF", it: "Panificio", de: "Backstube", en: "Bakery", fr: "Boulangerie" },
+  { id: "panificio", accent: "#FF6B00", it: "Panificio", de: "Backstube", en: "Bakery", fr: "Boulangerie" },
   { id: "pizzeria", accent: "#FFB800", it: "Pizzeria", de: "Pizzeria", en: "Pizzeria", fr: "Pizzeria" },
   { id: "pasticceria", accent: "#7FD8C0", it: "Pasticceria", de: "Konditorei", en: "Pastry", fr: "Pâtisserie" },
-  { id: "banco", accent: "#5E8CA8", it: "Magazzino", de: "Lager", en: "Warehouse", fr: "Entrepôt" },
+  { id: "banco", accent: "#64748B", it: "Magazzino", de: "Lager", en: "Warehouse", fr: "Entrepôt" },
 ];
 
 export default function App() {
@@ -147,11 +149,19 @@ export default function App() {
     const load = () => api.get("/deck/status").then((r) => {
       if (stop) return;
       setDeckStatus(r.data);
-      // Allarme sonoro discreto: suona all'ingresso in critico e ripete ogni 30s finche' resta critico.
+      // Allarme sonoro + voce Mike Mix all'ingresso in critico; ripete ogni 30s finche' resta critico.
       const mood = (r.data && r.data.mood) || "sereno";
       if (mood === "critico" && (prevDeckMood.current !== "critico" || Date.now() - lastDeckAlarm.current > 30000)) {
         lastDeckAlarm.current = Date.now();
         playDeckAlarm();
+        // Voce Mike Mix: annuncia il reparto in allarme (solo all'ingresso in critico, non a ogni ripetizione).
+        if (prevDeckMood.current !== "critico") {
+          const st = (r.data.critical_stations || []).slice(0, 3).join(", ");
+          const msg = st
+            ? tri(`Attenzione Capo, ${st} in allarme.`, `Achtung Chef, ${st} im Alarm.`, `Attention Capo, ${st} on alert.`, `Atención Capo, ${st} en alarma.`, `Attention Capo, ${st} en alerte.`, `توجه کاپو، ${st} در هشدار.`)
+            : tri("Attenzione Capo, l'impianto è in stato critico.", "Achtung Chef, die Anlage ist kritisch.", "Attention Capo, the plant is critical.", "Atención Capo, la planta está crítica.", "Attention Capo, l'usine est critique.", "توجه کاپو، کارخانه بحرانی است.");
+          try { playTTS(msg, { lang, voice: "mikemix" }); } catch { /* */ }
+        }
       }
       prevDeckMood.current = mood;
     }).catch(() => { /* */ });
@@ -159,9 +169,9 @@ export default function App() {
     const t = setInterval(load, 15000);
     return () => { stop = true; clearInterval(t); };
   }, [adminOk]);
-  const MOOD_COLORS = { sereno: "#00F0FF", attivo: "#22c55e", teso: "#FFB800", critico: "#f43f5e" };
+  const MOOD_COLORS = { sereno: "#0EA5E9", attivo: "#22c55e", teso: "#EAB308", critico: "#f43f5e" };
   const deckMood = (deckStatus && deckStatus.mood) || "sereno";
-  const moodColor = MOOD_COLORS[deckMood] || "#00F0FF";
+  const moodColor = MOOD_COLORS[deckMood] || "#0EA5E9";
   const moodLabel = { sereno: tri("Sereno", "Ruhig", "Calm", "Sereno", "Calme", "آرام"), attivo: tri("Attivo", "Aktiv", "Active", "Activo", "Actif", "فعال"), teso: tri("Teso", "Angespannt", "Tense", "Tenso", "Tendu", "پر تنش"), critico: tri("Critico", "Kritisch", "Critical", "Crítico", "Critique", "بحرانی") }[deckMood];
   const deptStatus = (id) => (deckStatus && deckStatus.depts && deckStatus.depts[id]) || null;
 
@@ -291,14 +301,14 @@ export default function App() {
 
   if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} /></>;
   if (resetToken) return <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />;
-  if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#070A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
+  if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#060A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
 
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
       <AmbientMike />
       <SplashScreen />
-      <div className="holo-root min-h-screen font-sans selection:bg-[#00F0FF] selection:text-[#070A10]">
+      <div className="holo-root min-h-screen font-sans selection:bg-[#FF6B00] selection:text-[#060A10]">
         <div className="holo-canvas" aria-hidden />
 
         <div className="relative z-10 flex flex-col min-h-screen">
@@ -309,22 +319,22 @@ export default function App() {
           )}
 
           {/* STATUS BAR ambientale (nessun menu classico) */}
-          <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#00F0FF]/15 bg-[#070A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
+          <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#FF6B00]/15 bg-[#060A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
               <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center gap-2.5 min-w-0 active:scale-95 transition-transform">
-                <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#00F0FF]/40 shadow-[0_0_16px_rgba(0,240,255,0.25)] bg-[#070A10] shrink-0">
+                <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_16px_rgba(255,107,0,0.25)] bg-[#060A10] shrink-0">
                   <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
                 </span>
                 <span className="min-w-0 text-left">
-                  <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase">MikiLab<span className="text-[#00F0FF]"> Pro</span></span>
-                  <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#00F0FF]/70 uppercase">Holographic Command OS</span>
+                  <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase">MikiLab<span className="text-[#FF6B00]"> Pro</span></span>
+                  <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#FF6B00]/70 uppercase">Holographic Command OS</span>
                 </span>
               </button>
 
               <div className="flex items-center gap-1.5 sm:gap-2 relative">
                 {user && user.role === "admin" && (
                   <button data-testid="briefing-open" onClick={() => setShowBriefing(true)} title="Cyber-Trio"
-                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#7DD3FC]/10 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95 transition-all">
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#FF9D42]/10 border border-[#FF9D42]/40 text-[#FF9D42] font-bold text-xs active:scale-95 transition-all">
                     ◐ <span className="hidden sm:inline">{tri("Turno", "Schicht", "Shift", "Turno", "Turn", "شیفت")}</span>
                   </button>
                 )}
@@ -332,21 +342,21 @@ export default function App() {
                 <InstallApp variant="chip" />
                 <KioskMode />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
-                  className="inline-flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#0C1019] border border-[#00F0FF]/20 text-white hover:border-[#00F0FF]/60 active:scale-95 transition-all">
-                  {operator ? <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#00F0FF]/50" /> : <User className="w-4 h-4 text-[#00F0FF]" />}
+                  className="inline-flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#0C1019] border border-[#FF6B00]/20 text-white hover:border-[#FF6B00]/60 active:scale-95 transition-all">
+                  {operator ? <img src={`${PUB}/${operator.img}`} alt={operator.name} className="w-6 h-6 rounded-full object-cover object-top border border-[#FF6B00]/50" /> : <User className="w-4 h-4 text-[#FF6B00]" />}
                   <span className="font-bold text-xs hidden md:inline">{operator ? operator.name : tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}</span>
                 </button>
                 <button data-testid="account-btn" onClick={() => { if (user) setShowAccountMenu((v) => !v); else openAuth(); }}
-                  className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-bold text-xs active:scale-95 transition-all border ${user ? "bg-[#00F0FF]/15 border-[#00F0FF]/50 text-[#00F0FF]" : "bg-[#00F0FF]/10 border-[#00F0FF]/30 text-[#00F0FF] hover:bg-[#00F0FF]/20"}`}>
+                  className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-lg font-bold text-xs active:scale-95 transition-all border ${user ? "bg-[#FF6B00]/15 border-[#FF6B00]/50 text-[#FF6B00]" : "bg-[#FF6B00]/10 border-[#FF6B00]/30 text-[#FF6B00] hover:bg-[#FF6B00]/20"}`}>
                   {user ? <ShieldCheck className="w-3.5 h-3.5" /> : <User className="w-3.5 h-3.5" />}
                   <span className="hidden sm:inline">{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}</span>
                 </button>
                 {user && showAccountMenu && (
                   <div data-testid="account-menu" className="absolute right-0 top-11 w-56 holo-panel p-3 z-[80]">
-                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#00F0FF] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
+                    <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#FF6B00] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
-                    {user.email && <p className="text-[10px] text-[#8aa0b4] truncate mb-2">{user.email}</p>}
-                    <p className="text-[9.5px] leading-snug text-[#F6D27A] mb-2">✦ {tri("Riconosciuto Capo Supremo — Miki-Nexus e Mike Mix ti obbediscono.", "Als Oberster Chef erkannt — Miki-Nexus und Mike Mix gehorchen dir.", "Recognized Supreme Capo — Miki-Nexus and Mike Mix obey you.", "Reconocido Capo Supremo — Miki-Nexus y Mike Mix te obedecen.", "Reconnu Capo Suprême — Miki-Nexus et Mike Mix t'obéissent.", "کاپوی برتر شناخته شد — میکی‌نکسوس و Mike Mix از تو اطاعت می‌کنند.")}</p>
+                    {user.email && <p className="text-[10px] text-[#94A3B8] truncate mb-2">{user.email}</p>}
+                    <p className="text-[9.5px] leading-snug text-[#EAB308] mb-2">✦ {tri("Riconosciuto Capo Supremo — Miki-Nexus e Mike Mix ti obbediscono.", "Als Oberster Chef erkannt — Miki-Nexus und Mike Mix gehorchen dir.", "Recognized Supreme Capo — Miki-Nexus and Mike Mix obey you.", "Reconocido Capo Supremo — Miki-Nexus y Mike Mix te obedecen.", "Reconnu Capo Suprême — Miki-Nexus et Mike Mix t'obéissent.", "کاپوی برتر شناخته شد — میکی‌نکسوس و Mike Mix از تو اطاعت می‌کنند.")}</p>
                     <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
                       className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
                       <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
@@ -362,14 +372,14 @@ export default function App() {
 
               {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) + reparti cliccabili */}
               <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-[240px] sm:h-[300px] transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 28px ${moodColor}33, inset 0 0 44px ${moodColor}12`, background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
-                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#00F0FF11 1px,transparent 1px),linear-gradient(90deg,#00F0FF11 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
+                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#FF6B0011 1px,transparent 1px),linear-gradient(90deg,#FF6B0011 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
                 <div className="absolute inset-0"><AvatarWorld3D theme={deckDept.id} accent={deckDept.accent} /></div>
                 {/* Alone reattivo dell'umore impianto (sereno/attivo/teso/critico) */}
                 <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 50% 115%, ${moodColor}38 0%, transparent 62%)` }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-4 z-10">
-                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#00F0FF]"> Command Deck</span></p>
-                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#7DD3FC] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
+                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
+                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
                 </div>
                 {deckStatus && (
                   <div data-testid="deck-heartbeat" className="absolute bottom-3 right-4 z-10 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase" style={{ color: moodColor }}>
@@ -380,7 +390,7 @@ export default function App() {
                 <div data-testid="deck-depts" className="absolute top-3 left-3 right-3 z-10 flex flex-wrap gap-1.5">
                   {DECK_DEPTS.map((d) => {
                     const st = deptStatus(d.id);
-                    const lvlColor = st && st.level === "critical" ? "#f43f5e" : st && st.level === "warn" ? "#FFB800" : d.accent;
+                    const lvlColor = st && st.level === "critical" ? "#f43f5e" : st && st.level === "warn" ? "#EAB308" : d.accent;
                     const alarmed = st && st.level !== "ok";
                     return (
                       <button key={d.id} data-testid={`deck-dept-${d.id}`}
@@ -391,7 +401,7 @@ export default function App() {
                           ? { background: lvlColor, color: "#050810", borderColor: lvlColor, boxShadow: `0 0 16px ${lvlColor}88` }
                           : alarmed
                             ? { background: "rgba(6,10,18,0.6)", color: lvlColor, borderColor: `${lvlColor}99`, boxShadow: `0 0 14px ${lvlColor}55` }
-                            : { background: "rgba(6,10,18,0.6)", color: "#9fb3c4", borderColor: "#1e293b" }}>
+                            : { background: "rgba(6,10,18,0.6)", color: "#CBD5E1", borderColor: "#1e293b" }}>
                         {st && st.active > 0 && <span data-testid={`deck-dot-${d.id}`} className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />}
                         {tri(d.it, d.de, d.en, d.it, d.fr, d.it)}
                         {st && st.active > 0 && <span className="font-mono-data text-[9px] opacity-80">×{st.active}</span>}
@@ -403,23 +413,23 @@ export default function App() {
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
-                <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#5E8CA8" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} reactive />
+                <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} reactive />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
-                    <span className="holo-corner holo-corner-tl" style={{ color: "#5E8CA8" }} />
-                    <span className="holo-corner holo-corner-tr" style={{ color: "#5E8CA8" }} />
-                    <span className="holo-corner holo-corner-bl" style={{ color: "#5E8CA8" }} />
-                    <span className="holo-corner holo-corner-br" style={{ color: "#5E8CA8" }} />
-                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#070A10] border border-[#5E8CA8]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(94,140,168,0.35)]">
-                      <ShieldCheck className="w-8 h-8 text-[#5E8CA8]" />
+                    <span className="holo-corner holo-corner-tl" style={{ color: "#64748B" }} />
+                    <span className="holo-corner holo-corner-tr" style={{ color: "#64748B" }} />
+                    <span className="holo-corner holo-corner-bl" style={{ color: "#64748B" }} />
+                    <span className="holo-corner holo-corner-br" style={{ color: "#64748B" }} />
+                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#060A10] border border-[#64748B]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(94,140,168,0.35)]">
+                      <ShieldCheck className="w-8 h-8 text-[#64748B]" />
                     </div>
                     <h2 className="font-cyber text-lg font-black text-white uppercase tracking-wider">{tri("Accesso Capo riservato", "Chef-Zugang reserviert", "Capo access reserved", "Acceso Capo reservado", "Accès Capo réservé", "دسترسی کاپو محفوظ است")}</h2>
-                    <p className="text-xs text-[#8aa0b4] mt-2 max-w-md mx-auto">{tri("Ricettario protetto, piano di produzione, magazzino, radar impianto e compliance UE/DE. Accedi per governare il laboratorio; gli operatori restano nella zona Produzione.", "Geschützte Rezepte, Produktionsplan, Lager, Werk-Radar und EU/DE-Compliance. Melde dich an; das Team bleibt in der Produktionszone.", "Protected recipes, production plan, warehouse, plant radar and EU/DE compliance. Sign in to run the lab; operators stay in the Production zone.", "Recetas protegidas, plan, almacén, radar y compliance UE/DE. Accede para gestionar; el equipo usa la zona Producción.", "Recettes protégées, plan, entrepôt, radar et conformité UE/DE. Connecte-toi ; l'équipe reste en zone Production.", "دستورهای محافظت‌شده، برنامه، انبار، رادار و انطباق. وارد شو تا آزمایشگاه را مدیریت کنی.")}</p>
-                    <button data-testid="capo-gate-login" onClick={openAuth} className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all"
-                      style={{ background: "linear-gradient(90deg,#5E8CA8,#7DA3C0)", boxShadow: "0 0 22px rgba(94,140,168,0.45)" }}>
+                    <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">{tri("Ricettario protetto, piano di produzione, magazzino, radar impianto e compliance UE/DE. Accedi per governare il laboratorio; gli operatori restano nella zona Produzione.", "Geschützte Rezepte, Produktionsplan, Lager, Werk-Radar und EU/DE-Compliance. Melde dich an; das Team bleibt in der Produktionszone.", "Protected recipes, production plan, warehouse, plant radar and EU/DE compliance. Sign in to run the lab; operators stay in the Production zone.", "Recetas protegidas, plan, almacén, radar y compliance UE/DE. Accede para gestionar; el equipo usa la zona Producción.", "Recettes protégées, plan, entrepôt, radar et conformité UE/DE. Connecte-toi ; l'équipe reste en zone Production.", "دستورهای محافظت‌شده، برنامه، انبار، رادار و انطباق. وارد شو تا آزمایشگاه را مدیریت کنی.")}</p>
+                    <button data-testid="capo-gate-login" onClick={openAuth} className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all"
+                      style={{ background: "linear-gradient(90deg,#64748B,#7DA3C0)", boxShadow: "0 0 22px rgba(94,140,168,0.45)" }}>
                       <ShieldCheck className="w-4 h-4" /> {tri("Accedi come Capo", "Als Chef anmelden", "Sign in as Capo", "Acceder como Capo", "Se connecter comme Capo", "ورود به‌عنوان کاپو")}
                     </button>
-                    <button data-testid="capo-gate-floor" onClick={() => jumpTo("operatori")} className="mt-3 block mx-auto text-xs font-bold text-[#8aa0b4] hover:text-[#00F0FF]">↓ {tri("Vai alla Produzione", "Zur Produktion", "Go to Production", "Ir a Producción", "Aller à la Production", "برو به تولید")}</button>
+                    <button data-testid="capo-gate-floor" onClick={() => jumpTo("operatori")} className="mt-3 block mx-auto text-xs font-bold text-[#94A3B8] hover:text-[#FF6B00]">↓ {tri("Vai alla Produzione", "Zur Produktion", "Go to Production", "Ir a Producción", "Aller à la Production", "برو به تولید")}</button>
                   </div>
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
@@ -437,94 +447,94 @@ export default function App() {
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Mike Mix e guide di manutenzione istantanee.", "SOS aus der Produktion mit Mike Mix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Mike Mix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shiftreport" accent="#00F0FF" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Mike Mix riassume il turno a voce e assegna il MikiScore dell'impianto.", "Mike Mix fasst die Schicht zusammen.", "Mike Mix voices the shift summary and the plant MikiScore.", "Mike Mix resume el turno.", "Mike Mix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
+                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Mike Mix riassume il turno a voce e assegna il MikiScore dell'impianto.", "Mike Mix fasst die Schicht zusammen.", "Mike Mix voices the shift summary and the plant MikiScore.", "Mike Mix resume el turno.", "Mike Mix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
                       <ShiftReport />
                     </HoloPanel>
-                    <HoloPanel testid="panel-autoplan" accent="#7DD3FC" beacon="#00F0FF" icon="✨" title={tri("Mike Mix · Piano del Giorno", "Mike Mix · Tagesplan", "Mike Mix · Day Plan", "Mike Mix · Plan del Día", "Mike Mix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Mike Mix genera la sequenza di produzione ottimale del giorno.", "Mike Mix erstellt den optimalen Produktionsablauf.", "Mike Mix generates the optimal production sequence.", "Mike Mix genera la secuencia óptima.", "Mike Mix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
+                    <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Mike Mix · Piano del Giorno", "Mike Mix · Tagesplan", "Mike Mix · Day Plan", "Mike Mix · Plan del Día", "Mike Mix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Mike Mix genera la sequenza di produzione ottimale del giorno.", "Mike Mix erstellt den optimalen Produktionsablauf.", "Mike Mix generates the optimal production sequence.", "Mike Mix genera la secuencia óptima.", "Mike Mix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
                     </HoloPanel>
-                    <HoloPanel testid="panel-weekly" accent="#00F0FF" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
+                    <HoloPanel testid="panel-weekly" accent="#FF6B00" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
                     </HoloPanel>
-                    <HoloPanel testid="panel-pianoai" accent="#7DD3FC" beacon="#00F0FF" icon="🤖" title={tri("Piano di Produzione AI", "KI-Produktionsplan", "AI Production Plan", "Plan de Producción IA", "Plan de Production IA", "برنامه تولید هوش مصنوعی")} sub={tri("Detta ordini e vincoli: l'IA costruisce il piano completo del giorno, pronto da eseguire.", "Aufträge & Grenzen: die KI baut den kompletten Tagesplan.", "Dictate orders and constraints: the AI builds the full day plan, ready to run.", "Dicta pedidos y límites: la IA construye el plan del día.", "Dicte commandes et contraintes : l'IA bâtit le plan du jour.", "سفارش‌ها را بگو: هوش مصنوعی برنامه کامل روز را می‌سازد.")}>
+                    <HoloPanel testid="panel-pianoai" accent="#FF9D42" beacon="#FF6B00" icon="🤖" title={tri("Piano di Produzione AI", "KI-Produktionsplan", "AI Production Plan", "Plan de Producción IA", "Plan de Production IA", "برنامه تولید هوش مصنوعی")} sub={tri("Detta ordini e vincoli: l'IA costruisce il piano completo del giorno, pronto da eseguire.", "Aufträge & Grenzen: die KI baut den kompletten Tagesplan.", "Dictate orders and constraints: the AI builds the full day plan, ready to run.", "Dicta pedidos y límites: la IA construye el plan del día.", "Dicte commandes et contraintes : l'IA bâtit le plan du jour.", "سفارش‌ها را بگو: هوش مصنوعی برنامه کامل روز را می‌سازد.")}>
                       <PianoProduzioneAI />
                     </HoloPanel>
-                    <HoloPanel testid="panel-backward" accent="#FFB800" beacon="#00F0FF" icon="⏱️" title={tri("Piano a Ritroso · dall'orario di consegna", "Rückwärtsplan · ab Lieferzeit", "Backward Plan · from delivery time", "Plan Inverso · desde la entrega", "Plan à Rebours · dès la livraison", "برنامه معکوس · از زمان تحویل")} sub={tri("Inserisci quando devono essere pronti i prodotti: MikiLab calcola a ritroso impasto, lievitazione e cottura.", "Wann fertig? MikiLab rechnet rückwärts Teig, Gare und Backen.", "Enter when products must be ready: MikiLab computes dough, proof and bake backwards.", "Indica cuándo deben estar listos: MikiLab calcula hacia atrás.", "Indique l'heure de prêt : MikiLab calcule à rebours.", "زمان آماده‌شدن را وارد کن: MikiLab معکوس محاسبه می‌کند.")}>
+                    <HoloPanel testid="panel-backward" accent="#FFB800" beacon="#FF6B00" icon="⏱️" title={tri("Piano a Ritroso · dall'orario di consegna", "Rückwärtsplan · ab Lieferzeit", "Backward Plan · from delivery time", "Plan Inverso · desde la entrega", "Plan à Rebours · dès la livraison", "برنامه معکوس · از زمان تحویل")} sub={tri("Inserisci quando devono essere pronti i prodotti: MikiLab calcola a ritroso impasto, lievitazione e cottura.", "Wann fertig? MikiLab rechnet rückwärts Teig, Gare und Backen.", "Enter when products must be ready: MikiLab computes dough, proof and bake backwards.", "Indica cuándo deben estar listos: MikiLab calcula hacia atrás.", "Indique l'heure de prêt : MikiLab calcule à rebours.", "زمان آماده‌شدن را وارد کن: MikiLab معکوس محاسبه می‌کند.")}>
                       <BackwardScheduler />
                     </HoloPanel>
-                    <HoloPanel testid="panel-twin" accent="#5E8CA8" beacon="#7DD3FC" icon="🌐" title={tri("Gemello Digitale 3D", "Digitaler Zwilling 3D", "3D Digital Twin", "Gemelo Digital 3D", "Jumeau Numérique 3D", "دوقلوی دیجیتال")} sub={tri("Metaverso di laboratorio: supervisione spaziale dei macchinari.", "Labor-Metaverse: räumliche Überwachung.", "Lab metaverse: spatial supervision of machines.", "Metaverso: supervisión espacial.", "Métavers: supervision spatiale.", "متاورس آزمایشگاه.")}>
+                    <HoloPanel testid="panel-twin" accent="#64748B" beacon="#FF9D42" icon="🌐" title={tri("Gemello Digitale 3D", "Digitaler Zwilling 3D", "3D Digital Twin", "Gemelo Digital 3D", "Jumeau Numérique 3D", "دوقلوی دیجیتال")} sub={tri("Metaverso di laboratorio: supervisione spaziale dei macchinari.", "Labor-Metaverse: räumliche Überwachung.", "Lab metaverse: spatial supervision of machines.", "Metaverso: supervisión espacial.", "Métavers: supervision spatiale.", "متاورس آزمایشگاه.")}>
                       <DigitalTwin />
                     </HoloPanel>
-                    <HoloPanel testid="panel-thermalflow" accent="#00F0FF" beacon="#7DD3FC" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
+                    <HoloPanel testid="panel-thermalflow" accent="#FF6B00" beacon="#FF9D42" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
                       <RecipeThermalFlow />
                     </HoloPanel>
-                    <HoloPanel testid="panel-ovenqc" accent="#5E8CA8" beacon="#22c55e" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
+                    <HoloPanel testid="panel-ovenqc" accent="#64748B" beacon="#22c55e" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
                       <OvenQC />
                     </HoloPanel>
-                    <HoloPanel testid="panel-b2b" accent="#5E8CA8" beacon="#00F0FF" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
+                    <HoloPanel testid="panel-b2b" accent="#64748B" beacon="#FF6B00" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
                       <B2BOrders />
                     </HoloPanel>
-                    <HoloPanel testid="panel-carbon" accent="#5E8CA8" beacon="#22c55e" icon="🌿" title={tri("Carbon Footprint & Energia", "CO₂-Bilanz & Energie", "Carbon Footprint & Energy", "Huella de Carbono & Energía", "Empreinte Carbone & Énergie", "ردپای کربن و انرژی")} sub={tri("CO₂ per quintale + costo energetico per kg cotto e slot di accensione ottimali.", "CO₂ pro Zentner + Energiekosten/kg.", "CO₂ per 100 kg + energy cost per kg baked and optimal firing slots.", "CO₂ por quintal + coste energético.", "CO₂ par quintal + coût énergie.", "CO₂ در هر صد کیلو + هزینه انرژی.")}>
+                    <HoloPanel testid="panel-carbon" accent="#64748B" beacon="#22c55e" icon="🌿" title={tri("Carbon Footprint & Energia", "CO₂-Bilanz & Energie", "Carbon Footprint & Energy", "Huella de Carbono & Energía", "Empreinte Carbone & Énergie", "ردپای کربن و انرژی")} sub={tri("CO₂ per quintale + costo energetico per kg cotto e slot di accensione ottimali.", "CO₂ pro Zentner + Energiekosten/kg.", "CO₂ per 100 kg + energy cost per kg baked and optimal firing slots.", "CO₂ por quintal + coste energético.", "CO₂ par quintal + coût énergie.", "CO₂ در هر صد کیلو + هزینه انرژی.")}>
                       <CarbonFootprint />
                     </HoloPanel>
-                    <HoloPanel testid="panel-silos" accent="#5E8CA8" beacon="#FFB800" icon="🌾" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias", "Silos & Matières", "سیلوها و مواد")} sub={tri("Calo peso, micro-ordini automatici e compensazione umidità della farina.", "Gewichtsverlust, Auto-Nachbestellung, Mehlfeuchte-Ausgleich.", "Weight drop, auto micro-orders and flour humidity compensation.", "Caída de peso, micro-pedidos y humedad.", "Perte de poids, micro-commandes, humidité.", "افت وزن، سفارش خودکار، رطوبت آرد.")}>
+                    <HoloPanel testid="panel-silos" accent="#64748B" beacon="#FFB800" icon="🌾" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias", "Silos & Matières", "سیلوها و مواد")} sub={tri("Calo peso, micro-ordini automatici e compensazione umidità della farina.", "Gewichtsverlust, Auto-Nachbestellung, Mehlfeuchte-Ausgleich.", "Weight drop, auto micro-orders and flour humidity compensation.", "Caída de peso, micro-pedidos y humedad.", "Perte de poids, micro-commandes, humidité.", "افت وزن، سفارش خودکار، رطوبت آرد.")}>
                       <SiloManager />
                     </HoloPanel>
-                    <HoloPanel testid="panel-proofing" accent="#5E8CA8" beacon="#7DD3FC" icon="💨" title={tri("Celle Adattive · Lievitazione", "Adaptive Gärkammern", "Adaptive Proofing Cells", "Cámaras Adaptativas", "Chambres Adaptatives", "اتاق تخمیر تطبیقی")} sub={tri("Curve multi-stadio che accelerano o frenano in base ai forni liberi.", "Mehrstufige Kurven je nach freien Öfen.", "Multi-stage curves that accelerate or brake by free ovens.", "Curvas multietapa según hornos libres.", "Courbes multi-étapes selon fours libres.", "منحنی چندمرحله‌ای بر اساس فرها.")}>
+                    <HoloPanel testid="panel-proofing" accent="#64748B" beacon="#FF9D42" icon="💨" title={tri("Celle Adattive · Lievitazione", "Adaptive Gärkammern", "Adaptive Proofing Cells", "Cámaras Adaptativas", "Chambres Adaptatives", "اتاق تخمیر تطبیقی")} sub={tri("Curve multi-stadio che accelerano o frenano in base ai forni liberi.", "Mehrstufige Kurven je nach freien Öfen.", "Multi-stage curves that accelerate or brake by free ovens.", "Curvas multietapa según hornos libres.", "Courbes multi-étapes selon fours libres.", "منحنی چندمرحله‌ای بر اساس فرها.")}>
                       <AdaptiveProofing />
                     </HoloPanel>
-                    <HoloPanel testid="panel-agv" accent="#5E8CA8" beacon="#22c55e" icon="🚚" title={tri("Flotta AGV · Logistica", "AGV-Flotte · Logistik", "AGV Fleet · Logistics", "Flota AGV · Logística", "Flotte AGV · Logistique", "ناوگان AGV")} sub={tri("Routing autonomo dei carrelli + rilevamento acustico preventivo dei guasti.", "Autonomes Routing + akustische Früherkennung.", "Autonomous cart routing + preventive acoustic fault detection.", "Routing autónomo + detección acústica.", "Routage autonome + détection acoustique.", "مسیریابی خودکار + تشخیص صوتی.")}>
+                    <HoloPanel testid="panel-agv" accent="#64748B" beacon="#22c55e" icon="🚚" title={tri("Flotta AGV · Logistica", "AGV-Flotte · Logistik", "AGV Fleet · Logistics", "Flota AGV · Logística", "Flotte AGV · Logistique", "ناوگان AGV")} sub={tri("Routing autonomo dei carrelli + rilevamento acustico preventivo dei guasti.", "Autonomes Routing + akustische Früherkennung.", "Autonomous cart routing + preventive acoustic fault detection.", "Routing autónomo + detección acústica.", "Routage autonome + détection acoustique.", "مسیریابی خودکار + تشخیص صوتی.")}>
                       <AgvFleet />
                     </HoloPanel>
-                    <HoloPanel testid="panel-packaging" accent="#5E8CA8" beacon="#FFB800" icon="🔪" title={tri("Packaging · Affettatrici", "Packaging · Schneider", "Packaging · Slicers", "Empaquetado · Cortadoras", "Emballage · Trancheuses", "بسته‌بندی · برش")} sub={tri("Velocità affettatrici sincronizzata alla curva di raffreddamento del pane (mollica intatta).", "Schneidegeschwindigkeit an Abkühlkurve gekoppelt.", "Slicer speed matched to bread cooling curve (crumb intact).", "Velocidad según curva de enfriamiento.", "Vitesse selon courbe de refroidissement.", "سرعت برش هماهنگ با خنک‌شدن نان.")}>
+                    <HoloPanel testid="panel-packaging" accent="#64748B" beacon="#FFB800" icon="🔪" title={tri("Packaging · Affettatrici", "Packaging · Schneider", "Packaging · Slicers", "Empaquetado · Cortadoras", "Emballage · Trancheuses", "بسته‌بندی · برش")} sub={tri("Velocità affettatrici sincronizzata alla curva di raffreddamento del pane (mollica intatta).", "Schneidegeschwindigkeit an Abkühlkurve gekoppelt.", "Slicer speed matched to bread cooling curve (crumb intact).", "Velocidad según curva de enfriamiento.", "Vitesse selon courbe de refroidissement.", "سرعت برش هماهنگ با خنک‌شدن نان.")}>
                       <PackagingSync />
                     </HoloPanel>
-                    <HoloPanel testid="panel-timeline" accent="#00F0FF" beacon="#7DD3FC" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
+                    <HoloPanel testid="panel-timeline" accent="#FF6B00" beacon="#FF9D42" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
                       <TimelineTurno />
                     </HoloPanel>
-                    <HoloPanel testid="panel-ordine" accent="#5E8CA8" beacon="#00F0FF" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
+                    <HoloPanel testid="panel-ordine" accent="#64748B" beacon="#FF6B00" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
                       <OrdineCapo />
                     </HoloPanel>
-                    <HoloPanel testid="panel-ricette" accent="#5E8CA8" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
+                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
                       <Ricette isMasterView={true} />
                     </HoloPanel>
-                    <HoloPanel testid="panel-magazzino" accent="#5E8CA8" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
+                    <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
                       <MagazzinoManager />
                     </HoloPanel>
-                    <HoloPanel testid="panel-planner" accent="#5E8CA8" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")}>
+                    <HoloPanel testid="panel-planner" accent="#64748B" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")}>
                       <SmartPlannerStressZero />
                     </HoloPanel>
-                    <HoloPanel testid="panel-ordini" accent="#5E8CA8" beacon="#FFB800" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
+                    <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#FFB800" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
                       <OrdiniExtra />
                     </HoloPanel>
-                    <HoloPanel testid="panel-radar" accent="#5E8CA8" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega.", "Live-Grundriss & Tracking.", "Live floor plan & tracking.", "Plano en vivo.", "Plan live.", "پلان زنده.")}>
+                    <HoloPanel testid="panel-radar" accent="#64748B" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega.", "Live-Grundriss & Tracking.", "Live floor plan & tracking.", "Plano en vivo.", "Plan live.", "پلان زنده.")}>
                       <PlantRadar />
                     </HoloPanel>
-                    <HoloPanel testid="panel-pin" accent="#5E8CA8" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN festlegen.", "Set the team PIN.", "Fija el PIN del equipo.", "Définis le PIN.", "پین تیم را تنظیم کن.")}>
+                    <HoloPanel testid="panel-pin" accent="#64748B" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN festlegen.", "Set the team PIN.", "Fija el PIN del equipo.", "Définis le PIN.", "پین تیم را تنظیم کن.")}>
                       <PinSetup />
                     </HoloPanel>
-                    <HoloPanel testid="panel-docs" accent="#5E8CA8" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
+                    <HoloPanel testid="panel-docs" accent="#64748B" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
                       <DocsDownload />
                     </HoloPanel>
-                    <HoloPanel testid="panel-elite" accent="#5E8CA8" beacon="#7DD3FC" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
+                    <HoloPanel testid="panel-elite" accent="#64748B" beacon="#FF9D42" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
                       <EliteTools />
                     </HoloPanel>
-                    <HoloPanel testid="panel-hardware" accent="#5E8CA8" beacon="#7DD3FC" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
+                    <HoloPanel testid="panel-hardware" accent="#64748B" beacon="#FF9D42" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
                       <HardwareBridge />
                     </HoloPanel>
-                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#00F0FF" icon="⚙️" title={tri("Nuovi Macchinari · Mike Mix riconosce", "Neue Maschinen · Mike Mix erkennt", "New Machines · Mike Mix recognizes", "Nuevas Máquinas · Mike Mix reconoce", "Nouvelles Machines · Mike Mix reconnaît", "ماشین‌های جدید · Mike Mix می‌شناسد")} sub={tri("Arriva un macchinario? Mike Mix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Mike Mix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Mike Mix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Mike Mix la reconoce e integra.", "Une machine arrive ? Mike Mix la reconnaît et l'intègre.", "دستگاه جدید؟ Mike Mix آن را می‌شناسد و ادغام می‌کند.")}>
+                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#FF6B00" icon="⚙️" title={tri("Nuovi Macchinari · Mike Mix riconosce", "Neue Maschinen · Mike Mix erkennt", "New Machines · Mike Mix recognizes", "Nuevas Máquinas · Mike Mix reconoce", "Nouvelles Machines · Mike Mix reconnaît", "ماشین‌های جدید · Mike Mix می‌شناسد")} sub={tri("Arriva un macchinario? Mike Mix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Mike Mix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Mike Mix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Mike Mix la reconoce e integra.", "Une machine arrive ? Mike Mix la reconnaît et l'intègre.", "دستگاه جدید؟ Mike Mix آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
-                    <HoloPanel testid="panel-dept-assign" accent="#00F0FF" beacon="#FFB800" icon="🏭" title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
+                    <HoloPanel testid="panel-dept-assign" accent="#FF6B00" beacon="#FFB800" icon="🏭" title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shift-team" accent="#7DD3FC" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce Mike Mix", "Team-Übersicht · Mike Mix-Stimme", "Team Roll-Call · Mike Mix Voice", "Resumen de Equipo · Voz Mike Mix", "Appel d'Équipe · Voix Mike Mix", "فراخوان تیم · صدای Mike Mix")} sub={tri("All'apertura del turno, Mike Mix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Mike Mix das Team pro Bereich an.", "At shift start, Mike Mix voices the team composition department by department.", "Al iniciar el turno, Mike Mix anuncia el equipo por área.", "Au début du service, Mike Mix annonce l'équipe par atelier.", "در شروع شیفت، Mike Mix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
+                    <HoloPanel testid="panel-shift-team" accent="#FF9D42" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce Mike Mix", "Team-Übersicht · Mike Mix-Stimme", "Team Roll-Call · Mike Mix Voice", "Resumen de Equipo · Voz Mike Mix", "Appel d'Équipe · Voix Mike Mix", "فراخوان تیم · صدای Mike Mix")} sub={tri("All'apertura del turno, Mike Mix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Mike Mix das Team pro Bereich an.", "At shift start, Mike Mix voices the team composition department by department.", "Al iniciar el turno, Mike Mix anuncia el equipo por área.", "Au début du service, Mike Mix annonce l'équipe par atelier.", "در شروع شیفت، Mike Mix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
                       <ShiftTeamCall />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shift-templates" accent="#7DD3FC" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
+                    <HoloPanel testid="panel-shift-templates" accent="#FF9D42" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
                       <ShiftTemplates />
                     </HoloPanel>
-                    <HoloPanel testid="panel-security" accent="#5E8CA8" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
+                    <HoloPanel testid="panel-security" accent="#64748B" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />
                     </HoloPanel>
                     {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
@@ -535,20 +545,20 @@ export default function App() {
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneHero testid="hero-operatori" avatar="avatar_mikemix.jpg" accent="#00F0FF" tag="Z-02 · Produzione" name="Mike Mix" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
+                <ZoneHero testid="hero-operatori" avatar="avatar_mikemix.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Mike Mix" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><MikeMixFloor /></div>
                 ) : (
                   <div data-testid="floor-lock" className="holo-panel p-6 sm:p-8 text-center">
-                    <span className="holo-corner holo-corner-tl" style={{ color: "#00F0FF" }} />
-                    <span className="holo-corner holo-corner-tr" style={{ color: "#00F0FF" }} />
-                    <span className="holo-corner holo-corner-bl" style={{ color: "#00F0FF" }} />
-                    <span className="holo-corner holo-corner-br" style={{ color: "#00F0FF" }} />
-                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#070A10] border border-[#00F0FF]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(0,240,255,0.35)]"><Lock className="w-8 h-8 text-[#00F0FF]" /></div>
+                    <span className="holo-corner holo-corner-tl" style={{ color: "#FF6B00" }} />
+                    <span className="holo-corner holo-corner-tr" style={{ color: "#FF6B00" }} />
+                    <span className="holo-corner holo-corner-bl" style={{ color: "#FF6B00" }} />
+                    <span className="holo-corner holo-corner-br" style={{ color: "#FF6B00" }} />
+                    <div className="w-16 h-16 mx-auto rounded-2xl bg-[#060A10] border border-[#FF6B00]/40 flex items-center justify-center mb-4 shadow-[0_0_24px_rgba(255,107,0,0.35)]"><Lock className="w-8 h-8 text-[#FF6B00]" /></div>
                     <h2 className="font-cyber text-lg font-black text-white uppercase tracking-wider">{tri("Produzione bloccata", "Produktion gesperrt", "Production locked", "Producción bloqueada", "Production verrouillée", "تولید قفل است")}</h2>
-                    <p className="text-xs text-[#8aa0b4] mt-2 max-w-md mx-auto">{tri("Inserisci il PIN del team per accedere alla postazione.", "Team-PIN eingeben, um zur Station zu gelangen.", "Enter the team PIN to access your station.", "Introduce el PIN del equipo.", "Entre le PIN de l'équipe.", "پین تیم را وارد کن.")}</p>
-                    <button data-testid="floor-unlock-btn" onClick={() => setShowPinLock(true)} className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all" style={{ background: "linear-gradient(90deg,#00F0FF,#00C8D6)", boxShadow: "0 0 22px rgba(0,240,255,0.4)" }}>
+                    <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">{tri("Inserisci il PIN del team per accedere alla postazione.", "Team-PIN eingeben, um zur Station zu gelangen.", "Enter the team PIN to access your station.", "Introduce el PIN del equipo.", "Entre le PIN de l'équipe.", "پین تیم را وارد کن.")}</p>
+                    <button data-testid="floor-unlock-btn" onClick={() => setShowPinLock(true)} className="mt-5 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all" style={{ background: "linear-gradient(90deg,#FF6B00,#00C8D6)", boxShadow: "0 0 22px rgba(255,107,0,0.4)" }}>
                       <Lock className="w-4 h-4" /> {tri("Sblocca Produzione", "Entsperren", "Unlock Production", "Desbloquear", "Déverrouiller", "باز کردن")}
                     </button>
                   </div>
@@ -570,29 +580,29 @@ export default function App() {
                   <NexusConsole isCapo={!!(user && user.role === "admin")} />
                 </div>
                 <div data-testid="panel-advanced-lab" className="mb-4 holo-panel p-5 sm:p-6">
-                  <span className="holo-corner holo-corner-tl" style={{ color: "#F6D27A" }} />
-                  <span className="holo-corner holo-corner-tr" style={{ color: "#F6D27A" }} />
-                  <span className="holo-corner holo-corner-bl" style={{ color: "#F6D27A" }} />
-                  <span className="holo-corner holo-corner-br" style={{ color: "#F6D27A" }} />
+                  <span className="holo-corner holo-corner-tl" style={{ color: "#EAB308" }} />
+                  <span className="holo-corner holo-corner-tr" style={{ color: "#EAB308" }} />
+                  <span className="holo-corner holo-corner-bl" style={{ color: "#EAB308" }} />
+                  <span className="holo-corner holo-corner-br" style={{ color: "#EAB308" }} />
                   <AdvancedLab />
                 </div>
                 <div data-testid="mikemix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />
                   <div className="relative z-10">
-                    <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#7DD3FC]/70 bg-[#7DD3FC]/5 flex items-center justify-center shadow-[0_0_36px_rgba(125,211,252,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
+                    <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#FF9D42]/70 bg-[#FF9D42]/5 flex items-center justify-center shadow-[0_0_36px_rgba(125,211,252,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
                       <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix AI" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     </div>
                     <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">Mike Mix AI</h2>
-                    <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#7DD3FC] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
-                    <p className="mt-3 text-sm text-[#9fb3c4] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Mike Mix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Mike Mix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Mike Mix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Mike Mix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Mike Mix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Mike Mix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
+                    <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#FF9D42] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
+                    <p className="mt-3 text-sm text-[#CBD5E1] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Mike Mix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Mike Mix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Mike Mix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Mike Mix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Mike Mix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Mike Mix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
                   </div>
                 </div>
                 <MikeMixGuide />
                 <div data-testid="panel-training" className="mt-4 holo-panel p-5 sm:p-6">
-                  <span className="holo-corner holo-corner-tl" style={{ color: "#7DD3FC" }} />
-                  <span className="holo-corner holo-corner-tr" style={{ color: "#7DD3FC" }} />
-                  <span className="holo-corner holo-corner-bl" style={{ color: "#7DD3FC" }} />
-                  <span className="holo-corner holo-corner-br" style={{ color: "#7DD3FC" }} />
+                  <span className="holo-corner holo-corner-tl" style={{ color: "#FF9D42" }} />
+                  <span className="holo-corner holo-corner-tr" style={{ color: "#FF9D42" }} />
+                  <span className="holo-corner holo-corner-bl" style={{ color: "#FF9D42" }} />
+                  <span className="holo-corner holo-corner-br" style={{ color: "#FF9D42" }} />
                   <DowntimeTraining />
                 </div>
               </section>
@@ -600,19 +610,19 @@ export default function App() {
             </ErrorBoundary>
           </main>
 
-          <footer data-testid="page-footer" className="mt-auto border-t border-[#00F0FF]/12 py-5 px-4 bg-[#070A10]">
+          <footer data-testid="page-footer" className="mt-auto border-t border-[#FF6B00]/12 py-5 px-4 bg-[#060A10]">
             <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 font-mono-data text-[10px] tracking-widest text-[#5b7183] uppercase">
               <p>MikiLab Pro · mikilab.de — Holographic Industrial OS</p>
               <div className="flex items-center gap-4">
-                <span className="text-[#7DD3FC]">● SYS ONLINE</span>
-                <button data-testid="legal-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#00F0FF] transition-colors uppercase tracking-widest">Impressum & Datenschutz</button>
+                <span className="text-[#FF9D42]">● SYS ONLINE</span>
+                <button data-testid="legal-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#FF6B00] transition-colors uppercase tracking-widest">Impressum & Datenschutz</button>
               </div>
             </div>
           </footer>
         </div>
 
         {legalOpen && (
-          <div className="fixed inset-0 z-50 bg-[#070A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#00F0FF]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage />{user && user.role === "admin" && <div className="mt-6"><CompliancePanel /></div>}</div></div>
+          <div className="fixed inset-0 z-50 bg-[#060A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#FF6B00]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage />{user && user.role === "admin" && <div className="mt-6"><CompliancePanel /></div>}</div></div>
         )}
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}

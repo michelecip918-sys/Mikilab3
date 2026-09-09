@@ -47,7 +47,7 @@ export default function Onboarding({ onDone }) {
         <div className="space-y-3">
           <input data-testid="ob-labname" value={p.labName} onChange={(e) => set({ labName: e.target.value })}
             placeholder={tri("Nome del laboratorio", "Name der Backstube", "Bakery name")}
-            className="w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+            className="w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-3 outline-none text-[#2B303B] dark:text-[#e4eff8]" />
           <div className="grid grid-cols-2 gap-2">
             {TYPES.map((tp) => (
               <button key={tp.id} data-testid={`ob-type-${tp.id}`} onClick={() => set({ type: tp.id })}
@@ -86,7 +86,7 @@ export default function Onboarding({ onDone }) {
 
   return (
     <div className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-3" data-testid="onboarding">
-      <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full max-w-md bg-white dark:bg-[#0E1620] rounded-3xl p-6 shadow-2xl">
+      <motion.div initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} className="w-full max-w-md bg-white dark:bg-[#0D1520] rounded-3xl p-6 shadow-2xl">
         <div className="flex items-center gap-2 mb-1">
           {STEPS.map((_, i) => <div key={i} className={`h-1.5 flex-1 rounded-full ${i <= step ? "bg-[#3E9C93]" : "bg-[#2A3B49] dark:bg-[#2A3B49]"}`} />)}
         </div>
@@ -104,12 +104,12 @@ export default function Onboarding({ onDone }) {
           <button data-testid="ob-skip" onClick={finish} className="text-sm text-[#7E8A93]">{tri("Salta", "Überspringen", "Skip")}</button>
           {step < 2 ? (
             <button data-testid="ob-next" onClick={() => setStep((x) => x + 1)}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold">
               {tri("Avanti", "Weiter", "Next")} <ChevronRight className="w-5 h-5" />
             </button>
           ) : (
             <button data-testid="ob-finish" onClick={finish}
-              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold">
+              className="flex items-center gap-1 px-5 py-2.5 rounded-2xl bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold">
               <Check className="w-5 h-5" /> {tri("Inizia!", "Los geht's!", "Start!")}
             </button>
           )}

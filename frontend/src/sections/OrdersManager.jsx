@@ -91,14 +91,14 @@ export default function OrdersManager({ store, stores }) {
     if (o.status === "bozza") setStatus(o, "inviato");
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40" data-testid="orders-manager">
       <p className="text-xs text-[#7E8A93] mb-3">{tri("Ordini del negozio", "Bestellungen der Filiale", "Orders for store")}: <b className="text-[#3E9C93]">{store ? storeName(store) : tri("tutti", "alle", "all")}</b></p>
 
       <button data-testid="order-add" onClick={() => setShowForm((s) => !s)}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-4">
         <Plus className="w-5 h-5" /> {tri("Nuovo ordine", "Neue Bestellung", "New order")}
       </button>
 
@@ -127,7 +127,7 @@ export default function OrdersManager({ store, stores }) {
           </div>
 
           <textarea data-testid="order-note" value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} rows={2} placeholder={tri("Note per il fornitore…", "Notizen für den Lieferanten…", "Notes for the supplier…")} className={inp} />
-          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
+          <button data-testid="order-create" onClick={create} disabled={busy} className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-50">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Crea ordine", "Bestellung erstellen", "Create order")}
           </button>
         </div>

@@ -46,7 +46,7 @@ export default class ErrorBoundary extends React.Component {
             <RotateCcw className="w-4.5 h-4.5" /> {tri("Riprova", "Erneut versuchen", "Retry")}
           </button>
           <button data-testid="error-home" onClick={() => { window.location.assign(window.location.origin + "/"); }}
-            className="inline-flex items-center justify-center gap-2 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <Home className="w-4.5 h-4.5" /> {tri("Torna alla Home", "Zur Startseite", "Go Home")}
           </button>
         </div>

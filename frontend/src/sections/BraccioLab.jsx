@@ -15,7 +15,7 @@ import { operatorApi } from "@/lib/api";
 
 // VISTA "SCHEDE DI PRODUZIONE" — tema SCURO "Grain Gold" (ebano caldo + oro), zero-scroll.
 // Hands-free: ascolto continuo (tasto ORECCHIO in basso). Avatar 3D vocale al centro.
-const D = { bg: "#0E1620", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", goldSoft: "#5E8CA8", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const D = { bg: "#0D1520", surf: "#1B2A38", surf2: "#1B2A38", border: "#2A3B49", gold: "#64748B", goldSoft: "#64748B", text: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 const fmtSec = (s) => `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
 
 export default function BraccioLab({ onOpenTool, onGestione }) {
@@ -132,7 +132,7 @@ export default function BraccioLab({ onOpenTool, onGestione }) {
           sub={tri("Tocca 👂 per parlare (mai da solo)", "Tippe 👂 zum Sprechen", "Tap 👂 to talk", "Toca 👂 para hablar", "Touche 👂 pour parler", "برای صحبت 👂 را بزن")} />
         <button data-testid="braccio-elite-engine" onClick={() => setEliteOpen(true)}
           className="flex items-center gap-2 rounded-2xl px-7 py-4 font-extrabold text-[16px] shadow-lg active:scale-95 transition-all"
-          style={{ background: D.gold, border: `3px solid #F6D27A`, color: D.bg }}>
+          style={{ background: D.gold, border: `3px solid #EAB308`, color: D.bg }}>
           <Cpu className="w-5 h-5" /> {tri("Apri MikiLab Elite Engine", "MikiLab Elite Engine öffnen", "Open MikiLab Elite Engine", "Abrir MikiLab Elite Engine", "Ouvrir MikiLab Elite Engine", "باز کردن MikiLab Elite Engine")}
         </button>
         <p className="text-[11px]" style={{ color: D.muted }}>{tri("Include Banco Impasti 3D, Forni, Pasticceria e Guida", "Enthält Teigbank 3D, Öfen, Konditorei & Guide", "Includes 3D Dough Bench, Ovens, Pastry & Guide", "Incluye Banco de Masas 3D, Hornos, Pastelería y Guía", "Inclut Banc à Pâte 3D, Fours, Pâtisserie & Guide", "شامل میز خمیر سه‌بعدی، فرها، شیرینی و راهنما")}</p>

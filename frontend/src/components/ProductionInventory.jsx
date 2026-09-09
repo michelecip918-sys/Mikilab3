@@ -138,7 +138,7 @@ export default function ProductionInventory({ onClose }) {
             const low = s.min_kg > 0 && s.quantity_kg <= s.min_kg;
             return (
               <div key={s.id} data-testid={`inventory-item-${s.id}`} className="flex items-center justify-between bg-[#0b0f19] border rounded-xl px-3 py-2" style={{ borderColor: low ? "#f59e0b55" : "#1e293b" }}>
-                <span className="text-[13px] text-white flex items-center gap-2">{s.kind === "farina" ? <Wheat className="w-4 h-4 text-[#e0b877]" /> : <Package className="w-4 h-4 text-[#5E8CA8]" />} {s.name}</span>
+                <span className="text-[13px] text-white flex items-center gap-2">{s.kind === "farina" ? <Wheat className="w-4 h-4 text-[#e0b877]" /> : <Package className="w-4 h-4 text-[#64748B]" />} {s.name}</span>
                 <span className={`font-mono-data font-bold ${low ? "text-[#f59e0b]" : "text-white"}`}>{s.quantity_kg} kg</span>
               </div>
             );

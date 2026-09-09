@@ -148,7 +148,7 @@ export default function Maestro() {
         <HighFive />
         <button data-testid="maestro-back-btn" onClick={back}
           className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full font-bold text-sm shadow-sm active:scale-95 transition-all"
-          style={{ background: "#FBF6E8", border: "2px solid #5E8CA8", color: "#8A5A16" }}>
+          style={{ background: "#FBF6E8", border: "2px solid #64748B", color: "#8A5A16" }}>
           <ChevronLeft className="w-5 h-5" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}
         </button>
         {tool === "aggiungi" && (

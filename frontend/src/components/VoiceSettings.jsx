@@ -81,7 +81,7 @@ export default function VoiceSettings({ open, onClose }) {
           className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-3" onClick={onClose}>
           <motion.div data-testid="voice-settings" initial={{ y: 24, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 24, opacity: 0 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full max-w-md rounded-3xl bg-[#0E1620] dark:bg-[#0E1620] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl p-5 max-h-[85vh] overflow-y-auto">
+            className="w-full max-w-md rounded-3xl bg-[#0D1520] dark:bg-[#0D1520] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl p-5 max-h-[85vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Scegli le voci 🎙️", "Stimmen wählen 🎙️", "Choose the voices 🎙️")}</h2>
               <button data-testid="voice-settings-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#e4eff8] dark:bg-[#1B2A38] flex items-center justify-center"><X className="w-4 h-4" /></button>
@@ -90,7 +90,7 @@ export default function VoiceSettings({ open, onClose }) {
             <p className="text-[11px] text-[#7E8A93] -mt-2 mb-2">{tri("Opzione secondaria · supporto tecnico", "Sekundäre Option · technischer Support", "Secondary option · technical support")}</p>
             <Group title={tri("Voce di MikiLab (supporto)", "MikiLab-Stimme (Support)", "MikiLab's voice (support)")} sel={momy} setSel={setMikiLab} who="momy" />
             <button data-testid="voice-settings-save" onClick={save}
-              className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+              className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               {tri("Salva le voci", "Stimmen speichern", "Save voices")}
             </button>
           </motion.div>

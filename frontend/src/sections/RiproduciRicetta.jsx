@@ -49,10 +49,10 @@ export default function RiproduciRicetta({ onBack, onNavigate }) {
         </button>
       )}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93 70%)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#64748B,#3E9C93 70%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center mb-3"><PlayCircle className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Riproduci una ricetta", "Rezept nachbacken", "Bake a recipe step by step", "Reproduce una receta", "Reproduis une recette", "پخت گام‌به‌گام")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Scegli una ricetta e ti guido passo dopo passo, con MikiLab accanto a te e la lista della spesa pronta.", "Wähle ein Rezept und ich führe dich Schritt für Schritt — mit MikiLab und fertiger Einkaufsliste.", "Pick a recipe and I'll guide you step by step, with MikiLab beside you and the shopping list ready.", "Elige una receta y te guío paso a paso, con MikiLab a tu lado y la lista lista.", "Choisis une recette et je te guide pas à pas, avec MikiLab et la liste de courses prête.", "یک دستور انتخاب کن تا گام‌به‌گام راهنمایی‌ات کنم.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Scegli una ricetta e ti guido passo dopo passo, con MikiLab accanto a te e la lista della spesa pronta.", "Wähle ein Rezept und ich führe dich Schritt für Schritt — mit MikiLab und fertiger Einkaufsliste.", "Pick a recipe and I'll guide you step by step, with MikiLab beside you and the shopping list ready.", "Elige una receta y te guío paso a paso, con MikiLab a tu lado y la lista lista.", "Choisis une recette et je te guide pas à pas, avec MikiLab et la liste de courses prête.", "یک دستور انتخاب کن تا گام‌به‌گام راهنمایی‌ات کنم.")}</p>
       </div>
 
       <div className="relative mb-4">

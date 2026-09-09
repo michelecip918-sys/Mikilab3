@@ -56,7 +56,7 @@ export default function TimetableLievitazione() {
       <div className="rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-4 mb-4">
         <label className="text-[12px] font-bold uppercase tracking-wide text-[#3E9C93]">{tri("Orario di inizio", "Startzeit", "Start time")}</label>
         <input data-testid="timetable-start" type="time" value={start} onChange={(e) => setStart(e.target.value || nowHM())}
-          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#0E1620] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-1.5 outline-none focus:border-[#3E9C93]" />
+          className="ml-3 font-mono-data text-lg font-extrabold text-white bg-[#0D1520] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-1.5 outline-none focus:border-[#3E9C93]" />
       </div>
 
       <div className="space-y-2">
@@ -70,9 +70,9 @@ export default function TimetableLievitazione() {
             </div>
             <div className="flex items-center gap-1 shrink-0">
               <input data-testid={`timetable-min-${i}`} type="number" min="0" step="5" value={r.min} onChange={(e) => setPhase(i, { min: e.target.value })}
-                className="w-16 text-right font-mono-data text-sm font-bold text-[#3E9C93] bg-[#0E1620] border border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none" />
+                className="w-16 text-right font-mono-data text-sm font-bold text-[#3E9C93] bg-[#0D1520] border border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none" />
               <span className="text-[11px] text-[#7E8A93]">min</span>
-              <button data-testid={`timetable-del-${i}`} onClick={() => del(i)} className="ml-1 w-8 h-8 rounded-lg bg-[#0E1620] border border-[#2A3B49] flex items-center justify-center text-[#7E8A93] active:scale-90"><Trash2 className="w-4 h-4" /></button>
+              <button data-testid={`timetable-del-${i}`} onClick={() => del(i)} className="ml-1 w-8 h-8 rounded-lg bg-[#0D1520] border border-[#2A3B49] flex items-center justify-center text-[#7E8A93] active:scale-90"><Trash2 className="w-4 h-4" /></button>
             </div>
           </div>
         ))}

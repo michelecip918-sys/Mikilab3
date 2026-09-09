@@ -125,7 +125,7 @@ export default function FermentazionePredittiva() {
   }).join(" ");
 
   const warm = est.Tf >= 25;
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   return (
     <div className="pb-40" data-testid="fermentazione-tool">
@@ -139,7 +139,7 @@ export default function FermentazionePredittiva() {
 
       {/* Meteo automatico */}
       <button data-testid="ferment-geo" onClick={useGeo} disabled={loading}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold py-3 rounded-2xl active:scale-98 transition-all mb-2">
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <MapPin className="w-5 h-5" />}
         {tri("Usa il meteo della mia zona", "Wetter meiner Gegend", "Use my local weather", "Usar el clima de mi zona")}
       </button>
@@ -176,7 +176,7 @@ export default function FermentazionePredittiva() {
       </div>
 
       {/* Risultato + curva */}
-      <div className="rounded-3xl bg-gradient-to-br from-[#3E9C93] to-[#5E8CA8] text-white p-5 shadow-lg mb-4">
+      <div className="rounded-3xl bg-gradient-to-br from-[#3E9C93] to-[#64748B] text-white p-5 shadow-lg mb-4">
         <p className="text-white/85 text-xs font-semibold uppercase tracking-wide">{tri("Tempo stimato di lievitazione", "Geschätzte Gärzeit", "Estimated proofing time", "Tiempo estimado")}</p>
         <div className="flex items-end justify-between mt-1">
           <p data-testid="ferment-time" className="font-mono-data text-4xl font-bold leading-none">{timeStr}</p>

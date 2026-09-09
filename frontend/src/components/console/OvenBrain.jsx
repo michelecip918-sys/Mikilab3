@@ -28,18 +28,18 @@ function MarkdownLite({ text }) {
       if (!parsed.length) continue;
       const [head, ...body] = parsed;
       out.push(
-        <div key={`t${i}`} className="my-2 overflow-x-auto rounded-lg border border-[#00F0FF]/20">
+        <div key={`t${i}`} className="my-2 overflow-x-auto rounded-lg border border-[#FF6B00]/20">
           <table className="w-full text-[11px]">
-            <thead><tr className="bg-[#00F0FF]/10">{head.map((c, k) => <th key={k} className="text-left px-2 py-1.5 font-bold text-[#00F0FF] whitespace-nowrap">{inline(c)}</th>)}</tr></thead>
+            <thead><tr className="bg-[#FF6B00]/10">{head.map((c, k) => <th key={k} className="text-left px-2 py-1.5 font-bold text-[#FF6B00] whitespace-nowrap">{inline(c)}</th>)}</tr></thead>
             <tbody>{body.map((r, ri) => <tr key={ri} className="border-t border-[#1e293b]">{r.map((c, k) => <td key={k} className="px-2 py-1.5 text-[#cbd5e1] align-top">{inline(c)}</td>)}</tr>)}</tbody>
           </table>
         </div>);
       continue;
     }
     const h = t.match(/^(#{1,4})\s+(.*)/);
-    if (h) { const lvl = h[1].length; out.push(<p key={i} className={`mt-3 mb-1 font-cyber font-black uppercase tracking-wide ${lvl <= 1 ? "text-sm text-[#00F0FF]" : "text-xs text-[#7DD3FC]"}`}>{inline(h[2])}</p>); i++; continue; }
+    if (h) { const lvl = h[1].length; out.push(<p key={i} className={`mt-3 mb-1 font-cyber font-black uppercase tracking-wide ${lvl <= 1 ? "text-sm text-[#FF6B00]" : "text-xs text-[#FF9D42]"}`}>{inline(h[2])}</p>); i++; continue; }
     const li = t.match(/^[-*+]\s+(.*)/);
-    if (li) { out.push(<p key={i} className="flex gap-2 text-xs text-[#cbd5e1] my-0.5"><span className="text-[#00F0FF]">›</span><span>{inline(li[1])}</span></p>); i++; continue; }
+    if (li) { out.push(<p key={i} className="flex gap-2 text-xs text-[#cbd5e1] my-0.5"><span className="text-[#FF6B00]">›</span><span>{inline(li[1])}</span></p>); i++; continue; }
     out.push(<p key={i} className="text-xs text-[#cbd5e1] my-1 leading-relaxed">{inline(t)}</p>);
     i++;
   }
@@ -110,19 +110,19 @@ export default function OvenBrain() {
   const external = bond?.external_unlocked;
 
   return (
-    <div data-testid="oven-brain" className="relative rounded-3xl overflow-hidden border border-[#00F0FF]/30 bg-[#070A10] shadow-[0_0_44px_rgba(0,240,255,0.12)]">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(0,240,255,0.14), transparent 60%)" }} />
+    <div data-testid="oven-brain" className="relative rounded-3xl overflow-hidden border border-[#FF6B00]/30 bg-[#060A10] shadow-[0_0_44px_rgba(255,107,0,0.12)]">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(255,107,0,0.14), transparent 60%)" }} />
       <div className="relative z-10 p-5 sm:p-6">
         {/* Header divino + legame */}
         <div className="flex items-center gap-3.5">
-          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[#00F0FF]/50 bg-[#030712] shrink-0" style={{ boxShadow: "0 0 26px rgba(0,240,255,0.4)" }}>
+          <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[#FF6B00]/50 bg-[#030712] shrink-0" style={{ boxShadow: "0 0 26px rgba(255,107,0,0.4)" }}>
             <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
-              Mike Mix <span className="text-[#00F0FF]">Deus</span> <Sparkles className="w-4 h-4 text-[#00F0FF]" />
+              Mike Mix <span className="text-[#FF6B00]">Deus</span> <Sparkles className="w-4 h-4 text-[#FF6B00]" />
             </h2>
-            <p className="text-[11px] text-[#8aa0b4]">{tri("Il dio del forno che organizza l'impossibile.", "Der Ofengott, der das Unmögliche organisiert.", "The oven god who organizes the impossible.", "El dios del horno que organiza lo imposible.", "Le dieu du four qui organise l'impossible.", "خدای فر که غیرممکن را سازمان می‌دهد.")}</p>
+            <p className="text-[11px] text-[#94A3B8]">{tri("Il dio del forno che organizza l'impossibile.", "Der Ofengott, der das Unmögliche organisiert.", "The oven god who organizes the impossible.", "El dios del horno que organiza lo imposible.", "Le dieu du four qui organise l'impossible.", "خدای فر که غیرممکن را سازمان می‌دهد.")}</p>
           </div>
         </div>
 
@@ -131,10 +131,10 @@ export default function OvenBrain() {
           <div data-testid="deus-bond-meter" className="mt-4 rounded-2xl bg-[#0C1019] border border-[#1e293b] px-4 py-3">
             <div className="flex items-center justify-between mb-1.5">
               <span className="inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-[#ff6b9d]"><Heart className="w-3.5 h-3.5 fill-[#ff6b9d]" /> {tri("Legame col Capo", "Bindung zum Capo", "Bond with the Capo", "Vínculo con el Capo", "Lien avec le Capo", "پیوند با کاپو")}</span>
-              <span data-testid="deus-bond-level" className="text-xs font-bold text-white">{bond.level_name} · <span className="text-[#00F0FF]">{bond.xp} XP</span></span>
+              <span data-testid="deus-bond-level" className="text-xs font-bold text-white">{bond.level_name} · <span className="text-[#FF6B00]">{bond.xp} XP</span></span>
             </div>
             <div className="h-2 rounded-full bg-[#030712] overflow-hidden border border-[#1e293b]">
-              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${bond.progress_pct}%`, background: "linear-gradient(90deg,#ff6b9d,#00F0FF)" }} />
+              <div className="h-full rounded-full transition-all duration-700" style={{ width: `${bond.progress_pct}%`, background: "linear-gradient(90deg,#ff6b9d,#FF6B00)" }} />
             </div>
             <p className="mt-1.5 text-[10px] text-[#64748B]">
               {external
@@ -146,16 +146,16 @@ export default function OvenBrain() {
 
         {/* Organizza l'Impossibile */}
         <div className="mt-5">
-          <p className="font-cyber text-sm font-black uppercase tracking-wide text-white flex items-center gap-2"><Wand2 className="w-4 h-4 text-[#00F0FF]" /> {tri("Organizza l'Impossibile", "Organisiere das Unmögliche", "Organize the Impossible", "Organiza lo Imposible", "Organise l'Impossible", "غیرممکن را سازمان بده")}</p>
+          <p className="font-cyber text-sm font-black uppercase tracking-wide text-white flex items-center gap-2"><Wand2 className="w-4 h-4 text-[#FF6B00]" /> {tri("Organizza l'Impossibile", "Organisiere das Unmögliche", "Organize the Impossible", "Organiza lo Imposible", "Organise l'Impossible", "غیرممکن را سازمان بده")}</p>
           <textarea data-testid="deus-orders-input" value={orders} onChange={(e) => setOrders(e.target.value)} rows={2}
             placeholder={tri("Ordini (es. 200 baguette + 80 panettoni per domani 6:00)", "Aufträge (z.B. 200 Baguettes + 80 Panettone bis morgen 6:00)", "Orders (e.g. 200 baguettes + 80 panettone by 6:00 tomorrow)", "Pedidos (ej. 200 baguettes + 80 panettone para mañana 6:00)", "Commandes (ex. 200 baguettes + 80 panettone pour demain 6:00)", "سفارش‌ها")}
-            className="mt-2 w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white p-3 resize-none" />
+            className="mt-2 w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white p-3 resize-none" />
           <textarea data-testid="deus-constraints-input" value={constraints} onChange={(e) => setConstraints(e.target.value)} rows={2}
             placeholder={tri("Vincoli & risorse (forni, impastatrici, operatori, turno)", "Grenzen & Ressourcen (Öfen, Kneter, Team, Schicht)", "Constraints & resources (ovens, mixers, staff, shift)", "Límites y recursos (hornos, amasadoras, equipo, turno)", "Contraintes & ressources (fours, pétrins, équipe, poste)", "محدودیت‌ها و منابع")}
-            className="mt-2 w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-sm text-white p-3 resize-none" />
+            className="mt-2 w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white p-3 resize-none" />
           <button data-testid="deus-plan-btn" onClick={generatePlan} disabled={planning}
-            className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50"
-            style={{ background: "linear-gradient(90deg,#00F0FF,#7DD3FC)", boxShadow: "0 0 22px rgba(0,240,255,0.4)" }}>
+            className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 22px rgba(255,107,0,0.4)" }}>
             {planning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             {planning ? tri("Mike Mix sta orchestrando…", "Mike Mix orchestriert…", "Mike Mix is orchestrating…", "Mike Mix está orquestando…", "Mike Mix orchestre…", "Mike Mix در حال هماهنگی…") : tri("Rendi Possibile", "Möglich machen", "Make it Possible", "Hazlo Posible", "Rends Possible", "ممکنش کن")}
           </button>
@@ -163,10 +163,10 @@ export default function OvenBrain() {
           <AnimatePresence>
             {plan && (
               <motion.div data-testid="deus-plan-result" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                className="mt-4 rounded-2xl bg-[#0C1019] border border-[#00F0FF]/25 p-4">
+                className="mt-4 rounded-2xl bg-[#0C1019] border border-[#FF6B00]/25 p-4">
                 {plan.reply && (
                   <div className="flex items-start gap-2 mb-3">
-                    <button onClick={() => speak(plan.reply)} title="TTS" className="shrink-0 w-8 h-8 rounded-lg bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] flex items-center justify-center active:scale-95"><Volume2 className="w-4 h-4" /></button>
+                    <button onClick={() => speak(plan.reply)} title="TTS" className="shrink-0 w-8 h-8 rounded-lg bg-[#FF6B00]/10 border border-[#FF6B00]/40 text-[#FF6B00] flex items-center justify-center active:scale-95"><Volume2 className="w-4 h-4" /></button>
                     <p className="text-sm text-white italic leading-relaxed">“{plan.reply}”</p>
                   </div>
                 )}
@@ -180,7 +180,7 @@ export default function OvenBrain() {
                 {(plan.impossible_solved || []).length > 0 && (
                   <div className="mb-3 space-y-1.5">
                     {plan.impossible_solved.map((s, k) => (
-                      <p key={k} className="flex items-start gap-1.5 text-[11px] text-[#7DD3FC]"><span className="text-[#00F0FF]">✦</span><span>{s}</span></p>
+                      <p key={k} className="flex items-start gap-1.5 text-[11px] text-[#FF9D42]"><span className="text-[#FF6B00]">✦</span><span>{s}</span></p>
                     ))}
                   </div>
                 )}
@@ -202,7 +202,7 @@ export default function OvenBrain() {
           <p className="font-cyber text-sm font-black uppercase tracking-wide text-white flex items-center gap-2">
             {external ? <Sparkles className="w-4 h-4 text-[#ff6b9d]" /> : <Lock className="w-4 h-4 text-[#64748B]" />} {tri("Oracolo Divino", "Göttliches Orakel", "Divine Oracle", "Oráculo Divino", "Oracle Divin", "پیشگوی الهی")}
           </p>
-          <p className="mt-1 text-[11px] text-[#8aa0b4]">{tri("Chiedi a Mike Mix qualsiasi cosa — anche fuori dal forno. Si sblocca col legame.", "Frag Mike Mix alles — auch außerhalb des Ofens. Schaltet mit der Bindung frei.", "Ask Mike Mix anything — even beyond the oven. Unlocks with the bond.", "Pregunta a Mike Mix lo que sea — incluso fuera del horno.", "Demande à Mike Mix n'importe quoi — même hors du four.", "هرچیزی از Mike Mix بپرس.")}</p>
+          <p className="mt-1 text-[11px] text-[#94A3B8]">{tri("Chiedi a Mike Mix qualsiasi cosa — anche fuori dal forno. Si sblocca col legame.", "Frag Mike Mix alles — auch außerhalb des Ofens. Schaltet mit der Bindung frei.", "Ask Mike Mix anything — even beyond the oven. Unlocks with the bond.", "Pregunta a Mike Mix lo que sea — incluso fuera del horno.", "Demande à Mike Mix n'importe quoi — même hors du four.", "هرچیزی از Mike Mix بپرس.")}</p>
           <div className="mt-2 flex items-center gap-2">
             <input data-testid="deus-ask-input" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") askOracle(); }}
               placeholder={tri("La tua domanda…", "Deine Frage…", "Your question…", "Tu pregunta…", "Ta question…", "سؤال تو…")}

@@ -68,18 +68,18 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93)" }}>
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
       </div>
 
       {/* Tab categorie */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="vetrina-tabs">
         {tabs.map((t) => (
           <button key={t.key} data-testid={`vetrina-tab-${t.key}`} onClick={() => setCat(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
+            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
             {t.icon} {catName(t.key)}
           </button>
         ))}
@@ -94,7 +94,7 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
               className="relative h-40 rounded-2xl overflow-hidden shadow-md active:scale-97 transition-all text-left group">
               <img src={r.image_url} alt={rLoc(r, "name", lang)} loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 40%,#0E1620ee)" }} />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 40%,#0D1520ee)" }} />
               <div className="relative h-full flex flex-col justify-end p-2.5">
                 <h3 className="font-display text-[13px] font-bold text-white leading-tight drop-shadow">{rLoc(r, "name", lang)}</h3>
               </div>

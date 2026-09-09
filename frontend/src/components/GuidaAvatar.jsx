@@ -25,13 +25,13 @@ export default function GuidaAvatar() {
   ];
 
   return (
-    <div data-testid="guida-avatar" className="rounded-3xl border border-[#2A3B49] overflow-hidden" style={{ background: "#0E1620" }}>
+    <div data-testid="guida-avatar" className="rounded-3xl border border-[#2A3B49] overflow-hidden" style={{ background: "#0D1520" }}>
       <div className="p-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93)" }}>
-        <div className="flex items-center gap-2 text-[#0E1620]">
+        <div className="flex items-center gap-2 text-[#0D1520]">
           <Sparkles className="w-5 h-5" />
           <h2 className="font-display text-xl font-bold">{L("Guida al Sito", "Website-Guide", "Site Guide", "Guía del Sitio")}</h2>
         </div>
-        <p className="text-[#0E1620]/85 text-sm mt-1">{L("Michele ti spiega come funziona MikiLab.", "Michele erklärt dir, wie MikiLab funktioniert.", "Michele explains how MikiLab works.", "Michele te explica cómo funciona MikiLab.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-1">{L("Michele ti spiega come funziona MikiLab.", "Michele erklärt dir, wie MikiLab funktioniert.", "Michele explains how MikiLab works.", "Michele te explica cómo funciona MikiLab.")}</p>
       </div>
 
       <div className="p-4">
@@ -40,7 +40,7 @@ export default function GuidaAvatar() {
             <img src={`${process.env.PUBLIC_URL}/michele-avatar-real.jpg`} alt={active.name} className="w-full h-full object-cover" />
           </div>
           <div>
-            <p className="font-bold text-[#3E9C93]">{active.name} <span className="text-[11px] font-semibold text-[#5E8CA8]">· {active.role}</span></p>
+            <p className="font-bold text-[#3E9C93]">{active.name} <span className="text-[11px] font-semibold text-[#64748B]">· {active.role}</span></p>
             <p className="text-sm text-[#3E9C93] mt-0.5 leading-relaxed">{active.intro}</p>
           </div>
         </div>
@@ -57,7 +57,7 @@ export default function GuidaAvatar() {
           ))}
         </div>
 
-        <div className="mt-3 flex items-center gap-2 text-[12px] text-[#5E8CA8] justify-center">
+        <div className="mt-3 flex items-center gap-2 text-[12px] text-[#64748B] justify-center">
           <MessageCircle className="w-3.5 h-3.5" /> {L("Nessun pagamento: guadagni tutto con le sfide.", "Keine Zahlung: alles über Challenges.", "No payment: earn everything through challenges.", "Sin pago: todo con retos.")}
         </div>
       </div>

@@ -77,7 +77,7 @@ export default function StreakFlame() {
       <div className="flex items-center gap-1.5 mt-3 flex-wrap" data-testid="streak-milestones">
         {milestones.map((m) => (
           <span key={m.days} data-testid={`streak-milestone-${m.days}`}
-            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold border ${m.reached ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "text-[#7E8A93] border-[#2A3B49]"}`}>
+            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold border ${m.reached ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "text-[#7E8A93] border-[#2A3B49]"}`}>
             {m.reached ? "🔥" : <Lock className="w-2.5 h-2.5" />} {m.days}
           </span>
         ))}

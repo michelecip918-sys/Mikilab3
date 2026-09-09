@@ -34,7 +34,7 @@ export default function PublicBatch({ id }) {
   ) : null;
 
   return (
-    <div data-testid="public-batch" className="fixed inset-0 z-[75] bg-[#0E1620] dark:bg-[#0E1620] overflow-auto">
+    <div data-testid="public-batch" className="fixed inset-0 z-[75] bg-[#0D1520] dark:bg-[#0D1520] overflow-auto">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center gap-3 mb-6">
           <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />

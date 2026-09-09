@@ -166,7 +166,7 @@ export default function AcademyCoach() {
           <div className="space-y-3 max-h-[420px] overflow-y-auto" data-testid="academy-coach-thread">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
-                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#3E9C93] text-white rounded-br-sm" : "bg-[#0E1620] dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#e4eff8] border border-[#2A3B49] dark:border-[#2A3B49] rounded-bl-sm"}`}>
+                <div className={`max-w-[88%] rounded-2xl px-3.5 py-2.5 text-sm ${m.role === "user" ? "bg-[#3E9C93] text-white rounded-br-sm" : "bg-[#0D1520] dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#e4eff8] border border-[#2A3B49] dark:border-[#2A3B49] rounded-bl-sm"}`}>
                   {m.role === "assistant" ? (
                     m.content ? <div className="markdown-body leading-relaxed"><ReactMarkdown>{m.content}</ReactMarkdown></div> : <Loader2 className="w-4 h-4 animate-spin text-[#3E9C93]" />
                   ) : <p className="whitespace-pre-line">{m.content}</p>}
@@ -186,7 +186,7 @@ export default function AcademyCoach() {
         <div className="flex items-center gap-2 pt-1">
           <input data-testid="academy-coach-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()}
             placeholder={tri("Scrivi o parla a MikiLab…", "Schreib oder sprich mit MikiLab…", "Type or talk to MikiLab…", "Escribe o habla con MikiLab…")}
-            className="flex-1 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
+            className="flex-1 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-full px-4 py-2.5 outline-none text-sm text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]" />
           {speechSupported && (
             <button data-testid="academy-coach-mic" onClick={startListening} disabled={busy}
               title={tri("Parla con MikiLab", "Mit MikiLab sprechen", "Talk to MikiLab", "Habla con MikiLab")}

@@ -158,7 +158,7 @@ export default function DayClose() {
     setSaving(false);
   };
 
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   // Consumi settimanali (farina vs lievito) dagli scarichi delle chiusure archiviate
   const consumption = useMemo(() => {
@@ -439,7 +439,7 @@ export default function DayClose() {
           </Card>
 
           <button data-testid="dayclose-confirm" onClick={doClose} disabled={saving}
-            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
+            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-bold py-3.5 rounded-2xl active:scale-98 shadow-md">
             <CheckSquare className="w-5 h-5" /> {saving ? tri("Chiusura…", "Abschluss…") : tri("Concludi turno & archivia", "Schicht abschließen & archivieren")}
           </button>
         </div>

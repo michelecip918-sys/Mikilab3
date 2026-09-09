@@ -45,7 +45,7 @@ export default function ProductionPipeline({ onClose }) {
           </div>
           <div className="rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-3">
             <div className="flex items-center justify-between text-[11px] font-bold text-[#94A3B8] mb-1"><span className="flex items-center gap-1"><Droplets className="w-3.5 h-3.5" /> {tri("Idratazione", "Hydration", "Hydration", "Hidratación", "Hydratation", "هیدراتاسیون")}</span><span className="text-white font-mono-data" data-testid="pipeline-hyd-val">{hydration}%</span></div>
-            <input data-testid="pipeline-hyd" type="range" min="40" max="100" step="1" value={hydration} onChange={(e) => setHydration(Number(e.target.value))} className="w-full accent-[#5E8CA8]" />
+            <input data-testid="pipeline-hyd" type="range" min="40" max="100" step="1" value={hydration} onChange={(e) => setHydration(Number(e.target.value))} className="w-full accent-[#64748B]" />
           </div>
         </div>
 
@@ -97,7 +97,7 @@ export default function ProductionPipeline({ onClose }) {
         </div>
 
         {line?.mike_note && (
-          <div className="mt-4 rounded-2xl border border-[#5E8CA8]/40 p-3 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }}>
+          <div className="mt-4 rounded-2xl border border-[#64748B]/40 p-3 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#64748B18,transparent)" }}>
             <Gauge className="w-4 h-4 text-[#7DA3C0] mt-0.5 shrink-0" />
             <p className="text-[12px] text-[#cfe0ec]">{line.mike_note}</p>
           </div>

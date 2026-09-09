@@ -4618,3 +4618,18 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Verificato: guasto simulato → deck rosso pulsante + "74 BPM · CRITICAL", ripristino OK.
 - RIMASTO: Upgrade WebGPU 120fps (solo con conferma esplicita + backup, rischio rottura scene 3D).
 
+
+## v44 (2026-09) — Voce allarme, Push critiche, REDESIGN industriale
+- **Voce Mike Mix**: su ingresso in mood "critico" App.js chiama `playTTS(msg,{voice:"mikemix"})` con i reparti in allarme ("Attenzione Capo, [stazioni] in allarme") oltre a `playDeckAlarm()`. deck/status ora ritorna anche `critical_stations`.
+- **Push critiche**: nuovo loop backend `_deck_alarm_loop` (avviato allo startup) — quando l'impianto entra in critico invia web-push (VAPID già presente) agli admin abbonati, ripetuta max ogni 10 min finché critico. Funzione condivisa `deck_status_compute()` riusata da endpoint e loop. Frontend: `enablePush()` disponibile per iscrizione admin.
+- **REDESIGN INDUSTRIALE** (design_agent → /app/design_guidelines.json): sostituito il tema CIANO con palette petrolio/navy + ARANCIONE energetico + acciaio. Replace globale su 209 file: #00F0FF→#FF6B00, #7DD3FC→#FF9D42, #F6D27A→#EAB308, #5E8CA8→#64748B, #070A10→#060A10, #0E1620→#0D1520, muted #8aa0b4→#94A3B8 / #9fb3c4→#CBD5E1, rgba(0,240,255)→rgba(255,107,0), classi Tailwind cyan-*→orange-*. MOOD_COLORS: sereno=#0EA5E9 (azzurro-acciaio, distinto dall'arancione), teso=#EAB308, attivo=verde, critico=rosso. Semantica stati deck preservata.
+- Testato iteration_223: backend 4/4, frontend 100%, 0 bug, 0 overflow (1920+390), palette arancione confermata senza residui ciano. Nota cosmetica: label BPM in EN mostra "CALM" (pre-esistente i18n inline).
+- RESTA: Redeploy (mandare in produzione v41-v44), Upgrade WebGPU 120fps (con backup).
+
+
+## v45 (2026-09) — Upgrade WebGPU 120fps
+- **three.js 0.160 → 0.186** (`yarn add three@0.186.0`; R3F non usato a runtime, peer >=0.133 compatibile). Solo 2 file usano three.
+- **WebGPURenderer con fallback automatico**: `AvatarWorld3D.jsx` e `console/DigitalTwin.jsx` ora `import * as THREE from "three/webgpu"` e usano `new THREE.WebGPURenderer({antialias, alpha, forceWebGL: !navigator.gpu})`. `await renderer.init()` prima del primo render (loop rAF avviato in `.finally()`, guardie mounted/alive). Dove il device supporta WebGPU → path GPU (120fps); altrove → WebGL2 identico a prima (zero regressioni). Le scene usano solo materiali standard (nessuno ShaderMaterial/onBeforeCompile, nessun EffectComposer) → compatibili.
+- Build produzione OK con `three/webgpu`. Testato iteration_224: le 3 scene 3D (Multiverso pubblico, Command Deck, DigitalTwin admin) renderizzano canvas non-vuoto via fallback WebGL2 headless, 0 pageerror, login admin UI OK, click sfere twin senza eccezioni.
+- Backup/rollback: garantito dai commit automatici della piattaforma Emergent.
+

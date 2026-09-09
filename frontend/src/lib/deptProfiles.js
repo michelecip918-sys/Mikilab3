@@ -7,7 +7,7 @@ export const DEPT_PROFILES = {
   panificazione: {
     id: "panificazione",
     icon: "🍞",
-    accent: "#5E8CA8",
+    accent: "#64748B",
     label: (l) => mkTri(l)("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی"),
     tagline: (l) => mkTri(l)("Industriale · lotti massivi", "Industriell · Großchargen", "Industrial · bulk batches", "Industrial · lotes grandes", "Industriel · grandes fournées", "صنعتی · دسته‌های انبوه"),
     // Parametri d'impasto tipici (prefill del recipe builder).

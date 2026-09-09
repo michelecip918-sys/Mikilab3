@@ -119,7 +119,7 @@ export default function SoundDiagnosi() {
 
       {!recording ? (
         <button data-testid="sound-start-btn" onClick={start} disabled={analyzing}
-          className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+          className="w-full bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
           {analyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Mic className="w-5 h-5" />}
           {analyzing ? tri("Analizzo…", "Analysiere…", "Analyzing…") : tri("Registra e analizza", "Aufnehmen & analysieren", "Record & analyze")}
         </button>
@@ -153,7 +153,7 @@ export default function SoundDiagnosi() {
             <Share2 className="w-5 h-5" /> {tri("Condividi", "Teilen", "Share")}
           </button>
           <ListenButton text={result} who="momy" testid="sound-listen-btn"
-            className="mt-2 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+            className="mt-2 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
         </div>
       )}
     </div>

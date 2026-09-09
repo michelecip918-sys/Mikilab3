@@ -61,7 +61,7 @@ export default function FriendsPanel({ open, onClose, onCount, onMessage }) {
   return (
     <div className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center" data-testid="friends-panel">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0E1620] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col">
+      <div className="relative w-full sm:max-w-md bg-white dark:bg-[#0D1520] rounded-t-3xl sm:rounded-3xl shadow-2xl max-h-[85vh] flex flex-col">
         <div className="flex items-center justify-between p-4 border-b border-[#2A3B49] dark:border-[#2A3B49]">
           <h3 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#EAF0EC] flex items-center gap-2"><Users2 className="w-5 h-5 text-[#3E9C93]" />{tri("Amici", "Freunde", "Friends")}</h3>
           <button data-testid="friends-close" onClick={onClose} className="w-9 h-9 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-5 h-5" /></button>

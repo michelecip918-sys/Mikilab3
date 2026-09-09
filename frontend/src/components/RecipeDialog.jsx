@@ -221,7 +221,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto thin-scroll bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49]">
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto thin-scroll bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-[#2B303B] dark:text-[#e4eff8]">
             {initial ? t("edit_recipe") : t("new_recipe")}
@@ -528,7 +528,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">{t("field_photo")}</label>
             <div className="mt-1 flex items-center gap-2 flex-wrap">
               {form.image_url ? <img src={form.image_url} alt="" className="w-16 h-16 rounded-2xl shadow-md border border-amber-900/40 object-cover border border-[#2A3B49] dark:border-[#2A3B49]" /> : null}
-              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#3E9C93] hover:bg-[#5E8CA8] text-white rounded-2xl shadow-md border border-amber-900/40 px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              <label data-testid="recipe-photo-take" className={`cursor-pointer bg-[#3E9C93] hover:bg-[#64748B] text-white rounded-2xl shadow-md border border-amber-900/40 px-4 py-2.5 text-sm font-medium flex items-center gap-2 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />}
                 {uploading ? t("photo_uploading") : (mkTri(lang)("Scatta ora", "Jetzt aufnehmen", "Take photo", "Hacer foto"))}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
@@ -726,7 +726,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             data-testid="recipe-save-btn"
             onClick={submit}
             disabled={saving}
-            className="flex-1 flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
+            className="flex-1 flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-60 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
           >
             {saving && <Loader2 className="w-4 h-4 animate-spin" />}
             {saving ? t("saving") : t("save")}

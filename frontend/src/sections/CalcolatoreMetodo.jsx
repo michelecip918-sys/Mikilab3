@@ -53,11 +53,11 @@ export default function CalcolatoreMetodo({ onBack }) {
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
       </button>}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5"
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5"
         style={{ background: "linear-gradient(135deg,#3E9C93 0%,#3E9C93 60%,#3E9C93 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Calculator className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Idratazione & Parametri Base", "Hydratation & Basiswerte", "Hydration & Base Parameters", "Hidratación y Parámetros Base")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Dosi, idratazione, scomputo del prefermento, temperatura acqua e tempi di incordatura per impasti ad alta alveolatura.", "Mengen, Hydratation, Vorteig-Verrechnung, Wassertemperatur und Knetzeiten für offene Porung.", "Doses, hydration, preferment offset, water temperature and mixing times for open-crumb doughs.", "Dosis, hidratación, cálculo del prefermento, temperatura del agua y tiempos de amasado para alveolado abierto.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Dosi, idratazione, scomputo del prefermento, temperatura acqua e tempi di incordatura per impasti ad alta alveolatura.", "Mengen, Hydratation, Vorteig-Verrechnung, Wassertemperatur und Knetzeiten für offene Porung.", "Doses, hydration, preferment offset, water temperature and mixing times for open-crumb doughs.", "Dosis, hidratación, cálculo del prefermento, temperatura del agua y tiempos de amasado para alveolado abierto.")}</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
@@ -79,8 +79,8 @@ export default function CalcolatoreMetodo({ onBack }) {
       </div>
 
       {/* Risultati */}
-      <div data-testid="calc-results" className="rounded-3xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden shadow-md">
-        <div className="bg-[#3E9C93] text-[#0E1620] px-5 py-3"><p className="font-display text-lg font-bold">{L("Ricetta calcolata", "Berechnetes Rezept", "Calculated recipe", "Receta calculada")}</p></div>
+      <div data-testid="calc-results" className="rounded-3xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden shadow-md">
+        <div className="bg-[#3E9C93] text-[#0D1520] px-5 py-3"><p className="font-display text-lg font-bold">{L("Ricetta calcolata", "Berechnetes Rezept", "Calculated recipe", "Receta calculada")}</p></div>
         <div className="divide-y divide-[#2A3B49] dark:divide-[#2A3B49]">
           {[
             [L("Acqua totale", "Wasser gesamt", "Total water", "Agua total"), `${num(r.totalWater)} g`],

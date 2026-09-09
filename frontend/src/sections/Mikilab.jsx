@@ -71,7 +71,7 @@ export default function MikiLab() {
               src={`${process.env.PUBLIC_URL}/bio-dough.jpg`}
               alt="Michele — impasto in mano"
               data-testid="bio-dough-photo"
-              className="w-full rounded-2xl object-contain bg-[#0E1620] ring-2 ring-[#3E9C93]/60 shadow-xl"
+              className="w-full rounded-2xl object-contain bg-[#0D1520] ring-2 ring-[#3E9C93]/60 shadow-xl"
             />
             <figcaption className="text-center text-[11px] text-white/70 mt-2 italic">{t("bio_dough_caption")}</figcaption>
           </figure>

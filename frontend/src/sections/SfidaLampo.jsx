@@ -61,15 +61,15 @@ export default function SfidaLampo() {
 
   return (
     <div data-testid="sfida-lampo" className="mb-5 rounded-3xl overflow-hidden border border-[#3E9C93]/40 bg-[#1B2A38] shadow-lg">
-      <div className="p-5 text-[#0E1620]" style={{ background: "linear-gradient(135deg,#5E8CA8,#3E9C93 75%)" }}>
+      <div className="p-5 text-[#0D1520]" style={{ background: "linear-gradient(135deg,#64748B,#3E9C93 75%)" }}>
         <div className="flex items-center justify-between">
           <p className="text-[11px] font-extrabold uppercase tracking-widest flex items-center gap-1.5"><Flame className="w-4 h-4" /> {L("Sfida Lampo della settimana", "Blitz-Challenge der Woche", "Weekly Flash Challenge", "Reto Relámpago semanal", "Défi Éclair de la semaine", "چالش برق‌آسای هفته")}</p>
-          <span className="inline-flex items-center gap-1 rounded-full bg-[#0E1620]/15 px-2.5 py-1 text-[11px] font-bold"><Clock className="w-3 h-3" /> {tl.d}g {tl.h}h</span>
+          <span className="inline-flex items-center gap-1 rounded-full bg-[#0D1520]/15 px-2.5 py-1 text-[11px] font-bold"><Clock className="w-3 h-3" /> {tl.d}g {tl.h}h</span>
         </div>
         <h2 data-testid="sfida-lampo-theme" className="font-display text-2xl font-extrabold mt-2 leading-tight">{theme?.title || "…"}</h2>
-        {theme?.description && <p className="text-[#0E1620]/85 text-sm mt-1 leading-snug">{theme.description}</p>}
+        {theme?.description && <p className="text-[#0D1520]/85 text-sm mt-1 leading-snug">{theme.description}</p>}
         {theme?.tip && (
-          <p className="mt-2 inline-flex items-start gap-1.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
+          <p className="mt-2 inline-flex items-start gap-1.5 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520]/12 px-3 py-2 text-[12px] font-medium">💡 {theme.tip}</p>
         )}
       </div>
 
@@ -85,7 +85,7 @@ export default function SfidaLampo() {
           </div>
         ) : (
           <button data-testid="sfida-lampo-join" disabled={busy} onClick={() => (user ? fileRef.current?.click() : (setAuthOpen && setAuthOpen(true)))}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] text-[#0E1620] font-bold py-3.5 active:scale-98 transition-all disabled:opacity-60">
+            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#3E9C93] text-[#0D1520] font-bold py-3.5 active:scale-98 transition-all disabled:opacity-60">
             {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Camera className="w-5 h-5" />} {L("Partecipa con una foto", "Mit Foto teilnehmen", "Join with a photo", "Participa con una foto", "Participe avec une photo", "با یک عکس شرکت کن")}
           </button>
         )}
@@ -98,7 +98,7 @@ export default function SfidaLampo() {
           ) : (
             <div className="space-y-2">
               {entries.map((e) => (
-                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-2">
+                <div key={e.id} data-testid={`sfida-lampo-entry-${e.id}`} className="flex items-center gap-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] border border-[#2A3B49] p-2">
                   <span className="w-7 text-center text-lg font-extrabold text-[#3E9C93] shrink-0">{medal(e.rank)}</span>
                   {e.image_url ? <img src={e.image_url} alt="" loading="lazy" className="w-12 h-12 rounded-lg object-cover shrink-0" /> : <div className="w-12 h-12 rounded-lg bg-[#3E9C93]/15 shrink-0" />}
                   <div className="flex-1 min-w-0">

@@ -282,7 +282,7 @@ export default function AdminPanel({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49]">
+      <DialogContent data-testid="admin-panel" className="max-w-md max-h-[88vh] overflow-y-auto overflow-x-hidden bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
         <DialogTitle className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
           <Crown className="w-5 h-5 text-[#3E9C93]" /> {de ? "Admin-Panel" : "Pannello Admin"}
         </DialogTitle>
@@ -299,7 +299,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </p>
           <button
             data-testid="admin-inventory-pdf" onClick={downloadInventory} disabled={invBusy}
-            className="mt-3 w-full bg-[#0E1620] dark:bg-[#1B2A38] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 border-2 border-[#3E9C93] disabled:opacity-60 active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="mt-3 w-full bg-[#0D1520] dark:bg-[#1B2A38] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 border-2 border-[#3E9C93] disabled:opacity-60 active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             <FileText className="w-4 h-4 text-[#3E9C93]" />
             {invBusy ? (de ? "PDF wird erstellt..." : "Creo il PDF...") : (de ? "Inventar als PDF" : "Scarica inventario PDF")}
@@ -329,14 +329,14 @@ export default function AdminPanel({ open, onOpenChange }) {
           </button>
         </div>
 
-        <div data-testid="admin-invites" className="rounded-2xl bg-[#5E8CA8]/10 border border-[#5E8CA8]/30 p-4 mt-2 space-y-3">
+        <div data-testid="admin-invites" className="rounded-2xl bg-[#64748B]/10 border border-[#64748B]/30 p-4 mt-2 space-y-3">
           <p className="flex items-center gap-2 text-sm font-semibold text-[#7DA3C0]">
             <KeyRound className="w-4 h-4" /> {de ? "Zugang auf Einladung (Ghost Mode)" : "Accesso su invito (Ghost Mode)"}
           </p>
           <p className="text-[11px] text-[#7E8A93]">{de ? "Registrierung nur per Einladungslink. Generiere einen Link und teile ihn." : "Registrazione solo su invito. Genera un link e condividilo."}</p>
           <button
             data-testid="admin-invite-gen" onClick={genInvite} disabled={inviteBusy}
-            className="w-full bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-[#5E8CA8]/40 active:scale-98 transition-all inline-flex items-center justify-center gap-2"
+            className="w-full bg-[#64748B] disabled:opacity-50 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-[#64748B]/40 active:scale-98 transition-all inline-flex items-center justify-center gap-2"
           >
             <KeyRound className="w-4 h-4" /> {de ? "Einladungslink erstellen + kopieren" : "Genera invito + copia link"}
           </button>
@@ -352,7 +352,7 @@ export default function AdminPanel({ open, onOpenChange }) {
                     <p className="text-[10px] text-[#7E8A93]">{inv.used}/{inv.max_uses} {de ? "verwendet" : "usati"}{!inv.active ? (de ? " · widerrufen" : " · revocato") : ""}</p>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    {!dead && <button data-testid={`admin-invite-copy-${inv.token}`} onClick={() => copyInvite(inv.token)} className="p-2 rounded-lg text-[#7DA3C0] hover:bg-[#5E8CA8]/15"><Copy className="w-4 h-4" /></button>}
+                    {!dead && <button data-testid={`admin-invite-copy-${inv.token}`} onClick={() => copyInvite(inv.token)} className="p-2 rounded-lg text-[#7DA3C0] hover:bg-[#64748B]/15"><Copy className="w-4 h-4" /></button>}
                     {inv.active && <button data-testid={`admin-invite-revoke-${inv.token}`} onClick={() => revokeInvite(inv.token)} className="p-2 rounded-lg text-[#ef4444] hover:bg-[#ef4444]/15"><Trash2 className="w-4 h-4" /></button>}
                   </div>
                 </div>
@@ -697,12 +697,12 @@ export default function AdminPanel({ open, onOpenChange }) {
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.it) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "it", e.target.value)}
                         placeholder={de ? "Text IT" : "Testo IT"}
-                        className="w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
+                        className="w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8] mb-1" />
                       <input data-testid={`admin-bubble-${sec.variant}-${who}-de`}
                         value={(settings.avatar_bubbles?.[`${sec.variant}.${who}`]?.de) || ""}
                         onChange={(e) => setBubble(sec.variant, who, "de", e.target.value)}
                         placeholder="Text DE"
-                        className="w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
+                        className="w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 text-xs outline-none text-[#2B303B] dark:text-[#e4eff8]" />
                     </div>
                   ))}
                 </div>
@@ -756,7 +756,7 @@ export default function AdminPanel({ open, onOpenChange }) {
           </p>
           {trCoverage.incomplete.length === 0 ? (
             <div data-testid="admin-translation-ok" className="flex items-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/12 border border-[#3E9C93]/35 px-3 py-2.5">
-              <CheckCircle2 className="w-5 h-5 text-[#5E8CA8] shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-[#64748B] shrink-0" />
               <p className="text-sm font-semibold text-[#3E9C93] dark:text-[#a9d2ec]">
                 {de ? `Alle ${trCoverage.total} Rezepte verifiziert ✓ (IT/DE/EN)` : `Tutte le ${trCoverage.total} ricette verificate ✓ (IT/DE/EN)`}
               </p>

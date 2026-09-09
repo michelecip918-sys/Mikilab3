@@ -7,7 +7,7 @@ import { playTTS } from "@/lib/tts";
 
 // "Team Sync Auricolari" — coordinamento squadra multi-reparto (impasti/banco/forni) a mani libere.
 // Voce nativa del telefono (zero crediti). Fedele al mockup dell'utente (dark + arancione + verde).
-const D = { bg: "#0A0B0E", card: "#12141D", input: "#161922", accent: "#D4AF37", green: "#7DD3FC", red: "#FF3333", amber: "#FF9900", text: "#F0F0F0", muted: "#8A9BA8", border: "#2A2E3D" };
+const D = { bg: "#0A0B0E", card: "#12141D", input: "#161922", accent: "#D4AF37", green: "#FF9D42", red: "#FF3333", amber: "#FF9900", text: "#F0F0F0", muted: "#8A9BA8", border: "#2A2E3D" };
 
 // Database ricette locale (offline) per il ricalcolo dosi dinamico.
 const RECIPES = [

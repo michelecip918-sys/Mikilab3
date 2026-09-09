@@ -76,7 +76,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
   return (
     <div data-testid="lab-tour" className="fixed inset-0 z-[60] pointer-events-none">
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#0E1620] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl p-4">
+      <div ref={cardRef} className="pointer-events-auto absolute left-1/2 -translate-x-1/2 bottom-24 w-[92%] max-w-md rounded-2xl bg-white dark:bg-[#0D1520] border border-[#2A3B49] dark:border-[#2A3B49] shadow-2xl p-4">
         <button data-testid="lab-tour-skip" onClick={finish} className="absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93]"><X className="w-4 h-4" /></button>
         <div className="flex items-start gap-3">
           <img src={AVATAR} alt="MikiLab" className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-2 ring-[#3E9C93]/50 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -92,7 +92,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
           <div className="flex items-center gap-2">
             {!last && <button data-testid="lab-tour-skip-2" onClick={finish} className="text-xs font-semibold text-[#7E8A93] px-2 py-2">{L.skip}</button>}
             <button data-testid="lab-tour-next" onClick={() => (last ? finish() : setStep(step + 1))}
-              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#3E9C93] hover:bg-[#5E8CA8] text-white px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
+              className="inline-flex items-center gap-1.5 text-sm font-bold bg-[#3E9C93] hover:bg-[#64748B] text-white px-4 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-95 transition-all">
               {last ? L.done : L.next}
               {!last && <ArrowRight className="w-4 h-4" />}
             </button>

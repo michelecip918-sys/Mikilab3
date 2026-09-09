@@ -143,13 +143,13 @@ export default function VoiceAssistant({ onNavigate }) {
           onClick={state === "listening" ? stop : start}
           aria-label={t("voice_tap")}
           className={`relative w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all active:scale-95 ${
-            state === "listening" ? "bg-[#3E9C93] animate-pulse" : "bg-[#3E9C93] hover:bg-[#5E8CA8]"
+            state === "listening" ? "bg-[#3E9C93] animate-pulse" : "bg-[#3E9C93] hover:bg-[#64748B]"
           }`}
         >
           {state === "idle" && <span aria-hidden className="absolute inset-0 rounded-full bg-[#3E9C93] opacity-60 animate-ping" />}
           {state === "thinking" ? <Loader2 className="w-6 h-6 text-white animate-spin relative" /> : <Mic className="w-6 h-6 text-white relative" />}
         </button>
-        <span className="text-[9px] font-bold text-[#3E9C93] bg-[#0E1620]/90 dark:bg-[#0E1620]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
+        <span className="text-[9px] font-bold text-[#3E9C93] bg-[#0D1520]/90 dark:bg-[#0D1520]/90 px-1.5 py-0.5 rounded-full shadow-sm">{t("voice_label")}</span>
       </div>
     </>
   );

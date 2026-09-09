@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
+import * as THREE from "three/webgpu";
 import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -7,8 +7,8 @@ import { mkTri } from "@/i18n/triMaps";
 // FASE 2 — Gemello Digitale 3D del laboratorio. Reso con three.js VANILLA (imperativo):
 // niente @react-three/fiber → compatibile con React 19 e con il Node del container.
 // Ogni macchinario REAGISCE alla PROPRIA telemetria IoT (colore + pulsazione).
-const STRESS_COL = { calmo: 0x7dd3fc, medio: 0xffb800, alto: 0xf43f5e };
-const STRESS_HEX = { calmo: "#7DD3FC", medio: "#FFB800", alto: "#f43f5e" };
+const STRESS_COL = { calmo: 0xFF9D42, medio: 0xffb800, alto: 0xf43f5e };
+const STRESS_HEX = { calmo: "#FF9D42", medio: "#FFB800", alto: "#f43f5e" };
 const MACHINES = [
   { id: "forno1", label: "Forno 1", pos: [-3, 0.7, -2], size: [1.6, 1.4, 1.6] },
   { id: "forno2", label: "Forno 2", pos: [-1, 0.7, -2], size: [1.6, 1.4, 1.6] },
@@ -46,10 +46,12 @@ export default function DigitalTwin() {
 
     let renderer;
     try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      // WebGPU con fallback automatico a WebGL2 (forceWebGL) — 120fps dove supportato.
+      renderer = new THREE.WebGPURenderer({ antialias: true, alpha: true, forceWebGL: !(typeof navigator !== "undefined" && navigator.gpu) });
     } catch (e) {
-      return; // WebGL non disponibile
+      return; // né WebGPU né WebGL disponibili
     }
+    let alive = true;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
     renderer.setSize(width, height);
     mount.appendChild(renderer.domElement);
@@ -58,7 +60,7 @@ export default function DigitalTwin() {
     const dir = new THREE.DirectionalLight(0xffffff, 1.1);
     dir.position.set(5, 8, 5);
     scene.add(dir);
-    const pt = new THREE.PointLight(0x7dd3fc, 0.7);
+    const pt = new THREE.PointLight(0xFF9D42, 0.7);
     pt.position.set(-5, 4, -5);
     scene.add(pt);
 
@@ -82,7 +84,7 @@ export default function DigitalTwin() {
     const agvMeshes = [];
     for (let i = 0; i < 4; i++) {
       const geo = new THREE.SphereGeometry(0.26, 16, 16);
-      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x00f0ff, emissiveIntensity: 0.6, metalness: 0.6, roughness: 0.3 });
+      const mat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xFF6B00, emissiveIntensity: 0.6, metalness: 0.6, roughness: 0.3 });
       const s = new THREE.Mesh(geo, mat);
       s.visible = false;
       group.add(s);
@@ -132,7 +134,7 @@ export default function DigitalTwin() {
         const prog = (t * 0.18 + i * 0.35) % 1;
         s.position.set(from[0] + (to[0] - from[0]) * prog, 0.45, from[2] + (to[2] - from[2]) * prog);
         const alert = c.health === "manutenzione";
-        const col = alert ? 0xf43f5e : (c.health === "attenzione" ? 0xffb800 : 0x00f0ff);
+        const col = alert ? 0xf43f5e : (c.health === "attenzione" ? 0xffb800 : 0xFF6B00);
         s.material.color.setHex(alert ? 0xf43f5e : 0xffffff);
         s.material.emissive.setHex(col);
         s.material.emissiveIntensity = alert ? 0.6 + Math.sin(t * 6) * 0.4 : 0.6;
@@ -141,7 +143,7 @@ export default function DigitalTwin() {
       renderer.render(scene, camera);
       raf = requestAnimationFrame(animate);
     };
-    animate();
+    renderer.init().catch(() => { /* forceWebGL fallback interno */ }).finally(() => { if (alive) animate(); });
 
     const onResize = () => {
       const w = mount.clientWidth || width;
@@ -152,6 +154,7 @@ export default function DigitalTwin() {
     window.addEventListener("resize", onResize);
 
     return () => {
+      alive = false;
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       renderer.domElement.removeEventListener("click", onClick);
@@ -184,27 +187,27 @@ export default function DigitalTwin() {
     });
   }, [tele]);
 
-  const col = STRESS_HEX[globalLevel] || "#7DD3FC";
+  const col = STRESS_HEX[globalLevel] || "#FF9D42";
   const selTele = sel ? tele[sel.id] : null;
 
   return (
     <div data-testid="digital-twin">
       <div className="flex items-center justify-between mb-2">
-        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8]">{tri("Gemello Digitale · Supervisione", "Digitaler Zwilling", "Digital Twin · Supervision", "Gemelo Digital", "Jumeau Numérique", "دوقلوی دیجیتال")}</p>
+        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#64748B]">{tri("Gemello Digitale · Supervisione", "Digitaler Zwilling", "Digital Twin · Supervision", "Gemelo Digital", "Jumeau Numérique", "دوقلوی دیجیتال")}</p>
         <span data-testid="twin-global-level" className="text-[10px] font-bold px-2 py-0.5 rounded-full" style={{ color: col, border: `1px solid ${col}66` }}>{tri("Stato", "Status", "Status", "Estado", "État", "وضعیت")}: {globalLevel}</span>
       </div>
-      <div ref={mountRef} data-testid="twin-canvas" className="rounded-xl overflow-hidden border" style={{ height: 340, background: "linear-gradient(180deg,#070A10,#0C1420)", borderColor: `${col}40`, boxShadow: globalLevel === "alto" ? `0 0 22px ${col}55 inset` : "none" }} />
+      <div ref={mountRef} data-testid="twin-canvas" className="rounded-xl overflow-hidden border" style={{ height: 340, background: "linear-gradient(180deg,#060A10,#0C1420)", borderColor: `${col}40`, boxShadow: globalLevel === "alto" ? `0 0 22px ${col}55 inset` : "none" }} />
       {selTele ? (
         <div data-testid="twin-selected" className="mt-2 rounded-lg border p-2.5 flex items-center gap-3" style={{ borderColor: `${STRESS_HEX[selTele.level]}55`, background: `${STRESS_HEX[selTele.level]}0d` }}>
           <span className="relative flex w-3 h-3"><span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: STRESS_HEX[selTele.level], opacity: 0.5 }} /><span className="relative w-3 h-3 rounded-full" style={{ background: STRESS_HEX[selTele.level] }} /></span>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-black text-white truncate">{sel.label}</p>
-            <p className="text-[11px] text-[#8aa0b4]">{tri("Stress", "Stress", "Stress", "Estrés", "Stress", "استرس")}: {selTele.level} · {selTele.temp_c}°C · {tri("carico", "Last", "load", "carga", "charge", "بار")} {selTele.load_pct}%{selTele.sos ? " · SOS" : ""}</p>
+            <p className="text-[11px] text-[#94A3B8]">{tri("Stress", "Stress", "Stress", "Estrés", "Stress", "استرس")}: {selTele.level} · {selTele.temp_c}°C · {tri("carico", "Last", "load", "carga", "charge", "بار")} {selTele.load_pct}%{selTele.sos ? " · SOS" : ""}</p>
             {selTele.torque_protection && <p data-testid="twin-torque" className="text-[11px] text-[#FFB800] font-bold mt-0.5">⚙ {tri(`Smart Torque: coppia ridotta al ${selTele.torque_pct}% (anti-stallo)`, `Smart Torque: Drehmoment auf ${selTele.torque_pct}%`, `Smart Torque: torque cut to ${selTele.torque_pct}% (anti-stall)`, `Smart Torque: par al ${selTele.torque_pct}%`, `Smart Torque: couple à ${selTele.torque_pct}%`, `گشتاور هوشمند: ${selTele.torque_pct}%`)}</p>}
           </div>
         </div>
       ) : (
-        <p className="mt-2 text-xs text-[#8aa0b4]" data-testid="twin-hint">
+        <p className="mt-2 text-xs text-[#94A3B8]" data-testid="twin-hint">
           {tri("Il laboratorio ruota in 3D · tocca un macchinario per la sua telemetria.", "Das Labor rotiert in 3D · Maschine antippen.", "The lab rotates in 3D · tap a machine for its telemetry.", "El taller gira en 3D · toca una máquina.", "L'atelier tourne en 3D · touche une machine.", "کارگاه در سه‌بعدی می‌چرخد.")}
         </p>
       )}

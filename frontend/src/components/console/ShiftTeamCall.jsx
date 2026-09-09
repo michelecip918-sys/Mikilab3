@@ -127,7 +127,7 @@ export default function ShiftTeamCall() {
     <div data-testid="shift-team-call" className="space-y-3">
       <div className="flex items-center gap-2">
         <button data-testid="shift-team-announce" onClick={announceAll} disabled={!groups.length}
-          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-black text-sm active:scale-95 disabled:opacity-40 transition-all">
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-black text-sm active:scale-95 disabled:opacity-40 transition-all">
           <Megaphone className="w-4 h-4" /> {tri("Annuncia la squadra del turno", "Schichtteam ansagen", "Announce the shift team", "Anunciar el equipo del turno", "Annoncer l'équipe du service", "اعلام تیم شیفت")}
         </button>
       </div>
@@ -142,11 +142,11 @@ export default function ShiftTeamCall() {
 
       <div className="flex items-center gap-2">
         <button data-testid="shift-team-recreate" onClick={recreateLast} disabled={busy}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 disabled:opacity-40 hover:border-[#7DD3FC]/60 transition-all">
+          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 disabled:opacity-40 hover:border-[#FF9D42]/60 transition-all">
           <RotateCcw className="w-3.5 h-3.5" /> {tri("Ricrea ultimo turno", "Letzte Schicht übernehmen", "Recreate last shift", "Recrear último turno", "Recréer le dernier service", "بازسازی شیفت قبل")}
         </button>
         <button data-testid="shift-team-export" onClick={exportCsv}
-          className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 hover:border-[#7DD3FC]/60 transition-all">
+          className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#1e293b] text-[#cbd5e1] font-bold text-xs active:scale-95 hover:border-[#FF9D42]/60 transition-all">
           <Download className="w-3.5 h-3.5" /> CSV
         </button>
       </div>
@@ -164,7 +164,7 @@ export default function ShiftTeamCall() {
         <div className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
           <span className="text-[11px] text-[#94A3B8] flex-1">{tri("Avvisa assenze dopo l'inizio turno:", "Abwesenheiten nach Schichtbeginn:", "Alert absences after shift start:", "Avisar ausencias tras el inicio:", "Alerter les absences après le début:", "هشدار غیبت پس از شروع:")}</span>
           <input data-testid="shift-start-input" type="time" value={shiftStart} onChange={(e) => saveShiftStart(e.target.value)}
-            className="rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#00F0FF]/60 outline-none text-white text-xs px-2 py-1" />
+            className="rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-white text-xs px-2 py-1" />
         </div>
       )}
 
@@ -182,8 +182,8 @@ export default function ShiftTeamCall() {
 
       <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] overflow-hidden">
         <button data-testid="shift-team-report-toggle" onClick={openReport} className="w-full flex items-center gap-2 px-3 py-2.5 active:scale-[0.99]">
-          <FileText className="w-4 h-4 text-[#7DD3FC]" />
-          <span className="text-xs font-black uppercase tracking-wide text-[#7DD3FC] flex-1 text-left">{tri("Report fine turno", "Schichtende-Bericht", "End-of-shift report", "Informe fin de turno", "Rapport de fin de service", "گزارش پایان شیفت")}</span>
+          <FileText className="w-4 h-4 text-[#FF9D42]" />
+          <span className="text-xs font-black uppercase tracking-wide text-[#FF9D42] flex-1 text-left">{tri("Report fine turno", "Schichtende-Bericht", "End-of-shift report", "Informe fin de turno", "Rapport de fin de service", "گزارش پایان شیفت")}</span>
           <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${showReport ? "rotate-180" : ""}`} />
         </button>
         {showReport && report && (
@@ -191,12 +191,12 @@ export default function ShiftTeamCall() {
             <div className="flex items-center justify-between rounded-lg bg-[#030712] border border-[#1e293b] px-2.5 py-2 text-[11px]">
               <span className="text-[#94A3B8]">{report.date}</span>
               <span className="font-bold text-white">{tri("Presenti", "Anwesend", "Present", "Presentes", "Présents", "حاضر")} <span className="text-[#22c55e]">{report.totals.present}</span>/{report.totals.assigned}</span>
-              <span className="font-bold text-white">{tri("Prodotti", "Produziert", "Produced", "Producidos", "Produits", "تولید")} <span className="text-[#7DD3FC]">{report.totals.produced}</span></span>
+              <span className="font-bold text-white">{tri("Prodotti", "Produziert", "Produced", "Producidos", "Produits", "تولید")} <span className="text-[#FF9D42]">{report.totals.produced}</span></span>
             </div>
             {report.depts.map((d) => (
               <div key={d.dept} data-testid={`shift-report-dept-${d.dept}`} className="rounded-lg bg-[#030712] border border-[#1e293b] p-2">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[11px] font-black text-[#7DD3FC]">{d.dept_name}</span>
+                  <span className="text-[11px] font-black text-[#FF9D42]">{d.dept_name}</span>
                   {d.produced && <span className="text-[10px] font-bold text-[#94A3B8]">{d.produced.done}/{d.produced.target || "∞"} {d.produced.unit}</span>}
                 </div>
                 <div className="flex flex-wrap gap-1.5">
@@ -208,7 +208,7 @@ export default function ShiftTeamCall() {
                 </div>
               </div>
             ))}
-            <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/40 text-[#7DD3FC] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
+            <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/40 text-[#FF9D42] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
             <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (Mike Mix)", "Bericht vorlesen (Mike Mix)", "Read report aloud (Mike Mix)", "Leer informe (Mike Mix)", "Lire le rapport (Mike Mix)", "خواندن گزارش (Mike Mix)")}</button>
           </div>
         )}
@@ -244,8 +244,8 @@ export default function ShiftTeamCall() {
       {/* Storico turni */}
       <div className="rounded-xl bg-[#0C1019] border border-[#1e293b] overflow-hidden">
         <button data-testid="shift-team-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full flex items-center gap-2 px-3 py-2.5 active:scale-[0.99]">
-          <History className="w-4 h-4 text-[#7DD3FC]" />
-          <span className="text-xs font-black uppercase tracking-wide text-[#7DD3FC] flex-1 text-left">{tri("Storico turni", "Schicht-Verlauf", "Shift history", "Historial de turnos", "Historique des services", "تاریخچه شیفت‌ها")}</span>
+          <History className="w-4 h-4 text-[#FF9D42]" />
+          <span className="text-xs font-black uppercase tracking-wide text-[#FF9D42] flex-1 text-left">{tri("Storico turni", "Schicht-Verlauf", "Shift history", "Historial de turnos", "Historique des services", "تاریخچه شیفت‌ها")}</span>
           <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${showHist ? "rotate-180" : ""}`} />
         </button>
         {showHist && (
@@ -255,7 +255,7 @@ export default function ShiftTeamCall() {
               <div key={day.date} data-testid={`shift-history-${day.date}`} className="rounded-lg bg-[#030712] border border-[#1e293b] p-2">
                 <p className="text-[10px] font-black text-[#94A3B8] mb-1">{day.date}</p>
                 {day.depts.map((d) => (
-                  <p key={d.dept} className="text-[11px] text-[#cbd5e1] leading-relaxed"><b style={{ color: "#7DD3FC" }}>{d.dept_name}:</b> {d.ops.map((o) => o.task ? `${o.operator} (${o.task})` : o.operator).join(", ")}</p>
+                  <p key={d.dept} className="text-[11px] text-[#cbd5e1] leading-relaxed"><b style={{ color: "#FF9D42" }}>{d.dept_name}:</b> {d.ops.map((o) => o.task ? `${o.operator} (${o.task})` : o.operator).join(", ")}</p>
                 ))}
               </div>
             ))}

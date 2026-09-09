@@ -243,7 +243,7 @@ export default function PhotoDiagnosi() {
         data-testid="photo-analyze-btn"
         onClick={analyze}
         disabled={!preview || analyzing}
-        className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
+        className="w-full bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         {analyzing ? t("photo_analyzing") : t("photo_analyze")}
       </button>
@@ -265,7 +265,7 @@ export default function PhotoDiagnosi() {
       )}
       {result && (
         <ListenButton text={result} who="momy" testid="photo-listen-btn"
-          className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
+          className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all" />
       )}
       {result && (
         <button data-testid="photo-share-btn" onClick={() => shareContent(`${modeLabel(mode)} — MikiLab`, result, lang)}
@@ -275,7 +275,7 @@ export default function PhotoDiagnosi() {
       )}
       {result && (
         <button data-testid="photo-pdf-btn" onClick={() => window.print()}
-          className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
+          className="no-print mt-2 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-medium px-4 py-3 rounded-2xl flex items-center justify-center gap-2 active:scale-98 transition-all">
           <Printer className="w-5 h-5" /> {mkTri(lang)("PDF / Stampa", "Als PDF / Drucken", "PDF / Print")}
         </button>
       )}

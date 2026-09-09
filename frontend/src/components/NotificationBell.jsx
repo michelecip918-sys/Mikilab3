@@ -126,7 +126,7 @@ export default function NotificationBell() {
                 { k: "likes", l: tri("Like", "Likes", "Likes", "Me gusta", "J'aime") },
               ].map((o) => (
                 <button key={o.k} data-testid={`notif-filter-${o.k}`} onClick={() => setNfilter(o.k)}
-                  className={`shrink-0 px-2.5 py-1 rounded-full text-[11.5px] font-bold border transition-all ${nfilter === o.k ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "bg-transparent text-[#7E8A93] border-[#2A3B49]"}`}>
+                  className={`shrink-0 px-2.5 py-1 rounded-full text-[11.5px] font-bold border transition-all ${nfilter === o.k ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-transparent text-[#7E8A93] border-[#2A3B49]"}`}>
                   {o.l}
                 </button>
               ))}

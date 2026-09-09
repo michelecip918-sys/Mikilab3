@@ -40,10 +40,10 @@ export default function PublicGate({ onUnlock }) {
   };
 
   const WORLDS = [
-    { id: "panificio", label: tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی"), accent: "#00F0FF" },
+    { id: "panificio", label: tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی"), accent: "#FF6B00" },
     { id: "pizzeria", label: tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا"), accent: "#FFB800" },
     { id: "pasticceria", label: tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی"), accent: "#7FD8C0" },
-    { id: "banco", label: tri("Magazzino", "Lager", "Warehouse", "Almacén", "Entrepôt", "انبار"), accent: "#5E8CA8" },
+    { id: "banco", label: tri("Magazzino", "Lager", "Warehouse", "Almacén", "Entrepôt", "انبار"), accent: "#64748B" },
   ];
 
   // Auto-tour dei mondi (viewing passivo, consentito)
@@ -56,9 +56,9 @@ export default function PublicGate({ onUnlock }) {
   }, [showPin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const AVATARS = [
-    { img: "avatar_miki.jpg", c: "#5E8CA8", n: "MikiLab", r: tri("Capo Supremo", "Oberster Chef", "Supreme Capo", "Capo Supremo", "Capo Suprême", "کاپوی برتر") },
-    { img: "avatar_nexus.jpg", c: "#F6D27A", n: "Miki-Nexus", r: tri("Coscienza Strategica", "Strategisches Bewusstsein", "Strategic Consciousness", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی"), nexus: true },
-    { img: "avatar_mikemix.jpg", c: "#00F0FF", n: "Mike Mix", r: tri("IA Operativa", "Operative KI", "Operational AI", "IA Operativa", "IA Opérationnelle", "هوش عملیاتی") },
+    { img: "avatar_miki.jpg", c: "#64748B", n: "MikiLab", r: tri("Capo Supremo", "Oberster Chef", "Supreme Capo", "Capo Supremo", "Capo Suprême", "کاپوی برتر") },
+    { img: "avatar_nexus.jpg", c: "#EAB308", n: "Miki-Nexus", r: tri("Coscienza Strategica", "Strategisches Bewusstsein", "Strategic Consciousness", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی"), nexus: true },
+    { img: "avatar_mikemix.jpg", c: "#FF6B00", n: "Mike Mix", r: tri("IA Operativa", "Operative KI", "Operational AI", "IA Operativa", "IA Opérationnelle", "هوش عملیاتی") },
   ];
 
   if (showPin) return <AdminGate onUnlock={handleUnlock} onBack={() => setShowPin(false)} />;
@@ -66,10 +66,10 @@ export default function PublicGate({ onUnlock }) {
   if (guest) {
     return (
       <div data-testid="guest-view" className="relative min-h-screen bg-[#030712] text-white">
-        <header className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 border-b border-[#7DD3FC]/15 bg-[#070A10]/85 backdrop-blur-xl">
+        <header className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 border-b border-[#FF9D42]/15 bg-[#060A10]/85 backdrop-blur-xl">
           <div className="flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl overflow-hidden border border-[#7DD3FC]/40 bg-[#070A10]"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" /></span>
-            <span className="leading-tight"><span className="block font-black tracking-[0.16em] text-base uppercase">MikiLab<span className="text-[#7DD3FC]"> · Ospite</span></span><span className="block font-mono text-[8px] tracking-[0.28em] text-[#7DD3FC]/70 uppercase">Guest Access · Training</span></span>
+            <span className="w-9 h-9 rounded-xl overflow-hidden border border-[#FF9D42]/40 bg-[#060A10]"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" /></span>
+            <span className="leading-tight"><span className="block font-black tracking-[0.16em] text-base uppercase">MikiLab<span className="text-[#FF9D42]"> · Ospite</span></span><span className="block font-mono text-[8px] tracking-[0.28em] text-[#FF9D42]/70 uppercase">Guest Access · Training</span></span>
           </div>
           <div className="flex items-center gap-2">
             <LangSelector testid="guest-lang" />
@@ -78,8 +78,8 @@ export default function PublicGate({ onUnlock }) {
         </header>
         <main className="max-w-2xl mx-auto px-4 py-6 space-y-5">
           <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-[#7DD3FC]/10 border border-[#7DD3FC]/40 flex items-center justify-center"><GraduationCap className="w-6 h-6 text-[#7DD3FC]" /></div>
-            <div><h1 className="font-cyber text-lg font-black uppercase tracking-wide">{tri("Formazione autorizzata", "Autorisierte Schulung", "Authorized Training", "Formación autorizada", "Formation autorisée", "آموزش مجاز")}</h1><p className="text-[11px] text-[#8aa0b4]">{tri("Accesso ospite abilitato dal Capo Supremo per la formazione.", "Gastzugang vom Obersten Chef für die Schulung freigegeben.", "Guest access enabled by the Supreme Capo for training.", "Acceso invitado habilitado por el Capo Supremo.", "Accès invité activé par le Capo Suprême.", "دسترسی مهمان توسط کاپو فعال شد.")}</p></div>
+            <div className="w-11 h-11 rounded-xl bg-[#FF9D42]/10 border border-[#FF9D42]/40 flex items-center justify-center"><GraduationCap className="w-6 h-6 text-[#FF9D42]" /></div>
+            <div><h1 className="font-cyber text-lg font-black uppercase tracking-wide">{tri("Formazione autorizzata", "Autorisierte Schulung", "Authorized Training", "Formación autorizada", "Formation autorisée", "آموزش مجاز")}</h1><p className="text-[11px] text-[#94A3B8]">{tri("Accesso ospite abilitato dal Capo Supremo per la formazione.", "Gastzugang vom Obersten Chef für die Schulung freigegeben.", "Guest access enabled by the Supreme Capo for training.", "Acceso invitado habilitado por el Capo Supremo.", "Accès invité activé par le Capo Suprême.", "دسترسی مهمان توسط کاپو فعال شد.")}</p></div>
           </div>
           <div className="holo-panel p-5">
             <DowntimeTraining />
@@ -112,12 +112,12 @@ export default function PublicGate({ onUnlock }) {
       {/* HEADER */}
       <header className="relative z-20 flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2.5">
-          <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#00F0FF]/40 shadow-[0_0_16px_rgba(0,240,255,0.25)] bg-[#070A10]">
+          <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_16px_rgba(255,107,0,0.25)] bg-[#060A10]">
             <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
           </span>
           <span className="leading-tight">
-            <span className="block font-black tracking-[0.18em] text-lg sm:text-xl uppercase">MikiLab<span className="text-[#00F0FF]"> Pro</span></span>
-            <span className="block font-mono text-[8.5px] tracking-[0.3em] text-[#00F0FF]/70 uppercase">Holographic Command OS</span>
+            <span className="block font-black tracking-[0.18em] text-lg sm:text-xl uppercase">MikiLab<span className="text-[#FF6B00]"> Pro</span></span>
+            <span className="block font-mono text-[8.5px] tracking-[0.3em] text-[#FF6B00]/70 uppercase">Holographic Command OS</span>
           </span>
         </div>
         <div className="flex items-center gap-2">
@@ -153,36 +153,36 @@ export default function PublicGate({ onUnlock }) {
               <div className="relative">
                 {a.nexus && (
                   <>
-                    <span className="nexus-ring nexus-ring-1" style={{ borderColor: "#F6D27A" }} />
-                    <span className="nexus-ring nexus-ring-2" style={{ borderColor: "#00F0FF" }} />
-                    <span className="absolute -inset-4 rounded-full blur-2xl" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.55), rgba(0,240,255,0.25) 55%, transparent 72%)" }} />
+                    <span className="nexus-ring nexus-ring-1" style={{ borderColor: "#EAB308" }} />
+                    <span className="nexus-ring nexus-ring-2" style={{ borderColor: "#FF6B00" }} />
+                    <span className="absolute -inset-4 rounded-full blur-2xl" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.55), rgba(255,107,0,0.25) 55%, transparent 72%)" }} />
                   </>
                 )}
                 <div className="relative rounded-full overflow-hidden bg-[#030712]"
                   style={{
                     width: a.nexus ? 132 : 84, height: a.nexus ? 132 : 84,
                     border: `3px solid ${a.c}`,
-                    boxShadow: a.nexus ? `0 0 46px ${a.c}, 0 0 90px rgba(0,240,255,0.35)` : `0 0 22px ${a.c}66`,
+                    boxShadow: a.nexus ? `0 0 46px ${a.c}, 0 0 90px rgba(255,107,0,0.35)` : `0 0 22px ${a.c}66`,
                   }}>
                   <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                 </div>
               </div>
               <span className="font-black text-xs sm:text-sm" style={{ color: a.c }}>{a.n}</span>
-              <span className="text-[9.5px] uppercase tracking-wider text-[#8aa0b4] max-w-[92px] leading-tight">{a.r}</span>
+              <span className="text-[9.5px] uppercase tracking-wider text-[#94A3B8] max-w-[92px] leading-tight">{a.r}</span>
             </motion.button>
           ))}
         </div>
 
         {/* Gerarchia */}
         <p data-testid="public-hierarchy" className="font-mono text-[10px] sm:text-[11px] tracking-[0.25em] text-[#64748B] uppercase mb-5">
-          MikiLab <span className="text-[#F6D27A]">→</span> Miki-Nexus <span className="text-[#00F0FF]">→</span> Mike Mix
+          MikiLab <span className="text-[#EAB308]">→</span> Miki-Nexus <span className="text-[#FF6B00]">→</span> Mike Mix
         </p>
 
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
           className="font-black tracking-[0.14em] text-2xl sm:text-4xl uppercase max-w-2xl">
           {tri("Il Multiverso della Panificazione", "Das Multiversum des Backens", "The Baking Multiverse", "El Multiverso de la Panificación", "Le Multivers de la Boulangerie", "چندجهانی نان‌پزی")}
         </motion.h1>
-        <p className="mt-3 max-w-md text-sm text-[#9fb3c4] leading-relaxed">
+        <p className="mt-3 max-w-md text-sm text-[#CBD5E1] leading-relaxed">
           {tri(
             "Sei un ospite. Esplora liberamente i reparti e gli avatar. Ogni interazione richiede un PIN.",
             "Du bist Gast. Erkunde frei die Bereiche und Avatare. Jede Interaktion erfordert einen PIN.",
@@ -194,12 +194,12 @@ export default function PublicGate({ onUnlock }) {
 
         <button data-testid="public-enter-btn" onClick={() => setShowPin(true)}
           className="mt-7 inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-base text-[#030712] active:scale-95 transition-all"
-          style={{ background: "linear-gradient(90deg,#00F0FF,#7DD3FC)", boxShadow: "0 0 26px rgba(0,240,255,0.45)" }}>
+          style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 26px rgba(255,107,0,0.45)" }}>
           <Lock className="w-4 h-4" /> {tri("Entra con il PIN", "Mit PIN eintreten", "Enter with PIN", "Entrar con PIN", "Entrer avec le PIN", "ورود با پین")} <ArrowRight className="w-4 h-4" />
         </button>
 
         <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[#64748B]">
-          <Sparkles className="w-3.5 h-3.5 text-[#F6D27A]" />
+          <Sparkles className="w-3.5 h-3.5 text-[#EAB308]" />
           {tri("Serve un accesso? Scrivi a", "Zugang nötig? Schreib an", "Need access? Write to", "¿Necesitas acceso? Escribe a", "Besoin d'accès ? Écris à", "دسترسی می‌خواهی؟ بنویس به")}
           <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#14b8a6] hover:text-[#2dd4bf]">accessi@mikilab.de</a>
         </div>
@@ -218,11 +218,11 @@ export default function PublicGate({ onUnlock }) {
             <>
               <p className="text-[11px] font-bold text-[#94A3B8] mb-2 text-left">{tri("Richiedi l'accesso dal portale", "Zugang anfragen", "Request access from the portal", "Solicitar acceso", "Demander l'accès", "درخواست دسترسی")}</p>
               <input data-testid="access-email" type="email" value={reqEmail} onChange={(e) => setReqEmail(e.target.value)} placeholder={tri("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton email", "ایمیل شما")}
-                className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
               <input data-testid="access-note" value={reqNote} onChange={(e) => setReqNote(e.target.value)} placeholder={tri("Motivo (opzionale)", "Grund (optional)", "Reason (optional)", "Motivo (opcional)", "Motif (option)", "دلیل")}
-                className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
               <button data-testid="access-send" onClick={sendRequest} disabled={reqBusy}
-                className="w-full py-2 rounded-lg font-bold text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#14b8a6,#7FD8C0)" }}>
+                className="w-full py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#14b8a6,#7FD8C0)" }}>
                 {reqBusy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia richiesta", "Anfrage senden", "Send request", "Enviar", "Envoyer", "ارسال")}
               </button>
             </>
@@ -233,7 +233,7 @@ export default function PublicGate({ onUnlock }) {
         <section data-testid="public-vetrina" className="mt-12 w-full max-w-3xl text-left">
           <h2 className="text-base md:text-lg font-black text-white uppercase tracking-wide text-center">{tri(
             "Cos'è MikiLab Pro", "Was ist MikiLab Pro", "What is MikiLab Pro", "Qué es MikiLab Pro", "Qu'est-ce que MikiLab Pro", "MikiLab Pro چیست")}</h2>
-          <p className="mt-2 text-sm text-[#9fb3c4] leading-relaxed text-center max-w-2xl mx-auto">{tri(
+          <p className="mt-2 text-sm text-[#CBD5E1] leading-relaxed text-center max-w-2xl mx-auto">{tri(
             "MikiLab Pro è il sistema operativo olografico per panificio, pizzeria e pasticceria. Unisce un multiverso 3D dei reparti, l'IA operativa Mike Mix e la coscienza strategica Miki-Nexus per gestire ricette, produzione, formazione e food cost — in un'unica interfaccia ad alta tecnologia.",
             "MikiLab Pro ist das holografische Betriebssystem für Backstube, Pizzeria und Konditorei: 3D-Multiversum, operative KI Mike Mix und strategische Instanz Miki-Nexus für Rezepte, Produktion, Schulung und Food Cost.",
             "MikiLab Pro is the holographic operating system for bakery, pizzeria and pastry: a 3D multiverse of departments, the Mike Mix operational AI and the Miki-Nexus strategic consciousness for recipes, production, training and food cost.",
@@ -242,13 +242,13 @@ export default function PublicGate({ onUnlock }) {
             "MikiLab Pro سیستم‌عامل هولوگرافیک برای نانوایی، پیتزا و شیرینی است.")}</p>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { t: tri("Ricettario Vivente", "Lebendes Rezeptbuch", "Living Recipe Book", "Recetario Vivo", "Livre Vivant", "دستورنامه زنده"), d: tri("Detta un obiettivo, Miki-Nexus calcola matrice e curva di maturazione.", "Ziel nennen, Miki-Nexus rechnet.", "Set a goal, Miki-Nexus computes the matrix and maturation curve.", "Fija un objetivo y Miki-Nexus calcula.", "Fixe un objectif, Miki-Nexus calcule.", "هدف بده تا محاسبه شود."), c: "#F6D27A" },
-              { t: tri("Produzione con l'IA", "KI-Produktion", "AI Production", "Producción con IA", "Production IA", "تولید با هوش"), d: tri("Piani, turni e food cost gestiti da Mike Mix in tempo reale.", "Pläne, Schichten, Food Cost von Mike Mix.", "Plans, shifts and food cost run by Mike Mix in real time.", "Planes, turnos y food cost por Mike Mix.", "Plans, équipes et food cost par Mike Mix.", "برنامه و شیفت با Mike Mix."), c: "#00F0FF" },
-              { t: tri("Formazione & Multiverso 3D", "Schulung & 3D", "Training & 3D Multiverse", "Formación & 3D", "Formation & 3D", "آموزش و ۳بعدی"), d: tri("Corsi interattivi per ricetta e un multiverso 3D immersivo dei reparti.", "Interaktive Kurse und 3D-Multiversum.", "Interactive per-recipe courses and an immersive 3D multiverse.", "Cursos interactivos y multiverso 3D.", "Cours interactifs et multivers 3D.", "دوره‌های تعاملی و چندجهانی."), c: "#7DD3FC" },
+              { t: tri("Ricettario Vivente", "Lebendes Rezeptbuch", "Living Recipe Book", "Recetario Vivo", "Livre Vivant", "دستورنامه زنده"), d: tri("Detta un obiettivo, Miki-Nexus calcola matrice e curva di maturazione.", "Ziel nennen, Miki-Nexus rechnet.", "Set a goal, Miki-Nexus computes the matrix and maturation curve.", "Fija un objetivo y Miki-Nexus calcula.", "Fixe un objectif, Miki-Nexus calcule.", "هدف بده تا محاسبه شود."), c: "#EAB308" },
+              { t: tri("Produzione con l'IA", "KI-Produktion", "AI Production", "Producción con IA", "Production IA", "تولید با هوش"), d: tri("Piani, turni e food cost gestiti da Mike Mix in tempo reale.", "Pläne, Schichten, Food Cost von Mike Mix.", "Plans, shifts and food cost run by Mike Mix in real time.", "Planes, turnos y food cost por Mike Mix.", "Plans, équipes et food cost par Mike Mix.", "برنامه و شیفت با Mike Mix."), c: "#FF6B00" },
+              { t: tri("Formazione & Multiverso 3D", "Schulung & 3D", "Training & 3D Multiverse", "Formación & 3D", "Formation & 3D", "آموزش و ۳بعدی"), d: tri("Corsi interattivi per ricetta e un multiverso 3D immersivo dei reparti.", "Interaktive Kurse und 3D-Multiversum.", "Interactive per-recipe courses and an immersive 3D multiverse.", "Cursos interactivos y multiverso 3D.", "Cours interactifs et multivers 3D.", "دوره‌های تعاملی و چندجهانی."), c: "#FF9D42" },
             ].map((f) => (
               <div key={f.t} className="rounded-xl bg-[#0b0f19]/70 border border-[#1e293b] p-4 backdrop-blur-md">
                 <p className="text-sm font-black" style={{ color: f.c }}>{f.t}</p>
-                <p className="mt-1 text-[12px] text-[#9fb3c4] leading-snug">{f.d}</p>
+                <p className="mt-1 text-[12px] text-[#CBD5E1] leading-snug">{f.d}</p>
               </div>
             ))}
           </div>

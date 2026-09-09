@@ -13,7 +13,7 @@ import { isBluetoothSupported, connectSensor, loadSensors } from "@/lib/bluetoot
 // Gestione Guasti & Celle — vista operativa (tema Oro del Grano).
 // Segnala macchine fuori uso e celle non funzionanti; il ricalcolo (regole offline) genera
 // note automatiche per il turno successivo. Include il riepilogo Basi & Pre-cotti.
-const C = { cream: "#0E1620", surf: "#1B2A38", border: "#2A3B49", gold: "#5E8CA8", title: "#5E8CA8", dark: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
+const C = { cream: "#0D1520", surf: "#1B2A38", border: "#2A3B49", gold: "#64748B", title: "#64748B", dark: "#F7F9FC", muted: "#94A3B8", danger: "#E63946" };
 
 export default function Emergenze() {
   const { lang } = useLang();

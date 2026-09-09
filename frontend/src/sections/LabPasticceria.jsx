@@ -19,7 +19,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
   const num = (v) => Math.round(v).toLocaleString(lang === "it" ? "it" : "en");
   const inp = "w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#3E9C93] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data";
   const lbl = "text-[12px] font-semibold text-[#3E9C93] dark:text-[#AEB8BF] mb-1";
-  const card = "rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
   const [tab, setTab] = useState("lievitati");
 
   // Grandi Lievitati: schedule 3 rinfreschi a 30°C
@@ -103,15 +103,15 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
     <div className="pb-8" data-testid="lab-pasticceria">
       {onBack && <button data-testid="pasticceria-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Back")}</button>}
       <RelatedToolsRow cat="pasticceria" onOpenTool={onOpenTool} />
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Cake className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Laboratorio Pasticceria & Lievitati", "Pastry & Leavened Lab")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Grandi lievitati, bilanciamento impasti dolci e gelateria da vetrina.", "Big leavened cakes, sweet dough balancing and display gelato.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Grandi lievitati, bilanciamento impasti dolci e gelateria da vetrina.", "Big leavened cakes, sweet dough balancing and display gelato.")}</p>
       </div>
 
       <div className="flex flex-wrap gap-1.5 bg-[#1B2A38] p-1.5 rounded-2xl mb-5 border border-[#2A3B49]">
         {TABS.map(({ id, Icon, label }) => (
-          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#3E9C93] text-[#0E1620] shadow" : "text-[#3E9C93]"}`}><Icon className="w-4 h-4" /> {label}</button>
+          <button key={id} data-testid={`pasticceria-tab-${id}`} onClick={() => setTab(id)} className={`flex-1 min-w-[30%] flex flex-col items-center gap-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-[11px] font-bold transition-all ${tab === id ? "bg-[#3E9C93] text-[#0D1520] shadow" : "text-[#3E9C93]"}`}><Icon className="w-4 h-4" /> {label}</button>
         ))}
       </div>
 
@@ -194,7 +194,7 @@ export default function LabPasticceria({ onBack, onOpenTool }) {
           <input data-testid="sc-name" value={prodName} onChange={(e) => setProdName(e.target.value)} className={inp + " !font-sans mb-3"} placeholder={L("Es. Cornetto alla crema", "e.g. Cream croissant")} />
           <p className={lbl}>{L("Ingredienti", "Ingredients")}</p>
           <textarea data-testid="sc-ing" value={prodIng} onChange={(e) => setProdIng(e.target.value)} rows={3} className={inp + " !font-sans mb-3"} placeholder={L("Farina, burro, uova, zucchero…", "Flour, butter, eggs, sugar…")} />
-          <div data-testid="sc-preview" className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#0E1620] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
+          <div data-testid="sc-preview" className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#0D1520] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
             <p className="font-display text-lg font-bold text-[#3E9C93] dark:text-[#e4eff8]">{prodName || L("Scheda prodotto", "Product sheet")}</p>
             {prodIng && <p className="text-[13px] text-[#3F4A54] dark:text-[#AEB8BF] mt-1"><b>{L("Ingredienti", "Ingredients")}:</b> {prodIng}</p>}
           </div>

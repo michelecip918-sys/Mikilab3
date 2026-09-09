@@ -29,14 +29,14 @@ export default function OperatorClock() {
   return (
     <div data-testid="operator-clock" className="w-full holo-panel p-4 mb-4">
       <span className="holo-scan-top" />
-      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#00F0FF]/80 mb-2">{tri("Timbratura personale (PIN)", "Persönliche Stempelung (PIN)", "Personal clock-in (PIN)", "Fichaje personal (PIN)", "Pointage personnel (PIN)", "ثبت شخصی (پین)")}</p>
+      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#FF6B00]/80 mb-2">{tri("Timbratura personale (PIN)", "Persönliche Stempelung (PIN)", "Personal clock-in (PIN)", "Fichaje personal (PIN)", "Pointage personnel (PIN)", "ثبت شخصی (پین)")}</p>
       <div className="flex flex-wrap items-center gap-2">
-        <input data-testid="clock-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN" className="w-24 bg-[#0C1019] border border-[#00F0FF]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#00F0FF] outline-none" />
-        <button data-testid="clock-in-btn" onClick={() => clock("in")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogIn className="w-4 h-4" /> {tri("Entrata", "Kommt", "In", "Entrada", "Entrée", "ورود")}</button>
+        <input data-testid="clock-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN" className="w-24 bg-[#0C1019] border border-[#FF6B00]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#FF6B00] outline-none" />
+        <button data-testid="clock-in-btn" onClick={() => clock("in")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogIn className="w-4 h-4" /> {tri("Entrata", "Kommt", "In", "Entrada", "Entrée", "ورود")}</button>
         <button data-testid="clock-break-btn" onClick={() => clock("break_start")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#FFB800]/15 border border-[#FFB800]/50 text-[#FFB800] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><Coffee className="w-4 h-4" /> {tri("Pausa", "Pause", "Break", "Pausa", "Pause", "استراحت")}</button>
         <button data-testid="clock-out-btn" onClick={() => clock("out")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#94a3b8] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogOut className="w-4 h-4" /> {tri("Uscita", "Geht", "Out", "Salida", "Sortie", "خروج")}</button>
       </div>
-      {msg && <p data-testid="clock-msg" className={`mt-2 text-sm font-bold ${msg.ok ? "text-[#7DD3FC]" : "text-[#f87171]"}`}>{msg.text}</p>}
+      {msg && <p data-testid="clock-msg" className={`mt-2 text-sm font-bold ${msg.ok ? "text-[#FF9D42]" : "text-[#f87171]"}`}>{msg.text}</p>}
     </div>
   );
 }

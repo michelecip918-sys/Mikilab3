@@ -117,14 +117,14 @@ export default function SpatialVisionAR({ onClose }) {
             <button data-testid="vision-start-cam" onClick={startCam} className="col-span-2 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0b0f19] border border-[#7DA3C0]/50 text-[#7DA3C0] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Accendi fotocamera", "Kamera an", "Turn on camera", "Encender cámara", "Allumer la caméra", "روشن کردن دوربین")}</button>
           ) : (
             <>
-              <button data-testid="vision-scan-btn" onClick={captureAndScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#5E8CA8] to-[#38618C] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+              <button data-testid="vision-scan-btn" onClick={captureAndScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#64748B] to-[#38618C] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
               <button data-testid="vision-stop-cam" onClick={stopCam} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-[#94A3B8] font-bold text-sm active:scale-95"><X className="w-4 h-4" /> {tri("Spegni", "Aus", "Off", "Apagar", "Éteindre", "خاموش")}</button>
             </>
           )}
         </div>
 
         {insight && (
-          <div className="rounded-2xl border border-[#7DA3C0]/40 p-3 mb-4 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#5E8CA818,transparent)" }} data-testid="vision-insight">
+          <div className="rounded-2xl border border-[#7DA3C0]/40 p-3 mb-4 flex items-start gap-2" style={{ background: "linear-gradient(135deg,#64748B18,transparent)" }} data-testid="vision-insight">
             <Sparkles className="w-4 h-4 text-[#7DA3C0] mt-0.5 shrink-0" />
             <p className="text-[12px] text-[#cfe0ec]">{insight}</p>
           </div>

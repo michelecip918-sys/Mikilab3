@@ -159,7 +159,7 @@ export default function EvolvingQuiz() {
         </button>
       )}
       {user && showBoard && (
-        <div data-testid="quiz-leaderboard" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3 space-y-1.5">
+        <div data-testid="quiz-leaderboard" className="mb-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3 space-y-1.5">
           <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1">{tri("Sfida «Fornaio della Settimana» — punti Master tra amici", "Challenge «Bäcker der Woche» — Master-Punkte unter Freunden", "«Baker of the Week» challenge — Master points among friends", "Desafío «Panadero de la Semana» — puntos Master entre amigos")}</p>
           {champion && (
             <div data-testid="quiz-champion" className="flex items-center gap-2.5 rounded-lg bg-gradient-to-r from-[#3E9C93] to-[#3E9C93] text-white px-2.5 py-2 mb-1">
@@ -216,7 +216,7 @@ export default function EvolvingQuiz() {
           </div>
 
           {picked != null && (
-            <div data-testid="quiz-explanation" className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3">
+            <div data-testid="quiz-explanation" className="mt-3 rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3">
               <p className={`text-sm font-bold mb-1 ${picked === q.correct ? "text-[#2e8b6f]" : "text-[#3E9C93]"}`}>
                 {picked === q.correct ? tri("✅ Corretto!", "✅ Richtig!", "✅ Correct!", "✅ ¡Correcto!") : tri("❌ Sbagliato", "❌ Falsch", "❌ Wrong", "❌ Incorrecto")}
               </p>

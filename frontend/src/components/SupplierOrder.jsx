@@ -92,11 +92,11 @@ export default function SupplierOrder({ totals }) {
         </a>
         <div className="grid grid-cols-2 gap-2 mt-3">
           <button data-testid="supplier-mail-btn" onClick={sendEmail} disabled={!data}
-            className="bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
             <Mail className="w-4 h-4" /> {t("shop_send_email")}
           </button>
           <button data-testid="supplier-share-btn" onClick={share} disabled={!data}
-            className="bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all flex items-center justify-center gap-2">
             <Share2 className="w-4 h-4" /> {t("shop_share")}
           </button>
         </div>

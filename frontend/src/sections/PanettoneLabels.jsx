@@ -56,7 +56,7 @@ export default function PanettoneLabels() {
       </div>
 
       <button data-testid="labels-print-btn" onClick={() => window.print()}
-        className="no-print w-full mb-5 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="no-print w-full mb-5 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <Printer className="w-5 h-5" /> {view === "labels" ? t("labels_print") : t("listino_print")}
       </button>
 

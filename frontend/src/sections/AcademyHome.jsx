@@ -149,7 +149,7 @@ export default function AcademyHome({ onNavigate }) {
             <p className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Diagnosi Foto IA", "Foto-Diagnose KI", "AI Photo Diagnosis", "Diagnóstico Foto IA")}</p>
             <p className="text-sm text-[#7E8A93] mt-1 max-w-sm mx-auto">{tri("Scatta o carica una foto dell'impasto o della crosta: l'IA ti dice cosa correggere.", "Mach oder lade ein Foto von Teig oder Kruste hoch: die KI sagt dir, was du korrigieren sollst.", "Take or upload a photo of the dough or crust: the AI tells you what to fix.", "Haz o sube una foto de la masa o la corteza: la IA te dice qué corregir.")}</p>
             <button data-testid="academy-open-diagnosi" onClick={() => onNavigate && onNavigate("diagnosi")}
-              className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+              className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
               <Camera className="w-5 h-5" /> {tri("Apri Diagnosi Foto", "Foto-Diagnose öffnen", "Open Photo Diagnosis", "Abrir Diagnóstico")}
             </button>
           </div>
@@ -234,7 +234,7 @@ function DynamicRecipes() {
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Ricetta", "Rezept", "Recipe")}</span>
             <select data-testid="calc-recipe" value={recipe} onChange={(e) => setRecipe(e.target.value)}
-              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0E1620] px-3 py-2.5">
+              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0D1520] px-3 py-2.5">
               {CALC_RECIPES.map((c) => <option key={c.id} value={c.id}>{L(c.name)}</option>)}
             </select>
           </label>
@@ -242,18 +242,18 @@ function DynamicRecipes() {
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Larghezza teglia (cm)", "Blechbreite (cm)", "Tin width (cm)")}</span>
               <input data-testid="calc-width" type="number" value={width} onChange={(e) => setWidth(e.target.value)}
-                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0E1620] px-3 py-2.5" />
+                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0D1520] px-3 py-2.5" />
             </label>
             <label className="text-sm">
               <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Lunghezza teglia (cm)", "Blechlänge (cm)", "Tin length (cm)")}</span>
               <input data-testid="calc-length" type="number" value={length} onChange={(e) => setLength(e.target.value)}
-                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0E1620] px-3 py-2.5" />
+                className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0D1520] px-3 py-2.5" />
             </label>
           </div>
           <label className="text-sm">
             <span className="block text-xs font-semibold text-[#7E8A93] mb-1">{tri("Farina", "Mehl", "Flour")}</span>
             <select data-testid="calc-flour" value={flour} onChange={(e) => setFlour(e.target.value)}
-              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0E1620] px-3 py-2.5">
+              className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0D1520] px-3 py-2.5">
               {FLOURS.map((f) => <option key={f.name} value={f.name}>{f.name} · {f.type_de}</option>)}
             </select>
           </label>
@@ -275,7 +275,7 @@ function DynamicRecipes() {
       </div>
 
       <button data-testid="calc-print" onClick={downloadPdf}
-        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+        className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         <Printer className="w-5 h-5" /> {tri("Scarica scheda PDF (IT · DE · EN)", "PDF-Karte herunterladen (IT · DE · EN)", "Download recipe card PDF (IT · DE · EN)")}
       </button>
     </div>
@@ -301,7 +301,7 @@ function FlourDB() {
     <div className="space-y-3" data-testid="flour-db">
       <input data-testid="flour-search" value={q} onChange={(e) => setQ(e.target.value)}
         placeholder={tri("Cerca farina (es. 00, Dinkel, Manitoba)", "Mehl suchen (z.B. 00, Dinkel, Manitoba)", "Search flour (e.g. 00, Dinkel, Manitoba)")}
-        className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0E1620] px-3 py-2.5 text-sm" />
+        className="w-full rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#0D1520] px-3 py-2.5 text-sm" />
       <div className="rounded-2xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49]">
         <div className="grid grid-cols-[1fr_1fr_auto] gap-2 bg-[#e4eff8] dark:bg-[#1B2A38] px-3 py-2 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93]">
           <span>IT</span><span>DE (Type)</span><span>W</span>

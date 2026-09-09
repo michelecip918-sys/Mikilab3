@@ -9,7 +9,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
   sanificazione: { icon: Brush, c: "#22c55e", it: "Sanificazione", de: "Reinigung", en: "Sanitation", es: "Sanitización", fr: "Nettoyage", fa: "بهداشت" },
-  regola: { icon: ShieldAlert, c: "#5E8CA8", it: "Regola", de: "Regel", en: "Rule", es: "Regla", fr: "Règle", fa: "قاعده" },
+  regola: { icon: ShieldAlert, c: "#64748B", it: "Regola", de: "Regel", en: "Rule", es: "Regla", fr: "Règle", fa: "قاعده" },
   crisis_override: { icon: Gauge, c: "#f59e0b", it: "Crisis Override", de: "Crisis Override", en: "Crisis Override", es: "Crisis Override", fr: "Crisis Override", fa: "بازنویسی بحران" },
   generico: { icon: ListChecks, c: "#5EEAD4", it: "Task", de: "Aufgabe", en: "Task", es: "Tarea", fr: "Tâche", fa: "وظیفه" },
 };

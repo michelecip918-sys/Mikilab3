@@ -83,7 +83,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
 
   return (
     <div data-testid="profile-panel" className="fixed inset-0 z-[60] bg-black/50 flex items-end sm:items-center justify-center" onClick={onClose}>
-      <div className="bg-white dark:bg-[#0E1620] w-full sm:max-w-lg sm:rounded-3xl rounded-t-3xl max-h-[88vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+      <div className="bg-white dark:bg-[#0D1520] w-full sm:max-w-lg sm:rounded-3xl rounded-t-3xl max-h-[88vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
         <div className="relative p-6 text-white" style={{ background: "linear-gradient(135deg,#0f2231,#1B2A38 45%,#1f5a68 72%,#3E9C93)" }}>
           <button data-testid="profile-close" onClick={onClose} className="absolute top-3 right-3 bg-white/20 rounded-full p-1.5"><X className="w-5 h-5" /></button>
           {!data ? (
@@ -160,7 +160,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                 </div>
                 <textarea data-testid="profile-bio-input" value={bio} onChange={(e) => setBio(e.target.value)} rows={3} maxLength={300}
                   placeholder={tri("Scrivi una breve bio: chi sei, il tuo forno, la tua specialità…", "Kurze Bio: wer du bist, deine Bäckerei, deine Spezialität…", "Short bio: who you are, your bakery, your specialty…", "Bio breve: quién eres, tu horno, tu especialidad…")}
-                  className="w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-3 text-sm outline-none" />
+                  className="w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-3 text-sm outline-none" />
                 <div className="flex gap-2">
                   <button data-testid="profile-save" onClick={save} disabled={saving} className="flex-1 bg-[#1B2A38] text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 disabled:opacity-60">{saving ? "…" : tri("Salva", "Speichern", "Save", "Guardar")}</button>
                   <button onClick={() => setEditing(false)} className="px-4 py-2.5 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49] text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
@@ -197,7 +197,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
                     { v: "off", it: "Disattivato", de: "Aus", en: "Off", es: "Apagado" },
                   ].map((o) => (
                     <button key={o.v} data-testid={`email-pref-${o.v}`} onClick={() => changeEmailMode(o.v)}
-                      className={`rounded-2xl shadow-md border border-amber-900/40 px-2 py-2.5 text-[12px] font-bold border transition-all active:scale-95 ${emailMode === o.v ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-[#0E1620] dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+                      className={`rounded-2xl shadow-md border border-amber-900/40 px-2 py-2.5 text-[12px] font-bold border transition-all active:scale-95 ${emailMode === o.v ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-[#0D1520] dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
                       {tri(o.it, o.de, o.en, o.es)}
                     </button>
                   ))}
@@ -233,7 +233,7 @@ export default function ProfilePanel({ userId, onClose, onMessage }) {
               ) : (
                 <div className="space-y-2">
                   {data.posts.map((p) => (
-                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3">
+                    <div key={p.id} data-testid={`profile-post-${p.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-3">
                       <span className="text-[10px] font-bold uppercase tracking-wide text-[#1B2A38] dark:text-[#8FB0C2]">{p.category}</span>
                       <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] mt-0.5 line-clamp-3">{p.text}</p>
                       {p.photo && <img src={p.photo} alt="" className="w-full h-32 object-cover rounded-lg mt-2" />}

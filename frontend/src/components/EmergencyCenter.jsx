@@ -68,7 +68,7 @@ export default function EmergencyCenter() {
     <div data-testid="emergency-center">
       {!active ? (
         <div data-testid="emergency-idle" className="flex items-center gap-3 py-2 text-sm text-[#7d97ac]">
-          <ShieldAlert className="w-4 h-4 text-[#7DD3FC]" />
+          <ShieldAlert className="w-4 h-4 text-[#FF9D42]" />
           {tri("Nessuna emergenza attiva. Il radar è in ascolto del reparto.", "Keine aktiven Notfälle. Der Radar hört mit.", "No active emergencies. The radar is listening to the floor.", "Sin emergencias activas. El radar escucha.", "Aucune urgence active. Le radar écoute.", "هیچ اضطراری فعالی نیست. رادار در حال گوش دادن است.")}
         </div>
       ) : (
@@ -114,18 +114,18 @@ export default function EmergencyCenter() {
 
       {hist && hist.resolved_count > 0 && (
         <div className="mt-2">
-          <button data-testid="sos-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full inline-flex items-center gap-1.5 text-[11px] font-bold text-[#7DD3FC] py-1.5">
+          <button data-testid="sos-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full inline-flex items-center gap-1.5 text-[11px] font-bold text-[#FF9D42] py-1.5">
             <History className="w-3.5 h-3.5" /> {tri("Storico & Reattività", "Verlauf & Reaktion", "History & Reactivity", "Historial & Reactividad", "Historique & Réactivité", "تاریخچه و واکنش")} ({hist.resolved_count}) {showHist ? "▲" : "▼"}
           </button>
           {showHist && (
             <div data-testid="sos-history" className="space-y-2 mt-1">
               {chal && chal.leaderboard && chal.leaderboard.length > 0 && (
-                <div data-testid="sos-challenge" className="rounded-xl border border-[#00F0FF]/30 bg-[#00F0FF]/5 p-2.5">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] mb-1.5">🏁 {chal.title}</p>
+                <div data-testid="sos-challenge" className="rounded-xl border border-[#FF6B00]/30 bg-[#FF6B00]/5 p-2.5">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-[#FF6B00] mb-1.5">🏁 {chal.title}</p>
                   {chal.leaderboard.map((b) => (
                     <div key={b.shift} data-testid={`sos-challenge-${b.shift}`} className="flex items-center justify-between text-[12px] text-white py-0.5">
                       <span className="capitalize">{(b.badges || []).join(" ")} {b.shift} <span className="text-[#64748b]">({b.count})</span></span>
-                      <span className="font-bold text-[#00F0FF]">{fmtDur(b.avg_response_s)}</span>
+                      <span className="font-bold text-[#FF6B00]">{fmtDur(b.avg_response_s)}</span>
                     </div>
                   ))}
                 </div>
@@ -146,7 +146,7 @@ export default function EmergencyCenter() {
                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
                   <span className="text-[12px] text-white flex-1 min-w-0 truncate">{h.operator}{h.machine ? ` · ${h.machine}` : ""}</span>
                   <span className="text-[10px] text-[#64748b] capitalize">{h.shift}</span>
-                  <span className="text-[11px] font-bold text-[#7DD3FC]">{fmtDur(h.response_seconds)}</span>
+                  <span className="text-[11px] font-bold text-[#FF9D42]">{fmtDur(h.response_seconds)}</span>
                 </div>
               ))}
             </div>

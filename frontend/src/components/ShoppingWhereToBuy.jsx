@@ -66,12 +66,12 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
         <div className="flex items-center gap-2 mt-1.5">
           <input data-testid="shopping-target-input" type="number" min={100} step={100} value={target}
             onChange={(e) => setTarget(Math.max(100, Number(e.target.value) || 100))}
-            className="w-28 bg-[#0E1620] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#3E9C93]" />
+            className="w-28 bg-[#0D1520] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2 text-sm text-white outline-none focus:border-[#3E9C93]" />
           <span className="text-sm text-[#AEB8BF]">g</span>
           <div className="flex gap-1.5 ml-1">
             {presets.map((p) => (
               <button key={p} data-testid={`shopping-preset-${p}`} onClick={() => setTarget(p)}
-                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${target === p ? "bg-[#3E9C93] text-[#0E1620]" : "bg-[#0E1620] text-[#AEB8BF] border border-[#2A3B49]"}`}>
+                className={`px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all ${target === p ? "bg-[#3E9C93] text-[#0D1520]" : "bg-[#0D1520] text-[#AEB8BF] border border-[#2A3B49]"}`}>
                 {p >= 1000 ? `${p / 1000}kg` : `${p}g`}
               </button>
             ))}
@@ -84,7 +84,7 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
       ) : (
         <div className="space-y-3" data-testid="shopping-sections">
           {sections.map((s) => (
-            <div key={s.key} data-testid={`shopping-cat-${s.key}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-3.5">
+            <div key={s.key} data-testid={`shopping-cat-${s.key}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] border border-[#2A3B49] p-3.5">
               <div className="flex items-center gap-2 mb-2">
                 <s.Icon className="w-4 h-4 text-[#3E9C93]" />
                 <h4 className="font-display text-sm font-bold text-white">{s.title}</h4>
@@ -104,7 +104,7 @@ export default function ShoppingWhereToBuy({ recipe, lang }) {
           ))}
 
           {/* Attrezzi & Teglie */}
-          <div data-testid="shopping-cat-attrezzi" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0E1620] border border-[#2A3B49] p-3.5">
+          <div data-testid="shopping-cat-attrezzi" className="rounded-2xl shadow-md border border-amber-900/40 bg-[#0D1520] border border-[#2A3B49] p-3.5">
             <div className="flex items-center gap-2 mb-2">
               <Wrench className="w-4 h-4 text-[#3E9C93]" />
               <h4 className="font-display text-sm font-bold text-white">{L("Attrezzi & Teglie", "Werkzeuge & Bleche", "Tools & Pans", "Utensilios y bandejas", "Outils & plaques", "ابزار و قالب")}</h4>

@@ -40,13 +40,13 @@ export default function ConsoleSectionMenu({ active, onPick }) {
         const on = active === s.key;
         return (
           <button key={s.key} data-testid={`console-section-${s.key}`} onClick={() => onPick(on ? "" : s.key)}
-            className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-all active:scale-[0.99] ${on ? "border-[#00F0FF]/70 bg-[#00F0FF]/10 shadow-[0_0_18px_rgba(0,240,255,0.15)]" : "border-[#1e293b] bg-[#0C1019] hover:border-[#00F0FF]/40"}`}>
+            className={`flex items-center gap-3 px-4 py-3 rounded-2xl border text-left transition-all active:scale-[0.99] ${on ? "border-[#FF6B00]/70 bg-[#FF6B00]/10 shadow-[0_0_18px_rgba(255,107,0,0.15)]" : "border-[#1e293b] bg-[#0C1019] hover:border-[#FF6B00]/40"}`}>
             <span className="text-2xl shrink-0">{s.icon}</span>
             <div className="flex-1 min-w-0">
-              <p className={`font-tech font-black text-sm uppercase tracking-wide ${on ? "text-[#00F0FF]" : "text-white"}`}>{label(s.key)}</p>
-              <p className="text-[11px] text-[#8aa0b4] truncate">{desc(s.key)}</p>
+              <p className={`font-tech font-black text-sm uppercase tracking-wide ${on ? "text-[#FF6B00]" : "text-white"}`}>{label(s.key)}</p>
+              <p className="text-[11px] text-[#94A3B8] truncate">{desc(s.key)}</p>
             </div>
-            <span className={`text-lg font-black transition-transform ${on ? "text-[#00F0FF] rotate-90" : "text-[#334155]"}`}>›</span>
+            <span className={`text-lg font-black transition-transform ${on ? "text-[#FF6B00] rotate-90" : "text-[#334155]"}`}>›</span>
           </button>
         );
       })}

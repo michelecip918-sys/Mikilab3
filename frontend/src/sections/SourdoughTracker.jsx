@@ -122,7 +122,7 @@ export default function SourdoughTracker() {
       </div>
 
       <button data-testid="ph-add-btn" onClick={() => add(ph, temp)}
-        className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 mb-2">
+        className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2 mb-2">
         <Plus className="w-5 h-5" /> {tri("Registra misura", "Messung speichern", "Save reading")}
       </button>
 

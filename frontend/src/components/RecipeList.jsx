@@ -255,7 +255,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <button
           data-testid="add-recipe-btn"
           onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+          className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
         >
           <Plus className="w-5 h-5" /> {t("add_recipe")}
         </button>
@@ -285,7 +285,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <p className="text-[12.5px] text-[#7E8A93] mt-1.5 max-w-xs mx-auto leading-snug">{triM("Questo archivio è 100% riservato a te: nessuna ricetta di esempio, solo le tue.", "Dieses Archiv gehört zu 100% dir: keine Beispielrezepte, nur deine.", "This archive is 100% yours: no example recipes, only yours.", "Este archivo es 100% tuyo: sin recetas de ejemplo.")}</p>
               {canEdit && (
                 <button data-testid="empty-add-recipe-btn" onClick={() => { setEditing(null); setDialogOpen(true); }}
-                  className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+                  className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
                   <Plus className="w-5 h-5" /> {triM("Aggiungi nuova ricetta privata", "Neues privates Rezept", "Add new private recipe", "Añadir receta privada")}
                 </button>
               )}
@@ -555,10 +555,10 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
       {/* Finestra ricetta */}
       <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
-        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49] p-0">
+        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49] p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
-          <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-[#0E1620]/95 dark:bg-[#0E1620]/95 backdrop-blur">
+          <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-[#0D1520]/95 dark:bg-[#0D1520]/95 backdrop-blur">
             {canEdit && viewing && (lang === "de" || lang === "en" || lang === "es") && !viewing[`name_${lang}`] && (
               <button data-testid="recipe-translate-btn" disabled={translating}
                 onClick={async () => {
@@ -616,7 +616,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       />
 
       <AlertDialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
-        <AlertDialogContent className="bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49]">
+        <AlertDialogContent className="bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
           <AlertDialogHeader>
             <AlertDialogTitle className="font-display">{t("delete_recipe_q")}</AlertDialogTitle>
             <AlertDialogDescription>
@@ -628,7 +628,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <AlertDialogAction
               data-testid="delete-confirm-btn"
               onClick={handleDelete}
-              className="bg-[#3E9C93] hover:bg-[#5E8CA8]"
+              className="bg-[#3E9C93] hover:bg-[#64748B]"
             >
               {t("delete")}
             </AlertDialogAction>
@@ -778,7 +778,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
               {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0E1620]/70 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0D1520]/70 to-transparent" />
         </div>
       )}
       <div className="p-5 space-y-4 print-area">
@@ -1097,8 +1097,8 @@ const BADGE_STYLE = {
   LDB: "bg-[#3E9C93]/12 text-[#3E9C93] border-[#3E9C93]/35",
   Rg: "bg-[#3E9C93]/12 text-[#3E9C93] border-[#3E9C93]/35",
   Vk: "bg-[#3E9C93]/12 text-[#3E9C93] border-[#3E9C93]/35",
-  Poolish: "bg-[#3E9C93]/12 text-[#5E8CA8] border-[#3E9C93]/35",
-  Biga: "bg-[#3E9C93]/12 text-[#5E8CA8] border-[#3E9C93]/35",
+  Poolish: "bg-[#3E9C93]/12 text-[#64748B] border-[#3E9C93]/35",
+  Biga: "bg-[#3E9C93]/12 text-[#64748B] border-[#3E9C93]/35",
 };
 function badgeClass(b) {
   return BADGE_STYLE[b] || "bg-[#3E9C93]/15 text-[#3E9C93] border-[#3E9C93]/35";

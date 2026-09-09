@@ -48,12 +48,12 @@ export default function RoleLayout() {
 
   return (
     <div data-testid="role-layout" className="flex items-center gap-1.5 overflow-x-auto pb-1">
-      <span className="text-[10px] font-mono-data uppercase tracking-widest text-[#5E8CA8] shrink-0 mr-1">{tri("Vista plancia", "Ansicht", "Console view", "Vista", "Vue", "نمای کنسول")}</span>
+      <span className="text-[10px] font-mono-data uppercase tracking-widest text-[#64748B] shrink-0 mr-1">{tri("Vista plancia", "Ansicht", "Console view", "Vista", "Vue", "نمای کنسول")}</span>
       {ROLES.map((r) => {
         const on = role === r.id;
         return (
           <button key={r.id} data-testid={`roleview-${r.id}`} onClick={() => pick(r.id)}
-            className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border active:scale-95 transition-all ${on ? "bg-[#00F0FF]/15 border-[#00F0FF]/50 text-[#00F0FF]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+            className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border active:scale-95 transition-all ${on ? "bg-[#FF6B00]/15 border-[#FF6B00]/50 text-[#FF6B00]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
             <r.icon className="w-3.5 h-3.5" /> {r.lbl(tri)}
           </button>
         );

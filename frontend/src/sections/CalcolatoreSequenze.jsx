@@ -78,11 +78,11 @@ export default function CalcolatoreSequenze({ onBack }) {
         <ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back", "Atrás")}
       </button>}
 
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5"
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5"
         style={{ background: "linear-gradient(135deg,#3E9C93 0%,#3E9C93 60%,#3E9C93 100%)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><SlidersHorizontal className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Calcolatore Metodo & Sequenze IA", "Methode & Abläufe (KI)", "Method & Sequences (AI)", "Método y Secuencias (IA)")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Calcola velocità d'impasto, ritmi (veloce/lento), pause e la sequenza delle lavorazioni in base al tipo d'impasto e all'impastatrice.", "Berechnet Knetgeschwindigkeiten, Rhythmen, Pausen und Arbeitsabfolge je nach Teig und Kneter.", "Computes mixing speeds, rhythms, pauses and the work sequence based on dough type and mixer.", "Calcula velocidades de amasado, ritmos, pausas y la secuencia de trabajo.")}</p>
       </div>
 
       <div className="grid grid-cols-1 gap-3 mb-4">

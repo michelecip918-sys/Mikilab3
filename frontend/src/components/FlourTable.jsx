@@ -40,12 +40,12 @@ export default function FlourTable({ embedded = false }) {
         <p className="text-xs font-bold uppercase text-[#1B2A38] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
         <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49]">
           <table className="w-full border-collapse">
-            <thead className="bg-[#0E1620] dark:bg-[#1B2A38]">
+            <thead className="bg-[#0D1520] dark:bg-[#1B2A38]">
               <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
             </thead>
             <tbody>
               {FLOURS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#0E1620]/50 dark:bg-[#1B2A38]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-[#0D1520]/50 dark:bg-[#1B2A38]/50" : ""}>
                   <td className={td + " font-semibold"}>{r[0]}</td>
                   <td className={td + " font-mono-data"}>{r[1]}</td>
                   <td className={td + " font-mono-data"}>{r[2]}</td>
@@ -61,12 +61,12 @@ export default function FlourTable({ embedded = false }) {
         <p className="text-xs font-bold uppercase text-[#1B2A38] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
         <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49]">
           <table className="w-full border-collapse">
-            <thead className="bg-[#0E1620] dark:bg-[#1B2A38]">
+            <thead className="bg-[#0D1520] dark:bg-[#1B2A38]">
               <tr><th className={th}>{tri("Sigla", "Kürzel", "Code")}</th><th className={th}>🇮🇹 IT</th><th className={th}>🇩🇪 DE</th><th className={th}>🌍 EN</th></tr>
             </thead>
             <tbody>
               {SIGNS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#0E1620]/50 dark:bg-[#1B2A38]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-[#0D1520]/50 dark:bg-[#1B2A38]/50" : ""}>
                   <td className={td + " font-mono-data font-semibold"}>{r[0]}</td>
                   <td className={td}>{r[1]}</td><td className={td}>{r[2]}</td><td className={td}>{r[3]}</td>
                 </tr>

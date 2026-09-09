@@ -119,7 +119,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
     <div data-testid="site-menu" className="fixed inset-0 z-[300]" onClick={() => setOpen(false)}>
       <div className="absolute inset-0 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200" />
       <div onClick={(e) => e.stopPropagation()}
-        className="absolute top-0 left-0 h-full w-[88%] max-w-sm bg-[#0E1620] dark:bg-[#1A1F24] shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
+        className="absolute top-0 left-0 h-full w-[88%] max-w-sm bg-[#0D1520] dark:bg-[#1A1F24] shadow-2xl overflow-y-auto animate-in slide-in-from-left duration-300">
         <div className="sticky top-0 z-10 bg-[#3E9C93] text-white">
           <div className="flex items-center justify-between px-4 py-3">
             <div className="min-w-0">
@@ -228,7 +228,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
             {/* Voce assistente: selettore Operatore (Michele / Momi), voci ElevenLabs */}
             <div data-testid="site-menu-voice" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#3E9C93]/40 p-2.5">
               <p className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5"><Mic className="w-3.5 h-3.5 text-[#3E9C93]" /> {tri("Voce assistente", "Assistenten-Stimme", "Assistant voice", "Voz del asistente")}</p>
-              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#0E1620]">
+              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#0D1520]">
                 {[
                   { id: "michele", label: tri("Michele", "Michele", "Michele", "Michele"), sub: tri("Maschile profonda", "Tief männlich", "Deep male", "Grave masculina") },
                   { id: "momy", label: "Momi", sub: tri("Voce dedicata", "Eigene Stimme", "Dedicated voice", "Voz dedicada") },
@@ -256,13 +256,13 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
                   {!pinEditing ? (
                     <>
                       <button data-testid="site-menu-pin-change" onClick={() => { setPinEditing(true); setPinMsg(""); }} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#3E9C93]/12 text-[#3E9C93]">{tri("Cambia PIN", "PIN ändern", "Change PIN", "Cambiar PIN")}</button>
-                      <button data-testid="site-menu-lock-now" onClick={lockNowBtn} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#1B2A38] text-[#5E8CA8] border border-[#2A3B49]">{tri("Blocca ora", "Jetzt sperren", "Lock now", "Bloquear ahora")}</button>
+                      <button data-testid="site-menu-lock-now" onClick={lockNowBtn} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#1B2A38] text-[#64748B] border border-[#2A3B49]">{tri("Blocca ora", "Jetzt sperren", "Lock now", "Bloquear ahora")}</button>
                     </>
                   ) : (
                     <>
                       <input data-testid="site-menu-pin-input" value={newPin} onChange={(e) => setNewPin(e.target.value.replace(/\D/g, "").slice(0, 6))}
                         inputMode="numeric" maxLength={6} placeholder="••••••" autoFocus
-                        className="w-24 text-center tracking-[6px] font-extrabold text-[16px] py-1.5 rounded-lg bg-[#f0f4f8] dark:bg-[#0E1620] border border-[#3E9C93]/40 text-[#2b3640] dark:text-white" />
+                        className="w-24 text-center tracking-[6px] font-extrabold text-[16px] py-1.5 rounded-lg bg-[#f0f4f8] dark:bg-[#0D1520] border border-[#3E9C93]/40 text-[#2b3640] dark:text-white" />
                       <button data-testid="site-menu-pin-save" onClick={savePin} className="text-[12px] font-bold px-2.5 py-1.5 rounded-lg bg-[#3E9C93] text-white">{tri("Salva", "Speichern", "Save", "Guardar")}</button>
                       <button onClick={() => { setPinEditing(false); setNewPin(""); }} className="text-[12px] font-semibold px-2 py-1.5 rounded-lg text-[#7E8A93]">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar")}</button>
                     </>
@@ -274,7 +274,7 @@ export default function SiteMenu({ onNavigate, onOpenSfide, tab }) {
             {/* Interruttore modalità: Pro (tutto) / Passione (senza B2B) */}
             <div data-testid="site-menu-mode" className="mt-1 rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#3E9C93]/40 p-2.5">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#7E8A93] mb-1.5 px-0.5">{tri("Modalità", "Modus", "Mode", "Modo")}</p>
-              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#0E1620]">
+              <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-[#e4eff8] dark:bg-[#0D1520]">
                 {[
                   { id: "pro", label: tri("Fornaio Pro", "Bäcker Pro", "Baker Pro", "Panadero Pro") },
                   { id: "passion", label: tri("Per Passione", "Aus Leidenschaft", "For Passion", "Por Pasión") },

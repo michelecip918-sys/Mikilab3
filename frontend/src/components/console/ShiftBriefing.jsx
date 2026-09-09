@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
-const STRESS = { calmo: "#7DD3FC", medio: "#FFB800", alto: "#f43f5e" };
+const STRESS = { calmo: "#FF9D42", medio: "#FFB800", alto: "#f43f5e" };
 const themeFor = (av) => (av || "").includes("mikemix") ? "mikemix" : (av || "").includes("bigmix") ? "bigmix" : "miki";
 const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
 const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
@@ -40,12 +40,12 @@ export default function ShiftBriefing({ onClose }) {
     return () => timers.current.forEach(clearTimeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const stressColor = STRESS[data?.level] || "#7DD3FC";
+  const stressColor = STRESS[data?.level] || "#FF9D42";
 
   return (
     <div data-testid="shift-briefing" className="fixed inset-0 z-[90] bg-[#050810]/97 backdrop-blur-xl flex flex-col items-center justify-center p-5 overflow-auto">
       <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(70% 55% at 50% 40%, ${stressColor}22, transparent 70%)` }} />
-      <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#0C1019] border border-[#5E8CA8]/40 text-[#9fc3dc] flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
+      <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
 
       <p className="relative font-cyber text-xs tracking-[0.35em] uppercase mb-1" style={{ color: stressColor }}>{tri("Apertura Turno", "Schichtbeginn", "Shift Open", "Apertura de Turno", "Ouverture", "شروع شیفت")}</p>
       <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Cyber-Trio</h2>
@@ -54,7 +54,7 @@ export default function ShiftBriefing({ onClose }) {
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">
         {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "avatar_mikemix.jpg" }, { avatar: "avatar_bigmix.jpg" }]).map((ln, i) => {
           const on = active === i;
-          const c = ln.accent || "#5E8CA8";
+          const c = ln.accent || "#64748B";
           return (
             <div key={i} data-testid={`briefing-avatar-${i}`} onClick={() => openWorld(i, ln)} role="button" tabIndex={0} className="flex flex-col items-center cursor-pointer group">
               <motion.div animate={{ scale: on ? 1.12 : 1, opacity: on ? 1 : 0.55 }} transition={{ duration: 0.5 }} className="relative group-hover:opacity-100 group-hover:scale-105">
@@ -86,10 +86,10 @@ export default function ShiftBriefing({ onClose }) {
         )}
       </AnimatePresence>
 
-      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#00F0FF)` }}>
+      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#FF6B00)` }}>
         {tri("Entra nella plancia", "Zur Konsole", "Enter the console", "Entrar a la consola", "Entrer", "ورود به کنسول")}
       </button>
-      <p className="relative mt-3 text-[11px] text-[#5E8CA8]">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>
+      <p className="relative mt-3 text-[11px] text-[#64748B]">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>
 
       <AnimatePresence>
         {worldFor && (() => {
@@ -98,7 +98,7 @@ export default function ShiftBriefing({ onClose }) {
             <motion.div key="world" data-testid="avatar-world-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="fixed inset-0 z-[95] bg-[#050810] overflow-hidden">
               <AvatarWorld3D theme={t} accent={acc} speaking={t === "bigmix" && speaking} />
-              <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-[#0C1019]/80 border border-[#5E8CA8]/40 text-[#cfe6f5] text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
+              <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-[#0C1019]/80 border border-[#64748B]/40 text-[#cfe6f5] text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
                 <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.35, type: "spring", stiffness: 120 }}
                   className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2" style={{ borderColor: acc, boxShadow: `0 0 60px ${acc}cc, inset 0 0 22px ${acc}66` }}>

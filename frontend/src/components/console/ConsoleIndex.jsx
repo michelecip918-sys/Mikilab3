@@ -48,21 +48,21 @@ export default function ConsoleIndex() {
     <>
       <div className="sticky top-[64px] z-30 flex items-center gap-2">
         <button data-testid="console-index-open" onClick={openIdx}
-          className="flex-1 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#00F0FF]/30 text-[#00F0FF] font-tech font-bold text-sm active:scale-[0.99] hover:border-[#00F0FF]/60 transition-all shadow-[0_0_16px_rgba(0,240,255,0.12)]">
+          className="flex-1 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#FF6B00]/30 text-[#FF6B00] font-tech font-bold text-sm active:scale-[0.99] hover:border-[#FF6B00]/60 transition-all shadow-[0_0_16px_rgba(255,107,0,0.12)]">
           <LayoutGrid className="w-4 h-4" />
           <span className="flex-1 text-left">{tri("Indice plance · vai a…", "Panel-Index · gehe zu…", "Panel index · jump to…", "Índice de paneles · ir a…", "Index des panneaux · aller à…", "فهرست پنل‌ها · برو به…")}</span>
         </button>
         <button data-testid="panels-collapse-all" onClick={() => setAll(false)} title={tri("Comprimi tutto", "Alles einklappen", "Collapse all", "Contraer todo", "Tout réduire", "بستن همه")}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#00F0FF] hover:border-[#00F0FF]/50 active:scale-95 transition-all"><ChevronsDownUp className="w-4 h-4" /></button>
+          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#FF6B00] hover:border-[#FF6B00]/50 active:scale-95 transition-all"><ChevronsDownUp className="w-4 h-4" /></button>
         <button data-testid="panels-expand-all" onClick={() => setAll(true)} title={tri("Espandi tutto", "Alles ausklappen", "Expand all", "Expandir todo", "Tout ouvrir", "باز کردن همه")}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#00F0FF] hover:border-[#00F0FF]/50 active:scale-95 transition-all"><ChevronsUpDown className="w-4 h-4" /></button>
+          className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-[#0C1019]/90 backdrop-blur-md border border-[#1e293b] text-[#94A3B8] hover:text-[#FF6B00] hover:border-[#FF6B00]/50 active:scale-95 transition-all"><ChevronsUpDown className="w-4 h-4" /></button>
       </div>
 
       {open && (
         <div data-testid="console-index-overlay" className="fixed inset-0 z-[110] bg-black/80 backdrop-blur-md flex items-start justify-center p-4 pt-20" onClick={() => setOpen(false)}>
           <div className="w-full max-w-2xl holo-panel p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 mb-3">
-              <span className="font-cyber text-sm font-black uppercase tracking-widest text-[#00F0FF] flex-1">{tri("Indice plance", "Panel-Index", "Panel index", "Índice", "Index", "فهرست")}</span>
+              <span className="font-cyber text-sm font-black uppercase tracking-widest text-[#FF6B00] flex-1">{tri("Indice plance", "Panel-Index", "Panel index", "Índice", "Index", "فهرست")}</span>
               <button data-testid="console-index-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-lg flex items-center justify-center border border-[#1e293b] text-[#94A3B8] hover:text-white active:scale-95"><X className="w-4 h-4" /></button>
             </div>
             <div className="flex items-center gap-2 rounded-xl bg-[#030712] border border-[#1e293b] px-3 py-2 mb-3">
@@ -77,11 +77,11 @@ export default function ConsoleIndex() {
                 if (its.length === 0) return null;
                 return (
                   <div key={cat.key} data-testid={`console-index-cat-${cat.key}`}>
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#00F0FF]/70 mb-1.5 px-0.5">{cat.label} · {its.length}</p>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#FF6B00]/70 mb-1.5 px-0.5">{cat.label} · {its.length}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {its.map((it) => (
                         <button key={it.id} data-testid={`console-index-item-${it.id}`} onClick={() => go(it.id)}
-                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#0C1019] border border-[#1e293b] text-left active:scale-95 hover:border-[#00F0FF]/60 transition-all">
+                          className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-[#0C1019] border border-[#1e293b] text-left active:scale-95 hover:border-[#FF6B00]/60 transition-all">
                           <span className="text-lg shrink-0">{it.icon}</span>
                           <span className="text-xs font-bold text-white leading-tight line-clamp-2">{it.title}</span>
                         </button>

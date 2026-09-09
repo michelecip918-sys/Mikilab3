@@ -173,7 +173,7 @@ export default function Community({ onNavigate }) {
       setFollows((f) => (r.following ? [...new Set([...f, ch])] : f.filter((x) => x !== ch)));
     } catch { toast.error(tri("Azione non riuscita", "Aktion fehlgeschlagen", "Action failed", "Acción fallida")); }
   };
-  const inp = "w-full bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "w-full bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
 
   // Registrazione OBBLIGATORIA per accedere al Social
   if (!user) {
@@ -290,7 +290,7 @@ export default function Community({ onNavigate }) {
             <input type="file" accept="image/*" onChange={onPhoto} className="hidden" />
           </label>
           <button data-testid="community-submit" data-sfx="save" onClick={submit} disabled={posting}
-            className="ml-auto flex items-center gap-1.5 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+            className="ml-auto flex items-center gap-1.5 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-2 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             {posting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Pubblica", "Posten", "Post", "Publicar")}
           </button>
         </div>
@@ -327,7 +327,7 @@ export default function Community({ onNavigate }) {
                     { k: "instant", l: tri("Ogni post", "Jeder Beitrag", "Every post", "Cada post", "Chaque post") },
                   ].map((o) => (
                     <button key={o.k} data-testid={`email-mode-${o.k}`} onClick={() => changeEmailMode(o.k)}
-                      className={`flex-1 px-2 py-1.5 rounded-lg text-[11.5px] font-bold border transition-all ${emailMode === o.k ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
+                      className={`flex-1 px-2 py-1.5 rounded-lg text-[11.5px] font-bold border transition-all ${emailMode === o.k ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
                       {o.l}
                     </button>
                   ))}
@@ -339,7 +339,7 @@ export default function Community({ onNavigate }) {
                   <div key={c.id} className="flex items-center justify-between px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 hover:bg-[#3E9C93]/5">
                     <span className="flex items-center gap-2 text-sm text-[#e4eff8]"><c.Icon className="w-4 h-4" style={{ color: c.color || "#3E9C93" }} />{catLabel(c.id)}</span>
                     <button data-testid={`follow-manage-${c.id}`} onClick={() => toggleFollow(c.id)}
-                      className={`px-3 py-1 rounded-full text-[12px] font-bold border transition-all ${on ? "bg-[#3E9C93] text-[#0E1620] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
+                      className={`px-3 py-1 rounded-full text-[12px] font-bold border transition-all ${on ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
                       {on ? `🔔 ${tri("Seguito", "Abonniert", "Following", "Siguiendo", "Suivi")}` : `🔕 ${tri("Segui", "Folgen", "Follow", "Seguir", "Suivre")}`}
                     </button>
                   </div>
@@ -354,7 +354,7 @@ export default function Community({ onNavigate }) {
         {CATS.map((c) => (
           <button key={c.id} data-testid={`community-filter-${c.id}`} onClick={() => selectFilter(c.id)} className={`relative px-3 py-1.5 rounded-full text-sm font-semibold whitespace-nowrap border ${filter === c.id ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#3F4A54] dark:text-[#AEB8BF] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
             {catLabel(c.id)}
-            {hasNew(c.id) && <span data-testid={`community-new-dot-${c.id}`} className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#ff3b5c] border border-[#0E1620] shadow" />}
+            {hasNew(c.id) && <span data-testid={`community-new-dot-${c.id}`} className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-[#ff3b5c] border border-[#0D1520] shadow" />}
           </button>
         ))}
       </div>

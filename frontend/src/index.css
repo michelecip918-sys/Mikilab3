@@ -41,8 +41,8 @@ img { -webkit-user-drag: none; user-drag: none; }
 
 /* Splash logo: pulsazione con luce ciano */
 @keyframes splashLogoPulse {
-  0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(0,240,255,.30), 0 0 4px rgba(0,240,255,.5) inset; }
-  50%     { transform: scale(1.06); box-shadow: 0 0 52px rgba(0,240,255,.75), 0 0 10px rgba(0,240,255,.7) inset; }
+  0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(255,107,0,.30), 0 0 4px rgba(255,107,0,.5) inset; }
+  50%     { transform: scale(1.06); box-shadow: 0 0 52px rgba(255,107,0,.75), 0 0 10px rgba(255,107,0,.7) inset; }
 }
 .splash-logo { animation: splashLogoPulse 1.7s ease-in-out infinite; }
 
@@ -53,7 +53,7 @@ img { -webkit-user-drag: none; user-drag: none; }
 }
 .splash-ring {
   position: absolute; width: 6.5rem; height: 6.5rem; border-radius: 9999px;
-  border: 1.5px solid rgba(0,240,255,.55);
+  border: 1.5px solid rgba(255,107,0,.55);
   animation: splashRingPulse 2.1s ease-out infinite;
 }
 
@@ -228,7 +228,7 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* portale ad arco in mattoni */
 .brick-arch {
   border: 10px solid transparent;
-  border-image: linear-gradient(160deg,#5E8CA8,#3E9C93 55%,#3E9C93) 1;
+  border-image: linear-gradient(160deg,#64748B,#3E9C93 55%,#3E9C93) 1;
 }
 .grain-overlay::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
@@ -247,16 +247,16 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* Sfondo caldo "panificio" per tutte le pagine */
 .app-warm-bg {
   background:
-    radial-gradient(95% 55% at 50% 0%, #0E1620 0%, transparent 55%),
+    radial-gradient(95% 55% at 50% 0%, #0D1520 0%, transparent 55%),
     radial-gradient(120% 80% at 50% 100%, #14212C 0%, transparent 60%),
-    linear-gradient(180deg, #0E1620 0%, #14212C 100%);
+    linear-gradient(180deg, #0D1520 0%, #14212C 100%);
   background-attachment: fixed;
 }
 .dark .app-warm-bg {
   background:
     radial-gradient(85% 42% at 50% -4%, rgba(62,156,147,.18) 0%, transparent 58%),
     radial-gradient(120% 70% at 50% 105%, rgba(94,140,168,.10) 0%, transparent 60%),
-    linear-gradient(180deg, #0E1620 0%, #0E1620 45%, #14212C 100%);
+    linear-gradient(180deg, #0D1520 0%, #0D1520 45%, #14212C 100%);
   background-attachment: fixed;
 }
 
@@ -281,10 +281,10 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
 /* ===== REGOLA UX: cosa si legge (bianco/grigio) vs cosa si clicca (arancio/giallo) ===== */
 /* Base: sfondo nero, testo chiaro */
-body { background:#0E1620; color:#E2E8F0; }
+body { background:#0D1520; color:#E2E8F0; }
 /* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
 h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\], h4.text-\[\#3E9C93\], p.text-\[\#3E9C93\],
-h1.text-\[\#5E8CA8\], h2.text-\[\#5E8CA8\], h3.text-\[\#5E8CA8\], p.text-\[\#5E8CA8\],
+h1.text-\[\#64748B\], h2.text-\[\#64748B\], h3.text-\[\#64748B\], p.text-\[\#64748B\],
 h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\] { color:#FFFFFF !important; }
 /* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
 button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"], button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"],
@@ -304,7 +304,7 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
 
 /* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */
 .oven-hover { transition: box-shadow .28s ease, border-color .28s ease, transform .15s ease; }
-.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #5E8CA8 !important; }
+.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #64748B !important; }
 .trinity-seal { box-shadow: 0 0 14px rgba(231,178,60,.55); }
 .trinity-seal:hover { box-shadow: 0 0 26px rgba(231,178,60,.9), 0 0 44px rgba(255,140,40,.45); }
 
@@ -323,9 +323,9 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
    PANIFICIO VIRTUALE — Palette generale "warm artisan" (no neon/rosa/viola)
    ========================================================================== */
 :root {
-  --bg-primary: #0E1620; /* Marrone legno scuro forno */
+  --bg-primary: #0D1520; /* Marrone legno scuro forno */
   --bg-secondary: #14212C;
-  --accent-warm: #5E8CA8; /* Tono grano / pane caldo */
+  --accent-warm: #64748B; /* Tono grano / pane caldo */
   --accent-border: #2A3B49;
   --text-main: #F7F9FC;
   --neon-pink: transparent;
@@ -394,21 +394,21 @@ a[class*="bg-[#1B2A38]"]:hover {
    MIKILAB PRO — PLANCIA OLOGRAFICA (Zero-Menu vertical console) v40
    Unica interfaccia continua dark-mode industriale. Mike Mix fuso nativamente.
    ========================================================================== */
-.holo-root { background:#070A10 !important; color:#E6F6FA !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+.holo-root { background:#060A10 !important; color:#E6F6FA !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 .holo-canvas {
   position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
   background:
-    radial-gradient(95% 65% at 50% -10%, rgba(0,240,255,0.10), transparent 62%),
+    radial-gradient(95% 65% at 50% -10%, rgba(255,107,0,0.10), transparent 62%),
     radial-gradient(60% 45% at 10% 28%, rgba(255,184,0,0.045), transparent 60%),
     radial-gradient(80% 60% at 92% 82%, rgba(0,255,102,0.04), transparent 60%),
     radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%),
-    linear-gradient(180deg,#060910 0%, #070A10 100%);
+    linear-gradient(180deg,#060910 0%, #060A10 100%);
 }
 .holo-canvas::before { /* micro holo-grid con deriva lenta */
   content:""; position:absolute; inset:-40px;
   background-image:
-    linear-gradient(rgba(0,240,255,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0,240,255,0.045) 1px, transparent 1px);
+    linear-gradient(rgba(255,107,0,0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,107,0,0.045) 1px, transparent 1px);
   background-size:34px 34px, 34px 34px;
   -webkit-mask-image: radial-gradient(120% 92% at 50% 0%, #000, transparent 74%);
   mask-image: radial-gradient(120% 92% at 50% 0%, #000, transparent 74%);
@@ -418,7 +418,7 @@ a[class*="bg-[#1B2A38]"]:hover {
 .holo-canvas::after { /* scanlines + grana industriale */
   content:""; position:absolute; inset:0; opacity:.45;
   background:
-    repeating-linear-gradient(0deg, rgba(0,240,255,0.03) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 4px),
+    repeating-linear-gradient(0deg, rgba(255,107,0,0.03) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 4px),
     radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
   background-size: auto, 3px 3px;
 }
@@ -427,36 +427,36 @@ a[class*="bg-[#1B2A38]"]:hover {
 .holo-panel {
   position:relative; border-radius:18px; isolation:isolate;
   background: linear-gradient(158deg, rgba(14,19,29,0.86), rgba(7,10,16,0.86));
-  border:1px solid rgba(0,240,255,0.16);
-  box-shadow: 0 12px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05), inset 0 0 30px rgba(0,240,255,0.028);
+  border:1px solid rgba(255,107,0,0.16);
+  box-shadow: 0 12px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05), inset 0 0 30px rgba(255,107,0,0.028);
   backdrop-filter: blur(20px) saturate(1.15); -webkit-backdrop-filter: blur(20px) saturate(1.15);
   transition: border-color .35s ease, box-shadow .35s ease, transform .35s cubic-bezier(.2,.7,.2,1);
   will-change: transform;
 }
 .holo-panel::before { /* hairline luminoso superiore */
   content:""; position:absolute; top:0; left:14%; right:14%; height:1px; z-index:2; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(0,240,255,0.55), transparent);
+  background:linear-gradient(90deg, transparent, rgba(255,107,0,0.55), transparent);
 }
 .holo-panel::after { /* velatura scanline interna, molto tenue */
   content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.35; border-radius:inherit;
-  background: repeating-linear-gradient(0deg, rgba(0,240,255,0.018) 0px, transparent 2px, transparent 5px);
+  background: repeating-linear-gradient(0deg, rgba(255,107,0,0.018) 0px, transparent 2px, transparent 5px);
   -webkit-mask-image: linear-gradient(180deg,#000,transparent 60%); mask-image: linear-gradient(180deg,#000,transparent 60%);
 }
 .holo-panel > * { position:relative; z-index:1; }
-.holo-panel:hover { border-color: rgba(0,240,255,0.45); box-shadow: 0 18px 54px rgba(0,0,0,0.6), 0 0 30px rgba(0,240,255,0.16), inset 0 0 34px rgba(0,240,255,0.05); transform: translate3d(0,-2px,0); }
-.holo-corner { position:absolute; width:14px; height:14px; pointer-events:none; z-index:3; filter: drop-shadow(0 0 4px rgba(0,240,255,0.55)); }
+.holo-panel:hover { border-color: rgba(255,107,0,0.45); box-shadow: 0 18px 54px rgba(0,0,0,0.6), 0 0 30px rgba(255,107,0,0.16), inset 0 0 34px rgba(255,107,0,0.05); transform: translate3d(0,-2px,0); }
+.holo-corner { position:absolute; width:14px; height:14px; pointer-events:none; z-index:3; filter: drop-shadow(0 0 4px rgba(255,107,0,0.55)); }
 .holo-corner-tl { top:0; left:0; border-top:2px solid; border-left:2px solid; border-top-left-radius:16px; }
 .holo-corner-tr { top:0; right:0; border-top:2px solid; border-right:2px solid; border-top-right-radius:16px; }
 .holo-corner-bl { bottom:0; left:0; border-bottom:2px solid; border-left:2px solid; border-bottom-left-radius:16px; }
 .holo-corner-br { bottom:0; right:0; border-bottom:2px solid; border-right:2px solid; border-bottom-right-radius:16px; }
-.holo-scan-top { position:absolute; inset-inline:0; top:0; height:1px; background:linear-gradient(90deg,transparent,rgba(0,240,255,0.9),transparent); }
+.holo-scan-top { position:absolute; inset-inline:0; top:0; height:1px; background:linear-gradient(90deg,transparent,rgba(255,107,0,0.9),transparent); }
 
 /* Scrollbar premium + selezione ciano (tocco cinematografico) */
 .holo-root ::-webkit-scrollbar { width:10px; height:10px; }
-.holo-root ::-webkit-scrollbar-track { background:#070A10; }
-.holo-root ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(0,240,255,0.35), rgba(0,240,255,0.12)); border-radius:8px; border:2px solid #070A10; }
-.holo-root ::-webkit-scrollbar-thumb:hover { background:rgba(0,240,255,0.5); }
-.holo-root ::selection { background:rgba(0,240,255,0.28); color:#EAFDFF; }
+.holo-root ::-webkit-scrollbar-track { background:#060A10; }
+.holo-root ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(255,107,0,0.35), rgba(255,107,0,0.12)); border-radius:8px; border:2px solid #060A10; }
+.holo-root ::-webkit-scrollbar-thumb:hover { background:rgba(255,107,0,0.5); }
+.holo-root ::selection { background:rgba(255,107,0,0.28); color:#EAFDFF; }
 @keyframes holoSweep { 0%{transform:translateY(0); opacity:0;} 10%{opacity:.8;} 100%{transform:translateY(240px); opacity:0;} }
 .holo-zone { scroll-margin-top:88px; }
 

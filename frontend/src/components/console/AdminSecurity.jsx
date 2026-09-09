@@ -38,26 +38,26 @@ export default function AdminSecurity() {
   return (
     <div className="space-y-6" data-testid="admin-security">
       {/* Scadenza cancello Master configurabile */}
-      <div data-testid="gate-ttl-config" className="flex flex-wrap items-end gap-2 bg-[#0C1019]/60 border border-[#5E8CA8]/25 rounded-xl p-3">
+      <div data-testid="gate-ttl-config" className="flex flex-wrap items-end gap-2 bg-[#0C1019]/60 border border-[#64748B]/25 rounded-xl p-3">
         <div className="flex-1 min-w-[180px]">
-          <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-1"><Clock className="w-3.5 h-3.5" /> {tri("Scadenza cancello Master", "Master-Gate-Ablauf", "Master gate expiry", "Caducidad de la puerta", "Expiration de la porte", "انقضای دروازه")}</p>
+          <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#64748B] mb-1"><Clock className="w-3.5 h-3.5" /> {tri("Scadenza cancello Master", "Master-Gate-Ablauf", "Master gate expiry", "Caducidad de la puerta", "Expiration de la porte", "انقضای دروازه")}</p>
           <p className="text-[11px] text-[#64748b]">{tri("Ogni quanti giorni ri-chiedere il PIN Master sui dispositivi.", "Nach wie vielen Tagen der Master-PIN erneut abgefragt wird.", "How many days before re-asking the Master PIN on devices.", "Cada cuántos días volver a pedir el PIN Master.", "Tous les combien de jours redemander le PIN Master.", "هر چند روز پین مستر دوباره پرسیده شود.")}</p>
         </div>
-        <input data-testid="gate-ttl-input" type="number" min="1" max="365" value={ttl} onChange={(e) => setTtl(e.target.value)} className="w-24 bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2 text-sm text-white text-center focus:border-[#5E8CA8] outline-none" />
+        <input data-testid="gate-ttl-input" type="number" min="1" max="365" value={ttl} onChange={(e) => setTtl(e.target.value)} className="w-24 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white text-center focus:border-[#64748B] outline-none" />
         <span className="text-xs text-[#7d97ac] pb-2">{tri("giorni", "Tage", "days", "días", "jours", "روز")}</span>
-        <button data-testid="gate-ttl-save" onClick={saveTtl} className="px-4 py-2 rounded-lg bg-[#5E8CA8]/20 border border-[#5E8CA8]/50 text-[#9fc3dc] font-bold text-sm active:scale-95 transition-all">{ttlSaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓", "Guardado ✓", "Enregistré ✓", "ذخیره شد ✓") : tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
+        <button data-testid="gate-ttl-save" onClick={saveTtl} className="px-4 py-2 rounded-lg bg-[#64748B]/20 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm active:scale-95 transition-all">{ttlSaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓", "Guardado ✓", "Enregistré ✓", "ذخیره شد ✓") : tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
       </div>
 
       {/* PIN personali operatore */}
       <div>
-        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-2">{tri("PIN personali operatore", "Persönliche Bediener-PINs", "Personal operator PINs", "PIN personales de operario", "PIN personnels opérateur", "پین‌های شخصی اپراتور")}</p>
+        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#64748B] mb-2">{tri("PIN personali operatore", "Persönliche Bediener-PINs", "Personal operator PINs", "PIN personales de operario", "PIN personnels opérateur", "پین‌های شخصی اپراتور")}</p>
         <div className="flex flex-wrap gap-2 items-center mb-3">
           <input data-testid="op-name-input" value={name} onChange={(e) => setName(e.target.value)} placeholder={tri("Nome operatore", "Bedienername", "Operator name", "Nombre operario", "Nom opérateur", "نام اپراتور")}
-            className="flex-1 min-w-[140px] bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#5E8CA8] outline-none" />
+            className="flex-1 min-w-[140px] bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#64748B] outline-none" />
           <input data-testid="op-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN (4)"
-            className="w-24 bg-[#0C1019] border border-[#5E8CA8]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#5E8CA8] outline-none" />
+            className="w-24 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#64748B] outline-none" />
           <button data-testid="op-add-btn" onClick={add} disabled={busy || !name.trim() || pin.length !== 4}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#5E8CA8]/20 border border-[#5E8CA8]/50 text-[#9fc3dc] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#64748B]/20 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
             <UserPlus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add", "Añadir", "Ajouter", "افزودن")}
           </button>
         </div>
@@ -74,13 +74,13 @@ export default function AdminSecurity() {
 
       {/* Registro accessi */}
       <div>
-        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#5E8CA8] mb-2">{tri("Registro accessi (ultimi tentativi PIN)", "Zugriffsprotokoll", "Access log (recent PIN attempts)", "Registro de accesos", "Journal d'accès", "گزارش دسترسی")}</p>
+        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#64748B] mb-2">{tri("Registro accessi (ultimi tentativi PIN)", "Zugriffsprotokoll", "Access log (recent PIN attempts)", "Registro de accesos", "Journal d'accès", "گزارش دسترسی")}</p>
         <div className="max-h-64 overflow-auto rounded-lg border border-[#1e293b] divide-y divide-[#1e293b]">
           {log.length === 0 && <p className="text-xs text-[#64748b] p-3">{tri("Nessun accesso registrato.", "Keine Zugriffe.", "No accesses logged.", "Sin accesos.", "Aucun accès.", "دسترسی ثبت نشده.")}</p>}
           {log.map((e, i) => (
             <div key={i} data-testid={`log-row-${i}`} className="flex items-center gap-2 px-3 py-1.5 text-xs">
-              {e.ok ? <ShieldCheck className="w-3.5 h-3.5 text-[#7DD3FC] shrink-0" /> : <ShieldAlert className="w-3.5 h-3.5 text-[#FFB800] shrink-0" />}
-              <span className="font-bold w-20 shrink-0 text-[#9fb3c4]">{kindLabel(e.kind)}</span>
+              {e.ok ? <ShieldCheck className="w-3.5 h-3.5 text-[#FF9D42] shrink-0" /> : <ShieldAlert className="w-3.5 h-3.5 text-[#FFB800] shrink-0" />}
+              <span className="font-bold w-20 shrink-0 text-[#CBD5E1]">{kindLabel(e.kind)}</span>
               <span className="flex-1 truncate text-white">{e.name || (e.ok ? tri("OK", "OK", "OK", "OK", "OK", "OK") : tri("PIN errato", "Falscher PIN", "Wrong PIN", "PIN incorrecto", "PIN incorrect", "پین اشتباه"))}</span>
               <span className="text-[#64748b] shrink-0">{(e.at || "").slice(0, 16).replace("T", " ")}</span>
             </div>

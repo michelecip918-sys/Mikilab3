@@ -128,14 +128,14 @@ export default function CapoDeck() {
   }[mode];
 
   return (
-    <div data-testid="capo-deck" className="relative rounded-3xl overflow-hidden border border-[#FFB800]/30 bg-[#070A10] shadow-[0_0_44px_rgba(255,184,0,0.10)]">
+    <div data-testid="capo-deck" className="relative rounded-3xl overflow-hidden border border-[#FFB800]/30 bg-[#060A10] shadow-[0_0_44px_rgba(255,184,0,0.10)]">
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(255,184,0,0.12), transparent 60%)" }} />
       <div className="relative z-10 p-5 sm:p-6">
         <div className="flex items-center gap-2 flex-wrap">
           <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2"><Factory className="w-5 h-5 text-[#FFB800]" /> {tri("Plancia del Capo", "Capo-Kommandobrücke", "Capo Command Deck", "Puente de Mando", "Poste de Commande", "پل فرماندهی کاپو")}</h2>
-          <span className="text-[11px] text-[#8aa0b4]">· {tri("compila e la produzione parte", "füllen und Produktion startet", "fill it and production kicks off", "rellena y arranca producción", "remplis et la production démarre", "پر کن و تولید شروع می‌شود")}</span>
+          <span className="text-[11px] text-[#94A3B8]">· {tri("compila e la produzione parte", "füllen und Produktion startet", "fill it and production kicks off", "rellena y arranca producción", "remplis et la production démarre", "پر کن و تولید شروع می‌شود")}</span>
           <button data-testid="capo-shift-report" onClick={shiftReport} disabled={reporting}
-            className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#00F0FF]/10 border border-[#00F0FF]/30 text-[#00F0FF] text-xs font-bold hover:bg-[#00F0FF]/20 active:scale-95 disabled:opacity-50">
+            className="ml-auto inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#FF6B00]/10 border border-[#FF6B00]/30 text-[#FF6B00] text-xs font-bold hover:bg-[#FF6B00]/20 active:scale-95 disabled:opacity-50">
             {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Volume2 className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
           </button>
         </div>
@@ -173,8 +173,8 @@ export default function CapoDeck() {
             )}
           </div>
           <button data-testid="capo-send-btn" onClick={send} disabled={busy}
-            className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50"
-            style={{ background: "linear-gradient(90deg,#FFB800,#00F0FF)", boxShadow: "0 0 20px rgba(255,184,0,0.3)" }}>
+            className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(90deg,#FFB800,#FF6B00)", boxShadow: "0 0 20px rgba(255,184,0,0.3)" }}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {busy ? tri("Mike Mix genera…", "Mike Mix generiert…", "Mike Mix generating…", "Mike Mix genera…", "Mike Mix génère…", "Mike Mix تولید می‌کند…") : tri("Manda a Mike Mix", "An Mike Mix senden", "Send to Mike Mix", "Enviar a Mike Mix", "Envoyer à Mike Mix", "به Mike Mix بفرست")}
           </button>
@@ -202,7 +202,7 @@ export default function CapoDeck() {
               )}
               {(result.generated || []).length > 0 && (
                 <div className="mb-2 flex flex-wrap gap-1.5">
-                  {result.generated.map((g, k) => <span key={k} className="text-[11px] px-2 py-0.5 rounded bg-[#00F0FF]/10 border border-[#00F0FF]/25 text-[#7DD3FC]"><Sparkles className="w-3 h-3 inline mr-1" />{g}</span>)}
+                  {result.generated.map((g, k) => <span key={k} className="text-[11px] px-2 py-0.5 rounded bg-[#FF6B00]/10 border border-[#FF6B00]/25 text-[#FF9D42]"><Sparkles className="w-3 h-3 inline mr-1" />{g}</span>)}
                 </div>
               )}
               {(result.tasks || []).map((t) => (
@@ -224,7 +224,7 @@ export default function CapoDeck() {
           <div className="space-y-1.5 max-h-64 overflow-y-auto">
             {queue.filter((t) => t.status === "pending").slice(0, 20).map((t) => (
               <div key={t.id} data-testid={`capo-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#00F0FF]/10 text-[#7DD3FC] border border-[#00F0FF]/20 shrink-0">{t.dept}</span>
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#FF6B00]/10 text-[#FF9D42] border border-[#FF6B00]/20 shrink-0">{t.dept}</span>
                 <div className="min-w-0 flex-1"><p className="text-xs font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[10px] text-[#64748B] truncate">{t.detail}</p>}</div>
                 <button data-testid={`capo-task-done-${t.id}`} onClick={() => markDone(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 text-[#22c55e] flex items-center justify-center active:scale-95"><CheckCircle2 className="w-4 h-4" /></button>
               </div>

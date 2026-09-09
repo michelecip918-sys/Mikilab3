@@ -101,7 +101,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-[#0E1620] dark:bg-[#0E1620]">
+    <div className="min-h-screen flex items-center justify-center px-4 bg-[#0D1520] dark:bg-[#0D1520]">
       <div className="w-full max-w-sm relative" data-testid="auth-screen">
         <div className="absolute -top-2 left-0 z-10"><LangSelector testid="auth-lang-selector" /></div>
         {onClose && (
@@ -214,7 +214,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
             </button>
           )}
           <button data-testid="auth-submit" type="submit" disabled={busy}
-            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
             {mode === "login" ? <LogIn className="w-5 h-5" /> : mode === "register" ? <UserPlus className="w-5 h-5" /> : <Mail className="w-5 h-5" />}
             {mode === "login" ? T.login : mode === "register" ? T.register : T.send}
           </button>

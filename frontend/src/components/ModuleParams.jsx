@@ -25,7 +25,7 @@ export default function ModuleParams({ screen }) {
   }
 
   return (
-    <div data-testid={`module-params-${screen}`} className="rounded-2xl border p-4 mb-4" style={{ borderColor: `${cfg.accent}44`, background: "linear-gradient(180deg,#131f29,#0e1620)" }}>
+    <div data-testid={`module-params-${screen}`} className="rounded-2xl border p-4 mb-4" style={{ borderColor: `${cfg.accent}44`, background: "linear-gradient(180deg,#131f29,#0D1520)" }}>
       <div className="flex items-center gap-2 mb-3">
         <Cpu className="w-4 h-4" style={{ color: cfg.accent }} />
         <h4 className="font-cyber text-[12px] font-bold uppercase tracking-wide" style={{ color: cfg.accent }}>{cfg.title}</h4>

@@ -35,7 +35,7 @@ export default function FoodCostBox() {
   }, [rows, pieces, price, overhead]);
 
   const eur = (v) => (Number(v) || 0).toLocaleString(lang === "it" ? "it" : "en", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const card = "rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
 
   return (
     <div className={card} data-testid="foodcost-box">

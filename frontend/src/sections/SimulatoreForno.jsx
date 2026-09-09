@@ -30,15 +30,15 @@ export default function SimulatoreForno({ onBack }) {
     return { setTempC, preheat, steamMin, dryHint };
   }, [oven, temp, stone, prod]);
 
-  const card = "rounded-2xl bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
+  const card = "rounded-2xl bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4 shadow-sm";
 
   return (
     <div className="pb-8" data-testid="sim-forno">
       {onBack && <button data-testid="simforno-back" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4"><ChevronRight className="w-5 h-5 rotate-180" /> {L("Indietro", "Zurück", "Back")}</button>}
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0E1620] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-5" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93 60%,#3E9C93)" }}>
         <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Flame className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{L("Gestione Vapore & Forno", "Dampf & Ofen", "Steam & Oven", "Vapor y Horno")}</h1>
-        <p className="text-[#0E1620]/85 text-sm mt-2 leading-snug">{L("Tempistiche esatte per vapore, pietra refrattaria e spiffero: cuoci come un pro anche col forno di casa.", "Genaue Zeiten für Dampf, Stein und Ofen.", "Exact timing for steam, stone and oven quirks.", "Tiempos exactos para vapor, piedra y horno.")}</p>
+        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{L("Tempistiche esatte per vapore, pietra refrattaria e spiffero: cuoci come un pro anche col forno di casa.", "Genaue Zeiten für Dampf, Stein und Ofen.", "Exact timing for steam, stone and oven quirks.", "Tiempos exactos para vapor, piedra y horno.")}</p>
       </div>
 
       <div className={card + " mb-4 space-y-3"}>

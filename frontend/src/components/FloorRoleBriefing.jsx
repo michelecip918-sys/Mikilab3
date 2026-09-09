@@ -31,14 +31,14 @@ export default function FloorRoleBriefing({ role = "" }) {
   if (!data) return null;
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="floor-briefing" className="w-full rounded-2xl border border-[#00F0FF]/40 bg-[#00F0FF]/5 p-3 mb-2">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#00F0FF] flex items-center gap-1.5"><Headphones className="w-3.5 h-3.5" /> {tri("Briefing di linea", "Linien-Briefing", "Line briefing", "Briefing de línea", "Briefing de ligne", "بریفینگ خط")} · {data.line_label}</p>
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="floor-briefing" className="w-full rounded-2xl border border-[#FF6B00]/40 bg-[#FF6B00]/5 p-3 mb-2">
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#FF6B00] flex items-center gap-1.5"><Headphones className="w-3.5 h-3.5" /> {tri("Briefing di linea", "Linien-Briefing", "Line briefing", "Briefing de línea", "Briefing de ligne", "بریفینگ خط")} · {data.line_label}</p>
       <p className="mt-1 text-[13px] text-[#e6f6fa] leading-snug">{data.spoken}</p>
       {(data.tasks || []).length > 0 && (
         <div className="mt-2 space-y-1">
           {data.tasks.slice(0, 4).map((t, i) => (
             <div key={i} data-testid={`floor-briefing-task-${i}`} className="flex items-center gap-2 text-[12px] text-white">
-              {t.start && <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#00F0FF] shrink-0"><Clock className="w-3 h-3" /> {t.start}</span>}
+              {t.start && <span className="inline-flex items-center gap-1 text-[10px] font-black text-[#FF6B00] shrink-0"><Clock className="w-3 h-3" /> {t.start}</span>}
               <span className="truncate">{t.title}</span>
             </div>
           ))}

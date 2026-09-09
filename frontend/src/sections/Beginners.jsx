@@ -136,14 +136,14 @@ function HomePlanner() {
         className="mt-1 w-full bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 p-2.5 text-sm outline-none focus:border-[#3E9C93]" />
 
       <button data-testid="home-generate" onClick={generate} disabled={generating}
-        className="mt-3 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
+        className="mt-3 w-full bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2">
         <ChefHat className="w-5 h-5" /> {generating ? t("capo_generating") : t("home_generate")}
       </button>
 
       {plan && (
         <>
           <button data-testid="home-print" onClick={() => window.print()}
-            className="no-print mt-3 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
+            className="no-print mt-3 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
             <Printer className="w-5 h-5" /> {t("capo_print")}
           </button>
           <div className="print-area mt-4 space-y-4">
@@ -292,7 +292,7 @@ function BakerQuiz() {
     return (
       <div>
         {record}
-        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
+        <button data-testid="quiz-start-btn" onClick={start} className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl shadow-sm active:scale-98 transition-all flex items-center justify-center gap-2">
           <Trophy className="w-5 h-5" /> {t("quiz_start")}
         </button>
       </div>
@@ -461,7 +461,7 @@ export default function Beginners({ onNavigate }) {
       <div data-testid="impara-tattoo-card" className="relative overflow-hidden rounded-2xl border border-[#2A3B49] bg-[#1B2A38]">
         <img src="/bio-dough.jpg" alt={mkTri(lang)("Le mani di Michele", "Micheles Hände", "Michele's hands", "Las manos de Michele", "Les mains de Michele", "دستان میکله")}
           className="w-full h-44 object-cover object-center" loading="lazy" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0E1620] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0D1520] via-transparent to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-3.5">
           <p className="text-white font-display text-base font-bold leading-tight drop-shadow">
             {mkTri(lang)("Farina, mani e un po' di storia sulla pelle", "Mehl, Hände und etwas Geschichte auf der Haut", "Flour, hands and a bit of history on the skin", "Harina, manos y algo de historia en la piel", "Farine, mains et un peu d'histoire sur la peau", "آرد، دست‌ها و کمی تاریخ روی پوست")}

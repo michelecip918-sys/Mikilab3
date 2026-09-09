@@ -26,7 +26,7 @@ export default function IntroGuide() {
 
   return (
     <Dialog open={open} onOpenChange={(o) => !o && setOpen(false)}>
-      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49] p-0 overflow-hidden">
+      <DialogContent data-testid="intro-guide" className="max-w-md bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49] p-0 overflow-hidden">
         <DialogTitle className="sr-only">{c.title}</DialogTitle>
         <DialogDescription className="sr-only">{c.desc}</DialogDescription>
         <div className="bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] text-white p-6 text-center">
@@ -54,7 +54,7 @@ export default function IntroGuide() {
           <button
             data-testid="intro-close-btn"
             onClick={() => setOpen(false)}
-            className="mt-5 w-full bg-[#3E9C93] hover:bg-[#5E8CA8] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
+            className="mt-5 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2"
           >
             <Sparkles className="w-5 h-5" /> {c.start} →
           </button>

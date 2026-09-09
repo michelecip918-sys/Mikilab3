@@ -50,9 +50,9 @@ export default function ShiftTemplates() {
       <div className="flex items-center gap-2">
         <input data-testid="shift-template-name" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") save(); }}
           placeholder={tri("Nome turno (es. Turno mattina)", "Schichtname", "Shift name (e.g. Morning)", "Nombre del turno", "Nom du service", "نام شیفت")}
-          className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#7DD3FC]/60 outline-none text-sm text-white px-3 py-2.5" />
+          className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF9D42]/60 outline-none text-sm text-white px-3 py-2.5" />
         <button data-testid="shift-template-save" onClick={save} disabled={busy}
-          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#7DD3FC]/15 border border-[#7DD3FC]/50 text-[#7DD3FC] font-bold text-sm active:scale-95 disabled:opacity-40">
+          className="shrink-0 inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-bold text-sm active:scale-95 disabled:opacity-40">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enreg.", "ذخیره")}
         </button>
       </div>
@@ -64,7 +64,7 @@ export default function ShiftTemplates() {
         <div className="space-y-1.5">
           {templates.map((t) => (
             <div key={t.id} data-testid={`shift-template-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-              <CalendarClock className="w-4 h-4 text-[#7DD3FC] shrink-0" />
+              <CalendarClock className="w-4 h-4 text-[#FF9D42] shrink-0" />
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate">{t.name}</p>
                 <p className="text-[10px] text-[#64748B]">{(t.items || []).length} {tri("assegnazioni", "Zuweisungen", "assignments", "asignaciones", "affectations", "واگذاری")}</p>

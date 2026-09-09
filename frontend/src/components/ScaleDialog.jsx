@@ -65,7 +65,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-[#0E1620] dark:bg-[#0E1620] border-[#2A3B49] dark:border-[#2A3B49]">
+      <DialogContent className="max-w-md bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
         <DialogHeader>
           <DialogTitle className="font-display text-2xl text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
             <Scale className="w-6 h-6 text-[#3E9C93]" /> {t("scale_title")}
@@ -143,7 +143,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             data-testid="scale-save-btn"
             onClick={submit}
             disabled={!factor}
-            className="flex-1 bg-[#3E9C93] hover:bg-[#5E8CA8] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
+            className="flex-1 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
           >
             {t("save_as_new")}
           </button>

@@ -691,7 +691,7 @@ export default function RicetteCustodite({ initialId = null }) {
     }
   };
 
-  const inp = "bg-[#0E1620] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data text-center w-28";
+  const inp = "bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data text-center w-28";
 
   if (recipe) {
     return (
@@ -708,7 +708,7 @@ export default function RicetteCustodite({ initialId = null }) {
               <div className="absolute inset-0 bg-gradient-to-t from-[#3a2415]/80 to-transparent" />
               <button type="button" data-testid={`custodite-fav-detail-${recipe.id}`} aria-pressed={isFav(`custodite:${recipe.id}`)}
                 onClick={() => toggleFav(`custodite:${recipe.id}`)}
-                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#0E1620]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
+                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#0D1520]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
                 <Heart className={`w-5 h-5 ${isFav(`custodite:${recipe.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
               </button>
               <div className="absolute bottom-3 left-4 right-4 text-white">
@@ -723,7 +723,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 const h = wa ? wa.pct : 0;
                 if (!(h >= 65 && h <= 85)) return null;
                 return (
-                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#F6D27A,#5E8CA8)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #F6D27A" }}>
+                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#EAB308,#64748B)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #EAB308" }}>
                     <span className="text-base">🏅</span>
                     <span className="text-[12.5px] font-extrabold">{L({ it: `Capolavoro — Idratazione Perfetta (${h}%)`, de: `Meisterwerk — Perfekte Hydration (${h}%)`, en: `Masterpiece — Perfect Hydration (${h}%)`, es: `Obra maestra — Hidratación perfecta (${h}%)`, fr: `Chef-d'œuvre — Hydratation parfaite (${h}%)` })}</span>
                   </div>
@@ -790,7 +790,7 @@ export default function RicetteCustodite({ initialId = null }) {
 
           {/* Ingredienti ricalcolati */}
           <div className="mt-4 rounded-2xl border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] overflow-hidden">
-            <div className="px-4 py-2.5 bg-[#0E1620] dark:bg-[#1B2A38] flex items-center gap-2 border-b border-[#2A3B49] dark:border-[#2A3B49]">
+            <div className="px-4 py-2.5 bg-[#0D1520] dark:bg-[#1B2A38] flex items-center gap-2 border-b border-[#2A3B49] dark:border-[#2A3B49]">
               <Wheat className="w-4 h-4 text-[#3E9C93]" />
               <span className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8]">{L({ it: "Ingredienti", de: "Zutaten", en: "Ingredients", es: "Ingredientes", fr: "Ingrédients" })}</span>
             </div>
@@ -814,7 +814,7 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Scheda condivisibile con QR */}
-          <div className="mt-4 rounded-2xl border-2 border-dashed border-[#3E9C93]/40 bg-[#0E1620] dark:bg-[#1B2A38] p-4 flex items-center gap-4">
+          <div className="mt-4 rounded-2xl border-2 border-dashed border-[#3E9C93]/40 bg-[#0D1520] dark:bg-[#1B2A38] p-4 flex items-center gap-4">
             {qr && <img data-testid="custodite-qr" src={qr} alt="QR" className="w-24 h-24 rounded-lg bg-white p-1 shrink-0" />}
             <div className="min-w-0">
               <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#3E9C93]" /> {L({ it: "Scheda da condividere", de: "Karte zum Teilen", en: "Shareable card", es: "Ficha para compartir", fr: "Fiche à partager" })}</p>
@@ -862,7 +862,7 @@ export default function RicetteCustodite({ initialId = null }) {
             </button>
             <button type="button" data-testid={`custodite-fav-${r.id}`} aria-pressed={isFav(`custodite:${r.id}`)}
               onClick={() => toggleFav(`custodite:${r.id}`)}
-              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#0E1620]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
+              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#0D1520]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
               <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
               {countOf(`custodite:${r.id}`) > 0 && <span data-testid={`custodite-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(`custodite:${r.id}`)}</span>}
             </button>
