@@ -64,7 +64,16 @@ export default function AdvancedLab() {
   // 5) Controllo vocale privato (Web Speech API locale)
   const [listening, setListening] = useState(false);
   const [heard, setHeard] = useState("");
+  const [voiceMsg, setVoiceMsg] = useState("");
   const recRef = useRef(null);
+
+  const runVoiceCommand = (txt) => {
+    const t = (txt || "").toLowerCase();
+    if (/(sensor|scansiona|scannerizza|scan|iot)/.test(t)) { scan(); setVoiceMsg(tri("Comando: scansione sensori avviata.", "Befehl: Sensor-Scan gestartet.", "Command: sensor scan started.", "Comando: escaneo iniciado.", "Commande : scan lancé.", "فرمان: اسکن آغاز شد.")); return; }
+    if (/(manutenz|maintenance|guasto|machine|macchin)/.test(t)) { setVoiceMsg(tri("Comando: stato manutenzione mostrato.", "Befehl: Wartungsstatus.", "Command: maintenance status.", "Comando: mantenimiento.", "Commande : maintenance.", "فرمان: نگهداری.")); return; }
+    if (/(clima|climate|meteo|acqua|water)/.test(t)) { setVoiceMsg(tri("Comando: compensazione climatica in evidenza.", "Befehl: Klimaausgleich.", "Command: climate compensation.", "Comando: clima.", "Commande : climat.", "فرمان: آب‌وهوا.")); return; }
+    setVoiceMsg(tri("Comando non riconosciuto. Prova: 'scansiona sensori'.", "Unbekannter Befehl. Versuch: 'Sensoren scannen'.", "Command not recognized. Try: 'scan sensors'.", "No reconocido. Prueba: 'escanear'.", "Non reconnu. Essaie : 'scanner'.", "شناخته نشد."));
+  };
   const toggleVoice = () => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) { setHeard(tri("Riconoscimento vocale non supportato dal browser.", "Spracherkennung nicht unterstützt.", "Voice recognition not supported.", "Reconocimiento no soportado.", "Reconnaissance non supportée.", "پشتیبانی نمی‌شود.")); return; }
@@ -72,7 +81,7 @@ export default function AdvancedLab() {
     const r = new SR(); recRef.current = r;
     r.lang = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" }[lang] || "it-IT";
     r.interimResults = false; r.maxAlternatives = 1;
-    r.onresult = (e) => { setHeard(e.results[0][0].transcript); setListening(false); };
+    r.onresult = (e) => { const txt = e.results[0][0].transcript; setHeard(txt); setListening(false); runVoiceCommand(txt); };
     r.onerror = () => setListening(false);
     r.onend = () => setListening(false);
     try { r.start(); setListening(true); setHeard(""); } catch { setListening(false); }
@@ -132,6 +141,7 @@ export default function AdvancedLab() {
             {listening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />} {listening ? tri("Ascolto…", "Höre…", "Listening…", "Escuchando…", "Écoute…", "شنیدن…") : tri("Comando vocale privato", "Sprachbefehl", "Private voice command", "Comando de voz", "Commande vocale", "فرمان صوتی")}
           </button>
           {heard && <p data-testid="lab-voice-heard" className="mt-1.5 text-[10.5px] text-[#7DD3FC] italic">“{heard}”</p>}
+          {voiceMsg && <p data-testid="lab-voice-action" className="mt-1 text-[10px] font-bold text-[#F6D27A]">⟶ {voiceMsg}</p>}
         </Card>
       </div>
     </div>

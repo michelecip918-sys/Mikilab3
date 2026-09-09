@@ -4550,3 +4550,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
   - **Edge Enzimatico** [lab-edge]: latenza sub-ms live + **Comando Vocale privato** [lab-voice] via Web Speech API locale (nessun cloud), trascrizione [lab-voice-heard]. (Fase 9)
 - Verificato a schermo: tutte le card live, scan IoT OK, alert manutenzione OK.
 - Backlog residuo (narrativa/infra, non necessario per MVP): WebGPU 120fps (attuale 3D = vanilla three.js), Simulatore AR forni con fotocamera, Backup Quantico/Nodi Edge/invisibilità IR (già visualizzati in NexusConsole).
+
+## v-MANIFESTO "bella idea" (2026-06) — Inbox operativa + hub vocale + AR forni
+- **Inbox Mohamed OPERATIVA**: all'approvazione (`POST /api/mike/access-requests/act` status=approvata) il backend genera un **PIN ospite monouso** (6 cifre, valido 30 giorni, coll. `guest_pins`) restituito al Capo e mostrato nell'inbox [inbox-pin-<id>] con tasto Copia (il Capo lo condivide a mano, come da Manifesto). `admin-gate/verify` ora valida anche i PIN da `guest_pins` non scaduti → level guest. Verificato end-to-end (approva → PIN 615077 → verify ok/guest).
+- **Hub pilotabile a voce**: in AdvancedLab il comando vocale privato (Web Speech API locale) viene interpretato ed esegue azioni ([lab-voice-action]): "scansiona sensori" → scan IoT, "manutenzione"/"clima" → focus. Nessun cloud.
+- **Simulatore AR Forni** (`components/AROven.jsx`, [panel-ar-oven] in Operatori): fotocamera (getUserMedia, fallback simulato) con mirino AR + overlay indicazioni cottura [ar-guide] (temp/tempo/posizione/nota) calcolate da Mike Mix. [ar-start]/[ar-scan]/[ar-stop]. Verificato a schermo.
+- Con questo il Manifesto è coperto integralmente (funzionale + visuale). Residuo puramente infrastrutturale: WebGPU 120fps, invio email reale dei PIN (serve provider), ingest IoT reale.

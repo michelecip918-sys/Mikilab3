@@ -13,6 +13,7 @@ export default function MohamedInbox() {
   const [reqs, setReqs] = useState([]);
   const [pending, setPending] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [pins, setPins] = useState({});
 
   const load = useCallback(async () => {
     setBusy(true);
@@ -21,7 +22,10 @@ export default function MohamedInbox() {
   }, []);
   useEffect(() => { load(); const t = setInterval(load, 30000); return () => clearInterval(t); }, [load]);
 
-  const act = async (id, status) => { try { await api.post("/mike/access-requests/act", { id, status }); } catch { /* */ } load(); };
+  const act = async (id, status) => {
+    try { const { data } = await api.post("/mike/access-requests/act", { id, status }); if (data && data.guest_pin) setPins((p) => ({ ...p, [id]: data.guest_pin })); } catch { /* */ }
+    load();
+  };
 
   const catColor = { formazione: "#7DD3FC", logistica: "#FFB800", partner: "#22c55e", generico: "#94A3B8" };
 
@@ -48,6 +52,13 @@ export default function MohamedInbox() {
                 <span className="shrink-0 text-[9px] font-black uppercase px-1.5 py-0.5 rounded" style={{ color: catColor[r.category] || "#94A3B8", background: `${catColor[r.category] || "#94A3B8"}18` }}>{r.category}</span>
               </div>
               {r.note && <p className="mt-1 text-[11.5px] text-[#9fb3c4] leading-snug">{r.note}</p>}
+              {pins[r.id] && (
+                <div data-testid={`inbox-pin-${r.id}`} className="mt-2 flex items-center gap-2 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 px-2.5 py-1.5">
+                  <span className="text-[10px] text-[#86efac] font-bold uppercase tracking-wide">{tri("PIN ospite", "Gast-PIN", "Guest PIN", "PIN invitado", "PIN invité", "پین مهمان")}:</span>
+                  <span className="font-cyber text-base font-black text-white tracking-[0.25em]">{pins[r.id]}</span>
+                  <button onClick={() => { try { navigator.clipboard.writeText(pins[r.id]); } catch { /* */ } }} className="ml-auto text-[10px] font-bold text-[#7DD3FC] active:scale-95">{tri("Copia", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}</button>
+                </div>
+              )}
               <div className="mt-2 flex items-center justify-between">
                 <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: r.status === "approvata" ? "#22c55e" : r.status === "rifiutata" ? "#f43f5e" : "#F6D27A" }}>{r.status}{r.priority === "alta" ? " · ⚡" : ""}</span>
                 {r.status === "nuova" && (

@@ -10315,6 +10315,12 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
         if guest_ok:
             ok = True
             level = "guest"
+        # PIN ospite MONOUSO/temporanei generati dal Capo (Inbox Mohamed)
+        if not ok and p:
+            gp = await db.guest_pins.find_one({"pin": p}, {"_id": 0})
+            if gp and gp.get("expires_at", "") >= now_iso():
+                ok = True
+                level = "guest"
     await _log_access(level or "master", _client_ip(request), bool(ok))
     if ok:
         # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.
@@ -10410,8 +10416,22 @@ class AccessReqAction(BaseModel):
 @api_router.post("/mike/access-requests/act")
 async def act_access_request(body: AccessReqAction, admin: dict = Depends(require_admin)):
     st = body.status if body.status in ("approvata", "rifiutata", "nuova") else "nuova"
-    await db.access_requests.update_one({"id": body.id}, {"$set": {"status": st, "acted_at": now_iso()}})
-    return {"ok": True}
+    update = {"status": st, "acted_at": now_iso()}
+    guest_pin = None
+    if st == "approvata":
+        # Genera un PIN ospite temporaneo (30 giorni) che apre SOLO la Formazione.
+        req = await db.access_requests.find_one({"id": body.id}, {"_id": 0})
+        import random
+        guest_pin = f"{random.randint(0, 999999):06d}"
+        expires = (datetime.now(timezone.utc) + timedelta(days=30)).isoformat()
+        await db.guest_pins.insert_one({
+            "pin": guest_pin, "email": (req or {}).get("email"), "request_id": body.id,
+            "created_at": now_iso(), "expires_at": expires,
+        })
+        update["guest_pin"] = guest_pin
+    await db.access_requests.update_one({"id": body.id}, {"$set": update})
+    return {"ok": True, "guest_pin": guest_pin}
+
 
 
 

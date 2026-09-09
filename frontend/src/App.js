@@ -50,6 +50,7 @@ import LegacyOven from "@/components/LegacyOven";
 import MohamedInbox from "@/components/MohamedInbox";
 import LivingRecipe from "@/components/LivingRecipe";
 import AdvancedLab from "@/components/AdvancedLab";
+import AROven from "@/components/AROven";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -485,6 +486,9 @@ export default function App() {
                 </div>
                 <div data-testid="panel-legacy" className="mt-4 holo-panel p-5">
                   <LegacyOven operator={operator} />
+                </div>
+                <div data-testid="panel-ar-oven" className="mt-4 holo-panel p-5">
+                  <AROven />
                 </div>
               </section>
 
