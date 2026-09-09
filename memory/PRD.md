@@ -4689,4 +4689,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Test email live produzione**: POST mikilab.de/api/auth/forgot-password per michelecip918@gmail.com → {"ok":true} → Resend invia da noreply@mikilab.de. CONFERMATO.
 - **DNS United Domains (ancora da completare dall'utente)**: presente solo A @ → 172.66.2.113. MANCANO: secondo A @ → 162.159.142.117 (ridondanza) e CNAME www → mikilab.de. Non toccare TXT SPF/Google.
 - NOTA: deployment_agent è solo analisi statica (non pubblica). La pubblicazione vera va fatta con il tool di deploy della piattaforma o dal bottone "Gestisci deployment" nell'UI Emergent.
+
+## v55 (2026-09) — Verifica finale DNS United Domains (PERFETTO)
+- **Screenshot utente analizzato**: configurati correttamente entrambi i record A (`162.159.142.117` e `172.66.2.113`) + wildcard `*` a `172.66.2.113`.
+- **Verifica live DNS**: `IP root mikilab.de: ['172.66.2.113', '162.159.142.117']` — propagati entrambi al 100%. Ridondanza DNS completata.
+- **HTTPS**: `https://mikilab.de` → HTTP 200, `https://www.mikilab.de` → HTTP 308 redirect pulito. Asset (logo-emblem, multiverse-banner) tutti 200.
+- Nota all'utente: eliminare la riga vuota/incompleta sotto CNAME (cliccando sul cestino) per evitare errori di validazione nel pannello United Domains.
+
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
