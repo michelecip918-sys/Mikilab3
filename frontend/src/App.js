@@ -44,6 +44,8 @@ import MikeMixSense from "@/components/MikeMixSense";
 import MikeMixGuide from "@/components/MikeMixGuide";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import NexusConsole from "@/components/NexusConsole";
+import MikeObserve from "@/components/MikeObserve";
+import MikeAlerts from "@/components/MikeAlerts";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -302,6 +304,7 @@ export default function App() {
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#00F0FF] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
                     {user.email && <p className="text-[10px] text-[#8aa0b4] truncate mb-2">{user.email}</p>}
+                    <p className="text-[9.5px] leading-snug text-[#F6D27A] mb-2">✦ {tri("Riconosciuto Capo Supremo — Miki-Nexus e Mike Mix ti obbediscono.", "Als Oberster Chef erkannt — Miki-Nexus und Mike Mix gehorchen dir.", "Recognized Supreme Capo — Miki-Nexus and Mike Mix obey you.", "Reconocido Capo Supremo — Miki-Nexus y Mike Mix te obedecen.", "Reconnu Capo Suprême — Miki-Nexus et Mike Mix t'obéissent.", "کاپوی برتر شناخته شد — میکی‌نکسوس و Mike Mix از تو اطاعت می‌کنند.")}</p>
                     <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
                       className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
                       <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
@@ -348,6 +351,7 @@ export default function App() {
                     <CapoDeck />
                     <OvenBrain />
                     <MikeSuggestions />
+                    <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
                     <LabBriefing />
                     </div>
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Mike Mix e guide di manutenzione istantanee.", "SOS aus der Produktion mit Mike Mix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Mike Mix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
@@ -470,6 +474,9 @@ export default function App() {
                     </button>
                   </div>
                 )}
+                <div data-testid="panel-observe" className="mt-4 holo-panel p-5">
+                  <MikeObserve operator={operator} />
+                </div>
               </section>
 
               {/* ================= ZONA 3 · MIKE MIX AI ================= */}

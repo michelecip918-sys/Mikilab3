@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Sparkles } from "lucide-react";
+import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
+import DowntimeTraining from "@/components/DowntimeTraining";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -15,7 +16,13 @@ export default function PublicGate({ onUnlock }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [showPin, setShowPin] = useState(false);
+  const [guest, setGuest] = useState(false);
   const [world, setWorld] = useState("panificio");
+
+  const handleUnlock = (level) => {
+    if (level === "guest") { setGuest(true); setShowPin(false); }
+    else { onUnlock(level); }
+  };
 
   const WORLDS = [
     { id: "panificio", label: tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی"), accent: "#00F0FF" },
@@ -39,7 +46,43 @@ export default function PublicGate({ onUnlock }) {
     { img: "avatar_mikemix.jpg", c: "#00F0FF", n: "Mike Mix", r: tri("IA Operativa", "Operative KI", "Operational AI", "IA Operativa", "IA Opérationnelle", "هوش عملیاتی") },
   ];
 
-  if (showPin) return <AdminGate onUnlock={onUnlock} onBack={() => setShowPin(false)} />;
+  if (showPin) return <AdminGate onUnlock={handleUnlock} onBack={() => setShowPin(false)} />;
+
+  if (guest) {
+    return (
+      <div data-testid="guest-view" className="relative min-h-screen bg-[#030712] text-white">
+        <header className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 border-b border-[#7DD3FC]/15 bg-[#070A10]/85 backdrop-blur-xl">
+          <div className="flex items-center gap-2.5">
+            <span className="w-9 h-9 rounded-xl overflow-hidden border border-[#7DD3FC]/40 bg-[#070A10]"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" /></span>
+            <span className="leading-tight"><span className="block font-black tracking-[0.16em] text-base uppercase">MikiLab<span className="text-[#7DD3FC]"> · Ospite</span></span><span className="block font-mono text-[8px] tracking-[0.28em] text-[#7DD3FC]/70 uppercase">Guest Access · Training</span></span>
+          </div>
+          <div className="flex items-center gap-2">
+            <LangSelector testid="guest-lang" />
+            <button data-testid="guest-exit" onClick={() => { setGuest(false); }} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#f87171] text-xs font-bold active:scale-95"><LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Exit", "Salir", "Quitter", "خروج")}</button>
+          </div>
+        </header>
+        <main className="max-w-2xl mx-auto px-4 py-6 space-y-5">
+          <div className="flex items-center gap-3">
+            <div className="w-11 h-11 rounded-xl bg-[#7DD3FC]/10 border border-[#7DD3FC]/40 flex items-center justify-center"><GraduationCap className="w-6 h-6 text-[#7DD3FC]" /></div>
+            <div><h1 className="font-cyber text-lg font-black uppercase tracking-wide">{tri("Formazione autorizzata", "Autorisierte Schulung", "Authorized Training", "Formación autorizada", "Formation autorisée", "آموزش مجاز")}</h1><p className="text-[11px] text-[#8aa0b4]">{tri("Accesso ospite abilitato dal Capo Supremo per la formazione.", "Gastzugang vom Obersten Chef für die Schulung freigegeben.", "Guest access enabled by the Supreme Capo for training.", "Acceso invitado habilitado por el Capo Supremo.", "Accès invité activé par le Capo Suprême.", "دسترسی مهمان توسط کاپو فعال شد.")}</p></div>
+          </div>
+          <div className="holo-panel p-5">
+            <DowntimeTraining />
+          </div>
+          <div data-testid="guest-barrier" className="rounded-xl border border-[#f59e0b]/30 bg-[#f59e0b]/8 p-4 flex items-start gap-2.5">
+            <ShieldAlert className="w-5 h-5 text-[#f59e0b] shrink-0 mt-0.5" />
+            <p className="text-[12px] text-[#d7c9a8] leading-relaxed">{tri(
+              "Le funzioni supreme (produzione, ricettario completo, sintesi sub-molecolare, plancia) sono riservate: è richiesto il profilo di MikiLab.",
+              "Die höchsten Funktionen sind reserviert: das MikiLab-Profil ist erforderlich.",
+              "Supreme functions (production, full recipe book, sub-molecular synthesis, console) are reserved: the MikiLab profile is required.",
+              "Las funciones supremas están reservadas: se requiere el perfil de MikiLab.",
+              "Les fonctions suprêmes sont réservées : le profil MikiLab est requis.",
+              "توابع برتر محفوظ‌اند: پروفایل MikiLab لازم است.")}</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   const cur = WORLDS.find((w) => w.id === world) || WORLDS[0];
 

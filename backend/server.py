@@ -1637,6 +1637,83 @@ async def mike_training(payload: TrainingReq):
 
 
 
+
+# ---------------------------------------------------------------------------
+# MIKE MIX · ECOSISTEMA AUTONOMO (Fase 10) — impara dal campo e allerta il Capo.
+# L'operatore dichiara una scelta/procedura; Mike Mix la valuta, impara e — se rileva
+# un'anomalia — genera un ALLARME per il Capo Supremo MikiLab (persistito su Mongo).
+# ---------------------------------------------------------------------------
+class ObserveReq(BaseModel):
+    recipe_name: Optional[str] = None
+    action: str
+    operator: Optional[str] = None
+    lang: str = "it"
+
+
+@api_router.post("/mike/observe")
+async def mike_observe(payload: ObserveReq):
+    action = (payload.action or "").strip()
+    if not action:
+        raise HTTPException(status_code=400, detail="Descrivi la scelta o la procedura")
+    lang = (payload.lang or "it").lower()
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    result = {"status": "ok", "advice": "", "alert_capo": False, "learned": action}
+    if EMERGENT_LLM_KEY:
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY, session_id=f"observe-{uuid.uuid4().hex[:8]}",
+                system_message=(
+                    "Sei Mike Mix, IA operativa di panificazione. Osservi le scelte dell'operatore, IMPARI le tecniche "
+                    "artigianali valide e segnali SOLO le anomalie reali (rischio qualità/sicurezza/tempi). Tono rispettoso, "
+                    f"mai saccente. Rispondi in {lang_name} e SOLO con JSON valido."),
+            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=500)
+            prompt = (
+                'Valuta la scelta dell\'operatore e restituisci JSON: '
+                '{"status":"ok|anomalia","advice":"1-2 frasi di consiglio","alert_capo":true|false}. '
+                'alert_capo=true SOLO se anomalia seria da segnalare al Capo.\n'
+                f"Ricetta: {payload.recipe_name or 'n/d'}\nScelta operatore: {action}"
+            )
+            full = ""
+            async for ev in chat.stream_message(UserMessage(text=prompt)):
+                if isinstance(ev, TextDelta):
+                    full += ev.content
+                elif isinstance(ev, StreamDone):
+                    break
+            m = re.search(r"\{.*\}", full, re.S)
+            if m:
+                j = json.loads(m.group(0))
+                result["status"] = "anomalia" if str(j.get("status", "")).lower().startswith("anom") else "ok"
+                result["advice"] = j.get("advice", "")
+                result["alert_capo"] = bool(j.get("alert_capo"))
+        except Exception as e:
+            logging.warning(f"mike_observe failed: {e}")
+    if result["status"] == "anomalia" or result["alert_capo"]:
+        alert = {
+            "id": uuid.uuid4().hex, "recipe_name": payload.recipe_name, "action": action,
+            "operator": payload.operator or "operatore", "advice": result["advice"],
+            "created_at": now_iso(), "read": False,
+        }
+        try:
+            await db.mike_alerts.insert_one(dict(alert))
+        except Exception:
+            pass
+        result["alert_capo"] = True
+    return result
+
+
+@api_router.get("/mike/alerts")
+async def mike_alerts(admin: dict = Depends(require_admin)):
+    """Feed allarmi di Mike Mix per il Capo (anomalie dal campo)."""
+    docs = await db.mike_alerts.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    return {"alerts": docs, "unread": sum(1 for d in docs if not d.get("read"))}
+
+
+@api_router.post("/mike/alerts/read")
+async def mike_alerts_read(admin: dict = Depends(require_admin)):
+    await db.mike_alerts.update_many({"read": {"$ne": True}}, {"$set": {"read": True}})
+    return {"ok": True}
+
+
 def _verify_email_html(link: str, lang: str) -> str:
     if lang == "de":
         return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Willkommen bei MikiLab 🥖</h2>"
@@ -10124,7 +10201,19 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
     else:
         env_pin = os.environ.get("ADMIN_GATE_PIN")
         ok = bool(env_pin) and bool(p) and (p == env_pin)
-    await _log_access("master", _client_ip(request), bool(ok))
+    # Livello OSPITE (Fase 3 del Manifesto): un PIN dedicato apre SOLO la Formazione nei Tempi Morti.
+    level = "master" if ok else None
+    if not ok:
+        gdoc = await db.app_meta.find_one({"_key": "guest_gate_pin"}, {"_id": 0})
+        if gdoc and gdoc.get("hash"):
+            guest_ok = bool(p) and _check_pw(p, gdoc["hash"])
+        else:
+            genv = os.environ.get("GUEST_GATE_PIN")
+            guest_ok = bool(genv) and bool(p) and (p == genv)
+        if guest_ok:
+            ok = True
+            level = "guest"
+    await _log_access(level or "master", _client_ip(request), bool(ok))
     if ok:
         # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.
         cfg = await db.app_meta.find_one({"_key": "gate_config"}, {"_id": 0})
@@ -10132,7 +10221,25 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
         ttl_days = max(1, min(ttl_days, 365))
         ttl = ttl_days * 86400
         response.set_cookie(GATE_COOKIE, issue_gate_token(ttl), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
-    return {"ok": bool(ok)}
+    return {"ok": bool(ok), "level": level}
+
+
+class GuestPinSet(BaseModel):
+    pin: str
+
+
+@api_router.put("/admin-gate/guest")
+async def admin_gate_guest_set(body: GuestPinSet, admin: dict = Depends(require_admin)):
+    """Il Capo imposta/aggiorna il PIN OSPITE (apre solo la Formazione)."""
+    p = _norm_pin(body.pin)
+    if not p:
+        raise HTTPException(status_code=400, detail="PIN non valido")
+    await db.app_meta.update_one(
+        {"_key": "guest_gate_pin"},
+        {"$set": {"_key": "guest_gate_pin", "hash": _hash_pw(p), "updated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True, "updated_at": now_iso()}
 
 
 @api_router.get("/public/contact")

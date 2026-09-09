@@ -1,0 +1,31 @@
+{
+  "summary": "Iteration 220 — Guest PIN gate + Autonomous Ecosystem (Mike Mix observe/alerts) + Capo recognition. Backend: 10/10 pytest cases passed (gate levels master/guest/invalid, PUT guest requires admin, /mike/observe schema+400, /mike/alerts admin-only, alert creation+persistence, /mike/alerts/read). Frontend: public-gate guest flow renders guest-view with downtime-training + guest-barrier + guest-exit (no app-header, no admin unlock localStorage); master PIN 198505 opens full app; nexus-console + kill-switch-locked still render; MikeObserve returns anomaly+alert with observe-result & observe-alerted; MikeAlerts panel lists new alerts (2 unread, 4 total after test observe). Backend admin login returns 200, session works. Capo recognition text is present in source at App.js:307 mentioning Miki-Nexus & Mike Mix (UI open of account-menu failed only due to a Cyber-Trio shift-open modal intercepting after reload — not a functional bug).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "console (React DevTools warning)", "issues": ["Duplicate key `mikemix` reported by React on the console-trio list — 'Encountered two children with the same key mikemix'. Non-blocking but should be fixed (unique keys per rendered avatar)."]},
+      {"screen": "post-login home", "issues": ["A large blocking 'Shift Open · Cyber-Trio' modal ('Enter the console') appears immediately after admin login and obscures header/account-btn — should auto-dismiss or offer a clearer close button for keyboard/testing."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/test_iter220_guest_ecosystem.py", "/app/test_reports/pytest/iter220.xml"],
+  "action_items": [
+    "Fix React duplicate key warning `mikemix` in the console-trio list.",
+    "Ensure the Shift-Open Cyber-Trio wizard has an obvious close (or is skipped after first shown) so it does not obstruct the header/account menu on every reload."
+  ],
+  "critical_code_review_comments": [
+    "server.py /api/mike/observe: robust to LLM absence; correctly persists alert only when anomaly/alert_capo. Good.",
+    "PublicGate handleUnlock cleanly separates guest (no admin flag) from master, matches Manifesto Phase-3.",
+    "AdminGate.jsx sets localStorage `mikilab_admin_unlocked` only on level==='master' — correct.",
+    "server.py: /admin-gate/verify rate-limited to 8/300s per IP — good hygiene; testing multiple times per iteration can trip 429. Consider a testing-only bypass header if needed for regression suites."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter220_guest_ecosystem.py"],
+  "success_rate": {"backend": "100%", "frontend": "~95% (Capo-recognition menu open blocked by unrelated Cyber-Trio modal but implementation verified in source and via API)"},
+  "test_credentials": "Master 198505 / Guest 202020 / admin@mikilab.de : Mikilab2026!",
+  "seed_data_creation": "Test observe alerts created with recipe_name TEST_iter220 / TEST_iter220_ui (kept in db.mike_alerts as they are a bounded feed).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Rate-limit on /api/admin-gate/verify (8/300s per IP) is easy to trip when scripting reloads — reuse an established gate cookie or wait ~5min between bursts. The Shift-Open Cyber-Trio modal appears after reload in the admin session; dismiss it before clicking header elements like account-btn. Guest-view exit correctly returns to public-gate.",
+  "rca of the issue": "N/A — no blocking issues."
+}

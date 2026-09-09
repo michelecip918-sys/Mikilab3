@@ -18,16 +18,18 @@ export default function AdminGate({ onUnlock, onBack }) {
   const tryPin = async (val) => {
     setBusy(true);
     let ok = false;
+    let level = "master";
     try {
       const res = await adminGateApi.verify(val);        // verifica lato server (segreto, hashato)
       ok = !!(res && res.ok);
+      level = (res && res.level) || "master";
       if (ok) { try { localStorage.setItem(OK_KEY, val); } catch { /* */ } }
     } catch {
       // Offline: confronto con l'ultimo PIN valido salvato su questo dispositivo.
       try { ok = val === localStorage.getItem(OK_KEY); } catch { ok = false; }
     }
     setBusy(false);
-    if (ok) { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } onUnlock(); }
+    if (ok) { if (level === "master") { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } } onUnlock(level); }
     else { setErr(true); setPin(""); }
   };
 

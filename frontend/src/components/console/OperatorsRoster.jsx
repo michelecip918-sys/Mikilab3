@@ -9,7 +9,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const CORE = [
   { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#5E8CA8" },
   { id: "mikemix", name: "Mike Mix", role: "Reparto Produzione · Fornaio", img: "avatar_mikemix.jpg", accent: "#00F0FF" },
-  { id: "mikemix", name: "Mike Mix AI", role: "Direttore AI · Intelligenza Suprema", img: "avatar_bigmix.jpg", accent: "#7DD3FC" },
+  { id: "nexus", name: "Miki-Nexus", role: "Coscienza Strategica · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#F6D27A" },
 ];
 
 // Postazioni operative BASE (arricchite a runtime dai reparti del Capo).
