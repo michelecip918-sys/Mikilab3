@@ -14812,7 +14812,9 @@ async def _run_daily_digest():
             await _log_email("digest", data["email"], count=1, meta={"items": len(data["items"])})
         except Exception:
             logger.exception("digest send failed")
-    await db.email_digest_queue.delete_many({})
+    # Rimuove solo gli elementi appena processati (più vecchi di 1 giorno), non svuota la coda.
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=1)).isoformat()
+    await db.email_digest_queue.delete_many({"created_at": {"$lt": cutoff}})
     return {"users_notified": sent, "queued_items": len(queued)}
 
 

@@ -4669,4 +4669,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Banner multiverso**: generato `multiverse-banner.jpg` (fabbrica industriale scura + 4 sfere olografiche dorate Bread/Pastry/Pizza/Warehouse + logo ML intrecciato in alto) ispirato all'immagine fornita dall'utente, ma col logo ML e tema oro-arancio. Usato come hero nella vetrina del PublicGate (`vetrina-banner`, alt tradotto) E come nuova `og-image.jpg` (anteprima social 1200x630).
 - sw.js CACHE_NAME → mikilab-v33.
 - Verificato via screenshot: logo ML dorato visibile in header gate + banner hero nella vetrina, 0 errori.
+
+## v52 (2026-09) — Conformità GDPR/UE (Germania)
+- **LegalPage riscritta** (`sections/LegalPage.jsx`): tema scuro industriale (era rimasto col vecchio tema chiaro/teal), contenuti GDPR completi in IT/DE/EN (pick() → fallback EN per le altre lingue). Titolare: **Michele Signorella — Stuttgart, Deutschland**; contatti privacy: accessi@mikilab.de + noreply@mikilab.de. Sezioni: titolare, dati+finalità con basi giuridiche art. 6 GDPR, responsabili terzi (Resend USA con SCC, hosting UE), cookie, conservazione/cancellazione, diritti art. 12–22 GDPR + reclamo LfDI Baden-Württemberg, no profilazione.
+- **Impressum §5 DDG**: nome+città+email inseriti; l'INDIRIZZO postale completo resta segnaposto evidenziato (l'utente non vuole pubblicare l'indirizzo di casa — appena fornisce un indirizzo/casella postale si sostituisce in `LegalPage.jsx`).
+- **Cookie Policy** dedicata (solo cookie tecnici §25(2) TTDSG → nessun consenso obbligatorio) + **banner cookie informativo** (dismiss, localStorage mikilab_cookie_ok) e **footer legale** nel PublicGate (Impressum/Privacy/Cookies aprono la modale LegalPage anche da pubblico). testid: public-legal-footer, cookie-notice, cookie-accept-btn, public-legal-modal.
+- Testato: banner+link+pagina con dati reali OK, 0 pageerror. sw.js → mikilab-v35.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.

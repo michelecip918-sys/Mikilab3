@@ -8,6 +8,7 @@ import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import AuthScreen from "@/components/AuthScreen";
+import LegalPage from "@/sections/LegalPage";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
@@ -26,6 +27,9 @@ export default function PublicGate({ onUnlock }) {
   const [reqSent, setReqSent] = useState(false);
   const [reqBusy, setReqBusy] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [legalOpen, setLegalOpen] = useState(false);
+  const [cookieOk, setCookieOk] = useState(() => { try { return !!localStorage.getItem("mikilab_cookie_ok"); } catch { return true; } });
+  const acceptCookies = () => { try { localStorage.setItem("mikilab_cookie_ok", "1"); } catch { /* */ } setCookieOk(true); };
 
   const shareUrl = "https://mikilab.de/";
   const doShare = async () => {
@@ -299,7 +303,42 @@ export default function PublicGate({ onUnlock }) {
           </div>
         </section>
 
+        {/* Footer legale (GDPR / Impressum) */}
+        <footer data-testid="public-legal-footer" className="mt-10 mb-4 w-full max-w-3xl flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono-data text-[10px] tracking-widest uppercase text-[#64748B]">
+          <button data-testid="public-impressum-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#FF6B00] transition-colors">Impressum</button>
+          <button data-testid="public-privacy-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#FF6B00] transition-colors">{tri("Privacy (GDPR)", "Datenschutz (DSGVO)", "Privacy (GDPR)", "Privacidad (RGPD)", "Confidentialité (RGPD)", "حریم خصوصی")}</button>
+          <button data-testid="public-cookies-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#FF6B00] transition-colors">Cookies</button>
+          <span className="text-[#334155]">© 2026 {tri("Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "mikilab.de")}</span>
+        </footer>
+
       </div>
+
+      {/* Banner cookie informativo (solo cookie tecnici) */}
+      {!cookieOk && (
+        <div data-testid="cookie-notice" className="fixed bottom-4 left-4 right-4 sm:left-auto sm:max-w-sm z-50 rounded-xl border border-[#FF6B00]/30 bg-[#0D1520]/95 backdrop-blur px-4 py-3 shadow-2xl">
+          <p className="text-xs text-[#CBD5E1] leading-snug">{tri(
+            "Questo sito usa solo cookie tecnici necessari al funzionamento. Nessun tracciamento.",
+            "Diese Seite verwendet nur technisch notwendige Cookies. Kein Tracking.",
+            "This site uses only technical cookies required for operation. No tracking.",
+            "Este sitio usa solo cookies técnicas necesarias. Sin rastreo.",
+            "Ce site utilise uniquement des cookies techniques nécessaires. Aucun suivi.",
+            "این سایت فقط کوکی‌های فنی لازم را استفاده می‌کند. بدون ردیابی.")}</p>
+          <div className="mt-2.5 flex items-center gap-2">
+            <button data-testid="cookie-accept-btn" onClick={acceptCookies} className="px-4 py-1.5 rounded-full text-[11px] font-bold text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)" }}>OK</button>
+            <button data-testid="cookie-info-btn" onClick={() => setLegalOpen(true)} className="px-4 py-1.5 rounded-full text-[11px] font-bold border border-[#64748B]/40 text-[#CBD5E1] hover:border-[#FF6B00] hover:text-[#FF6B00] transition-colors">{tri("Info", "Info", "Info", "Info", "Info", "اطلاعات")}</button>
+          </div>
+        </div>
+      )}
+
+      {/* Pagina legale (modale) */}
+      {legalOpen && (
+        <div data-testid="public-legal-modal" className="fixed inset-0 z-[60] bg-[#060A10] overflow-auto p-4">
+          <div className="max-w-xl mx-auto py-5">
+            <button data-testid="public-legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#FF6B00]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
+            <LegalPage />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
