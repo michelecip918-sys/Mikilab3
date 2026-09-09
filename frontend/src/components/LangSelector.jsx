@@ -11,7 +11,7 @@ const SAMPLE = {
   es: "Hola Mi Supremo Jefe, soy Mike Mix, a su servicio.",
   fr: "Bonjour Mon Illustre Commandant, je suis Mike Mix, à votre service.",
   fa: "سلام فرمانده، من بوکومیکس هستم، در خدمت شما.",
-  ar: "مرحباً أيها القائد، أنا بوكوميكس، في خدمتك.",
+  ar: "مرحباً أيها القائد، أنا مايك ميكس، في خدمتك.",
   tr: "Merhaba Şefim, ben Mike Mix, hizmetinizdeyim.",
 };
 

@@ -4657,4 +4657,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **OG image** rigenerata a tema industriale arancione (banner 1200x630 con logo ML + "MikiLab Pro" + forno glow), sostituisce og-image.jpg. Meta OG/Twitter già presenti e corretti in index.html.
 - Ritocchi coerenza: bottone "Invia richiesta" gradiente ora tutto arancione (#D95200→#FF9D42), ✓ conferma verde successo.
 - sw.js CACHE_NAME → mikilab-v28.
+
+## v50 (2026-09) — Avatar definitivi + QA multilingua + Publish
+- **Avatar rifatti da zero (definitivi)**: 5 nuovi render 3D fotorealistici (no cartone), tema arancione, logo "ML · MikiLab" su maglia/grembiule. MikiLab e Mohamed rigenerati CON somiglianza dalle foto di riferimento dell'utente (image-1 (37).jpeg = Michele con tatuaggio+orecchino; image-1 (56).jpeg = Mohamed). Miki-Nexus = fusione umano/AI, Mike Mix = robot bianco/acciaio, bigmix = mascotte. sw.js → mikilab-v30.
+- **Cleanup nomi vecchi**: campione vocale arabo del LangSelector correggeva "بوكوميكس" (BokoMix, vecchio nome) → "مايك ميكس" (Mike Mix). NB: i `voice: "bakemix"` sparsi sono ID voce interni (mappati backend), non user-facing → lasciati.
+- **QA multilingua** (8 lingue it/de/en/es/fr/fa/ar/tr): RTL arabo OK (dir=rtl, layout speculare), 0 overflow mobile 390, 0 pageerror. Titoli/tab/pulsanti pubblici mancanti in AR/TR aggiunti a `triExtraArTr.js` (Panificio, Pizzeria, "Il Multiverso della Panificazione", Condividi, "Cos'è MikiLab Pro", Storico allarmi, Esporta, Attiva notifiche, Entra con il PIN, Invia richiesta). Verificato TR: titoli/tab/CTA ora tradotti; i paragrafi lunghi restano EN come fallback dignitoso.
+- Pubblicato in produzione (redeploy).
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.

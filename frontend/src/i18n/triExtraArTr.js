@@ -16,6 +16,10 @@ const AR = {
   "Efficienza": "الكفاءة", "Errore": "خطأ", "Impostazioni": "الإعدادات", "Lingua": "اللغة", "Aiuto": "مساعدة",
   "Qualità": "الجودة", "Controllo": "فحص", "Verifica": "تحقّق", "Scarica": "تنزيل", "Stampa": "طباعة",
   "Timer": "مؤقّت", "Inizio turno": "بداية الوردية", "Fine turno": "نهاية الوردية",
+  "Panificio": "المخبز", "Pizzeria": "بيتزيريا", "Il Multiverso della Panificazione": "عالم الخَبز المتعدّد",
+  "Condividi": "مشاركة", "Cos'è MikiLab Pro": "ما هو MikiLab Pro", "Storico allarmi": "سجل الإنذارات",
+  "Esporta": "تصدير", "Attiva notifiche": "تفعيل الإشعارات", "Entra con il PIN": "ادخل برمز PIN",
+  "Invia richiesta": "إرسال الطلب",
 };
 const TR = {
   "Ricette": "Tarifler", "Ricettario": "Tarif kitabı", "Produzione": "Üretim", "Magazzino": "Depo",
@@ -33,6 +37,10 @@ const TR = {
   "Efficienza": "Verimlilik", "Errore": "Hata", "Impostazioni": "Ayarlar", "Lingua": "Dil", "Aiuto": "Yardım",
   "Qualità": "Kalite", "Controllo": "Kontrol", "Verifica": "Doğrula", "Scarica": "İndir", "Stampa": "Yazdır",
   "Timer": "Zamanlayıcı", "Inizio turno": "Vardiya başı", "Fine turno": "Vardiya sonu",
+  "Panificio": "Ekmek fırını", "Pizzeria": "Pizzacı", "Il Multiverso della Panificazione": "Ekmek Yapımının Çoklu Evreni",
+  "Condividi": "Paylaş", "Cos'è MikiLab Pro": "MikiLab Pro nedir", "Storico allarmi": "Alarm geçmişi",
+  "Esporta": "Dışa aktar", "Attiva notifiche": "Bildirimleri aç", "Entra con il PIN": "PIN ile gir",
+  "Invia richiesta": "Talep gönder",
 };
 export const triAR = (it) => (it != null ? AR[it] : undefined);
 export const triTR = (it) => (it != null ? TR[it] : undefined);
