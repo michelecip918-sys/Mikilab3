@@ -4593,3 +4593,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ## v-MANIFESTO Email dominio verificato (2026-06)
 - Dominio **mikilab.de VERIFICATO** su Resend (id 2e9b39bb..., region eu-west-1, status verified) — confermato via API.
 - Mittente ufficiale **noreply@mikilab.de** operativo: invio di prova reale riuscito (email id ricevuto). SENDER_EMAIL=noreply@mikilab.de in backend/.env. Fallback wrapper resta come sicurezza (non si attiverà). Le email (verifica account, reset password, PIN ospite) ora partono ufficialmente da mikilab.de verso qualunque destinatario.
+
+## v-MANIFESTO Reparti cliccabili + Deploy (2026-06)
+- **Reparti cliccabili** [deck-depts]: i 4 reparti del Multiverso (Panificio/Pizzeria/Pasticceria/Magazzino → deck-dept-panificio|pizzeria|pasticceria|banco) sono ora filtri rapidi della schermata unica: al click cambiano il tema 3D (AvatarWorld3D) + accent e scrollano alla produzione. Stato `deckDept`. Verificato a schermo (Pizzeria attiva → scena pizzeria).
+- **Deploy**: inviata richiesta di pubblicazione al deployer (job aa6b806a...). Primo deploy = 50 ECU, richiede conferma utente nell'UI.
+- WebGPU vero: NON eseguito (richiede upgrade three.js r160→r168+, rischioso; in attesa di task dedicato con backup). Test email live: da fare post-deploy (reset password reale da noreply@mikilab.de).

@@ -109,6 +109,13 @@ const ZONES = [
   { id: "mikemix", label: "Mike Mix AI", accent: "#7DD3FC", avatar: "avatar_bigmix.jpg" },
 ];
 
+const DECK_DEPTS = [
+  { id: "panificio", accent: "#00F0FF", it: "Panificio", de: "Backstube", en: "Bakery", fr: "Boulangerie" },
+  { id: "pizzeria", accent: "#FFB800", it: "Pizzeria", de: "Pizzeria", en: "Pizzeria", fr: "Pizzeria" },
+  { id: "pasticceria", accent: "#7FD8C0", it: "Pasticceria", de: "Konditorei", en: "Pastry", fr: "Pâtisserie" },
+  { id: "banco", accent: "#5E8CA8", it: "Magazzino", de: "Lager", en: "Warehouse", fr: "Entrepôt" },
+];
+
 export default function App() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -126,6 +133,7 @@ export default function App() {
   const [showPinLock, setShowPinLock] = useState(false);
   const [online, setOnline] = useState(() => (typeof navigator !== "undefined" ? navigator.onLine : true));
   const [activeZone, setActiveZone] = useState("master");
+  const [deckDept, setDeckDept] = useState(DECK_DEPTS[0]);
   const [showBriefing, setShowBriefing] = useState(false);
 
   // Cyber-Trio: briefing automatico SOLO al primo accesso del Capo (poi si apre solo dal pulsante).
@@ -323,14 +331,26 @@ export default function App() {
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-40">
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
-              {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) */}
+              {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) + reparti cliccabili */}
               <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border border-[#00F0FF]/25 h-[240px] sm:h-[300px]" style={{ background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
                 <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#00F0FF11 1px,transparent 1px),linear-gradient(90deg,#00F0FF11 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
-                <div className="absolute inset-0"><AvatarWorld3D theme="panificio" accent="#00F0FF" /></div>
+                <div className="absolute inset-0"><AvatarWorld3D theme={deckDept.id} accent={deckDept.accent} /></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-4 z-10">
                   <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#00F0FF]"> Command Deck</span></p>
                   <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#7DD3FC] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
+                </div>
+                <div data-testid="deck-depts" className="absolute top-3 left-3 right-3 z-10 flex flex-wrap gap-1.5">
+                  {DECK_DEPTS.map((d) => (
+                    <button key={d.id} data-testid={`deck-dept-${d.id}`}
+                      onClick={() => { setDeckDept(d); try { zoneRefs.operatori.current && zoneRefs.operatori.current.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }}
+                      className="px-3 py-1.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider border transition-all active:scale-95"
+                      style={deckDept.id === d.id
+                        ? { background: d.accent, color: "#050810", borderColor: d.accent, boxShadow: `0 0 16px ${d.accent}88` }
+                        : { background: "rgba(6,10,18,0.6)", color: "#9fb3c4", borderColor: "#1e293b" }}>
+                      {tri(d.it, d.de, d.en, d.it, d.fr, d.it)}
+                    </button>
+                  ))}
                 </div>
               </div>
 
