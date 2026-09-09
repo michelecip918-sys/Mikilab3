@@ -14947,6 +14947,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Deck alarm push loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Deck alarm loop start error: {e}")
+    try:
+        asyncio.create_task(_uptime_monitor_loop())
+        logging.getLogger(__name__).info("Uptime monitor loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Uptime monitor start error: {e}")
 
 
 @app.on_event("shutdown")

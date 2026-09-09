@@ -4683,4 +4683,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Verificato**: mikilab.de HTTP 200 (HTTPS/Cloudflare attivo), logo/banner 200, API dietro PIN gate (401 atteso), logo live = ultima versione (md5 match). L'utente ha messo UN SOLO A record (172.66.2.113) — consigliato aggiungere anche 162.159.142.117 per ridondanza.
 - **Fix deploy blocker**: `delete_many({})` su email_digest_queue (in _run_daily_digest) reso non distruttivo → ora filtra `created_at < cutoff(1 giorno)`. deployment_agent: PASS.
 - RIFERIMENTO DNS CORRETTO per futuro: A @ 162.159.142.117 + 172.66.2.113, CNAME www → mikilab.de.
+
+## v54 (2026-09) — Monitor Uptime + verifiche live
+- **Monitor Uptime** (backend): `_uptime_monitor_loop` (registrato allo startup) controlla https://mikilab.de ogni ORA via httpx, salva i check in `db.uptime_checks` (pruning 30gg, non distruttivo), invia web-push agli admin quando il sito va GIÙ e quando torna SU. Endpoint admin `GET /api/uptime/status` (ultimo check + uptime 24h %). Helper condiviso `_push_admins(payload)`. Testato: primo check ok=True, 200, uptime 100%.
+- **Test email live produzione**: POST mikilab.de/api/auth/forgot-password per michelecip918@gmail.com → {"ok":true} → Resend invia da noreply@mikilab.de. CONFERMATO.
+- **DNS United Domains (ancora da completare dall'utente)**: presente solo A @ → 172.66.2.113. MANCANO: secondo A @ → 162.159.142.117 (ridondanza) e CNAME www → mikilab.de. Non toccare TXT SPF/Google.
+- NOTA: deployment_agent è solo analisi statica (non pubblica). La pubblicazione vera va fatta con il tool di deploy della piattaforma o dal bottone "Gestisci deployment" nell'UI Emergent.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
