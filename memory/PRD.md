@@ -4611,3 +4611,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Google Search Console: SALTATO su richiesta utente (proprietà già verificata via DNS, niente tag HTML).
 - Test reset password live: `POST /api/auth/forgot-password` per michelecip918@gmail.com con origin mikilab.de → ok, nessun errore nei log. Test diretto Resend da noreply@mikilab.de → consegnata (id ef4e2321-..., nessun fallback a onboarding@resend.dev → il dominio mikilab.de è verificato e funzionante su Resend). Quota mensile Resend: 47 rimanenti.
 - ATTESA: conferma utente di ricezione delle 2 email in inbox (controllare anche spam).
+
+## v43 (2026-09) — Allarme sonoro Deck + conferme utente
+- Email Resend CONFERMATE dall'utente (arrivate e funzionanti). Dominio mikilab.de LIVE (confermato dall'utente).
+- **Allarme sonoro critico**: `playDeckAlarm()` in lib/uiSounds.js (3 toni discendenti 880→660 Hz, ~1s, indipendente da playSfx che resta silenziato per scelta). In App.js il polling deck lo attiva all'ingresso in mood "critico" e ripete ogni 30s finché resta critico (richiede un primo gesto utente per la policy audio del browser).
+- Verificato: guasto simulato → deck rosso pulsante + "74 BPM · CRITICAL", ripristino OK.
+- RIMASTO: Upgrade WebGPU 120fps (solo con conferma esplicita + backup, rischio rottura scene 3D).
+

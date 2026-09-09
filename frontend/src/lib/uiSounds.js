@@ -80,3 +80,14 @@ export function playSfx(name) {
     (SOUNDS[name] || SOUNDS.crunch)();
   } catch { /* no-op */ }
 }
+
+// Allarme Deck: segnale discreto quando l'umore impianto diventa CRITICO.
+// Indipendente da playSfx (silenziato per scelta): suona SOLO su allarme reale.
+export function playDeckAlarm() {
+  try {
+    if (!ensure()) return;
+    playTone(880, 0.22, 0.16, "sine", 660);
+    setTimeout(() => { try { if (ctx) playTone(880, 0.22, 0.16, "sine", 660); } catch { /* */ } }, 320);
+    setTimeout(() => { try { if (ctx) playTone(990, 0.3, 0.14, "sine", 620); } catch { /* */ } }, 640);
+  } catch { /* no-op */ }
+}

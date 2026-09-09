@@ -59,6 +59,7 @@ import InstallApp from "@/components/InstallApp";
 import KioskMode from "@/components/KioskMode";
 import SplashScreen from "@/components/SplashScreen";
 import { mkTri } from "@/i18n/triMaps";
+import { playDeckAlarm } from "@/lib/uiSounds";
 import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
@@ -138,10 +139,22 @@ export default function App() {
 
   // Deck reattivo: stato live dei reparti (turni attivi + allarmi Mike Mix), polling 15s.
   const [deckStatus, setDeckStatus] = useState(null);
+  const prevDeckMood = useRef("sereno");
+  const lastDeckAlarm = useRef(0);
   useEffect(() => {
     if (!adminOk) return;
     let stop = false;
-    const load = () => api.get("/deck/status").then((r) => { if (!stop) setDeckStatus(r.data); }).catch(() => { /* */ });
+    const load = () => api.get("/deck/status").then((r) => {
+      if (stop) return;
+      setDeckStatus(r.data);
+      // Allarme sonoro discreto: suona all'ingresso in critico e ripete ogni 30s finche' resta critico.
+      const mood = (r.data && r.data.mood) || "sereno";
+      if (mood === "critico" && (prevDeckMood.current !== "critico" || Date.now() - lastDeckAlarm.current > 30000)) {
+        lastDeckAlarm.current = Date.now();
+        playDeckAlarm();
+      }
+      prevDeckMood.current = mood;
+    }).catch(() => { /* */ });
     load();
     const t = setInterval(load, 15000);
     return () => { stop = true; clearInterval(t); };
