@@ -47,6 +47,8 @@ import NexusConsole from "@/components/NexusConsole";
 import MikeObserve from "@/components/MikeObserve";
 import MikeAlerts from "@/components/MikeAlerts";
 import LegacyOven from "@/components/LegacyOven";
+import MohamedInbox from "@/components/MohamedInbox";
+import LivingRecipe from "@/components/LivingRecipe";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -353,6 +355,8 @@ export default function App() {
                     <OvenBrain />
                     <MikeSuggestions />
                     <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
+                    <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
+                    <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
                     <LabBriefing />
                     </div>
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Mike Mix e guide di manutenzione istantanee.", "SOS aus der Produktion mit Mike Mix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Mike Mix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>

@@ -1759,6 +1759,63 @@ async def mike_legacy_adapt(payload: LegacyAdaptReq):
 
 
 
+# ---------------------------------------------------------------------------
+# MIKI-NEXUS · RICETTARIO VIVENTE & GENERATORE DINAMICO (Fase 9) — funzione suprema.
+# Il Capo detta un OBIETTIVO; Miki-Nexus calcola la matrice vivente e la curva di maturazione.
+# Funzione riservata: require_admin (barriera anti-ospite, Fase 4).
+# ---------------------------------------------------------------------------
+class LivingRecipeReq(BaseModel):
+    objective: str
+    product_type: Optional[str] = None   # pizza, pane, focaccia, croissant...
+    lang: str = "it"
+
+
+@api_router.post("/nexus/living-recipe")
+async def nexus_living_recipe(payload: LivingRecipeReq, admin: dict = Depends(require_admin)):
+    obj = (payload.objective or "").strip()
+    if not obj:
+        raise HTTPException(status_code=400, detail="Detta un obiettivo")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Miki-Nexus non configurato")
+    lang = (payload.lang or "it").lower()
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"living-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei Miki-Nexus, coscienza strategica di MikiLab. Dato un obiettivo, calcoli la MATRICE VIVENTE di un "
+                "impasto e la curva di maturazione perfetta, con predizione sensoriale (croccantezza, alveolatura, "
+                f"aroma). Sii tecnico ma sintetico. Rispondi in {lang_name} e SOLO con JSON valido e CONCISO."),
+        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1600)
+        prompt = (
+            'Restituisci SOLO JSON valido e conciso (max 5 fasi nella curva): {'
+            '"name":"nome impasto","matrix":{"flour":"tipo/W","hydration_pct":75,"prefermento":"biga/poolish/none","salt_pct":2.2,"yeast":"es. 0.3% LM"},'
+            '"maturation_curve":[{"phase":"puntata","hours":18,"temp_c":4,"note":"breve"}],'
+            '"sensory":{"crust":"...","crumb":"...","aroma":"..."},"why":"1-2 frasi"}\n'
+            f"Prodotto: {payload.product_type or 'a scelta di Miki-Nexus'}\nObiettivo del Capo: {obj}"
+        )
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        recipe = json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.warning(f"living_recipe failed: {e}")
+        raise HTTPException(status_code=424, detail="Errore calcolo matrice")
+    recipe["objective"] = obj
+    recipe["generated_at"] = now_iso()
+    try:
+        await db.living_recipes.insert_one({**recipe})
+    except Exception:
+        pass
+    recipe.pop("_id", None)
+    return recipe
+
+
+
 def _verify_email_html(link: str, lang: str) -> str:
     if lang == "de":
         return (f"<div style='font-family:Arial,sans-serif;max-width:520px;margin:auto'><h2 style='color:#234b6e'>Willkommen bei MikiLab 🥖</h2>"
@@ -10291,6 +10348,72 @@ async def admin_gate_guest_set(body: GuestPinSet, admin: dict = Depends(require_
 async def public_contact():
     """Email ufficiale MikiLab da mostrare sul Muro del PIN per richiedere l'accesso."""
     return {"email": os.environ.get("MIKILAB_CONTACT_EMAIL") or "accessi@mikilab.de"}
+
+
+# ---------------------------------------------------------------------------
+# MOHAMED · Assistente Operativo Subordinato (reintegro controllato).
+# Compito ESCLUSIVO: smistare le richieste email in arrivo dal portale pubblico.
+# Nessun privilegio root, nessun accesso a ricette o comandi plancia.
+# ---------------------------------------------------------------------------
+class AccessRequestIn(BaseModel):
+    email: str
+    note: Optional[str] = None
+    lang: str = "it"
+
+
+def _mohamed_triage(email: str, note: str) -> dict:
+    """Smistamento base di Mohamed (regole leggere, senza LLM): categoria + priorita'."""
+    t = f"{email} {note or ''}".lower()
+    if any(k in t for k in ["forno", "oven", "macchin", "sensor", "iot", "guasto", "assist", "support"]):
+        cat = "logistica"
+    elif any(k in t for k in ["corso", "formaz", "training", "impar", "learn"]):
+        cat = "formazione"
+    elif any(k in t for k in ["partner", "azienda", "b2b", "collab", "forn"]):
+        cat = "partner"
+    else:
+        cat = "generico"
+    prio = "alta" if any(k in t for k in ["urgent", "subito", "guasto", "bloccat"]) else "normale"
+    return {"category": cat, "priority": prio, "routed_by": "Mohamed"}
+
+
+@api_router.post("/public/access-request")
+async def public_access_request(body: AccessRequestIn, request: Request):
+    """Fase 2: chiunque puo' richiedere l'accesso dal portale pubblico. Mohamed smista."""
+    email = (body.email or "").strip()
+    if not re.match(r"^[^@\s]+@[^@\s]+\.[^@\s]+$", email):
+        raise HTTPException(status_code=400, detail="Email non valida")
+    triage = _mohamed_triage(email, body.note or "")
+    doc = {
+        "id": uuid.uuid4().hex, "email": email, "note": (body.note or "").strip()[:500],
+        "ip": _client_ip(request), "created_at": now_iso(), "status": "nuova",
+        **triage,
+    }
+    try:
+        await db.access_requests.insert_one(dict(doc))
+    except Exception:
+        pass
+    return {"ok": True, "routed_by": "Mohamed", "category": triage["category"]}
+
+
+@api_router.get("/mike/access-requests")
+async def list_access_requests(admin: dict = Depends(require_admin)):
+    """Inbox del Capo: richieste d'accesso smistate da Mohamed."""
+    docs = await db.access_requests.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return {"requests": docs, "pending": sum(1 for d in docs if d.get("status") == "nuova")}
+
+
+class AccessReqAction(BaseModel):
+    id: str
+    status: str  # "approvata" | "rifiutata" | "nuova"
+
+
+@api_router.post("/mike/access-requests/act")
+async def act_access_request(body: AccessReqAction, admin: dict = Depends(require_admin)):
+    st = body.status if body.status in ("approvata", "rifiutata", "nuova") else "nuova"
+    await db.access_requests.update_one({"id": body.id}, {"$set": {"status": st, "acted_at": now_iso()}})
+    return {"ok": True}
+
+
 
 
 @api_router.get("/admin-gate/config")

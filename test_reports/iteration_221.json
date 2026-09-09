@@ -1,0 +1,28 @@
+{
+  "summary": "Iter 221 — Backend: 11/11 pytest passed (public/access-request valid+invalid+no-gate-cookie, Mohamed inbox admin-only + list+act persistence, Living Recipe non-admin/guest 401-403 + admin success ~15s LLM, Legacy oven ~35s, Observe+Alerts, guest barrier). Frontend: public-gate loads, access-request form submits and shows 'Request sent. Mohamed will route it and the Capo will decide.' (Mohamed mentioned). Master PIN 198505 unlocks; admin login admin@mikilab.de / Mikilab2026! establishes admin console. In admin console DOM, all requested testids are present: panel-mohamed-inbox, mohamed-inbox, panel-living-recipe, living-recipe, living-objective, living-generate, panel-legacy, legacy-oven, legacy-eq, legacy-run, mike-alerts, account-btn. Account menu shows Capo recognition line: '✦ Recognized Supreme Capo — Miki-Nexus and Mike Mix obey you.' The Living-Recipe and Mohamed-Inbox panels are inside collapsed accordions on first paint (rendered in DOM but not visible until the corresponding section is expanded) — this is expected UX and does not affect functionality.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": ["/app/backend/tests/test_iter221_mohamed_living.py", "/app/test_reports/pytest/iter221.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py _mohamed_triage: pure regex-based routing (no LLM) — deterministic, correct, keeps Mohamed low-tier as intended. Category 'logistica' correctly returned for 'guasto forno'.",
+    "POST /api/public/access-request is properly PUBLIC (no gate/admin dependency) and returns {ok, routed_by:'Mohamed', category}. Email regex validation returns 400 on invalid email — verified.",
+    "GET /api/mike/access-requests and POST /api/mike/access-requests/act both require_admin — verified 401/403 without admin session, 200 with. Data persistence verified via act→list re-fetch (status='approvata').",
+    "/api/nexus/living-recipe correctly gated by require_admin — both gate-only (no session) and guest cookie return 401/403. Admin returns a payload containing matrix/curve/sensory keys.",
+    "Mohamed properly kept low-tier: no recipe/plancia endpoints under his surface; inbox is the only Mohamed-owned data.",
+    "Frontend: public-gate confirmation copy 'Request sent. Mohamed will route it and the Capo will decide.' clearly attributes the routing to Mohamed as per manifest.",
+    "Minor UX: Mohamed-inbox and Living-Recipe panels are hidden inside collapsed accordions on first admin login (Panel index · jump to…). Users must expand these to see the panels. Consider auto-expanding Mohamed-inbox when 'pending>0' to draw the Capo's attention."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter221_mohamed_living.py", "/app/test_reports/pytest/iter221.xml"],
+  "success_rate": {"backend": "100% (11/11)", "frontend": "100% for verifiable testids and Capo recognition; panels rendered in DOM as expected"},
+  "test_credentials": "Master 198505 / Guest 202020 / admin@mikilab.de : Mikilab2026!",
+  "seed_data_creation": "Access requests seeded via POST /api/public/access-request with emails TEST_iter221@example.com, TEST_iter221_act@example.com, TEST_ui_iter221@example.com. Observe alert seeded with recipe_name TEST_iter221_observe.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "The main admin console renders many panels inside a collapsible accordion. In Playwright, use element.count() (DOM presence) instead of scroll_into_view_if_needed() to verify testids — they may exist but be non-visible until expanded. To interact, first expand the accordion (e.g. Panel index · jump to…) or click the section header. Rate-limit on /api/admin-gate/verify (8/300s per IP) is still in effect. LLM endpoints living-recipe & legacy-adapt complete in ~15–35s in this env.",
+  "rca of the issue": "N/A — all requested features verified functional."
+}

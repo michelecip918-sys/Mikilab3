@@ -7,6 +7,7 @@ import LangSelector from "@/components/LangSelector";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
+import { api } from "@/lib/api";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -18,6 +19,18 @@ export default function PublicGate({ onUnlock }) {
   const [showPin, setShowPin] = useState(false);
   const [guest, setGuest] = useState(false);
   const [world, setWorld] = useState("panificio");
+  const [reqEmail, setReqEmail] = useState("");
+  const [reqNote, setReqNote] = useState("");
+  const [reqSent, setReqSent] = useState(false);
+  const [reqBusy, setReqBusy] = useState(false);
+
+  const sendRequest = async () => {
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(reqEmail) || reqBusy) return;
+    setReqBusy(true);
+    try { await api.post("/public/access-request", { email: reqEmail, note: reqNote, lang }); setReqSent(true); }
+    catch { setReqSent(true); }
+    setReqBusy(false);
+  };
 
   const handleUnlock = (level) => {
     if (level === "guest") { setGuest(true); setShowPin(false); }
@@ -181,6 +194,31 @@ export default function PublicGate({ onUnlock }) {
           <Sparkles className="w-3.5 h-3.5 text-[#F6D27A]" />
           {tri("Serve un accesso? Scrivi a", "Zugang nötig? Schreib an", "Need access? Write to", "¿Necesitas acceso? Escribe a", "Besoin d'accès ? Écris à", "دسترسی می‌خواهی؟ بنویس به")}
           <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#14b8a6] hover:text-[#2dd4bf]">accessi@mikilab.de</a>
+        </div>
+
+        {/* Fase 2 · Richiesta accesso — smistata da Mohamed */}
+        <div data-testid="access-request" className="mt-5 w-full max-w-sm rounded-2xl bg-[#0b0f19]/80 border border-[#1e293b] p-4 backdrop-blur-md">
+          {reqSent ? (
+            <p data-testid="access-sent" className="text-[12.5px] text-[#7FD8C0] leading-snug">✓ {tri(
+              "Richiesta inviata. Mohamed la smisterà e il Capo deciderà l'accesso.",
+              "Anfrage gesendet. Mohamed sortiert sie, der Chef entscheidet.",
+              "Request sent. Mohamed will route it and the Capo will decide.",
+              "Solicitud enviada. Mohamed la clasificará.",
+              "Demande envoyée. Mohamed la triera.",
+              "درخواست ارسال شد. محمد آن را بررسی می‌کند.")}</p>
+          ) : (
+            <>
+              <p className="text-[11px] font-bold text-[#94A3B8] mb-2 text-left">{tri("Richiedi l'accesso dal portale", "Zugang anfragen", "Request access from the portal", "Solicitar acceso", "Demander l'accès", "درخواست دسترسی")}</p>
+              <input data-testid="access-email" type="email" value={reqEmail} onChange={(e) => setReqEmail(e.target.value)} placeholder={tri("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton email", "ایمیل شما")}
+                className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+              <input data-testid="access-note" value={reqNote} onChange={(e) => setReqNote(e.target.value)} placeholder={tri("Motivo (opzionale)", "Grund (optional)", "Reason (optional)", "Motivo (opcional)", "Motif (option)", "دلیل")}
+                className="w-full rounded-lg bg-[#070A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+              <button data-testid="access-send" onClick={sendRequest} disabled={reqBusy}
+                className="w-full py-2 rounded-lg font-bold text-sm text-[#070A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#14b8a6,#7FD8C0)" }}>
+                {reqBusy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia richiesta", "Anfrage senden", "Send request", "Enviar", "Envoyer", "ارسال")}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

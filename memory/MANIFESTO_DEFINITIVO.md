@@ -29,3 +29,17 @@
 - avatar_miki.jpg = foto reale del Capo (image-1 (37)).
 - avatar_nexus.jpg = Capo metà-uomo metà-IA (Miki-Nexus).
 - avatar_mikemix.jpg = Mike Mix operativo.
+
+---
+## AGGIORNAMENTO — Manifesto Supremo Consolidato (2026-06)
+### Mohamed REINTEGRATO (controllato)
+- Assistente operativo di BASSO livello, subordinato a MikiLab, sorvegliato da Mike Mix e Miki-Nexus.
+- Compito ESCLUSIVO: smistare le richieste email in arrivo dal portale pubblico (accessi@mikilab.de) e logistica di base.
+- ZERO privilegi root, ZERO autonomia decisionale, NESSUN accesso a ricette o comandi plancia.
+- Implementato: `/api/public/access-request` (triage `_mohamed_triage`) + Inbox Capo `/api/mike/access-requests` + pannello `MohamedInbox`. Avatar sobrio /public/avatar_mohamed.jpg.
+### Nuove tecnologie (Fase 9) — mappa implementazione
+- Ricettario Vivente & Generatore Dinamico: `/api/nexus/living-recipe` (require_admin) + `LivingRecipe.jsx` — obiettivo → matrice vivente + curva maturazione + predizione sensoriale. [FATTO]
+- Sintesi Neurale/Gustativa Predittiva: inclusa nell'output sensory del Ricettario Vivente. [FATTO base]
+- Simulatore AR forni tradizionali, Controllo vocale privato, Edge computing enzimatico, IoT Plug&Play, Compensazione climatica globale, WebGPU 120fps, Backup quantico: [DA FARE / visualizzazioni future]
+### Note
+- Mike Mix resta l'IA operativa (ex BakoMix/MohaLab); Mohamed è entità distinta e minore. NON rinominare Mike Mix in Mohamed.
