@@ -4598,3 +4598,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Reparti cliccabili** [deck-depts]: i 4 reparti del Multiverso (Panificio/Pizzeria/Pasticceria/Magazzino → deck-dept-panificio|pizzeria|pasticceria|banco) sono ora filtri rapidi della schermata unica: al click cambiano il tema 3D (AvatarWorld3D) + accent e scrollano alla produzione. Stato `deckDept`. Verificato a schermo (Pizzeria attiva → scena pizzeria).
 - **Deploy**: inviata richiesta di pubblicazione al deployer (job aa6b806a...). Primo deploy = 50 ECU, richiede conferma utente nell'UI.
 - WebGPU vero: NON eseguito (richiede upgrade three.js r160→r168+, rischioso; in attesa di task dedicato con backup). Test email live: da fare post-deploy (reset password reale da noreply@mikilab.de).
+
+
+## v41 (2026-09) — Deck Reattivo (Multiverso live)
+- **Backend**: nuovo `GET /api/deck/status` (in server.py dopo /lab/pulse/history): aggrega `_compute_pulse()` + turni attivi ora (`db.shifts` del giorno, start<=now<=end) mappati per reparto via keyword su station/role (`_DECK_DEPT_KEYWORDS`: panificio/pizzeria/pasticceria/banco). Ritorna mood/heartbeat/score + per reparto {active, people, level: ok|warn|critical} (level dagli allarmi Mike Mix riconducibili al reparto).
+- **Frontend** (App.js): polling `/api/deck/status` ogni 15s dopo unlock. Deck 3D ora REATTIVO: bordo+glow del pannello colorati per umore impianto (sereno=ciano, attivo=verde, teso=ambra, critico=rosso pulsante, `deck-mood-glow`); badge BPM live in basso a destra (`deck-heartbeat`); chip reparti con pallino verde pulsante + conteggio ×N quando c'è un turno attivo (`deck-dot-<id>`), glow ambra/rosso per warn/critical, tooltip con i nomi degli operatori.
+- Testato: curl (turno attivo → panificio active=1; macchina "Forno Pizzeria" giù → critical su pizzeria+panificio, mood critico) + screenshot (heartbeat live "74 BPM · CRITICAL" dopo allarme simulato, poi stato ripristinato).
+- NOTA DEPLOY: mikilab.de NON raggiungibile (timeout) al 2026-09-09 nonostante approvazione utente — verificare nell'UI Emergent che il deploy sia "Live" e il dominio collegato. Static analysis deployment_agent: PASS.

@@ -54,7 +54,7 @@ import AROven from "@/components/AROven";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
-import { recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
+import { api, recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
 import InstallApp from "@/components/InstallApp";
 import KioskMode from "@/components/KioskMode";
 import SplashScreen from "@/components/SplashScreen";
@@ -135,6 +135,22 @@ export default function App() {
   const [activeZone, setActiveZone] = useState("master");
   const [deckDept, setDeckDept] = useState(DECK_DEPTS[0]);
   const [showBriefing, setShowBriefing] = useState(false);
+
+  // Deck reattivo: stato live dei reparti (turni attivi + allarmi Mike Mix), polling 15s.
+  const [deckStatus, setDeckStatus] = useState(null);
+  useEffect(() => {
+    if (!adminOk) return;
+    let stop = false;
+    const load = () => api.get("/deck/status").then((r) => { if (!stop) setDeckStatus(r.data); }).catch(() => { /* */ });
+    load();
+    const t = setInterval(load, 15000);
+    return () => { stop = true; clearInterval(t); };
+  }, [adminOk]);
+  const MOOD_COLORS = { sereno: "#00F0FF", attivo: "#22c55e", teso: "#FFB800", critico: "#f43f5e" };
+  const deckMood = (deckStatus && deckStatus.mood) || "sereno";
+  const moodColor = MOOD_COLORS[deckMood] || "#00F0FF";
+  const moodLabel = { sereno: tri("Sereno", "Ruhig", "Calm", "Sereno", "Calme", "آرام"), attivo: tri("Attivo", "Aktiv", "Active", "Activo", "Actif", "فعال"), teso: tri("Teso", "Angespannt", "Tense", "Tenso", "Tendu", "پر تنش"), critico: tri("Critico", "Kritisch", "Critical", "Crítico", "Critique", "بحرانی") }[deckMood];
+  const deptStatus = (id) => (deckStatus && deckStatus.depts && deckStatus.depts[id]) || null;
 
   // Cyber-Trio: briefing automatico SOLO al primo accesso del Capo (poi si apre solo dal pulsante).
   useEffect(() => {
@@ -332,25 +348,43 @@ export default function App() {
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
               {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) + reparti cliccabili */}
-              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border border-[#00F0FF]/25 h-[240px] sm:h-[300px]" style={{ background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
+              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-[240px] sm:h-[300px] transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 28px ${moodColor}33, inset 0 0 44px ${moodColor}12`, background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
                 <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#00F0FF11 1px,transparent 1px),linear-gradient(90deg,#00F0FF11 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
                 <div className="absolute inset-0"><AvatarWorld3D theme={deckDept.id} accent={deckDept.accent} /></div>
+                {/* Alone reattivo dell'umore impianto (sereno/attivo/teso/critico) */}
+                <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 50% 115%, ${moodColor}38 0%, transparent 62%)` }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-4 z-10">
                   <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#00F0FF]"> Command Deck</span></p>
                   <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#7DD3FC] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
                 </div>
+                {deckStatus && (
+                  <div data-testid="deck-heartbeat" className="absolute bottom-3 right-4 z-10 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase" style={{ color: moodColor }}>
+                    <span className={`inline-block w-2 h-2 rounded-full ${deckMood === "critico" ? "animate-ping" : "animate-pulse"}`} style={{ background: moodColor }} />
+                    {deckStatus.heartbeat} BPM · {moodLabel}
+                  </div>
+                )}
                 <div data-testid="deck-depts" className="absolute top-3 left-3 right-3 z-10 flex flex-wrap gap-1.5">
-                  {DECK_DEPTS.map((d) => (
-                    <button key={d.id} data-testid={`deck-dept-${d.id}`}
-                      onClick={() => { setDeckDept(d); try { zoneRefs.operatori.current && zoneRefs.operatori.current.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }}
-                      className="px-3 py-1.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider border transition-all active:scale-95"
-                      style={deckDept.id === d.id
-                        ? { background: d.accent, color: "#050810", borderColor: d.accent, boxShadow: `0 0 16px ${d.accent}88` }
-                        : { background: "rgba(6,10,18,0.6)", color: "#9fb3c4", borderColor: "#1e293b" }}>
-                      {tri(d.it, d.de, d.en, d.it, d.fr, d.it)}
-                    </button>
-                  ))}
+                  {DECK_DEPTS.map((d) => {
+                    const st = deptStatus(d.id);
+                    const lvlColor = st && st.level === "critical" ? "#f43f5e" : st && st.level === "warn" ? "#FFB800" : d.accent;
+                    const alarmed = st && st.level !== "ok";
+                    return (
+                      <button key={d.id} data-testid={`deck-dept-${d.id}`}
+                        onClick={() => { setDeckDept(d); try { zoneRefs.operatori.current && zoneRefs.operatori.current.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }}
+                        title={st && st.people.length ? st.people.join(", ") : undefined}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider border transition-all active:scale-95 ${st && st.level === "critical" ? "animate-pulse" : ""}`}
+                        style={deckDept.id === d.id
+                          ? { background: lvlColor, color: "#050810", borderColor: lvlColor, boxShadow: `0 0 16px ${lvlColor}88` }
+                          : alarmed
+                            ? { background: "rgba(6,10,18,0.6)", color: lvlColor, borderColor: `${lvlColor}99`, boxShadow: `0 0 14px ${lvlColor}55` }
+                            : { background: "rgba(6,10,18,0.6)", color: "#9fb3c4", borderColor: "#1e293b" }}>
+                        {st && st.active > 0 && <span data-testid={`deck-dot-${d.id}`} className="inline-block w-1.5 h-1.5 rounded-full bg-[#22c55e] animate-pulse" />}
+                        {tri(d.it, d.de, d.en, d.it, d.fr, d.it)}
+                        {st && st.active > 0 && <span className="font-mono-data text-[9px] opacity-80">×{st.active}</span>}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

@@ -3436,6 +3436,48 @@ async def get_pulse_history(minutes: int = 240, user: Optional[dict] = Depends(o
     docs = await db.lab_pulse_history.find({"at": {"$gte": since}}, {"_id": 0}).sort("at", 1).to_list(300)
     return {"points": docs}
 
+# ===========================================================================
+# DECK REATTIVO — stato live dei 4 reparti del Multiverso 3D (turni + allarmi)
+# ===========================================================================
+_DECK_DEPT_KEYWORDS = {
+    "panificio": ("panificio", "pane", "backstube", "bakery", "impasto", "forno", "cella", "back"),
+    "pizzeria": ("pizza", "pizzeria"),
+    "pasticceria": ("pasticceria", "dolci", "konditorei", "pastry", "lievitati"),
+    "banco": ("magazzino", "banco", "lager", "warehouse", "vendita", "scarico", "silo"),
+}
+
+
+@api_router.get("/deck/status")
+async def deck_status(user: Optional[dict] = Depends(optional_user)):
+    now = datetime.now(timezone.utc)
+    today = now.strftime("%Y-%m-%d")
+    hm = now.strftime("%H:%M")
+    pulse = await _compute_pulse()
+    depts = {k: {"active": 0, "people": [], "level": "ok"} for k in _DECK_DEPT_KEYWORDS}
+    # Turni attivi in questo momento, assegnati al reparto per postazione/ruolo.
+    async for s in db.shifts.find({"day": today}, {"_id": 0}):
+        if (s.get("start") or "") <= hm <= (s.get("end") or ""):
+            txt = f"{s.get('station') or ''} {s.get('role') or ''}".lower()
+            for d, kws in _DECK_DEPT_KEYWORDS.items():
+                if any(k in txt for k in kws):
+                    depts[d]["active"] += 1
+                    if s.get("employee"):
+                        depts[d]["people"].append(s["employee"])
+                    break
+    # Gravita' per reparto dagli allarmi di Mike Mix (stazione riconducibile al reparto).
+    rank = {"ok": 0, "warn": 1, "critical": 2}
+    for a in pulse["alerts"]:
+        st = (a.get("station") or "").lower()
+        lvl = "critical" if a.get("level") == "critical" else ("warn" if a.get("level") == "warn" else "ok")
+        for d, kws in _DECK_DEPT_KEYWORDS.items():
+            if any(k in st for k in kws) and rank[lvl] > rank[depts[d]["level"]]:
+                depts[d]["level"] = lvl
+    return {
+        "mood": pulse["mood"], "heartbeat": pulse["heartbeat"], "score": pulse["score"],
+        "depts": depts, "generated_at": now.isoformat(),
+    }
+
+
 
 class CheckinReq(BaseModel):
     operator: Optional[str] = Field("", max_length=60)
