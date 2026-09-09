@@ -6,8 +6,8 @@ import { API } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 
 const OWNER = "Michele Signorella";
-const EMAIL = "accessi@mikilab.de";
-const EMAIL2 = "noreply@mikilab.de";
+const EMAIL = "michelecip918@gmail.com";
+const EMAIL2 = "";
 const CITY = "Stuttgart, Deutschland";
 
 const T = {
@@ -15,7 +15,7 @@ const T = {
     title: "Note legali & Privacy (GDPR)",
     intro: "Informativa ai sensi del Regolamento (UE) 2016/679 (GDPR) e delle leggi tedesche (DDG/TTDSG). MikiLab Pro tratta solo i dati minimi necessari al funzionamento del servizio.",
     sections: [
-      { h: "Titolare del trattamento (Verantwortlicher)", b: `${OWNER} — ${CITY}. Contatto privacy: ${EMAIL} (alternativa: ${EMAIL2}). Per ogni richiesta sui tuoi dati scrivi a questi indirizzi: rispondiamo entro 30 giorni come previsto dal GDPR.` },
+      { h: "Titolare del trattamento (Verantwortlicher)", b: `${OWNER} — ${CITY}. Contatto privacy: ${EMAIL}. Per ogni richiesta sui tuoi dati scrivi a questi indirizzi: rispondiamo entro 30 giorni come previsto dal GDPR.` },
       { h: "Dati trattati e finalità", b: "• Registrazione/accesso: nome ed email (base: art. 6(1)(b) GDPR, esecuzione del servizio). • Richiesta di accesso dal portale pubblico: email e motivazione (art. 6(1)(b)). • Cookie tecnico di sessione e gate PIN (art. 6(1)(f), strettamente necessario). • Preferenze locali (lingua, volume, tema) salvate solo nel tuo browser (localStorage), mai inviate al server. • Iscrizione notifiche push (solo se la attivi tu): token del dispositivo per inviarti avvisi critici (art. 6(1)(a), consenso revocabile). • Funzioni vocali: i testi letti ad alta voce passano dal servizio di sintesi vocale; non salviamo registrazioni." },
       { h: "Servizi terzi (responsabili del trattamento)", b: "• Resend (invio email operative e di reset password) — USA, con Clausole Contrattuali Standard UE. • Provider di hosting (server e banca dati nell'UE). Nessun dato viene venduto, ceduto o usato per pubblicità o profilazione." },
       { h: "Cookie", b: "Il sito usa SOLO cookie tecnici strettamente necessari (sessione di accesso e PIN gate, § 25(2) TTDSG) e preferenze in localStorage. Nessun cookie di tracciamento, analitica o marketing: per questo non è richiesto il banner di consenso." },
@@ -28,7 +28,7 @@ const T = {
     title: "Impressum & Datenschutz (DSGVO)",
     intro: "Informationen gemäß Verordnung (EU) 2016/679 (DSGVO) sowie DDG/TTDSG. MikiLab Pro verarbeitet nur die für den Betrieb des Dienstes notwendigen Mindestdaten.",
     sections: [
-      { h: "Verantwortlicher", b: `${OWNER} — ${CITY}. Datenschutz-Kontakt: ${EMAIL} (alternativ: ${EMAIL2}). Für alle Anfragen zu deinen Daten schreibe an diese Adressen: Wir antworten innerhalb von 30 Tagen gemäß DSGVO.` },
+      { h: "Verantwortlicher", b: `${OWNER} — ${CITY}. Datenschutz-Kontakt: ${EMAIL}. Für alle Anfragen zu deinen Daten schreibe an diese Adressen: Wir antworten innerhalb von 30 Tagen gemäß DSGVO.` },
       { h: "Verarbeitete Daten und Zwecke", b: "• Registrierung/Login: Name und E-Mail (Rechtsgrundlage: Art. 6(1)(b) DSGVO, Vertragserfüllung). • Zugangsanfrage über das öffentliche Portal: E-Mail und Grund (Art. 6(1)(b)). • Technisches Sitzungs-Cookie und PIN-Gate (Art. 6(1)(f), unbedingt erforderlich). • Lokale Einstellungen (Sprache, Lautstärke) nur in deinem Browser (localStorage), nie an den Server gesendet. • Push-Benachrichtigungen (nur wenn du sie aktivierst): Geräte-Token für kritische Warnungen (Art. 6(1)(a), widerrufbar). • Sprachfunktionen: Vorzulesende Texte werden an den Sprachdienst übergeben; wir speichern keine Aufnahmen." },
       { h: "Auftragsverarbeiter", b: "• Resend (Versand von Betriebs- und Passwort-Reset-E-Mails) — USA, mit EU-Standardvertragsklauseln. • Hosting-Anbieter (Server und Datenbank in der EU). Daten werden nicht verkauft, weitergegeben oder für Werbung/Profiling genutzt." },
       { h: "Cookies", b: "Diese Seite verwendet NUR unbedingt erforderliche technische Cookies (Login-Sitzung und PIN-Gate, § 25(2) TTDSG) sowie Einstellungen im localStorage. Keine Tracking-, Analyse- oder Marketing-Cookies: daher ist kein Einwilligungs-Banner erforderlich." },
@@ -41,7 +41,7 @@ const T = {
     title: "Legal Notice & Privacy (GDPR)",
     intro: "Information pursuant to Regulation (EU) 2016/679 (GDPR) and German law (DDG/TTDSG). MikiLab Pro processes only the minimum data needed to operate the service.",
     sections: [
-      { h: "Data controller", b: `${OWNER} — ${CITY}. Privacy contact: ${EMAIL} (alternative: ${EMAIL2}). For any request about your data, write to these addresses: we reply within 30 days as required by the GDPR.` },
+      { h: "Data controller", b: `${OWNER} — ${CITY}. Privacy contact: ${EMAIL}. For any request about your data, write to these addresses: we reply within 30 days as required by the GDPR.` },
       { h: "Data processed and purposes", b: "• Registration/login: name and email (basis: Art. 6(1)(b) GDPR, performance of the service). • Access request via the public portal: email and reason (Art. 6(1)(b)). • Technical session cookie and PIN gate (Art. 6(1)(f), strictly necessary). • Local preferences (language, volume) stored only in your browser (localStorage), never sent to the server. • Push notifications (only if you enable them): device token to send critical alerts (Art. 6(1)(a), revocable consent). • Voice features: texts read aloud are passed to the speech service; we do not store recordings." },
       { h: "Processors", b: "• Resend (operational and password-reset emails) — USA, with EU Standard Contractual Clauses. • Hosting provider (server and database in the EU). Data is never sold, shared or used for advertising or profiling." },
       { h: "Cookies", b: "This site uses ONLY strictly necessary technical cookies (login session and PIN gate, § 25(2) TTDSG) plus preferences in localStorage. No tracking, analytics or marketing cookies: therefore no consent banner is required." },
@@ -90,7 +90,7 @@ export default function LegalPage() {
         <div className={`${pcl} mt-2`}>
           <p className="font-bold text-white">{OWNER}</p>
           <p>{CITY}</p>
-          <p>E-Mail: <span className="text-[#FF9D42]">{EMAIL}</span> · {EMAIL2}</p>
+          <p>E-Mail: <span className="text-[#FF9D42]">{EMAIL}</span></p>
           <p className="text-[#94A3B8]">{tr("Sito: mikilab.de", "Website: mikilab.de", "Website: mikilab.de")}</p>
         </div>
         <p data-testid="impressum-todo" className="text-[11px] text-[#FFB800] mt-3 italic border border-[#FFB800]/30 rounded-lg px-3 py-2 bg-[#FFB800]/5">

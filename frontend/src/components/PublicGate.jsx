@@ -15,7 +15,7 @@ import { toast } from "sonner";
 const PUB = process.env.PUBLIC_URL;
 
 // Multiverso pubblico read-only: chi non ha il PIN puo GUARDARE i 4 mondi e gli avatar,
-// ma OGNI interazione porta al Muro del PIN (198505 · richiesta accessi@mikilab.de).
+// ma OGNI interazione porta al Muro del PIN (198505 · richiesta michelecip918@gmail.com).
 export default function PublicGate({ onUnlock }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -30,6 +30,16 @@ export default function PublicGate({ onUnlock }) {
   const [legalOpen, setLegalOpen] = useState(false);
   const [cookieOk, setCookieOk] = useState(() => { try { return !!localStorage.getItem("mikilab_cookie_ok"); } catch { return true; } });
   const acceptCookies = () => { try { localStorage.setItem("mikilab_cookie_ok", "1"); } catch { /* */ } setCookieOk(true); };
+
+  // Allerta impianto: mostra l'occhio rosso del Nexus ai visitatori quando il laboratorio e' in stato critico.
+  const [plantAlert, setPlantAlert] = useState(false);
+  useEffect(() => {
+    let stop = false;
+    const check = () => api.get("/deck/status").then((r) => { if (!stop) setPlantAlert(r.data && r.data.mood === "critico"); }).catch(() => { /* */ });
+    check();
+    const t = setInterval(check, 20000);
+    return () => { stop = true; clearInterval(t); };
+  }, []);
 
   const shareUrl = "https://mikilab.de/";
   const doShare = async () => {
@@ -189,6 +199,12 @@ export default function PublicGate({ onUnlock }) {
                     boxShadow: a.nexus ? `0 0 46px ${a.c}, 0 0 90px rgba(255,107,0,0.35)` : `0 0 22px ${a.c}66`,
                   }}>
                   <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  {a.nexus && plantAlert && (
+                    <>
+                      <span data-testid="gate-nexus-red-eye" className="absolute rounded-full animate-ping" style={{ left: "63%", top: "33%", width: 18, height: 18, background: "rgba(244,63,94,0.85)", boxShadow: "0 0 14px 5px rgba(244,63,94,0.85)", transform: "translate(-50%,-50%)" }} />
+                      <span className="absolute rounded-full animate-pulse" style={{ left: "63%", top: "33%", width: 12, height: 12, background: "#ff1f3d", boxShadow: "0 0 12px 4px rgba(255,31,61,0.9)", transform: "translate(-50%,-50%)" }} />
+                    </>
+                  )}
                 </div>
               </div>
               <span className="font-black text-xs sm:text-sm" style={{ color: a.c }}>{a.n}</span>
@@ -225,7 +241,7 @@ export default function PublicGate({ onUnlock }) {
         <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[#64748B]">
           <Sparkles className="w-3.5 h-3.5 text-[#EAB308]" />
           {tri("Serve un accesso? Scrivi a", "Zugang nötig? Schreib an", "Need access? Write to", "¿Necesitas acceso? Escribe a", "Besoin d'accès ? Écris à", "دسترسی می‌خواهی؟ بنویس به")}
-          <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#D95200] hover:text-[#FF8533]">accessi@mikilab.de</a>
+          <a href="mailto:michelecip918@gmail.com?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#D95200] hover:text-[#FF8533]">michelecip918@gmail.com</a>
         </div>
 
         {/* Fase 2 · Richiesta accesso — smistata da Mohamed */}

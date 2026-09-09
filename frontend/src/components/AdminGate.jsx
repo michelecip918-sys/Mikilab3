@@ -84,9 +84,9 @@ export default function AdminGate({ onUnlock, onBack }) {
             "¿Sin PIN? El acceso a MikiLab es por invitación del Capo.",
             "Pas de PIN ? L'accès à MikiLab se fait sur invitation du Capo.",
             "پین نداری؟ دسترسی به MikiLab با دعوت کاپو است.")}</p>
-          <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="admin-gate-email"
+          <a href="mailto:michelecip918@gmail.com?subject=Richiesta%20accesso%20MikiLab" data-testid="admin-gate-email"
             className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#D95200] hover:text-[#FF8533] transition-colors">
-            <ShieldCheck className="w-3.5 h-3.5" /> accessi@mikilab.de
+            <ShieldCheck className="w-3.5 h-3.5" /> michelecip918@gmail.com
           </a>
         </div>
       </div>

@@ -4718,4 +4718,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Nuovo componente `components/NexusAvatar.jsx`: avatar Miki-Nexus con overlay occhio rosso che PULSA (animate-ping+pulse, posizionato eyeLeft/eyeTop sull'occhio cromato) quando l'impianto è in stato CRITICO. Ascolta l'evento window "mikilab-mood" emesso dal polling deck in App.js (dispatch dopo ogni /deck/status). Sostituito l'img statico in `NexusConsole.jsx` e `console/OperatorsRoster.jsx`. testid: nexus-avatar, nexus-red-eye.
 - Testato: guasto simulato → nexus-red-eye ON + deck "74 BPM · CRITICAL", 0 pageerror; stato ripristinato.
 - ⚠️ DEPLOY: tutto pronto (analisi PASS), ma la pubblicazione va completata premendo Redeploy in "Gestisci deployment" (il trigger automatico non ha risposto in questo turno).
+
+## v60 (2026-09) — Fix email contatto + occhio gate + voce Nexus
+- **BUG EMAIL RISOLTO**: `accessi@mikilab.de` NON è una casella reale (nessun MX/mailbox che riceve) → le email inviate lì rimbalzavano "550 User unknown". Sostituito ovunque con `michelecip918@gmail.com` (reale, riceve): PublicGate, AdminGate, LegalPage (contatto privacy + Impressum). `noreply@mikilab.de` resta SOLO mittente (Resend, send-only) — non serve che riceva.
+- **Occhio rosso nel GATE PUBBLICO**: PublicGate ora fa polling `/deck/status` ogni 20s; se mood=critico mostra l'occhio rosso pulsante sul Nexus anche ai visitatori (testid gate-nexus-red-eye). Testato: simulato critico → occhio acceso nel gate, 0 errori.
+- **Voce Nexus distinta**: in tts.js voce "nexus"/"mikinexus" → pitch 0.5, rate 0.9 (più profonda/metallica di mikemix a 0.76).
+- sw.js → mikilab-v43.
+- ⚠️ **PIN 198505 KO in produzione**: mikilab.de gira ancora il BUILD VECCHIO (deck/status→401). Il fix di riallineamento PIN allo startup + tutte le novità sono in PREVIEW, non live. SERVE che l'utente prema Redeploy in "Gestisci deployment". NB: l'account michelecip918 potrebbe non esistere nel DB di produzione → dopo il deploy, registrarsi con quella email (OWNER_EMAIL → diventa admin) invece di fare reset.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
