@@ -7191,6 +7191,68 @@ async def deck_status_compute():
             "depts": depts, "critical_stations": crit_stations, "generated_at": now.isoformat()}
 
 
+# ---------------------------------------------------------------------------
+# MONITOR UPTIME — controlla ogni ora che mikilab.de risponda; push agli admin
+# quando il sito va giù e quando torna online.
+# ---------------------------------------------------------------------------
+UPTIME_URL = os.environ.get("UPTIME_URL", "https://mikilab.de")
+
+
+async def _push_admins(payload: dict):
+    admins = await db.users.find(
+        {"$or": [{"role": "admin"}, {"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}]},
+        {"_id": 0, "user_id": 1}).to_list(50)
+    ids = [a["user_id"] for a in admins]
+    if not ids:
+        return
+    _, priv = await _get_vapid()
+    subs = await db.push_subs.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(100)
+    for s in subs:
+        await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+
+
+async def _uptime_monitor_loop():
+    await asyncio.sleep(60)
+    was_up = True
+    down_since = None
+    while True:
+        try:
+            ok = False
+            code = 0
+            try:
+                async with httpx.AsyncClient(timeout=15, follow_redirects=True) as cx:
+                    r = await cx.get(UPTIME_URL)
+                    code = r.status_code
+                    ok = 200 <= code < 400
+            except Exception:
+                ok = False
+            now = datetime.now(timezone.utc)
+            await db.uptime_checks.insert_one({"ts": now.isoformat(), "ok": ok, "code": code, "url": UPTIME_URL})
+            # mantieni solo ultimi ~30 giorni di check (720 orari) - non distruttivo sul resto
+            old = (now - timedelta(days=30)).isoformat()
+            await db.uptime_checks.delete_many({"ts": {"$lt": old}})
+            if not ok and was_up:
+                down_since = now
+                await _push_admins({"title": "MikiLab · SITO OFFLINE", "body": f"mikilab.de non risponde (codice {code or 'timeout'}). Controlla il dominio/DNS.", "tag": "uptime"})
+            elif ok and not was_up:
+                mins = int((now - down_since).total_seconds() // 60) if down_since else 0
+                await _push_admins({"title": "MikiLab · SITO ONLINE", "body": f"mikilab.de è di nuovo raggiungibile (down ~{mins} min).", "tag": "uptime"})
+                down_since = None
+            was_up = ok
+        except Exception:
+            logger.exception("uptime monitor error")
+        await asyncio.sleep(3600)  # ogni ora
+
+
+@api_router.get("/uptime/status")
+async def uptime_status(admin: dict = Depends(require_pro)):
+    checks = await db.uptime_checks.find({}, {"_id": 0}).sort("ts", -1).to_list(48)
+    last = checks[0] if checks else None
+    up_count = sum(1 for c in checks if c.get("ok"))
+    pct = round(up_count / len(checks) * 100, 1) if checks else None
+    return {"url": UPTIME_URL, "last": last, "checks": checks, "uptime_24h_pct": pct}
+
+
 _DEPT_LABELS_IT = {"panificio": "Panificio", "pizzeria": "Pizzeria", "pasticceria": "Pasticceria", "banco": "Magazzino"}
 
 
