@@ -340,11 +340,14 @@ export default function App() {
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
                     <ConsoleIndex />
+                    <ConsoleSectionMenu active={consoleSec} onPick={setConsoleSec} />
+                    <div data-testid="console-regia-tools" className="space-y-4">
                     <RoleLayout />
                     <CapoDeck />
                     <OvenBrain />
                     <BakoSuggestions />
                     <LabBriefing />
+                    </div>
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale BakoMix e guide di manutenzione istantanee.", "SOS aus der Produktion mit BakoMix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with BakoMix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
