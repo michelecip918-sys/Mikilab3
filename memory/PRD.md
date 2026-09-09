@@ -4582,3 +4582,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Email: mittente ufficiale `noreply@mikilab.de` con **fallback automatico** a `onboarding@resend.dev` (wrapper su _resend.Emails.send) finché il dominio non è verificato su Resend. Nuova chiave utente in .env.
 - WebGPU 120fps: NON fattibile su three r160 (nessuna build WebGPU di produzione) senza upgrade di three.js → task futuro. Search Console: in attesa del codice.
 - NB: import inutilizzati residui (ConsoleIndex/ConsoleSectionMenu/ZoneDivider/ZoneRail) → solo warning ESLint, non bloccanti (rimuovibili in cleanup).
+
+## v-MANIFESTO Fix Schermata Unica (2026-06)
+- **Risolte le "schermate nere / menu spezzati"**: rimossa la logica-residuo del vecchio section-menu che impostava display:none sui pannelli quando nessuna sezione era selezionata (consoleSec sempre "" dopo la rimozione del menu). Ora l'effetto forza display:"" su TUTTI i pannelli → schermata unica con tutto sempre visibile.
+- **Cleanup import**: rimossi import morti `ConsoleIndex` e `ConsoleSectionMenu`. (ZoneDivider/ZoneRail già rimossi dall'import HoloKit).
+- **Deck multiverso**: aggiunto backdrop industriale (radial gradient + griglia ciano) dietro AvatarWorld3D così non appare mai come rettangolo nero.
+- Verificato: i 6 pannelli (panel-nexus, panel-advanced-lab, panel-observe, panel-legacy, panel-ar-oven, panel-training) risultano tutti 'shown', hub tecnologie renderizzato correttamente.
+- Pendenti (input utente/rischio): verifica dominio mikilab.de su Resend (DNS lato utente); WebGPU vero (richiede upgrade three.js r160→r168+, task dedicato con backup).

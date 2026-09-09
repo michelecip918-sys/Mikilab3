@@ -71,7 +71,7 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
-import { ZoneDivider, HoloPanel, ZoneRail, ZoneHero } from "@/components/console/HoloKit";
+import { HoloPanel, ZoneHero } from "@/components/console/HoloKit";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
@@ -97,8 +97,6 @@ import CapoDeck from "@/components/console/CapoDeck";
 import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
 import ShiftTemplates from "@/components/console/ShiftTemplates";
-import ConsoleIndex from "@/components/console/ConsoleIndex";
-import ConsoleSectionMenu from "@/components/console/ConsoleSectionMenu";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
@@ -154,9 +152,10 @@ export default function App() {
     return () => window.removeEventListener("mikilab:open-panel", onJump);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
+    // Schermata unica: tutti i pannelli sempre visibili (rimossa la logica a sezioni).
     const apply = () => {
-      Object.keys(CONSOLE_SECMAP).forEach((pid) => { const el = document.querySelector(`[data-testid="${pid}"]`); if (el) el.style.display = (consoleSec && CONSOLE_SECMAP[pid] === consoleSec) ? "" : "none"; });
-      const rt = document.querySelector('[data-testid="console-regia-tools"]'); if (rt) rt.style.display = consoleSec === "regia" ? "" : "none";
+      Object.keys(CONSOLE_SECMAP).forEach((pid) => { const el = document.querySelector(`[data-testid="${pid}"]`); if (el) el.style.display = ""; });
+      const rt = document.querySelector('[data-testid="console-regia-tools"]'); if (rt) rt.style.display = "";
     };
     apply(); const t = setTimeout(apply, 120);
     return () => clearTimeout(t);
@@ -325,7 +324,8 @@ export default function App() {
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
               {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) */}
-              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border border-[#00F0FF]/25 h-[240px] sm:h-[300px] bg-[#050810]">
+              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border border-[#00F0FF]/25 h-[240px] sm:h-[300px]" style={{ background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
+                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#00F0FF11 1px,transparent 1px),linear-gradient(90deg,#00F0FF11 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
                 <div className="absolute inset-0"><AvatarWorld3D theme="panificio" accent="#00F0FF" /></div>
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-4 z-10">
