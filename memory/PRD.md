@@ -4562,3 +4562,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **og-image.jpg** (1200×630) brandizzato generato (multiverso olografico ciano/oro) in /public.
 - **robots.txt**: da `Disallow: /` → `Allow: /` + `Sitemap: https://mikilab.de/sitemap.xml`. sitemap.xml già presente.
 - Verificato sull'HTML servito: nuovo title, robots index/follow, OG, JSON-LD presenti. NB: robots.txt in preview è gestito da Cloudflare; in produzione (mikilab.de) verrà servito quello di /public.
+
+## v-MANIFESTO Login pubblico + AR live (2026-06)
+- **Login più visibile**: aggiunto pulsante "Accedi" [public-login-btn] nell'header del Multiverso pubblico (PublicGate) che apre AuthScreen (Google + Email/Password + Forgot). L'header app aveva già login visibile.
+- **AR Forni collegato al motore reale**: [ar-recipe] selettore ricetta (ricettario MikiLab) + scan chiama `POST /api/mike/legacy-adapt` con la ricetta; parsing regex di °C/min dall'output LLM per l'overlay, con badge "Live · Mike Mix" quando il calcolo è reale (fallback simulato se LLM non disponibile). Verificato a schermo: 180°C/18min + nota LLM.
+- Google Search Console verifica: rimandata a fine lavori (come da utente).

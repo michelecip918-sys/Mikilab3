@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut } from "lucide-react";
+import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
+import AuthScreen from "@/components/AuthScreen";
 import { api } from "@/lib/api";
 
 const PUB = process.env.PUBLIC_URL;
@@ -23,6 +24,7 @@ export default function PublicGate({ onUnlock }) {
   const [reqNote, setReqNote] = useState("");
   const [reqSent, setReqSent] = useState(false);
   const [reqBusy, setReqBusy] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
 
   const sendRequest = async () => {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(reqEmail) || reqBusy) return;
@@ -118,8 +120,14 @@ export default function PublicGate({ onUnlock }) {
             <span className="block font-mono text-[8.5px] tracking-[0.3em] text-[#00F0FF]/70 uppercase">Holographic Command OS</span>
           </span>
         </div>
-        <LangSelector testid="public-lang" />
+        <div className="flex items-center gap-2">
+          <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#14b8a6]/40 text-[#14b8a6] text-xs font-bold hover:border-[#14b8a6] active:scale-95 transition-all backdrop-blur-md">
+            <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Entrar", "Connexion", "ورود")}
+          </button>
+          <LangSelector testid="public-lang" />
+        </div>
       </header>
+      {showAuth && <AuthScreen onClose={() => setShowAuth(false)} initialMode="login" />}
 
       <div className="relative z-10 flex flex-col items-center justify-center px-5 pt-2 pb-28 text-center min-h-[calc(100vh-72px)]">
         {/* Selettore mondi (viewing passivo) */}
