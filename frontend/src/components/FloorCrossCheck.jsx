@@ -44,7 +44,7 @@ export default function FloorCrossCheck({ task = "Produzione" }) {
         {busy ? tri("Analisi in corso…", "Analyse läuft…", "Analyzing…", "Analizando…", "Analyse…", "در حال تحلیل…") : tri("Scatta e verifica", "Foto & prüfen", "Snap & verify", "Foto y verificar", "Photo & vérifier", "عکس و بررسی")}
       </button>
       {res && (
-        <div data-testid="floor-cc-result" className={`rounded-xl p-3 text-sm font-semibold flex items-start gap-2 ${res.ok ? "bg-[#14b8a6]/10 border border-[#14b8a6]/40 text-[#14b8a6]" : "bg-rose-500/10 border border-rose-500/50 text-rose-300"}`}>
+        <div data-testid="floor-cc-result" className={`rounded-xl p-3 text-sm font-semibold flex items-start gap-2 ${res.ok ? "bg-[#D95200]/10 border border-[#D95200]/40 text-[#D95200]" : "bg-rose-500/10 border border-rose-500/50 text-rose-300"}`}>
           {res.ok ? <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" /> : <Snowflake className="w-4 h-4 mt-0.5 shrink-0" />}
           <span>{res.message}</span>
         </div>

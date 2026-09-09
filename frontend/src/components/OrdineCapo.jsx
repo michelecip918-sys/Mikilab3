@@ -46,12 +46,12 @@ export default function OrdineCapo() {
     finally { setSending(false); }
   };
 
-  const inputCls = "bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-sm text-white focus:border-[#14b8a6] outline-none w-full";
+  const inputCls = "bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-sm text-white focus:border-[#D95200] outline-none w-full";
 
   return (
     <div data-testid="ordine-capo" className="space-y-4">
       <div>
-        <h3 className="text-sm font-bold text-[#14b8a6] flex items-center gap-2"><CalendarClock className="w-4 h-4" /> {tri("Ordine & Piano a Ritroso", "Auftrag & Rückwärtsplan", "Order & Backwards Plan", "Pedido & Plan a la Inversa", "Commande & Plan à Rebours", "سفارش و برنامه معکوس")}</h3>
+        <h3 className="text-sm font-bold text-[#D95200] flex items-center gap-2"><CalendarClock className="w-4 h-4" /> {tri("Ordine & Piano a Ritroso", "Auftrag & Rückwärtsplan", "Order & Backwards Plan", "Pedido & Plan a la Inversa", "Commande & Plan à Rebours", "سفارش و برنامه معکوس")}</h3>
         <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Detta l'ordine: dall'ora di consegna calcolo a ritroso impasto, lievitazione e cottura, poi invio la scaletta a Mike Mix.", "Diktiere den Auftrag: von der Lieferzeit rechne ich rückwärts.", "Dictate the order: from the delivery time I schedule mixing, proofing and baking backwards, then send it to Mike Mix.", "Dicta el pedido: desde la hora de entrega calculo hacia atrás.", "Dicte la commande : depuis l'heure de livraison je planifie à rebours.", "سفارش را بگو: از زمان تحویل به‌صورت معکوس برنامه‌ریزی می‌کنم.")}</p>
       </div>
 
@@ -85,21 +85,21 @@ export default function OrdineCapo() {
       </div>
 
       <button data-testid="ordine-calc-btn" onClick={calc} disabled={busy}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#14b8a6]/20 disabled:opacity-50 active:scale-95 transition-all">
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#D95200]/20 disabled:opacity-50 active:scale-95 transition-all">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {busy ? tri("Calcolo…", "Berechne…", "Computing…", "Calculando…", "Calcul…", "در حال محاسبه…") : tri("Calcola Piano a Ritroso", "Rückwärtsplan berechnen", "Compute Backwards Plan", "Calcular Plan a la Inversa", "Calculer le Plan à Rebours", "محاسبه برنامه معکوس")}
       </button>
 
       {res && (
-        <div data-testid="ordine-result" className="rounded-xl bg-[#030712] border border-[#14b8a6]/30 p-4">
+        <div data-testid="ordine-result" className="rounded-xl bg-[#030712] border border-[#D95200]/30 p-4">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm font-bold text-white">{res.title}</span>
-            <button data-testid="ordine-listen" onClick={() => { try { playTTS(res.plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#14b8a6]"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta", "Hören", "Listen", "Escuchar", "Écouter", "بشنو")}</button>
+            <button data-testid="ordine-listen" onClick={() => { try { playTTS(res.plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#D95200]"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta", "Hören", "Listen", "Escuchar", "Écouter", "بشنو")}</button>
           </div>
           <div className="space-y-2">
             {res.steps.map((s, i) => (
-              <div key={i} className={`flex items-center gap-3 rounded-lg px-3 py-2 border ${s.phase === "consegna" ? "bg-[#14b8a6]/10 border-[#14b8a6]/40" : "bg-[#0b0f19] border-[#1e293b]"}`}>
-                <span className="text-sm font-black text-[#14b8a6] tabular-nums w-12">{s.clock}</span>
+              <div key={i} className={`flex items-center gap-3 rounded-lg px-3 py-2 border ${s.phase === "consegna" ? "bg-[#D95200]/10 border-[#D95200]/40" : "bg-[#0b0f19] border-[#1e293b]"}`}>
+                <span className="text-sm font-black text-[#D95200] tabular-nums w-12">{s.clock}</span>
                 <span className="flex-1 text-sm font-semibold text-white">{s.label}</span>
                 {s.minutes ? <span className="text-[11px] text-[#64748B]">{s.minutes} min</span> : null}
               </div>

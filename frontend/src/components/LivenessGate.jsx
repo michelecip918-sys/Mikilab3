@@ -57,11 +57,11 @@ export default function LivenessGate({ onPass, onCancel }) {
 
   return (
     <div data-testid="liveness-gate" className="fixed inset-0 z-[90] flex items-center justify-center bg-black/75 p-4">
-      <div className="w-full max-w-sm rounded-2xl bg-[#0b0f19] border border-[#14b8a6]/40 shadow-2xl p-5 space-y-4">
+      <div className="w-full max-w-sm rounded-2xl bg-[#0b0f19] border border-[#D95200]/40 shadow-2xl p-5 space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-[#14b8a6]" />
-            <h3 className="text-sm font-extrabold text-[#14b8a6]">{tri("Verifica presenza (Anti-Fooling)", "Präsenzprüfung (Anti-Fooling)", "Liveness check (Anti-Fooling)", "Verificación de presencia", "Vérification de présence", "بررسی حضور")}</h3>
+            <ShieldCheck className="w-5 h-5 text-[#D95200]" />
+            <h3 className="text-sm font-extrabold text-[#D95200]">{tri("Verifica presenza (Anti-Fooling)", "Präsenzprüfung (Anti-Fooling)", "Liveness check (Anti-Fooling)", "Verificación de presencia", "Vérification de présence", "بررسی حضور")}</h3>
           </div>
           {onCancel && <button data-testid="liveness-cancel" onClick={onCancel} className="w-8 h-8 rounded-full bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>}
         </div>
@@ -75,25 +75,25 @@ export default function LivenessGate({ onPass, onCancel }) {
         ) : (
           <>
             <p className="text-[11px] text-[#94A3B8]">{tri("Pronuncia questa frase per confermare che sei tu dal vivo:", "Sprich diesen Satz, um zu bestätigen, dass du live bist:", "Say this phrase to confirm you're live:", "Di esta frase para confirmar que eres tú:", "Prononce cette phrase pour confirmer :", "این عبارت را بگو تا تأیید شود:")}</p>
-            <div data-testid="liveness-phrase" className="rounded-xl bg-[#14b8a6]/8 border border-[#14b8a6]/30 p-3 text-center text-base font-bold text-white">
+            <div data-testid="liveness-phrase" className="rounded-xl bg-[#D95200]/8 border border-[#D95200]/30 p-3 text-center text-base font-bold text-white">
               {ch ? `“${ch.phrase}”` : <Loader2 className="w-4 h-4 animate-spin mx-auto" />}
             </div>
 
             {supported ? (
               <button data-testid="liveness-mic" onClick={listen} disabled={busy || !ch}
-                className={`w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-sm border active:scale-95 transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#14b8a6]/15 border-[#14b8a6]/50 text-[#14b8a6]"} disabled:opacity-40`}>
+                className={`w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl font-black text-sm border active:scale-95 transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#D95200]/15 border-[#D95200]/50 text-[#D95200]"} disabled:opacity-40`}>
                 {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Mic className="w-4 h-4" />}
                 {listening ? tri("Ascolto…", "Höre zu…", "Listening…", "Escuchando…", "Écoute…", "در حال شنیدن…") : tri("Parla per verificare", "Zum Prüfen sprechen", "Speak to verify", "Habla para verificar", "Parle pour vérifier", "برای تأیید صحبت کن")}
               </button>
             ) : (
               <div className="flex items-center gap-2">
                 <input data-testid="liveness-typed" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={tri("Digita la frase…", "Satz eingeben…", "Type the phrase…", "Escribe la frase…", "Tape la phrase…", "عبارت را بنویس…")}
-                  className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#14b8a6]" />
-                <button data-testid="liveness-typed-verify" onClick={() => verify(typed)} disabled={busy || !typed.trim()} className="shrink-0 px-4 py-2.5 rounded-xl bg-[#14b8a6] text-[#030712] font-bold text-sm disabled:opacity-40">OK</button>
+                  className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#D95200]" />
+                <button data-testid="liveness-typed-verify" onClick={() => verify(typed)} disabled={busy || !typed.trim()} className="shrink-0 px-4 py-2.5 rounded-xl bg-[#D95200] text-[#030712] font-bold text-sm disabled:opacity-40">OK</button>
               </div>
             )}
 
-            {status === "ok" && <p data-testid="liveness-ok" className="text-center text-sm font-bold text-[#14b8a6]">✓ {tri("Presenza verificata", "Präsenz bestätigt", "Presence verified", "Presencia verificada", "Présence vérifiée", "حضور تأیید شد")}</p>}
+            {status === "ok" && <p data-testid="liveness-ok" className="text-center text-sm font-bold text-[#D95200]">✓ {tri("Presenza verificata", "Präsenz bestätigt", "Presence verified", "Presencia verificada", "Présence vérifiée", "حضور تأیید شد")}</p>}
             {status === "fail" && <p data-testid="liveness-fail" className="text-center text-sm font-bold text-amber-400">✗ {tri("Non corrisponde. Riprova.", "Stimmt nicht. Nochmal.", "No match. Try again.", "No coincide. Reintenta.", "Pas de correspondance. Réessaie.", "مطابقت ندارد. دوباره.")} ({heard ? `“${heard}”` : ""}) · {3 - fails} {tri("tentativi", "Versuche", "tries", "intentos", "essais", "تلاش")}</p>}
           </>
         )}

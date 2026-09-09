@@ -87,7 +87,7 @@ export default function VoiceDelegation({ onClose }) {
     <div data-testid="voice-delegation" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><Mic className="w-5 h-5 text-[#14b8a6]" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation (Eclipse)", "Voice Delegation (Eclipse)", "Delegación por Voz (Eclipse)", "Délégation Vocale (Eclipse)", "واگذاری صوتی (اکلیپس)")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><Mic className="w-5 h-5 text-[#D95200]" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation (Eclipse)", "Voice Delegation (Eclipse)", "Delegación por Voz (Eclipse)", "Délégation Vocale (Eclipse)", "واگذاری صوتی (اکلیپس)")}</h2>
           <button data-testid="delegation-close" onClick={() => { try { recRef.current?.stop(); } catch { /* */ } onClose(); }} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
@@ -100,7 +100,7 @@ export default function VoiceDelegation({ onClose }) {
             </div>
             <div className="flex gap-2">
               <button data-testid="delegation-new" onClick={() => { setDone(null); setProposal(null); setTranscript(""); }} className="px-5 py-3 rounded-xl bg-[#0b0f19] border border-[#2A3B49] text-white text-sm font-bold active:scale-95">{tri("Nuova delega", "Neue Delegation", "New delegation", "Nueva delegación", "Nouvelle délégation", "واگذاری جدید")}</button>
-              <button data-testid="delegation-exit" onClick={onClose} className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] text-sm font-black active:scale-95">{tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
+              <button data-testid="delegation-exit" onClick={onClose} className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] text-sm font-black active:scale-95">{tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
             </div>
           </motion.div>
         ) : (
@@ -110,17 +110,17 @@ export default function VoiceDelegation({ onClose }) {
             {/* MIC + testo */}
             <div className="flex flex-col items-center mb-4">
               <button data-testid="delegation-mic" onClick={toggleMic} className="relative active:scale-95 transition-transform">
-                {listening && <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-[#14b8a6]/50 animate-ping" />}
-                <span className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 ${listening ? "bg-[#14b8a6] border-[#14b8a6] text-[#030712]" : "bg-[#0b0f19] border-[#2A3B49] text-[#14b8a6]"}`}><Mic className="w-8 h-8" /></span>
+                {listening && <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-[#D95200]/50 animate-ping" />}
+                <span className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 ${listening ? "bg-[#D95200] border-[#D95200] text-[#030712]" : "bg-[#0b0f19] border-[#2A3B49] text-[#D95200]"}`}><Mic className="w-8 h-8" /></span>
               </button>
               <p className="mt-2 text-[11px] text-[#7E8A93]">{listening ? tri("Sto ascoltando…", "Ich höre zu…", "Listening…", "Escuchando…", "J'écoute…", "در حال شنیدن…") : tri("Tocca e parla (o scrivi sotto)", "Tippen & sprechen", "Tap & speak (or type)", "Toca y habla", "Touche et parle", "بزن و صحبت کن")}</p>
             </div>
             <textarea
               data-testid="delegation-transcript" value={transcript} onChange={(e) => setTranscript(e.target.value)} rows={2}
               placeholder={tri("Es. «Sanificate i carrelli al reparto forni»", "z.B. «Reinigt die Wagen am Ofen»", "e.g. «Sanitize the trolleys at the ovens»", "Ej. «Sanitizad los carros en hornos»", "Ex. «Nettoyez les chariots aux fours»", "مثال «چرخ‌ها را کنار فرها بشویید»")}
-              className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-2xl p-3 text-sm text-white outline-none focus:border-[#14b8a6] resize-none"
+              className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-2xl p-3 text-sm text-white outline-none focus:border-[#D95200] resize-none"
             />
-            <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
+            <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
               {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con Mike Mix", "Mit Mike Mix analysieren", "Analyze with Mike Mix", "Analizar con Mike Mix", "Analyser avec Mike Mix", "تحلیل با Mike Mix")}
             </button>
 
@@ -141,12 +141,12 @@ export default function VoiceDelegation({ onClose }) {
                     {(proposal.steps || []).map((s) => (
                       <div key={s.order} className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3">
                         <div className="flex items-start gap-2">
-                          <span className="shrink-0 w-6 h-6 rounded-full bg-[#14b8a6]/20 text-[#14b8a6] text-xs font-black flex items-center justify-center">{s.order}</span>
+                          <span className="shrink-0 w-6 h-6 rounded-full bg-[#D95200]/20 text-[#D95200] text-xs font-black flex items-center justify-center">{s.order}</span>
                           <div className="min-w-0 flex-1">
                             <p className="text-[13px] text-white font-semibold leading-snug">{s.instruction}</p>
                             <p className="text-[10px] text-[#64748B] mt-0.5">{tri("competenza", "Kompetenz", "skill", "competencia", "compétence", "مهارت")}: {s.sub_role || "—"}</p>
                             <div className="mt-1.5 flex items-center gap-2">
-                              <select data-testid={`delegation-assignee-${s.order}`} value={s.assignee || ""} onChange={(e) => setAssignee(s.order, e.target.value)} className="flex-1 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1.5 text-[12px] text-white outline-none focus:border-[#14b8a6]">
+                              <select data-testid={`delegation-assignee-${s.order}`} value={s.assignee || ""} onChange={(e) => setAssignee(s.order, e.target.value)} className="flex-1 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1.5 text-[12px] text-white outline-none focus:border-[#D95200]">
                                 <option value="">{tri("— nessuno —", "— keiner —", "— none —", "— ninguno —", "— aucun —", "— هیچ —")}</option>
                                 {pool.map((w) => (<option key={w.name} value={w.name}>{w.name}{w.position ? ` · ${w.position}` : ""}</option>))}
                               </select>

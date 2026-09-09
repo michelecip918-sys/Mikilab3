@@ -36,14 +36,14 @@ export default function PeripheralSetup() {
   return (
     <div data-testid="peripheral-setup" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">
       <div className="flex items-center justify-between mb-3 gap-2">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#14b8a6] flex items-center gap-2">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#D95200] flex items-center gap-2">
           <Cpu className="w-4 h-4" /> Auto-Setup Periferiche
         </h3>
         <button
           data-testid="peripheral-setup-btn"
           onClick={run}
           disabled={busy}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#14b8a6] text-[#0f172a] hover:bg-[#0d9488] disabled:opacity-50 active:scale-95 transition-all shrink-0"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-[#D95200] text-[#0f172a] hover:bg-[#0d9488] disabled:opacity-50 active:scale-95 transition-all shrink-0"
         >
           {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Cpu className="w-3.5 h-3.5" />}
           {busy ? "Rilevamento…" : "Configura tutto"}

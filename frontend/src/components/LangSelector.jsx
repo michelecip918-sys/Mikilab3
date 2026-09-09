@@ -64,15 +64,15 @@ export default function LangSelector({ testid = "lang-selector" }) {
   return (
     <div ref={ref} className="relative">
       <button data-testid={`${testid}-btn`} onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#14b8a6] active:scale-95 transition-all">
-        <Globe className="w-4 h-4 text-[#14b8a6]" />
+        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#D95200] active:scale-95 transition-all">
+        <Globe className="w-4 h-4 text-[#D95200]" />
         <span className="text-base leading-none">{cur.flag}</span>
         <span className="text-xs font-bold uppercase">{cur.code}</span>
       </button>
       {open && (
         <div data-testid={`${testid}-menu`} className="absolute right-0 top-11 w-64 max-h-[70vh] overflow-hidden rounded-xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl z-[95] flex flex-col">
           <div className="p-2 border-b border-[#1e293b]">
-            <div className="flex items-center gap-2 bg-[#030712] rounded-lg px-2.5 py-2 border border-[#1e293b] focus-within:border-[#14b8a6]">
+            <div className="flex items-center gap-2 bg-[#030712] rounded-lg px-2.5 py-2 border border-[#1e293b] focus-within:border-[#D95200]">
               <Search className="w-4 h-4 text-[#64748B] shrink-0" />
               <input ref={inputRef} data-testid={`${testid}-search`} value={q} onChange={(e) => setQ(e.target.value)}
                 placeholder={tri("Cerca la tua lingua…", "Sprache suchen…", "Search your language…", "Busca tu idioma…", "Cherche ta langue…", "زبان خود را جستجو کن…")}
@@ -82,12 +82,12 @@ export default function LangSelector({ testid = "lang-selector" }) {
           <div className="overflow-y-auto p-1.5 space-y-0.5">
             {ready.map((l) => (
               <button key={l.code} data-testid={`${testid}-${l.code}`} onClick={() => { setLang(l.code); setOpen(false); setQ(""); }}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${l.code === lang ? "bg-[#14b8a6]/15 text-[#14b8a6] font-bold" : "text-[#cbd5e1] hover:bg-[#0f172a]"}`}>
+                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${l.code === lang ? "bg-[#D95200]/15 text-[#D95200] font-bold" : "text-[#cbd5e1] hover:bg-[#0f172a]"}`}>
                 <span className="text-base leading-none">{l.flag}</span>
                 <span className="flex-1 text-left">{l.label}</span>
                 <span data-testid={`${testid}-preview-${l.code}`} role="button" tabIndex={0}
                   onClick={(e) => { e.stopPropagation(); try { playTTS(SAMPLE[l.code] || SAMPLE.en, { lang: l.code, voice: "bakemix" }); } catch { /* */ } }}
-                  className="shrink-0 p-1 rounded-md hover:bg-[#14b8a6]/20 text-[#14b8a6]" title={tri("Ascolta un esempio", "Beispiel anhören", "Listen to a sample", "Escuchar ejemplo", "Écouter un exemple", "شنیدن نمونه")}>
+                  className="shrink-0 p-1 rounded-md hover:bg-[#D95200]/20 text-[#D95200]" title={tri("Ascolta un esempio", "Beispiel anhören", "Listen to a sample", "Escuchar ejemplo", "Écouter un exemple", "شنیدن نمونه")}>
                   <Volume2 className="w-3.5 h-3.5" />
                 </span>
                 {l.code === lang && <Check className="w-4 h-4" />}

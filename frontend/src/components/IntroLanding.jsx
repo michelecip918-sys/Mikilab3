@@ -19,7 +19,7 @@ export default function IntroLanding({ onStart, onRegister }) {
         <img src={`${PUB}/intro-team.jpg`} alt="" className="w-full h-full object-cover opacity-60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <div className="absolute inset-0 bg-gradient-to-b from-[#030712]/75 via-[#030712]/40 to-[#030712]/95" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b18_1px,transparent_1px),linear-gradient(to_bottom,#1e293b18_1px,transparent_1px)] bg-[size:3.5rem_3.5rem]" />
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[280px] bg-[#14b8a6]/15 blur-[130px] rounded-full" />
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[520px] h-[280px] bg-[#D95200]/15 blur-[130px] rounded-full" />
       </div>
 
       {/* lingua in alto a destra */}
@@ -30,7 +30,7 @@ export default function IntroLanding({ onStart, onRegister }) {
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
         <motion.div initial={{ opacity: 0, scale: 0.85 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }}
           className="flex items-end justify-center gap-3 mb-5">
-          {[{ img: "avatar_miki.jpg", c: "#14b8a6", n: "MikiLab" }, { img: "avatar_mikemix.jpg", c: "#f59e0b", n: "Mike Mix" }, { img: "avatar_bigmix.jpg", c: "#06b6d4", n: "Mike Mix AI" }].map((a, i) => (
+          {[{ img: "avatar_miki.jpg", c: "#D95200", n: "MikiLab" }, { img: "avatar_mikemix.jpg", c: "#f59e0b", n: "Mike Mix" }, { img: "avatar_bigmix.jpg", c: "#06b6d4", n: "Mike Mix AI" }].map((a, i) => (
             <div key={a.n} className="flex flex-col items-center gap-1.5">
               <div className={`rounded-full overflow-hidden bg-[#030712] shadow-xl ${i === 0 ? "w-24 h-24" : "w-18 h-18"}`} style={{ width: i === 0 ? 92 : 72, height: i === 0 ? 92 : 72, border: `3px solid ${a.c}`, boxShadow: `0 0 22px ${a.c}66` }}>
                 <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
@@ -44,7 +44,7 @@ export default function IntroLanding({ onStart, onRegister }) {
           className="font-black tracking-[0.2em] text-4xl sm:text-5xl uppercase text-white">MIKILAB</motion.h1>
 
         <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28, duration: 0.5 }}
-          className="mt-4 max-w-md text-base sm:text-lg text-[#14b8a6] font-semibold leading-snug">
+          className="mt-4 max-w-md text-base sm:text-lg text-[#D95200] font-semibold leading-snug">
           {tri(
             "Dove la farina incontra il futuro.",
             "Wo Mehl auf die Zukunft trifft.",
@@ -69,12 +69,12 @@ export default function IntroLanding({ onStart, onRegister }) {
         <div className="pointer-events-auto mt-8 flex flex-col items-center gap-3 w-full max-w-[260px]">
           <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.5 }}
             data-testid="intro-register-btn" onClick={onRegister}
-            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#14b8a6]/30 active:scale-95 transition-all">
+            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-black text-base shadow-xl shadow-[#D95200]/30 active:scale-95 transition-all">
             {tri("Registrati", "Registrieren", "Sign up", "Regístrate", "S'inscrire", "ثبت‌نام")}
           </motion.button>
           <motion.button initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.58, duration: 0.5 }}
             data-testid="intro-start-btn" onClick={onStart}
-            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#0b0f19] border border-[#14b8a6]/40 text-[#14b8a6] font-bold text-base hover:border-[#14b8a6] active:scale-95 transition-all">
+            className="w-full inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full bg-[#0b0f19] border border-[#D95200]/40 text-[#D95200] font-bold text-base hover:border-[#D95200] active:scale-95 transition-all">
             {tri("Inizia", "Los geht's", "Start", "Empezar", "Commencer", "شروع")} <ArrowRight className="w-5 h-5" />
           </motion.button>
           <InstallApp variant="hero" />

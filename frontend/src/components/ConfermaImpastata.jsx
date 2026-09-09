@@ -68,13 +68,13 @@ export default function ConfermaImpastata() {
   };
 
   return (
-    <div data-testid="conferma-impastata" className="p-3 rounded-xl bg-[#030712] border border-[#14b8a6]/30 space-y-3">
+    <div data-testid="conferma-impastata" className="p-3 rounded-xl bg-[#030712] border border-[#D95200]/30 space-y-3">
       <div className="flex flex-col sm:flex-row gap-2">
         <select
           data-testid="conferma-impastata-recipe"
           value={sel}
           onChange={(e) => setSel(e.target.value)}
-          className="flex-1 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#14b8a6] outline-none"
+          className="flex-1 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#D95200] outline-none"
         >
           <option value="manual">— Manuale (peso impasto) —</option>
           {recipes.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
@@ -82,12 +82,12 @@ export default function ConfermaImpastata() {
         {recipe ? (
           <div className="flex items-center gap-2">
             <label className="text-[11px] font-bold text-[#94A3B8] whitespace-nowrap">Impastate</label>
-            <input data-testid="conferma-impastata-batches" type="number" min="1" step="1" value={batches} onChange={(e) => setBatches(e.target.value)} className="w-16 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#14b8a6] outline-none" />
+            <input data-testid="conferma-impastata-batches" type="number" min="1" step="1" value={batches} onChange={(e) => setBatches(e.target.value)} className="w-16 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#D95200] outline-none" />
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <label className="text-[11px] font-bold text-[#94A3B8] whitespace-nowrap">Peso (kg)</label>
-            <input data-testid="conferma-impastata-kg" type="number" min="0" step="0.5" value={doughKg} onChange={(e) => setDoughKg(e.target.value)} className="w-20 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#14b8a6] outline-none" />
+            <input data-testid="conferma-impastata-kg" type="number" min="0" step="0.5" value={doughKg} onChange={(e) => setDoughKg(e.target.value)} className="w-20 bg-[#0b0f19] border border-[#334155] rounded-lg px-2.5 py-2 text-xs text-white focus:border-[#D95200] outline-none" />
           </div>
         )}
       </div>
@@ -102,7 +102,7 @@ export default function ConfermaImpastata() {
         data-testid="conferma-impastata-btn"
         onClick={confirm}
         disabled={busy}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#14b8a6]/20 disabled:opacity-50 active:scale-95 transition-all"
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#D95200]/20 disabled:opacity-50 active:scale-95 transition-all"
       >
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
         Conferma Impastata & Scarico Scorte

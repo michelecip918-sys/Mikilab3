@@ -48,14 +48,14 @@ export default function ConsumiChart() {
             <ResponsiveContainer>
               <BarChart data={data} margin={{ top: 4, right: 4, left: 4, bottom: 0 }}>
                 <XAxis dataKey="day" tick={{ fill: "#64748B", fontSize: 9 }} interval={1} axisLine={false} tickLine={false} />
-                <Tooltip cursor={{ fill: "#14b8a611" }} contentStyle={{ background: "#0b0f19", border: "1px solid #1e293b", borderRadius: 8, fontSize: 11 }} labelStyle={{ color: "#94A3B8" }} formatter={(v) => [`${v} kg`, "Consumo"]} />
+                <Tooltip cursor={{ fill: "#D9520011" }} contentStyle={{ background: "#0b0f19", border: "1px solid #1e293b", borderRadius: 8, fontSize: 11 }} labelStyle={{ color: "#94A3B8" }} formatter={(v) => [`${v} kg`, "Consumo"]} />
                 <Bar dataKey="kg" radius={[3, 3, 0, 0]}>
-                  {data.map((_, i) => <Cell key={i} fill="#14b8a6" />)}
+                  {data.map((_, i) => <Cell key={i} fill="#D95200" />)}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-[10px] text-[#64748B] mt-1">Totale farine consumate nel periodo: <strong className="text-[#14b8a6]">{Math.round(total * 100) / 100} kg</strong></p>
+          <p className="text-[10px] text-[#64748B] mt-1">Totale farine consumate nel periodo: <strong className="text-[#D95200]">{Math.round(total * 100) / 100} kg</strong></p>
         </>
       )}
     </div>

@@ -121,7 +121,7 @@ export default function PublicGate({ onUnlock }) {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#14b8a6]/40 text-[#14b8a6] text-xs font-bold hover:border-[#14b8a6] active:scale-95 transition-all backdrop-blur-md">
+          <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#D95200]/40 text-[#D95200] text-xs font-bold hover:border-[#D95200] active:scale-95 transition-all backdrop-blur-md">
             <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Entrar", "Connexion", "ورود")}
           </button>
           <LangSelector testid="public-lang" />
@@ -201,7 +201,7 @@ export default function PublicGate({ onUnlock }) {
         <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[#64748B]">
           <Sparkles className="w-3.5 h-3.5 text-[#EAB308]" />
           {tri("Serve un accesso? Scrivi a", "Zugang nötig? Schreib an", "Need access? Write to", "¿Necesitas acceso? Escribe a", "Besoin d'accès ? Écris à", "دسترسی می‌خواهی؟ بنویس به")}
-          <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#14b8a6] hover:text-[#2dd4bf]">accessi@mikilab.de</a>
+          <a href="mailto:accessi@mikilab.de?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#D95200] hover:text-[#FF8533]">accessi@mikilab.de</a>
         </div>
 
         {/* Fase 2 · Richiesta accesso — smistata da Mohamed */}
@@ -218,11 +218,11 @@ export default function PublicGate({ onUnlock }) {
             <>
               <p className="text-[11px] font-bold text-[#94A3B8] mb-2 text-left">{tri("Richiedi l'accesso dal portale", "Zugang anfragen", "Request access from the portal", "Solicitar acceso", "Demander l'accès", "درخواست دسترسی")}</p>
               <input data-testid="access-email" type="email" value={reqEmail} onChange={(e) => setReqEmail(e.target.value)} placeholder={tri("La tua email", "Deine E-Mail", "Your email", "Tu email", "Ton email", "ایمیل شما")}
-                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#D95200] outline-none" />
               <input data-testid="access-note" value={reqNote} onChange={(e) => setReqNote(e.target.value)} placeholder={tri("Motivo (opzionale)", "Grund (optional)", "Reason (optional)", "Motivo (opcional)", "Motif (option)", "دلیل")}
-                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#14b8a6] outline-none" />
+                className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 mb-2 focus:border-[#D95200] outline-none" />
               <button data-testid="access-send" onClick={sendRequest} disabled={reqBusy}
-                className="w-full py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#14b8a6,#7FD8C0)" }}>
+                className="w-full py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#D95200,#7FD8C0)" }}>
                 {reqBusy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia richiesta", "Anfrage senden", "Send request", "Enviar", "Envoyer", "ارسال")}
               </button>
             </>

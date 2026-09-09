@@ -47,7 +47,7 @@ export default function SequenceGuard() {
 
   return (
     <div data-testid="sequence-guard" className="rounded-2xl bg-[#0b0f19] border border-[#1e293b] p-4">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#14b8a6] flex items-center gap-1.5 mb-3">
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#D95200] flex items-center gap-1.5 mb-3">
         <ListOrdered className="w-4 h-4" /> {tri("Sequenza lotti · Mike Mix", "Chargen-Reihenfolge · Mike Mix", "Batch sequence · Mike Mix", "Secuencia de lotes · Mike Mix", "Séquence des lots · Mike Mix", "ترتیب دسته‌ها · Mike Mix")}
       </p>
       <div className="space-y-2">

@@ -343,7 +343,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                 {pulse?.checkin?.active ? (
                   <p className="text-[12px] text-[#94A3B8]">🟢 {tri("Turno avviato da", "Schicht gestartet von", "Shift started by", "Turno iniciado por", "Service démarré par", "شیفت آغاز شد توسط")} <b className="text-white">{pulse.checkin.by}</b></p>
                 ) : (
-                  <button data-testid="mikemix-checkin-btn" onClick={doCheckin} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#14b8a6] text-[#030712] font-black text-sm active:scale-95 transition-transform">
+                  <button data-testid="mikemix-checkin-btn" onClick={doCheckin} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#D95200] text-[#030712] font-black text-sm active:scale-95 transition-transform">
                     <Play className="w-4 h-4" /> {tri("Avvia turno (timbra)", "Schicht starten", "Start shift", "Iniciar turno", "Démarrer le service", "شروع شیفت")}
                   </button>
                 )}
@@ -373,7 +373,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                 <button data-testid="mikemix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
                   <Package className="w-4 h-4" /> {tri("Inventario di Produzione (foto)", "Produktions-Inventar (Foto)", "Production Inventory (photo)", "Inventario de Producción (foto)", "Inventaire de Production (photo)", "موجودی تولید (عکس)")}
                 </button>
-                <button data-testid="mikemix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#14b8a6]/50 text-[#14b8a6] bg-[#14b8a612] active:scale-95 transition-transform">
+                <button data-testid="mikemix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#D95200]/50 text-[#D95200] bg-[#D9520012] active:scale-95 transition-transform">
                   <Mic className="w-4 h-4" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation", "Voice Delegation", "Delegación por Voz", "Délégation Vocale", "واگذاری صوتی")}
                 </button>
                 <button data-testid="mikemix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
@@ -427,7 +427,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                     <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><Users className="w-3.5 h-3.5" /> {tri("Organico di oggi", "Heutiges Personal", "Today's staff", "Personal de hoy", "Effectif du jour", "کارکنان امروز")}</p>
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-[12px] text-white">{tri("Presenti", "Anwesend", "Present", "Presentes", "Présents", "حاضر")}: <b>{pulse.staffing.present}</b> / <span className="text-[#94A3B8]">{tri("totale", "gesamt", "total", "total", "total", "کل")}</span></span>
-                      <input data-testid="mikemix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-staff-total" type="number" min="1" max="100" defaultValue={pulse.staffing.total} onBlur={(e) => { const v = parseInt(e.target.value || "1", 10); staffingApi.set(v).then(refresh).catch(() => {}); }} className="w-16 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#D95200]" />
                     </div>
                     {pulse.staffing.reduce_pct > 0 ? (
                       <>
@@ -473,15 +473,15 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                     <p className="text-[11px] font-black uppercase tracking-wider text-[#94A3B8] mb-2 flex items-center gap-1.5"><AlarmClock className="w-3.5 h-3.5" /> {tri("Sveglia Predittiva", "Vorausschauender Wecker", "Predictive Wake", "Despertador Predictivo", "Réveil Prédictif", "بیدارباش پیش‌بین")}</p>
                     <div className="flex items-center justify-between gap-2">
                       <label className="text-[12px] text-white">{tri("Primo avvio", "Erster Start", "First start", "Primer inicio", "Premier départ", "شروع اول")}</label>
-                      <input data-testid="mikemix-wake-start" type="time" value={wake.first_start} onChange={(e) => saveWake({ first_start: e.target.value })} className="bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-wake-start" type="time" value={wake.first_start} onChange={(e) => saveWake({ first_start: e.target.value })} className="bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#D95200]" />
                     </div>
                     <div className="flex items-center justify-between gap-2 mt-2">
                       <label className="text-[12px] text-white">{tri("Margine prep. (min)", "Vorbereitung (min)", "Prep buffer (min)", "Margen prep. (min)", "Marge prépa (min)", "حاشیه آماده‌سازی")}</label>
-                      <input data-testid="mikemix-wake-prep" type="number" min="0" max="240" value={wake.prep_minutes} onChange={(e) => saveWake({ prep_minutes: parseInt(e.target.value || "0", 10) })} className="w-20 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#14b8a6]" />
+                      <input data-testid="mikemix-wake-prep" type="number" min="0" max="240" value={wake.prep_minutes} onChange={(e) => saveWake({ prep_minutes: parseInt(e.target.value || "0", 10) })} className="w-20 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1 text-sm text-white outline-none focus:border-[#D95200]" />
                     </div>
-                    <div className="mt-2 text-center rounded-xl py-2" style={{ background: "#14b8a622", border: "1px solid #14b8a655" }}>
+                    <div className="mt-2 text-center rounded-xl py-2" style={{ background: "#D9520022", border: "1px solid #D9520055" }}>
                       <span className="text-[11px] text-[#94A3B8]">{tri("Sveglia consigliata", "Empfohlener Wecker", "Suggested wake", "Despertar sugerido", "Réveil conseillé", "بیدارباش پیشنهادی")}: </span>
-                      <span data-testid="mikemix-wake-at" className="text-lg font-black text-[#14b8a6]">{wake.wake_at}</span>
+                      <span data-testid="mikemix-wake-at" className="text-lg font-black text-[#D95200]">{wake.wake_at}</span>
                     </div>
                   </div>
                 )}

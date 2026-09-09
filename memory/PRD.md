@@ -4633,3 +4633,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Build produzione OK con `three/webgpu`. Testato iteration_224: le 3 scene 3D (Multiverso pubblico, Command Deck, DigitalTwin admin) renderizzano canvas non-vuoto via fallback WebGL2 headless, 0 pageerror, login admin UI OK, click sfere twin senza eccezioni.
 - Backup/rollback: garantito dai commit automatici della piattaforma Emergent.
 
+
+## v46 (2026-09) — Logo + Avatar a tema industriale (stile illustrato)
+- **Logo** rigenerato a tema: monogramma ML acciaio con glow ARANCIONE su fondo petrolio (logo-emblem.png / logo.png / logo-256.png, 512/256).
+- **4 personaggi ricreati da zero** in stile COMIC ILLUSTRATO coerente + palette arancione/petrolio, mantenendo i lineamenti: `avatar_miki.jpg` (MikiLab: calvo, orecchino, tatuaggio avambraccio, braccia incrociate, NESSUNA scritta), `avatar_nexus.jpg` (Miki-Nexus: fusione umano/AI, occhio arancione, braccio cibernetico, burst arancione), `avatar_mikemix.jpg` (Mike Mix: robot panettiere piastre acciaio + linee arancioni), `avatar_mohamed.jpg` (Mohamed: cappellino bianco + giacca chef, tiene una pagnotta). Mascotte `avatar_bigmix.jpg` anch'essa a tema (robot steampunk dome).
+- **Teal CTA → arancione**: #14b8a6→#D95200, #2dd4bf→#FF8533 (35 file) per coerenza (bottoni "Invia richiesta"/link email). Pasticceria dept resta verde-acqua per distinzione.
+- sw.js CACHE_NAME → mikilab-v23 (forza refresh cache al redeploy). NB: modifiche in PREVIEW → serve REDEPLOY per mikilab.de.
+- Restano da fare (richieste utente precedenti, non ancora implementate): Push iPhone/iOS PWA, effetti WebGPU avanzati (bagliori volumetrici/riflessi forni), Storico Allarmi esportabile nel report di turno.
+

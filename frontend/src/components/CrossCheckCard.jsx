@@ -51,13 +51,13 @@ export default function CrossCheckCard() {
       <label data-testid="cc-photo-label" className="flex items-center gap-2 text-[11px] text-[#64748B] cursor-pointer">
         <input data-testid="cc-photo" type="file" accept="image/*" capture="environment" onChange={onPhoto} className="hidden" />
         <span className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-[#06b6d4] font-semibold">📷 {tri("Foto verifica (opzionale)", "Prüffoto (optional)", "Verification photo (optional)", "Foto (opcional)", "Photo (option)", "عکس (اختیاری)")}</span>
-        {photo && <span className="text-[#14b8a6]">✓</span>}
+        {photo && <span className="text-[#D95200]">✓</span>}
       </label>
       <button data-testid="cc-run" onClick={run} disabled={busy} className="w-full py-2.5 rounded-xl bg-[#06b6d4] text-[#030712] font-black text-sm active:scale-95 transition-all disabled:opacity-40 inline-flex items-center justify-center gap-2">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanEye className="w-4 h-4" />} {tri("Verifica conferma", "Bestätigung prüfen", "Verify completion", "Verificar", "Vérifier", "بررسی")}
       </button>
       {res && (
-        <div data-testid="cc-result" className={`rounded-xl p-3 text-sm font-semibold flex items-start gap-2 ${res.ok ? "bg-[#14b8a6]/10 border border-[#14b8a6]/40 text-[#14b8a6]" : "bg-rose-500/10 border border-rose-500/50 text-rose-300"}`}>
+        <div data-testid="cc-result" className={`rounded-xl p-3 text-sm font-semibold flex items-start gap-2 ${res.ok ? "bg-[#D95200]/10 border border-[#D95200]/40 text-[#D95200]" : "bg-rose-500/10 border border-rose-500/50 text-rose-300"}`}>
           {res.ok ? <CheckCircle2 className="w-4 h-4 mt-0.5 shrink-0" /> : <Snowflake className="w-4 h-4 mt-0.5 shrink-0" />}
           <span>{res.message}</span>
         </div>

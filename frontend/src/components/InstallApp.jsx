@@ -40,12 +40,12 @@ export default function InstallApp({ variant = "hero" }) {
     <>
       {variant === "hero" ? (
         <button data-testid="install-app-btn" onClick={click}
-          className="pointer-events-auto mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0b0f19] border border-[#14b8a6]/40 text-[#14b8a6] font-bold text-sm hover:border-[#14b8a6] active:scale-95 transition-all">
+          className="pointer-events-auto mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#0b0f19] border border-[#D95200]/40 text-[#D95200] font-bold text-sm hover:border-[#D95200] active:scale-95 transition-all">
           <Download className="w-4 h-4" /> {label}
         </button>
       ) : (
         <button data-testid="install-app-chip" onClick={click} title={label}
-          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#14b8a6]/10 border border-[#14b8a6]/30 text-[#14b8a6] font-bold hover:bg-[#14b8a6]/20 active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#D95200]/10 border border-[#D95200]/30 text-[#D95200] font-bold hover:bg-[#D95200]/20 active:scale-95 transition-all">
           <Download className="w-3.5 h-3.5" /> <span className="hidden sm:inline">{label}</span>
         </button>
       )}
@@ -59,8 +59,8 @@ export default function InstallApp({ variant = "hero" }) {
             </div>
             <p className="text-xs text-[#94A3B8] mb-3">{tri("Per installare MikiLab sul telefono:", "So installierst du MikiLab:", "To install MikiLab on your phone:", "Para instalar MikiLab en el móvil:", "Pour installer MikiLab sur le téléphone :", "برای نصب میکی‌لب روی گوشی:")}</p>
             <ol className="space-y-2 text-sm text-[#cbd5e1]">
-              <li className="flex items-center gap-2"><Share className="w-4 h-4 text-[#14b8a6]" /> {tri("Tocca «Condividi» nel browser", "Tippe auf «Teilen»", "Tap «Share» in the browser", "Toca «Compartir»", "Touche «Partager»", "روی «اشتراک» بزن")}</li>
-              <li className="flex items-center gap-2"><Plus className="w-4 h-4 text-[#14b8a6]" /> {tri("Scegli «Aggiungi a Home»", "Wähle «Zum Home-Bildschirm»", "Choose «Add to Home Screen»", "Elige «Añadir a inicio»", "Choisis «Sur l'écran d'accueil»", "«افزودن به صفحه اصلی» را انتخاب کن")}</li>
+              <li className="flex items-center gap-2"><Share className="w-4 h-4 text-[#D95200]" /> {tri("Tocca «Condividi» nel browser", "Tippe auf «Teilen»", "Tap «Share» in the browser", "Toca «Compartir»", "Touche «Partager»", "روی «اشتراک» بزن")}</li>
+              <li className="flex items-center gap-2"><Plus className="w-4 h-4 text-[#D95200]" /> {tri("Scegli «Aggiungi a Home»", "Wähle «Zum Home-Bildschirm»", "Choose «Add to Home Screen»", "Elige «Añadir a inicio»", "Choisis «Sur l'écran d'accueil»", "«افزودن به صفحه اصلی» را انتخاب کن")}</li>
             </ol>
           </div>
         </div>

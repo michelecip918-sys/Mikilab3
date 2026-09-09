@@ -51,11 +51,11 @@ export default function PinSetup() {
 
   return (
     <div data-testid="pin-setup" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-[#14b8a6] flex items-center gap-2 mb-2">
+      <h3 className="text-xs font-bold uppercase tracking-wider text-[#D95200] flex items-center gap-2 mb-2">
         <KeyRound className="w-4 h-4" /> {tri("PIN Produzione (unico, scelto dal Capo)", "Produktions-PIN (einer, vom Chef)", "Production PIN (single, set by the Capo)", "PIN de producción (único, del Capo)", "PIN de production (unique, par le Capo)", "پین تولید (یکتا، توسط کاپو)")}
       </h3>
       <p className="text-[11px] text-[#64748B] mb-1 flex items-center gap-1.5">
-        <Globe className="w-3.5 h-3.5 text-[#14b8a6]" />
+        <Globe className="w-3.5 h-3.5 text-[#D95200]" />
         {tri("PIN unico per tutti i dispositivi. Con questo gli operai entrano nel Floor Mode a mani libere.",
              "Ein PIN für alle Geräte. Damit betreten die Mitarbeiter den Floor-Modus freihändig.",
              "One PIN for all devices. Workers use it to enter hands-free Floor Mode.",
@@ -76,9 +76,9 @@ export default function PinSetup() {
           inputMode="numeric"
           maxLength={4}
           placeholder={tri("Nuovo PIN (4 cifre)", "Neuer PIN (4 Ziffern)", "New PIN (4 digits)", "Nuevo PIN (4 dígitos)", "Nouveau PIN (4 chiffres)", "پین جدید (۴ رقم)")}
-          className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#14b8a6] outline-none"
+          className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#D95200] outline-none"
         />
-        <button data-testid="pin-setup-save" onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#14b8a6] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
+        <button data-testid="pin-setup-save" onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D95200] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}
         </button>
       </div>

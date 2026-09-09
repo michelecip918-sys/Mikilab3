@@ -59,7 +59,7 @@ export default function CompliancePanel() {
           <div data-testid="compliance-arbzg" className="rounded-2xl border border-[#3E9C93]/40 bg-[#3E9C93]/5 p-4">
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-black text-[#3E9C93] flex items-center gap-1.5"><Clock className="w-4 h-4" /> {tri("Orari di oggi (ArbZG · UE 2003/88)", "Heutige Zeiten (ArbZG · EU 2003/88)", "Today's hours (ArbZG · EU 2003/88)", "Horas de hoy (ArbZG · UE 2003/88)", "Heures du jour (ArbZG · UE 2003/88)", "ساعات امروز (ArbZG · اتحادیه اروپا)")}</p>
-              <span data-testid="compliance-integrity" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tl && tl.integrity_ok ? "bg-[#14b8a6]/15 text-[#14b8a6]" : "bg-rose-500/15 text-rose-400"}`}>
+              <span data-testid="compliance-integrity" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${tl && tl.integrity_ok ? "bg-[#D95200]/15 text-[#D95200]" : "bg-rose-500/15 text-rose-400"}`}>
                 {tl && tl.integrity_ok ? tri("Catena integra", "Kette intakt", "Chain intact", "Cadena íntegra", "Chaîne intacte", "زنجیره سالم") : tri("Manomissione!", "Manipulation!", "Tampered!", "¡Manipulado!", "Altéré !", "دستکاری!")}
               </span>
             </div>
@@ -71,7 +71,7 @@ export default function CompliancePanel() {
                   const s = summaries[w];
                   return (
                     <div key={w} data-testid={`compliance-worker-${w.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`} className="flex items-center gap-2 text-xs">
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${s.compliant ? "bg-[#14b8a6]" : "bg-rose-500"}`} />
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${s.compliant ? "bg-[#D95200]" : "bg-rose-500"}`} />
                       <span className="font-bold text-white flex-1 min-w-0 truncate">{w}</span>
                       <span className="font-mono-data text-[#94A3B8]">{Math.floor(s.work_min / 60)}h {s.work_min % 60}m · {tri("pausa", "Pause", "break", "pausa", "pause", "استراحت")} {s.break_min}m</span>
                       {!s.compliant && <FileWarning className="w-3.5 h-3.5 text-rose-400 shrink-0" title={s.flags.join(", ")} />}
@@ -105,8 +105,8 @@ export default function CompliancePanel() {
 
           {/* GDPR/DSGVO · Privacy */}
           {privacy && (
-            <div data-testid="compliance-gdpr" className="rounded-2xl border border-[#14b8a6]/30 bg-[#14b8a6]/5 p-4">
-              <p className="text-xs font-black text-[#14b8a6] flex items-center gap-1.5 mb-1"><Lock className="w-4 h-4" /> {privacy.posture}</p>
+            <div data-testid="compliance-gdpr" className="rounded-2xl border border-[#D95200]/30 bg-[#D95200]/5 p-4">
+              <p className="text-xs font-black text-[#D95200] flex items-center gap-1.5 mb-1"><Lock className="w-4 h-4" /> {privacy.posture}</p>
               <ul className="text-[11px] text-[#94A3B8] space-y-0.5 list-disc list-inside">
                 {(privacy.principles || []).map((p, i) => <li key={i}>{p}</li>)}
               </ul>

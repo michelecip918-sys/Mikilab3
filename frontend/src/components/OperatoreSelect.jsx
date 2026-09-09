@@ -3,7 +3,7 @@ import { X } from "lucide-react";
 // Selezione OPERATORE attivo: riconosce chi sta lavorando in laboratorio (Capo / Floor).
 // Nessuna sezione accademica: solo identità operativa per report, briefing e passaggi di consegna.
 const OPERATORI = [
-  { id: "michele", name: "Michele", role: "Capo · Lab Control", img: "avatar_miki.jpg", accent: "#14b8a6" },
+  { id: "michele", name: "Michele", role: "Capo · Lab Control", img: "avatar_miki.jpg", accent: "#D95200" },
   { id: "mikemix", name: "Mike Mix", role: "Reparto Produzione · Fornaio", img: "avatar_mikemix.jpg", accent: "#f59e0b" },
 ];
 
@@ -17,7 +17,7 @@ export default function OperatoreSelect({ current, onSelect, onClose }) {
           </button>
         )}
         <div className="text-center mb-8">
-          <img src={`${process.env.PUBLIC_URL}/logo-emblem.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-[#14b8a6]/40 object-contain bg-[#0b0f19]" />
+          <img src={`${process.env.PUBLIC_URL}/logo-emblem.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-[#D95200]/40 object-contain bg-[#0b0f19]" />
           <h1 className="text-2xl font-black text-white uppercase tracking-wider">Chi è in laboratorio?</h1>
           <p className="text-sm text-[#94A3B8] mt-1.5">Seleziona l'operatore attivo del turno. Puoi cambiarlo quando vuoi.</p>
         </div>
@@ -27,7 +27,7 @@ export default function OperatoreSelect({ current, onSelect, onClose }) {
               key={op.id}
               data-testid={`operatore-${op.id}`}
               onClick={() => onSelect(op)}
-              className={`w-full flex items-center gap-4 rounded-2xl p-4 bg-[#0b0f19] border-2 transition-all active:scale-[0.98] ${current && current.id === op.id ? "border-[#14b8a6]" : "border-[#1e293b] hover:border-[#334155]"}`}
+              className={`w-full flex items-center gap-4 rounded-2xl p-4 bg-[#0b0f19] border-2 transition-all active:scale-[0.98] ${current && current.id === op.id ? "border-[#D95200]" : "border-[#1e293b] hover:border-[#334155]"}`}
               style={{ boxShadow: `inset 0 -30px 50px -30px ${op.accent}55` }}
             >
               <img src={`${process.env.PUBLIC_URL}/${op.img}`} alt={op.name} className="w-14 h-14 rounded-xl object-cover object-top border" style={{ borderColor: op.accent }} />
@@ -35,7 +35,7 @@ export default function OperatoreSelect({ current, onSelect, onClose }) {
                 <p className="text-lg font-extrabold text-white leading-tight">{op.name}</p>
                 <p className="text-xs font-semibold" style={{ color: op.accent }}>{op.role}</p>
               </div>
-              {current && current.id === op.id && <span className="text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-[#14b8a6]/15 text-[#14b8a6] border border-[#14b8a6]/40">Attivo</span>}
+              {current && current.id === op.id && <span className="text-[10px] font-bold uppercase px-2 py-1 rounded-full bg-[#D95200]/15 text-[#D95200] border border-[#D95200]/40">Attivo</span>}
             </button>
           ))}
         </div>

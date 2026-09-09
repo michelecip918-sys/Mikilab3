@@ -77,7 +77,7 @@ export default function Ricette() {
       <div data-testid="ricette-title" className="relative rounded-3xl overflow-hidden mb-4 h-44">
         <img src={`${process.env.PUBLIC_URL}/mikilab-ricette-hero.jpg`} alt="" className="w-full h-full object-cover" style={{ objectPosition: "50% 55%" }} />
         <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/40 to-transparent" />
-        <div aria-hidden className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#14b8a611_1px,transparent_1px),linear-gradient(to_bottom,#14b8a611_1px,transparent_1px)] bg-[size:1.5rem_1.5rem] opacity-30" />
+        <div aria-hidden className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#D9520011_1px,transparent_1px),linear-gradient(to_bottom,#D9520011_1px,transparent_1px)] bg-[size:1.5rem_1.5rem] opacity-30" />
         <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/35 backdrop-blur rounded-full px-2.5 py-1 border border-white/25">
           <span className="text-lg leading-none" title="Italiano">🇮🇹</span>
           <span className="text-lg leading-none" title="Deutsch">🇩🇪</span>
@@ -86,7 +86,7 @@ export default function Ricette() {
           <h1 className="font-display text-3xl font-bold text-white leading-tight" style={{ textShadow: "0 2px 10px rgba(0,0,0,.85)" }}>
             {mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
           </h1>
-          <div className="h-1 w-12 rounded-full bg-[#14b8a6] mt-1.5 mb-1" />
+          <div className="h-1 w-12 rounded-full bg-[#D95200] mt-1.5 mb-1" />
           <p className="text-white/90 text-sm max-w-md" style={{ textShadow: "0 1px 6px rgba(0,0,0,.9)" }}>
             {mkTri(lang)("Tutto il ricettario professionale: sfoglia, scala le dosi e adatta alla tua produzione.", "Das komplette Profi-Rezeptbuch: blättern, Mengen skalieren und an deine Produktion anpassen.", "The full professional recipe book: browse, scale doses and adapt to your production.", "Todo el recetario profesional: hojea, escala las dosis y adáptalo a tu producción.", "Tout le recettaire professionnel : feuillette, adapte les quantités à ta production.", "کل کتاب دستور حرفه‌ای: ورق بزن، مقادیر را تنظیم و با تولیدت هماهنگ کن.")}
           </p>

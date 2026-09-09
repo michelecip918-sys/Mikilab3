@@ -31,9 +31,9 @@ export default function PlantRadar() {
     <div data-testid="plant-radar" className="space-y-4">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">
-          <Radar className="w-5 h-5 text-[#14b8a6]" />
+          <Radar className="w-5 h-5 text-[#D95200]" />
           <div>
-            <h3 className="text-sm font-extrabold text-[#14b8a6]">{tri("Radar Impianto · Live", "Werk-Radar · Live", "Plant Radar · Live", "Radar de planta · En vivo", "Radar usine · Live", "رادار کارخانه · زنده")}</h3>
+            <h3 className="text-sm font-extrabold text-[#D95200]">{tri("Radar Impianto · Live", "Werk-Radar · Live", "Plant Radar · Live", "Radar de planta · En vivo", "Radar usine · Live", "رادار کارخانه · زنده")}</h3>
             <p className="text-[11px] text-[#94A3B8]">{workers.length} {tri("operatori tracciati", "verfolgte Bediener", "tracked operators", "operarios rastreados", "opérateurs suivis", "اپراتور ردیابی‌شده")} · {tri("solo Master", "nur Master", "Master only", "solo Master", "Master seul", "فقط مستر")}</p>
           </div>
         </div>
@@ -48,7 +48,7 @@ export default function PlantRadar() {
           <AlertTriangle className="w-4 h-4" /> {anomalies} {tri("anomalia/e geofencing: personale fuori settore.", "Geofencing-Anomalie(n): Personal außerhalb.", "geofencing anomaly(ies): staff out of sector.", "anomalía(s) de geocerca: personal fuera de sector.", "anomalie(s) de géorepérage : personnel hors secteur.", "ناهنجاری ژئوفنس: خارج از بخش.")}
         </div>
       ) : (
-        <div className="flex items-center gap-2 rounded-xl border border-[#14b8a6]/40 bg-[#14b8a6]/10 px-3 py-2 text-xs font-bold text-[#14b8a6]">
+        <div className="flex items-center gap-2 rounded-xl border border-[#D95200]/40 bg-[#D95200]/10 px-3 py-2 text-xs font-bold text-[#D95200]">
           <ShieldCheck className="w-4 h-4" /> {tri("Forza lavoro allineata · nessuna anomalia.", "Belegschaft ausgerichtet · keine Anomalie.", "Workforce aligned · no anomaly.", "Personal alineado · sin anomalías.", "Effectif aligné · aucune anomalie.", "نیروی کار همسو · بدون ناهنجاری.")}
         </div>
       )}

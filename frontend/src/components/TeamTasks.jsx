@@ -83,7 +83,7 @@ export default function TeamTasks({ operatorName = "" }) {
 
   return (
     <div data-testid="team-tasks" className="w-full space-y-2 mb-4">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-[#14b8a6]" /> {tri("Task di squadra dal Capo", "Team-Aufgaben vom Chef", "Team tasks from the Boss", "Tareas de equipo del Jefe", "Tâches d'équipe du Chef", "وظایف تیمی از رئیس")}</p>
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-[#D95200]" /> {tri("Task di squadra dal Capo", "Team-Aufgaben vom Chef", "Team tasks from the Boss", "Tareas de equipo del Jefe", "Tâches d'équipe du Chef", "وظایف تیمی از رئیس")}</p>
       <AnimatePresence>
         {tasks.map((t) => {
           const K = KIND[t.kind] || KIND.generico;

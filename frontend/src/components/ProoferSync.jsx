@@ -40,8 +40,8 @@ export default function ProoferSync({ onClose }) {
                 <p className="text-2xl font-black text-white mt-1" data-testid="proofer-temp">{d.proofer_temp_c}°</p>
                 <p className="text-[10px] text-[#94A3B8]">{tri("cella", "Gärraum", "proofer", "cámara", "chambre", "تخمیر")}</p>
               </div>
-              <div className="rounded-2xl border border-[#14b8a6]/40 bg-[#14b8a60d] p-3 text-center">
-                <Timer className="w-4 h-4 text-[#14b8a6] mx-auto" />
+              <div className="rounded-2xl border border-[#D95200]/40 bg-[#D952000d] p-3 text-center">
+                <Timer className="w-4 h-4 text-[#D95200] mx-auto" />
                 <p className="text-2xl font-black text-white mt-1" data-testid="proofer-time">{d.proof_time_min}′</p>
                 <p className="text-[10px] text-[#94A3B8]">{tri("finestra", "Fenster", "window", "ventana", "fenêtre", "پنجره")}</p>
               </div>

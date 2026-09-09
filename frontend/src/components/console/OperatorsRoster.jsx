@@ -17,7 +17,7 @@ const BASE_STATIONS = [
   { key: "impastatore", label: "Impastatore", color: "#64748B", ic: "🌀" },
   { key: "fornaio", label: "Fornaio", color: "#f59e0b", ic: "🔥" },
   { key: "laugen", label: "Laugen / Pretzel", color: "#64748B", ic: "🥨" },
-  { key: "fermentazione", label: "Fermentazione", color: "#14b8a6", ic: "🫧" },
+  { key: "fermentazione", label: "Fermentazione", color: "#D95200", ic: "🫧" },
   { key: "pizzaiolo", label: "Pizzaiolo", color: "#3E9C93", ic: "🍕" },
   { key: "pasticcere", label: "Pasticcere", color: "#7FB0A6", ic: "🥐" },
   { key: "banconista", label: "Banconista", color: "#f59e0b", ic: "🧺" },

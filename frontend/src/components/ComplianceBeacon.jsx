@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 // Non un pannello: tre "beacon" olografici (ArbZG · DGUV · GDPR) che pulsano
 // verde (integro) o rosso (allarme). Zero-menu: solo stato ambientale.
 function Beacon({ label, ok, hint }) {
-  const color = ok ? "#14b8a6" : "#f43f5e";
+  const color = ok ? "#D95200" : "#f43f5e";
   return (
     <span title={hint} className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider"
       style={{ background: "rgba(6,12,22,0.65)", border: `1px solid ${color}66`, color, textShadow: `0 0 8px ${color}99` }}>

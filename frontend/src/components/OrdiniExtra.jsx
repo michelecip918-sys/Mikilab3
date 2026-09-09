@@ -72,7 +72,7 @@ export default function OrdiniExtra() {
   return (
     <div data-testid="ordini-extra" className="space-y-3">
       <div>
-        <h3 className="text-sm font-bold text-[#14b8a6] flex items-center gap-2"><Sparkles className="w-4 h-4" /> {tri("Ordini Extra · Rigenerazione AI del Piano", "Extra-Aufträge · KI-Neuerstellung des Plans", "Extra Orders · AI Plan Regeneration", "Pedidos Extra · Regeneración IA del Plan", "Commandes Extra · Régénération IA du Plan", "سفارش‌های اضافه · بازسازی برنامه با هوش مصنوعی")}</h3>
+        <h3 className="text-sm font-bold text-[#D95200] flex items-center gap-2"><Sparkles className="w-4 h-4" /> {tri("Ordini Extra · Rigenerazione AI del Piano", "Extra-Aufträge · KI-Neuerstellung des Plans", "Extra Orders · AI Plan Regeneration", "Pedidos Extra · Regeneración IA del Plan", "Commandes Extra · Régénération IA du Plan", "سفارش‌های اضافه · بازسازی برنامه با هوش مصنوعی")}</h3>
         <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Inserisci le variazioni urgenti dell'ultimo minuto (una per riga). L'IA rigenera subito il piano giornaliero.", "Gib die dringenden Last-Minute-Änderungen ein (eine pro Zeile). Die KI erstellt sofort den Tagesplan neu.", "Enter urgent last-minute changes (one per line). AI instantly regenerates the daily plan.", "Introduce los cambios urgentes de último minuto (uno por línea). La IA regenera al instante el plan diario.", "Saisis les changements urgents de dernière minute (un par ligne). L'IA régénère aussitôt le plan du jour.", "تغییرات فوری لحظه‌آخری را وارد کن (هر خط یکی). هوش مصنوعی فوراً برنامه را بازسازی می‌کند.")}</p>
       </div>
       <textarea
@@ -81,32 +81,32 @@ export default function OrdiniExtra() {
         onChange={(e) => setOrders(e.target.value)}
         rows={4}
         placeholder={tri("Es.\n+30 baguette per Bar Centrale entro le 11:00\n2 torte nuziali per domani mattina\nAnnulla 10 focacce ordine Rossi", "Z.B.\n+30 Baguettes für Bar Centrale bis 11:00\n2 Hochzeitstorten für morgen früh\n10 Focaccia Bestellung Rossi stornieren", "E.g.\n+30 baguettes for Bar Centrale by 11:00\n2 wedding cakes for tomorrow morning\nCancel 10 focaccia, Rossi order", "Ej.\n+30 baguettes para Bar Centrale antes de las 11:00\n2 tartas de boda para mañana\nCancela 10 focaccias del pedido Rossi", "Ex.\n+30 baguettes pour Bar Centrale avant 11h00\n2 gâteaux de mariage pour demain\nAnnule 10 focaccias commande Rossi", "مثال:\n+۳۰ باگت برای بار سنترال تا ساعت ۱۱\n۲ کیک عروسی برای فردا صبح")}
-        className="w-full bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-[#475569] focus:border-[#14b8a6] outline-none resize-y"
+        className="w-full bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-xs text-white placeholder:text-[#475569] focus:border-[#D95200] outline-none resize-y"
       />
       <input ref={fileRef} type="file" accept="image/*" capture="environment" onChange={onPhoto} className="hidden" data-testid="ordini-extra-photo-input" />
       <button
         data-testid="ordini-extra-photo-btn"
         onClick={() => fileRef.current && fileRef.current.click()}
         disabled={scanning}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0b1220] border border-[#334155] text-[#cbd5e1] font-bold text-xs rounded-xl disabled:opacity-50 active:scale-95 transition-all hover:border-[#14b8a6]"
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0b1220] border border-[#334155] text-[#cbd5e1] font-bold text-xs rounded-xl disabled:opacity-50 active:scale-95 transition-all hover:border-[#D95200]"
       >
-        {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-[#14b8a6]" />}
+        {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-[#D95200]" />}
         {scanning ? tri("Lettura foto in corso…", "Foto wird gelesen…", "Reading photo…", "Leyendo foto…", "Lecture de la photo…", "در حال خواندن عکس…") : tri("📸 Foto comanda → compila ordini", "📸 Bestellfoto → Aufträge ausfüllen", "📸 Photo of order → fill orders", "📸 Foto del pedido → rellenar", "📸 Photo de commande → remplir", "📸 عکس سفارش")}
       </button>
       <button
         onClick={regen}
         disabled={busy}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#14b8a6]/20 disabled:opacity-50 active:scale-95 transition-all"
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#D95200]/20 disabled:opacity-50 active:scale-95 transition-all"
       >
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {busy ? tri("Rigenerazione in corso…", "Neuerstellung läuft…", "Regenerating…", "Regenerando…", "Régénération…", "در حال بازسازی…") : tri("Rigenera Piano Giornaliero", "Tagesplan neu erstellen", "Regenerate Daily Plan", "Regenerar Plan Diario", "Régénérer le Plan du Jour", "بازسازی برنامه روزانه")}
       </button>
 
       {plan && (
-        <div data-testid="ordini-extra-plan" className="p-3 rounded-xl bg-[#030712] border border-[#14b8a6]/30">
+        <div data-testid="ordini-extra-plan" className="p-3 rounded-xl bg-[#030712] border border-[#D95200]/30">
           <div className="flex items-center justify-between mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#38bdf8]">{tri("Piano Aggiornato", "Aktualisierter Plan", "Updated Plan", "Plan Actualizado", "Plan Mis à Jour", "برنامه به‌روز")}</span>
-            <button data-testid="ordini-extra-listen" onClick={() => { try { playTTS(plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#14b8a6]">
+            <button data-testid="ordini-extra-listen" onClick={() => { try { playTTS(plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#D95200]">
               <Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta", "Hören", "Listen", "Escuchar", "Écouter", "بشنو")}
             </button>
           </div>

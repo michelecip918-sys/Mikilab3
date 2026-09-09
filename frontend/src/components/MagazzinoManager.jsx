@@ -115,7 +115,7 @@ export default function MagazzinoManager() {
   return (
     <div data-testid="magazzino-manager" className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-bold text-[#14b8a6] flex items-center gap-2">
+        <h3 className="text-sm font-bold text-[#D95200] flex items-center gap-2">
           <Package className="w-4 h-4" /> {tri("Magazzino & Ceste", "Lager & Körbe", "Warehouse & Baskets", "Almacén y Cestas", "Magasin & Paniers", "انبار و سبدها")}
         </h3>
         <button data-testid="magazzino-refresh" onClick={load} className="p-1.5 rounded-lg bg-[#1F2937] border border-[#374151] text-[#94A3B8] hover:text-white active:scale-95 transition-all">
@@ -124,7 +124,7 @@ export default function MagazzinoManager() {
       </div>
 
       {activeDept && activeDept !== "tutti" && (
-        <div data-testid="magazzino-dept-banner" className="flex items-center gap-1.5 rounded-lg border border-[#14b8a6]/40 bg-[#14b8a6]/10 px-3 py-1.5 text-xs font-bold text-[#14b8a6]">
+        <div data-testid="magazzino-dept-banner" className="flex items-center gap-1.5 rounded-lg border border-[#D95200]/40 bg-[#D95200]/10 px-3 py-1.5 text-xs font-bold text-[#D95200]">
           <span>{deptIcon(activeDept)}</span> {tri("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, tri)} <span className="font-normal text-[#94A3B8]">· {visibleItems.length}/{items.length} {tri("materie", "Zutaten", "items", "materias", "matières", "مواد")}</span>
         </div>
       )}
@@ -138,8 +138,8 @@ export default function MagazzinoManager() {
             {prof.warehouse.map((n) => (
               <button key={n} data-testid={`magazzino-suggest-${n.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`}
                 onClick={() => setForm((f) => ({ ...f, name: n, department: activeDept, kind: /farina|mehl|semola|w\d/i.test(n) ? "farina" : "ingrediente" }))}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0f172a] border border-[#14b8a6]/30 text-[11px] font-semibold text-[#94A3B8] hover:text-white hover:border-[#14b8a6] active:scale-95 transition-all">
-                <Plus className="w-3 h-3 text-[#14b8a6]" /> {n}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0f172a] border border-[#D95200]/30 text-[11px] font-semibold text-[#94A3B8] hover:text-white hover:border-[#D95200] active:scale-95 transition-all">
+                <Plus className="w-3 h-3 text-[#D95200]" /> {n}
               </button>
             ))}
           </div>
@@ -157,17 +157,17 @@ export default function MagazzinoManager() {
 
       {/* Form di carico rapido */}
       <form onSubmit={submit} className="grid grid-cols-2 sm:grid-cols-7 gap-2 p-3 rounded-xl bg-[#030712] border border-[#1F2937]">
-        <input data-testid="magazzino-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Nome (es. Farina 0)", "Name (z.B. Mehl 0)", "Name (e.g. Flour 0)", "Nombre (ej. Harina 0)", "Nom (ex. Farine 0)", "نام (مثلاً آرد ۰)")} className="col-span-2 sm:col-span-2 bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#14b8a6] outline-none" />
-        <select data-testid="magazzino-kind" value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#14b8a6]">
+        <input data-testid="magazzino-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Nome (es. Farina 0)", "Name (z.B. Mehl 0)", "Name (e.g. Flour 0)", "Nombre (ej. Harina 0)", "Nom (ex. Farine 0)", "نام (مثلاً آرد ۰)")} className="col-span-2 sm:col-span-2 bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
+        <select data-testid="magazzino-kind" value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#D95200]">
           {KINDS.map((k) => <option key={k.v} value={k.v}>{tri(...k.labels)}</option>)}
         </select>
-        <input data-testid="magazzino-qty" type="number" step="0.1" min="0" value={form.quantity_kg} onChange={(e) => setForm({ ...form, quantity_kg: e.target.value })} placeholder={tri("Q.tà kg", "Menge kg", "Qty kg", "Cant. kg", "Qté kg", "مقدار kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#14b8a6] outline-none" />
-        <input data-testid="magazzino-min" type="number" step="0.1" min="0" value={form.min_kg} onChange={(e) => setForm({ ...form, min_kg: e.target.value })} placeholder={tri("Soglia kg", "Schwelle kg", "Threshold kg", "Umbral kg", "Seuil kg", "آستانه kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#14b8a6] outline-none" />
-        <select data-testid="magazzino-dept" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#14b8a6]">
+        <input data-testid="magazzino-qty" type="number" step="0.1" min="0" value={form.quantity_kg} onChange={(e) => setForm({ ...form, quantity_kg: e.target.value })} placeholder={tri("Q.tà kg", "Menge kg", "Qty kg", "Cant. kg", "Qté kg", "مقدار kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
+        <input data-testid="magazzino-min" type="number" step="0.1" min="0" value={form.min_kg} onChange={(e) => setForm({ ...form, min_kg: e.target.value })} placeholder={tri("Soglia kg", "Schwelle kg", "Threshold kg", "Umbral kg", "Seuil kg", "آستانه kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
+        <select data-testid="magazzino-dept" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#D95200]">
           <option value="">🌐 {tri("Tutti i reparti", "Alle Bereiche", "All departments", "Todos los departamentos", "Tous les rayons", "همه بخش‌ها")}</option>
           {DEPTS.map((d) => <option key={d} value={d}>{deptIcon(d)} {deptLabel(d, tri)}</option>)}
         </select>
-        <button data-testid="magazzino-add" type="submit" disabled={saving} className="inline-flex items-center justify-center gap-1 bg-[#14b8a6] text-[#030712] text-xs font-bold rounded-lg px-2.5 py-2 disabled:opacity-50 active:scale-95 transition-all">
+        <button data-testid="magazzino-add" type="submit" disabled={saving} className="inline-flex items-center justify-center gap-1 bg-[#D95200] text-[#030712] text-xs font-bold rounded-lg px-2.5 py-2 disabled:opacity-50 active:scale-95 transition-all">
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />} {tri("Carica", "Laden", "Load", "Cargar", "Charger", "بارگذاری")}
         </button>
       </form>
@@ -187,11 +187,11 @@ export default function MagazzinoManager() {
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-white truncate">{it.name}</span>
                     <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#1F2937] text-[#94A3B8] border border-[#374151]">{it.kind}</span>
-                    {it.department && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#14b8a6]/15 text-[#14b8a6] border border-[#14b8a6]/30">{deptIcon(it.department)} {deptLabel(it.department, tri)}</span>}
+                    {it.department && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#D95200]/15 text-[#D95200] border border-[#D95200]/30">{deptIcon(it.department)} {deptLabel(it.department, tri)}</span>}
                     {isLow && <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1"><AlertTriangle className="w-2.5 h-2.5" /> {tri("Bassa", "Niedrig", "Low", "Baja", "Basse", "کم")}</span>}
                   </div>
                   <div className="text-[11px] text-[#94A3B8] mt-0.5">
-                    <strong className={isLow ? "text-rose-300" : "text-[#14b8a6]"}>{it.quantity_kg} {it.unit || "kg"}</strong>
+                    <strong className={isLow ? "text-rose-300" : "text-[#D95200]"}>{it.quantity_kg} {it.unit || "kg"}</strong>
                     {Number(it.min_kg) > 0 && <span className="text-[#64748B]"> · {tri("soglia", "Schwelle", "threshold", "umbral", "seuil", "آستانه")} {it.min_kg} {it.unit || "kg"}</span>}
                     {stats[it.id] && stats[it.id].days_left != null && (
                       <span className="text-[#64748B]"> · ~<strong className="text-[#38bdf8]">{stats[it.id].days_left}g</strong> {tri("autonomia", "Reichweite", "autonomy", "autonomía", "autonomie", "خودکفایی")}</span>

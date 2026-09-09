@@ -114,7 +114,7 @@ export default function ProductionInventory({ onClose }) {
               <button data-testid="inventory-batch-plus" onClick={() => setBatches((b) => (Number(b) || 1) + 1)} className="w-10 h-10 rounded-xl bg-[#030712] border border-[#1e293b] text-white text-lg font-black active:scale-95">+</button>
             </div>
           </div>
-          <button data-testid="inventory-bind-btn" onClick={bind} disabled={!recipeId || binding} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-[#14b8a6] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-95">{binding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />} {tri("Aggancia e scala consumi", "Verknüpfen & abbuchen", "Bind & deduct", "Vincular y descontar", "Lier & déduire", "اتصال و کسر")}</button>
+          <button data-testid="inventory-bind-btn" onClick={bind} disabled={!recipeId || binding} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-95">{binding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Link2 className="w-4 h-4" />} {tri("Aggancia e scala consumi", "Verknüpfen & abbuchen", "Bind & deduct", "Vincular y descontar", "Lier & déduire", "اتصال و کسر")}</button>
           {bindResult && (
             <div className="mt-3 space-y-1.5" data-testid="inventory-bind-result">
               {(bindResult.consumed || []).map((c, i) => (

@@ -315,11 +315,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             transition={{ delay: Math.min(i * 0.015, 0.2) }}
             onClick={() => setViewing(r)}
             data-testid={`recipe-row-${r.id}`}
-            className="group relative overflow-hidden text-left bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-lg active:scale-[0.98] hover:border-[#14b8a6]/70 hover:shadow-[0_0_24px_-6px_rgba(20,184,166,0.35)] transition-all flex flex-col h-full"
+            className="group relative overflow-hidden text-left bg-[#0b0f19] border border-[#1e293b] rounded-xl shadow-lg active:scale-[0.98] hover:border-[#D95200]/70 hover:shadow-[0_0_24px_-6px_rgba(20,184,166,0.35)] transition-all flex flex-col h-full"
           >
             {/* angoli cyber (brackets) */}
-            <span aria-hidden className="pointer-events-none absolute top-1.5 left-1.5 z-30 w-3.5 h-3.5 border-t-2 border-l-2 border-[#14b8a6]/40 group-hover:border-[#14b8a6] transition-colors" />
-            <span aria-hidden className="pointer-events-none absolute bottom-1.5 right-1.5 z-30 w-3.5 h-3.5 border-b-2 border-r-2 border-[#14b8a6]/40 group-hover:border-[#14b8a6] transition-colors" />
+            <span aria-hidden className="pointer-events-none absolute top-1.5 left-1.5 z-30 w-3.5 h-3.5 border-t-2 border-l-2 border-[#D95200]/40 group-hover:border-[#D95200] transition-colors" />
+            <span aria-hidden className="pointer-events-none absolute bottom-1.5 right-1.5 z-30 w-3.5 h-3.5 border-b-2 border-r-2 border-[#D95200]/40 group-hover:border-[#D95200] transition-colors" />
             {/* strisciolina tricolore del Paese d'origine */}
             {countryColors(r.origin) && (
               <div aria-hidden className="absolute top-0 left-0 right-0 z-20 flex h-1">
@@ -333,20 +333,20 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               )}
               {/* overlay cyber: griglia + gradiente + scanline teal */}
-              <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-[linear-gradient(to_right,#14b8a611_1px,transparent_1px),linear-gradient(to_bottom,#14b8a611_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] opacity-30" />
+              <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-[linear-gradient(to_right,#D9520011_1px,transparent_1px),linear-gradient(to_bottom,#D9520011_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] opacity-30" />
               <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/10 to-transparent" />
-              <div aria-hidden className="absolute left-0 right-0 top-0 z-[3] h-px bg-gradient-to-r from-transparent via-[#14b8a6]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div aria-hidden className="absolute left-0 right-0 top-0 z-[3] h-px bg-gradient-to-r from-transparent via-[#D95200]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
               {r.origin && flagEmoji(r.origin) && (
                 <span title={countryName(r.origin)} className="absolute top-2.5 right-2 z-[4] text-xl drop-shadow-md">{flagEmoji(r.origin)}</span>
               )}
               {isColored(r.name) && (
-                <span data-testid={`recipe-new-badge-${r.id}`} className="absolute top-2 left-2 z-[4] text-[9px] font-extrabold uppercase tracking-wider text-[#030712] px-2 py-0.5 rounded shadow bg-[#14b8a6]">
+                <span data-testid={`recipe-new-badge-${r.id}`} className="absolute top-2 left-2 z-[4] text-[9px] font-extrabold uppercase tracking-wider text-[#030712] px-2 py-0.5 rounded shadow bg-[#D95200]">
                   {triM("Novità", "Neu", "New")}
                 </span>
               )}
               {r.locked && (
-                <span className="absolute bottom-2 right-2 z-[4] bg-[#030712]/85 border border-[#14b8a6]/40 rounded-md p-1.5 shadow">
-                  <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#14b8a6]" />
+                <span className="absolute bottom-2 right-2 z-[4] bg-[#030712]/85 border border-[#D95200]/40 rounded-md p-1.5 shadow">
+                  <Lock data-testid={`recipe-locked-${r.id}`} className="w-3.5 h-3.5 text-[#D95200]" />
                 </span>
               )}
               <span
@@ -365,14 +365,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             </div>
             {/* testo */}
             <div className="p-3 min-w-0 flex-1 border-t border-[#1e293b]">
-              <h3 className="font-display text-sm font-bold text-white leading-tight line-clamp-2 group-hover:text-[#14b8a6] transition-colors">
-                {(() => { const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "#14b8a6"; return (
+              <h3 className="font-display text-sm font-bold text-white leading-tight line-clamp-2 group-hover:text-[#D95200] transition-colors">
+                {(() => { const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "#D95200"; return (
                   <span data-testid={`recipe-cat-icon-${r.id}`} title={t(c.label)}
                     className="inline-flex items-center justify-center w-5 h-5 rounded-md mr-1.5 text-[11px] align-middle shrink-0"
                     style={{ background: col + "26", boxShadow: `inset 0 0 0 1px ${col}` }} aria-hidden>{c.icon}</span>
                 ); })()}{rLoc(r, "name", lang)}
               </h3>
-              {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-semibold text-[#14b8a6] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
+              {rLoc(r, "real_name", lang) ? <p className="text-[11px] font-semibold text-[#D95200] truncate mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
               {rLoc(r, "flour_type", lang) ? <p className="text-[10px] uppercase tracking-wider text-[#64748B] truncate mt-0.5">{(mkTri(lang)("Farina: ", "Mehl: ", "Flour: ", "Harina: "))}{rLoc(r, "flour_type", lang)}</p> : null}
             </div>
           </motion.button>
@@ -382,8 +382,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           <div>
             {/* Banner reparto attivo (filtro globale del Capo) */}
             {deptScoped && activeDept && activeDept !== "tutti" && (
-              <div data-testid="recipe-dept-banner" className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-[#14b8a6]/40 bg-[#14b8a6]/10 px-3 py-2">
-                <span className="text-xs font-bold text-[#14b8a6] flex items-center gap-1.5">
+              <div data-testid="recipe-dept-banner" className="mb-3 flex items-center justify-between gap-2 rounded-xl border border-[#D95200]/40 bg-[#D95200]/10 px-3 py-2">
+                <span className="text-xs font-bold text-[#D95200] flex items-center gap-1.5">
                   <span>{deptIcon(activeDept)}</span>
                   {triM("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, triM)}
                 </span>
