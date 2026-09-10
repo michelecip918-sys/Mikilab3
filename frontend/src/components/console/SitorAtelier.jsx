@@ -54,6 +54,11 @@ export default function SitorAtelier() {
     setWidgets((ws) => ws.filter((w) => w.id !== wid));
     try { await atelierApi.remove(wid); } catch { /* */ }
   };
+  const share = async (wid, dept) => {
+    setWidgets((ws) => ws.map((w) => (w.id === wid ? { ...w, share_dept: dept } : w)));
+    try { await atelierApi.share(wid, dept); } catch { /* */ }
+  };
+  const DEPTS = ["", "tutti", "panificio", "pasticceria", "pizzeria", "banco", "laugen"];
 
   const SUGGEST = [
     tri("Un contatore degli sfridi di oggi", "Ein Ausschuss-Zähler für heute", "A counter for today's waste", "Un contador de mermas de hoy", "Un compteur de pertes du jour", "شمارنده ضایعات امروز"),
@@ -164,7 +169,8 @@ export default function SitorAtelier() {
                           </div>
                         ))}
                       </div>
-                      <p className="text-[10px] text-[#94A3B8] mb-1.5">{w.config.label}{w.config.unit ? ` · ${w.config.unit}` : ""}</p>
+                      <p className="text-[10px] text-[#94A3B8] mb-1.5">{w.config.label}{w.config.unit ? ` · ${w.config.unit}` : ""}{w.config.auto ? " · " : ""}{w.config.auto && <span data-testid={`atelier-chart-auto-${w.id}`} className="text-[#22c55e] font-bold">{tri("dati reali", "Echtdaten", "real data", "datos reales", "données réelles", "داده واقعی")}</span>}</p>
+                      {!w.config.auto && (
                       <div className="flex gap-1 overflow-x-auto pb-1">
                         {series.map((p, k) => (
                           <input key={k} data-testid={`atelier-chart-input-${w.id}-${k}`} inputMode="decimal" value={p.v}
@@ -172,9 +178,19 @@ export default function SitorAtelier() {
                             className="w-10 shrink-0 bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[11px] text-white text-center rounded px-1 py-1" />
                         ))}
                       </div>
+                      )}
                     </div>
                   );
                 })()}
+
+                <div className="mt-2 pt-2 border-t border-[#1e293b] flex items-center gap-1.5">
+                  <span className="text-[10px] text-[#64748B]">{tri("Condividi in reparto:", "In Bereich teilen:", "Share to dept:", "Compartir en área:", "Partager à l'atelier :", "اشتراک با بخش:")}</span>
+                  <select data-testid={`atelier-share-${w.id}`} value={w.share_dept || ""} onChange={(e) => share(w.id, e.target.value)}
+                    className="bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[11px] text-white rounded px-1.5 py-1">
+                    {DEPTS.map((d) => <option key={d} value={d}>{d === "" ? tri("no", "nein", "no", "no", "non", "خیر") : d}</option>)}
+                  </select>
+                  {w.share_dept && <span className="text-[9px] text-[#22c55e] font-bold">✓</span>}
+                </div>
               </motion.div>
             );
           })}

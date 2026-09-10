@@ -1194,7 +1194,12 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
                     series.append({"d": str(pt.get("d") or "")[:8], "v": 0})
         if not series:
             series = [{"d": d, "v": 0} for d in ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]]
+        rl = req.lower()
+        source = "waste" if any(k in rl for k in ["sfrid", "scart", "waste", "invendut", "abfall", "merma", "perte"]) else ("pieces" if any(k in rl for k in ["pezz", "piece", "produzion", "sforn", "stück", "produc", "pièce"]) else "")
         cfg = {"label": str(cfg.get("label") or spec["title"])[:60], "unit": str(cfg.get("unit") or "")[:16], "series": series}
+        if source:
+            cfg["source"] = source
+            cfg["auto"] = True
     else:
         cfg = {"text": str(cfg.get("text") or req)[:600]}
     doc = {"id": str(uuid.uuid4()), "capo": _capo_key(admin), "type": t, "title": spec["title"],
@@ -1206,7 +1211,61 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
 @api_router.get("/capo/atelier")
 async def capo_atelier_list(admin: dict = Depends(require_admin)):
     docs = await db.capo_atelier.find({"capo": _capo_key(admin)}, {"_id": 0}).sort("created_at", 1).to_list(60)
+    # I grafici con "source" (waste/pieces) si riempiono da soli dai rapporti di fine turno reali.
+    for d in docs:
+        if d.get("type") == "chart" and (d.get("config") or {}).get("source") in ("waste", "pieces"):
+            d["config"]["series"] = await _reports_daily_series((d["config"]["source"]))
+            d["config"]["auto"] = True
     return {"widgets": docs}
+
+
+import re as _re_atelier
+
+
+async def _reports_daily_series(field: str, days: int = 7):
+    """Somma i numeri trovati nel campo (pieces/waste) dei rapporti di fine turno, per ognuno degli ultimi giorni."""
+    from datetime import timedelta
+    today = datetime.now(timezone.utc).date()
+    buckets = {}
+    labels = []
+    for i in range(days - 1, -1, -1):
+        d = today - timedelta(days=i)
+        key = d.isoformat()
+        buckets[key] = 0.0
+        labels.append((key, ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"][d.weekday()]))
+    reports = await db.floor_shift_reports.find({}, {"_id": 0, "at": 1, field: 1}).sort("at", -1).to_list(500)
+    for r in reports:
+        day = str(r.get("at", ""))[:10]
+        if day in buckets:
+            nums = _re_atelier.findall(r"\d+(?:[.,]\d+)?", str(r.get(field, "")))
+            buckets[day] += sum(float(n.replace(",", ".")) for n in nums)
+    return [{"d": lbl, "v": round(buckets[key], 1)} for key, lbl in labels]
+
+
+class AtelierShareReq(BaseModel):
+    share_dept: str = ""
+
+
+@api_router.patch("/capo/atelier/{wid}/share")
+async def capo_atelier_share(wid: str, body: AtelierShareReq, admin: dict = Depends(require_admin)):
+    await db.capo_atelier.update_one({"id": wid, "capo": _capo_key(admin)}, {"$set": {"share_dept": (body.share_dept or "")[:40], "updated_at": now_iso()}})
+    return {"ok": True}
+
+
+@api_router.get("/floor/shared-widgets")
+async def floor_shared_widgets(dept: str = ""):
+    """Widget che il Capo ha scelto di condividere col reparto (sola lettura sul tablet operai)."""
+    q = {"share_dept": {"$nin": ["", None]}}
+    docs = await db.capo_atelier.find(q, {"_id": 0, "capo": 0}).to_list(60)
+    d = (dept or "").strip().lower()
+    out = []
+    for w in docs:
+        sd = (w.get("share_dept") or "").strip().lower()
+        if not d or sd == d or sd == "tutti" or sd == "all":
+            if w.get("type") == "chart" and (w.get("config") or {}).get("source") in ("waste", "pieces"):
+                w["config"]["series"] = await _reports_daily_series((w["config"]["source"]))
+            out.append(w)
+    return {"widgets": out}
 
 
 class AtelierUpdateReq(BaseModel):

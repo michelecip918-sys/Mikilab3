@@ -8,6 +8,7 @@ import TeamTasks from "@/components/TeamTasks";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
+import SharedWidgets from "@/components/SharedWidgets";
 import FaceCheckIn from "@/components/FaceCheckIn";
 import OperatorClock from "@/components/OperatorClock";
 import { useLang } from "@/i18n/LanguageContext";
@@ -347,6 +348,9 @@ export default function FloorOperatorDay() {
 
       {/* Sitor Maestro: guida passo-passo adattata al livello + proposta di modifica al piano */}
       {role && <SitorMaestro role={role} />}
+
+      {/* Widget condivisi dal Capo per il reparto */}
+      <SharedWidgets dept={mine ? (mine.dept_name || mine.dept || "") : ""} />
 
       {/* Sempre disponibili: chiedi aiuto + analizzatore foto */}
       <SosButton role={role} operator={role} />

@@ -713,7 +713,9 @@ export const atelierApi = {
   list: () => api.get(`/capo/atelier`).then((r) => r.data),
   create: (request, lang) => api.post(`/capo/atelier/create`, { request, lang }).then((r) => r.data),
   update: (wid, config) => api.patch(`/capo/atelier/${wid}`, { config }).then((r) => r.data),
+  share: (wid, share_dept) => api.patch(`/capo/atelier/${wid}/share`, { share_dept }).then((r) => r.data),
   remove: (wid) => api.delete(`/capo/atelier/${wid}`).then((r) => r.data),
+  shared: (dept) => api.get(`/floor/shared-widgets`, { params: { dept } }).then((r) => r.data),
 };
 
 // Registro accessi (tentativi PIN Master/Produzione/Operatore) — solo Capo.

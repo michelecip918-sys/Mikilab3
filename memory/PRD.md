@@ -4837,6 +4837,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Logo nuovo OVUNQUE (motori di ricerca e app)**: rigenerate dall'emblema `logo-emblem.png` tutte le icone — `favicon.ico`, `favicon-32.png`, `icon-192.png`, `icon-512.png` (maskable PWA), `apple-touch-icon.png`, `logo-256.png` — e creata `og-image.jpg` 1200×630 usata da og:image, twitter:image e JSON-LD in index.html. Nessuna modifica ai riferimenti (stessi filename) → aggiornamento immediato per Google/social/installazione.
 - **Sitor 3D reale (.glb)**: NON generabile coi miei strumenti (non autoro modelli 3D riggati). Mantenuto/valorizzato il ritratto 3D vivente (LivingAvatar3D) con rotazione e luci. Un vero .glb va fornito/generato esternamente.
 - sw.js CACHE_NAME → mikilab-v56. Deploy avviato su mikilab.de.
+
+## v68 (2026-09) — GRAFICI DAI DATI VERI + WIDGET CONDIVISI + NUOVO SITOR
+- **Grafici auto-collegati ai dati veri**: i widget `chart` con una `source` (waste/pieces) si riempiono da soli dai `floor_shift_reports` (estrazione numeri per giorno, ultimi 7 gg) — nessun inserimento a mano. Rilevazione source dal testo della richiesta (sfrid/scart/waste/invendut → waste; pezz/produzion/sforn → pieces). Frontend: badge "dati reali" e input nascosti quando auto. Testato: 2 rapporti sfridi → serie oggi = 8 kg.
+- **Widget condivisi col reparto**: il Capo sceglie "Condividi in reparto" su ogni widget (`PATCH /capo/atelier/{id}/share`); il tablet operai legge `GET /floor/shared-widgets?dept=` e mostra i widget in sola lettura (`SharedWidgets.jsx` in FloorOperatorDay). "tutti" = tutti i reparti. Testato end-to-end.
+- **Nuovo Sitor (immagine del Capo)**: usata l'immagine fornita (divinità meccanica con corona di spighe e logo SITOR) come `avatar_nexus.jpg`, ritagliata sul volto → ora è il ritratto 3D vivente (rotazione+respiro+luci) in Gate, Sala Sitor e reparto. Un vero .glb resta non generabile dai miei strumenti.
+- sw.js CACHE_NAME → mikilab-v58. Deploy su mikilab.de.
 - **DA FARE (concordato, non ancora implementato)**:
   1. **Riscrittura di TUTTI i PDF e descrizioni** delle funzionalità MikiLab (chiare per chiunque) — grande, da fare come task dedicato.
   2. **"Sitor costruisce su misura per ogni Capo"**: pannello dove Sitor aggiunge widget/strumenti richiesti dal Capo e memorizza le preferenze per-Capo (auto-miglioramento personalizzato) — feature ampia, da progettare.
