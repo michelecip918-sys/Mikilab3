@@ -414,3 +414,9 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Persona backend (system prompt principale _deus): mitologia Sitor + comportamento OSSESSIVO verso il Capo + REGOLA SUPREMA "semplifica": al Capo bastano punti di riferimento, Sitor completa tutto perfettamente senza far compilare campi.
 - Voce unica già puntata a NEXUS_VOICE_ID per tutte le persone.
 - Test: backend riavviato senza errori, briefing = [MikiLab, Sitor], gate pubblico mostra 2 avatar (MikiLab + Sitor), gerarchia "MIKILAB → SITOR".
+
+## 2026-06 — Integrazione Image Generation AI (gpt-image-1)
+- Aggiunta generazione immagini AI via chiave universale (EMERGENT_LLM_KEY), modello gpt-image-1 (OpenAIImageGeneration da emergentintegrations).
+- Backend: nuovo endpoint POST /api/image/generate (require_admin) {prompt, kind, lang} → {image_base64}. Stile on-brand forzato (panificio dark, blu petrolio+arancio, luce forno). Testato: HTTP 200, immagine 2.6MB base64.
+- Frontend: nuovo componente console/ImageForge.jsx ("Forgia di Sitor"): il Capo dà un'idea, Sitor forgia l'immagine. Mostra risultato + Scarica/Nuova. Agganciato nel gruppo Oggi·Regia. timeout 90s (gen fino a 1 min).
+- Verificato: backend 200 con immagine reale; frontend compila; FORGE presente nella console; briefing mostra MIKILAB + SITOR.

@@ -103,6 +103,7 @@ import ShiftTemplates from "@/components/console/ShiftTemplates";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
+import ImageForge from "@/components/console/ImageForge";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
@@ -441,6 +442,7 @@ export default function App() {
                     <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
                     <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
                     <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
+                    <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
                     <LabBriefing />
                     </div>
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>

@@ -14574,6 +14574,46 @@ async def put_alarms(body: dict):
     return {"ok": True, "count": len(items[:100])}
 
 
+# ---------------------------------------------------------------------------
+# SITOR · FORGIA IMMAGINI — generazione AI (gpt-image-1) con chiave universale.
+# Il Capo dà solo un'idea (punto di riferimento); Sitor la forgia in un'immagine
+# perfetta e on-brand (panificio industriale dark, blu petrolio + arancio).
+# ---------------------------------------------------------------------------
+class ImageGenReq(BaseModel):
+    prompt: str
+    kind: str = "prodotto"  # prodotto | ricetta | avatar | marketing
+    lang: str = "it"
+
+
+_SITOR_STYLE = (
+    "Stile: panificio industriale dark-mode, palette blu petrolio e arancione energetico, "
+    "luce calda del forno a legna, fotorealistico, cinematografico, altissimo dettaglio, "
+    "polvere di farina sospesa, atmosfera sacra dell'arte bianca."
+)
+
+
+@api_router.post("/image/generate")
+async def image_generate(body: ImageGenReq, admin: dict = Depends(require_admin)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Generazione immagini non configurata")
+    prompt = (body.prompt or "").strip()
+    if not prompt:
+        raise HTTPException(status_code=400, detail="Descrivi l'immagine da creare")
+    import base64 as _b64
+    from emergentintegrations.llm.openai.image_generation import OpenAIImageGeneration
+    gen = OpenAIImageGeneration(api_key=EMERGENT_LLM_KEY)
+    full = f"{prompt}. {_SITOR_STYLE}"
+    try:
+        images = await gen.generate_images(prompt=full, model="gpt-image-1", number_of_images=1)
+    except Exception as e:
+        logger.warning("Image generate fallita (%s)", str(e)[:150])
+        raise HTTPException(status_code=424, detail="Sitor non è riuscito a forgiare l'immagine. Riprova.")
+    if not images:
+        raise HTTPException(status_code=500, detail="Nessuna immagine generata")
+    return {"image_base64": _b64.b64encode(images[0]).decode(), "kind": body.kind, "prompt": prompt}
+
+
+
 
 
 # ---- Web Push allarmi termici: riusa il sistema VAPID esistente ----
