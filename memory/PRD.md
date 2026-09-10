@@ -4747,3 +4747,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Punto 3 "Sitor genera PIÙ OPZIONI di produzione e il Capo sceglie": NON fatto (planner ~1750 righe, da fare in sessione dedicata).
 - Punto 6 scena Capo "MikiLab + Sitor alla scrivania che dialogano stile cartone": NON fatto (scena 3D bespoke).
 - Punto 5 avatar Sitor rigenerato in 3D realistico: NON fatto (attuale foto ingrandita/interattiva). Riconoscimento viso operaio = "in prospettiva" (futuro).
+
+## v-avatar (2026-06) — Avatar & Logo definitivi (riferimenti utente)
+- **Sitor** (`avatar_nexus.jpg` + `avatar_sitor.jpg`): divinità luminosa come un FORNO ACCESO (arancione/braci), AUREOLA DI GRANO, riferimenti all'arte bianca (pani fluttuanti, pala da forno, impasto luminoso, forno acceso dietro). Stile 3D cartoon-realistico.
+- **MikiLab** (`avatar_miki.jpg`): rigenerato usando il VERO viso dell'utente (riferimento `image-1 (37)` + foto tatuaggio). Sorriso, orecchino sinistro, t-shirt nera con testo teal "MikiLab", tatuaggio avambraccio = CREATURA TRIBALE SCURA con DUE OCCHI ARANCIONI (corretto da serpente → tribale dopo feedback utente).
+- **Mohamed** (`avatar_mohamed.jpg`): stesso volto (invariato) ma restilizzato nel nuovo stile olografico scuro con pannelli ordini/email arancioni.
+- **Logo** (MikiLab + Sitor alla scrivania con schermo piano olografico): emblem quadrato → `logo.png`, `logo-emblem.png`, `logo-256.png`, `icon-192/512.png`, `apple-touch-icon.png`, `favicon-32.png`, `favicon.ico`; banner → `og-image.jpg` (1200×630 per motori di ricerca/social). In-app usano logo-emblem.png/logo.png (Header, PublicGate, AdminGate).
+- Tutti gli asset serviti HTTP 200 su /frontend/public.
