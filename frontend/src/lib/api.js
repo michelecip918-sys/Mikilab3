@@ -589,6 +589,7 @@ export const masterApi = {
 export const mikeApi = {
   proactive: (lang) => api.get(`/mike/proactive`, { params: { lang } }).then((r) => r.data),
   autoplan: (payload) => api.post(`/mike/autoplan`, payload).then((r) => r.data),
+  autoplanOptions: (payload) => api.post(`/mike/autoplan/options`, payload).then((r) => r.data),
   dispatch: (batches) => api.post(`/mike/autoplan/dispatch`, { batches }).then((r) => r.data),
   briefing: (lang) => api.get(`/mike/briefing`, { params: { lang } }).then((r) => r.data),
   floorBriefing: (role, lang) => api.get(`/mike/briefing/floor`, { params: { role, lang } }).then((r) => r.data),

@@ -105,6 +105,7 @@ import FloorShiftReports from "@/components/console/FloorShiftReports";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
+import DeskScene from "@/components/console/DeskScene";
 import ImageForge from "@/components/console/ImageForge";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
@@ -438,6 +439,7 @@ export default function App() {
                   </div>
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
+                    <DeskScene />
                     <PlantHeartbeatProvider>
                     <CapoGroup id="piano" icon="🗓️" accent="#FF9D42" open={consoleSec === "piano"} onToggle={() => toggleSec("piano")}
                       title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}

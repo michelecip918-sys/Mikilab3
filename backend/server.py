@@ -11055,6 +11055,70 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     return {"ok": True, "date": today, "context": {"leaders": leaders, "workers_today": workers_today, "low_stock": low}, "plan": plan}
 
 
+@api_router.post("/mike/autoplan/options")
+async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require_admin)):
+    """Sitor genera PIÙ OPZIONI di piano (strategie diverse) tra cui il Capo sceglie."""
+    ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = ld.get("leaders") or {}
+    low = []
+    try:
+        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+            mn = float(s.get("min_kg") or 0); q = float(s.get("quantity_kg") or 0)
+            if mn > 0 and q <= mn:
+                low.append(f"{s.get('name')} ({q:g}/{mn:g}kg)")
+    except Exception:
+        pass
+    today = (body.date or now_iso()[:10])
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
+    ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
+           f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
+           f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
+
+    options = []
+    if EMERGENT_LLM_KEY:
+        try:
+            langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
+            sysmsg = (
+                "Sei Sitor, direttore di produzione di una panetteria industriale d'élite. "
+                "Genera 3 OPZIONI ALTERNATIVE di piano di produzione della giornata, ognuna con una STRATEGIA diversa: "
+                "1) 'Massima velocità' (meno colli di bottiglia al forno, consegne rapide), "
+                "2) 'Massima qualità' (lievitazioni più lunghe, cura del prodotto), "
+                "3) 'Risparmio personale' (meno operatori, sequenza compatta). "
+                "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o burocrazia. Solo produzione, tempi, sequenza, linee e persone.\n"
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"options\":[{\"label\":\"Massima velocità\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"baguette|pane|pizzeria|pasticceria\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve\"}]}. "
+                "Esattamente 3 opzioni, massimo 5 lotti per opzione. Nessun testo fuori dal JSON."
+            )
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanopt-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=4000)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera 3 opzioni di piano.")):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            import json as _json, re as _re
+            raw = out.strip().replace("```json", "").replace("```", "")
+            m = _re.search(r"\{.*\}", raw, _re.S)
+            frag = m.group(0) if m else raw
+            try:
+                parsed = _json.loads(frag)
+                options = parsed.get("options", [])
+            except Exception:
+                depth = 0; end = -1
+                for i, ch in enumerate(frag):
+                    if ch == "{":
+                        depth += 1
+                    elif ch == "}":
+                        depth -= 1
+                        if depth == 0:
+                            end = i + 1
+                            break
+                if end > 0:
+                    options = _json.loads(frag[:end]).get("options", [])
+        except Exception as e:
+            logger.warning("autoplan options fail (%s)", str(e)[:120])
+    return {"ok": True, "date": today, "options": options}
+
+
 class AutoPlanDispatchReq(BaseModel):
     batches: List[dict] = []
 

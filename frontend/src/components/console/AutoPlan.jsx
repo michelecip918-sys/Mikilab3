@@ -4,7 +4,7 @@ import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Sparkles, Volume2, Send } from "lucide-react";
+import { Sparkles, Volume2, Send, Layers, Check } from "lucide-react";
 
 // PILASTRO 1 — Sitor Direttore d'Orchestra: piano di produzione ottimale auto-generato.
 export default function AutoPlan() {
@@ -13,6 +13,9 @@ export default function AutoPlan() {
   const [orders, setOrders] = useState("");
   const [res, setRes] = useState(null);
   const [busy, setBusy] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [busyOpt, setBusyOpt] = useState(false);
+  const [chosen, setChosen] = useState(-1);
 
   // Sync ordini B2B → prefill del piano (evento dal modulo E-commerce B2B).
   useEffect(() => {
@@ -22,21 +25,58 @@ export default function AutoPlan() {
   }, [tri]);
 
   const gen = async () => {
-    setBusy(true);
+    setBusy(true); setOptions([]); setChosen(-1);
     try { const r = await mikeApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
     setBusy(false);
   };
+
+  // Sitor genera PIÙ OPZIONI di piano tra cui il Capo sceglie.
+  const genOptions = async () => {
+    setBusyOpt(true); setRes(null); setChosen(-1); setOptions([]);
+    try {
+      const r = await mikeApi.autoplanOptions({ orders_text: orders, lang });
+      if ((r.options || []).length) { setOptions(r.options); try { playTTS(tri("Ho preparato tre strategie. Scegli quella che preferisci.", "Drei Strategien. Wähle eine.", "I prepared three strategies. Pick one.", "Preparé tres estrategias. Elige una.", "J'ai préparé trois stratégies. Choisis-en une.", "سه استراتژی آماده کردم. یکی را انتخاب کن."), { lang, voice: "nexus" }); } catch { /* */ } }
+      else toast.error(tri("Nessuna opzione generata. Riprova.", "Keine Optionen.", "No options generated.", "Sin opciones.", "Aucune option.", "گزینه‌ای نیست."));
+    } catch (e) { toast.error(tri("Sitor non è riuscito a generare le opzioni.", "Optionen fehlgeschlagen.", "Couldn't generate options.", "No se pudieron generar.", "Échec des options.", "خطا در گزینه‌ها.")); }
+    setBusyOpt(false);
+  };
+
+  const chooseOption = (i) => { setChosen(i); setRes(options[i]); };
 
   return (
     <div data-testid="autoplan" className="space-y-3">
       <textarea data-testid="autoplan-orders" value={orders} onChange={(e) => setOrders(e.target.value)} rows={2}
         placeholder={tri("Ordini del giorno (facoltativo): es. 300 baguette, 120 focacce, 40 torte…", "Tagesaufträge (optional)…", "Today's orders (optional)…", "Pedidos de hoy (opcional)…", "Commandes du jour (optionnel)…", "سفارش‌های امروز (اختیاری)…")}
         className="w-full bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#64748B] outline-none resize-none" />
-      <button data-testid="autoplan-gen" onClick={gen} disabled={busy}
-        className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-        style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)", boxShadow: "0 0 20px rgba(255,107,0,0.35)" }}>
-        <Sparkles className="w-4 h-4" /> {busy ? tri("Sitor pianifica…", "Sitor plant…", "Sitor is planning…", "Sitor planifica…", "Sitor planifie…", "برنامه‌ریزی…") : tri("Genera piano ottimale", "Optimalen Plan erstellen", "Generate optimal plan", "Generar plan óptimo", "Générer le plan optimal", "تولید برنامه بهینه")}
-      </button>
+      <div className="flex flex-wrap gap-2">
+        <button data-testid="autoplan-gen" onClick={gen} disabled={busy || busyOpt}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
+          style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)", boxShadow: "0 0 20px rgba(255,107,0,0.35)" }}>
+          <Sparkles className="w-4 h-4" /> {busy ? tri("Sitor pianifica…", "Sitor plant…", "Sitor is planning…", "Sitor planifica…", "Sitor planifie…", "برنامه‌ریزی…") : tri("Piano ottimale", "Optimaler Plan", "Optimal plan", "Plan óptimo", "Plan optimal", "برنامه بهینه")}
+        </button>
+        <button data-testid="autoplan-gen-options" onClick={genOptions} disabled={busy || busyOpt}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#FF9D42] border border-[#FF9D42]/50 bg-[#FF9D42]/10 active:scale-95 transition-all disabled:opacity-50">
+          <Layers className="w-4 h-4" /> {busyOpt ? tri("Sitor prepara le opzioni…", "Optionen…", "Preparing options…", "Preparando opciones…", "Options…", "گزینه‌ها…") : tri("3 opzioni tra cui scegliere", "3 Optionen", "3 options to choose", "3 opciones", "3 options", "۳ گزینه")}
+        </button>
+      </div>
+
+      {/* Opzioni di piano (Sitor propone, il Capo sceglie) */}
+      {options.length > 0 && (
+        <div data-testid="autoplan-options" className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+          {options.map((o, i) => (
+            <button key={i} data-testid={`autoplan-option-${i}`} onClick={() => chooseOption(i)}
+              className="text-left rounded-xl p-3 border transition-all active:scale-[0.98]"
+              style={chosen === i ? { borderColor: "#FF9D42", background: "rgba(255,157,66,0.12)", boxShadow: "0 0 18px rgba(255,157,66,0.3)" } : { borderColor: "#334155", background: "#0C1019" }}>
+              <div className="flex items-center gap-1.5 mb-1">
+                {chosen === i && <Check className="w-4 h-4 text-[#FF9D42]" />}
+                <span className="text-sm font-black text-white">{o.label || `Opzione ${i + 1}`}</span>
+              </div>
+              <p className="text-[11px] text-[#94A3B8] leading-snug">{o.strategy || o.summary}</p>
+              <p className="text-[10px] text-[#64748B] mt-1">{(o.batches || []).length} {tri("lotti", "Lose", "batches", "lotes", "lots", "دسته")}</p>
+            </button>
+          ))}
+        </div>
+      )}
 
       {res && (
         <div data-testid="autoplan-result" className="space-y-3 pt-1">

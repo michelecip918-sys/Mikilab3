@@ -4754,3 +4754,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Mohamed** (`avatar_mohamed.jpg`): stesso volto (invariato) ma restilizzato nel nuovo stile olografico scuro con pannelli ordini/email arancioni.
 - **Logo** (MikiLab + Sitor alla scrivania con schermo piano olografico): emblem quadrato → `logo.png`, `logo-emblem.png`, `logo-256.png`, `icon-192/512.png`, `apple-touch-icon.png`, `favicon-32.png`, `favicon.ico`; banner → `og-image.jpg` (1200×630 per motori di ricerca/social). In-app usano logo-emblem.png/logo.png (Header, PublicGate, AdminGate).
 - Tutti gli asset serviti HTTP 200 su /frontend/public.
+
+## v-fase4 (2026-06) — Completati gli ultimi 2 punti in sospeso del file istruzioni
+- **Sitor genera PIÙ OPZIONI di piano** (punto 3): nuovo `POST /api/mike/autoplan/options` (require_admin) → 3 strategie ('Massima velocità', 'Massima qualità', 'Risparmio personale'), ognuna con summary/batches/spoken. In `AutoPlan.jsx` pulsante "3 opzioni tra cui scegliere" → card selezionabili (`autoplan-option-{i}`); scelta → mostra piano + "Invia agli operatori". Sitor annuncia a voce (nexus). VERIFICATO e2e: 3 opzioni generate, scelta funzionante, 0 errori.
+- **Scena "MikiLab + Sitor alla scrivania"** (punto 6): immagine cartoon `desk_scene.jpg` (i due che dialogano davanti al calendario olografico) + componente `console/DeskScene.jsx` come banner in cima alla console Capo (`desk-scene`). Verificato render OK.
+### File istruzioni: TUTTI i punti principali ora coperti. Resta solo (futuro): riconoscimento viso operaio ("in prospettiva"); scena scrivania in 3D interattivo vero (ora è banner cartoon).
