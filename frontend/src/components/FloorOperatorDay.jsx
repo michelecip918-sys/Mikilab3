@@ -284,6 +284,7 @@ export default function FloorOperatorDay() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [apprentice, setApprentice] = useState(false);
+  const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
   const greetedRef = useRef(false);
 
   const syncRole = useCallback(() => { try { setRole(localStorage.getItem(ROLE_KEY) || ""); } catch { /* */ } }, []);
@@ -294,12 +295,13 @@ export default function FloorOperatorDay() {
 
   // Rileva se il Capo ha attivato la MODALITÀ APPRENDISTA per questo operaio → Sitor cambia comportamento.
   useEffect(() => {
-    if (!role) { setApprentice(false); return; }
+    if (!role) { setApprentice(false); setMine(null); return; }
     let alive = true;
     const check = () => deptApi.assignment().then((d) => {
       if (!alive) return;
       const mine = (d.assignments || []).find((a) => (a.operator || "").toLowerCase() === role.toLowerCase());
       setApprentice(!!(mine && mine.apprentice));
+      setMine(mine || null);
     }).catch(() => {});
     check(); const id = setInterval(check, 30000);
     return () => { alive = false; clearInterval(id); };

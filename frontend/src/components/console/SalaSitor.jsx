@@ -11,6 +11,7 @@ import LivingAvatar3D from "@/components/LivingAvatar3D";
 import MikeSuggestions from "@/components/console/MikeSuggestions";
 import MikeAlerts from "@/components/MikeAlerts";
 import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
+import SitorShiftDraft from "@/components/console/SitorShiftDraft";
 
 // SALA SITOR — l'UNICO luogo d'incontro tra il Capo e Sitor (Dio dell'Arte Bianca).
 // Qui il Capo scrive, detta, allega foto/email, dà ordini e riceve tutto: risposte,
@@ -273,6 +274,11 @@ export default function SalaSitor() {
         {/* Modifiche proposte dagli operai — approvazione del Capo */}
         <div className="pt-3 border-t border-[#1e293b]">
           <FloorChangeApprovals />
+        </div>
+
+        {/* Report fine turno automatico — Sitor compila, il Capo approva */}
+        <div className="pt-3 border-t border-[#1e293b]">
+          <SitorShiftDraft />
         </div>
 
         {/* Sitor parla da solo: proposte e allarmi arrivano QUI */}

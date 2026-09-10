@@ -643,6 +643,9 @@ export const deusApi = {
   queueDone: (id) => api.post(`/mike/deus/queue/${id}/done`).then((r) => r.data),
   queueClear: () => api.post(`/mike/deus/queue/clear`).then((r) => r.data),
   shiftReport: (lang) => api.get(`/mike/shift-report`, { params: { lang } }).then((r) => r.data),
+  shiftDraftGenerate: (lang) => api.post(`/capo/sitor/shift-draft/generate`, { lang }).then((r) => r.data),
+  shiftDrafts: () => api.get(`/capo/sitor/shift-drafts`).then((r) => r.data),
+  shiftDraftPatch: (id, payload) => api.patch(`/capo/sitor/shift-drafts/${id}`, payload).then((r) => r.data),
 };
 
 // Produzione (Operaio) — rapporto di fine turno + lista per il Capo.

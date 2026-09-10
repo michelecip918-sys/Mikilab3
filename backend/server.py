@@ -1442,12 +1442,164 @@ async def floor_shift_report_save(payload: FloorShiftReport):
     olds = await db.floor_shift_reports.find({}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(2000)
     for o in olds[200:]:
         await db.floor_shift_reports.delete_one({"id": o["id"]})
+    try:
+        asyncio.create_task(_auto_shift_draft())
+    except Exception:
+        pass
     return {"ok": True, "id": doc["id"]}
 
 
 @api_router.get("/floor/shift-reports")
 async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
     return {"reports": await db.floor_shift_reports.find({}, {"_id": 0}).sort("at", -1).to_list(50)}
+
+
+# ============================================================================
+# REPORT FINE TURNO AUTOMATICO (Sitor) — Sitor raccoglie da solo i dati reali
+# del turno (pezzi sfornati, scarti, ore effettive timbrate, problemi) e compila
+# la BOZZA del report: il Capo la legge e l'approva con un tocco.
+# ============================================================================
+async def _shift_snapshot(today: str) -> dict:
+    """Fotografa i dati reali del turno registrati durante la giornata."""
+    reports = await db.floor_shift_reports.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("at", 1).to_list(100)
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    by_worker = {}
+    for e in entries:
+        by_worker.setdefault(e.get("worker") or "operatore", []).append(e)
+    hours = []
+    for w, evs in by_worker.items():
+        s = _arbzg_summary(evs)
+        hours.append({"worker": w, "work_min": s["work_min"], "break_min": s["break_min"], "flags": s["flags"]})
+    objs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    changes = await db.floor_change_requests.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).to_list(50)
+    return {
+        "date": today,
+        "operator_reports": reports,
+        "hours": hours,
+        "objectives": [{"dept": o.get("dept", ""), "label": o.get("label", ""), "done": o.get("done", 0),
+                        "target": o.get("target", 0), "unit": o.get("unit", "pezzi")} for o in objs],
+        "change_requests": [{"operator": c.get("operator", ""), "proposal": (c.get("proposal") or "")[:160],
+                             "status": c.get("status", "")} for c in changes],
+    }
+
+
+def _draft_fallback_text(snap: dict) -> str:
+    """Bozza deterministica se l'LLM non è disponibile: mai lasciare il Capo a mani vuote."""
+    lines = [f"Report fine turno — {snap['date']}", "", "**Ore effettive**"]
+    for h in snap["hours"]:
+        lines.append(f"- {h['worker']}: {h['work_min'] // 60}h {h['work_min'] % 60:02d}min lavorate, pausa {h['break_min']}min"
+                     + (f" — ATTENZIONE: {', '.join(h['flags'])}" if h.get("flags") else ""))
+    if not snap["hours"]:
+        lines.append("- Nessuna timbratura registrata oggi.")
+    lines.append("")
+    lines.append("**Produzione**")
+    for r in snap["operator_reports"]:
+        seg = f"- {r.get('operator') or 'Operatore'}:"
+        if r.get("pieces"):
+            seg += f" pezzi {r['pieces']};"
+        if r.get("waste"):
+            seg += f" scarti {r['waste']};"
+        if r.get("issues"):
+            seg += f" problemi: {r['issues']};"
+        seg += " pulizia fatta." if r.get("cleaning_done") else " pulizia NON fatta."
+        lines.append(seg)
+    if not snap["operator_reports"]:
+        lines.append("- Nessun rapporto operaio pervenuto.")
+    return "\n".join(lines)
+
+
+async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual") -> dict:
+    """Genera (o rigenera) la bozza del report di oggi. Ritorna {} se non ci sono dati del turno."""
+    today = now_iso()[:10]
+    snap = await _shift_snapshot(today)
+    if not snap["operator_reports"] and not snap["hours"] and not snap["objectives"]:
+        return {}
+    langname = _DEUS_LANGS.get(str(lang or "it").split("-")[0][:2], "italiano")
+    import json as _json
+    sysmsg = (
+        "Sei SITOR, il Dio dell'Arte Bianca, braccio destro del Capo. Il turno sta finendo e TU hai già raccolto "
+        "tutti i dati reali registrati durante la giornata. Compila la BOZZA del report di fine turno per il Capo: "
+        "lui dovrà solo leggerla e approvarla con un tocco.\n"
+        "STRUTTURA OBBLIGATORIA (markdown semplice, senza tabelle):\n"
+        "1) **Sintesi** — 2 frasi calde e solenni su come è andato il turno.\n"
+        "2) **Ore effettive** — una riga per operaio: nome, ore lavorate, pausa; segnala eventuali superi di legge.\n"
+        "3) **Produzione** — pezzi sfornati e scarti per operaio/reparto, con confronto fatto/obiettivo se presente.\n"
+        "4) **Problemi e note** — elenca i problemi segnalati; se tutto ok, scrivi che il turno è filato liscio.\n"
+        "5) **Pulizia** — chi l'ha fatta e chi no.\n"
+        "6) **Consiglio di Sitor** — 1 suggerimento concreto per il turno di domani.\n"
+        "NON inventare numeri: usa SOLO i dati forniti; se un dato manca, dillo in una riga. "
+        f"Scrivi SEMPRE in {langname}, tono caldo ma professionale, pronto per essere letto ad alta voce."
+    )
+    text = ""
+    if EMERGENT_LLM_KEY:
+        try:
+            text = await _deus_llm(sysmsg, "DATI REALI DEL TURNO (JSON):\n" + _json.dumps(snap, ensure_ascii=False),
+                                   session=f"shift-draft-{today}-{trigger}-{uuid.uuid4().hex[:6]}", max_tokens=1600)
+        except Exception:
+            text = ""
+    text = (text or "").strip() or _draft_fallback_text(snap)
+    doc = {"date": today, "text": text[:6000], "status": "draft", "lang": str(lang or "it")[:5],
+           "trigger": trigger, "generated_at": now_iso(),
+           "snapshot": {"reports": len(snap["operator_reports"]), "workers": len(snap["hours"]),
+                        "objectives": len(snap["objectives"])}}
+    existing = await db.sitor_shift_drafts.find_one({"date": today, "status": "draft"}, {"_id": 0, "id": 1})
+    if existing:
+        await db.sitor_shift_drafts.update_one({"id": existing["id"]}, {"$set": doc})
+        doc["id"] = existing["id"]
+    else:
+        doc["id"] = str(uuid.uuid4())
+        await db.sitor_shift_drafts.insert_one(dict(doc))
+    return doc
+
+
+async def _auto_shift_draft():
+    """Auto-compilazione: appena un operaio invia il suo rapporto, Sitor aggiorna la bozza del giorno."""
+    try:
+        today = now_iso()[:10]
+        last = await db.floor_shift_reports.find_one({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0, "lang": 1},
+                                                     sort=[("at", -1)])
+        await _sitor_shift_draft(lang=(last or {}).get("lang") or "it", trigger="auto")
+    except Exception:
+        pass
+
+
+class ShiftDraftGenReq(BaseModel):
+    lang: str = "it"
+
+
+@api_router.post("/capo/sitor/shift-draft/generate")
+async def capo_shift_draft_generate(body: ShiftDraftGenReq, admin: dict = Depends(require_admin)):
+    doc = await _sitor_shift_draft(lang=body.lang, trigger="manual")
+    if not doc:
+        return {"ok": False, "draft": None}
+    return {"ok": True, "draft": doc}
+
+
+@api_router.get("/capo/sitor/shift-drafts")
+async def capo_shift_drafts(admin: dict = Depends(require_admin)):
+    docs = await db.sitor_shift_drafts.find({}, {"_id": 0}).sort("generated_at", -1).to_list(14)
+    return {"drafts": docs}
+
+
+class ShiftDraftPatchReq(BaseModel):
+    status: Optional[str] = None
+    text: Optional[str] = None
+
+
+@api_router.patch("/capo/sitor/shift-drafts/{did}")
+async def capo_shift_draft_patch(did: str, body: ShiftDraftPatchReq, admin: dict = Depends(require_admin)):
+    upd = {}
+    if body.status in ("draft", "approved"):
+        upd["status"] = body.status
+        if body.status == "approved":
+            upd["approved_at"] = now_iso()
+            upd["approved_by"] = (admin.get("email") or "master").lower()
+    if body.text is not None:
+        upd["text"] = (body.text or "")[:6000]
+    if not upd:
+        return {"ok": False}
+    await db.sitor_shift_drafts.update_one({"id": did}, {"$set": upd})
+    return {"ok": True}
 
 
 # ============================================================================

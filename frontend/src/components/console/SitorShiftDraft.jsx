@@ -1,0 +1,118 @@
+import { useState, useEffect, useCallback } from "react";
+import { ClipboardCheck, RefreshCw, CheckCircle2, Loader2, Wand2 } from "lucide-react";
+import { toast } from "sonner";
+import ReactMarkdown from "react-markdown";
+import { deusApi } from "@/lib/api";
+import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
+
+// REPORT FINE TURNO AUTOMATICO — Sitor raccoglie da solo pezzi, scarti e ore
+// effettive registrate durante il turno e compila la bozza: il Capo la approva con un tocco.
+export default function SitorShiftDraft() {
+  const { lang } = useLang();
+  const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const [drafts, setDrafts] = useState([]);
+  const [busy, setBusy] = useState(false);
+  const [approving, setApproving] = useState("");
+
+  const load = useCallback(() => {
+    deusApi.shiftDrafts().then((d) => setDrafts(d.drafts || [])).catch(() => {});
+  }, []);
+  useEffect(() => { load(); const id = setInterval(load, 45000); return () => clearInterval(id); }, [load]);
+
+  const today = new Date().toISOString().slice(0, 10);
+  const current = drafts.find((d) => d.date === today) || drafts[0] || null;
+  const past = drafts.filter((d) => d.id !== (current && current.id)).slice(0, 4);
+
+  const generate = async () => {
+    setBusy(true);
+    try {
+      const r = await deusApi.shiftDraftGenerate(lang);
+      if (r.ok) {
+        toast.success(tri("Bozza pronta, Capo: leggila e approva.", "Entwurf fertig, Chef: lesen & freigeben.", "Draft ready, Capo: read & approve.", "Borrador listo: léelo y aprueba.", "Brouillon prêt : lisez et approuvez.", "پیش‌نویس آماده است."));
+        load();
+      } else {
+        toast.error(tri("Nessun dato del turno ancora registrato.", "Noch keine Schichtdaten erfasst.", "No shift data recorded yet.", "Aún sin datos del turno.", "Aucune donnée de service.", "هنوز داده‌ای ثبت نشده."));
+      }
+    } catch {
+      toast.error(tri("Sitor non risponde: riprova tra poco.", "Sitor antwortet nicht: gleich erneut.", "Sitor not responding: retry shortly.", "Sitor no responde: reintenta.", "Sitor ne répond pas : réessayez.", "سیتور پاسخ نمی‌دهد."));
+    } finally { setBusy(false); }
+  };
+
+  const approve = async (d) => {
+    setApproving(d.id);
+    try {
+      await deusApi.shiftDraftPatch(d.id, { status: "approved" });
+      toast.success(tri("Report approvato e archiviato.", "Report freigegeben & archiviert.", "Report approved & archived.", "Informe aprobado y archivado.", "Rapport approuvé et archivé.", "گزارش تأیید و بایگانی شد."));
+      load();
+    } catch { toast.error(tri("Errore: riprova.", "Fehler: erneut versuchen.", "Error: retry.", "Error: reintenta.", "Erreur : réessayez.", "خطا: دوباره.")); }
+    finally { setApproving(""); }
+  };
+
+  const fmtMin = (min) => `${Math.floor((min || 0) / 60)}h ${String((min || 0) % 60).padStart(2, "0")}m`;
+
+  return (
+    <div data-testid="sitor-shift-draft" className="space-y-2.5">
+      <div className="flex items-center gap-2">
+        <ClipboardCheck className="w-4 h-4 text-[#EAB308] shrink-0" />
+        <p className="text-xs font-black uppercase tracking-wide text-[#EAB308] flex-1 min-w-0">
+          {tri("Report Fine Turno · Bozza di Sitor", "Schichtbericht · Sitor-Entwurf", "End-of-Shift Report · Sitor's Draft", "Informe Fin de Turno · Borrador de Sitor", "Rapport de Fin de Service · Brouillon de Sitor", "گزارش پایان شیفت · پیش‌نویس سیتور")}
+        </p>
+        <button data-testid="sitor-draft-generate" onClick={generate} disabled={busy}
+          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#EAB308]/10 border border-[#EAB308]/35 text-[#EAB308] text-xs font-bold hover:bg-[#EAB308]/20 active:scale-95 disabled:opacity-50">
+          {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
+          {current ? tri("Rigenera", "Neu", "Regenerate", "Regenerar", "Régénérer", "بازسازی") : tri("Genera bozza", "Entwurf", "Generate draft", "Generar", "Générer", "بساز")}
+        </button>
+      </div>
+      <p className="text-[11px] text-[#94A3B8]">
+        {tri("Sitor raccoglie da solo scarti, pezzi e ore effettive e compila la bozza appena un operaio chiude il suo rapporto.",
+             "Sitor sammelt Ausschuss, Stückzahlen & Arbeitszeiten und erstellt den Entwurf automatisch.",
+             "Sitor collects waste, pieces and actual hours on its own and drafts the report as soon as an operator submits theirs.",
+             "Sitor recoge mermas, piezas y horas reales y redacta el borrador solo.",
+             "Sitor collecte rebuts, pièces et heures réelles et rédige le brouillon tout seul.",
+             "سیتور ضایعات و ساعات را جمع می‌کند و پیش‌نویس را خودش می‌نویسد.")}
+      </p>
+
+      {!current ? (
+        <div data-testid="sitor-draft-empty" className="rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-4 text-center text-[12px] text-[#64748B]">
+          {tri("Nessuna bozza ancora: appena arrivano dati dal turno, Sitor la scrive da solo.", "Noch kein Entwurf: sobald Schichtdaten eintreffen, schreibt Sitor ihn selbst.", "No draft yet: as soon as shift data arrives, Sitor writes it on its own.", "Sin borrador: Sitor lo escribe solo al llegar datos.", "Aucun brouillon : Sitor l'écrit dès l'arrivée des données.", "هنوز پیش‌نویسی نیست.")}
+        </div>
+      ) : (
+        <div className="rounded-xl bg-[#0C1019] border border-[#EAB308]/25 p-3 space-y-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span data-testid="sitor-draft-status" className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded border ${current.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "bg-[#EAB308]/10 text-[#EAB308] border-[#EAB308]/30"}`}>
+              {current.status === "approved" ? tri("Approvato", "Freigegeben", "Approved", "Aprobado", "Approuvé", "تأییدشده") : tri("Bozza", "Entwurf", "Draft", "Borrador", "Brouillon", "پیش‌نویس")}
+            </span>
+            <span className="text-[10px] text-[#64748B] font-mono-data">{current.date} · {current.trigger === "auto" ? tri("auto", "auto", "auto", "auto", "auto", "خودکار") : tri("manuale", "manuell", "manual", "manual", "manuel", "دستی")}</span>
+            {current.snapshot && (
+              <span data-testid="sitor-draft-meta" className="text-[10px] text-[#64748B]">
+                · {current.snapshot.reports || 0} {tri("rapporti", "Berichte", "reports", "informes", "rapports", "گزارش")} · {current.snapshot.workers || 0} {tri("timbrati", "gestempelt", "clocked", "fichados", "pointés", "ثبت‌شده")}
+              </span>
+            )}
+          </div>
+          <div data-testid="sitor-draft-text" className="text-[13px] leading-relaxed text-[#E8EEF5] max-h-72 overflow-y-auto pr-1 [&_strong]:text-[#EAB308] [&_h1]:text-base [&_h1]:font-black [&_h1]:mb-2 [&_h2]:text-sm [&_h2]:font-black [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:mb-2 [&_li]:mb-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_hr]:border-[#1e293b] [&_hr]:my-2">
+            <ReactMarkdown>{current.text}</ReactMarkdown>
+          </div>
+          {current.status !== "approved" && (
+            <button data-testid="sitor-draft-approve" onClick={() => approve(current)} disabled={approving === current.id}
+              className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-sm font-black active:scale-95 disabled:opacity-50">
+              {approving === current.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+              {tri("Approva e archivia", "Freigeben & archivieren", "Approve & archive", "Aprobar y archivar", "Approuver & archiver", "تأیید و بایگانی")}
+            </button>
+          )}
+        </div>
+      )}
+
+      {past.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {past.map((d) => (
+            <span key={d.id} data-testid={`sitor-draft-past-${d.date}`} className={`text-[10px] font-mono-data px-2 py-1 rounded-lg border ${d.status === "approved" ? "bg-emerald-500/5 text-emerald-400/80 border-emerald-500/20" : "bg-[#0C1019] text-[#64748B] border-[#1e293b]"}`}>
+              {d.date} {d.status === "approved" ? "✓" : ""}
+            </span>
+          ))}
+          <button data-testid="sitor-draft-refresh" onClick={load} className="text-[#64748B] hover:text-[#EAB308] active:scale-95"><RefreshCw className="w-3.5 h-3.5" /></button>
+        </div>
+      )}
+    </div>
+  );
+}
