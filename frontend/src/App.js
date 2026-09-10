@@ -109,6 +109,7 @@ const DECK_DEPTS = [
   { id: "pasticceria", accent: "#7FD8C0", it: "Pasticceria", de: "Konditorei", en: "Pastry", fr: "Pâtisserie" },
   { id: "banco", accent: "#64748B", it: "Magazzino", de: "Lager", en: "Warehouse", fr: "Entrepôt" },
 ];
+const DECK_PHOTOS = { panificio: "panificio.jpg", pizzeria: "pizzeria.jpg", pasticceria: "pasticceria.jpg", banco: "banco.jpg" };
 
 export default function App() {
   const { lang } = useLang();
@@ -391,7 +392,11 @@ export default function App() {
               {mode !== "floor" && (<>
               {/* MULTIVERSO · plancia snella: foto reale del forno + reparti cliccabili */}
               <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-28 sm:h-36 transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 22px ${moodColor}2e`, background: "#050810" }}>
-                <img src={`${PUB}/deck/command-deck.jpg`} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                {DECK_DEPTS.map((d) => (
+                  <img key={d.id} src={`${PUB}/deck/${DECK_PHOTOS[d.id]}`} alt="" aria-hidden
+                    className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700"
+                    style={{ opacity: deckDept.id === d.id ? 0.6 : 0 }} />
+                ))}
                 <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(5,8,16,0.94) 0%, rgba(5,8,16,0.55) 45%, rgba(5,8,16,0.25) 100%)" }} />
                 {/* Alone reattivo dell'umore impianto (sereno/attivo/teso/critico) */}
                 <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 85% 110%, ${moodColor}30 0%, transparent 55%)` }} />

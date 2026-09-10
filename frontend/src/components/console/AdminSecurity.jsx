@@ -12,6 +12,7 @@ export default function AdminSecurity() {
   const [name, setName] = useState("");
   const [pin, setPin] = useState("");
   const [opLevel, setOpLevel] = useState("novizio");
+  const [opTtl, setOpTtl] = useState(0);
   const [log, setLog] = useState([]);
   const [busy, setBusy] = useState(false);
   const [ttl, setTtl] = useState(30);
@@ -37,7 +38,7 @@ export default function AdminSecurity() {
   const add = async () => {
     if (!name.trim() || pin.length !== 4) return;
     setBusy(true);
-    try { await operatorPinsApi.set(name.trim(), pin, opLevel); setName(""); setPin(""); setOpLevel("novizio"); load(); } catch (e) { /* */ }
+    try { await operatorPinsApi.set(name.trim(), pin, opLevel, opTtl); setName(""); setPin(""); setOpLevel("novizio"); setOpTtl(0); load(); } catch (e) { /* */ }
     setBusy(false);
   };
   const del = async (n) => { try { await operatorPinsApi.remove(n); load(); } catch (e) { /* */ } };
@@ -49,6 +50,19 @@ export default function AdminSecurity() {
   ];
 
   const kindLabel = (k) => ({ master: tri("Master", "Master", "Master", "Master", "Master", "مستر"), production: tri("Produzione", "Produktion", "Production", "Producción", "Production", "تولید"), operator: tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور") }[k] || k);
+
+  const TTLS = [
+    { h: 0, label: tri("Permanente", "Dauerhaft", "Permanent", "Permanente", "Permanent", "دائمی") },
+    { h: 8, label: tri("8 ore", "8 Std.", "8 hours", "8 horas", "8 heures", "۸ ساعت") },
+    { h: 24, label: tri("24 ore", "24 Std.", "24 hours", "24 horas", "24 heures", "۲۴ ساعت") },
+  ];
+  const remainingLabel = (exp) => {
+    if (!exp) return null;
+    const ms = new Date(exp).getTime() - Date.now();
+    if (ms <= 0) return tri("Scaduto", "Abgelaufen", "Expired", "Caducado", "Expiré", "منقضی");
+    const h = Math.floor(ms / 3600000), m = Math.floor((ms % 3600000) / 60000);
+    return h > 0 ? tri(`tra ${h}h ${m}m`, `in ${h}Std ${m}m`, `in ${h}h ${m}m`, `en ${h}h ${m}m`, `dans ${h}h ${m}m`, `${h}س ${m}د دیگر`) : tri(`tra ${m}m`, `in ${m}m`, `in ${m}m`, `en ${m}m`, `dans ${m}m`, `${m}د دیگر`);
+  };
 
   return (
     <div className="space-y-6" data-testid="admin-security">
@@ -99,23 +113,34 @@ export default function AdminSecurity() {
             className="bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2 text-sm text-white focus:border-[#64748B] outline-none">
             {LEVELS.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
           </select>
+          <select data-testid="op-ttl-input" value={opTtl} onChange={(e) => setOpTtl(Number(e.target.value))}
+            className="bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2 text-sm text-white focus:border-[#64748B] outline-none">
+            {TTLS.map((tOpt) => <option key={tOpt.h} value={tOpt.h}>{tOpt.label}</option>)}
+          </select>
           <button data-testid="op-add-btn" onClick={add} disabled={busy || !name.trim() || pin.length !== 4}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#64748B]/20 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
             <UserPlus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add", "Añadir", "Ajouter", "افزودن")}
           </button>
         </div>
         <p className="text-[11px] text-[#64748b] mb-3">{tri(
-          "Il livello dice a Sitor come guidare ciascuno: più semplice per i novizi, più tecnico per i maestri.",
-          "Das Level sagt Sitor, wie es jeden führt.",
-          "The level tells Sitor how to guide each person: simpler for novices, more technical for masters.",
-          "El nivel le dice a Sitor cómo guiar a cada uno.",
-          "Le niveau indique à Sitor comment guider chacun.",
-          "سطح به سیتور می‌گوید هرکس را چگونه راهنمایی کند.")}</p>
+          "Il livello dice a Sitor come guidare ciascuno: più semplice per i novizi, più tecnico per i maestri. Scegli una durata (8/24 ore) per stagionali ed extra: il PIN si revoca da solo alla scadenza.",
+          "Das Level sagt Sitor, wie es jeden führt. Wähle 8/24 Std. für Saison-/Aushilfskräfte: der PIN wird automatisch widerrufen.",
+          "The level tells Sitor how to guide each person. Pick a duration (8/24h) for seasonal/extra staff: the PIN auto-revokes when it expires.",
+          "El nivel le dice a Sitor cómo guiar a cada uno. Elige 8/24h para temporales: el PIN se revoca solo al caducar.",
+          "Le niveau indique à Sitor comment guider chacun. Choisis 8/24h pour les saisonniers : le PIN s'auto-révoque.",
+          "سطح به سیتور می‌گوید هرکس را چگونه راهنمایی کند. برای فصلی‌ها ۸/۲۴ ساعت انتخاب کن: پین خودکار باطل می‌شود.")}</p>
         <div className="space-y-1.5">
           {ops.length === 0 && <p className="text-xs text-[#64748b]">{tri("Nessun PIN operatore. Aggiungine uno per timbrature tracciabili al singolo.", "Noch keine Bediener-PINs.", "No operator PINs yet — add one for per-person clock-ins.", "Aún no hay PIN de operario.", "Aucun PIN opérateur.", "هنوز پینی نیست.")}</p>}
           {ops.map((o) => (
-            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className="flex items-center gap-2 bg-[#0C1019]/60 border border-[#1e293b] rounded-lg px-3 py-2">
-              <span className="text-sm font-semibold text-white flex-1 truncate">{o.name}</span>
+            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className={`flex items-center gap-2 bg-[#0C1019]/60 border rounded-lg px-3 py-2 ${o.expired || o.active === false ? "border-[#f87171]/40 opacity-70" : o.expires_at ? "border-[#EAB308]/40" : "border-[#1e293b]"}`}>
+              <span className="text-sm font-semibold text-white flex-1 truncate">
+                {o.name}
+                {o.expires_at && (
+                  <span data-testid={`op-ttl-badge-${o.name_key || o.name}`} className={`ml-2 inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${o.expired || o.active === false ? "bg-[#f87171]/20 text-[#f87171]" : "bg-[#EAB308]/20 text-[#EAB308]"}`}>
+                    <Clock className="w-2.5 h-2.5" /> {o.expired || o.active === false ? tri("Scaduto", "Abgelaufen", "Expired", "Caducado", "Expiré", "منقضی") : remainingLabel(o.expires_at)}
+                  </span>
+                )}
+              </span>
               <select data-testid={`op-level-${o.name_key || o.name}`} value={o.level || "novizio"} onChange={(e) => changeLevel(o, e.target.value)}
                 className="bg-[#060A10] border border-[#64748B]/30 rounded-lg px-2 py-1 text-[11px] font-bold text-white focus:border-[#64748B] outline-none"
                 style={{ color: (LEVELS.find((l) => l.id === (o.level || "novizio")) || LEVELS[0]).c }}>

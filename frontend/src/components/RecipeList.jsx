@@ -177,6 +177,17 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     }
   };
 
+  const handlePromote = async (r) => {
+    try {
+      await recipesApi.promote(r.id);
+      toast.success(triM("Promossa a MikiLab ✓", "Zu MikiLab befördert ✓", "Promoted to MikiLab ✓", "Promovida a MikiLab ✓"));
+      setViewing(null);
+      load();
+    } catch {
+      toast.error(t("toast_save_error"));
+    }
+  };
+
   const handleDuplicate = async (r) => {
     try {
       const { id, created_at, updated_at, ...rest } = r;
@@ -586,6 +597,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               onDuplicate={() => handleDuplicate(viewing)}
               onScaleAction={() => setScaling(viewing)}
               onDelete={() => setToDelete(viewing)}
+              onPromote={isCapo && viewing.collection_name === "personal" ? () => handlePromote(viewing) : null}
             />
           )}
         </DialogContent>
@@ -637,7 +649,7 @@ function procWithImprover(text, onImprover) {
 }
 
 
-function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete }) {
+function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete, onPromote }) {
   const { profile } = useProfile();
   const isPro = profile === "pro";
   const { lang } = useLang();
@@ -804,6 +816,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#3E9C93" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
           {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#7E8A93" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#3E9C93"><Pencil className="w-4 h-4" /></ActionBtn>}
+          {onPromote && <ActionBtn testid={`promote-recipe-${r.id}`} onClick={onPromote} color="#EAB308" label={tri("Promuovi a MikiLab", "Zu MikiLab befördern", "Promote to MikiLab", "Promover a MikiLab")}><Share2 className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#3E9C93"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
 

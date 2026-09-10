@@ -4874,3 +4874,14 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Stesso metodo sul Piano Settimanale e derivazioni**: nel gruppo "piano" il tool principale (Piano Settimanale · Prodotti) è ora primo e `defaultOpen`; le derivazioni (Sitor Piano del Giorno, Piano AI, Piano a Ritroso, Ordine&Piano, Smart Planner, Timeline) restano collassate sotto. Esteso ai gruppi "ordini" (panel-ordini) e "squadra" (panel-dept-assign): tool principale aperto di default.
 - Bug minori verificati già risolti: maestro-level-badge presente in SitorMaestro; nessuno <span> dentro <option> nel selettore attività.
 - Per mikilab.de serve REDEPLOY.
+
+## v73 (2026-09) — 3 feature backlog: Foto Deck per Reparto + Promuovi a MikiLab + PIN temporanei
+### Foto Deck per Reparto
+- Command Deck: banner cambia foto in base al reparto selezionato con crossfade (opacity 700ms). Mappa DECK_PHOTOS in App.js → /public/deck/{panificio,pizzeria,pasticceria,banco}.jpg. Tutte le 4 img montate sovrapposte, solo l'attiva a opacity .6. Verificato: click deck-dept-pizzeria → pizzeria.jpg attiva.
+### Ricetta Mia → MikiLab (Promuovi)
+- Backend: POST /api/recipes/{id}/promote (admin) → collection_name personal→mikilab, $unset owner_id, user_edited=true. Idempotente (already=true se già mikilab).
+- Frontend: api recipesApi.promote(id); ActionBtn ambra `promote-recipe-<id>` visibile solo al Capo su ricette personali nella scheda dettaglio. handlePromote → toast + reload. Testato via curl (personal→mikilab, owner_id rimosso).
+### PIN Operatore temporanei (8h/24h) a revoca automatica
+- Backend: OperatorPinSet.ttl_hours (0=permanente | 8 | 24). set → salva expires_at = now+ttl. GET /operator-pins calcola expired e AUTO-REVOCA (active=false) i scaduti; verify nega + revoca al volo i PIN scaduti. Permanente azzera expires_at.
+- Frontend: operatorPinsApi.set(name,pin,level,ttlHours). AdminSecurity: selettore durata `op-ttl-input` (Permanente/8h/24h), badge scadenza `op-ttl-badge-<key>` con countdown residuo, riga rossa se scaduto/revocato. Testato via curl: PIN 8h creato+verificato OK; forzata scadenza → verify nega + auto-revoca active=false.
+- Per mikilab.de serve REDEPLOY.

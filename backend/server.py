@@ -3283,6 +3283,23 @@ async def _translate_recipe_lang(doc, target):
         return {}
 
 
+@api_router.post("/recipes/{recipe_id}/promote")
+async def promote_recipe(recipe_id: str, user: dict = Depends(current_user)):
+    """Promuove una ricetta personale del Capo a ricetta MikiLab condivisa con un tocco."""
+    if user.get("role") != "admin":
+        raise HTTPException(status_code=403, detail="Solo l'admin può promuovere ricette a MikiLab")
+    existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not existing:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if existing.get("collection_name") == "mikilab":
+        return {"ok": True, "already": True}
+    await db.recipes.update_one(
+        {"id": recipe_id},
+        {"$set": {"collection_name": "mikilab", "user_edited": True, "updated_at": now_iso()}, "$unset": {"owner_id": ""}},
+    )
+    return {"ok": True}
+
+
 @api_router.post("/recipes/{recipe_id}/translate")
 async def translate_recipe(recipe_id: str, lang: str = "en", user: dict = Depends(current_user)):
     existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
@@ -11403,6 +11420,7 @@ class OperatorPinSet(BaseModel):
     name: str
     pin: str
     level: str = "novizio"  # novizio | esperto | maestro — Sitor adatta la guida al livello
+    ttl_hours: int = 0  # 0 = permanente; 8 o 24 = PIN temporaneo (stagionali/extra) a revoca automatica
 
 
 class OperatorPinVerify(BaseModel):
@@ -11412,12 +11430,32 @@ class OperatorPinVerify(BaseModel):
 _OP_LEVELS = {"novizio", "esperto", "maestro"}
 
 
+def _pin_expiry_status(d: dict):
+    """Ritorna (scaduto: bool, expires_at_iso|None). PIN temporaneo se ha 'expires_at'."""
+    exp = d.get("expires_at")
+    if not exp:
+        return False, None
+    try:
+        return now_iso() >= exp, exp
+    except Exception:
+        return False, exp
+
+
 @api_router.get("/operator-pins")
 async def operator_pin_list(admin: dict = Depends(require_admin)):
     docs = await db.operator_pins.find({}, {"_id": 0, "hash": 0}).sort("name", 1).to_list(200)
+    out = []
     for d in docs:
         d.setdefault("level", "novizio")
-    return {"operators": docs}
+        expired, exp = _pin_expiry_status(d)
+        if expired and d.get("active", True):
+            # Revoca automatica: il PIN temporaneo scaduto viene disattivato.
+            await db.operator_pins.update_one({"name_key": d["name_key"]}, {"$set": {"active": False, "revoked_at": now_iso()}})
+            d["active"] = False
+        d["expires_at"] = exp
+        d["expired"] = expired
+        out.append(d)
+    return {"operators": out}
 
 
 @api_router.put("/operator-pins")
@@ -11429,12 +11467,16 @@ async def operator_pin_set(body: OperatorPinSet, admin: dict = Depends(require_a
         lvl = "novizio"
     if not nm or not p:
         raise HTTPException(status_code=400, detail="Nome e PIN (4 cifre) richiesti")
-    await db.operator_pins.update_one(
-        {"name_key": nm.lower()},
-        {"$set": {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso()}},
-        upsert=True,
-    )
-    return {"ok": True}
+    ttl = int(body.ttl_hours or 0)
+    doc = {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso()}
+    if ttl in (8, 24):
+        doc["expires_at"] = (datetime.now(timezone.utc) + timedelta(hours=ttl)).isoformat()
+        doc["ttl_hours"] = ttl
+    else:
+        # PIN permanente: azzera eventuale scadenza precedente.
+        await db.operator_pins.update_one({"name_key": nm.lower()}, {"$unset": {"expires_at": "", "ttl_hours": "", "revoked_at": ""}})
+    await db.operator_pins.update_one({"name_key": nm.lower()}, {"$set": doc}, upsert=True)
+    return {"ok": True, "expires_at": doc.get("expires_at")}
 
 
 @api_router.delete("/operator-pins/{name}")
@@ -11468,6 +11510,11 @@ async def operator_pin_verify(body: OperatorPinVerify, request: Request):
     if p:
         async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
             if _check_pw(p, d.get("hash", "")):
+                expired, _ = _pin_expiry_status(d)
+                if expired:
+                    # PIN temporaneo scaduto: revoca al volo e nega l'accesso.
+                    await db.operator_pins.update_one({"name_key": d["name_key"]}, {"$set": {"active": False, "revoked_at": now_iso()}})
+                    continue
                 ok = True
                 name = d.get("name")
                 level = d.get("level") or "novizio"

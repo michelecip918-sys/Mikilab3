@@ -92,6 +92,7 @@ export const recipesApi = {
   create: (data) => api.post(`/recipes`, data).then((r) => r.data),
   update: (id, data) => api.put(`/recipes/${id}`, data).then((r) => r.data),
   remove: (id) => api.delete(`/recipes/${id}`).then((r) => r.data),
+  promote: (id) => api.post(`/recipes/${id}/promote`).then((r) => r.data),
   translate: (id, lang) => api.post(`/recipes/${id}/translate`, {}, { params: { lang } }).then((r) => r.data),
   generate: (data) => api.post(`/recipes/generate`, data).then((r) => r.data),
   complete: (recipe_name, recipe_id, image_url) => api.post(`/recipe/complete`, { recipe_name, recipe_id, image_url }).then((r) => r.data),
@@ -696,7 +697,7 @@ export const deptApi = {
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
 export const operatorPinsApi = {
   list: () => api.get(`/operator-pins`).then((r) => r.data),
-  set: (name, pin, level) => api.put(`/operator-pins`, { name, pin, level }).then((r) => r.data),
+  set: (name, pin, level, ttlHours = 0) => api.put(`/operator-pins`, { name, pin, level, ttl_hours: ttlHours }).then((r) => r.data),
   remove: (name) => api.delete(`/operator-pins/${encodeURIComponent(name)}`).then((r) => r.data),
   setLevel: (name, level) => api.patch(`/operator-pins/${encodeURIComponent(name)}/level`, { level }).then((r) => r.data),
   verify: (pin) => api.post(`/operator-pins/verify`, { pin }).then((r) => r.data),
