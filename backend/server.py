@@ -8047,6 +8047,12 @@ try:
 except Exception:
     pass
 _TR_LANG_NAMES = {"it": "Italian", "de": "German", "en": "English", "es": "Spanish", "fr": "French", "fa": "Persian (Farsi)"}
+# Lingue con enforcement supportato da eleven_turbo_v2_5 (evita che la voce "parta in inglese").
+_EL_LANG = {"it": "it", "de": "de", "en": "en", "es": "es", "fr": "fr", "pt": "pt", "nl": "nl", "pl": "pl"}
+
+
+def _el_lang_code(lang):
+    return _EL_LANG.get((lang or "it").lower().split("-")[0][:2])
 
 
 async def _translate_for_tts(text: str, lang: str) -> str:
@@ -8096,7 +8102,8 @@ async def _synth_tts_bytes(text: str, lang: str = "it", voice: str = "michele"):
     vkey = (voice or "michele").lower()
     if _eleven_client and time.time() >= _eleven_cooldown_until:
         vid = _VOICE_MAP.get(vkey, MICHELE_VOICE_ID)
-        ck = _hashlib.sha256(f"11l|{text}|{vid}|mp3".encode()).hexdigest()
+        lc = _el_lang_code(lang)
+        ck = _hashlib.sha256(f"11l|{text}|{vid}|turbo|{lc}|mp3".encode()).hexdigest()
         cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
         try:
             if os.path.exists(cpath):
@@ -8105,7 +8112,10 @@ async def _synth_tts_bytes(text: str, lang: str = "it", voice: str = "michele"):
         except Exception:
             pass
         try:
-            gen = _eleven_client.text_to_speech.convert(text=text, voice_id=vid, model_id="eleven_multilingual_v2", voice_settings=_voice_settings(vkey))
+            _kw = {"text": text, "voice_id": vid, "model_id": "eleven_turbo_v2_5", "voice_settings": _voice_settings(vkey)}
+            if lc:
+                _kw["language_code"] = lc
+            gen = _eleven_client.text_to_speech.convert(**_kw)
             audio = b"".join(gen)
             try:
                 with open(cpath, "wb") as f:
@@ -8171,7 +8181,8 @@ async def tts_speak(payload: TTSReq):
 
     if _eleven_client and time.time() >= _eleven_cooldown_until:
         vid = payload.voice_id or _VOICE_MAP.get(vkey, MICHELE_VOICE_ID)
-        ck = _hashlib.sha256(f"11l|{text}|{vid}|mp3".encode()).hexdigest()
+        lc = _el_lang_code(payload.lang)
+        ck = _hashlib.sha256(f"11l|{text}|{vid}|turbo|{lc}|mp3".encode()).hexdigest()
         cpath = os.path.join(_TTS_CACHE_DIR, ck + ".mp3")
         try:
             if os.path.exists(cpath):
@@ -8180,10 +8191,10 @@ async def tts_speak(payload: TTSReq):
         except Exception:
             pass
         try:
-            gen = _eleven_client.text_to_speech.convert(
-                text=text, voice_id=vid, model_id="eleven_multilingual_v2",
-                voice_settings=_voice_settings(vkey),
-            )
+            _kw = {"text": text, "voice_id": vid, "model_id": "eleven_turbo_v2_5", "voice_settings": _voice_settings(vkey)}
+            if lc:
+                _kw["language_code"] = lc
+            gen = _eleven_client.text_to_speech.convert(**_kw)
             audio = b"".join(gen)
             try:
                 with open(cpath, "wb") as f:

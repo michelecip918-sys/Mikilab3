@@ -120,9 +120,9 @@ export default function OvenBrain() {
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
-              Mike Mix <span className="text-[#FF6B00]">Deus</span> <Sparkles className="w-4 h-4 text-[#FF6B00]" />
+              Mike Mix <Sparkles className="w-4 h-4 text-[#FF6B00]" />
             </h2>
-            <p className="text-[11px] text-[#94A3B8]">{tri("Il dio del forno che organizza l'impossibile.", "Der Ofengott, der das Unmögliche organisiert.", "The oven god who organizes the impossible.", "El dios del horno que organiza lo imposible.", "Le dieu du four qui organise l'impossible.", "خدای فر که غیرممکن را سازمان می‌دهد.")}</p>
+            <p className="text-[11px] text-[#94A3B8]">{tri("L'IA operativa che organizza tutta la produzione.", "Die operative KI, die die ganze Produktion organisiert.", "The operational AI that organizes all production.", "La IA operativa que organiza toda la producción.", "L'IA opérationnelle qui organise toute la production.", "هوش عملیاتی که کل تولید را سازمان می‌دهد.")}</p>
           </div>
         </div>
 

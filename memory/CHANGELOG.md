@@ -388,3 +388,9 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - DeptFocus: striscia 3D del reparto assegnato (canvas WebGL) + nome + macchine vocali + obiettivo squadra + progresso per PIN.
 - Collaudo E2E (iter 211) 100%: backend 3/3, frontend 5/5. Sync live verificato (dept-progress-5 -> 15->20/100, PIN tracciato). Nessun ErrorBoundary, nessun viola.
 - 2026-09-15: Fix critico login produzione (mikilab.de). Il database remoto aveva un hash PIN corrotto che sovrascriveva il file .env. Modificato 'admin_gate_verify' in server.py per dare priorita assoluta a 'ADMIN_GATE_PIN' nel .env.
+
+## 2026-06 — Semplificazione console Capo + fix audio
+- Console Capo: 28+ pannelli raggruppati in 6 SEZIONI a fisarmonica (single-open): Oggi·Regia, Piani di Produzione, Ricette, Squadra & Turni, Impianto & Macchine, Magazzino/Costi/Report. Nuovo componente `CapoGroup.jsx`. Nessuna funzione eliminata (incorporate). CONSOLE_SECMAP rimappato a 6 gruppi; rimossa la vecchia logica force-visible.
+- Audio TTS: passato da `eleven_multilingual_v2` a `eleven_turbo_v2_5` con `language_code` forzato (fix "l'audio italiano parte in inglese"). Cache-key aggiornata (turbo+lang). Helper `_el_lang_code`.
+- Rimosso branding confuso "Mike Mix Deus"/"dio del forno" nel titolo OvenBrain → ora solo "Mike Mix" con descrizione chiara.
+- PIN Master 198505: verify ora dà priorità assoluta al valore hardcoded/`.env` (fix desync DB produzione). NB: richiede DEPLOY per applicarsi su mikilab.de.
