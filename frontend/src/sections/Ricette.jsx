@@ -7,7 +7,6 @@ import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
 import SaporiCasa from "@/sections/SaporiCasa";
 // (Rimosso "Scopri MikiLab" / "Guida al Sito" su richiesta)
-import SaporeDelGiorno from "@/components/SaporeDelGiorno";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import VetrinaFocacce from "@/components/VetrinaFocacce";
 import { useLang } from "@/i18n/LanguageContext";
@@ -93,26 +92,29 @@ export default function Ricette() {
         </div>
       </div>
 
-      {/* BARRA BOTTONI — tutti in alto, compatti */}
-      <div data-testid="ricette-toolbar" className="grid grid-cols-3 gap-2 mb-4">
-        <UtilBtn testid="ricette-sapori-band" Icon={UtensilsCrossed} label={tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa", "Saveurs de la Maison")} onClick={() => setView("sapori")} />
-        <UtilBtn testid="ricette-custodite-band" Icon={Tag} label={tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas", "Recettes Gardées")} onClick={() => setView("custodite")} />
-        <UtilBtn testid="ricette-focacce-band" Icon={Sandwich} label={tri("Vetrina Focacce", "Focaccia-Schaufenster", "Focaccia Showcase", "Vitrina de Focaccias", "Vitrine des Focaccias")} onClick={() => setView("focacce")} />
-        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
-        <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
-        <UtilBtn testid="ricette-backup-btn" Icon={Download} label={tri("Backup Ricette", "Rezept-Backup", "Recipe Backup", "Copia de Recetas", "Sauvegarde Recettes")} onClick={() => setBackupOpen(true)} />
-      </div>
-
-      <div className="mb-4"><SaporeDelGiorno /></div>
-
       <div data-testid="ricette-list">
       <RecipeList
         collectionName="mikilab"
         deptScoped={true}
         hideHero={true}
         emptyText={t("mikilab_empty")}
-        extraHeader={<NovitaColorate />}
       />
+      </div>
+
+      {/* STRUMENTI EXTRA — in fondo alla pagina, dove non danno fastidio */}
+      <div className="mt-8 pt-5 border-t border-[#2A3B49] dark:border-[#2A3B49]">
+        <div className="mb-4 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] p-4"><NovitaColorate /></div>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-[#7E8A93] mb-3">
+          {tri("Strumenti del ricettario", "Rezeptbuch-Werkzeuge", "Recipe book tools", "Herramientas del recetario", "Outils du livre de recettes")}
+        </p>
+        <div data-testid="ricette-toolbar" className="grid grid-cols-3 gap-2">
+        <UtilBtn testid="ricette-sapori-band" Icon={UtensilsCrossed} label={tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa", "Saveurs de la Maison")} onClick={() => setView("sapori")} />
+        <UtilBtn testid="ricette-custodite-band" Icon={Tag} label={tri("Ricette Custodite", "Bewahrte Rezepte", "Treasured Recipes", "Recetas Custodiadas", "Recettes Gardées")} onClick={() => setView("custodite")} />
+        <UtilBtn testid="ricette-focacce-band" Icon={Sandwich} label={tri("Vetrina Focacce", "Focaccia-Schaufenster", "Focaccia Showcase", "Vitrina de Focaccias", "Vitrine des Focaccias")} onClick={() => setView("focacce")} />
+        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
+        <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
+        <UtilBtn testid="ricette-backup-btn" Icon={Download} label={tri("Backup Ricette", "Rezept-Backup", "Recipe Backup", "Copia de Recetas", "Sauvegarde Recettes")} onClick={() => setBackupOpen(true)} />
+        </div>
       </div>
 
       {backupOpen && (

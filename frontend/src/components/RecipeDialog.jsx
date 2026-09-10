@@ -34,8 +34,9 @@ const empty = {
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
 };
 
-export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
+export default function RecipeDialog({ open, onOpenChange, initial, onSave, collectionChoice = false }) {
   const [form, setForm] = useState(empty);
+  const [coll, setColl] = useState("mikilab");
   const [pctMode, setPctMode] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -46,6 +47,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   useEffect(() => {
     if (open) {
       setForm(initial ? { ...empty, ...normalize(initial) } : { ...empty, department: (activeDept && activeDept !== "tutti") ? activeDept : "" });
+      setColl("mikilab");
       setPctMode(false);
       floursApi.list().then(setPantry).catch(() => setPantry([]));
     }
@@ -154,6 +156,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
     if (!form.name.trim()) return;
     if (saving) return;
     const payload = {
+      ...((collectionChoice && !initial) ? { collection_name: coll } : {}),
       name: form.name.trim(), real_name: (form.real_name || "").trim() || null, menu_category: form.menu_category || null, department: form.department || null, flour_type: form.flour_type, origin: form.origin || null, dough_category: form.dough_category || null, water_temp_c: form.water_temp_c === "" || form.water_temp_c == null ? null : Number(form.water_temp_c), notes: form.notes, procedure: form.procedure,
       preferment_type: form.preferment_type || null,
       oven_type: form.oven_type || null,
@@ -197,6 +200,21 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             {t("recipe_dialog_desc")}
           </DialogDescription>
         </DialogHeader>
+
+        {collectionChoice && !initial && (
+          <div data-testid="recipe-collection-choice" className="grid grid-cols-2 gap-2 pb-1">
+            <button type="button" data-testid="recipe-coll-mikilab" onClick={() => setColl("mikilab")}
+              className={`rounded-2xl border px-3 py-2.5 text-left transition-all active:scale-97 ${coll === "mikilab" ? "bg-[#3E9C93]/15 border-[#3E9C93] text-white" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] text-[#7E8A93]"}`}>
+              <span className="block text-sm font-bold">{mkTri(lang)("Ricetta MikiLab", "MikiLab-Rezept", "MikiLab recipe", "Receta MikiLab")}</span>
+              <span className="block text-[11px] opacity-80">{mkTri(lang)("condivisa, visibile a tutti", "geteilt, für alle sichtbar", "shared, visible to all", "compartida, visible para todos")}</span>
+            </button>
+            <button type="button" data-testid="recipe-coll-personal" onClick={() => setColl("personal")}
+              className={`rounded-2xl border px-3 py-2.5 text-left transition-all active:scale-97 ${coll === "personal" ? "bg-[#EAB308]/15 border-[#EAB308] text-white" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] text-[#7E8A93]"}`}>
+              <span className="block text-sm font-bold">{mkTri(lang)("Ricetta mia", "Mein Rezept", "My recipe", "Receta mía")}</span>
+              <span className="block text-[11px] opacity-80">{mkTri(lang)("privata, solo per te", "privat, nur für dich", "private, only for you", "privada, solo para ti")}</span>
+            </button>
+          </div>
+        )}
 
         <div className="space-y-3 py-1">
           <div>
