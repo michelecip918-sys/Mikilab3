@@ -420,3 +420,9 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Backend: nuovo endpoint POST /api/image/generate (require_admin) {prompt, kind, lang} → {image_base64}. Stile on-brand forzato (panificio dark, blu petrolio+arancio, luce forno). Testato: HTTP 200, immagine 2.6MB base64.
 - Frontend: nuovo componente console/ImageForge.jsx ("Forgia di Sitor"): il Capo dà un'idea, Sitor forgia l'immagine. Mostra risultato + Scarica/Nuova. Agganciato nel gruppo Oggi·Regia. timeout 90s (gen fino a 1 min).
 - Verificato: backend 200 con immagine reale; frontend compila; FORGE presente nella console; briefing mostra MIKILAB + SITOR.
+
+## 2026-06 — Redesign da documento utente (priorità 1 e 3)
+- PRIORITÀ 1 — Sezione Capo UNIFICATA in UNA pagina con 5 voci a fisarmonica (una aperta per volta), nomi esatti richiesti: "Piano Settimanale", "Ordini Extra", "Ruoli & Turni", "Strumenti & Integrazioni", "Chat & Voce con Sitor". Nessun pannello eliminato: tutti reincorporati (ImageForge e tutti i tool dentro Strumenti; CapoDeck/OvenBrain/MikeAlerts/MohamedInbox/LivingRecipe dentro Chat Sitor). CONSOLE_SECMAP e default aggiornati (default "piano").
+- PRIORITÀ 3 — Selettore ATTIVITÀ sempre in alto (header): Panificio/Pizzeria/Pasticceria, persistito in localStorage (mikilab_activity), cambiabile in ogni momento.
+- Testato: frontend compila, 5 gruppi presenti (piano/ordini/squadra/strumenti/sitor), selettore presente, titoli verificati via screenshot.
+- RESTANO da fare (dal documento): #2 Produzione = operatore vede SOLO il compito del giorno; #4 Home = ridurre a UNA sola spiegazione prima del PIN; #5 stile "multiverso" (avatar grandi rotanti, reattività al movimento) — già in parte presente.

@@ -140,6 +140,7 @@ export default function App() {
   const [activeZone, setActiveZone] = useState("master");
   const [deckDept, setDeckDept] = useState(DECK_DEPTS[0]);
   const [showBriefing, setShowBriefing] = useState(false);
+  const [activity, setActivity] = useState(() => { try { return localStorage.getItem("mikilab_activity") || "panificio"; } catch { return "panificio"; } });
 
   // Deck reattivo: stato live dei reparti (turni attivi + allarmi Sitor), polling 15s.
   const [deckStatus, setDeckStatus] = useState(null);
@@ -187,15 +188,13 @@ export default function App() {
 
   // Plancia Capo a 6 sezioni a fisarmonica: ogni pannello appartiene a una sezione.
   // Solo UNA sezione aperta per volta = niente muro di 30 pannelli.
-  const [consoleSec, setConsoleSec] = useState("oggi");
+  const [consoleSec, setConsoleSec] = useState("piano");
   const toggleSec = (id) => setConsoleSec((s) => (s === id ? "" : id));
   const CONSOLE_SECMAP = {
-    "panel-emergency": "oggi", "panel-shiftreport": "oggi",
-    "panel-autoplan": "piani", "panel-weekly": "piani", "panel-pianoai": "piani", "panel-backward": "piani", "panel-ordine": "piani", "panel-ordini": "piani", "panel-planner": "piani", "panel-b2b": "piani", "panel-timeline": "piani",
-    "panel-thermalflow": "ricette", "panel-ricette": "ricette",
+    "panel-autoplan": "piano", "panel-weekly": "piano", "panel-pianoai": "piano", "panel-backward": "piano", "panel-ordine": "piano", "panel-planner": "piano", "panel-timeline": "piano",
+    "panel-ordini": "ordini", "panel-b2b": "ordini",
     "panel-dept-assign": "squadra", "panel-shift-team": "squadra", "panel-shift-templates": "squadra",
-    "panel-twin": "impianto", "panel-ovenqc": "impianto", "panel-carbon": "impianto", "panel-proofing": "impianto", "panel-agv": "impianto", "panel-packaging": "impianto", "panel-radar": "impianto", "panel-hardware": "impianto", "panel-machine-arrival": "impianto",
-    "panel-silos": "magazzino", "panel-magazzino": "magazzino", "panel-elite": "magazzino", "panel-docs": "magazzino", "panel-pin": "magazzino", "panel-security": "magazzino",
+    "panel-thermalflow": "strumenti", "panel-ricette": "strumenti", "panel-magazzino": "strumenti", "panel-silos": "strumenti", "panel-elite": "strumenti", "panel-docs": "strumenti", "panel-pin": "strumenti", "panel-security": "strumenti", "panel-twin": "strumenti", "panel-ovenqc": "strumenti", "panel-carbon": "strumenti", "panel-proofing": "strumenti", "panel-agv": "strumenti", "panel-packaging": "strumenti", "panel-radar": "strumenti", "panel-hardware": "strumenti", "panel-machine-arrival": "strumenti", "panel-image-forge": "strumenti", "panel-emergency": "strumenti", "panel-shiftreport": "strumenti",
   };
   useEffect(() => {
     const onJump = (e) => { const s = CONSOLE_SECMAP[e.detail]; if (s) setConsoleSec(s); };
@@ -334,6 +333,12 @@ export default function App() {
                   </button>
                 )}
                 <LangSelector testid="header-lang" />
+                <select data-testid="activity-selector" value={activity} onChange={(e) => { setActivity(e.target.value); try { localStorage.setItem("mikilab_activity", e.target.value); } catch { /* */ } }}
+                  className="rounded-lg bg-[#0C1019] border border-[#FF6B00]/30 text-[#FF6B00] text-[11px] font-bold px-1.5 py-1.5 outline-none focus:border-[#FF6B00]">
+                  <option value="panificio">🥖 {tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی")}</option>
+                  <option value="pizzeria">🍕 {tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا")}</option>
+                  <option value="pasticceria">🧁 {tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")}</option>
+                </select>
                 <InstallApp variant="chip" />
                 <KioskMode />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
@@ -431,31 +436,9 @@ export default function App() {
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
-                    <CapoGroup id="oggi" icon="⚡" accent="#FF6B00" open={consoleSec === "oggi"} onToggle={() => toggleSec("oggi")}
-                      title={tri("Oggi · Regia", "Heute · Regie", "Today · Control", "Hoy · Control", "Aujourd'hui · Régie", "امروز · کنترل")}
-                      sub={tri("Comando del turno, allarmi, posta e SOS.", "Schichtsteuerung, Alarme, Post, SOS.", "Shift control, alarms, mail, SOS.", "Control de turno, alarmas, SOS.", "Contrôle du service, alarmes, SOS.", "کنترل شیفت، هشدارها، SOS.")}>
-                    <div data-testid="console-regia-tools" className="space-y-4">
-                    <RoleLayout />
-                    <CapoDeck />
-                    <OvenBrain />
-                    <MikeSuggestions />
-                    <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
-                    <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
-                    <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
-                    <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
-                    <LabBriefing />
-                    </div>
-                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
-                      <EmergencyCenter />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Sitor riassume il turno a voce e assegna il MikiScore dell'impianto.", "Sitor fasst die Schicht zusammen.", "Sitor voices the shift summary and the plant MikiScore.", "Sitor resume el turno.", "Sitor résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
-                      <ShiftReport />
-                    </HoloPanel>
-                    </CapoGroup>
-
-                    <CapoGroup id="piani" icon="🗓️" accent="#FF9D42" open={consoleSec === "piani"} onToggle={() => toggleSec("piani")}
-                      title={tri("Piani di Produzione", "Produktionspläne", "Production Plans", "Planes de Producción", "Plans de Production", "برنامه‌های تولید")}
-                      sub={tri("Piano del giorno, settimana, ordini e timeline.", "Tages- und Wochenplan, Aufträge, Timeline.", "Day/week plan, orders and timeline.", "Plan diario/semanal y pedidos.", "Plan jour/semaine et commandes.", "برنامه روز/هفته و سفارش‌ها.")}>
+                    <CapoGroup id="piano" icon="🗓️" accent="#FF9D42" open={consoleSec === "piano"} onToggle={() => toggleSec("piano")}
+                      title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}
+                      sub={tri("Dai un punto di partenza: Sitor completa il piano del giorno e della settimana.", "Gib einen Startpunkt: Sitor vollendet den Plan.", "Give a starting point: Sitor completes the plan.", "Da un punto de partida: Sitor completa el plan.", "Donne un point de départ : Sitor complète le plan.", "یک نقطه شروع بده: سیتور برنامه را کامل می‌کند.")}>
                     <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Sitor · Piano del Giorno", "Sitor · Tagesplan", "Sitor · Day Plan", "Sitor · Plan del Día", "Sitor · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Sitor genera la sequenza di produzione ottimale del giorno.", "Sitor erstellt den optimalen Produktionsablauf.", "Sitor generates the optimal production sequence.", "Sitor genera la secuencia óptima.", "Sitor génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
                     </HoloPanel>
@@ -474,30 +457,24 @@ export default function App() {
                     <HoloPanel testid="panel-planner" accent="#64748B" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")}>
                       <SmartPlannerStressZero />
                     </HoloPanel>
+                    <HoloPanel testid="panel-timeline" accent="#FF6B00" beacon="#FF9D42" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
+                      <TimelineTurno />
+                    </HoloPanel>
+                    </CapoGroup>
+
+                    <CapoGroup id="ordini" icon="⚡" accent="#FFB800" open={consoleSec === "ordini"} onToggle={() => toggleSec("ordini")}
+                      title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")}
+                      sub={tri("Ordini last-minute e B2B: Sitor rigenera il piano all'istante.", "Last-Minute- & B2B-Aufträge.", "Last-minute and B2B orders: Sitor regenerates instantly.", "Pedidos de última hora y B2B.", "Commandes de dernière minute et B2B.", "سفارش‌های لحظه‌آخری و B2B.")}>
                     <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#FFB800" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
                       <OrdiniExtra />
                     </HoloPanel>
                     <HoloPanel testid="panel-b2b" accent="#64748B" beacon="#FF6B00" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
                       <B2BOrders />
                     </HoloPanel>
-                    <HoloPanel testid="panel-timeline" accent="#FF6B00" beacon="#FF9D42" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
-                      <TimelineTurno />
-                    </HoloPanel>
                     </CapoGroup>
 
-                    <CapoGroup id="ricette" icon="🥖" accent="#FF6B00" open={consoleSec === "ricette"} onToggle={() => toggleSec("ricette")}
-                      title={tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها")}
-                      sub={tri("Ricettario protetto ed editor termico live.", "Geschützte Rezepte & Thermo-Editor.", "Protected recipe book & live thermal editor.", "Recetario protegido y editor térmico.", "Recettes protégées & éditeur thermique.", "دستورنامه محافظت‌شده و ویرایشگر حرارتی.")}>
-                    <HoloPanel testid="panel-thermalflow" accent="#FF6B00" beacon="#FF9D42" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
-                      <RecipeThermalFlow />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
-                      <Ricette isMasterView={true} />
-                    </HoloPanel>
-                    </CapoGroup>
-
-                    <CapoGroup id="squadra" icon="🏭" accent="#FF9D42" open={consoleSec === "squadra"} onToggle={() => toggleSec("squadra")}
-                      title={tri("Squadra & Turni", "Team & Schichten", "Team & Shifts", "Equipo & Turnos", "Équipe & Services", "تیم و شیفت‌ها")}
+                    <CapoGroup id="squadra" icon="👥" accent="#FF9D42" open={consoleSec === "squadra"} onToggle={() => toggleSec("squadra")}
+                      title={tri("Ruoli & Turni", "Rollen & Schichten", "Roles & Shifts", "Roles & Turnos", "Rôles & Services", "نقش‌ها و شیفت‌ها")}
                       sub={tri("Chi lavora, dove e quando.", "Wer arbeitet, wo und wann.", "Who works, where and when.", "Quién trabaja, dónde y cuándo.", "Qui travaille, où et quand.", "چه کسی، کجا و کی کار می‌کند.")}>
                     <HoloPanel testid="panel-dept-assign" accent="#FF6B00" beacon="#FFB800" icon="🏭" title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
@@ -510,9 +487,25 @@ export default function App() {
                     </HoloPanel>
                     </CapoGroup>
 
-                    <CapoGroup id="impianto" icon="🌐" accent="#64748B" open={consoleSec === "impianto"} onToggle={() => toggleSec("impianto")}
-                      title={tri("Impianto & Macchine", "Anlage & Maschinen", "Plant & Machines", "Planta & Máquinas", "Usine & Machines", "کارخانه و ماشین‌ها")}
-                      sub={tri("Gemello 3D, forni, celle, logistica ed energia.", "3D-Zwilling, Öfen, Kammern, Logistik.", "3D twin, ovens, cells, logistics and energy.", "Gemelo 3D, hornos, celdas, logística.", "Jumeau 3D, fours, chambres, logistique.", "دوقلوی سه‌بعدی، فرها، لجستیک.")}>
+                    <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
+                      title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
+                      sub={tri("Ricette, forgia immagini, magazzino, forni, qualità, energia, report e sicurezza.", "Rezepte, Bilder, Lager, Öfen, Qualität, Berichte.", "Recipes, image forge, warehouse, ovens, quality, reports.", "Recetas, imágenes, almacén, hornos, informes.", "Recettes, images, entrepôt, fours, rapports.", "دستورها، تصاویر، انبار، فرها، گزارش‌ها.")}>
+                    <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
+                    <HoloPanel testid="panel-thermalflow" accent="#FF6B00" beacon="#FF9D42" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
+                      <RecipeThermalFlow />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
+                      <Ricette isMasterView={true} />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
+                      <MagazzinoManager />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-silos" accent="#64748B" beacon="#FFB800" icon="🌾" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias", "Silos & Matières", "سیلوها و مواد")} sub={tri("Calo peso, micro-ordini automatici e compensazione umidità della farina.", "Gewichtsverlust, Auto-Nachbestellung, Mehlfeuchte-Ausgleich.", "Weight drop, auto micro-orders and flour humidity compensation.", "Caída de peso, micro-pedidos y humedad.", "Perte de poids, micro-commandes, humidité.", "افت وزن، سفارش خودکار، رطوبت آرد.")}>
+                      <SiloManager />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-elite" accent="#64748B" beacon="#FF9D42" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
+                      <EliteTools />
+                    </HoloPanel>
                     <HoloPanel testid="panel-twin" accent="#64748B" beacon="#FF9D42" icon="🌐" title={tri("Gemello Digitale 3D", "Digitaler Zwilling 3D", "3D Digital Twin", "Gemelo Digital 3D", "Jumeau Numérique 3D", "دوقلوی دیجیتال")} sub={tri("Metaverso di laboratorio: supervisione spaziale dei macchinari.", "Labor-Metaverse: räumliche Überwachung.", "Lab metaverse: spatial supervision of machines.", "Metaverso: supervisión espacial.", "Métavers: supervision spatiale.", "متاورس آزمایشگاه.")}>
                       <DigitalTwin />
                     </HoloPanel>
@@ -540,20 +533,6 @@ export default function App() {
                     <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#FF6B00" icon="⚙️" title={tri("Nuovi Macchinari · Sitor riconosce", "Neue Maschinen · Sitor erkennt", "New Machines · Sitor recognizes", "Nuevas Máquinas · Sitor reconoce", "Nouvelles Machines · Sitor reconnaît", "ماشین‌های جدید · Sitor می‌شناسد")} sub={tri("Arriva un macchinario? Sitor lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Sitor erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Sitor flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Sitor la reconoce e integra.", "Une machine arrive ? Sitor la reconnaît et l'intègre.", "دستگاه جدید؟ Sitor آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
-                    </CapoGroup>
-
-                    <CapoGroup id="magazzino" icon="📦" accent="#64748B" open={consoleSec === "magazzino"} onToggle={() => toggleSec("magazzino")}
-                      title={tri("Magazzino, Costi & Report", "Lager, Kosten & Berichte", "Warehouse, Costs & Reports", "Almacén, Costes & Informes", "Entrepôt, Coûts & Rapports", "انبار، هزینه‌ها و گزارش‌ها")}
-                      sub={tri("Scorte, food cost, PDF, PIN e sicurezza.", "Bestand, Food Cost, PDF, PIN, Sicherheit.", "Stock, food cost, PDF, PIN and security.", "Stock, coste, PDF, PIN y seguridad.", "Stock, coût, PDF, PIN et sécurité.", "موجودی، بها، PDF، پین و امنیت.")}>
-                    <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
-                      <MagazzinoManager />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-silos" accent="#64748B" beacon="#FFB800" icon="🌾" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias", "Silos & Matières", "سیلوها و مواد")} sub={tri("Calo peso, micro-ordini automatici e compensazione umidità della farina.", "Gewichtsverlust, Auto-Nachbestellung, Mehlfeuchte-Ausgleich.", "Weight drop, auto micro-orders and flour humidity compensation.", "Caída de peso, micro-pedidos y humedad.", "Perte de poids, micro-commandes, humidité.", "افت وزن، سفارش خودکار، رطوبت آرد.")}>
-                      <SiloManager />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-elite" accent="#64748B" beacon="#FF9D42" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
-                      <EliteTools />
-                    </HoloPanel>
                     <HoloPanel testid="panel-docs" accent="#64748B" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
                       <DocsDownload />
                     </HoloPanel>
@@ -563,6 +542,25 @@ export default function App() {
                     <HoloPanel testid="panel-security" accent="#64748B" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
                       <AdminSecurity />
                     </HoloPanel>
+                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
+                      <EmergencyCenter />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Sitor riassume il turno a voce e assegna il MikiScore dell'impianto.", "Sitor fasst die Schicht zusammen.", "Sitor voices the shift summary and the plant MikiScore.", "Sitor resume el turno.", "Sitor résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
+                      <ShiftReport />
+                    </HoloPanel>
+                    </CapoGroup>
+
+                    <CapoGroup id="sitor" icon="💬" accent="#EAB308" open={consoleSec === "sitor"} onToggle={() => toggleSec("sitor")}
+                      title={tri("Chat & Voce con Sitor", "Chat & Stimme mit Sitor", "Chat & Voice with Sitor", "Chat & Voz con Sitor", "Chat & Voix avec Sitor", "گفت‌وگو با سیتور")}
+                      sub={tri("Parla o scrivi a Sitor: dagli un punto di riferimento e fa tutto lui.", "Sprich mit Sitor: gib einen Anhaltspunkt, er macht alles.", "Talk to Sitor: give a reference point and he does everything.", "Habla con Sitor: dale un punto y lo hace todo.", "Parle à Sitor : donne un repère, il fait tout.", "با سیتور صحبت کن: یک نقطه بده، همه‌چیز را انجام می‌دهد.")}>
+                    <RoleLayout />
+                    <CapoDeck />
+                    <OvenBrain />
+                    <MikeSuggestions />
+                    <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
+                    <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
+                    <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
+                    <LabBriefing />
                     </CapoGroup>
                     {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
                     </PlantHeartbeatProvider>
