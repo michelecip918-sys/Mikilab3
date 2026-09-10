@@ -4814,3 +4814,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **PIN Sezione Operai configurabile dal Capo**: il gate (`/api/admin-gate/verify`) ora accetta anche il `production_pin` (impostato dal Capo) → livello **operator** generico (apre solo la Produzione). I PIN personali con livello restano validi in parallelo (tracciano chi è + livello). UI in panel-security: `op-gate-pin-config` (status + input + Imposta/Cambia PIN) via `productionPinApi.set/status`. Verificato: production_pin 5566 → gate ritorna `{level:"operator"}`.
 - **Avatar 3D viventi** (`components/LivingAvatar3D.jsx`, Vanilla three.js/WebGPU + fallback WebGL2): ritratto con profondità (cupola) dalla foto, **respiro/idle continuo** (scala+float+sway), **rotazione al tocco/drag e hover del mouse** con ritorno elastico, alone additivo (più intenso per Sitor/nexus). Sostituiti gli avatar statici MikiLab+Sitor nella PublicGate (i 2 avatar del sito). Il tap resta un click (apre il PIN). Nessun uso di @react-three/fiber (regola rispettata). Smoke test: 2 canvas attivi (78px MikiLab, 126px Sitor), aura pulsante, 0 overflow.
 - sw.js CACHE_NAME → mikilab-v52.
+
+## v64 (2026-09) — 3D VIVENTI OVUNQUE + NUOVO LOGO/EMBLEMA
+- **Avatar 3D viventi estesi**: `LivingAvatar3D` ora anche nella testata della **Sala Sitor** (56px, nexus) e nella card di saluto **Sitor del reparto** (FloorOperatorDay). Ogni istanza = 1 contesto WebGL: tenuti pochi per pagina (Gate 2 + Sala 1 + Floor 1) per performance. Avatar per-messaggio in chat restano immagini leggere (NexusAvatar) di proposito.
+- **Nuovo logo/emblema**: generato con Gemini 3.1 Flash Image (divinità dell'arte bianca, oro/arancio su nero) e applicato a `logo-emblem.png` + `logo.png` (header, gate, orb, icona PWA). Backup vecchio in logo-emblem-old.png.
+- sw.js CACHE_NAME → mikilab-v53. Deploy ripubblicato su mikilab.de.
+- **DA FARE (concordato, non ancora implementato)**:
+  1. **Riscrittura di TUTTI i PDF e descrizioni** delle funzionalità MikiLab (chiare per chiunque) — grande, da fare come task dedicato.
+  2. **"Sitor costruisce su misura per ogni Capo"**: pannello dove Sitor aggiunge widget/strumenti richiesti dal Capo e memorizza le preferenze per-Capo (auto-miglioramento personalizzato) — feature ampia, da progettare.
+  3. **.glb reali dei personaggi**: impossibile autorare modelli 3D riggati con gli strumenti attuali; realizzato invece il ritratto 3D vivente dalla foto. Se l'utente fornisce/genera un .glb, montarlo con model-viewer/Three.js.

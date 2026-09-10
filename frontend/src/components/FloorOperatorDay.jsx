@@ -7,6 +7,7 @@ import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
+import LivingAvatar3D from "@/components/LivingAvatar3D";
 import FaceCheckIn from "@/components/FaceCheckIn";
 import OperatorClock from "@/components/OperatorClock";
 import { useLang } from "@/i18n/LanguageContext";
@@ -326,7 +327,7 @@ export default function FloorOperatorDay() {
       )}
       {/* Sitor parla direttamente con l'operaio */}
       <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-[#0b0f19]"}`}>
-        <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-14 h-14 rounded-xl object-cover object-top border-2 border-amber-500/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-amber-500/60 shrink-0"><LivingAvatar3D src={`${PUB}/avatar_nexus.jpg`} accent="#EAB308" nexus className="w-full h-full" /></div>
         <div className="min-w-0">
           <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">Sitor
             {apprentice && <span data-testid="floor-appr-badge" className="inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/50"><GraduationCap className="w-3 h-3" /> {tri("Modalità apprendista", "Lehrlingsmodus", "Apprentice mode", "Modo aprendiz", "Mode apprenti", "حالت کارآموز")}</span>}

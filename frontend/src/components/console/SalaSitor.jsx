@@ -7,6 +7,7 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { NexusAvatar } from "@/components/NexusAvatar";
+import LivingAvatar3D from "@/components/LivingAvatar3D";
 import MikeSuggestions from "@/components/console/MikeSuggestions";
 import MikeAlerts from "@/components/MikeAlerts";
 import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
@@ -148,9 +149,11 @@ export default function SalaSitor() {
 
         {/* Testata: il luogo d'incontro */}
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div className="relative w-14 h-14 shrink-0">
             <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(234,179,8,0.55), rgba(255,107,0,0.3) 60%, transparent 72%)" }} />
-            <NexusAvatar size={56} className="relative border-2 border-[#EAB308]/70" />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#EAB308]/70">
+              <LivingAvatar3D src="/avatar_nexus.jpg" accent="#EAB308" nexus className="w-full h-full" />
+            </div>
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
