@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
 import { toast } from "sonner";
-import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag, ShoppingBasket, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Plus, Trash2, Save, Wheat, AlertTriangle, Printer, Share2, FileText, Store, Tag, CheckCircle2 } from "lucide-react";
 import { recipesApi, weeklyApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
-import { fmtQty, computeShopping, otherLabel } from "@/lib/shopping";
+import { fmtQty } from "@/lib/format";
 import { rLoc, ingLoc, recipeTitle } from "@/lib/loc";
 import RecipeOptions from "@/components/RecipeOptions";
 import CategoryRecipePicker from "@/components/CategoryRecipePicker";
@@ -497,70 +497,6 @@ export default function WeeklyPlan() {
     setTimeout(() => w.print(), 500);
   };
 
-  // PDF Lista della Spesa divisa per Punto Vendita: ingredienti totali per ogni negozio.
-  const pdfShoppingPerShop = () => {
-    const groups = {};
-    const NOSHOP = tri("Senza negozio assegnato", "Ohne Verkaufspunkt", "No sales point");
-    items.forEach((it) => {
-      const key = it.sale_point || NOSHOP;
-      const grams = Number(it.pieces || 0) * Number(it.grams_per_piece || 0);
-      if (grams <= 0) return;
-      (groups[key] = groups[key] || []).push({ recipe_id: it.recipe_id, grams });
-    });
-    const shopNames = Object.keys(groups);
-    if (shopNames.length === 0) { toast.error(t("weekly_empty_share")); return; }
-    shopNames.sort((a, b) => (a === NOSHOP ? 1 : b === NOSHOP ? -1 : a.localeCompare(b)));
-    const esc = (s) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    const origin = window.location.origin + (process.env.PUBLIC_URL || "");
-    const logo = `${origin}/logo-light-256.png`;
-    const L = {
-      flours: tri("Farine", "Mehle", "Flours"),
-      others: tri("Base impasto", "Teigbasis", "Dough base"),
-      extras: tri("Altri ingredienti", "Weitere Zutaten", "Other ingredients"),
-      title: tri("Lista della Spesa per Punto Vendita", "Einkaufsliste pro Verkaufspunkt", "Shopping List per Sales Point"),
-    };
-
-    const sections = shopNames.map((shop) => {
-      const totals = computeShopping(groups[shop], recipeById, lang);
-      const flours = Object.entries(totals.flourByType).sort((a, b) => b[1] - a[1]);
-      const others = Object.entries(totals.others);
-      const extras = Object.entries(totals.extras).sort((a, b) => b[1] - a[1]);
-      const li = (name, val) => `<li><span>${esc(name)}</span><b>${fmtQty(val)}</b></li>`;
-      return `
-        <section class="shop">
-          <h2>🏪 ${esc(shop)}</h2>
-          ${flours.length ? `<div class="grp"><h3>${L.flours}</h3><ul>${flours.map(([k, v]) => li(k, v)).join("")}</ul></div>` : ""}
-          ${others.length ? `<div class="grp"><h3>${L.others}</h3><ul>${others.map(([f, v]) => li(otherLabel(f, lang), v)).join("")}</ul></div>` : ""}
-          ${extras.length ? `<div class="grp"><h3>${L.extras}</h3><ul>${extras.map(([k, v]) => li(ingLoc(k, lang), v)).join("")}</ul></div>` : ""}
-        </section>`;
-    }).join("");
-
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${esc(L.title)}</title>
-      <style>
-        *{box-sizing:border-box}
-        body{font-family:Georgia,serif;color:#2B303B;max-width:720px;margin:0 auto;padding:28px 22px}
-        .head{display:flex;align-items:center;gap:12px;border-bottom:3px solid #3E9C93;padding-bottom:10px;margin-bottom:14px}
-        .head img{height:44px;width:auto}
-        .head .brand{font-weight:800;font-size:22px;color:#2B303B}
-        .head .sub{font-size:12px;color:#666}
-        .shop{margin-top:18px;page-break-inside:avoid}
-        h2{color:#fff;background:#3E9C93;display:inline-block;padding:4px 14px;border-radius:20px;font-size:16px;margin:0 0 8px}
-        .grp{margin:6px 0 10px} .grp h3{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#3E9C93;margin:0 0 4px}
-        .grp ul{list-style:none;margin:0;padding:0}
-        .grp li{display:flex;justify-content:space-between;border-bottom:1px dotted #2A3B49;padding:3px 0;font-size:14px}
-        .grp li b{font-family:monospace;color:#3E9C93}
-      </style></head><body>
-      <div style="height:4px;width:100%;background:linear-gradient(90deg,#3E9C93 0%,#F6F4EE 30%,#1B2A38 60%,#3E9C93 82%,#1E1B18 100%);margin-bottom:10px"></div>
-      <div class="head"><img src="${logo}" alt="MikiLab" onerror="this.style.display='none'"><div><div class="brand">MikiLab</div><div class="sub">${esc(L.title)} · ${new Date().toLocaleDateString(mkTri(lang)("it-IT", "de-DE", "en-GB"))}</div></div></div>
-      ${sections}
-      </body></html>`);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 500);
-  };
-
   return (
     <div className="pb-4">
       <div className="flex items-center gap-3 mb-1">
@@ -705,14 +641,6 @@ export default function WeeklyPlan() {
         className="w-full mt-2 bg-[#C9A24B] hover:bg-[#b38f3f] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
       >
         <Tag className="w-5 h-5" /> {tri("Etichette Sacchetti", "Beutel-Etiketten", "Bag Labels")}
-      </button>
-
-      <button
-        data-testid="weekly-shopping-shop-btn"
-        onClick={pdfShoppingPerShop}
-        className="w-full mt-2 bg-[#3E9C93] hover:bg-[#5c788b] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2"
-      >
-        <ShoppingBasket className="w-5 h-5" /> {tri("Lista Spesa per Negozio", "Einkaufsliste pro Laden", "Shopping List per Shop")}
       </button>
 
       {assignedPoints.length > 0 && (

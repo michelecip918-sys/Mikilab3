@@ -4787,3 +4787,15 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Motivo (utente): niente HACCP, allergeni, filiali aziendali o burocrazia. Il bisogno "più forni/spazi di produzione" è già coperto dai reparti (DeptAssign) e dall'Activity Selector.
 - Verificato: sito compila 0 errori, nessun import rotto, 0 errori console, bottone enterprise assente. Restano solo le sezioni del nuovo progetto, coerenti tra loro.
 - NB: LegalPage (GDPR/Impressum) mantenuta perché requisito legale del sito pubblico .de (non è burocrazia di produzione).
+
+## v61 (2026-09) — PULIZIA TOTALE + SALA SITOR (punto d'incontro unico Capo↔Sitor)
+- **Deep clean eseguito**: eliminati ~205 file morti/legacy dal frontend (vecchie sezioni ShoppingList, ShelfLife, SupplierOrder, Maestro, Home, Beginners, PaywallGate, ToolsDirectory, LabWizard, LabOnboarding, ecc. + data/lib/hooks orfani + backup traduzioni). Grafo import verificato: 0 import rotti. La libreria `components/ui/` (shadcn) è stata MANTENUTA di proposito.
+- **Lista spesa eradicata dai file vivi**: WeeklyPlan (rimossi bottone+PDF "Lista Spesa per Negozio", `fmtQty` spostato in `lib/format.js`), PianoProduzioneAI (rimossi modulo `spesa`, SupplierOrder, computeShopping, tool "Shelf-Life", testo PDF), server.py (rimossa istruzione LISTA SPESA dal prompt AI).
+- **Etichetta UE/allergeni rimossa** da RecipeDialog (form.label, fillTypicalLabel, payload.label, sezione UI recipe-label-section).
+- **SALA SITOR** (`components/console/SalaSitor.jsx`, NUOVO): l'UNICO luogo Capo↔Sitor. Chat con avatar, compositore universale (Testo/Voce dettatura/Foto upload/Email), intent **Ordine→Produzione** (deusApi.capture, genera coda) e **Domanda→Risposta** (deusApi.ask), chip rapidi, Report Turno vocale, coda produzione generata (done/clear), feed "Sitor ti parla" (MikeSuggestions+MikeAlerts), NexusConsole (kill-switch) sotto. Voce TTS "nexus".
+- **Rimossi i punti di dialogo duplicati**: VoiceCommand (orb globale), AmbientMike (orb ambientale), TalkWithMiki (chat morta), CapoDeck, OvenBrain, RoleLayout, MikeMixGuide. Eliminata la ZONA 3 (hero-sitor + mikemix-core): Sitor vive SOLO nella Sala Sitor. ZONES legacy rimossa; MikeMixSense senza modo "guida".
+- **Spostati in "Strumenti"**: AdvancedLab, DowntimeTraining, MohamedInbox, LivingRecipe. I 5 gruppi Capo restano: piano/ordini/squadra/strumenti/sitor.
+- **AutoPlan**: "Invia agli operatori" ora chiama anche deusApi.broadcast → l'headline del piano sul tablet di produzione continua a funzionare (prima scritta da OvenBrain).
+- sw.js CACHE_NAME → mikilab-v50.
+- **Test iteration_225: backend 7/7 (100%), frontend 100%** — Sala Sitor 14/14 parti, AI ask/capture OK (<3s), zero duplicati Sitor nel DOM, zero legacy "Lista Spesa/Shelf-Life", recipe dialog senza etichetta UE, 0 errori console, 0 overflow (1920+390). Unico warning cosmetico pre-esistente: span-in-option (non bloccante).
+- deployment_agent: **PASS**. ⚠️ PUBBLICAZIONE: il tool di trigger deploy non è disponibile in questo fork → premere **Redeploy** in "Gestisci deployment" per portare tutto su mikilab.de.

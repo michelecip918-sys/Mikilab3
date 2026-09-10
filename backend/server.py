@@ -7908,10 +7908,6 @@ async def capo_plan_stream(payload: CapoPlanRequest):
             prompt += ("\n\nANTI-VERSCHWENDUNG: Gib konkrete Tipps, um Reste/Überschuss zu vermeiden (Mengen anpassen, Reste weiterverwenden, was einfrieren)."
                        if de else
                        "\n\nANTI-SPRECO: dai consigli concreti per evitare avanzi/eccedenze (adatta le quantità, riusa gli avanzi, cosa congelare).")
-        if mod_on("spesa"):
-            prompt += ("\n\nEINKAUFSLISTE: Füge am Ende eine kurze Einkaufsliste hinzu (Mehle nach Typ, Wasser, Vorteig, Salz, Zusätze)."
-                       if de else
-                       "\n\nLISTA SPESA: aggiungi in fondo una breve lista della spesa (farine per tipo, acqua, prefermento, sale, extra).")
         if mod_on("infornate"):
             prompt += (
                 "\n\nWICHTIG — BACK-TABELLE (Backfahrplan): Füge GANZ AM ENDE des Plans einen eigenen Abschnitt "
@@ -7928,9 +7924,9 @@ async def capo_plan_stream(payload: CapoPlanRequest):
                 "(rispetta la capienza del forno e l'ordine: raggruppa le stesse temperature, gestisci prima ciò che cuoce più a lungo). "
                 "Calcola l'ora di infornata a ritroso da formatura + appretto di ogni prodotto. Se in ricetta manca temperatura/tempo di cottura, proponi un valore sensato e segnalalo con (indicativo)."
             )
-            prompt += ("\n\nWICHTIG: Dieser Abschnitt **## 🔥 Backfahrplan** ist PFLICHT und muss IMMER vollständig erscheinen. Wenn der Platz knapp wird, kürze die anderen Abschnitte (Team, Hinweise, Einkaufsliste), aber lasse die Back-Tabelle NIE weg."
+            prompt += ("\n\nWICHTIG: Dieser Abschnitt **## 🔥 Backfahrplan** ist PFLICHT und muss IMMER vollständig erscheinen. Wenn der Platz knapp wird, kürze die anderen Abschnitte (Team, Hinweise), aber lasse die Back-Tabelle NIE weg."
                        if de else
-                       "\n\nIMPORTANTE: la sezione **## 🔥 Orario Infornate** è OBBLIGATORIA e deve SEMPRE comparire completa. Se lo spazio scarseggia, accorcia le altre sezioni (squadra, avvisi, lista spesa) ma NON omettere mai la tabella delle infornate.")
+                       "\n\nIMPORTANTE: la sezione **## 🔥 Orario Infornate** è OBBLIGATORIA e deve SEMPRE comparire completa. Se lo spazio scarseggia, accorcia le altre sezioni (squadra, avvisi) ma NON omettere mai la tabella delle infornate.")
             max_tokens = max(max_tokens, 4500)
 
     prompt += lang_instr

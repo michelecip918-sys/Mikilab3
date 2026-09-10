@@ -32,7 +32,6 @@ const empty = {
   sourdough_grams: "", salt_grams: "", bulk_fermentation_hours: "",
   proofing_hours: "", mix_minutes: "", bake_temp: "", bake_minutes: "",
   oven_type: "statico", method_type: "indiretto", notes: "", procedure: "", image_url: "", extra_ingredients: [], work_phases: [], costing: standardCosting(),
-  label: { energy_kcal: "", fat: "", saturates: "", carbs: "", sugars: "", fibre: "", protein: "", salt: "", allergens: "", ingredients: "", net_weight_g: "" },
 };
 
 export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
@@ -105,26 +104,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
   const addIng = () => setForm((f) => ({ ...f, extra_ingredients: [...(f.extra_ingredients || []), { name: "", percent: "" }] }));
   const removeIng = (i) => setForm((f) => ({ ...f, extra_ingredients: (f.extra_ingredients || []).filter((_, idx) => idx !== i) }));
 
-  const emptyLabel = { energy_kcal: "", fat: "", saturates: "", carbs: "", sugars: "", fibre: "", protein: "", salt: "", allergens: "", ingredients: "", net_weight_g: "" };
-  const lab = form.label || emptyLabel;
-  const setLab = (k, v) => setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), [k]: v } }));
-
-  // Valori nutrizionali INDICATIVI per 100 g, per categoria (Michele li verifica/modifica).
-  const fillTypicalLabel = () => {
-    const s = `${form.name || ""} ${form.menu_category || ""} ${form.preferment_type || ""}`.toLowerCase();
-    let p;
-    if (/panettone|colomba|pandoro|lievitato/.test(s))
-      p = { energy_kcal: 360, fat: 15, saturates: 8, carbs: 50, sugars: 26, fibre: 2, protein: 7, salt: 0.5, allergens: mkTri(lang)("Glutine, Uova, Latte, Frutta a guscio", "Gluten, Eier, Milch, Schalenfrüchte", "Gluten, Eggs, Milk, Nuts", "Gluten, Huevos, Leche, Frutos secos") };
-    else if (/focaccia|pizza|puccia/.test(s))
-      p = { energy_kcal: 270, fat: 6, saturates: 1, carbs: 45, sugars: 2, fibre: 2.5, protein: 7.5, salt: 1.4, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
-    else if (/brezel|laugen|taralli|frisell/.test(s))
-      p = { energy_kcal: 300, fat: 4, saturates: 0.8, carbs: 55, sugars: 2, fibre: 2.5, protein: 9, salt: 2.2, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
-    else if (/croissant|plunder|sfogli|brioche|zopf|latte/.test(s))
-      p = { energy_kcal: 400, fat: 20, saturates: 12, carbs: 45, sugars: 10, fibre: 2, protein: 7, salt: 0.9, allergens: mkTri(lang)("Glutine, Latte, Uova", "Gluten, Milch, Eier", "Gluten, Milk, Eggs", "Gluten, Leche, Huevos") };
-    else
-      p = { energy_kcal: 250, fat: 1.5, saturates: 0.3, carbs: 49, sugars: 2, fibre: 3.5, protein: 8.5, salt: 1.2, allergens: mkTri(lang)("Glutine", "Gluten", "Gluten", "Gluten") };
-    setForm((f) => ({ ...f, label: { ...(f.label || emptyLabel), ...p, net_weight_g: (f.label && f.label.net_weight_g) || "" } }));
-  };
 
   const setPhase = (i, patch) => setForm((f) => { const l = [...(f.work_phases || [])]; l[i] = { ...l[i], ...patch }; return { ...f, work_phases: l }; });
   const addPhase = () => setForm((f) => ({ ...f, work_phases: [...(f.work_phases || []), { name: "", time: "", temp: "" }] }));
@@ -198,18 +177,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
       flour_kg: num(c.flour_kg), water_l: num(c.water_l), sourdough_kg: num(c.sourdough_kg), salt_kg: num(c.salt_kg),
       extras: (c.extras || []).filter((e) => e.name || e.cost).map((e) => ({ name: e.name || "", cost: num(e.cost) })),
       overhead: num(c.overhead), pieces: num(c.pieces), markup: num(c.markup),
-    };
-    // Etichetta UE: valori per 100 g (numeri o null) + allergeni/ingredienti (testo) + peso netto.
-    const nz = (v) => (v === "" || v == null ? null : Number(v));
-    const kcal = nz(lab.energy_kcal);
-    payload.label = {
-      energy_kcal: kcal,
-      energy_kj: kcal == null ? null : Math.round(kcal * 4.184),
-      fat: nz(lab.fat), saturates: nz(lab.saturates), carbs: nz(lab.carbs), sugars: nz(lab.sugars),
-      fibre: nz(lab.fibre), protein: nz(lab.protein), salt: nz(lab.salt),
-      net_weight_g: nz(lab.net_weight_g),
-      allergens: (lab.allergens || "").trim(),
-      ingredients: (lab.ingredients || "").trim(),
     };
     try {
       setSaving(true);
@@ -672,46 +639,6 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave }) {
             )}
           </div>
 
-          {/* Etichetta UE — dichiarazione nutrizionale per 100 g + allergeni + ingredienti */}
-          <div className="pt-2 border-t border-[#2A3B49] dark:border-[#2A3B49]" data-testid="recipe-label-section">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-1">{mkTri(lang)("Etichetta UE (valori nutrizionali)", "EU-Etikett (Nährwerte)", "EU label (nutrition)", "Etiqueta UE (valores nutricionales)")}</p>
-            <p className="text-[11px] text-[#7E8A93] mb-2 leading-snug">{mkTri(lang)("Valori per 100 g. L'energia in kJ è calcolata in automatico.", "Werte pro 100 g. Energie in kJ wird automatisch berechnet.", "Values per 100 g. Energy in kJ is auto-calculated.", "Valores por 100 g. La energía en kJ se calcula automáticamente.")}</p>
-            <button type="button" data-testid="label-fill-typical" onClick={fillTypicalLabel}
-              className="mb-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/30 px-3 py-1.5 rounded-lg active:scale-95 transition-all">
-              ✨ {mkTri(lang)("Compila valori tipici (da verificare)", "Typische Werte einsetzen (zu prüfen)", "Fill typical values (to verify)", "Rellenar valores típicos (a verificar)")}
-            </button>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                ["energy_kcal", mkTri(lang)("Energia (kcal)", "Energie (kcal)", "Energy (kcal)", "Energía (kcal)")],
-                ["fat", mkTri(lang)("Grassi (g)", "Fett (g)", "Fat (g)", "Grasas (g)")],
-                ["saturates", mkTri(lang)("di cui saturi (g)", "davon gesättigt (g)", "of which saturates (g)", "de las cuales saturadas (g)")],
-                ["carbs", mkTri(lang)("Carboidrati (g)", "Kohlenhydrate (g)", "Carbohydrate (g)", "Hidratos de carbono (g)")],
-                ["sugars", mkTri(lang)("di cui zuccheri (g)", "davon Zucker (g)", "of which sugars (g)", "de los cuales azúcares (g)")],
-                ["fibre", mkTri(lang)("Fibre (g)", "Ballaststoffe (g)", "Fibre (g)", "Fibra (g)")],
-                ["protein", mkTri(lang)("Proteine (g)", "Eiweiß (g)", "Protein (g)", "Proteínas (g)")],
-                ["salt", mkTri(lang)("Sale (g)", "Salz (g)", "Salt (g)", "Sal (g)")],
-                ["net_weight_g", mkTri(lang)("Peso netto (g)", "Nettogewicht (g)", "Net weight (g)", "Peso neto (g)")],
-              ].map(([k, lbl]) => (
-                <div key={k}>
-                  <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{lbl}</label>
-                  <input
-                    data-testid={`label-${k}-input`} type="number" step="0.1" value={lab[k]}
-                    onChange={(e) => setLab(k, e.target.value)}
-                    className="mt-0.5 w-full font-mono-data bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 text-sm outline-none focus:border-[#3E9C93]"
-                  />
-                </div>
-              ))}
-            </div>
-            <div className="mt-2">
-              <label className="text-[10px] font-semibold uppercase tracking-wide text-[#7E8A93]">{mkTri(lang)("Elenco ingredienti", "Zutatenliste", "Ingredients list", "Lista de ingredientes")}</label>
-              <textarea
-                data-testid="label-ingredients-input" rows={2} value={lab.ingredients}
-                onChange={(e) => setLab("ingredients", e.target.value)}
-                placeholder={mkTri(lang)("Farina di GRANO tenero, acqua, lievito madre, sale…", "WEIZENMEHL, Wasser, Sauerteig, Salz…", "WHEAT flour, water, sourdough, salt…", "Harina de TRIGO, agua, masa madre, sal…")}
-                className="mt-0.5 w-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg p-2 text-sm outline-none focus:border-[#3E9C93] resize-none"
-              />
-            </div>
-          </div>
         </div>
 
         <DialogFooter className="gap-2 sm:gap-2">
@@ -772,12 +699,6 @@ function normalize(r) {
     salt_kg: has(rc.salt_kg) ? rc.salt_kg : STANDARD_PRICES.salt_kg,
     extras: (rc.extras || []).map((e) => ({ name: e.name || "", cost: e.cost ?? "" })),
     overhead: rc.overhead ?? "", pieces: rc.pieces ?? "", markup: rc.markup ?? "",
-  };
-  const rl = r.label || {};
-  out.label = {
-    energy_kcal: rl.energy_kcal ?? "", fat: rl.fat ?? "", saturates: rl.saturates ?? "",
-    carbs: rl.carbs ?? "", sugars: rl.sugars ?? "", fibre: rl.fibre ?? "", protein: rl.protein ?? "",
-    salt: rl.salt ?? "", net_weight_g: rl.net_weight_g ?? "", allergens: rl.allergens ?? "", ingredients: rl.ingredients ?? "",
   };
   return out;
 }

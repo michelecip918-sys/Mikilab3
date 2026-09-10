@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { mikeApi } from "@/lib/api";
+import { mikeApi, deusApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -91,7 +91,7 @@ export default function AutoPlan() {
           )}
           {(res.batches || []).length > 0 && (
             <button data-testid="autoplan-dispatch" onClick={async () => {
-              try { const r = await mikeApi.dispatch(res.batches); try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
+              try { const r = await mikeApi.dispatch(res.batches); try { await deusApi.broadcast({ plan_markdown: res.summary || "", headline: res.spoken || res.summary || "" }); } catch { /* */ } try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
             }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-bold text-sm active:scale-95 transition-all">
               <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
             </button>

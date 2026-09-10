@@ -7,7 +7,7 @@
  *  cloning non autorizzati, tracciati dal Sitor Security Guardian.
  * ============================================================================
  *  PLANCIA OLOGRAFICA — Zero-Menu vertical command console (v40).
- *  Unica PWA continua a scorrimento verticale: Master · Operatori · Sitor.
+ *  Unica PWA continua a scorrimento verticale: Master · Operatori · Sala Sitor.
  */
 import { useState, useEffect, useRef, useCallback } from "react";
 import "@/App.css";
@@ -23,15 +23,12 @@ import { MachinesProvider } from "@/audio/MachinesContext";
 
 import PinLock from "@/components/PinLock";
 import { isLocked as pinIsLocked } from "@/lib/pinLock";
-import VoiceCommand from "@/components/VoiceCommand";
 import RadioFornaio from "@/components/RadioFornaio";
 import ShiftScheduler from "@/components/ShiftScheduler";
-import TalkWithMiki from "@/components/TalkWithMiki";
 import AudioRouteIndicator from "@/components/AudioRouteIndicator";
 import LegalPage from "@/sections/LegalPage";
 import MagazzinoManager from "@/components/MagazzinoManager";
 import DocsDownload from "@/components/DocsDownload";
-import LabBriefing from "@/components/LabBriefing";
 import AutoReport from "@/components/AutoReport";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import AuthScreen from "@/components/AuthScreen";
@@ -41,10 +38,8 @@ import PinSetup from "@/components/PinSetup";
 import OrdineCapo from "@/components/OrdineCapo";
 import FloorOperatorDay from "@/components/FloorOperatorDay";
 import MikeMixSense from "@/components/MikeMixSense";
-import MikeMixGuide from "@/components/MikeMixGuide";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import NexusConsole from "@/components/NexusConsole";
-import MikeAlerts from "@/components/MikeAlerts";
 import MohamedInbox from "@/components/MohamedInbox";
 import LivingRecipe from "@/components/LivingRecipe";
 import AdvancedLab from "@/components/AdvancedLab";
@@ -65,7 +60,6 @@ import Ricette from "@/sections/Ricette";
 import OrdiniExtra from "@/components/OrdiniExtra";
 import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
-import AmbientMike from "@/components/AmbientMike";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
@@ -91,12 +85,8 @@ import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 import SiloManager from "@/components/console/SiloManager";
 import AdaptiveProofing from "@/components/console/AdaptiveProofing";
 import AgvFleet from "@/components/console/AgvFleet";
-import RoleLayout from "@/components/console/RoleLayout";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
-import MikeSuggestions from "@/components/console/MikeSuggestions";
-import OvenBrain from "@/components/console/OvenBrain";
-import CapoDeck from "@/components/console/CapoDeck";
 import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
 import ShiftTemplates from "@/components/console/ShiftTemplates";
@@ -106,16 +96,11 @@ import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
 import DeskScene from "@/components/console/DeskScene";
+import SalaSitor from "@/components/console/SalaSitor";
 import ImageForge from "@/components/console/ImageForge";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
-
-const ZONES = [
-  { id: "master", label: "Master", accent: "#64748B", avatar: "avatar_miki.jpg" },
-  { id: "operatori", label: "Operatori", accent: "#FF6B00", avatar: "avatar_nexus.jpg" },
-  { id: "mikemix", label: "Sitor", accent: "#FF9D42", avatar: "avatar_nexus.jpg" },
-];
 
 const DECK_DEPTS = [
   { id: "panificio", accent: "#FF6B00", it: "Panificio", de: "Backstube", en: "Bakery", fr: "Boulangerie" },
@@ -206,7 +191,7 @@ export default function App() {
     return () => window.removeEventListener("mikilab:open-panel", onJump);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const zoneRefs = { master: useRef(null), operatori: useRef(null), mikemix: useRef(null) };
+  const zoneRefs = { master: useRef(null), operatori: useRef(null) };
 
   const jumpTo = useCallback((id) => {
     const el = zoneRefs[id]?.current;
@@ -304,7 +289,6 @@ export default function App() {
   return (
     <ProfileProvider><AmbientProvider><TimerProvider><SoundFXProvider><MixerTimersProvider><MachinesProvider>
       <SecurityGuardian />
-      <AmbientMike />
       <SplashScreen />
       <div className="holo-root min-h-screen font-sans selection:bg-[#FF6B00] selection:text-[#060A10]">
         <div className="holo-canvas" aria-hidden />
@@ -430,7 +414,7 @@ export default function App() {
                       <ShieldCheck className="w-8 h-8 text-[#64748B]" />
                     </div>
                     <h2 className="font-cyber text-lg font-black text-white uppercase tracking-wider">{tri("Accesso Capo riservato", "Chef-Zugang reserviert", "Capo access reserved", "Acceso Capo reservado", "Accès Capo réservé", "دسترسی کاپو محفوظ است")}</h2>
-                    <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">{tri("Ricettario protetto, piano di produzione, magazzino, radar impianto e compliance UE/DE. Accedi per governare il laboratorio; gli operatori restano nella zona Produzione.", "Geschützte Rezepte, Produktionsplan, Lager, Werk-Radar und EU/DE-Compliance. Melde dich an; das Team bleibt in der Produktionszone.", "Protected recipes, production plan, warehouse, plant radar and EU/DE compliance. Sign in to run the lab; operators stay in the Production zone.", "Recetas protegidas, plan, almacén, radar y compliance UE/DE. Accede para gestionar; el equipo usa la zona Producción.", "Recettes protégées, plan, entrepôt, radar et conformité UE/DE. Connecte-toi ; l'équipe reste en zone Production.", "دستورهای محافظت‌شده، برنامه، انبار، رادار و انطباق. وارد شو تا آزمایشگاه را مدیریت کنی.")}</p>
+                    <p className="text-xs text-[#94A3B8] mt-2 max-w-md mx-auto">{tri("Ricettario, piano di produzione con Sitor, squadra e strumenti. Accedi per governare il laboratorio; gli operatori restano nella zona Produzione.", "Rezepte, Produktionsplan mit Sitor, Team und Werkzeuge. Melde dich an; das Team bleibt in der Produktionszone.", "Recipes, production plan with Sitor, team and tools. Sign in to run the lab; operators stay in the Production zone.", "Recetas, plan de producción con Sitor, equipo y herramientas. Accede para gestionar; el equipo usa la zona Producción.", "Recettes, plan de production avec Sitor, équipe et outils. Connecte-toi ; l'équipe reste en zone Production.", "دستورها، برنامه تولید با سیتور، تیم و ابزارها. وارد شو تا آزمایشگاه را مدیریت کنی.")}</p>
                     <button data-testid="capo-gate-login" onClick={openAuth} className="mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all"
                       style={{ background: "linear-gradient(90deg,#64748B,#7DA3C0)", boxShadow: "0 0 22px rgba(94,140,168,0.45)" }}>
                       <ShieldCheck className="w-4 h-4" /> {tri("Accedi come Capo", "Als Chef anmelden", "Sign in as Capo", "Acceder como Capo", "Se connecter comme Capo", "ورود به‌عنوان کاپو")}
@@ -447,7 +431,7 @@ export default function App() {
                     <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Sitor · Piano del Giorno", "Sitor · Tagesplan", "Sitor · Day Plan", "Sitor · Plan del Día", "Sitor · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Sitor genera la sequenza di produzione ottimale del giorno.", "Sitor erstellt den optimalen Produktionsablauf.", "Sitor generates the optimal production sequence.", "Sitor genera la secuencia óptima.", "Sitor génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
                     </HoloPanel>
-                    <HoloPanel testid="panel-weekly" accent="#FF6B00" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
+                    <HoloPanel testid="panel-weekly" accent="#FF6B00" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Stampa PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
                     </HoloPanel>
                     <HoloPanel testid="panel-pianoai" accent="#FF9D42" beacon="#FF6B00" icon="🤖" title={tri("Piano di Produzione AI", "KI-Produktionsplan", "AI Production Plan", "Plan de Producción IA", "Plan de Production IA", "برنامه تولید هوش مصنوعی")} sub={tri("Detta ordini e vincoli: l'IA costruisce il piano completo del giorno, pronto da eseguire.", "Aufträge & Grenzen: die KI baut den kompletten Tagesplan.", "Dictate orders and constraints: the AI builds the full day plan, ready to run.", "Dicta pedidos y límites: la IA construye el plan del día.", "Dicte commandes et contraintes : l'IA bâtit le plan du jour.", "سفارش‌ها را بگو: هوش مصنوعی برنامه کامل روز را می‌سازد.")}>
@@ -567,19 +551,17 @@ export default function App() {
                     <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Sitor riassume il turno a voce e assegna il MikiScore dell'impianto.", "Sitor fasst die Schicht zusammen.", "Sitor voices the shift summary and the plant MikiScore.", "Sitor resume el turno.", "Sitor résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
                       <ShiftReport />
                     </HoloPanel>
-                    </CapoGroup>
-
-                    <CapoGroup id="sitor" icon="💬" accent="#EAB308" open={consoleSec === "sitor"} onToggle={() => toggleSec("sitor")}
-                      title={tri("Chat & Voce con Sitor", "Chat & Stimme mit Sitor", "Chat & Voice with Sitor", "Chat & Voz con Sitor", "Chat & Voix avec Sitor", "گفت‌وگو با سیتور")}
-                      sub={tri("Parla o scrivi a Sitor: dagli un punto di riferimento e fa tutto lui.", "Sprich mit Sitor: gib einen Anhaltspunkt, er macht alles.", "Talk to Sitor: give a reference point and he does everything.", "Habla con Sitor: dale un punto y lo hace todo.", "Parle à Sitor : donne un repère, il fait tout.", "با سیتور صحبت کن: یک نقطه بده، همه‌چیز را انجام می‌دهد.")}>
-                    <RoleLayout />
-                    <CapoDeck />
-                    <OvenBrain />
-                    <MikeSuggestions />
-                    <div data-testid="panel-mike-alerts" className="holo-panel p-4"><MikeAlerts /></div>
+                    <div data-testid="panel-advanced-lab" className="holo-panel p-5 sm:p-6"><AdvancedLab /></div>
+                    <div data-testid="panel-training" className="holo-panel p-5 sm:p-6"><DowntimeTraining /></div>
                     <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
                     <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
-                    <LabBriefing />
+                    </CapoGroup>
+
+                    <CapoGroup id="sitor" icon="✦" accent="#EAB308" open={consoleSec === "sitor"} onToggle={() => toggleSec("sitor")}
+                      title={tri("Sala Sitor · Punto d'Incontro", "Sitor-Saal · Treffpunkt", "Sitor Hall · Meeting Point", "Sala Sitor · Punto de Encuentro", "Salle Sitor · Point de Rencontre", "تالار سیتور · محل ملاقات")}
+                      sub={tri("L'unico luogo dove incontri Sitor: scrivi, detta, allega, ordina — e ricevi risposte, produzione e avvisi.", "Der einzige Ort für Sitor: schreiben, diktieren, anhängen, befehlen — Antworten, Produktion und Alarme inklusive.", "The one place to meet Sitor: write, dictate, attach, command — and receive answers, production and alerts.", "El único lugar para hablar con Sitor: escribe, dicta, ordena y recibe todo.", "Le seul lieu pour rencontrer Sitor : écris, dicte, ordonne — et reçois tout.", "تنها جای ملاقات با سیتور: بنویس، بگو، دستور بده و همه‌چیز را دریافت کن.")}>
+                    <SalaSitor />
+                    <NexusConsole isCapo={true} />
                     </CapoGroup>
                     {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
                     </PlantHeartbeatProvider>
@@ -609,40 +591,6 @@ export default function App() {
                 )}
               </section>
 
-              {/* ================= ZONA 3 · MIKE MIX AI ================= */}
-              <section ref={zoneRefs.mikemix} data-zone="mikemix" className="holo-zone pt-2">
-                <ZoneHero3D testid="hero-sitor" theme="bigmix" avatar="avatar_nexus.jpg" accent="#EAB308" tag="Z-03 · Sitor" name="Sitor" role={tri("Dio dell'Arte Bianca · Voce viva", "Gott der Backkunst · Lebendige Stimme", "God of the White Art · Living Voice", "Dios del Arte Blanco · Voz viva", "Dieu de l'Art Blanc · Voix vivante", "خدای هنر نان · صدای زنده")} listenSpeaking />
-                <div data-testid="panel-nexus" className="mb-4">
-                  <NexusConsole isCapo={!!(user && user.role === "admin")} />
-                </div>
-                <div data-testid="panel-advanced-lab" className="mb-4 holo-panel p-5 sm:p-6">
-                  <span className="holo-corner holo-corner-tl" style={{ color: "#EAB308" }} />
-                  <span className="holo-corner holo-corner-tr" style={{ color: "#EAB308" }} />
-                  <span className="holo-corner holo-corner-bl" style={{ color: "#EAB308" }} />
-                  <span className="holo-corner holo-corner-br" style={{ color: "#EAB308" }} />
-                  <AdvancedLab />
-                </div>
-                <div data-testid="mikemix-core" className="holo-panel p-6 sm:p-8 mb-4 text-center overflow-hidden">
-                  <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />
-                  <div className="relative z-10">
-                    <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#FF9D42]/70 bg-[#FF9D42]/5 flex items-center justify-center shadow-[0_0_36px_rgba(125,211,252,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
-                      <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                    </div>
-                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">Sitor</h2>
-                    <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#FF9D42] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
-                    <p className="mt-3 text-sm text-[#CBD5E1] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Sitor in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Sitor-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Sitor orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Sitor escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Sitor écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Sitor گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
-                  </div>
-                </div>
-                <MikeMixGuide />
-                <div data-testid="panel-training" className="mt-4 holo-panel p-5 sm:p-6">
-                  <span className="holo-corner holo-corner-tl" style={{ color: "#FF9D42" }} />
-                  <span className="holo-corner holo-corner-tr" style={{ color: "#FF9D42" }} />
-                  <span className="holo-corner holo-corner-bl" style={{ color: "#FF9D42" }} />
-                  <span className="holo-corner holo-corner-br" style={{ color: "#FF9D42" }} />
-                  <DowntimeTraining />
-                </div>
-              </section>
-
             </ErrorBoundary>
           </main>
 
@@ -666,11 +614,9 @@ export default function App() {
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
 
         <Toaster position="top-center" richColors />
-        <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : activeZone === "mikemix" ? "guida" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
+        <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
         <RadioFornaio />
         <ShiftScheduler />
-        <TalkWithMiki />
-        <VoiceCommand />
         <AutoReport />
         <AudioRouteIndicator />
       </div>

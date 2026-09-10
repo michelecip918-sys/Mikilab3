@@ -2,14 +2,12 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { motion, Reorder } from "framer-motion";
-import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, ShoppingCart, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth, Warehouse, Mic, ClipboardList } from "lucide-react";
+import { ChefHat, Plus, X, Thermometer, Sparkles, Printer, Share2, CalendarDays, Clock, Euro, Store, Users, BookOpen, Snowflake, CheckCircle2, RotateCcw, FlaskConical, Flag, Recycle, Wrench, SlidersHorizontal, Building2, Scale, Flame, Droplets, Timer as TimerIcon, CloudSun, Camera, QrCode, ScanLine, ListChecks, CalendarClock, Archive, Info, Eye, EyeOff, ChevronUp, ChevronDown, Settings2, HelpCircle, Star, Search, AlertTriangle, GripVertical, Activity, Wheat, RefreshCw, Cookie, Stethoscope, Calculator, UtensilsCrossed, TrendingUp, Sprout, FileText, Pizza, Cake, Hand, Landmark, Menu, Download, Globe, Bluetooth, Warehouse, Mic, ClipboardList } from "lucide-react";
 import { API, labConfigApi, recipesApi, weeklyApi, capoPlanApi } from "@/lib/api";
 import { computeRecipeCostPerPiece } from "@/data/prices";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { useAuth } from "@/auth/AuthContext";
-import { computeShopping } from "@/lib/shopping";
-import SupplierOrder from "@/components/SupplierOrder";
 import { fireHighFive } from "@/components/HighFive";
 import PlanArchive from "@/components/PlanArchive";
 import LabTour from "@/components/LabTour";
@@ -71,7 +69,7 @@ const serializeInfTable = (headers, rows) => {
 const isPanettoneRecipe = (r) => /panettone/i.test(r?.name || "") || /panettone/i.test(r?.menu_category || "");
 
 // Moduli opzionali del Piano IA: si accendono/spengono senza bloccare il piano base.
-const DEFAULT_MODULES = { celle: true, orari: true, spesa: true, foodcost: true, infornate: true, clima: false, antispreco: false, turni: false, macchine: false, forni: false, notte: false };
+const DEFAULT_MODULES = { celle: true, orari: true, foodcost: true, infornate: true, clima: false, antispreco: false, turni: false, macchine: false, forni: false, notte: false };
 const MODULES = [
   // Controlli di calcolo del piano (raggruppati in "Impostazioni Avanzate IA")
   { id: "turni", Icon: Users, it: "Turni di Lavoro", de: "Arbeitsschichten", en: "Work shifts", es: "Turnos de trabajo" },
@@ -82,7 +80,6 @@ const MODULES = [
   { id: "orari", Icon: Clock, it: "Orari d'inizio", de: "Startzeiten", en: "Start times" },
   { id: "infornate", Icon: CalendarClock, it: "Orario Infornate", de: "Backzeiten", en: "Baking schedule" },
   { id: "clima", Icon: Thermometer, it: "Meteo & Clima", de: "Wetter & Klima", en: "Weather & climate" },
-  { id: "spesa", Icon: ShoppingCart, it: "Lista Spesa", de: "Einkaufsliste", en: "Shopping list" },
   { id: "foodcost", Icon: Euro, it: "Costi & Margine", de: "Kosten & Marge", en: "Costs & margin" },
   { id: "antispreco", Icon: Recycle, it: "Anti-Spreco", de: "Anti-Verschwendung", en: "Anti-waste" },
 ];
@@ -97,13 +94,12 @@ const MODULE_DESC = {
   orari: { it: "Calcola gli orari d'inizio a partire dall'ora indicata.", de: "Berechnet Startzeiten ab der angegebenen Uhrzeit.", en: "Computes start times from the given hour.", es: "Calcula las horas de inicio." },
   infornate: { it: "Aggiunge la tabella oraria delle infornate.", de: "Fügt den Backfahrplan hinzu.", en: "Adds the baking time table.", es: "Añade la tabla de horneadas." },
   clima: { it: "Adatta acqua e tempi alla temperatura del laboratorio.", de: "Passt Wasser und Zeiten an die Raumtemperatur an.", en: "Adapts water and times to room temperature.", es: "Adapta agua y tiempos a la temperatura." },
-  spesa: { it: "Genera la lista della spesa e l'ordine al fornitore.", de: "Erstellt die Einkaufsliste.", en: "Generates the shopping list.", es: "Genera la lista de la compra." },
   foodcost: { it: "Calcola costi e margini della produzione.", de: "Berechnet Kosten und Margen.", en: "Computes costs and margins.", es: "Calcula costes y márgenes." },
   antispreco: { it: "Suggerisce recuperi e riduzione degli sprechi.", de: "Schlägt Resteverwertung vor.", en: "Suggests recovery and waste reduction.", es: "Sugiere aprovechamiento y menos desperdicio." },
 };
 
 // Ogni interruttore-modulo apre lo strumento corrispondente per configurarlo.
-const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", spesa: "spesa", foodcost: "foodcost", punti: "salespoints", antispreco: "spreco", infornate: "inversa", macchine: "macchine", forni: "adatta" };
+const MODULE_TOOL = { celle: "capo", orari: "inversa", freezer: "freezer", turni: "turni", clima: "termo", foodcost: "foodcost", antispreco: "spreco", infornate: "inversa", macchine: "macchine", forni: "adatta" };
 
 // Catalogo strumenti rapidi personalizzabili (l'utente sceglie quali 6 mostrare nel passo "Scegli")
 const QUICK_CATALOG = [
@@ -198,7 +194,6 @@ export const TOOLS = [
   { id: "suono", Icon: Camera, cat: "coldchain", kind: "controlla", it: "Diagnosi Suono", de: "Klang-Diagnose", en: "Sound Diagnosis" },
   { id: "sessioni", Icon: Thermometer, cat: "coldchain", kind: "gestisci", it: "Diario Impasti", de: "Teig-Tagebuch", en: "Dough Log" },
   { id: "check", Icon: ListChecks, cat: "coldchain", kind: "gestisci", it: "Checklist Laboratorio", de: "Checklisten", en: "Checklists" },
-  { id: "shelf", Icon: CalendarClock, cat: "coldchain", kind: "gestisci", it: "Shelf-Life", de: "Shelf-Life", en: "Shelf-Life" },
 ];
 
 export const TOOL_CATS = [
@@ -614,15 +609,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
     </>
   );
 
-  const shopTotals = useMemo(() => {
-    const list = products
-      .filter((p) => p.recipe_id)
-      .map((p) => ({ recipe_id: p.recipe_id, grams: p.unit === "kg" ? Number(p.qty || 0) * 1000 : Number(p.qty || 0) * Number(p.gpp || 500) }));
-    if (useWeekly) {
-      weeklyItems.forEach((w) => list.push({ recipe_id: w.recipe_id, grams: Number(w.pieces || 0) * Number(w.grams_per_piece || 0) }));
-    }
-    return computeShopping(list, recipeById, lang);
-  }, [products, useWeekly, weeklyItems, recipeById, lang]);
 
   const usedRecipes = useMemo(() => {
     const ids = new Set(products.filter((p) => p.recipe_id).map((p) => p.recipe_id));
@@ -1638,7 +1624,7 @@ export default function PianoProduzioneAI({ onOpenTool }) {
             </div>
             <button data-testid="capo-print" onClick={() => window.print()}
               className="no-print mt-3 w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all flex items-center justify-center gap-2">
-              <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + spesa + ricette)", "Komplettes PDF (Plan + Einkauf + Rezepte)", "Full PDF (plan + shopping + recipes)")}
+              <Printer className="w-5 h-5" /> {tri3(lang, "PDF Completo (piano + ricette)", "Komplettes PDF (Plan + Rezepte)", "Full PDF (plan + recipes)")}
             </button>
             <button data-testid="capo-pdf" onClick={downloadPlanPdf} disabled={pdfBusy}
               className="no-print mt-2 w-full bg-[#0D1520] dark:bg-[#1B2A38] hover:bg-[#000] text-white font-semibold px-5 py-3 rounded-2xl border-2 border-[#3E9C93] active:scale-98 transition-all disabled:opacity-60 flex items-center justify-center gap-2">
@@ -1738,7 +1724,6 @@ export default function PianoProduzioneAI({ onOpenTool }) {
                 </div>
               </div>
 
-              {modules.spesa && <SupplierOrder totals={shopTotals} />}
 
               {usedRecipes.length > 0 && (
                 <div data-testid="capo-recipes" className="space-y-3">

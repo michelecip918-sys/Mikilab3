@@ -1,0 +1,31 @@
+{
+  "summary": "Full backend+frontend regression for MikiLab Pro Sala Sitor refactor (iter 225). Backend: 7/7 pytest passed (gate 198505, admin login, deus bond/ask/capture/queue/clear, recipes list, deck status). Frontend E2E on preview URL: login flow OK, master-console visible, 5 capo groups exactly (piano/ordini/squadra/strumenti/sitor). Sala Sitor: all 14 required parts present (sala-sitor, sitor-input, sitor-send, sitor-intent-ordine/domanda, 4 sitor-mode-*, sitor-report-btn, sitor-queue, mike-suggestions, mike-alerts, nexus-console). Sitor AI reply received in ~2s. Ordine intent flow OK. Forbidden legacy testids ALL absent: ambient-mike-orb, talk-miki-launcher, hero-sitor, capo-deck, oven-brain. No data-zone='mikemix' section. WeeklyPlan/PianoAI: no weekly-shopping-shop-btn, 0 occurrences of 'Lista Spesa'/'Shelf-Life' in body. Recipe dialog opens; recipe-label-section absent, base fields (name, category, department, dough type, hydration) visible. Strumenti group contains panel-advanced-lab, panel-training, panel-mohamed-inbox, panel-living-recipe. Squadra: operators-roster + floor-lock present. Header activity-selector functional. No horizontal overflow at 1920x1080 or 390x844. 0 pageerrors. 1 minor React hydration warning (<span> as child of <option>).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Console (some panel in TimerProvider subtree)", "issues": ["React hydration warning: 'In HTML, <span> cannot be a child of <option>'. Not blocking but should be cleaned up."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter225_sala_sitor.py",
+    "/app/test_reports/pytest/iter225.xml"
+  ],
+  "action_items": [
+    "(Optional) Fix hydration warning: remove <span> children inside <option> elements somewhere in the app (dropdown rendering)."
+  ],
+  "critical_code_review_comments": [
+    "Refactor is clean: legacy Sitor entry points (VoiceCommand/AmbientMike/TalkWithMiki/CapoDeck/OvenBrain) fully removed from DOM.",
+    "Sala Sitor is a solid single hub; AI ask/capture endpoints respond quickly (<3s in this test env).",
+    "Consider adding data-testid='floor-operator-day' if that component is expected to be present alongside floor-lock — only floor-lock was found under squadra."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter225_sala_sitor.py"],
+  "success_rate": {"backend": "100% (7/7)", "frontend": "100% (all required checks passed)"},
+  "test_credentials": "Gate PIN 198505 · admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "Deus capture created transient production tasks then cleared via /queue/clear during test.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Preview URL https://edit-33.preview.emergentagent.com. Login flow: goto → seed localStorage (mikilab_onboarded=1, mikilab_activity=panificio, mikilab_kiosk_wizard_seen=1, mikilab_briefing_seen=1) → reload → public-enter-btn → admin-key-1/9/8/5/0/5 → account-btn → auth-email/password → auth-submit. Capo groups: capo-group-toggle-{piano,ordini,squadra,strumenti,sitor}. Ricette (panel-ricette) lives under 'strumenti' group. Recipe dialog opened via [data-testid='add-recipe-btn']. Deus AI endpoints respond in <3s in this env — but keep the 60s tolerance for safety.",
+  "rca of the issue": "N/A — no functional issues found. Only cosmetic hydration warning about <span> inside <option>."
+}
