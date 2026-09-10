@@ -114,7 +114,9 @@ export default function App() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user, authOpen, setAuthOpen, logout } = useAuth();
 
-  const [adminOk, setAdminOk] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1"; } catch { return false; } });
+  const [adminOk, setAdminOk] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" || localStorage.getItem("mikilab_mode") === "floor"; } catch { return false; } });
+  const [mode, setMode] = useState(() => { try { return localStorage.getItem("mikilab_mode") === "floor" ? "floor" : "capo"; } catch { return "capo"; } });
+  const [opLevel, setOpLevel] = useState(() => { try { return localStorage.getItem("mikilab_op_level") || "novizio"; } catch { return "novizio"; } });
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -136,7 +138,7 @@ export default function App() {
   const prevDeckMood = useRef("sereno");
   const lastDeckAlarm = useRef(0);
   useEffect(() => {
-    if (!adminOk) return;
+    if (!adminOk || mode === "floor") return;
     let stop = false;
     const load = () => api.get("/deck/status").then((r) => {
       if (stop) return;
@@ -282,7 +284,17 @@ export default function App() {
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
   const openAuth = () => { setAuthMode("login"); setAuthOpen(true); };
 
-  if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={() => { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } setAdminOk(true); }} /></>;
+  if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={(payload) => {
+    const p = payload || {};
+    if (p.mode === "floor") {
+      try { localStorage.setItem("mikilab_mode", "floor"); localStorage.setItem("mikilab_op_level", p.level || "novizio"); if (p.name) localStorage.setItem("mikilab_role", p.name); } catch { /* */ }
+      setMode("floor"); setOpLevel(p.level || "novizio"); setFloorRole(p.name || ""); setFloorUnlocked(true); setAdminOk(true);
+      try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: p.name || "" } })); } catch { /* */ }
+    } else {
+      try { localStorage.setItem("mikilab_admin_unlocked", "1"); localStorage.removeItem("mikilab_mode"); } catch { /* */ }
+      setMode("capo"); setAdminOk(true);
+    }
+  }} /></>;
   if (resetToken) return <ResetPassword token={resetToken} onDone={() => { setResetToken(null); setAuthOpen(true); }} />;
   if (authOpen && !user) return <div className="fixed inset-0 z-[70] bg-[#060A10] overflow-auto"><AuthScreen onClose={() => setAuthOpen(false)} initialMode={authMode} /></div>;
 
@@ -328,6 +340,19 @@ export default function App() {
                   <option value="pasticceria">🧁 {tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")}</option>
                 </select>
                 <InstallApp variant="chip" />
+                {mode === "floor" ? (
+                  <>
+                    <span data-testid="floor-operator-badge" className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#FF6B00]/12 border border-[#FF6B00]/40 text-[#FF9D42] text-xs font-bold">
+                      <User className="w-3.5 h-3.5" /> {floorRole || tri("Operaio", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}
+                      <span className="hidden sm:inline text-[9px] uppercase tracking-wider text-[#FF6B00]/70">· {opLevel}</span>
+                    </span>
+                    <button data-testid="floor-exit-btn" onClick={() => { try { localStorage.removeItem("mikilab_mode"); localStorage.removeItem("mikilab_admin_unlocked"); localStorage.removeItem("mikilab_pin_unlocked"); } catch { /* */ } window.location.reload(); }}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0C1019] border border-[#f87171]/40 text-[#f87171] font-bold text-xs active:scale-95 transition-all">
+                      <LogOut className="w-3.5 h-3.5" /> <span className="hidden sm:inline">{tri("Esci", "Abmelden", "Exit", "Salir", "Quitter", "خروج")}</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
                 <KioskMode />
                 <button data-testid="operatore-chip" onClick={() => setShowOperator(true)} title="Operatore"
                   className="inline-flex items-center gap-1.5 pl-1 pr-2 py-1 rounded-full bg-[#0C1019] border border-[#FF6B00]/20 text-white hover:border-[#FF6B00]/60 active:scale-95 transition-all">
@@ -351,6 +376,8 @@ export default function App() {
                     </button>
                   </div>
                 )}
+                  </>
+                )}
               </div>
             </div>
           </header>
@@ -358,6 +385,7 @@ export default function App() {
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 pb-40">
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
+              {mode !== "floor" && (<>
               {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) + reparti cliccabili */}
               <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-[240px] sm:h-[300px] transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 28px ${moodColor}33, inset 0 0 44px ${moodColor}12`, background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
                 <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#FF6B0011 1px,transparent 1px),linear-gradient(90deg,#FF6B0011 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
@@ -568,6 +596,7 @@ export default function App() {
                   </div>
                 )}
               </section>
+              </>)}
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">

@@ -9,6 +9,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { NexusAvatar } from "@/components/NexusAvatar";
 import MikeSuggestions from "@/components/console/MikeSuggestions";
 import MikeAlerts from "@/components/MikeAlerts";
+import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
 
 // SALA SITOR — l'UNICO luogo d'incontro tra il Capo e Sitor (Dio dell'Arte Bianca).
 // Qui il Capo scrive, detta, allega foto/email, dà ordini e riceve tutto: risposte,
@@ -264,6 +265,11 @@ export default function SalaSitor() {
             ))}
             {queue.filter((t) => t.status === "pending").length === 0 && <p className="text-[11px] text-[#64748B] text-center py-3">{tri("Vuota. Ordina qui sopra e Sitor genera la produzione.", "Leer. Oben bestellen, Sitor erzeugt die Produktion.", "Empty. Order above and Sitor generates production.", "Vacía. Ordena arriba.", "Vide. Ordonne ci-dessus.", "خالی است.")}</p>}
           </div>
+        </div>
+
+        {/* Modifiche proposte dagli operai — approvazione del Capo */}
+        <div className="pt-3 border-t border-[#1e293b]">
+          <FloorChangeApprovals />
         </div>
 
         {/* Sitor parla da solo: proposte e allarmi arrivano QUI */}

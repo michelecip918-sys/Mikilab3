@@ -15,12 +15,13 @@ export default function AdminGate({ onUnlock, onBack }) {
   const [err, setErr] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const tryPin = async (val) => {
-    setBusy(true);
+  const tryPin = async (val, soft) => {
+    if (!soft) setBusy(true);
     let ok = false;
     let level = "master";
+    let res = null;
     try {
-      const res = await adminGateApi.verify(val);        // verifica lato server (segreto, hashato)
+      res = await adminGateApi.verify(val);        // verifica lato server (segreto, hashato)
       ok = !!(res && res.ok);
       level = (res && res.level) || "master";
       if (ok) { try { localStorage.setItem(OK_KEY, val); } catch { /* */ } }
@@ -28,9 +29,9 @@ export default function AdminGate({ onUnlock, onBack }) {
       // Offline: confronto con l'ultimo PIN valido salvato su questo dispositivo.
       try { ok = val === localStorage.getItem(OK_KEY); } catch { ok = false; }
     }
-    setBusy(false);
-    if (ok) { if (level === "master") { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } } onUnlock(level); }
-    else { setErr(true); setPin(""); }
+    if (!soft) setBusy(false);
+    if (ok) { if (level === "master") { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } } onUnlock(level, res || {}); }
+    else if (!soft) { setErr(true); setPin(""); }
   };
 
   const push = (d) => {
@@ -38,7 +39,10 @@ export default function AdminGate({ onUnlock, onBack }) {
     const next = pin + d;
     setPin(next);
     setErr(false);
-    if (next.length === 6) setTimeout(() => tryPin(next), 120);
+    // 4 cifre → possibile PIN OPERAIO (o ospite): verifica "soft", senza errore se non combacia.
+    if (next.length === 4) setTimeout(() => tryPin(next, true), 120);
+    // 6 cifre → PIN MASTER: verifica finale.
+    if (next.length === 6) setTimeout(() => tryPin(next, false), 120);
   };
   const back = () => { setPin((p) => p.slice(0, -1)); setErr(false); };
 

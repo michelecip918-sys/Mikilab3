@@ -4799,3 +4799,13 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - sw.js CACHE_NAME → mikilab-v50.
 - **Test iteration_225: backend 7/7 (100%), frontend 100%** — Sala Sitor 14/14 parti, AI ask/capture OK (<3s), zero duplicati Sitor nel DOM, zero legacy "Lista Spesa/Shelf-Life", recipe dialog senza etichetta UE, 0 errori console, 0 overflow (1920+390). Unico warning cosmetico pre-esistente: span-in-option (non bloccante).
 - deployment_agent: **PASS**. ⚠️ PUBBLICAZIONE: il tool di trigger deploy non è disponibile in questo fork → premere **Redeploy** in "Gestisci deployment" per portare tutto su mikilab.de.
+
+## v62 (2026-09) — ACCESSO OPERAIO BLINDATO + SITOR OPUS 4.8 + PRODUZIONE GUIDATA
+- **Cervello di Sitor → Claude Opus 4.8**: costante `SITOR_BRAIN="claude-opus-4-8"` applicata a tutte le 46 chiamate LLM in server.py (il modello più potente per il "Dio dell'Arte Bianca").
+- **Ingresso Operaio blindato (un unico keypad)**: `POST /api/admin-gate/verify` ora riconosce anche i PIN personali operaio (4 cifre) e ritorna `{level:"operator", name, operator_level}` rilasciando il cookie gate. Il keypad verifica a 4 cifre (operaio/ospite, soft) e a 6 cifre (master). Livello master rate-limit alzato a 20/300s.
+- **Modalità FLOOR (App.js)**: stato `mode` (capo|floor). Chi entra come operaio va DRITTO in Produzione; la zona Capo (deck, master-console, capo-gate, account-btn, controlli header) è **completamente rimossa dal DOM** (verificato su 2 viewport). Header floor mostra badge `Nome · livello` + `floor-exit-btn`.
+- **Livello per operaio (novizio/esperto/maestro)**: campo `level` su `operator_pins`; il Capo lo imposta in panel-security (`op-level-input` + select per riga). Nuovo `PATCH /api/operator-pins/{name}/level`.
+- **Sitor Maestro (SitorMaestro.jsx, nel Floor)**: `POST /api/floor/sitor/guide` — guida passo-passo adattata al livello (tono/dettaglio), con o senza macchinari; TTS. Domanda libera a Sitor.
+- **Modifiche al piano con OK del Capo**: `POST /api/floor/sitor/change-request` — Opus classifica minor/major; le minori Sitor le auto-applica e avvisa il Capo, le maggiori restano `pending`. Il Capo approva/rifiuta dalla **Sala Sitor** (`FloorChangeApprovals.jsx`): `GET /floor/sitor/change-requests`, `POST .../{id}/decide`.
+- **Test iteration_226: backend 6/6 (100%), frontend 100%** — ingresso operaio 4 cifre, zona Capo invisibile (5 testid vietati assenti su mobile+desktop), guida Opus in italiano, change-request minor auto-applicata, 5 gruppi Capo intatti, panel-security con livelli, 0 pageerror, 0 overflow.
+- sw.js CACHE_NAME → mikilab-v51. Credenziali: PIN operaio di test **7391 → Marco (novizio)**.

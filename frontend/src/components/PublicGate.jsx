@@ -66,9 +66,10 @@ export default function PublicGate({ onUnlock }) {
     setReqBusy(false);
   };
 
-  const handleUnlock = (level) => {
+  const handleUnlock = (level, res) => {
     if (level === "guest") { setGuest(true); setShowPin(false); }
-    else { onUnlock(level); }
+    else if (level === "operator") { onUnlock({ mode: "floor", name: (res && res.name) || "", level: (res && res.operator_level) || "novizio" }); }
+    else { onUnlock({ mode: "capo" }); }
   };
 
   const WORLDS = [

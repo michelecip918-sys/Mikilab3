@@ -693,9 +693,19 @@ export const deptApi = {
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
 export const operatorPinsApi = {
   list: () => api.get(`/operator-pins`).then((r) => r.data),
-  set: (name, pin) => api.put(`/operator-pins`, { name, pin }).then((r) => r.data),
+  set: (name, pin, level) => api.put(`/operator-pins`, { name, pin, level }).then((r) => r.data),
   remove: (name) => api.delete(`/operator-pins/${encodeURIComponent(name)}`).then((r) => r.data),
+  setLevel: (name, level) => api.patch(`/operator-pins/${encodeURIComponent(name)}/level`, { level }).then((r) => r.data),
   verify: (pin) => api.post(`/operator-pins/verify`, { pin }).then((r) => r.data),
+};
+
+// Sitor Maestro di Produzione — guida per-operaio adattata al livello + richieste di modifica al piano.
+export const sitorFloorApi = {
+  guide: (payload) => api.post(`/floor/sitor/guide`, payload).then((r) => r.data),
+  changeRequest: (payload) => api.post(`/floor/sitor/change-request`, payload).then((r) => r.data),
+  changeList: () => api.get(`/floor/sitor/change-requests`).then((r) => r.data),
+  changeCount: () => api.get(`/floor/sitor/change-requests/count`).then((r) => r.data),
+  changeDecide: (rid, decision, note) => api.post(`/floor/sitor/change-requests/${rid}/decide`, { decision, note }).then((r) => r.data),
 };
 
 // Registro accessi (tentativi PIN Master/Produzione/Operatore) — solo Capo.

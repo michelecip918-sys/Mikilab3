@@ -1,0 +1,36 @@
+{
+  "summary": "Iteration 226 — Operator Floor Mode + Sitor Maestro (Opus 4.8) full backend + frontend regression. Backend: 6/6 pytest passed (gate master, gate operator level, operator-pins lifecycle with level esperto→maestro + gate verify reflecting maestro + delete, sitor guide with/without machines in Italian, change-request classification+status+ack, list, decide). Frontend E2E on preview URL @ mobile 390x844 and desktop 1920x800: operator PIN 7391 auto-verifies at 4 digits, floor-operator-day rendered, floor-operator-badge shows 'Marco · novizio', floor-exit-btn works. CRITICAL security check PASSED — capo-group-toggle-piano, master-console, capo-gate, deck-multiverse, account-btn ALL absent in floor mode on both viewports. Sitor Maestro flow: maestro-guide-btn triggered maestro-guide with maestro-step-0, machines toggle worked, change-request 'Cambiare l ordine dei forni' returned maestro-change-result with Italian ack from Opus 4.8. Capo mode intact: master-console visible, EXACTLY 5 capo groups (piano/ordini/squadra/strumenti/sitor). capo-group-toggle-sitor → sala-sitor + floor-change-approvals both present. capo-group-toggle-strumenti → panel-security present (accordion, must click 'Security & Access' header to expand) → op-level-input + op-level-marco/sara/youssef selects render; changing Marco novizio→esperto issued PATCH /api/operator-pins/Marco/level 200 OK and DOM reflects new value. activity-selector works. No horizontal overflow at 1920x800/1080 or 390x844. 0 pageerrors.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "SitorMaestro (FloorOperatorDay)", "issue": "maestro-level-badge testid is ABSENT although the request explicitly lists it. sitor-maestro/maestro-machines-toggle/maestro-guide-btn all present. The operator level ('novizio') IS shown inside floor-operator-badge instead. If a dedicated badge inside SitorMaestro is required, please add data-testid='maestro-level-badge'.", "selector": "[data-testid=maestro-level-badge]", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "activity-selector <option>", "issues": ["React hydration warning persists: '<span> cannot be a child of <option>' — same warning already noted in iteration 225, still not fixed. Not blocking."]}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iter226_operator_floor.py",
+    "/app/test_reports/pytest/iter226.xml"
+  ],
+  "action_items": [
+    "(OPTIONAL) Add data-testid='maestro-level-badge' inside SitorMaestro to expose the operator level explicitly (currently the level is only shown in the header floor-operator-badge).",
+    "(OPTIONAL) Fix long-standing React hydration warning on <option>/<span> in activity-selector."
+  ],
+  "critical_code_review_comments": [
+    "Security requirement met: floor mode fully hides Capo surfaces (checked 5 forbidden testids on 2 viewports).",
+    "Gate keypad correctly distinguishes 4-digit operator PIN vs 6-digit master PIN with auto-verify.",
+    "PATCH /api/operator-pins/{name}/level uses the display name (case-preserved) while UI testids for row selects are lower-cased ('op-level-marco'). Slight inconsistency — request expected 'op-level-Marco'. Not a bug, just document the convention.",
+    "Opus 4.8 latency was acceptable (guide + change response returned well under 60s in this environment).",
+    "AdminSecurity is nested inside an accordion inside strumenti group; op-level-* selects only render when 'Security & Access' is expanded (via panel-security-head button). This is fine but worth calling out for future tests."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter226_operator_floor.py", "/app/test_reports/iteration_226.json"],
+  "success_rate": {"backend": "100% (6/6)", "frontend": "100% (all critical checks passed; 1 minor missing testid)"},
+  "test_credentials": "Master gate PIN 198505 · admin@mikilab.de / Mikilab2026! · Operator PIN 7391 (Marco/novizio) — recreated by fixture if missing. Test PIN 8172 (QAOp) is created and deleted within the pytest lifecycle.",
+  "seed_data_creation": "test_operator_pin_lifecycle: creates and deletes QAOp/8172. ensure_marco fixture PUTs Marco/7391 novizio (idempotent).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Preview URL https://edit-33.preview.emergentagent.com. To reach floor mode: seed the 4 localStorage keys + mikilab_cookies_ok=1 (else cookie banner blocks keypad), click public-enter-btn, then tap admin-key-7/3/9/1 (auto-verifies at 4 digits). To reach Capo strumenti panel-security you must ALSO click the accordion header (panel-security button:first-child) to reveal op-level-* selects. op-level row testids use lowercased name ('op-level-marco'). Backend endpoints: PATCH /api/operator-pins/{Name}/level (name case preserved), POST /api/floor/sitor/guide (Opus 4.8, up to ~30s), POST /api/floor/sitor/change-request + GET /api/floor/sitor/change-requests + POST /api/floor/sitor/change-requests/{id}/decide.",
+  "rca of the issue": "N/A — all functional flows pass. Missing maestro-level-badge testid is a spec-vs-implementation naming detail, not a bug."
+}

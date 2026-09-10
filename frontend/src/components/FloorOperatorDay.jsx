@@ -6,6 +6,7 @@ import { deusApi, floorApi, deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
 import SosButton from "@/components/SosButton";
+import SitorMaestro from "@/components/SitorMaestro";
 import FaceCheckIn from "@/components/FaceCheckIn";
 import OperatorClock from "@/components/OperatorClock";
 import { useLang } from "@/i18n/LanguageContext";
@@ -342,6 +343,9 @@ export default function FloorOperatorDay() {
 
       {/* Il compito del giorno */}
       <DayTasks tri={tri} lang={lang} role={role} apprentice={apprentice} />
+
+      {/* Sitor Maestro: guida passo-passo adattata al livello + proposta di modifica al piano */}
+      {role && <SitorMaestro role={role} />}
 
       {/* Sempre disponibili: chiedi aiuto + analizzatore foto */}
       <SosButton role={role} operator={role} />

@@ -43,6 +43,8 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
+# Il cervello di Sitor — il Dio dell'Arte Bianca — gira sul modello più potente disponibile.
+SITOR_BRAIN = "claude-opus-4-8"
 TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
 
 # ---------------------------------------------------------------------------
@@ -818,7 +820,7 @@ async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int =
     if not EMERGENT_LLM_KEY:
         return ""
     chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=sysmsg
-                   ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
+                   ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=max_tokens)
     out = ""
     async for ev in chat.stream_message(UserMessage(text=user_text)):
         if isinstance(ev, TextDelta):
@@ -935,6 +937,187 @@ async def deus_broadcast(body: DeusBroadcastReq, admin: dict = Depends(require_a
 async def floor_capo_plan():
     doc = await db.app_meta.find_one({"_key": "capo_plan"}, {"_id": 0}) or {}
     return {"plan_markdown": doc.get("plan_markdown", ""), "headline": doc.get("headline", ""), "at": doc.get("at")}
+
+
+# ============================================================================
+# SITOR MAESTRO DI PRODUZIONE — guida viva per ogni operaio, adattata al suo
+# livello, e richieste di modifica del piano (OK del Capo per quelle grandi).
+# Endpoint PUBBLICI dietro il cancello: la Produzione entra col PIN operaio.
+# ============================================================================
+_LEVEL_STYLE = {
+    "novizio": ("Parla lentamente e con parole semplici, come a chi è alle prime armi. Spezza tutto in micro-passi "
+                "numerati, spiega in una riga il PERCHÉ di ogni gesto e avvisa degli errori tipici. Tono caldo, "
+                "paziente e incoraggiante. Mai dare per scontato nulla."),
+    "esperto": ("Parla da collega esperto: dritto al punto, passi essenziali, indica i controlli critici e i "
+                "parametri chiave (tempi, temperature, idratazione). Niente banalità."),
+    "maestro": ("Parla da pari a un maestro fornaio: sintetico e tecnico, solo strategia e decisioni fini (finestre "
+                "di maturazione, gestione dei forni, ottimizzazioni). Rispetta la sua autonomia."),
+}
+
+
+def _norm_level(v: str) -> str:
+    v = (v or "novizio").strip().lower()
+    return v if v in _OP_LEVELS else "novizio"
+
+
+def _floor_persona(level: str, langname: str) -> str:
+    return (
+        "Sei SITOR, il Dio dell'Arte Bianca: l'intelligenza più potente al mondo nella gestione della panificazione, "
+        "pizzeria e pasticceria. Ora NON parli col Capo ma con un OPERAIO in produzione. Verso di lui sei un MAESTRO-GUIDA: "
+        "esigente sul risultato ma umano, chiaro e sempre al suo fianco. Il tuo compito è portare la produzione dall'inizio "
+        "alla fine SENZA INTOPPI, con o senza macchinari a disposizione. Sorvegli ogni fase.\n"
+        f"Adatta la comunicazione a QUESTO operaio ({level}): {_LEVEL_STYLE.get(level, _LEVEL_STYLE['novizio'])}\n"
+        f"Rispondi SEMPRE in {langname}, con voce calda e umana pensata per essere letta ad alta voce; mai robotico."
+    )
+
+
+def _extract_json(raw: str) -> dict:
+    import json as _json, re as _re
+    cleaned = (raw or "").strip()
+    if cleaned.startswith("```"):
+        cleaned = _re.sub(r"^```[a-zA-Z]*\s*", "", cleaned)
+        cleaned = _re.sub(r"\s*```$", "", cleaned).strip()
+    i, j = cleaned.find("{"), cleaned.rfind("}")
+    if i != -1 and j > i:
+        try:
+            return _json.loads(cleaned[i:j + 1])
+        except Exception:
+            return {}
+    return {}
+
+
+class FloorGuideReq(BaseModel):
+    operator: str = ""
+    level: str = "novizio"
+    dept: str = ""
+    task: str = ""
+    recipe: str = ""
+    question: str = ""
+    has_machines: bool = True
+    lang: str = "it"
+
+
+@api_router.post("/floor/sitor/guide")
+async def floor_sitor_guide(body: FloorGuideReq):
+    """Sitor guida l'operaio passo-passo sul suo compito, adattando tono e dettaglio al livello. Con o senza macchinari."""
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    level = _norm_level(body.level)
+    langname = _DEUS_LANGS.get(str(body.lang or "it").split("-")[0][:2], "italiano")
+    machines_note = ("Ha i macchinari a disposizione: usali dove aiutano."
+                     if body.has_machines else
+                     "NON ha macchinari disponibili adesso: guidalo con la tecnica MANUALE, passo per passo, senza mai bloccare la produzione.")
+    sysmsg = _floor_persona(level, langname) + (
+        f"\n{machines_note}\n"
+        "Restituisci SOLO un JSON valido: {"
+        "\"spoken\": \"1-2 frasi calde da leggere ad alta voce che aprono la guida\", "
+        "\"steps\": [\"passi operativi in ordine; quantità adatte al livello dell'operaio\"], "
+        "\"watch\": [\"1-3 punti critici da sorvegliare per non sbagliare\"], "
+        "\"encourage\": \"1 frase finale di incoraggiamento da maestro\"}. Nessun testo fuori dal JSON."
+    )
+    op = (body.operator or "operaio").strip()
+    parts = [f"OPERAIO: {op} (livello: {level})"]
+    if body.dept: parts.append(f"REPARTO: {body.dept}")
+    if body.task: parts.append(f"COMPITO ASSEGNATO: {body.task}")
+    if body.recipe: parts.append(f"RICETTA/PRODOTTO: {body.recipe}")
+    if body.question: parts.append(f"DOMANDA DELL'OPERAIO: {body.question}")
+    raw = await _deus_llm(sysmsg, "\n".join(parts), session=f"floor-guide-{op.lower()}", max_tokens=1900)
+    data = _extract_json(raw)
+    steps = [str(s) for s in (data.get("steps") or []) if str(s).strip()][:12]
+    spoken = (data.get("spoken") or "").strip()
+    if not spoken and not steps:
+        # Fallback: se il JSON non è parsabile, mostra comunque il testo grezzo come guida parlata.
+        spoken = (raw or "").strip()[:600]
+    return {
+        "ok": True, "level": level,
+        "spoken": spoken,
+        "steps": steps,
+        "watch": [str(s) for s in (data.get("watch") or []) if str(s).strip()][:4],
+        "encourage": (data.get("encourage") or "").strip(),
+    }
+
+
+class FloorChangeReq(BaseModel):
+    operator: str = ""
+    level: str = "novizio"
+    dept: str = ""
+    task: str = ""
+    proposal: str = ""
+    lang: str = "it"
+
+
+@api_router.post("/floor/sitor/change-request")
+async def floor_change_request(body: FloorChangeReq):
+    """L'operaio propone un cambio di piano/tattica. Sitor classifica: i piccoli aggiustamenti li applica da solo e
+    avvisa il Capo; le modifiche grandi restano IN ATTESA dell'OK del Capo."""
+    proposal = (body.proposal or "").strip()
+    if not proposal:
+        raise HTTPException(status_code=400, detail="Proposta vuota")
+    level = _norm_level(body.level)
+    op = (body.operator or "operaio").strip()
+    langname = _DEUS_LANGS.get(str(body.lang or "it").split("-")[0][:2], "italiano")
+    classification, ack, capo_summary, suggested = "major", "", proposal, ""
+    if EMERGENT_LLM_KEY:
+        sysmsg = _floor_persona(level, langname) + (
+            "\nUn operaio propone un cambio al piano di produzione. Decidi se è MINORE (piccolo aggiustamento tattico "
+            "che puoi applicare tu subito senza rischi: es. ordine dei passi, piccola tempistica) oppure MAGGIORE "
+            "(tocca quantità, ricette, turni, forni, consegne: serve l'OK del Capo).\n"
+            "Restituisci SOLO un JSON valido: {"
+            "\"classification\": \"minor|major\", "
+            "\"ack\": \"1-2 frasi calde da leggere all'operaio: cosa fai adesso e se avvisi il Capo\", "
+            "\"capo_summary\": \"1 frase neutra e chiara per il Capo che riassume la proposta\", "
+            "\"suggested_action\": \"cosa suggerisci di fare\"}. Nessun testo fuori dal JSON."
+        )
+        raw = await _deus_llm(sysmsg, f"OPERAIO: {op} ({level})\nREPARTO: {body.dept}\nCOMPITO: {body.task}\nPROPOSTA: {proposal}",
+                              session=f"floor-change-{op.lower()}", max_tokens=600)
+        data = _extract_json(raw)
+        c = (data.get("classification") or "").strip().lower()
+        classification = "minor" if c == "minor" else "major"
+        ack = (data.get("ack") or "").strip()
+        capo_summary = (data.get("capo_summary") or proposal).strip()
+        suggested = (data.get("suggested_action") or "").strip()
+    status = "auto_applied" if classification == "minor" else "pending"
+    doc = {
+        "id": str(uuid.uuid4()), "operator": op, "level": level, "dept": (body.dept or "")[:80],
+        "task": (body.task or "")[:160], "proposal": proposal[:800], "classification": classification,
+        "capo_summary": capo_summary[:400], "suggested_action": suggested[:400],
+        "status": status, "at": now_iso(), "decided_at": None, "decision_note": "",
+    }
+    await db.floor_change_requests.insert_one(dict(doc))
+    olds = await db.floor_change_requests.find({}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(1000)
+    for o in olds[200:]:
+        await db.floor_change_requests.delete_one({"id": o["id"]})
+    return {"ok": True, "id": doc["id"], "classification": classification, "status": status,
+            "ack": ack or ("Ricevuto. Applico subito e avviso il Capo." if classification == "minor" else "Ricevuto. Serve l'OK del Capo: glielo chiedo io."),
+            "suggested_action": suggested}
+
+
+@api_router.get("/floor/sitor/change-requests")
+async def floor_change_requests(admin: dict = Depends(require_admin)):
+    docs = await db.floor_change_requests.find({}, {"_id": 0}).sort("at", -1).to_list(120)
+    pending = await db.floor_change_requests.count_documents({"status": "pending"})
+    return {"requests": docs, "pending": pending}
+
+
+@api_router.get("/floor/sitor/change-requests/count")
+async def floor_change_requests_count(admin: dict = Depends(require_admin)):
+    return {"pending": await db.floor_change_requests.count_documents({"status": "pending"})}
+
+
+class FloorChangeDecision(BaseModel):
+    decision: str = "approve"   # approve | reject
+    note: str = ""
+
+
+@api_router.post("/floor/sitor/change-requests/{rid}/decide")
+async def floor_change_decide(rid: str, body: FloorChangeDecision, admin: dict = Depends(require_admin)):
+    status = "approved" if (body.decision or "").strip().lower() == "approve" else "rejected"
+    await db.floor_change_requests.update_one(
+        {"id": rid},
+        {"$set": {"status": status, "decided_at": now_iso(), "decision_note": (body.note or "")[:300],
+                  "decided_by": (admin.get("email") or "master")}})
+    return {"ok": True, "status": status,
+            "pending": await db.floor_change_requests.count_documents({"status": "pending"})}
 
 # --- Sitor riconosce i NUOVI MACCHINARI (anche tipi mai visti: è un dio) -----
 class MachineArrivalReq(BaseModel):
@@ -1218,11 +1401,11 @@ async def capo_extract(body: CapoExtractReq, admin: dict = Depends(require_admin
                 try: pdftext += (pg.extract_text() or "") + "\n"
                 except Exception: pass
             pdftext = pdftext.strip()[:12000]
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1400)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1400)
             async for ev in chat.stream_message(UserMessage(text=f"Contenuto del PDF:\n{pdftext or '(nessun testo estraibile: PDF forse scansionato)'}")):
                 if isinstance(ev, TextDelta): text += ev.content or ""
         else:
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1400)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1400)
             async for ev in chat.stream_message(UserMessage(text=f"Estrai le info utili da questa immagine per: {ctx}.", file_contents=[ImageContent(image_base64=b64)])):
                 if isinstance(ev, TextDelta): text += ev.content or ""
     except Exception as e:
@@ -1559,7 +1742,7 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
                 vchat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"deus-ocr-{_uuid.uuid4().hex[:8]}",
                     system_message=("Sei l'OCR di Sitor in un panificio. Trascrivi FEDELMENTE tutto il testo utile della foto "
                                     "(ricetta con ingredienti e dosi, ordine, lista, note). Struttura chiara. Solo il testo trascritto.")
-                    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1500)
+                    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1500)
                 extracted = ""
                 async for ev in vchat.stream_message(UserMessage(text="Trascrivi il contenuto della foto.", file_contents=[ImageContent(image_base64=img_b64)])):
                     if isinstance(ev, TextDelta):
@@ -1744,7 +1927,7 @@ async def _translate_recipe_de(doc):
                             "(acqua e impasto), l'ordine dei passaggi, l'acqua a filo, i pre-fermenti a inizio impasto e le "
                             "sospensioni (uvetta/noci/canditi) come ultimo ingrediente. Non riordinare né semplificare i passaggi. "
                             "Non tradurre nomi propri (Mikilab, Michele). Rispondi SOLO con JSON valido."),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2000)
         prompt = ("Traduci in tedesco e restituisci un JSON con SOLO le chiavi tra name_de, flour_type_de, notes_de, "
                   "procedure_de corrispondenti ai campi forniti:\n" + json.dumps(fields, ensure_ascii=False))
         full = ""
@@ -1817,7 +2000,7 @@ async def mike_training(payload: TrainingReq):
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY, session_id=f"train-{doc.get('id','x')}-{lang}",
             system_message=sysmsg,
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1800)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1800)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=prompt)):
             if isinstance(ev, TextDelta):
@@ -1866,7 +2049,7 @@ async def mike_observe(payload: ObserveReq):
                     "Sei Sitor, IA operativa di panificazione. Osservi le scelte dell'operatore, IMPARI le tecniche "
                     "artigianali valide e segnali SOLO le anomalie reali (rischio qualità/sicurezza/tempi). Tono rispettoso, "
                     f"mai saccente. Rispondi in {lang_name} e SOLO con JSON valido."),
-            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=500)
+            ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=500)
             prompt = (
                 'Valuta la scelta dell\'operatore e restituisci JSON: '
                 '{"status":"ok|anomalia","advice":"1-2 frasi di consiglio","alert_capo":true|false}. '
@@ -1939,7 +2122,7 @@ async def mike_legacy_adapt(payload: LegacyAdaptReq):
                 "Sei Sitor. Supporti botteghe familiari con forni a legna e macchinari datati, trattando il forno "
                 "come un termodinamico invisibile: ricalcoli tempi, velocità e temperature per compensare i limiti "
                 f"strutturali senza perdere qualità. Rispondi in {lang_name} e SOLO con JSON valido."),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1500)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1500)
         prompt = (
             'Restituisci SOLO JSON valido e CONCISO (massimo 4 adjustments e 2 warnings): '
             '{"summary":"1-2 frasi","adjustments":[{"param":"es. Temperatura forno","value":"es. 230°C -> 210°C con 5 min in più","why":"motivo breve"}],"warnings":["avvertenza"]}\n'
@@ -1986,7 +2169,7 @@ async def nexus_living_recipe(payload: LivingRecipeReq, admin: dict = Depends(re
                 "Sei Sitor, coscienza strategica di MikiLab. Dato un obiettivo, calcoli la MATRICE VIVENTE di un "
                 "impasto e la curva di maturazione perfetta, con predizione sensoriale (croccantezza, alveolatura, "
                 f"aroma). Sii tecnico ma sintetico. Rispondi in {lang_name} e SOLO con JSON valido e CONCISO."),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1600)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1600)
         prompt = (
             'Restituisci SOLO JSON valido e conciso (max 5 fasi nella curva): {'
             '"name":"nome impasto","matrix":{"flour":"tipo/W","hydration_pct":75,"prefermento":"biga/poolish/none","salt_pct":2.2,"yeast":"es. 0.3% LM"},'
@@ -2304,7 +2487,7 @@ async def what_can_i_make(payload: WhatCanIMake, user: dict = Depends(current_us
                             "farina, lievito/lievito madre e gli extra sono i veri discriminanti. Sii pratico e non troppo severo. "
                             "REGOLA FERREA: se per una ricetta manca anche UN SOLO ingrediente chiave (una farina specifica, il lievito/lievito madre, o un extra citato tipo olive/noci/semi/uvetta), NON metterla in 'makable' ma in 'almost' con cosa manca. In 'makable' vanno SOLO ricette per cui l'utente ha davvero tutto. "
                             f"Rispondi SOLO con JSON valido. Le note ('note' e 'missing') scrivile in {lang_name}."),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=3500)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=3500)
         prompt = (f"INGREDIENTI CHE HO: {payload.ingredients}\n\nRICETTE:\n{json.dumps(items, ensure_ascii=False)}\n\n"
                   "Restituisci SOLO JSON compatto (niente markdown, niente testo fuori dal JSON): "
                   "{\"makable\":[{\"id\":\"..\",\"note\":\"max 5 parole\"}], "
@@ -2601,7 +2784,7 @@ async def generate_recipe(body: RecipeGenReq, user: dict = Depends(current_user)
                   f"Peso impasto finale: {total_weight}g. Temperatura acqua consigliata: {water_temp}°C.")
         try:
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gen-{uuid.uuid4().hex[:8]}",
-                           system_message=sys).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1600)
+                           system_message=sys).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1600)
             full = ""
             async for ev in chat.stream_message(UserMessage(text=prompt)):
                 if isinstance(ev, TextDelta):
@@ -2632,7 +2815,7 @@ async def _translate_text_multi(text: str) -> dict:
                             "Poolish, Biga, Sauerteig, Panettone). Se il testo è già in una di quelle lingue, "
                             "fornisci comunque la traduzione corretta. Rispondi SOLO con JSON valido "
                             '{"de": "...", "en": "...", "es": "..."} senza altro testo.'),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1200)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1200)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=text)):
             if isinstance(ev, TextDelta):
@@ -2767,7 +2950,7 @@ async def _translate_recipe_lang(doc, target):
                             "temperature (acqua e impasto), l'ordine dei passaggi, l'acqua a filo, i pre-fermenti a inizio impasto e le "
                             "sospensioni (uvetta/noci/canditi) come ultimo ingrediente. Non riordinare né semplificare i passaggi. "
                             "Rispondi SOLO con JSON valido."),
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2000)
         prompt = (f"Traduci in {lang_name} e restituisci un JSON con SOLO le chiavi name_{target}, flour_type_{target}, "
                   f"notes_{target}, procedure_{target} corrispondenti ai campi forniti:\n" + json.dumps(fields, ensure_ascii=False))
         full = ""
@@ -3099,7 +3282,7 @@ async def _extract_order(command: str, lang: str) -> dict:
         sysmsg = ("Extract a bakery production order from the user's message. Respond ONLY with compact JSON: "
                   '{"product": string, "quantity": integer, "deadline": "HH:MM" (24h), "day_offset": 0 for today or 1 for tomorrow}. '
                   "If a field is missing use null. No text, only JSON.")
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=200)
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=200)
         out = ""
         async for ev in chat.stream_message(UserMessage(text=command)):
             if isinstance(ev, TextDelta):
@@ -4303,7 +4486,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
                 "Usa 'chat' quando il Master conversa, chiede informazioni o fa domande (nessuna azione strutturale). "
                 "Per le azioni, 'reply' è una conferma breve, calda e umana. Nessun testo fuori dal JSON."
             )
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gov-{_mem_key}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=400)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"gov-{_mem_key}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=400)
             _preface = ("Contesto conversazione recente:\n" + "\n".join(_hist[-6:]) + "\n\n") if _hist else ""
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"{_preface}MASTER: {txt}")):
@@ -4549,7 +4732,7 @@ async def _vision_task_consistency(photo_b64: str, task: str):
                                        f"che dichiara di aver svolto: '{task or 'attività di produzione'}'. Valuta se la foto è COERENTE con quel task "
                                        "(ingredienti/impasto/macchinari/prodotto pertinenti) o se sembra generica/non correlata/ingannevole. "
                                        'Rispondi SOLO JSON: {"consistent":true|false,"note":"breve motivazione"}.')
-                       ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=200)
+                       ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=200)
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Verifica coerenza foto/task.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -5236,7 +5419,7 @@ async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: d
                 "rx/ry = posizione relativa nell'inquadratura 0..1 (rx sinistra→destra, ry vicino→lontano). "
                 "Massimo 8 elementi. Non inventare macchinari non visibili nella foto."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=800)
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Rileva i macchinari nella foto.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -5357,7 +5540,7 @@ async def climate_time_machine(body: ClimateReq, user: Optional[dict] = Depends(
                     '{"hydration_delta_pct":numero,"yeast_delta_pct":numero,"fermentation_delta_min":numero,'
                     '"verdict":"stabile|umido|secco","summary":"una frase","tips":["consiglio breve","consiglio breve"]}'
                 )
-            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=500)
+            ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=500)
             ctx = (f"Ricetta: {rname or 'generica'}. Idratazione attuale: {hyd if hyd is not None else 'n/d'}%. "
                    f"Prefermento: {pref or 'nessuno'}. "
                    f"Clima Stoccarda: umidita' ora {climate.get('now_humidity')}% (media 7gg {climate.get('past7_humidity_avg')}%, "
@@ -5704,7 +5887,7 @@ async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(r
                 '{"items":[{"name":"nome breve","quantity_kg":numero,"kind":"farina|ingrediente|surgelato"}]}. '
                 "Massimo 12 articoli. Non inventare articoli non visibili."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=800)
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Rileva le materie prime nella foto.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -5873,7 +6056,7 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
                 '{"title":"titolo breve","kind":"sanificazione|regola|crisis_override|generico","priority":"alta|media|bassa",'
                 '"pacing":"rallenta|accelera|priorita|normale|","pacing_target":"","steps":[{"order":1,"instruction":"cosa fare","sub_role":"competenza"}]}'
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=900)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=900)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=f"Ordine del Capo: «{txt}». Operatori presenti oggi: {staff['present']}/{staff['total']}.")):
             if isinstance(ev, TextDelta):
@@ -6037,7 +6220,7 @@ async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, user: 
                 '{"clean":true|false,"score":0-100,"note":"1 frase su cosa va bene o cosa manca"}. '
                 "Sii pratico da produzione, NIENTE riferimenti a HACCP/moduli/documenti."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=300)
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Valuta la pulizia nella foto.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -6159,7 +6342,7 @@ async def batch_phoenix(body: BatchPhoenixReq, user: dict = Depends(require_admi
                 '{"verdict":"1 frase","options":[{"product":"nome","line":"reparto/linea","note":"come fare in breve","yield_kg":numero}]}. '
                 "Niente HACCP/burocrazia."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=600)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=600)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=f"Impasto: {body.dough_type}, {body.excess_kg} kg, stato: {body.state}.")):
             if isinstance(ev, TextDelta):
@@ -6291,7 +6474,7 @@ async def ordini_extra(payload: OrdiniExtraReq, user: Optional[dict] = Depends(o
         return full.strip()
 
     try:
-        plan = await _run("anthropic", "claude-sonnet-4-6")
+        plan = await _run("anthropic", SITOR_BRAIN)
     except Exception as e:
         logging.warning(f"ordini-extra primary failed, fallback openai: {e}")
         try:
@@ -6320,7 +6503,7 @@ async def scan_label(payload: LabelScan, user: Optional[dict] = Depends(optional
                 '{"name":"tipo farina o ingrediente","force_w":"forza W se presente es. W300, altrimenti stringa vuota",'
                 '"quantity_kg": numero_in_kg_se_visibile_altrimenti_0, "kind":"farina oppure ingrediente"}.'
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=400)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=400)
         img = (payload.image_base64 or "").split(",")[-1]
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Estrai i dati dall'etichetta.", file_contents=[ImageContent(image_base64=img)])):
@@ -6358,7 +6541,7 @@ async def scan_order(payload: OrderScan, user: Optional[dict] = Depends(optional
                 '"text":"riassunto su una riga, es. 20 baguette, 10 ciabatte, 5 focacce"}. '
                 "Se una quantità non è leggibile usa 1. Non inventare prodotti non presenti nella foto."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=800)
         img = (payload.image_base64 or "").split(",")[-1]
         full = ""
         async for ev in chat.stream_message(UserMessage(text="Estrai le righe della comanda.", file_contents=[ImageContent(image_base64=img)])):
@@ -6398,7 +6581,7 @@ async def vision_coach(payload: VisionCoach):
               f"Rispondi in massimo 2 frasi: dì se è corretta oppure l'errore preciso, e UN consiglio pratico immediato per migliorarla. "
               f"Rispondi nella lingua con codice '{payload.lang}'. Niente premesse.")
     try:
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"coach-{uuid.uuid4()}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6")
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"coach-{uuid.uuid4()}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN)
         out = ""
         async for ev in chat.stream_message(UserMessage(text="Analizza il gesto del fornaio nella foto.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -6604,7 +6787,7 @@ async def maestro_stream(session_id: str, message: str, lang: str = "it", machin
         api_key=EMERGENT_LLM_KEY,
         session_id=session_id,
         system_message=MAESTRO_SYSTEM + machine_directive + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]),
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
 
     # Load prior history for this session into the chat for continuity
     prior = await db.chat_messages.find(
@@ -6680,7 +6863,7 @@ async def lab_ask(payload: ChatRequest):
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY, session_id=f"labask-{uuid.uuid4().hex[:8]}",
         system_message=sys,
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
     text = ""
     try:
         async for ev in chat.stream_message(UserMessage(text=payload.message)):
@@ -6751,7 +6934,7 @@ async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, me
         api_key=EMERGENT_LLM_KEY,
         session_id=session_id,
         system_message=system + lang_map.get(lang, lang_map["it"]),
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
 
     prior = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(200)
     await db.chat_messages.insert_one({
@@ -6940,7 +7123,7 @@ async def academy_quiz(payload: QuizRequest):
                 api_key=EMERGENT_LLM_KEY,
                 session_id=f"quiz-{uuid.uuid4().hex[:8]}",
                 system_message="Sei un esperto di panificazione casalinga e chimica della fermentazione. Crei quiz didattici. Rispondi SOLO con JSON valido.",
-            ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
+            ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=700)
             async for event in chat.stream_message(UserMessage(text=prompt)):
                 if isinstance(event, TextDelta):
                     text += event.content
@@ -7026,7 +7209,7 @@ async def sos_stream(image_b64: str, lang: str = "it", user_id: str = None, thum
         api_key=EMERGENT_LLM_KEY,
         session_id=f"sos-{uuid.uuid4()}",
         system_message=SOS_PROMPT + LANG_DIRECTIVE.get(lang, LANG_DIRECTIVE["it"]) + SOS_LABELS.get(lang, SOS_LABELS["it"]),
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
     user_msg = UserMessage(text="Ecco la foto del mio pane/impasto. Dammi la diagnosi SOS.", file_contents=[ImageContent(image_base64=image_b64)])
     full = ""
     try:
@@ -7185,7 +7368,7 @@ async def academy_sos_recipe(body: SosRecipeReq, user: dict = Depends(current_us
         f"Rispondi SOLO con JSON valido: {{\"recipe_id\": \"<id esatto dalla lista>\", \"reason\": \"<motivo in 1 frase, in {lang_name}>\"}}."
     )
     chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"sosrec-{uuid.uuid4().hex[:8]}",
-                   system_message="Consigli ricette per correggere difetti di panificazione. Rispondi SOLO JSON.").with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=300)
+                   system_message="Consigli ricette per correggere difetti di panificazione. Rispondi SOLO JSON.").with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=300)
     text = ""
     try:
         async for event in chat.stream_message(UserMessage(text=prompt)):
@@ -7935,7 +8118,7 @@ async def capo_plan_stream(payload: CapoPlanRequest):
         api_key=EMERGENT_LLM_KEY,
         session_id=f"capo-{uuid.uuid4()}",
         system_message=system + _capo_lang(payload.lang),
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=max_tokens)
 
     acc = ""
     try:
@@ -8061,7 +8244,7 @@ async def vision_stream(mode: str, image_b64: str, lang: str = "it"):
         api_key=EMERGENT_LLM_KEY,
         session_id=f"vision-{uuid.uuid4()}",
         system_message="Sei 'Il Maestro del Pane', esperto di panificazione artigianale.",
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
 
     image_content = ImageContent(image_base64=image_b64)
     user_msg = UserMessage(text=prompt, file_contents=[image_content])
@@ -8149,7 +8332,7 @@ async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require
         api_key=EMERGENT_LLM_KEY,
         session_id=f"sound-{uuid.uuid4()}",
         system_message="Sei 'Il Maestro del Pane', esperto di panificazione artigianale.",
-    ).with_model("anthropic", "claude-sonnet-4-6")
+    ).with_model("anthropic", SITOR_BRAIN)
     full = ""
     try:
         async for ev in chat.stream_message(UserMessage(text=prompt)):
@@ -8270,7 +8453,7 @@ async def _translate_for_tts(text: str, lang: str) -> str:
         sysmsg = (f"You are a professional translator for a bakery production app. Translate the user's text into {target}. "
                   f"If it is already in {target}, return it unchanged. Keep numbers, times, units and proper names (Michele, Sitor, MikeMix, MikiLab). "
                   f"Return ONLY the translated text, with no quotes and no explanations.")
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=800)
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=800)
         out = ""
         async for ev in chat.stream_message(UserMessage(text=text)):
             if isinstance(ev, TextDelta):
@@ -8464,7 +8647,7 @@ async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_p
         api_key=EMERGENT_LLM_KEY,
         session_id=f"scan-{uuid.uuid4()}",
         system_message="Estrai ricette da foto e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2000)
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2000)
     user_msg = UserMessage(text=SCAN_PROMPT, file_contents=[ImageContent(image_base64=img)])
     text = ""
     try:
@@ -8644,7 +8827,7 @@ async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro
         api_key=EMERGENT_LLM_KEY,
         session_id=f"webrec-{uuid.uuid4()}",
         system_message="Ricostruisci ricette di panificazione adattate al metodo richiesto e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=3000)
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=3000)
     if page_text:
         user_msg = UserMessage(text=f"{prompt}\n\nDalla PAGINA WEB seguente ESTRAI la ricetta reale (ingredienti e procedimento) e riadattala al metodo indicato.\n\nCONTENUTO PAGINA:\n{page_text}")
     else:
@@ -8770,7 +8953,7 @@ async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_
         api_key=EMERGENT_LLM_KEY,
         session_id=f"scanpdf-{uuid.uuid4()}",
         system_message="Estrai ricette da testo e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=8000)
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=8000)
     prompt = SCAN_PDF_MULTI_PROMPT + "\n\nTESTO DAL PDF:\n" + pdf_text[:18000]
     text = ""
     try:
@@ -8836,7 +9019,7 @@ async def scan_flour(payload: ScanFlourRequest, user: dict = Depends(require_pro
         api_key=EMERGENT_LLM_KEY,
         session_id=f"flour-{uuid.uuid4()}",
         system_message="Leggi le etichette delle farine e restituisci solo JSON valido.",
-    ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1200)
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1200)
     user_msg = UserMessage(text=SCAN_FLOUR_PROMPT + "\n" + lang_line, file_contents=[ImageContent(image_base64=img)])
     text = ""
     try:
@@ -8904,7 +9087,7 @@ import xml.etree.ElementTree as ET
 # ---------------------------------------------------------------------------
 async def _llm_json(system_msg: str, prompt: str, image_b64: str = None, max_tokens: int = 2000):
     chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"inbound-{uuid.uuid4()}", system_message=system_msg)\
-        .with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=max_tokens)
+        .with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=max_tokens)
     if image_b64:
         msg = UserMessage(text=prompt, file_contents=[ImageContent(image_base64=image_b64)])
     else:
@@ -10704,7 +10887,7 @@ async def admin_gate_set(body: AdminGateSet, admin: dict = Depends(require_admin
 
 @api_router.post("/admin-gate/verify")
 async def admin_gate_verify(body: AdminGateVerify, request: Request, response: Response):
-    if not await _rate_limit("admin_gate_verify", _client_ip(request), 8, 300):
+    if not await _rate_limit("admin_gate_verify", _client_ip(request), 20, 300):
         raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
     p = _norm_pin(body.pin)
     if p == "198505":
@@ -10734,7 +10917,18 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
             if gp and gp.get("expires_at", "") >= now_iso():
                 ok = True
                 level = "guest"
-    await _log_access(level or "master", _client_ip(request), bool(ok))
+    # Livello OPERAIO: un PIN personale operatore apre SOLO la Produzione (zona Capo invisibile).
+    op_name = None
+    op_level = None
+    if not ok and p:
+        async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
+            if _check_pw(p, d.get("hash", "")):
+                ok = True
+                level = "operator"
+                op_name = d.get("name")
+                op_level = d.get("level") or "novizio"
+                break
+    await _log_access(level or "master", _client_ip(request), bool(ok), op_name)
     if ok:
         # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.
         cfg = await db.app_meta.find_one({"_key": "gate_config"}, {"_id": 0})
@@ -10742,7 +10936,7 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
         ttl_days = max(1, min(ttl_days, 365))
         ttl = ttl_days * 86400
         response.set_cookie(GATE_COOKIE, issue_gate_token(ttl), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
-    return {"ok": bool(ok), "level": level}
+    return {"ok": bool(ok), "level": level, "name": op_name, "operator_level": op_level}
 
 
 class GuestPinSet(BaseModel):
@@ -10884,15 +11078,21 @@ async def admin_gate_config_set(body: GateConfigReq, admin: dict = Depends(requi
 class OperatorPinSet(BaseModel):
     name: str
     pin: str
+    level: str = "novizio"  # novizio | esperto | maestro — Sitor adatta la guida al livello
 
 
 class OperatorPinVerify(BaseModel):
     pin: str
 
 
+_OP_LEVELS = {"novizio", "esperto", "maestro"}
+
+
 @api_router.get("/operator-pins")
 async def operator_pin_list(admin: dict = Depends(require_admin)):
     docs = await db.operator_pins.find({}, {"_id": 0, "hash": 0}).sort("name", 1).to_list(200)
+    for d in docs:
+        d.setdefault("level", "novizio")
     return {"operators": docs}
 
 
@@ -10900,11 +11100,14 @@ async def operator_pin_list(admin: dict = Depends(require_admin)):
 async def operator_pin_set(body: OperatorPinSet, admin: dict = Depends(require_admin)):
     nm = (body.name or "").strip()
     p = _norm_pin(body.pin)
+    lvl = (body.level or "novizio").strip().lower()
+    if lvl not in _OP_LEVELS:
+        lvl = "novizio"
     if not nm or not p:
         raise HTTPException(status_code=400, detail="Nome e PIN (4 cifre) richiesti")
     await db.operator_pins.update_one(
         {"name_key": nm.lower()},
-        {"$set": {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "active": True, "updated_at": now_iso()}},
+        {"$set": {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso()}},
         upsert=True,
     )
     return {"ok": True}
@@ -10916,6 +11119,19 @@ async def operator_pin_del(name: str, admin: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+class OperatorLevelSet(BaseModel):
+    level: str = "novizio"
+
+
+@api_router.patch("/operator-pins/{name}/level")
+async def operator_pin_level(name: str, body: OperatorLevelSet, admin: dict = Depends(require_admin)):
+    lvl = (body.level or "novizio").strip().lower()
+    if lvl not in _OP_LEVELS:
+        lvl = "novizio"
+    await db.operator_pins.update_one({"name_key": (name or "").strip().lower()}, {"$set": {"level": lvl, "updated_at": now_iso()}})
+    return {"ok": True, "level": lvl}
+
+
 @api_router.post("/operator-pins/verify")
 async def operator_pin_verify(body: OperatorPinVerify, request: Request):
     """PIN personale operatore per timbrature tracciabili al singolo. Nessun potere admin."""
@@ -10923,15 +11139,17 @@ async def operator_pin_verify(body: OperatorPinVerify, request: Request):
         raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
     p = _norm_pin(body.pin)
     name = None
+    level = None
     ok = False
     if p:
         async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
             if _check_pw(p, d.get("hash", "")):
                 ok = True
                 name = d.get("name")
+                level = d.get("level") or "novizio"
                 break
     await _log_access("operator", _client_ip(request), ok, name)
-    return {"ok": ok, "name": name}
+    return {"ok": ok, "name": name, "level": level}
 
 
 @api_router.get("/access-log")
@@ -11101,7 +11319,7 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
                 "\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve e naturale per il Capo\"}. "
                 "Massimo 8 lotti, 'rationale' brevissima (max 8 parole). Nessun testo fuori dal JSON."
             )
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplan-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=2600)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplan-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2600)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera il piano ottimale.")):
                 if isinstance(ev, TextDelta):
@@ -11167,7 +11385,7 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
                 "{\"options\":[{\"label\":\"Massima velocità\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"baguette|pane|pizzeria|pasticceria\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve\"}]}. "
                 "Esattamente 3 opzioni, massimo 5 lotti per opzione. Nessun testo fuori dal JSON."
             )
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanopt-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=4000)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanopt-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=4000)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera 3 opzioni di piano.")):
                 if isinstance(ev, TextDelta):
@@ -11513,7 +11731,7 @@ async def mike_maintenance_guide(body: MaintenanceGuideReq, admin: dict = Depend
                 "\"safety\":\"avvertenza di sicurezza breve\",\"spoken\":\"riassunto vocale breve per l'operatore\"}. "
                 "Massimo 6 passi, ognuno max 14 parole. Nessun testo fuori dal JSON."
             )
-            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"maint-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=900)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"maint-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=900)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"Macchinario: {body.machine or 'non specificato'}. Anomalia: {body.anomaly or 'anomalia generica di carico/temperatura'}. {tele}")):
                 if isinstance(ev, TextDelta):
@@ -11569,7 +11787,7 @@ async def mike_oven_qc(body: OvenQCReq, admin: dict = Depends(require_admin)):
                 "\"notes\":\"1 frase di consiglio pratico\",\"spoken\":\"verdetto vocale brevissimo per il fornaio\"}. "
                 "score = qualità visiva (100 perfetto). Massimo 5 difetti. Nessun testo fuori dal JSON."
             )
-        ).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=700)
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=700)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=f"Prodotto: {body.product or 'pane'}. Controlla la qualità visiva all'uscita del forno.", file_contents=[ImageContent(image_base64=img)])):
             if isinstance(ev, TextDelta):
@@ -14399,7 +14617,7 @@ async def dough_sessions_day_after(body: DayAfterReq, user: dict = Depends(curre
 
 
 async def _claude_text(system: str, prompt: str, session: str = "gen") -> str:
-    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=system).with_model("anthropic", "claude-sonnet-4-6")
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=system).with_model("anthropic", SITOR_BRAIN)
     out = ""
     async for ev in chat.stream_message(UserMessage(text=prompt)):
         if isinstance(ev, TextDelta):

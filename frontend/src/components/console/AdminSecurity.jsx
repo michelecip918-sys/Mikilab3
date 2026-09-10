@@ -11,6 +11,7 @@ export default function AdminSecurity() {
   const [ops, setOps] = useState([]);
   const [name, setName] = useState("");
   const [pin, setPin] = useState("");
+  const [opLevel, setOpLevel] = useState("novizio");
   const [log, setLog] = useState([]);
   const [busy, setBusy] = useState(false);
   const [ttl, setTtl] = useState(30);
@@ -28,10 +29,16 @@ export default function AdminSecurity() {
   const add = async () => {
     if (!name.trim() || pin.length !== 4) return;
     setBusy(true);
-    try { await operatorPinsApi.set(name.trim(), pin); setName(""); setPin(""); load(); } catch (e) { /* */ }
+    try { await operatorPinsApi.set(name.trim(), pin, opLevel); setName(""); setPin(""); setOpLevel("novizio"); load(); } catch (e) { /* */ }
     setBusy(false);
   };
   const del = async (n) => { try { await operatorPinsApi.remove(n); load(); } catch (e) { /* */ } };
+  const changeLevel = async (o, lvl) => { try { await operatorPinsApi.setLevel(o.name, lvl); load(); } catch (e) { /* */ } };
+  const LEVELS = [
+    { id: "novizio", label: tri("Novizio", "Anfänger", "Novice", "Novato", "Novice", "تازه‌کار"), c: "#22c55e" },
+    { id: "esperto", label: tri("Esperto", "Erfahren", "Expert", "Experto", "Expert", "ماهر"), c: "#EAB308" },
+    { id: "maestro", label: tri("Maestro", "Meister", "Master", "Maestro", "Maître", "استاد"), c: "#FF6B00" },
+  ];
 
   const kindLabel = (k) => ({ master: tri("Master", "Master", "Master", "Master", "Master", "مستر"), production: tri("Produzione", "Produktion", "Production", "Producción", "Production", "تولید"), operator: tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور") }[k] || k);
 
@@ -56,16 +63,32 @@ export default function AdminSecurity() {
             className="flex-1 min-w-[140px] bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#64748B] outline-none" />
           <input data-testid="op-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN (4)"
             className="w-24 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#64748B] outline-none" />
+          <select data-testid="op-level-input" value={opLevel} onChange={(e) => setOpLevel(e.target.value)}
+            className="bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2 text-sm text-white focus:border-[#64748B] outline-none">
+            {LEVELS.map((l) => <option key={l.id} value={l.id}>{l.label}</option>)}
+          </select>
           <button data-testid="op-add-btn" onClick={add} disabled={busy || !name.trim() || pin.length !== 4}
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#64748B]/20 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
             <UserPlus className="w-4 h-4" /> {tri("Aggiungi", "Hinzufügen", "Add", "Añadir", "Ajouter", "افزودن")}
           </button>
         </div>
+        <p className="text-[11px] text-[#64748b] mb-3">{tri(
+          "Il livello dice a Sitor come guidare ciascuno: più semplice per i novizi, più tecnico per i maestri.",
+          "Das Level sagt Sitor, wie es jeden führt.",
+          "The level tells Sitor how to guide each person: simpler for novices, more technical for masters.",
+          "El nivel le dice a Sitor cómo guiar a cada uno.",
+          "Le niveau indique à Sitor comment guider chacun.",
+          "سطح به سیتور می‌گوید هرکس را چگونه راهنمایی کند.")}</p>
         <div className="space-y-1.5">
           {ops.length === 0 && <p className="text-xs text-[#64748b]">{tri("Nessun PIN operatore. Aggiungine uno per timbrature tracciabili al singolo.", "Noch keine Bediener-PINs.", "No operator PINs yet — add one for per-person clock-ins.", "Aún no hay PIN de operario.", "Aucun PIN opérateur.", "هنوز پینی نیست.")}</p>}
           {ops.map((o) => (
-            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className="flex items-center justify-between bg-[#0C1019]/60 border border-[#1e293b] rounded-lg px-3 py-2">
-              <span className="text-sm font-semibold text-white">{o.name}</span>
+            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className="flex items-center gap-2 bg-[#0C1019]/60 border border-[#1e293b] rounded-lg px-3 py-2">
+              <span className="text-sm font-semibold text-white flex-1 truncate">{o.name}</span>
+              <select data-testid={`op-level-${o.name_key || o.name}`} value={o.level || "novizio"} onChange={(e) => changeLevel(o, e.target.value)}
+                className="bg-[#060A10] border border-[#64748B]/30 rounded-lg px-2 py-1 text-[11px] font-bold text-white focus:border-[#64748B] outline-none"
+                style={{ color: (LEVELS.find((l) => l.id === (o.level || "novizio")) || LEVELS[0]).c }}>
+                {LEVELS.map((l) => <option key={l.id} value={l.id} style={{ color: "#fff" }}>{l.label}</option>)}
+              </select>
               <button data-testid={`op-del-${o.name_key || o.name}`} onClick={() => del(o.name)} className="text-[#f87171]/80 hover:text-[#f87171] active:scale-90 transition-all"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}
