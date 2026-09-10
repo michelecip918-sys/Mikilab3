@@ -4780,3 +4780,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Traduzioni ruoli/postazioni**: OperatorsRoster ora traduce le postazioni (es. Impastatore→Mixer/Teigmacher…) e i ruoli core. VERIFICATO in EN.
 - **Logo NON rotondo, a riempimento pieno**: rigenerato full-bleed (scena che riempie il riquadro) su logo.png/emblem/icone/favicon/og; display principali passati a object-cover.
 - NB deploy: i nomi file immagine sono invariati → in produzione fare cache-bust/redeploy per evitare CDN stale.
+
+## v-fase9 (2026-06) — Rimozione burocrazia/sezioni vecchie (coerenza totale)
+- ELIMINATI (codice morto/vecchio, non produzione): `EnterpriseGrid.jsx` (gestione filiali aziendale + KPI "Efficienza/Anomalie/Sfida Aura"), `MikeMixFloor.jsx` (vecchio floor sostituito da FloorOperatorDay), `ComplianceBeacon.jsx`, `EULabel.jsx` (etichetta allergeni UE, mai renderizzata), `CompliancePanel.jsx` (pannello HACCP/compliance).
+- Rimosso il bottone "Rete · 100 Panifici / Le mie Sedi · Filiali" dalla zona Sitor (era enterprise/burocrazia, non produzione) e il render di CompliancePanel dall'overlay legale.
+- Motivo (utente): niente HACCP, allergeni, filiali aziendali o burocrazia. Il bisogno "più forni/spazi di produzione" è già coperto dai reparti (DeptAssign) e dall'Activity Selector.
+- Verificato: sito compila 0 errori, nessun import rotto, 0 errori console, bottone enterprise assente. Restano solo le sezioni del nuovo progetto, coerenti tra loro.
+- NB: LegalPage (GDPR/Impressum) mantenuta perché requisito legale del sito pubblico .de (non è burocrazia di produzione).

@@ -66,7 +66,6 @@ import OrdiniExtra from "@/components/OrdiniExtra";
 import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
 import AmbientMike from "@/components/AmbientMike";
-import CompliancePanel from "@/components/CompliancePanel";
 import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
@@ -659,7 +658,7 @@ export default function App() {
         </div>
 
         {legalOpen && (
-          <div className="fixed inset-0 z-50 bg-[#060A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#FF6B00]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage />{user && user.role === "admin" && <div className="mt-6"><CompliancePanel /></div>}</div></div>
+          <div className="fixed inset-0 z-50 bg-[#060A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#FF6B00]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage /></div></div>
         )}
         {showOnboarding && <OnboardingActivity onChoose={(a) => setActivity(a)} onClose={() => setShowOnboarding(false)} />}
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}

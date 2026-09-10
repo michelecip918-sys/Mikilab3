@@ -9,7 +9,6 @@ import { mkTri } from "@/i18n/triMaps";
 import LabAura, { auraColor } from "@/components/LabAura";
 import FailsafeSwitch from "@/components/FailsafeSwitch";
 import ShiftPowerBoard from "@/components/ShiftPowerBoard";
-import EnterpriseGrid from "@/components/EnterpriseGrid";
 import RecipeAuditMatrix from "@/components/RecipeAuditMatrix";
 import ProductionPipeline from "@/components/ProductionPipeline";
 import SpatialVisionAR from "@/components/SpatialVisionAR";
@@ -41,7 +40,6 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
   const [staffHist, setStaffHist] = useState([]);
   const [briefing, setBriefing] = useState(null);
   const [briefingOpen, setBriefingOpen] = useState(true);
-  const [entOpen, setEntOpen] = useState(false);
   const [auditOpen, setAuditOpen] = useState(false);
   const [pipelineOpen, setPipelineOpen] = useState(false);
   const [visionOpen, setVisionOpen] = useState(false);
@@ -215,7 +213,6 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
   return (
     <>
       <LabAura enabled={aura} mood={mood} heartbeat={hb} station={mode === "floor" ? (floorRole || "") : ""} />
-      {entOpen && <EnterpriseGrid onClose={() => setEntOpen(false)} />}
       {auditOpen && <RecipeAuditMatrix onClose={() => setAuditOpen(false)} />}
       {pipelineOpen && <ProductionPipeline onClose={() => setPipelineOpen(false)} />}
       {visionOpen && <SpatialVisionAR onClose={() => setVisionOpen(false)} />}
@@ -353,9 +350,6 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
-                <button data-testid="mikemix-enterprise-btn" onClick={() => setEntOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-transform" style={{ background: "linear-gradient(90deg, #5EEAD4, #f59e0b)" }}>
-                  <Globe className="w-4 h-4" /> {tri("Rete · 100 Panifici", "Netz · 100 Bäckereien", "Grid · 100 Bakeries", "Red · 100 Panaderías", "Réseau · 100 Boulangeries", "شبکه · ۱۰۰ نانوایی")}
-                </button>
                 <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
                   <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
