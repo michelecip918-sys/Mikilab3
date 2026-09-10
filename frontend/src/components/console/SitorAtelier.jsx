@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Sparkles, Loader2, Send, Trash2, Plus, Minus, Check, Volume2,
   Star, StickyNote, ListChecks, Hash, Gauge, Bell, Clock, Flame, Wheat,
-  Euro, Thermometer, Package, Truck, Calendar, Target, Trophy, Leaf,
+  Euro, Thermometer, Package, Truck, Calendar, Target, Trophy, Leaf, BarChart3,
 } from "lucide-react";
 import { toast } from "sonner";
 import { atelierApi } from "@/lib/api";
@@ -14,7 +14,7 @@ import { mkTri } from "@/i18n/triMaps";
 const ICONS = {
   sparkles: Sparkles, star: Star, note: StickyNote, list: ListChecks, hash: Hash, gauge: Gauge,
   bell: Bell, clock: Clock, flame: Flame, wheat: Wheat, euro: Euro, thermometer: Thermometer,
-  package: Package, truck: Truck, calendar: Calendar, target: Target, trophy: Trophy, leaf: Leaf,
+  package: Package, truck: Truck, calendar: Calendar, target: Target, trophy: Trophy, leaf: Leaf, hash2: BarChart3,
 };
 
 // SITOR SU MISURA — il Capo chiede a parole, Sitor progetta lo strumento e lo appunta
@@ -59,6 +59,7 @@ export default function SitorAtelier() {
     tri("Un contatore degli sfridi di oggi", "Ein Ausschuss-Zähler für heute", "A counter for today's waste", "Un contador de mermas de hoy", "Un compteur de pertes du jour", "شمارنده ضایعات امروز"),
     tri("Una checklist di apertura del laboratorio", "Eine Öffnungs-Checkliste", "An opening checklist for the lab", "Una checklist de apertura", "Une checklist d'ouverture", "چک‌لیست بازگشایی"),
     tri("Un promemoria per ordinare la farina venerdì", "Erinnerung: Freitag Mehl bestellen", "A reminder to order flour on Friday", "Recordatorio para pedir harina el viernes", "Un rappel pour commander la farine vendredi", "یادآوری سفارش آرد جمعه"),
+    tri("Un grafico degli sfridi della settimana", "Ein Wochendiagramm des Ausschusses", "A chart of this week's waste", "Un gráfico de las mermas de la semana", "Un graphique des pertes de la semaine", "نمودار ضایعات این هفته"),
   ];
 
   return (
@@ -148,6 +149,32 @@ export default function SitorAtelier() {
                     <div><p className="text-[13px] text-[#CBD5E1] leading-snug">{w.config.text}</p>{w.config.date && <p className="text-[11px] text-[#FF9D42] font-bold mt-0.5">{w.config.date}</p>}</div>
                   </div>
                 )}
+
+                {w.type === "chart" && (() => {
+                  const series = w.config.series || [];
+                  const max = Math.max(1, ...series.map((p) => Number(p.v) || 0));
+                  return (
+                    <div data-testid={`atelier-chart-${w.id}`}>
+                      <div className="flex items-end gap-1.5 h-24 mb-1.5">
+                        {series.map((p, k) => (
+                          <div key={k} className="flex-1 flex flex-col items-center justify-end h-full">
+                            <span className="text-[9px] text-[#EAB308] font-bold mb-0.5">{Number(p.v) || 0}</span>
+                            <div className="w-full rounded-t transition-all" style={{ height: `${Math.max(4, ((Number(p.v) || 0) / max) * 100)}%`, background: "linear-gradient(180deg,#EAB308,#FF6B00)" }} />
+                            <span className="text-[9px] text-[#64748B] mt-1">{p.d}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-[10px] text-[#94A3B8] mb-1.5">{w.config.label}{w.config.unit ? ` · ${w.config.unit}` : ""}</p>
+                      <div className="flex gap-1 overflow-x-auto pb-1">
+                        {series.map((p, k) => (
+                          <input key={k} data-testid={`atelier-chart-input-${w.id}-${k}`} inputMode="decimal" value={p.v}
+                            onChange={(e) => { const v = e.target.value.replace(/[^\d.]/g, ""); const s = series.map((x, j) => (j === k ? { ...x, v: v === "" ? 0 : Number(v) } : x)); patch(w.id, { ...w.config, series: s }); }}
+                            className="w-10 shrink-0 bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[11px] text-white text-center rounded px-1 py-1" />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </motion.div>
             );
           })}

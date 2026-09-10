@@ -4831,6 +4831,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Guida multilingua**: `GuidaMikiLab.jsx` ora completa in IT/EN/DE/ES/FR/FA (8 sezioni), con direzione RTL per il farsi e PDF localizzato.
 - **Guida sul cancello**: pulsante `public-guide-btn` in PublicGate (pre-login) → chiunque apra l'app vede la Guida. Verificato a schermo (8 sezioni, 0 overflow).
 - sw.js CACHE_NAME → mikilab-v55. Da pubblicare su mikilab.de al prossimo "vai live".
+
+## v67 (2026-09) — WIDGET GRAFICO + LOGO OVUNQUE (SEO/PWA) + DEPLOY
+- **Widget "grafico" per Sitor su misura**: nuovo tipo `chart` — Sitor genera un mini-grafico a barre settimanale (label, unità, 7 giorni) e il Capo aggiorna i valori reali giorno per giorno (input inline sotto le barre, persistiti via PATCH). Testato via curl: "grafico sfridi settimana in kg" → chart, 7 barre. Frontend: barre SVG con gradiente oro→arancio in `SitorAtelier.jsx`.
+- **Logo nuovo OVUNQUE (motori di ricerca e app)**: rigenerate dall'emblema `logo-emblem.png` tutte le icone — `favicon.ico`, `favicon-32.png`, `icon-192.png`, `icon-512.png` (maskable PWA), `apple-touch-icon.png`, `logo-256.png` — e creata `og-image.jpg` 1200×630 usata da og:image, twitter:image e JSON-LD in index.html. Nessuna modifica ai riferimenti (stessi filename) → aggiornamento immediato per Google/social/installazione.
+- **Sitor 3D reale (.glb)**: NON generabile coi miei strumenti (non autoro modelli 3D riggati). Mantenuto/valorizzato il ritratto 3D vivente (LivingAvatar3D) con rotazione e luci. Un vero .glb va fornito/generato esternamente.
+- sw.js CACHE_NAME → mikilab-v56. Deploy avviato su mikilab.de.
 - **DA FARE (concordato, non ancora implementato)**:
   1. **Riscrittura di TUTTI i PDF e descrizioni** delle funzionalità MikiLab (chiare per chiunque) — grande, da fare come task dedicato.
   2. **"Sitor costruisce su misura per ogni Capo"**: pannello dove Sitor aggiunge widget/strumenti richiesti dal Capo e memorizza le preferenze per-Capo (auto-miglioramento personalizzato) — feature ampia, da progettare.

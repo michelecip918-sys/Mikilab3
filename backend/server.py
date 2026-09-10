@@ -1155,6 +1155,8 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
             "- counter: un contatore (es. sfridi, pezzi). config={\"label\": \"...\", \"value\": 0, \"step\": 1}\n"
             "- metric: un valore da tenere d'occhio. config={\"label\": \"...\", \"value\": \"...\", \"unit\": \"...\"}\n"
             "- reminder: un promemoria con data. config={\"text\": \"...\", \"date\": \"YYYY-MM-DD\"}\n"
+            "- chart: un mini-grafico a barre (dati reali che il Capo aggiorna giorno per giorno). "
+            "config={\"label\":\"...\",\"unit\":\"...\",\"series\":[{\"d\":\"Lun\",\"v\":0},{\"d\":\"Mar\",\"v\":0},{\"d\":\"Mer\",\"v\":0},{\"d\":\"Gio\",\"v\":0},{\"d\":\"Ven\",\"v\":0},{\"d\":\"Sab\",\"v\":0},{\"d\":\"Dom\",\"v\":0}]}\n"
             f"Scegli un'icona tra: {', '.join(sorted(_ATELIER_ICONS))}.\n"
             f"Rispondi in {langname}. Restituisci SOLO un JSON valido: "
             "{\"type\":\"...\",\"title\":\"titolo breve\",\"icon\":\"...\",\"config\":{...},"
@@ -1162,7 +1164,7 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
         )
         raw = await _deus_llm(sysmsg, f"RICHIESTA DEL CAPO: {req}", session=f"atelier-{_capo_key(admin)}", max_tokens=700)
         data = _extract_json(raw)
-        if data.get("type") in {"note", "checklist", "counter", "metric", "reminder"}:
+        if data.get("type") in {"note", "checklist", "counter", "metric", "reminder", "chart"}:
             spec["type"] = data["type"]
         spec["title"] = (data.get("title") or spec["title"]).strip()[:60]
         if data.get("icon") in _ATELIER_ICONS:
@@ -1181,6 +1183,18 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
         cfg = {"label": str(cfg.get("label") or spec["title"])[:60], "value": str(cfg.get("value") or "")[:40], "unit": str(cfg.get("unit") or "")[:16]}
     elif t == "reminder":
         cfg = {"text": str(cfg.get("text") or spec["title"])[:200], "date": str(cfg.get("date") or "")[:10]}
+    elif t == "chart":
+        raw_series = cfg.get("series") or []
+        series = []
+        for pt in raw_series[:14]:
+            if isinstance(pt, dict):
+                try:
+                    series.append({"d": str(pt.get("d") or "")[:8], "v": float(pt.get("v") or 0)})
+                except Exception:
+                    series.append({"d": str(pt.get("d") or "")[:8], "v": 0})
+        if not series:
+            series = [{"d": d, "v": 0} for d in ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"]]
+        cfg = {"label": str(cfg.get("label") or spec["title"])[:60], "unit": str(cfg.get("unit") or "")[:16], "series": series}
     else:
         cfg = {"text": str(cfg.get("text") or req)[:600]}
     doc = {"id": str(uuid.uuid4()), "capo": _capo_key(admin), "type": t, "title": spec["title"],
