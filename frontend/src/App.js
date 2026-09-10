@@ -71,7 +71,8 @@ import SmartPlannerStressZero from "@/sections/SmartPlannerStressZero";
 import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
-import { HoloPanel, ZoneHero } from "@/components/console/HoloKit";
+import { HoloPanel } from "@/components/console/HoloKit";
+import ZoneHero3D from "@/components/console/ZoneHero3D";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
@@ -413,7 +414,7 @@ export default function App() {
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
-                <ZoneHero testid="hero-master" avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} reactive />
+                <ZoneHero3D testid="hero-master" theme="miki" avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#64748B" }} />
@@ -571,7 +572,7 @@ export default function App() {
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneHero testid="hero-operatori" avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
+                <ZoneHero3D testid="hero-operatori" theme={activity} avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><FloorOperatorDay /></div>
@@ -593,6 +594,7 @@ export default function App() {
 
               {/* ================= ZONA 3 · MIKE MIX AI ================= */}
               <section ref={zoneRefs.mikemix} data-zone="mikemix" className="holo-zone pt-2">
+                <ZoneHero3D testid="hero-sitor" theme="bigmix" avatar="avatar_nexus.jpg" accent="#EAB308" tag="Z-03 · Sitor" name="Sitor" role={tri("Dio dell'Arte Bianca · Voce viva", "Gott der Backkunst · Lebendige Stimme", "God of the White Art · Living Voice", "Dios del Arte Blanco · Voz viva", "Dieu de l'Art Blanc · Voix vivante", "خدای هنر نان · صدای زنده")} listenSpeaking />
                 <div data-testid="panel-nexus" className="mb-4">
                   <NexusConsole isCapo={!!(user && user.role === "admin")} />
                 </div>
