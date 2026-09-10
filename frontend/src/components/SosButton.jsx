@@ -10,7 +10,7 @@ const HOLD_MS = 1200;
 
 // SOS operatore con CONFERMA TATTILE (tieni premuto): evita falsi allarmi accidentali.
 // Al rilascio dell'anello completo invia l'SOS; il Capo lo vede in plancia con bagliore
-// e Miki-Nexus lo annuncia a voce.
+// e Sitor lo annuncia a voce.
 export default function SosButton({ role = "", operator = "" }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);

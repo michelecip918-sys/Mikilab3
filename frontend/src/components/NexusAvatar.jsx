@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-// Avatar di Miki-Nexus con occhio rosso REATTIVO: pulsa quando l'impianto e' in stato critico.
+// Avatar di Sitor con occhio rosso REATTIVO: pulsa quando l'impianto e' in stato critico.
 // Lo stato arriva via evento window "mikilab-mood" emesso dal polling del deck in App.js.
 export const NexusAvatar = ({ size = 56, className = "", eyeLeft = "63%", eyeTop = "33%" }) => {
   const [alert, setAlert] = useState(false);
@@ -11,7 +11,7 @@ export const NexusAvatar = ({ size = 56, className = "", eyeLeft = "63%", eyeTop
   }, []);
   return (
     <div data-testid="nexus-avatar" className={`relative rounded-full overflow-hidden ${className}`} style={{ width: size, height: size }}>
-      <img src="/avatar_nexus.jpg" alt="Miki-Nexus" className="w-full h-full object-cover object-top"
+      <img src="/avatar_nexus.jpg" alt="Sitor" className="w-full h-full object-cover object-top"
         onError={(e) => { e.currentTarget.style.display = "none"; }} />
       {alert && (
         <>

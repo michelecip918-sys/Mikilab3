@@ -4,7 +4,7 @@ import { api } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// FASE 10 · Feed allarmi di Miki-Nexus per il Capo Supremo (anomalie dal campo).
+// FASE 10 · Feed allarmi di Sitor per il Capo Supremo (anomalie dal campo).
 export default function MikeAlerts() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -26,7 +26,7 @@ export default function MikeAlerts() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="relative"><BellRing className="w-5 h-5 text-[#f59e0b]" />{unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#f43f5e] text-[9px] font-black text-white flex items-center justify-center">{unread}</span>}</div>
-          <h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Allarmi di Miki-Nexus", "Miki-Nexus Alarme", "Miki-Nexus Alerts", "Alertas de Miki-Nexus", "Alertes de Miki-Nexus", "هشدارهای Miki-Nexus")}</h4>
+          <h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Allarmi di Sitor", "Sitor Alarme", "Sitor Alerts", "Alertas de Sitor", "Alertes de Sitor", "هشدارهای Sitor")}</h4>
         </div>
         <div className="flex items-center gap-2">
           <button data-testid="alerts-refresh" onClick={load} className="text-[#FF9D42] active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>

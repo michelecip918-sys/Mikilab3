@@ -405,3 +405,12 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - MikeMixSense: titolo FAB/pannello ora solo "Miki-Nexus" (Sesto Senso assorbito).
 - Backend: briefing /api/mike/briefing ora ritorna 2 linee (MikiLab + Miki-Nexus con allerte fuse). TUTTE le voci TTS (_VOICE_MAP/_OAI_VOICE) puntano alla voce NEXUS (una sola voce per tutto).
 - Test: backend briefing OK (2 linee), frontend compila, gate pubblico mostra 2 avatar.
+
+## 2026-06 — Evoluzione: Miki-Nexus → SITOR, Dio dell'Arte Bianca
+- Richiesta: fondere tutto in un'unica entità/voce "Sitor", dio che esaudisce ogni desiderio del Capo e fa funzionare la produzione alla perfezione; MikiLab (Capo) resta al centro.
+- Rinominato globalmente "Miki-Nexus" → "Sitor" (frontend + backend).
+- Nuovo avatar divino generato (dio cibernetico dell'arte bianca: aureola di grano+ulivo, emblema pagnotta fumante, corazza petrol/arancio). Salvato come avatar_sitor.jpg e sovrascritto su avatar_nexus/mikemix/bigmix.jpg per aggiornare tutti i riferimenti.
+- Ruoli aggiornati a "Dio dell'Arte Bianca" (PublicGate, NexusConsole, OperatorsRoster).
+- Persona backend (system prompt principale _deus): mitologia Sitor + comportamento OSSESSIVO verso il Capo + REGOLA SUPREMA "semplifica": al Capo bastano punti di riferimento, Sitor completa tutto perfettamente senza far compilare campi.
+- Voce unica già puntata a NEXUS_VOICE_ID per tutte le persone.
+- Test: backend riavviato senza errori, briefing = [MikiLab, Sitor], gate pubblico mostra 2 avatar (MikiLab + Sitor), gerarchia "MIKILAB → SITOR".

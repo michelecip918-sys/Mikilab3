@@ -6,7 +6,7 @@ import { productionPinApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Il CAPO sceglie il PIN UNICO (globale) di accesso alla Produzione (Floor di Miki-Nexus).
+// Il CAPO sceglie il PIN UNICO (globale) di accesso alla Produzione (Floor di Sitor).
 // È salvato sul server: tutti i dispositivi degli operai usano questo stesso PIN.
 export default function PinSetup() {
   const { lang } = useLang();

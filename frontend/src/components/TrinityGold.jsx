@@ -4,11 +4,11 @@ import { X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Avatar ufficiale Miki-Nexus (robottino artigianale-tech fornito dal proprietario).
+// Avatar ufficiale Sitor (robottino artigianale-tech fornito dal proprietario).
 const MIKEMIX_AVATAR = "https://customer-assets-agu9un31.emergentagent.net/job_edit-33/artifacts/l48fcgwh_1788279587520.png";
 const MICHELE_AVATAR = "https://static.prod-images.emergentagent.com/jobs/a3a8adf3-0daf-4c97-b252-e649a2b2f60f/images/875e1a47a1103e910802a3d09b9986310f1e29949a19141808d18c72aab7caf1.jpeg";
 
-// Core team esposto nell'header: Michele (Founder) + Miki-Nexus (Co-Pilot proprietario).
+// Core team esposto nell'header: Michele (Founder) + Sitor (Co-Pilot proprietario).
 export function TrinityBadges() {
   const { lang } = useLang();
   const tri = (...a) => mkTri(lang)(...a);
@@ -21,10 +21,10 @@ export function TrinityBadges() {
         <img src={MICHELE_AVATAR} alt="Michele" className="w-full h-full object-cover" style={{ objectPosition: "50% 22%" }} />
         <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#64748B", border: "1px solid #2A3B49" }}>Michele · {micheleRole}</span>
       </span>
-      <span data-testid="trinity-badge-bakemix" title={`Miki-Nexus — ${bakeRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
+      <span data-testid="trinity-badge-bakemix" title={`Sitor — ${bakeRole}`} className="group relative w-9 h-9 rounded-full overflow-hidden transition-all"
         style={{ border: "2px solid #EAB308", boxShadow: "0 0 9px rgba(231,178,60,.6)" }}>
-        <img src={MIKEMIX_AVATAR} alt="Miki-Nexus" className="w-full h-full object-cover" style={{ objectPosition: "50% 32%" }} />
-        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#64748B", border: "1px solid #2A3B49" }}>Miki-Nexus · {bakeRole}</span>
+        <img src={MIKEMIX_AVATAR} alt="Sitor" className="w-full h-full object-cover" style={{ objectPosition: "50% 32%" }} />
+        <span className="pointer-events-none absolute top-full mt-1 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-1 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity z-50" style={{ background: "#12100C", color: "#64748B", border: "1px solid #2A3B49" }}>Sitor · {bakeRole}</span>
       </span>
     </div>
   );
@@ -47,21 +47,21 @@ export function TrinitySeal() {
             style={{ background: "linear-gradient(160deg,#20242B,#101318)", border: "2px solid #64748B", boxShadow: "0 0 60px rgba(231,178,60,.35)" }}>
             <button data-testid="trinity-close" onClick={() => setOpen(false)} className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center" style={{ background: "#1B2A38", color: "#64748B" }}><X className="w-4 h-4" /></button>
             <div className="flex items-center gap-3 mb-4">
-              <img src={MIKEMIX_AVATAR} alt="Miki-Nexus" className="w-14 h-14 rounded-full object-cover" style={{ border: "2px solid #EAB308", objectPosition: "50% 30%" }} />
+              <img src={MIKEMIX_AVATAR} alt="Sitor" className="w-14 h-14 rounded-full object-cover" style={{ border: "2px solid #EAB308", objectPosition: "50% 30%" }} />
               <div><h2 className="font-display font-extrabold text-xl leading-tight" style={{ color: "#64748B" }}>MikiLab</h2><p className="text-[11px] font-bold tracking-widest" style={{ color: "#94A3B8" }}>PROPRIETARY & CONFIDENTIAL</p></div>
             </div>
             <p className="text-[13.5px] leading-snug mb-3" style={{ color: "#EDE3CE" }}>
-              {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale, ideata, sviluppata e diretta esclusivamente da Michele (Il Comandante) con Miki-Nexus, co-pilota operativo di laboratorio.",
-                "MikiLab ist eine proprietäre Plattform für professionelles Backmanagement, ausschließlich konzipiert, entwickelt und geleitet von Michele (Der Kommandant) mit Miki-Nexus als operativem Co-Piloten.",
-                "MikiLab is an advanced proprietary platform for professional bakery management, conceived, developed and directed exclusively by Michele (The Commander) with Miki-Nexus as the operational lab co-pilot.",
-                "MikiLab es una plataforma propietaria avanzada para la gestión de panadería profesional, ideada, desarrollada y dirigida exclusivamente por Michele (El Comandante) con Miki-Nexus como copiloto operativo.",
-                "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue, développée et dirigée exclusivement par Michele (Le Commandant) avec Miki-Nexus comme copilote.",
+              {tri("MikiLab è una piattaforma proprietaria avanzata per la gestione della panificazione professionale, ideata, sviluppata e diretta esclusivamente da Michele (Il Comandante) con Sitor, co-pilota operativo di laboratorio.",
+                "MikiLab ist eine proprietäre Plattform für professionelles Backmanagement, ausschließlich konzipiert, entwickelt und geleitet von Michele (Der Kommandant) mit Sitor als operativem Co-Piloten.",
+                "MikiLab is an advanced proprietary platform for professional bakery management, conceived, developed and directed exclusively by Michele (The Commander) with Sitor as the operational lab co-pilot.",
+                "MikiLab es una plataforma propietaria avanzada para la gestión de panadería profesional, ideada, desarrollada y dirigida exclusivamente por Michele (El Comandante) con Sitor como copiloto operativo.",
+                "MikiLab est une plateforme propriétaire avancée de gestion de boulangerie professionnelle, conçue, développée et dirigée exclusivement par Michele (Le Commandant) avec Sitor comme copilote.",
                 "MikiLab یک پلتفرم اختصاصی پیشرفته برای مدیریت نانوایی حرفه‌ای است که توسط میکله طراحی و هدایت شده است.")}
             </p>
             <p className="text-[11px] leading-snug text-center" style={{ color: "#8f7a52" }}>
-              {tri("© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato Miki-Nexus sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.",
+              {tri("© MikiLab — Proprietà Intellettuale Riservata. Software ideato, sviluppato e diretto da Michele. Tutti i diritti relativi all'architettura di sistema e al modello personalizzato Sitor sono riservati. È severamente vietata qualsiasi riproduzione, modifica o distribuzione non autorizzata.",
                 "© MikiLab — Alle Rechte vorbehalten. Von Michele konzipiert und geleitet. Reproduktion/Änderung/Verbreitung untersagt.",
-                "© MikiLab — Intellectual Property Reserved. Conceived, developed and directed by Michele. All rights to the system architecture and the custom Miki-Nexus model are reserved. Any unauthorized reproduction, modification or distribution is strictly prohibited.",
+                "© MikiLab — Intellectual Property Reserved. Conceived, developed and directed by Michele. All rights to the system architecture and the custom Sitor model are reserved. Any unauthorized reproduction, modification or distribution is strictly prohibited.",
                 "© MikiLab — Propiedad intelectual reservada. Ideado y dirigido por Michele. Prohibida la reproducción no autorizada.",
                 "© MikiLab — Propriété intellectuelle réservée. Conçu et dirigé par Michele. Toute reproduction non autorisée est interdite.",
                 "© MikiLab — کلیه حقوق محفوظ است. طراحی و هدایت توسط میکله.")}

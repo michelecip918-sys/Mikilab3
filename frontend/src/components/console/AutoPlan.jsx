@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Sparkles, Volume2, Send } from "lucide-react";
 
-// PILASTRO 1 — Miki-Nexus Direttore d'Orchestra: piano di produzione ottimale auto-generato.
+// PILASTRO 1 — Sitor Direttore d'Orchestra: piano di produzione ottimale auto-generato.
 export default function AutoPlan() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -23,7 +23,7 @@ export default function AutoPlan() {
 
   const gen = async () => {
     setBusy(true);
-    try { const r = await mikeApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("Miki-Nexus non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Miki-Nexus couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
+    try { const r = await mikeApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
     setBusy(false);
   };
 
@@ -35,7 +35,7 @@ export default function AutoPlan() {
       <button data-testid="autoplan-gen" onClick={gen} disabled={busy}
         className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
         style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)", boxShadow: "0 0 20px rgba(255,107,0,0.35)" }}>
-        <Sparkles className="w-4 h-4" /> {busy ? tri("Miki-Nexus pianifica…", "Miki-Nexus plant…", "Miki-Nexus is planning…", "Miki-Nexus planifica…", "Miki-Nexus planifie…", "برنامه‌ریزی…") : tri("Genera piano ottimale", "Optimalen Plan erstellen", "Generate optimal plan", "Generar plan óptimo", "Générer le plan optimal", "تولید برنامه بهینه")}
+        <Sparkles className="w-4 h-4" /> {busy ? tri("Sitor pianifica…", "Sitor plant…", "Sitor is planning…", "Sitor planifica…", "Sitor planifie…", "برنامه‌ریزی…") : tri("Genera piano ottimale", "Optimalen Plan erstellen", "Generate optimal plan", "Generar plan óptimo", "Générer le plan optimal", "تولید برنامه بهینه")}
       </button>
 
       {res && (

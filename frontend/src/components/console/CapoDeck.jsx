@@ -113,7 +113,7 @@ export default function CapoDeck() {
       toast.success(tri(`+${(r.tasks || []).length} in produzione`, `+${(r.tasks || []).length} in Produktion`, `+${(r.tasks || []).length} to production`, `+${(r.tasks || []).length} a producción`, `+${(r.tasks || []).length} en production`, `+${(r.tasks || []).length} به تولید`), { icon: "🏭" });
       loadQueue();
     } catch {
-      toast.error(tri("Miki-Nexus non risponde.", "Miki-Nexus antwortet nicht.", "Miki-Nexus not responding.", "Miki-Nexus no responde.", "Miki-Nexus ne répond pas.", "Miki-Nexus پاسخ نمی‌دهد."));
+      toast.error(tri("Sitor non risponde.", "Sitor antwortet nicht.", "Sitor not responding.", "Sitor no responde.", "Sitor ne répond pas.", "Sitor پاسخ نمی‌دهد."));
     } finally { setBusy(false); }
   };
 
@@ -176,7 +176,7 @@ export default function CapoDeck() {
             className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
             style={{ background: "linear-gradient(90deg,#FFB800,#FF6B00)", boxShadow: "0 0 20px rgba(255,184,0,0.3)" }}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-            {busy ? tri("Miki-Nexus genera…", "Miki-Nexus generiert…", "Miki-Nexus generating…", "Miki-Nexus genera…", "Miki-Nexus génère…", "Miki-Nexus تولید می‌کند…") : tri("Manda a Miki-Nexus", "An Miki-Nexus senden", "Send to Miki-Nexus", "Enviar a Miki-Nexus", "Envoyer à Miki-Nexus", "به Miki-Nexus بفرست")}
+            {busy ? tri("Sitor genera…", "Sitor generiert…", "Sitor generating…", "Sitor genera…", "Sitor génère…", "Sitor تولید می‌کند…") : tri("Manda a Sitor", "An Sitor senden", "Send to Sitor", "Enviar a Sitor", "Envoyer à Sitor", "به Sitor بفرست")}
           </button>
         </div>
 

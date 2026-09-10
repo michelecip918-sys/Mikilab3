@@ -5,7 +5,7 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// FASE 3 · Formazione nei Tempi Morti — Miki-Nexus guida micro-lezioni interattive per ricetta.
+// FASE 3 · Formazione nei Tempi Morti — Sitor guida micro-lezioni interattive per ricetta.
 export default function DowntimeTraining() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -45,30 +45,30 @@ export default function DowntimeTraining() {
         <div>
           <h3 className="font-cyber text-base font-black text-white uppercase tracking-wide">{tri("Formazione nei Tempi Morti", "Schulung in Leerlaufzeiten", "Downtime Training", "Formación en Tiempos Muertos", "Formation pendant les temps morts", "آموزش در زمان‌های خالی")}</h3>
           <p className="text-[11px] text-[#94A3B8] mt-0.5 max-w-md">{tri(
-            "Nelle pause, Miki-Nexus trasforma un momento libero in una micro-lezione pratica su una ricetta.",
-            "In den Pausen macht Miki-Nexus aus einem freien Moment eine praktische Mini-Lektion zu einem Rezept.",
-            "During breaks, Miki-Nexus turns a free moment into a hands-on micro-lesson on a recipe.",
-            "En las pausas, Miki-Nexus convierte un momento libre en una micro-lección práctica sobre una receta.",
-            "Pendant les pauses, Miki-Nexus transforme un moment libre en une micro-leçon pratique sur une recette.",
-            "در استراحت‌ها، Miki-Nexus یک لحظه آزاد را به درس کوچک عملی درباره یک دستور تبدیل می‌کند.")}</p>
+            "Nelle pause, Sitor trasforma un momento libero in una micro-lezione pratica su una ricetta.",
+            "In den Pausen macht Sitor aus einem freien Moment eine praktische Mini-Lektion zu einem Rezept.",
+            "During breaks, Sitor turns a free moment into a hands-on micro-lesson on a recipe.",
+            "En las pausas, Sitor convierte un momento libre en una micro-lección práctica sobre una receta.",
+            "Pendant les pauses, Sitor transforme un moment libre en une micro-leçon pratique sur une recette.",
+            "در استراحت‌ها، Sitor یک لحظه آزاد را به درس کوچک عملی درباره یک دستور تبدیل می‌کند.")}</p>
         </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">
         <select data-testid="training-recipe-select" value={sel} onChange={(e) => setSel(e.target.value)}
           className="flex-1 rounded-lg bg-[#0b0f19] border border-[#1e293b] text-white text-sm px-3 py-2.5 focus:border-[#FF9D42] outline-none">
-          <option value="">{tri("Lezione a sorpresa (Miki-Nexus sceglie)", "Überraschungslektion (Miki-Nexus wählt)", "Surprise lesson (Miki-Nexus picks)", "Lección sorpresa (Miki-Nexus elige)", "Leçon surprise (Miki-Nexus choisit)", "درس شگفتی (Miki-Nexus انتخاب می‌کند)")}</option>
+          <option value="">{tri("Lezione a sorpresa (Sitor sceglie)", "Überraschungslektion (Sitor wählt)", "Surprise lesson (Sitor picks)", "Lección sorpresa (Sitor elige)", "Leçon surprise (Sitor choisit)", "درس شگفتی (Sitor انتخاب می‌کند)")}</option>
           {recipes.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
         </select>
         <button data-testid="training-start-btn" onClick={start} disabled={busy}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-60"
           style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)", boxShadow: "0 0 18px rgba(125,211,252,0.4)" }}>
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
-          {busy ? tri("Miki-Nexus prepara…", "Miki-Nexus bereitet vor…", "Miki-Nexus prepares…", "Miki-Nexus prepara…", "Miki-Nexus prépare…", "در حال آماده‌سازی…") : tri("Avvia lezione", "Lektion starten", "Start lesson", "Iniciar lección", "Démarrer", "شروع درس")}
+          {busy ? tri("Sitor prepara…", "Sitor bereitet vor…", "Sitor prepares…", "Sitor prepara…", "Sitor prépare…", "در حال آماده‌سازی…") : tri("Avvia lezione", "Lektion starten", "Start lesson", "Iniciar lección", "Démarrer", "شروع درس")}
         </button>
       </div>
 
-      {err && <p data-testid="training-error" className="text-xs font-bold text-red-400">{tri("Miki-Nexus non è riuscito a preparare la lezione. Riprova.", "Miki-Nexus konnte die Lektion nicht erstellen. Nochmal.", "Miki-Nexus couldn't prepare the lesson. Try again.", "Miki-Nexus no pudo preparar la lección.", "Miki-Nexus n'a pas pu préparer la leçon.", "آماده‌سازی درس ناموفق بود.")}</p>}
+      {err && <p data-testid="training-error" className="text-xs font-bold text-red-400">{tri("Sitor non è riuscito a preparare la lezione. Riprova.", "Sitor konnte die Lektion nicht erstellen. Nochmal.", "Sitor couldn't prepare the lesson. Try again.", "Sitor no pudo preparar la lección.", "Sitor n'a pas pu préparer la leçon.", "آماده‌سازی درس ناموفق بود.")}</p>}
 
       {lesson && (
         <div data-testid="training-lesson" className="rounded-xl bg-[#0b0f19] border border-[#FF9D42]/25 p-4 space-y-4">

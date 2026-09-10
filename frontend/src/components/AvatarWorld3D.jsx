@@ -3,7 +3,7 @@ import * as THREE from "three/webgpu";
 
 // Mondo 3D immersivo (Vanilla three.js) che si assembla dietro l'avatar del trio.
 // theme: "miki" (Ufficio Tecnico/Ricette) | "mikemix" (Produzione Calda) | "bigmix" (Assistente vocale)
-// speaking: per Miki-Nexus -> onde sonore/particelle piu intense quando parla.
+// speaking: per Sitor -> onde sonore/particelle piu intense quando parla.
 export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", speaking = false }) {
   const mountRef = useRef(null);
   const speakingRef = useRef(speaking);

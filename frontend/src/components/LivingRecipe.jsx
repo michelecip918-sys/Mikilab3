@@ -5,7 +5,7 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// FASE 9 · Ricettario Vivente & Generatore Dinamico — funzione suprema di Miki-Nexus (solo Capo).
+// FASE 9 · Ricettario Vivente & Generatore Dinamico — funzione suprema di Sitor (solo Capo).
 const PRESETS = ["pizza altamente digeribile e croccante", "pane a lunga conservazione", "croissant sfoglia estrema", "focaccia soffice e alveolata"];
 
 export default function LivingRecipe() {
@@ -31,8 +31,8 @@ export default function LivingRecipe() {
     <div data-testid="living-recipe" className="space-y-3">
       <div className="flex items-center gap-2">
         <Dna className="w-5 h-5 text-[#EAB308]" />
-        <div><h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Ricettario Vivente · Miki-Nexus", "Lebendes Rezeptbuch · Miki-Nexus", "Living Recipe Book · Miki-Nexus", "Recetario Vivo · Miki-Nexus", "Livre Vivant · Miki-Nexus", "دستورنامه زنده")}</h4>
-        <p className="text-[10.5px] text-[#94A3B8]">{tri("Detta un obiettivo: Miki-Nexus calcola la matrice vivente e la curva di maturazione.", "Nenne ein Ziel: Miki-Nexus berechnet die lebende Matrix.", "Dictate an objective: Miki-Nexus computes the living matrix and maturation curve.", "Dicta un objetivo: Miki-Nexus calcula la matriz viva.", "Dicte un objectif : Miki-Nexus calcule la matrice vivante.", "هدفی بگو: میکی‌نکسوس ماتریس زنده را می‌سازد.")}</p></div>
+        <div><h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Ricettario Vivente · Sitor", "Lebendes Rezeptbuch · Sitor", "Living Recipe Book · Sitor", "Recetario Vivo · Sitor", "Livre Vivant · Sitor", "دستورنامه زنده")}</h4>
+        <p className="text-[10.5px] text-[#94A3B8]">{tri("Detta un obiettivo: Sitor calcola la matrice vivente e la curva di maturazione.", "Nenne ein Ziel: Sitor berechnet die lebende Matrix.", "Dictate an objective: Sitor computes the living matrix and maturation curve.", "Dicta un objetivo: Sitor calcula la matriz viva.", "Dicte un objectif : Sitor calcule la matrice vivante.", "هدفی بگو: میکی‌نکسوس ماتریس زنده را می‌سازد.")}</p></div>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {PRESETS.map((p) => (<button key={p} data-testid={`living-preset-${p.slice(0,5)}`} onClick={() => setObj(p)} className={`px-2.5 py-1 rounded-full text-[10.5px] font-bold border active:scale-95 transition-all ${obj === p ? "bg-[#EAB308] text-[#060A10] border-[#EAB308]" : "bg-[#060A10] text-[#94A3B8] border-[#1e293b]"}`}>{p}</button>))}
@@ -41,7 +41,7 @@ export default function LivingRecipe() {
         className="w-full rounded-lg bg-[#060A10] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#EAB308] outline-none resize-none" />
       <button data-testid="living-generate" onClick={gen} disabled={busy || !obj.trim()}
         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50" style={{ background: "linear-gradient(90deg,#EAB308,#FF6B00)" }}>
-        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />} {busy ? tri("Miki-Nexus calcola…", "Miki-Nexus rechnet…", "Miki-Nexus computing…", "Miki-Nexus calcula…", "Miki-Nexus calcule…", "در حال محاسبه…") : tri("Genera matrice vivente", "Matrix erzeugen", "Generate living matrix", "Generar matriz", "Générer la matrice", "ساخت ماتریس")}
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />} {busy ? tri("Sitor calcola…", "Sitor rechnet…", "Sitor computing…", "Sitor calcula…", "Sitor calcule…", "در حال محاسبه…") : tri("Genera matrice vivente", "Matrix erzeugen", "Generate living matrix", "Generar matriz", "Générer la matrice", "ساخت ماتریس")}
       </button>
       {r && r.maturation_curve && (
         <div data-testid="living-result" className="rounded-xl border border-[#EAB308]/30 bg-gradient-to-b from-[#0b0f19] to-[#060A10] p-4 space-y-3">

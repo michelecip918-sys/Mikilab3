@@ -4,7 +4,7 @@ import { playTTS, stopTTS } from "@/lib/tts";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import { useLang } from "@/i18n/LanguageContext";
 
-// CYBER-BAKERY TRIO: Miki (Capo), Miki-Nexus (braccio destro), Bake Mix (robot).
+// CYBER-BAKERY TRIO: Miki (Capo), Sitor (braccio destro), Bake Mix (robot).
 // Banner interattivo: clic su un personaggio → micro-guida a step con lettura vocale hands-free.
 const TRIO = [
   {
@@ -17,8 +17,8 @@ const TRIO = [
     ],
   },
   {
-    id: "mikemix", name: "Miki-Nexus", role: "Reparto Produzione", img: "avatar_nexus.jpg", accent: "#3E9C93",
-    intro: "Sono Miki-Nexus, il reparto Produzione. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
+    id: "mikemix", name: "Sitor", role: "Reparto Produzione", img: "avatar_nexus.jpg", accent: "#3E9C93",
+    intro: "Sono Sitor, il reparto Produzione. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
     steps: [
       { t: "Voice Core", d: "Lavoro a mani libere: avvio impastatrici e forni con la voce, senza toccare lo schermo." },
       { t: "Parco Macchine", d: "Tengo d'occhio impastatrice, forni e celle con i timer sempre attivi tra le schermate." },

@@ -26,7 +26,7 @@ const PUB = process.env.PUBLIC_URL;
 const API = process.env.REACT_APP_BACKEND_URL;
 const ROLE_KEY = "mikilab_role";
 
-// Banner "Piano del Capo": mostra alla Produzione il piano divino inviato da Miki-Nexus Deus.
+// Banner "Piano del Capo": mostra alla Produzione il piano divino inviato da Sitor Deus.
 function CapoPlanBanner({ tri }) {
   const [plan, setPlan] = useState(null);
   const [open, setOpen] = useState(false);
@@ -43,7 +43,7 @@ function CapoPlanBanner({ tri }) {
       <button data-testid="capo-plan-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 active:scale-[0.99] transition-all">
         <span className="w-8 h-8 rounded-lg bg-[#FF6B00]/15 border border-[#FF6B00]/40 flex items-center justify-center shrink-0"><Radio className="w-4 h-4 text-[#FF6B00]" /></span>
         <span className="min-w-0 flex-1">
-          <span className="block text-xs font-black uppercase tracking-wide text-[#FF6B00]">{tri("Piano del Capo · Miki-Nexus", "Plan des Capo · Miki-Nexus", "Capo's Plan · Miki-Nexus", "Plan del Capo · Miki-Nexus", "Plan du Capo · Miki-Nexus", "برنامه کاپو · Miki-Nexus")}</span>
+          <span className="block text-xs font-black uppercase tracking-wide text-[#FF6B00]">{tri("Piano del Capo · Sitor", "Plan des Capo · Sitor", "Capo's Plan · Sitor", "Plan del Capo · Sitor", "Plan du Capo · Sitor", "برنامه کاپو · Sitor")}</span>
           {plan.headline && <span className="block text-[11px] text-[#94A3B8] truncate">{plan.headline}</span>}
         </span>
         <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${open ? "rotate-180" : ""}`} />
@@ -149,8 +149,8 @@ export default function MikeMixFloor() {
         <CapoPlanBanner tri={tri} />
         <FloorQueue tri={tri} lang={lang} />
         <div className="text-center">
-          <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
-          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Miki-Nexus</h2>
+          <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-20 h-20 rounded-2xl object-cover object-top mx-auto border-2 border-amber-500/60" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <h2 className="mt-3 text-xl font-black text-white uppercase tracking-wide">Sitor</h2>
           <p className="mt-1 text-sm text-[#94A3B8]">{tri("Ciao! Seleziona la tua postazione di forno per ricevere i task giusti.", "Hallo! Wähle deine Station, um die richtigen Aufgaben zu erhalten.", "Hi! Select your station to receive the right tasks.", "¡Hola! Selecciona tu puesto para recibir las tareas correctas.", "Salut ! Choisis ton poste pour recevoir les bonnes tâches.", "سلام! پست کاری‌ات را انتخاب کن تا وظایف درست را بگیری.")}</p>
         </div>
         {depts.map((d) => (
@@ -199,13 +199,13 @@ export default function MikeMixFloor() {
       <span data-testid="mikemix-role-badge" className="mb-4 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/40 text-xs font-black uppercase tracking-wider">{role}</span>
       <button data-testid="mikemix-mic-btn" onClick={() => { if (livenessOk) setActive(true); else setGate(true); }} className="relative group active:scale-95 transition-all">
         <OperatorAura name={role} size={184} showBadge={true} announce={true}>
-          <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         </OperatorAura>
         <span className="absolute bottom-1 right-1 z-20 w-14 h-14 rounded-full bg-amber-500 border-4 border-[#030712] flex items-center justify-center shadow-lg"><Mic className="w-6 h-6 text-[#030712]" /></span>
       </button>
       {gate && <LivenessGate onPass={() => { setLivenessOk(true); setGate(false); setActive(true); try { complianceApi.clock(role, "in"); } catch { /* */ } }} onCancel={() => setGate(false)} />}
-      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Miki-Nexus</motion.h2>
-      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a Miki-Nexus: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit Miki-Nexus: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to Miki-Nexus: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con Miki-Nexus: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à Miki-Nexus : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با Miki-Nexus حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
+      <motion.h2 initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-8 font-black text-2xl uppercase tracking-wide text-white">Sitor</motion.h2>
+      <p className="mt-2 max-w-xs text-sm text-[#94A3B8] leading-relaxed">{tri("Parla a Sitor: dì il tuo nome o \"pronti\" e ti leggo i task del tuo ruolo, passo-passo. Niente pulsanti — solo voce.", "Sprich mit Sitor: sag deinen Namen oder \"bereit\" und ich lese dir deine Aufgaben vor, Schritt für Schritt. Keine Tasten — nur Stimme.", "Speak to Sitor: say your name or \"ready\" and I'll read your role's tasks, step by step. No buttons — voice only.", "Habla con Sitor: di tu nombre o \"listo\" y te leo las tareas de tu rol, paso a paso. Sin botones — solo voz.", "Parle à Sitor : dis ton nom ou \"prêt\" et je te lis les tâches de ton rôle, étape par étape. Pas de boutons — voix seule.", "با Sitor حرف بزن: نامت یا «آماده» را بگو تا وظایف نقش‌ات را قدم‌به‌قدم بخوانم. بدون دکمه — فقط صدا.")}</p>
       <button data-testid="mikemix-open-scale" onClick={() => setTool("scale")}
         className="group relative overflow-hidden mt-5 inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-black text-sm text-[#22d3ee] active:scale-95 transition-all"
         style={{ background: "linear-gradient(155deg, rgba(11,20,32,0.9), rgba(6,12,22,0.9))", border: "1px solid rgba(34,211,238,0.45)", boxShadow: "0 0 20px rgba(34,211,238,0.18)" }}>

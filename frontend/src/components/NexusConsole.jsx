@@ -68,11 +68,11 @@ export default function NexusConsole({ isCapo = false }) {
 
   const speak = () => {
     const txt = tri(
-      `Sintesi enzimatica al ${m.enz.toFixed(1)} percento. ${m.nodes} nodi edge attivi, ${m.plants} impianti coordinati. Integrità del codice ${m.integrity.toFixed(1)} percento. Sono Miki-Nexus, al servizio del Capo Supremo.`,
-      `Enzymsynthese bei ${m.enz.toFixed(1)} Prozent. ${m.nodes} aktive Edge-Knoten, ${m.plants} Anlagen koordiniert. Code-Integrität ${m.integrity.toFixed(1)} Prozent. Ich bin Miki-Nexus.`,
-      `Enzymatic synthesis at ${m.enz.toFixed(1)} percent. ${m.nodes} edge nodes active, ${m.plants} plants coordinated. Code integrity ${m.integrity.toFixed(1)} percent. I am Miki-Nexus, at the service of the Supreme Capo.`,
-      `Síntesis enzimática al ${m.enz.toFixed(1)} por ciento. ${m.nodes} nodos edge activos. Soy Miki-Nexus.`,
-      `Synthèse enzymatique à ${m.enz.toFixed(1)} pour cent. ${m.nodes} nœuds edge actifs. Je suis Miki-Nexus.`,
+      `Sintesi enzimatica al ${m.enz.toFixed(1)} percento. ${m.nodes} nodi edge attivi, ${m.plants} impianti coordinati. Integrità del codice ${m.integrity.toFixed(1)} percento. Sono Sitor, al servizio del Capo Supremo.`,
+      `Enzymsynthese bei ${m.enz.toFixed(1)} Prozent. ${m.nodes} aktive Edge-Knoten, ${m.plants} Anlagen koordiniert. Code-Integrität ${m.integrity.toFixed(1)} Prozent. Ich bin Sitor.`,
+      `Enzymatic synthesis at ${m.enz.toFixed(1)} percent. ${m.nodes} edge nodes active, ${m.plants} plants coordinated. Code integrity ${m.integrity.toFixed(1)} percent. I am Sitor, at the service of the Supreme Capo.`,
+      `Síntesis enzimática al ${m.enz.toFixed(1)} por ciento. ${m.nodes} nodos edge activos. Soy Sitor.`,
+      `Synthèse enzymatique à ${m.enz.toFixed(1)} pour cent. ${m.nodes} nœuds edge actifs. Je suis Sitor.`,
       `سنتز آنزیمی ${m.enz.toFixed(1)} درصد. من میکی‌نکسوس هستم.`
     );
     try { playTTS(txt, { lang, voice: "nexus" }); } catch { /* */ }
@@ -96,8 +96,8 @@ export default function NexusConsole({ isCapo = false }) {
             <NexusAvatar size={56} className="relative border-2 border-[#EAB308]/70" />
           </div>
           <div className="min-w-0">
-            <h3 className="font-cyber text-lg font-black uppercase tracking-[0.14em] text-white">Miki-Nexus</h3>
-            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#EAB308]">{tri("Coscienza Strategica · Plancia Olografica", "Strategisches Bewusstsein · Holo-Konsole", "Strategic Consciousness · Holo Console", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی")}</p>
+            <h3 className="font-cyber text-lg font-black uppercase tracking-[0.14em] text-white">Sitor</h3>
+            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#EAB308]">{tri("Dio dell'Arte Bianca · Plancia Olografica", "Gott der Backkunst · Holo-Konsole", "God of the White Art · Holo Console", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان")}</p>
           </div>
           <button data-testid="nexus-speak" onClick={speak} className="ml-auto shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#EAB308] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /> {tri("Parla", "Sprich", "Speak", "Habla", "Parle", "بگو")}</button>
         </div>
@@ -156,11 +156,11 @@ export default function NexusConsole({ isCapo = false }) {
             )}
           </div>
           <p className="mt-1.5 text-[10.5px] text-[#94A3B8] leading-snug">{tri(
-            "In caso di violazione, Miki-Nexus sovrascrive e cancella dati, ricette e configurazioni da ogni nodo, garantendo la sovranità di MikiLab.",
-            "Bei Verletzung überschreibt und löscht Miki-Nexus Daten von jedem Knoten und sichert die Souveränität von MikiLab.",
-            "On breach, Miki-Nexus overwrites and wipes data, recipes and configs from every node, guaranteeing MikiLab's sovereignty.",
-            "Ante una violación, Miki-Nexus borra los datos de cada nodo.",
-            "En cas de violation, Miki-Nexus efface les données de chaque nœud.",
+            "In caso di violazione, Sitor sovrascrive e cancella dati, ricette e configurazioni da ogni nodo, garantendo la sovranità di MikiLab.",
+            "Bei Verletzung überschreibt und löscht Sitor Daten von jedem Knoten und sichert die Souveränität von MikiLab.",
+            "On breach, Sitor overwrites and wipes data, recipes and configs from every node, guaranteeing MikiLab's sovereignty.",
+            "Ante una violación, Sitor borra los datos de cada nodo.",
+            "En cas de violation, Sitor efface les données de chaque nœud.",
             "در صورت نفوذ، میکی‌نکسوس داده‌ها را از هر نود پاک می‌کند.")}</p>
           {armed && <motion.p data-testid="nexus-armed-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 text-[11px] font-bold text-[#f43f5e]">⚠ {tri("Protocollo armato — pronto all'annullamento istantaneo su ordine del Capo.", "Protokoll scharf — bereit zur sofortigen Löschung auf Befehl des Chefs.", "Protocol armed — ready for instant wipe on the Capo's order.", "Protocolo armado.", "Protocole armé.", "پروتکل مسلح شد.")}</motion.p>}
         </div>

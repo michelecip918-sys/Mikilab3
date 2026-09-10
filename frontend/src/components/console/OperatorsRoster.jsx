@@ -9,8 +9,8 @@ const API = process.env.REACT_APP_BACKEND_URL;
 // Identità CORE con avatar reale.
 const CORE = [
   { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#64748B" },
-  { id: "mikemix", name: "Miki-Nexus", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#FF6B00" },
-  { id: "nexus", name: "Miki-Nexus", role: "Coscienza Strategica · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#EAB308" },
+  { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#FF6B00" },
+  { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#EAB308" },
 ];
 
 // Postazioni operative BASE (arricchite a runtime dai reparti del Capo).

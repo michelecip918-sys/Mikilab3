@@ -11,7 +11,7 @@ const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-
 // Umore → colore reattivo dell'orb (industriale: acciaio/blu/ambra, niente viola).
 const MOOD_COLOR = { calm: "#22d3ee", busy: "#64748B", proud: "#FF9D42", alert: "#FFB800" };
 
-// Miki-Nexus ambientale: presenza olografica fusa nel flusso. Streaming vocale,
+// Sitor ambientale: presenza olografica fusa nel flusso. Streaming vocale,
 // reattività cognitiva (colore in base all'umore) e avvisi PROATTIVI a voce.
 export default function AmbientMike() {
   const { lang } = useLang();
@@ -110,7 +110,7 @@ export default function AmbientMike() {
           <motion.div data-testid="ambient-mike-reply" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 8 }}
             className="pointer-events-auto mb-2 max-w-[86vw] sm:max-w-md rounded-2xl px-4 py-2.5 text-sm backdrop-blur-xl"
             style={{ background: "rgba(6,14,22,0.6)", border: `1px solid ${accent}55`, color: "#d6fbff", boxShadow: `0 0 30px ${accent}33` }}>
-            {busy && !reply ? tri("Miki-Nexus elabora…", "Miki-Nexus denkt…", "Miki-Nexus is thinking…", "Miki-Nexus procesa…", "Miki-Nexus réfléchit…", "باکومیکس در حال پردازش…") : reply}
+            {busy && !reply ? tri("Sitor elabora…", "Sitor denkt…", "Sitor is thinking…", "Sitor procesa…", "Sitor réfléchit…", "باکومیکس در حال پردازش…") : reply}
           </motion.div>
         )}
       </AnimatePresence>
@@ -119,7 +119,7 @@ export default function AmbientMike() {
       <div aria-hidden className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[240px] h-[150px] pointer-events-none"
         style={{ background: `radial-gradient(60% 80% at 50% 100%, ${accent}${active ? "2e" : "14"}, transparent 70%)`, transition: "background 600ms ease" }} />
 
-      <button data-testid="ambient-mike-orb" onClick={engage} aria-label="Miki-Nexus"
+      <button data-testid="ambient-mike-orb" onClick={engage} aria-label="Sitor"
         className="pointer-events-auto relative w-16 h-16 mb-1 rounded-full flex items-center justify-center active:scale-95 transition-transform"
         style={{ opacity: active ? 1 : 0.62, transition: "opacity 500ms ease" }}>
         <motion.span aria-hidden className="absolute inset-0 rounded-full"
@@ -139,7 +139,7 @@ export default function AmbientMike() {
       </button>
       <span className="pointer-events-none pb-2 text-[9px] font-bold uppercase tracking-[0.25em] transition-all duration-500"
         style={{ color: active ? accent : "rgba(148,163,184,0.45)", textShadow: active ? `0 0 8px ${accent}` : "none" }}>
-        {listening ? tri("in ascolto", "hört zu", "listening", "escuchando", "à l'écoute", "در حال شنیدن") : "Miki-Nexus"}
+        {listening ? tri("in ascolto", "hört zu", "listening", "escuchando", "à l'écoute", "در حال شنیدن") : "Sitor"}
       </span>
     </div>
   );

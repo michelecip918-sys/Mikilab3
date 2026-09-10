@@ -35,7 +35,7 @@ export default function ProductionPipeline({ onClose }) {
           <button data-testid="pipeline-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
-        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("6 settori contigui: Miki-Nexus prevede i parametri a valle dall'impasto in uscita.", "6 Sektoren: Miki-Nexus sagt die nachgelagerten Parameter voraus.", "6 contiguous sectors: Miki-Nexus predicts downstream parameters from the dough.", "6 sectores: Miki-Nexus predice los parámetros aguas abajo.", "6 secteurs : Miki-Nexus prédit les paramètres en aval.", "۶ بخش پیوسته: Miki-Nexus پارامترهای پایین‌دست را پیش‌بینی می‌کند.")}</p>
+        <p className="text-[12px] text-[#94A3B8] mb-4">{tri("6 settori contigui: Sitor prevede i parametri a valle dall'impasto in uscita.", "6 Sektoren: Sitor sagt die nachgelagerten Parameter voraus.", "6 contiguous sectors: Sitor predicts downstream parameters from the dough.", "6 sectores: Sitor predice los parámetros aguas abajo.", "6 secteurs : Sitor prédit les paramètres en aval.", "۶ بخش پیوسته: Sitor پارامترهای پایین‌دست را پیش‌بینی می‌کند.")}</p>
 
         {/* Controlli impasto in uscita */}
         <div className="grid grid-cols-2 gap-3 mb-5">

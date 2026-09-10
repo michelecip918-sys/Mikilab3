@@ -72,7 +72,7 @@ export default function VoiceDelegation({ onClose }) {
     try {
       const r = await delegationApi.confirm(proposal);
       setDone(r.task);
-      // Miki-Nexus conferma a voce SOLO al Capo (modalità strategica attiva).
+      // Sitor conferma a voce SOLO al Capo (modalità strategica attiva).
       try { playTTS(tri(`Fatto Capo. ${proposal.title} inviato al floor in silenzio.`, `Erledigt Chef. ${proposal.title} still an die Halle gesendet.`, `Done boss. ${proposal.title} sent silently to the floor.`, `Hecho jefe. ${proposal.title} enviado en silencio.`, `C'est fait chef. ${proposal.title} envoyé en silence.`, `انجام شد رئیس. ${proposal.title} بی‌صدا به سالن ارسال شد.`), lang); } catch { /* */ }
       toast.success(r.mikemix_insight || tri("Task inviato", "Gesendet", "Task sent", "Enviado", "Envoyé", "ارسال شد"));
     } catch (e) {
@@ -105,7 +105,7 @@ export default function VoiceDelegation({ onClose }) {
           </motion.div>
         ) : (
           <>
-            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Miki-Nexus lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio.", "Diktiere einen Befehl: Miki-Nexus macht daraus eine Team-Aufgabe. Du bestätigst vor dem Senden.", "Dictate an order: Miki-Nexus turns it into a team task and proposes operators. You confirm before dispatch.", "Dicta una orden: Miki-Nexus la convierte en tarea de equipo. Confirmas antes de enviar.", "Dicte un ordre : Miki-Nexus en fait une tâche d'équipe. Tu confirmes avant l'envoi.", "دستوری بگو: Miki-Nexus آن را به وظیفه تیمی تبدیل می‌کند. قبل از ارسال تأیید می‌کنی.")}</p>
+            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Sitor lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio.", "Diktiere einen Befehl: Sitor macht daraus eine Team-Aufgabe. Du bestätigst vor dem Senden.", "Dictate an order: Sitor turns it into a team task and proposes operators. You confirm before dispatch.", "Dicta una orden: Sitor la convierte en tarea de equipo. Confirmas antes de enviar.", "Dicte un ordre : Sitor en fait une tâche d'équipe. Tu confirmes avant l'envoi.", "دستوری بگو: Sitor آن را به وظیفه تیمی تبدیل می‌کند. قبل از ارسال تأیید می‌کنی.")}</p>
 
             {/* MIC + testo */}
             <div className="flex flex-col items-center mb-4">
@@ -121,7 +121,7 @@ export default function VoiceDelegation({ onClose }) {
               className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-2xl p-3 text-sm text-white outline-none focus:border-[#D95200] resize-none"
             />
             <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
-              {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con Miki-Nexus", "Mit Miki-Nexus analysieren", "Analyze with Miki-Nexus", "Analizar con Miki-Nexus", "Analyser avec Miki-Nexus", "تحلیل با Miki-Nexus")}
+              {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con Sitor", "Mit Sitor analysieren", "Analyze with Sitor", "Analizar con Sitor", "Analyser avec Sitor", "تحلیل با Sitor")}
             </button>
 
             {/* PROPOSTA */}

@@ -3,16 +3,16 @@ import { Globe, Check, Search, Clock, Volume2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { playTTS } from "@/lib/tts";
 
-// Frase-esempio per ascoltare la voce di Miki-Nexus in ogni lingua.
+// Frase-esempio per ascoltare la voce di Sitor in ogni lingua.
 const SAMPLE = {
-  it: "Salve Mio Supremo Capo, sono Miki-Nexus, al vostro servizio.",
-  de: "Guten Tag, mein erhabener Chef, ich bin Miki-Nexus, zu Ihren Diensten.",
-  en: "Hello Capo, I am Miki-Nexus, at your service.",
-  es: "Hola Mi Supremo Jefe, soy Miki-Nexus, a su servicio.",
-  fr: "Bonjour Mon Illustre Commandant, je suis Miki-Nexus, à votre service.",
+  it: "Salve Mio Supremo Capo, sono Sitor, al vostro servizio.",
+  de: "Guten Tag, mein erhabener Chef, ich bin Sitor, zu Ihren Diensten.",
+  en: "Hello Capo, I am Sitor, at your service.",
+  es: "Hola Mi Supremo Jefe, soy Sitor, a su servicio.",
+  fr: "Bonjour Mon Illustre Commandant, je suis Sitor, à votre service.",
   fa: "سلام فرمانده، من بوکومیکس هستم، در خدمت شما.",
   ar: "مرحباً أيها القائد، أنا مايك ميكس، في خدمتك.",
-  tr: "Merhaba Şefim, ben Miki-Nexus, hizmetinizdeyim.",
+  tr: "Merhaba Şefim, ben Sitor, hizmetinizdeyim.",
 };
 
 // Lingue ATTIVE (dizionari completi) + set globale predisposto all'espansione.

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 // Avatar 3D "pop-out" con anelli sonori animati.
-// who: "lab" (Michele) | "momi" (Miki-Nexus). mode: "listening" (blu) | "speaking" (arancio).
+// who: "lab" (Michele) | "momi" (Sitor). mode: "listening" (blu) | "speaking" (arancio).
 const IMG = { lab: "michele-avatar.jpg", momi: "logo.png" };
 
 export default function SpeakingAvatar({

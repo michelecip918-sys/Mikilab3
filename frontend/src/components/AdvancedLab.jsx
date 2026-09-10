@@ -96,7 +96,7 @@ export default function AdvancedLab() {
         <div className="w-11 h-11 shrink-0 rounded-xl bg-[#EAB308]/10 border border-[#EAB308]/40 flex items-center justify-center"><Zap className="w-6 h-6 text-[#EAB308]" /></div>
         <div>
           <h3 className="font-cyber text-base font-black text-white uppercase tracking-wide">{tri("Tecnologie Uniche al Mondo", "Einzigartige Technologien", "World-Unique Technologies", "Tecnologías Únicas", "Technologies Uniques", "فناوری‌های بی‌نظیر")}</h3>
-          <p className="text-[11px] text-[#94A3B8]">{tri("Plancia avanzata di Miki-Nexus & Miki-Nexus — dati live.", "Erweiterte Konsole — Live-Daten.", "Advanced console — live data.", "Consola avanzada — datos en vivo.", "Console avancée — données en direct.", "کنسول پیشرفته — داده زنده")}</p>
+          <p className="text-[11px] text-[#94A3B8]">{tri("Plancia avanzata di Sitor & Sitor — dati live.", "Erweiterte Konsole — Live-Daten.", "Advanced console — live data.", "Consola avanzada — datos en vivo.", "Console avancée — données en direct.", "کنسول پیشرفته — داده زنده")}</p>
         </div>
       </div>
 

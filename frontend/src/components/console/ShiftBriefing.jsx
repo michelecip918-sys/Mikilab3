@@ -48,7 +48,7 @@ export default function ShiftBriefing({ onClose }) {
       <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
 
       <p className="relative font-cyber text-xs tracking-[0.35em] uppercase mb-1" style={{ color: stressColor }}>{tri("Apertura Turno", "Schichtbeginn", "Shift Open", "Apertura de Turno", "Ouverture", "شروع شیفت")}</p>
-      <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Miki-Nexus</h2>
+      <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Sitor</h2>
       {data && <p className="relative font-mono-data text-[11px] tracking-widest uppercase mb-8" style={{ color: stressColor }}>{tri("Stato impianto", "Anlagenstatus", "Plant status", "Estado planta", "État usine", "وضعیت")}: {data.level} · {data.stats.workers} op · {data.stats.leaders} {tri("linee","Linien","lines","líneas","lignes","خط")} · {data.stats.low_stock} {tri("scorte basse","niedrig","low stock","stock bajo","stock bas","کم")}</p>}
 
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">

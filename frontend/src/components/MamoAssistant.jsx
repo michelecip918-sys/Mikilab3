@@ -40,7 +40,7 @@ export default function MamoAssistant() {
   useEffect(() => { guidingRef.current = guiding; }, [guiding]);
 
   const load = useCallback(async () => {
-    // Ruolo dell'operatore (Miki-Nexus): mostra solo i task della sua postazione.
+    // Ruolo dell'operatore (Sitor): mostra solo i task della sua postazione.
     const role = (() => { try { return (localStorage.getItem("mikilab_role") || "").toLowerCase(); } catch { return ""; } })();
     const roleKeywords = (r) => {
       if (/impast|knead/.test(r)) return ["impast", "knead", "mixing", "amasad", "pétriss", "puntatura", "bulk", "stockgare", "pointage", "reposo en bloque"];

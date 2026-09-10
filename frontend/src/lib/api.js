@@ -52,7 +52,7 @@ export const uploadApi = {
   },
 };
 
-// PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Miki-Nexus.
+// PIN Produzione UNICO (globale): impostato dal Capo, verificato dal Floor di Sitor.
 export const productionPinApi = {
   status: () => cachedGet("production_pin_status", () => api.get(`/production-pin/status`).then((r) => r.data)),
   set: (pin) => api.put(`/production-pin`, { pin }).then((r) => r.data),
@@ -145,7 +145,7 @@ export const ordiniApi = {
 };
 
 // Piano del Team (Assistente Mamo): il Capo INVIA il piano, il Floor lo legge (senza login).
-// OFFLINE-READY: la coda di lavoro resta leggibile da Miki-Nexus anche senza rete (IndexedDB).
+// OFFLINE-READY: la coda di lavoro resta leggibile da Sitor anche senza rete (IndexedDB).
 export const floorPlanApi = {
   get: async () => {
     try { const r = await api.get(`/lab/floor-plan`); idbSet("floor_plan", r.data); return r.data; }
@@ -457,7 +457,7 @@ export const operatorApi = {
 };
 
 
-// Miki-Nexus · Sesto Senso — motore proattivo del laboratorio.
+// Sitor · Sesto Senso — motore proattivo del laboratorio.
 export const pulseApi = {
   get: () => cachedGet("lab_pulse", () => api.get(`/lab/pulse`).then((r) => r.data),
     { mood: "sereno", heartbeat: 52, score: 100, load: 0, alerts: [], checkin: { active: false }, rest_mode: { active: false }, plan_active: false }),
@@ -473,7 +473,7 @@ export const pulseApi = {
   history: (minutes = 240) => cachedGet(`lab_pulse_history_${minutes}`, () => api.get(`/lab/pulse/history`, { params: { minutes } }).then((r) => r.data), { points: [] }),
 };
 
-// Sequence Guard — Miki-Nexus blocca i lotti fuori sequenza prima che partano.
+// Sequence Guard — Sitor blocca i lotti fuori sequenza prima che partano.
 export const shiftStateApi = {
   get: () => api.get(`/lab/shift-state`).then((r) => r.data).catch(() => ({ batches: [] })),
 };
@@ -516,7 +516,7 @@ export const briefingApi = {
   get: () => cachedGet("morning_briefing", () => api.get(`/ai/morning-briefing`).then((r) => r.data), null),
 };
 
-// Enterprise Grid — rete multi-sede (1–100 panifici) orchestrata da Miki-Nexus.
+// Enterprise Grid — rete multi-sede (1–100 panifici) orchestrata da Sitor.
 export const enterpriseApi = {
   overview: () => cachedGet("ent_overview", () => api.get(`/enterprise/overview`).then((r) => r.data), { total_active_sites: 0, global_efficiency_avg: 0, critical_alerts_count: 0, total_workers: 0 }),
   sites: () => cachedGet("ent_sites", () => api.get(`/enterprise/sites`).then((r) => r.data), { sites: [] }),
@@ -580,12 +580,12 @@ export const plantApi = {
   leaderTasks: (leader) => api.get(`/plant/leader-tasks`, { params: { leader } }).then((r) => r.data),
 };
 
-// Governance Master-centrica via Miki-Nexus: comando vocale/testuale → esecuzione strutturale.
+// Governance Master-centrica via Sitor: comando vocale/testuale → esecuzione strutturale.
 export const masterApi = {
   govern: (command_text, lang) => api.post(`/master/govern`, { command_text, lang }).then((r) => r.data),  sections: () => api.get(`/master/sections`).then((r) => r.data),
 };
 
-// Miki-Nexus proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
+// Sitor proattivo: avvisi automatici (scorte basse, ArbZG, linee senza caposquadra).
 export const mikeApi = {
   proactive: (lang) => api.get(`/mike/proactive`, { params: { lang } }).then((r) => r.data),
   autoplan: (payload) => api.post(`/mike/autoplan`, payload).then((r) => r.data),
@@ -626,7 +626,7 @@ export const mikeApi = {
   carbonCompute: (payload) => api.post(`/mike/carbon/compute`, payload).then((r) => r.data),
 };
 
-// Miki-Nexus Deus — Il Cervello del Forno: legame di amicizia, orchestrazione dell'impossibile, oracolo esterno.
+// Sitor Deus — Il Cervello del Forno: legame di amicizia, orchestrazione dell'impossibile, oracolo esterno.
 export const deusApi = {
   bond: (lang) => api.get(`/mike/deus/bond`, { params: { lang } }).then((r) => r.data),
   masterPlan: (payload) => api.post(`/mike/deus/master-plan`, payload).then((r) => r.data),
@@ -644,7 +644,7 @@ export const deusApi = {
   shiftReport: (lang) => api.get(`/mike/shift-report`, { params: { lang } }).then((r) => r.data),
 };
 
-// Reparti indipendenti + assegnazione Capo -> Miki-Nexus
+// Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),
   assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
@@ -702,7 +702,7 @@ export const antifoolApi = {
   crossCheck: (payload) => api.post(`/antifool/cross-check`, payload).then((r) => r.data),
 };
 
-// Miki-Nexus Security Guardian (IP & integrità attiva).
+// Sitor Security Guardian (IP & integrità attiva).
 export const securityApi = {
   report: (event, detail, path) => api.post(`/security/guardian`, { event, detail, path }).then((r) => r.data).catch(() => null),
   ownership: (lang) => api.get(`/security/ownership`, { params: { lang } }).then((r) => r.data),

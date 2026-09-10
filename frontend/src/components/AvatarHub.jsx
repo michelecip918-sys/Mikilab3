@@ -16,8 +16,8 @@ export default function AvatarHub({ onSelect, onLogin, isLoggedIn = false }) {
 
   const CARDS = [
     { kind: "lab", img: "avatar_miki.jpg", name: "MikiLab", role: tri("Il Capo · Controllo Produzione", "Der Chef · Produktionssteuerung", "The Capo · Production Control", "El Capo · Control de Producción", "Le Capo · Contrôle Production", "کاپو · کنترل تولید"), accent: "#D95200" },
-    { kind: "floor", img: "avatar_nexus.jpg", name: "Miki-Nexus", role: tri("Produzione · A mani libere", "Produktion · Freihändig", "Production · Hands-free", "Producción · Manos libres", "Production · Mains libres", "تولید · بدون دست"), accent: "#f59e0b" },
-    { kind: "guida", img: "avatar_nexus.jpg", name: "Miki-Nexus", role: tri("Assistente AI · Ti spiega tutto", "KI-Assistent · Erklärt alles", "AI Assistant · Explains everything", "Asistente IA · Te explica todo", "Assistant IA · Explique tout", "دستیار هوش مصنوعی · همه‌چیز را توضیح می‌دهد"), accent: "#06b6d4" },
+    { kind: "floor", img: "avatar_nexus.jpg", name: "Sitor", role: tri("Produzione · A mani libere", "Produktion · Freihändig", "Production · Hands-free", "Producción · Manos libres", "Production · Mains libres", "تولید · بدون دست"), accent: "#f59e0b" },
+    { kind: "guida", img: "avatar_nexus.jpg", name: "Sitor", role: tri("Assistente AI · Ti spiega tutto", "KI-Assistent · Erklärt alles", "AI Assistant · Explains everything", "Asistente IA · Te explica todo", "Assistant IA · Explique tout", "دستیار هوش مصنوعی · همه‌چیز را توضیح می‌دهد"), accent: "#06b6d4" },
   ];
 
   const onScroll = () => {

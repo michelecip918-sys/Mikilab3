@@ -230,11 +230,11 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
         data-testid="mikemix-sense-fab"
         onClick={() => setOpen((v) => !v)}
         className="fixed left-4 bottom-24 z-[55] w-16 h-16 rounded-full active:scale-95 transition-transform"
-        title="Miki-Nexus"
+        title="Sitor"
       >
         <style>{`@keyframes senseRing{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.25);opacity:0}}`}</style>
         <span aria-hidden className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 0 2px ${color}`, animation: `senseRing ${beatSec}s ease-out infinite`, background: `${color}22` }} />
-        <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="relative w-16 h-16 rounded-full object-cover border-2" style={{ borderColor: color }} />
+        <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="relative w-16 h-16 rounded-full object-cover border-2" style={{ borderColor: color }} />
         {nAlert > 0 && (
           <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-6 h-6 px-1.5 rounded-full text-[11px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
         )}
@@ -247,7 +247,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             <div className="flex items-center gap-2">
               <Activity className="w-5 h-5" style={{ color }} />
               <div>
-                <p className="text-sm font-black text-white leading-none">Miki-Nexus</p>
+                <p className="text-sm font-black text-white leading-none">Sitor</p>
                 <p className="text-[11px] font-bold mt-1" style={{ color }}>
                   {tri(...moodLabel)} · {hb} bpm · {pulse?.score ?? 100}%
                 </p>
@@ -418,7 +418,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                     <span className="text-[11px] font-mono-data font-bold text-white" data-testid="stall-value">{stall}′</span>
                   </div>
                   <input data-testid="stall-slider" type="range" min="30" max="180" step="5" value={stall} onChange={(e) => setStallMin(Number(e.target.value))} className="w-full accent-[#f59e0b]" />
-                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti Miki-Nexus segnala il recupero (Batch Phoenix).", "Danach meldet Miki-Nexus die Rettung (Batch Phoenix).", "Beyond this Miki-Nexus flags recovery (Batch Phoenix).", "Pasados estos minutos Miki-Nexus avisa el recupero.", "Au-delà, Miki-Nexus signale la récupération.", "پس از این دقایق Miki-Nexus بازیافت را اعلام می‌کند.")}</p>
+                  <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti Sitor segnala il recupero (Batch Phoenix).", "Danach meldet Sitor die Rettung (Batch Phoenix).", "Beyond this Sitor flags recovery (Batch Phoenix).", "Pasados estos minutos Sitor avisa el recupero.", "Au-delà, Sitor signale la récupération.", "پس از این دقایق Sitor بازیافت را اعلام می‌کند.")}</p>
                 </div>
                 <ShiftPowerBoard editable />
                 {/* Organico del giorno → ricalcolo volumi */}

@@ -5,7 +5,7 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// FASE 10 · Supporto forni a legna & macchinari datati — Miki-Nexus ricalcola tempi/temperature.
+// FASE 10 · Supporto forni a legna & macchinari datati — Sitor ricalcola tempi/temperature.
 const PRESETS = ["forno a legna", "impastatrice a bracci datata", "cella frigo datata", "forno statico anni '80"];
 
 export default function LegacyOven({ operator }) {
@@ -33,7 +33,7 @@ export default function LegacyOven({ operator }) {
       <div className="flex items-center gap-2">
         <Flame className="w-5 h-5 text-[#FFB800]" />
         <div><h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Forni a Legna & Macchinari Datati", "Holzöfen & alte Maschinen", "Wood Ovens & Legacy Machines", "Hornos de Leña & Máquinas Antiguas", "Fours à Bois & Machines Anciennes", "تنور هیزمی و ماشین‌های قدیمی")}</h4>
-        <p className="text-[10.5px] text-[#94A3B8]">{tri("Miki-Nexus ricalcola tempi, velocità e temperature per compensare i limiti.", "Miki-Nexus passt Zeiten, Tempo und Temperaturen an.", "Miki-Nexus recomputes times, speed and temperatures to compensate.", "Miki-Nexus recalcula tiempos y temperaturas.", "Miki-Nexus recalcule les temps et températures.", "Miki-Nexus زمان و دما را بازمحاسبه می‌کند.")}</p></div>
+        <p className="text-[10.5px] text-[#94A3B8]">{tri("Sitor ricalcola tempi, velocità e temperature per compensare i limiti.", "Sitor passt Zeiten, Tempo und Temperaturen an.", "Sitor recomputes times, speed and temperatures to compensate.", "Sitor recalcula tiempos y temperaturas.", "Sitor recalcule les temps et températures.", "Sitor زمان و دما را بازمحاسبه می‌کند.")}</p></div>
       </div>
       <div className="flex flex-wrap gap-1.5">
         {PRESETS.map((p) => (
@@ -52,7 +52,7 @@ export default function LegacyOven({ operator }) {
       <button data-testid="legacy-run" onClick={run} disabled={busy || !eq.trim()}
         className="inline-flex items-center gap-2 px-4 py-2 rounded-lg font-bold text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
         style={{ background: "linear-gradient(90deg,#FFB800,#EAB308)" }}>
-        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wrench className="w-4 h-4" />} {tri("Adatta con Miki-Nexus", "Mit Miki-Nexus anpassen", "Adapt with Miki-Nexus", "Adaptar con Miki-Nexus", "Adapter avec Miki-Nexus", "تنظیم با Miki-Nexus")}
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wrench className="w-4 h-4" />} {tri("Adatta con Sitor", "Mit Sitor anpassen", "Adapt with Sitor", "Adaptar con Sitor", "Adapter avec Sitor", "تنظیم با Sitor")}
       </button>
       {res && (
         <div data-testid="legacy-result" className="rounded-lg border border-[#FFB800]/30 bg-[#FFB800]/6 p-3 space-y-2">

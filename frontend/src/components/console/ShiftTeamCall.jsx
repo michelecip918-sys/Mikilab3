@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 const AUTO_KEY = "mikilab_shift_autocall";
 
-// Riepilogo Squadra Vocale: Miki-Nexus annuncia, reparto per reparto, chi lavora oggi e la sua mansione.
+// Riepilogo Squadra Vocale: Sitor annuncia, reparto per reparto, chi lavora oggi e la sua mansione.
 export default function ShiftTeamCall() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -209,7 +209,7 @@ export default function ShiftTeamCall() {
               </div>
             ))}
             <button data-testid="shift-report-export" onClick={exportReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/40 text-[#FF9D42] font-bold text-xs active:scale-95"><Download className="w-3.5 h-3.5" /> {tri("Esporta report CSV", "Bericht CSV", "Export report CSV", "Exportar informe CSV", "Exporter le rapport CSV", "خروجی CSV گزارش")}</button>
-            <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (Miki-Nexus)", "Bericht vorlesen (Miki-Nexus)", "Read report aloud (Miki-Nexus)", "Leer informe (Miki-Nexus)", "Lire le rapport (Miki-Nexus)", "خواندن گزارش (Miki-Nexus)")}</button>
+            <button data-testid="shift-report-speak" onClick={speakReport} className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] font-bold text-xs active:scale-95"><Volume2 className="w-3.5 h-3.5" /> {tri("Leggi report a voce (Sitor)", "Bericht vorlesen (Sitor)", "Read report aloud (Sitor)", "Leer informe (Sitor)", "Lire le rapport (Sitor)", "خواندن گزارش (Sitor)")}</button>
           </div>
         )}
       </div>

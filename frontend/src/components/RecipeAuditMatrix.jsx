@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 const PUB = process.env.PUBLIC_URL;
 const LVL = { ok: "#22c55e", warn: "#f59e0b", high: "#ef4444" };
 
-// DUAL-MODE STRATEGICO: Miki-Nexus (Master Baker) critica la ricetta e presenta al
+// DUAL-MODE STRATEGICO: Sitor (Master Baker) critica la ricetta e presenta al
 // Boss la matrice sovrana a 3 opzioni. La decisione finale resta del Capo.
 export default function RecipeAuditMatrix({ onClose }) {
   const { lang } = useLang();
@@ -43,11 +43,11 @@ export default function RecipeAuditMatrix({ onClose }) {
           <button data-testid="recipe-audit-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
-        {/* Robot Miki-Nexus: stato oro/ambra in modalità strategica */}
+        {/* Robot Sitor: stato oro/ambra in modalità strategica */}
         <div className="flex items-center gap-3 my-3 rounded-2xl border p-3" style={{ borderColor: goldState ? "#f59e0b66" : "#1e293b", background: goldState ? "#f59e0b12" : "#0b0f19" }}>
           <div className="relative">
             {goldState && <span className="absolute inset-0 rounded-full bg-[#f59e0b]/50 blur-md animate-pulse" />}
-            <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "#f59e0b" : "#5EEAD4" }} />
+            <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "#f59e0b" : "#5EEAD4" }} />
           </div>
           <p className="text-[12px] text-[#cfe0ec] flex-1">{audit ? audit.mike_note : tri("Scegli una ricetta: la analizzo come Master Baker.", "Wähle ein Rezept: ich prüfe es als Master Baker.", "Pick a recipe: I'll audit it as Master Baker.", "Elige una receta: la audito como Master Baker.", "Choisis une recette : je l'audite en Master Baker.", "دستوری انتخاب کن تا مثل استاد نان بررسی کنم.")}</p>
         </div>

@@ -79,7 +79,7 @@ export default function OvenBrain() {
       celebrate(r.bond, r.leveled_up);
       speak(r.reply);
     } catch {
-      toast.error(tri("Miki-Nexus è irraggiungibile.", "Miki-Nexus nicht erreichbar.", "Miki-Nexus is unreachable.", "Miki-Nexus no disponible.", "Miki-Nexus injoignable.", "Miki-Nexus در دسترس نیست."));
+      toast.error(tri("Sitor è irraggiungibile.", "Sitor nicht erreichbar.", "Sitor is unreachable.", "Sitor no disponible.", "Sitor injoignable.", "Sitor در دسترس نیست."));
     } finally { setPlanning(false); }
   };
 
@@ -103,7 +103,7 @@ export default function OvenBrain() {
       celebrate(r.bond, r.leveled_up);
       speak(r.reply);
     } catch {
-      toast.error(tri("Miki-Nexus è irraggiungibile.", "Miki-Nexus nicht erreichbar.", "Miki-Nexus is unreachable.", "Miki-Nexus no disponible.", "Miki-Nexus injoignable.", "Miki-Nexus در دسترس نیست."));
+      toast.error(tri("Sitor è irraggiungibile.", "Sitor nicht erreichbar.", "Sitor is unreachable.", "Sitor no disponible.", "Sitor injoignable.", "Sitor در دسترس نیست."));
     } finally { setAsking(false); }
   };
 
@@ -116,11 +116,11 @@ export default function OvenBrain() {
         {/* Header divino + legame */}
         <div className="flex items-center gap-3.5">
           <div className="relative w-16 h-16 rounded-2xl overflow-hidden border border-[#FF6B00]/50 bg-[#030712] shrink-0" style={{ boxShadow: "0 0 26px rgba(255,107,0,0.4)" }}>
-            <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
-              Miki-Nexus <Sparkles className="w-4 h-4 text-[#FF6B00]" />
+              Sitor <Sparkles className="w-4 h-4 text-[#FF6B00]" />
             </h2>
             <p className="text-[11px] text-[#94A3B8]">{tri("L'IA operativa che organizza tutta la produzione.", "Die operative KI, die die ganze Produktion organisiert.", "The operational AI that organizes all production.", "La IA operativa que organiza toda la producción.", "L'IA opérationnelle qui organise toute la production.", "هوش عملیاتی که کل تولید را سازمان می‌دهد.")}</p>
           </div>
@@ -157,7 +157,7 @@ export default function OvenBrain() {
             className="mt-3 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
             style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 22px rgba(255,107,0,0.4)" }}>
             {planning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {planning ? tri("Miki-Nexus sta orchestrando…", "Miki-Nexus orchestriert…", "Miki-Nexus is orchestrating…", "Miki-Nexus está orquestando…", "Miki-Nexus orchestre…", "Miki-Nexus در حال هماهنگی…") : tri("Rendi Possibile", "Möglich machen", "Make it Possible", "Hazlo Posible", "Rends Possible", "ممکنش کن")}
+            {planning ? tri("Sitor sta orchestrando…", "Sitor orchestriert…", "Sitor is orchestrating…", "Sitor está orquestando…", "Sitor orchestre…", "Sitor در حال هماهنگی…") : tri("Rendi Possibile", "Möglich machen", "Make it Possible", "Hazlo Posible", "Rends Possible", "ممکنش کن")}
           </button>
 
           <AnimatePresence>
@@ -202,7 +202,7 @@ export default function OvenBrain() {
           <p className="font-cyber text-sm font-black uppercase tracking-wide text-white flex items-center gap-2">
             {external ? <Sparkles className="w-4 h-4 text-[#ff6b9d]" /> : <Lock className="w-4 h-4 text-[#64748B]" />} {tri("Oracolo Divino", "Göttliches Orakel", "Divine Oracle", "Oráculo Divino", "Oracle Divin", "پیشگوی الهی")}
           </p>
-          <p className="mt-1 text-[11px] text-[#94A3B8]">{tri("Chiedi a Miki-Nexus qualsiasi cosa — anche fuori dal forno. Si sblocca col legame.", "Frag Miki-Nexus alles — auch außerhalb des Ofens. Schaltet mit der Bindung frei.", "Ask Miki-Nexus anything — even beyond the oven. Unlocks with the bond.", "Pregunta a Miki-Nexus lo que sea — incluso fuera del horno.", "Demande à Miki-Nexus n'importe quoi — même hors du four.", "هرچیزی از Miki-Nexus بپرس.")}</p>
+          <p className="mt-1 text-[11px] text-[#94A3B8]">{tri("Chiedi a Sitor qualsiasi cosa — anche fuori dal forno. Si sblocca col legame.", "Frag Sitor alles — auch außerhalb des Ofens. Schaltet mit der Bindung frei.", "Ask Sitor anything — even beyond the oven. Unlocks with the bond.", "Pregunta a Sitor lo que sea — incluso fuera del horno.", "Demande à Sitor n'importe quoi — même hors du four.", "هرچیزی از Sitor بپرس.")}</p>
           <div className="mt-2 flex items-center gap-2">
             <input data-testid="deus-ask-input" value={question} onChange={(e) => setQuestion(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") askOracle(); }}
               placeholder={tri("La tua domanda…", "Deine Frage…", "Your question…", "Tu pregunta…", "Ta question…", "سؤال تو…")}

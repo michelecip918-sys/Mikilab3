@@ -8,7 +8,7 @@ const CHICCHE = {
   51: "Startup Splash Screen (glitch neon)", 52: "La Bacheca di Miki (messaggio del Capo)",
   53: "Cyber-Industrial Kit (font Space-Tech)", 54: "Synchronized Success Sound",
   55: "Dynamic Focus Animation (glow critico)", 56: "Miki's Handshake (aptica sincronizzata)",
-  57: "Miki-Nexus Live View", 58: "Bake Mix · Interactive Training",
+  57: "Sitor Live View", 58: "Bake Mix · Interactive Training",
   59: "Audio Snapshot", 60: "Smart Scale Sync", 61: "Stress Index",
   62: "Recipe Scaling", 63: "Squad Check-In", 64: "Multi-Chief Executive Architecture",
 };
