@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { operatorPinsApi, accessLogApi, gateConfigApi } from "@/lib/api";
+import { operatorPinsApi, accessLogApi, gateConfigApi, productionPinApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock } from "lucide-react";
+import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock, KeyRound } from "lucide-react";
 
 // Zona Capo: gestione PIN personali operatore + Registro Accessi (tentativi PIN).
 export default function AdminSecurity() {
@@ -16,15 +16,23 @@ export default function AdminSecurity() {
   const [busy, setBusy] = useState(false);
   const [ttl, setTtl] = useState(30);
   const [ttlSaved, setTtlSaved] = useState(false);
+  const [opGatePin, setOpGatePin] = useState("");
+  const [opGateSet, setOpGateSet] = useState(false);
+  const [opGateSaved, setOpGateSaved] = useState(false);
 
   const load = () => {
     operatorPinsApi.list().then((d) => setOps(d.operators || [])).catch(() => { /* */ });
     accessLogApi.list(80).then((d) => setLog(d.entries || [])).catch(() => { /* */ });
     gateConfigApi.get().then((d) => setTtl(d.ttl_days || 30)).catch(() => { /* */ });
+    productionPinApi.status().then((d) => setOpGateSet(!!(d && d.is_set))).catch(() => { /* */ });
   };
   useEffect(() => { load(); }, []);
 
   const saveTtl = async () => { try { await gateConfigApi.set(Number(ttl) || 30); setTtlSaved(true); setTimeout(() => setTtlSaved(false), 2000); } catch (e) { /* */ } };
+  const saveOpGate = async () => {
+    if (opGatePin.length !== 4) return;
+    try { await productionPinApi.set(opGatePin); setOpGatePin(""); setOpGateSet(true); setOpGateSaved(true); setTimeout(() => setOpGateSaved(false), 2000); } catch (e) { /* */ }
+  };
 
   const add = async () => {
     if (!name.trim() || pin.length !== 4) return;
@@ -44,6 +52,30 @@ export default function AdminSecurity() {
 
   return (
     <div className="space-y-6" data-testid="admin-security">
+      {/* PIN Sezione Operai — scelto dal Capo: apre la Produzione (zona Capo invisibile) */}
+      <div data-testid="op-gate-pin-config" className="rounded-xl border border-[#FF6B00]/30 bg-[#FF6B00]/6 p-3">
+        <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#FF9D42] mb-1"><KeyRound className="w-3.5 h-3.5" /> {tri("PIN Sezione Operai", "PIN Produktionsbereich", "Operator Section PIN", "PIN Sección Operarios", "PIN Section Opérateurs", "پین بخش اپراتور")}</p>
+        <p className="text-[11px] text-[#c9a98a] mb-2">{tri(
+          "Scegli tu il PIN con cui gli operai entrano nella loro sezione. Chi lo usa vede SOLO la Produzione, mai la tua plancia. I PIN personali qui sotto restano validi (e tracciano chi è).",
+          "Wähle den PIN, mit dem das Team in seinen Bereich gelangt. Nur Produktion sichtbar.",
+          "Choose the PIN operators use to enter their section. It opens ONLY Production, never your console. Personal PINs below still work.",
+          "Elige el PIN con el que los operarios entran a su sección. Solo ven Producción.",
+          "Choisis le PIN d'accès des opérateurs. Il ouvre seulement la Production.",
+          "پینی که اپراتورها با آن وارد بخش خود می‌شوند را انتخاب کن.")}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <span data-testid="op-gate-status" className={`text-[11px] font-bold px-2 py-1 rounded-full border ${opGateSet ? "text-[#22c55e] border-[#22c55e]/40 bg-[#22c55e]/10" : "text-[#FFB800] border-[#FFB800]/40 bg-[#FFB800]/10"}`}>
+            {opGateSet ? tri("Impostato ✓", "Gesetzt ✓", "Set ✓", "Configurado ✓", "Défini ✓", "تنظیم شد ✓") : tri("Non impostato", "Nicht gesetzt", "Not set", "Sin configurar", "Non défini", "تنظیم نشده")}
+          </span>
+          <input data-testid="op-gate-pin-input" value={opGatePin} onChange={(e) => setOpGatePin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric"
+            placeholder={opGateSet ? tri("Nuovo PIN (4)", "Neuer PIN (4)", "New PIN (4)", "Nuevo PIN (4)", "Nouveau PIN (4)", "پین جدید (۴)") : "PIN (4)"}
+            className="w-28 bg-[#0C1019] border border-[#FF6B00]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#FF6B00] outline-none" />
+          <button data-testid="op-gate-save" onClick={saveOpGate} disabled={opGatePin.length !== 4}
+            className="px-4 py-2 rounded-lg bg-[#FF6B00]/20 border border-[#FF6B00]/50 text-[#FF9D42] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
+            {opGateSaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓", "Guardado ✓", "Enregistré ✓", "ذخیره شد ✓") : (opGateSet ? tri("Cambia PIN", "PIN ändern", "Change PIN", "Cambiar PIN", "Changer PIN", "تغییر پین") : tri("Imposta PIN", "PIN setzen", "Set PIN", "Definir PIN", "Définir PIN", "تنظیم پین"))}
+          </button>
+        </div>
+      </div>
+
       {/* Scadenza cancello Master configurabile */}
       <div data-testid="gate-ttl-config" className="flex flex-wrap items-end gap-2 bg-[#0C1019]/60 border border-[#64748B]/25 rounded-xl p-3">
         <div className="flex-1 min-w-[180px]">

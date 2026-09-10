@@ -10917,7 +10917,7 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
             if gp and gp.get("expires_at", "") >= now_iso():
                 ok = True
                 level = "guest"
-    # Livello OPERAIO: un PIN personale operatore apre SOLO la Produzione (zona Capo invisibile).
+    # Livello OPERAIO: PIN personale operatore (per-persona, con livello) apre SOLO la Produzione.
     op_name = None
     op_level = None
     if not ok and p:
@@ -10928,6 +10928,13 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
                 op_name = d.get("name")
                 op_level = d.get("level") or "novizio"
                 break
+    # PIN SEZIONE OPERAI scelto dal Capo (condiviso): apre la Produzione in modo generico.
+    if not ok and p:
+        pdoc = await db.app_meta.find_one({"_key": "production_pin"}, {"_id": 0})
+        if pdoc and pdoc.get("hash") and _check_pw(p, pdoc["hash"]):
+            ok = True
+            level = "operator"
+            op_level = "novizio"
     await _log_access(level or "master", _client_ip(request), bool(ok), op_name)
     if ok:
         # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.

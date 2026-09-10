@@ -7,6 +7,7 @@ import LangSelector from "@/components/LangSelector";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
+import LivingAvatar3D from "@/components/LivingAvatar3D";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
 import { api } from "@/lib/api";
@@ -199,7 +200,7 @@ export default function PublicGate({ onUnlock }) {
                     border: `3px solid ${a.c}`,
                     boxShadow: a.nexus ? `0 0 46px ${a.c}, 0 0 90px rgba(255,107,0,0.35)` : `0 0 22px ${a.c}66`,
                   }}>
-                  <img src={`${PUB}/${a.img}`} alt={a.n} className="w-full h-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                  <LivingAvatar3D src={`${PUB}/${a.img}`} accent={a.c} nexus={!!a.nexus} className="w-full h-full" />
                   {a.nexus && plantAlert && (
                     <>
                       <span data-testid="gate-nexus-red-eye" className="absolute rounded-full animate-ping" style={{ left: "63%", top: "33%", width: 18, height: 18, background: "rgba(244,63,94,0.85)", boxShadow: "0 0 14px 5px rgba(244,63,94,0.85)", transform: "translate(-50%,-50%)" }} />
