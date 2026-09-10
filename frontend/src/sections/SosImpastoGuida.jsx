@@ -52,7 +52,7 @@ export default function SosImpastoGuida({ onBack, onOpenTool }) {
                   <p className="text-[#3E9C93] dark:text-[#AEB8BF]"><span className="font-bold text-[#2e8b6f]">{L("Rimedio:", "Lösung:", "Fix:", "Solución:")} </span>{d.fix}</p>
                   <div data-testid={`sos-calibrated-${i}`} className="flex items-center gap-2 mt-1 rounded-2xl shadow-md border border-amber-900/40 px-3 py-2" style={{ background: "#1B2A38", border: "2px solid #64748B" }}>
                     <span className="text-base">✅</span>
-                    <span className="text-[12.5px] font-extrabold" style={{ color: "#64748B" }}>{L("Impasto calibrato con successo da Miki & Mike Mix", "Teig erfolgreich kalibriert von Miki & Mike Mix", "Dough successfully calibrated by Miki & Mike Mix", "Masa calibrada con éxito por Miki & Mike Mix")}</span>
+                    <span className="text-[12.5px] font-extrabold" style={{ color: "#64748B" }}>{L("Impasto calibrato con successo da Miki & Miki-Nexus", "Teig erfolgreich kalibriert von Miki & Miki-Nexus", "Dough successfully calibrated by Miki & Miki-Nexus", "Masa calibrada con éxito por Miki & Miki-Nexus")}</span>
                   </div>
                 </div>
               )}

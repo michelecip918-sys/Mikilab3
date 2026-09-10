@@ -4,7 +4,7 @@ import { playTTS, stopTTS } from "@/lib/tts";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import { useLang } from "@/i18n/LanguageContext";
 
-// CYBER-BAKERY TRIO: Miki (Capo), Mike Mix (braccio destro), Bake Mix (robot).
+// CYBER-BAKERY TRIO: Miki (Capo), Miki-Nexus (braccio destro), Bake Mix (robot).
 // Banner interattivo: clic su un personaggio → micro-guida a step con lettura vocale hands-free.
 const TRIO = [
   {
@@ -17,8 +17,8 @@ const TRIO = [
     ],
   },
   {
-    id: "mikemix", name: "Mike Mix", role: "Reparto Produzione", img: "avatar_mikemix.jpg", accent: "#3E9C93",
-    intro: "Sono Mike Mix, il reparto Produzione. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
+    id: "mikemix", name: "Miki-Nexus", role: "Reparto Produzione", img: "avatar_nexus.jpg", accent: "#3E9C93",
+    intro: "Sono Miki-Nexus, il reparto Produzione. Eseguo la produzione, seguo i timer e i passaggi di consegna.",
     steps: [
       { t: "Voice Core", d: "Lavoro a mani libere: avvio impastatrici e forni con la voce, senza toccare lo schermo." },
       { t: "Parco Macchine", d: "Tengo d'occhio impastatrice, forni e celle con i timer sempre attivi tra le schermate." },
@@ -26,7 +26,7 @@ const TRIO = [
     ],
   },
   {
-    id: "bigmix", name: "Bake Mix", role: "Assistente Robot", img: "avatar_bigmix.jpg", accent: "#6EA8FE",
+    id: "bigmix", name: "Bake Mix", role: "Assistente Robot", img: "avatar_nexus.jpg", accent: "#6EA8FE",
     intro: "Sono Bake Mix. Ti accompagno a mani libere: comandi vocali, previsioni e allarmi termici in tempo reale.",
     steps: [
       { t: "Comandi vocali", d: "Dì «Miki, quanto manca» o «avvia forno»: rispondo a voce, chiaro e pulito." },

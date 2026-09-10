@@ -1,13 +1,13 @@
 /*
  * ============================================================================
- *  MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
+ *  MIKILAB PRO & Miki-Nexus — PROPRIETARY & CONFIDENTIAL
  *  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
  *  Unico proprietario legale: il Master. Sole legal owner: the Master.
  *  Codice riservato: vietata copia, distribuzione, reverse engineering o
- *  cloning non autorizzati, tracciati dal Mike Mix AI Security Guardian.
+ *  cloning non autorizzati, tracciati dal Miki-Nexus Security Guardian.
  * ============================================================================
  *  PLANCIA OLOGRAFICA — Zero-Menu vertical command console (v40).
- *  Unica PWA continua a scorrimento verticale: Master · Operatori · Mike Mix AI.
+ *  Unica PWA continua a scorrimento verticale: Master · Operatori · Miki-Nexus.
  */
 import { useState, useEffect, useRef, useCallback } from "react";
 import "@/App.css";
@@ -109,8 +109,8 @@ const PUB = process.env.PUBLIC_URL;
 
 const ZONES = [
   { id: "master", label: "Master", accent: "#64748B", avatar: "avatar_miki.jpg" },
-  { id: "operatori", label: "Operatori", accent: "#FF6B00", avatar: "avatar_mikemix.jpg" },
-  { id: "mikemix", label: "Mike Mix AI", accent: "#FF9D42", avatar: "avatar_bigmix.jpg" },
+  { id: "operatori", label: "Operatori", accent: "#FF6B00", avatar: "avatar_nexus.jpg" },
+  { id: "mikemix", label: "Miki-Nexus", accent: "#FF9D42", avatar: "avatar_nexus.jpg" },
 ];
 
 const DECK_DEPTS = [
@@ -140,7 +140,7 @@ export default function App() {
   const [deckDept, setDeckDept] = useState(DECK_DEPTS[0]);
   const [showBriefing, setShowBriefing] = useState(false);
 
-  // Deck reattivo: stato live dei reparti (turni attivi + allarmi Mike Mix), polling 15s.
+  // Deck reattivo: stato live dei reparti (turni attivi + allarmi Miki-Nexus), polling 15s.
   const [deckStatus, setDeckStatus] = useState(null);
   const prevDeckMood = useRef("sereno");
   const lastDeckAlarm = useRef(0);
@@ -150,12 +150,12 @@ export default function App() {
     const load = () => api.get("/deck/status").then((r) => {
       if (stop) return;
       setDeckStatus(r.data);
-      // Allarme sonoro + voce Mike Mix all'ingresso in critico; ripete ogni 30s finche' resta critico.
+      // Allarme sonoro + voce Miki-Nexus all'ingresso in critico; ripete ogni 30s finche' resta critico.
       const mood = (r.data && r.data.mood) || "sereno";
       if (mood === "critico" && (prevDeckMood.current !== "critico" || Date.now() - lastDeckAlarm.current > 30000)) {
         lastDeckAlarm.current = Date.now();
         playDeckAlarm();
-        // Voce Mike Mix: annuncia il reparto in allarme (solo all'ingresso in critico, non a ogni ripetizione).
+        // Voce Miki-Nexus: annuncia il reparto in allarme (solo all'ingresso in critico, non a ogni ripetizione).
         if (prevDeckMood.current !== "critico") {
           const st = (r.data.critical_stations || []).slice(0, 3).join(", ");
           const msg = st
@@ -350,7 +350,7 @@ export default function App() {
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#FF6B00] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
                     {user.email && <p className="text-[10px] text-[#94A3B8] truncate mb-2">{user.email}</p>}
-                    <p className="text-[9.5px] leading-snug text-[#EAB308] mb-2">✦ {tri("Riconosciuto Capo Supremo — Miki-Nexus e Mike Mix ti obbediscono.", "Als Oberster Chef erkannt — Miki-Nexus und Mike Mix gehorchen dir.", "Recognized Supreme Capo — Miki-Nexus and Mike Mix obey you.", "Reconocido Capo Supremo — Miki-Nexus y Mike Mix te obedecen.", "Reconnu Capo Suprême — Miki-Nexus et Mike Mix t'obéissent.", "کاپوی برتر شناخته شد — میکی‌نکسوس و Mike Mix از تو اطاعت می‌کنند.")}</p>
+                    <p className="text-[9.5px] leading-snug text-[#EAB308] mb-2">✦ {tri("Riconosciuto Capo Supremo — Miki-Nexus ti obbedisce.", "Als Oberster Chef erkannt — Miki-Nexus gehorcht dir.", "Recognized Supreme Capo — Miki-Nexus obeys you.", "Reconocido Capo Supremo — Miki-Nexus te obedece.", "Reconnu Capo Suprême — Miki-Nexus t'obéit.", "کاپوی برتر شناخته شد — Miki-Nexus از تو اطاعت می‌کند.")}</p>
                     <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito. Sessione Capo chiusa.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
                       className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#f87171] font-bold text-xs hover:border-[#f87171]/50 active:scale-95 transition-all">
                       <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
@@ -373,7 +373,7 @@ export default function App() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
                 <div className="absolute bottom-3 left-4 z-10">
                   <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
-                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase">MikiLab → Miki-Nexus → Mike Mix</p>
+                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase">MikiLab → Miki-Nexus</p>
                 </div>
                 {deckStatus && (
                   <div data-testid="deck-heartbeat" className="absolute bottom-3 right-4 z-10 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase" style={{ color: moodColor }}>
@@ -443,10 +443,10 @@ export default function App() {
                     <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
                     <LabBriefing />
                     </div>
-                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Mike Mix e guide di manutenzione istantanee.", "SOS aus der Produktion mit Mike Mix-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Mike Mix voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
+                    <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Miki-Nexus e guide di manutenzione istantanee.", "SOS aus der Produktion mit Miki-Nexus-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Miki-Nexus voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Mike Mix riassume il turno a voce e assegna il MikiScore dell'impianto.", "Mike Mix fasst die Schicht zusammen.", "Mike Mix voices the shift summary and the plant MikiScore.", "Mike Mix resume el turno.", "Mike Mix résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
+                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Miki-Nexus riassume il turno a voce e assegna il MikiScore dell'impianto.", "Miki-Nexus fasst die Schicht zusammen.", "Miki-Nexus voices the shift summary and the plant MikiScore.", "Miki-Nexus resume el turno.", "Miki-Nexus résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
                       <ShiftReport />
                     </HoloPanel>
                     </CapoGroup>
@@ -454,7 +454,7 @@ export default function App() {
                     <CapoGroup id="piani" icon="🗓️" accent="#FF9D42" open={consoleSec === "piani"} onToggle={() => toggleSec("piani")}
                       title={tri("Piani di Produzione", "Produktionspläne", "Production Plans", "Planes de Producción", "Plans de Production", "برنامه‌های تولید")}
                       sub={tri("Piano del giorno, settimana, ordini e timeline.", "Tages- und Wochenplan, Aufträge, Timeline.", "Day/week plan, orders and timeline.", "Plan diario/semanal y pedidos.", "Plan jour/semaine et commandes.", "برنامه روز/هفته و سفارش‌ها.")}>
-                    <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Mike Mix · Piano del Giorno", "Mike Mix · Tagesplan", "Mike Mix · Day Plan", "Mike Mix · Plan del Día", "Mike Mix · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Mike Mix genera la sequenza di produzione ottimale del giorno.", "Mike Mix erstellt den optimalen Produktionsablauf.", "Mike Mix generates the optimal production sequence.", "Mike Mix genera la secuencia óptima.", "Mike Mix génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
+                    <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Miki-Nexus · Piano del Giorno", "Miki-Nexus · Tagesplan", "Miki-Nexus · Day Plan", "Miki-Nexus · Plan del Día", "Miki-Nexus · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Miki-Nexus genera la sequenza di produzione ottimale del giorno.", "Miki-Nexus erstellt den optimalen Produktionsablauf.", "Miki-Nexus generates the optimal production sequence.", "Miki-Nexus genera la secuencia óptima.", "Miki-Nexus génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
                       <AutoPlan />
                     </HoloPanel>
                     <HoloPanel testid="panel-weekly" accent="#FF6B00" beacon="#FFB800" icon="🗓️" title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Genera lista spesa, PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. Einkaufsliste, PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. Generates shopping list, PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. Lista de compra, PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. Liste de courses, PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
@@ -500,7 +500,7 @@ export default function App() {
                     <HoloPanel testid="panel-dept-assign" accent="#FF6B00" beacon="#FFB800" icon="🏭" title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
                     </HoloPanel>
-                    <HoloPanel testid="panel-shift-team" accent="#FF9D42" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce Mike Mix", "Team-Übersicht · Mike Mix-Stimme", "Team Roll-Call · Mike Mix Voice", "Resumen de Equipo · Voz Mike Mix", "Appel d'Équipe · Voix Mike Mix", "فراخوان تیم · صدای Mike Mix")} sub={tri("All'apertura del turno, Mike Mix annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Mike Mix das Team pro Bereich an.", "At shift start, Mike Mix voices the team composition department by department.", "Al iniciar el turno, Mike Mix anuncia el equipo por área.", "Au début du service, Mike Mix annonce l'équipe par atelier.", "در شروع شیفت، Mike Mix ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
+                    <HoloPanel testid="panel-shift-team" accent="#FF9D42" beacon="#22c55e" icon="📣" title={tri("Riepilogo Squadra · Voce Miki-Nexus", "Team-Übersicht · Miki-Nexus-Stimme", "Team Roll-Call · Miki-Nexus Voice", "Resumen de Equipo · Voz Miki-Nexus", "Appel d'Équipe · Voix Miki-Nexus", "فراخوان تیم · صدای Miki-Nexus")} sub={tri("All'apertura del turno, Miki-Nexus annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Miki-Nexus das Team pro Bereich an.", "At shift start, Miki-Nexus voices the team composition department by department.", "Al iniciar el turno, Miki-Nexus anuncia el equipo por área.", "Au début du service, Miki-Nexus annonce l'équipe par atelier.", "در شروع شیفت، Miki-Nexus ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
                       <ShiftTeamCall />
                     </HoloPanel>
                     <HoloPanel testid="panel-shift-templates" accent="#FF9D42" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
@@ -535,7 +535,7 @@ export default function App() {
                     <HoloPanel testid="panel-hardware" accent="#64748B" beacon="#FF9D42" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
                       <HardwareBridge />
                     </HoloPanel>
-                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#FF6B00" icon="⚙️" title={tri("Nuovi Macchinari · Mike Mix riconosce", "Neue Maschinen · Mike Mix erkennt", "New Machines · Mike Mix recognizes", "Nuevas Máquinas · Mike Mix reconoce", "Nouvelles Machines · Mike Mix reconnaît", "ماشین‌های جدید · Mike Mix می‌شناسد")} sub={tri("Arriva un macchinario? Mike Mix lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Mike Mix erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Mike Mix flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Mike Mix la reconoce e integra.", "Une machine arrive ? Mike Mix la reconnaît et l'intègre.", "دستگاه جدید؟ Mike Mix آن را می‌شناسد و ادغام می‌کند.")}>
+                    <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#FF6B00" icon="⚙️" title={tri("Nuovi Macchinari · Miki-Nexus riconosce", "Neue Maschinen · Miki-Nexus erkennt", "New Machines · Miki-Nexus recognizes", "Nuevas Máquinas · Miki-Nexus reconoce", "Nouvelles Machines · Miki-Nexus reconnaît", "ماشین‌های جدید · Miki-Nexus می‌شناسد")} sub={tri("Arriva un macchinario? Miki-Nexus lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Miki-Nexus erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Miki-Nexus flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Miki-Nexus la reconoce e integra.", "Une machine arrive ? Miki-Nexus la reconnaît et l'intègre.", "دستگاه جدید؟ Miki-Nexus آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
                     </CapoGroup>
@@ -570,7 +570,7 @@ export default function App() {
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneHero testid="hero-operatori" avatar="avatar_mikemix.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Mike Mix" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
+                <ZoneHero testid="hero-operatori" avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Miki-Nexus" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><MikeMixFloor /></div>
@@ -615,11 +615,11 @@ export default function App() {
                   <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 40%, rgba(125,211,252,0.12), transparent 65%)" }} />
                   <div className="relative z-10">
                     <div className="w-24 h-24 mx-auto rounded-full border-2 border-[#FF9D42]/70 bg-[#FF9D42]/5 flex items-center justify-center shadow-[0_0_36px_rgba(125,211,252,0.4)]" style={{ animation: "pulse 2.8s ease-in-out infinite" }}>
-                      <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix AI" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                      <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-20 h-20 rounded-full object-cover object-top" onError={(e) => { e.currentTarget.style.display = "none"; }} />
                     </div>
-                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">Mike Mix AI</h2>
+                    <h2 className="mt-4 font-cyber text-xl font-black uppercase tracking-[0.2em] text-white">Miki-Nexus</h2>
                     <p className="mt-1 font-mono-data text-[11px] tracking-[0.25em] text-[#FF9D42] uppercase">{tri("Sistema online · voce attiva", "System online · Stimme aktiv", "System online · voice active", "Sistema en línea · voz activa", "Système en ligne · voix active", "سیستم آنلاین · صدا فعال")}</p>
-                    <p className="mt-3 text-sm text-[#CBD5E1] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Mike Mix in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Mike Mix-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Mike Mix orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Mike Mix escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Mike Mix écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Mike Mix گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
+                    <p className="mt-3 text-sm text-[#CBD5E1] max-w-md mx-auto">{tri("Parla in qualsiasi momento: l'orbita Miki-Nexus in basso ascolta e governa. Detta ordini, chiedi aiuto, ottieni report — solo voce.", "Sprich jederzeit: die Miki-Nexus-Orbit unten hört zu und steuert. Diktiere Befehle, frage nach Hilfe — nur Stimme.", "Speak anytime: the Miki-Nexus orb below listens and governs. Dictate orders, ask for help, get reports — voice only.", "Habla cuando quieras: el orbe Miki-Nexus escucha y gobierna. Dicta órdenes, pide ayuda — solo voz.", "Parle à tout moment : l'orbe Miki-Nexus écoute et gouverne — voix seule.", "هر وقت خواستی حرف بزن: اوربیت Miki-Nexus گوش می‌دهد و مدیریت می‌کند — فقط صدا.")}</p>
                   </div>
                 </div>
                 <MikeMixGuide />

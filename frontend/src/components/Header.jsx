@@ -54,9 +54,9 @@ export default function Header() {
       </div>
 
       <div className="flex items-center gap-1 flex-wrap justify-end w-full sm:w-auto">
-        <span data-testid="bakemix-status" title="Mike Mix AI online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #2A3B49" }}>
+        <span data-testid="bakemix-status" title="Miki-Nexus online" className="flex items-center gap-1 rounded-full px-2 py-1 mr-0.5" style={{ background: "#1a1206", border: "1px solid #2A3B49" }}>
           <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: "#39d98a" }} />
-          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#64748B" }}>Mike Mix AI</span>
+          <span className="text-[9.5px] font-extrabold tracking-wide" style={{ color: "#64748B" }}>Miki-Nexus</span>
         </span>
         <TrinitySeal />
         <button data-testid="header-search-btn" onClick={() => window.dispatchEvent(new Event("mikilab-open-search"))} aria-label={mkTri(lang)("Cerca", "Suche", "Search", "Buscar", "Chercher", "جستجو")}

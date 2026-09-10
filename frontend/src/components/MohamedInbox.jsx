@@ -33,10 +33,10 @@ export default function MohamedInbox() {
     <div data-testid="mohamed-inbox" className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <img src={`${PUB}/avatar_mohamed.jpg`} alt="Mohamed" className="w-9 h-9 rounded-full object-cover border border-[#64748B]/50 grayscale-[0.2]" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-9 h-9 rounded-full object-cover border border-[#64748B]/50 grayscale-[0.2]" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div>
             <h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Inbox Accessi", "Zugangs-Postfach", "Access Inbox", "Bandeja de Accesos", "Boîte d'accès", "صندوق دسترسی")}</h4>
-            <p className="text-[10px] text-[#94A3B8]">{tri("Smistate da Mohamed · assistente subordinato", "Sortiert von Mohamed · untergeordnet", "Routed by Mohamed · subordinate assistant", "Clasificadas por Mohamed", "Triées par Mohamed", "توسط محمد")}</p>
+            <p className="text-[10px] text-[#94A3B8]">{tri("Smistate da Miki-Nexus · assistente subordinato", "Sortiert von Miki-Nexus · untergeordnet", "Routed by Miki-Nexus · subordinate assistant", "Clasificadas por Miki-Nexus", "Triées par Miki-Nexus", "توسط محمد")}</p>
           </div>
         </div>
         <button data-testid="inbox-refresh" onClick={load} className="text-[#FF9D42] active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>

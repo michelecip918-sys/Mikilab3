@@ -34,7 +34,7 @@ export default function FloorCrossCheck({ task = "Produzione" }) {
         <Camera className="w-5 h-5 text-[#06b6d4]" />
         <div className="min-w-0">
           <h3 className="text-sm font-extrabold text-[#06b6d4]">{tri("Verifica task con foto", "Aufgabe per Foto prüfen", "Verify task with photo", "Verifica con foto", "Vérifier par photo", "بررسی با عکس")}</h3>
-          <p className="text-[11px] text-[#94A3B8]">{tri("Scatta la foto del lavoro finito: Mike Mix la valida.", "Foto der fertigen Arbeit: Mike Mix prüft.", "Snap the finished work: Mike Mix validates.", "Foto del trabajo terminado: Mike Mix valida.", "Photo du travail fini : Mike Mix valide.", "عکس کار تمام‌شده: باکومیکس تأیید می‌کند.")}</p>
+          <p className="text-[11px] text-[#94A3B8]">{tri("Scatta la foto del lavoro finito: Miki-Nexus la valida.", "Foto der fertigen Arbeit: Miki-Nexus prüft.", "Snap the finished work: Miki-Nexus validates.", "Foto del trabajo terminado: Miki-Nexus valida.", "Photo du travail fini : Miki-Nexus valide.", "عکس کار تمام‌شده: باکومیکس تأیید می‌کند.")}</p>
         </div>
       </div>
       <input ref={inputRef} data-testid="floor-cc-input" type="file" accept="image/*" capture="environment" onChange={onPhoto} className="hidden" />

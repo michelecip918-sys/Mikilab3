@@ -394,3 +394,14 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Audio TTS: passato da `eleven_multilingual_v2` a `eleven_turbo_v2_5` con `language_code` forzato (fix "l'audio italiano parte in inglese"). Cache-key aggiornata (turbo+lang). Helper `_el_lang_code`.
 - Rimosso branding confuso "Mike Mix Deus"/"dio del forno" nel titolo OvenBrain → ora solo "Mike Mix" con descrizione chiara.
 - PIN Master 198505: verify ora dà priorità assoluta al valore hardcoded/`.env` (fix desync DB produzione). NB: richiede DEPLOY per applicarsi su mikilab.de.
+
+## 2026-06 — FUSIONE TOTALE: una sola entità AI (Miki-Nexus)
+- Richiesta utente: "Deve essere solo una persona, tutto in uno. Mike Mix incorporato dentro Miki-Nexus. Solo un avatar robotico oltre MikiLab."
+- Frontend: sostituzione globale "Mike Mix" → "Miki-Nexus" (~193 occorrenze), avatar_mikemix/avatar_bigmix → avatar_nexus.jpg, rimosso suffisso "AI" (si chiama solo Miki-Nexus).
+- PublicGate: da 3 avatar a 2 (MikiLab Capo + Miki-Nexus); gerarchia "MIKILAB → MIKI-NEXUS".
+- ShiftBriefing: da Cyber-Trio a duo (MikiLab + Miki-Nexus); voce sempre "nexus".
+- TalkWithMiki: tab ridotte a 2 (MikiLab + Miki-Nexus); copilot selector ridotto a 2; rimosso "Trio".
+- MohamedInbox: Mohamed fuso in Miki-Nexus (testi + avatar_nexus.jpg). Componente interno invariato.
+- MikeMixSense: titolo FAB/pannello ora solo "Miki-Nexus" (Sesto Senso assorbito).
+- Backend: briefing /api/mike/briefing ora ritorna 2 linee (MikiLab + Miki-Nexus con allerte fuse). TUTTE le voci TTS (_VOICE_MAP/_OAI_VOICE) puntano alla voce NEXUS (una sola voce per tutto).
+- Test: backend briefing OK (2 linee), frontend compila, gate pubblico mostra 2 avatar.

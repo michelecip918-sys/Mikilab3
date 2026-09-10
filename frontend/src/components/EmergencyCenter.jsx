@@ -9,7 +9,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 // CENTRO EMERGENZE del Capo (Neural Load Radar): raccoglie gli SOS del reparto con
-// bagliore rosso pulsante, Mike Mix li ANNUNCIA a voce, e genera una GUIDA RAPIDA di
+// bagliore rosso pulsante, Miki-Nexus li ANNUNCIA a voce, e genera una GUIDA RAPIDA di
 // manutenzione in tempo reale (Claude) per la macchina in allarme.
 export default function EmergencyCenter() {
   const { lang } = useLang();

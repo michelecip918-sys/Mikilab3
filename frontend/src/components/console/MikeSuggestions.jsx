@@ -15,7 +15,7 @@ const EXEC = {
   b2b: async () => { const r = await mikeApi.b2bToPlan(); try { window.dispatchEvent(new CustomEvent("mikilab-prefill-orders", { detail: { text: r.orders_text } })); } catch { /* */ } return { kind: "b2b", ...r }; },
 };
 
-// Mike Mix · Suggerimenti predittivi: il "cervello" unico dell'impianto propone azioni concrete.
+// Miki-Nexus · Suggerimenti predittivi: il "cervello" unico dell'impianto propone azioni concrete.
 export default function MikeSuggestions() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -41,7 +41,7 @@ export default function MikeSuggestions() {
   const toggleAuto = async (e) => {
     e.stopPropagation();
     const next = !autopilot; setAutopilot(next);
-    try { await mikeApi.autopilotSet(next); toast.success(next ? tri("Auto-pilota Mike Mix attivo", "Autopilot aktiv", "Mike Mix autopilot on", "Piloto automático activo", "Pilote auto activé", "خلبان خودکار فعال") : tri("Auto-pilota disattivato", "Autopilot aus", "Autopilot off", "Piloto desactivado", "Pilote désactivé", "خلبان خاموش")); load(); } catch { setAutopilot(!next); }
+    try { await mikeApi.autopilotSet(next); toast.success(next ? tri("Auto-pilota Miki-Nexus attivo", "Autopilot aktiv", "Miki-Nexus autopilot on", "Piloto automático activo", "Pilote auto activé", "خلبان خودکار فعال") : tri("Auto-pilota disattivato", "Autopilot aus", "Autopilot off", "Piloto desactivado", "Pilote désactivé", "خلبان خاموش")); load(); } catch { setAutopilot(!next); }
   };
 
   const goTo = (target) => {
@@ -69,7 +69,7 @@ export default function MikeSuggestions() {
 
   return (
     <div data-testid="mike-suggestions" className="rounded-2xl border border-[#FF6B00]/40 bg-gradient-to-br from-[#FF6B00]/8 to-transparent p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#FF6B00] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Mike Mix · Suggerimenti", "Mike Mix · Vorschläge", "Mike Mix · Suggestions", "Mike Mix · Sugerencias", "Mike Mix · Suggestions", "بوکومیکس · پیشنهادها")}
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#FF6B00] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Miki-Nexus · Suggerimenti", "Miki-Nexus · Vorschläge", "Miki-Nexus · Suggestions", "Miki-Nexus · Sugerencias", "Miki-Nexus · Suggestions", "بوکومیکس · پیشنهادها")}
         <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#22c55e]/20 border-[#22c55e]/60 text-[#22c55e]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
           <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
         </button>

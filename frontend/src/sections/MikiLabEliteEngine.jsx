@@ -1,5 +1,5 @@
 /* ============================================================================
-   MIKILAB OS v10.3 - ULTIMATE 3D BAKERY ENTERPRISE EDITION (Miki & Mike Mix)
+   MIKILAB OS v10.3 - ULTIMATE 3D BAKERY ENTERPRISE EDITION (Miki & Miki-Nexus)
    UI: Real Photos + Real Radio (RAI stream) + DB Recipes + Push Notifications
    Reso come overlay a schermo intero (createPortal) con Chiudi + ESC.
    ============================================================================ */
@@ -474,7 +474,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
   const startBake = () => {
     setIsBaking(true);
-    speakVoice(tr("Conto alla rovescia forno avviato da Mike Mix", "Ofen-Countdown von Mike Mix gestartet", "Oven countdown started by Mike Mix", "Cuenta atrás del horno iniciada por Mike Mix", "Compte à rebours du four lancé par Mike Mix", "شمارش معکوس فر توسط Mike Mix آغاز شد"));
+    speakVoice(tr("Conto alla rovescia forno avviato da Miki-Nexus", "Ofen-Countdown von Miki-Nexus gestartet", "Oven countdown started by Miki-Nexus", "Cuenta atrás del horno iniciada por Miki-Nexus", "Compte à rebours du four lancé par Miki-Nexus", "شمارش معکوس فر توسط Miki-Nexus آغاز شد"));
     try { if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission(); } catch (e) {}
   };
 
@@ -585,7 +585,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
         {/* SEZIONE RICETTE & SAPORI (ricette reali dal DB) */}
         {!isLocked && eliteSection === 'ricette' && (
           <div data-testid="elite-panel-ricette" style={{ marginBottom: '16px' }}>
-            {/* Calcolatore Mike Mix — temperatura acqua & idratazione */}
+            {/* Calcolatore Miki-Nexus — temperatura acqua & idratazione */}
             <div data-testid="elite-bakemix" style={{ backgroundColor: 'rgba(0,0,0,0.5)', border: `1px solid ${currentRoom.color}`, borderRadius: '12px', padding: '12px', marginBottom: '14px' }}>
               <div style={{ fontSize: '0.7rem', color: currentRoom.color, fontWeight: 800, marginBottom: '8px' }}>🧮 {_pick('Calcolatore Acqua & Idratazione', 'Wasser-Rechner', 'Water & Hydration Calc', 'Cálculo agua', 'Calcul eau', 'محاسبه آب')}</div>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(90px, 1fr))', gap: '6px', marginBottom: '8px' }}>
@@ -891,7 +891,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
 
           {activeTab === 'guida' ? (
             <div data-testid="elite-guida-content" style={{ fontSize: '0.85rem', lineHeight: '1.6', color: '#DDD' }}>
-              <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong>>{tr(" ideato e sviluppato da Mike Mix & Miki.", " erdacht und entwickelt von Mike Mix & Miki.", " conceived and developed by Mike Mix & Miki.", " ideado y desarrollado por Mike Mix & Miki.", " conçu et développé par Mike Mix & Miki.", " طراحی و توسعه توسط محمد و میکی.")}</p>
+              <p>✨ <strong>MikiLab | 3D Lab Simulation v10.3</strong>>{tr(" ideato e sviluppato da Miki-Nexus & Miki.", " erdacht und entwickelt von Miki-Nexus & Miki.", " conceived and developed by Miki-Nexus & Miki.", " ideado y desarrollado por Miki-Nexus & Miki.", " conçu et développé par Miki-Nexus & Miki.", " طراحی و توسعه توسط محمد و میکی.")}</p>
               <p>🔒 <strong>Protezione Copyright:</strong> Questo software, l'interfaccia 3D, la logica dei timer e i contenuti multimediali sono protetti da diritti di proprietà intellettuale esclusivi. Ogni duplicazione o uso non autorizzato è severamente vietato.</p>
               <p>🚀 <strong>{tr("Rispetto al mercato:", "Im Vergleich zum Markt:", "Compared to the market:", "Frente al mercado:", "Par rapport au marché :", "در مقایسه با بازار:")}</strong>>{tr("Foto reali del team, radio live integrata, ricette collegate al database e allarmi con notifica del telefono per la cottura.", "Echte Team-Fotos, integriertes Live-Radio, mit der Datenbank verknüpfte Rezepte und Backalarme mit Telefonbenachrichtigung.", "Real team photos, integrated live radio, recipes linked to the database and baking alarms with phone notification.", "Fotos reales del equipo, radio en vivo integrada, recetas vinculadas a la base de datos y alarmas de cocción con notificación al teléfono.", "Photos réelles de l'équipe, radio live intégrée, recettes liées à la base de données et alarmes de cuisson avec notification téléphone.", "عکس‌های واقعی تیم، رادیوی زنده یکپارچه، دستورهای متصل به پایگاه‌داده و هشدارهای پخت با اعلان تلفن.")}</p>
             </div>
@@ -1091,7 +1091,7 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
           fontSize: '0.75rem', color: '#AAA', display: 'flex', justifyContent: 'center',
           gap: '15px', flexWrap: 'wrap'
         }}>
-          <span>© MikiLab | 3D Lab Simulation v10.3 - Mike Mix & Miki (Tutti i diritti riservati)</span>
+          <span>© MikiLab | 3D Lab Simulation v10.3 - Miki-Nexus & Miki (Tutti i diritti riservati)</span>
           <button data-testid="elite-privacy" onClick={() => setModalOpen('privacy')} style={{ background: 'none', border: 'none', color: '#D97706', cursor: 'pointer', textDecoration: 'underline', fontSize: '0.75rem' }}>
             🔒 Privacy (GDPR)
           </button>
@@ -1127,11 +1127,11 @@ export default function MikiLabEliteEngine({ open, onClose, locked = false, lock
                 <p>I dati di produzione, le ricette e le impostazioni del laboratorio gestiti all'interno di MikiLab | 3D Lab Simulation sono trattati in totale conformità al Regolamento UE 2016/679 (GDPR), garantendo la massima riservatezza e sicurezza dei dati aziendali.</p>
               )}
               {modalOpen === 'copyright' && (
-                <p><strong>© 2026 MikiLab | 3D Lab Simulation - Mike Mix & Miki.</strong> Tutti i diritti di proprietà intellettuale relativi al codice sorgente, all'interfaccia 3D, ai flussi operativi, alle immagini e ai concetti di laboratorio sono riservati. È vietata la copia, la riproduzione o la distribuzione non autorizzata, anche parziale, dell'opera.</p>
+                <p><strong>© 2026 MikiLab | 3D Lab Simulation - Miki-Nexus & Miki.</strong> Tutti i diritti di proprietà intellettuale relativi al codice sorgente, all'interfaccia 3D, ai flussi operativi, alle immagini e ai concetti di laboratorio sono riservati. È vietata la copia, la riproduzione o la distribuzione non autorizzata, anche parziale, dell'opera.</p>
               )}
               {modalOpen === 'impressum' && (
                 <p><strong>MikiLab Industrial Systems</strong><br />
-                  Sviluppato da Mike Mix & Miki<br />
+                  Sviluppato da Miki-Nexus & Miki<br />
                   Laboratorio di Panificazione e Pasticceria 3D<br />
                   Contatto ufficiale: support@mikilab-os.com</p>
               )}

@@ -9,8 +9,8 @@ import { mkTri } from "@/i18n/triMaps";
 
 const SR_LOCALE = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
-// Trigger "i" Mike Mix: governance Master-centrica contestuale. Il Master parla o scrive,
-// Mike Mix interpreta ed ESEGUE (delega linea, crea/elimina sezione) senza form.
+// Trigger "i" Miki-Nexus: governance Master-centrica contestuale. Il Master parla o scrive,
+// Miki-Nexus interpreta ed ESEGUE (delega linea, crea/elimina sezione) senza form.
 export default function MikeInfo({ context = "" }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
@@ -31,7 +31,7 @@ export default function MikeInfo({ context = "" }) {
       setReply(r.reply || "");
       try { playTTS(r.reply || "", { lang, voice: "bakemix" }); } catch { /* */ }
       if (r.executed) {
-        toast.success("Mike Mix", { description: r.reply });
+        toast.success("Miki-Nexus", { description: r.reply });
         try { window.dispatchEvent(new Event("mikilab-govern-executed")); } catch { /* */ }
         setText("");
       }
@@ -57,7 +57,7 @@ export default function MikeInfo({ context = "" }) {
 
   return (
     <>
-      <button data-testid="mike-info-trigger" onClick={() => setOpen(true)} title="Mike Mix"
+      <button data-testid="mike-info-trigger" onClick={() => setOpen(true)} title="Miki-Nexus"
         className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#06b6d4]/15 border border-[#06b6d4]/50 text-[#06b6d4] active:scale-90 transition-all hover:bg-[#06b6d4]/25">
         <Info className="w-4 h-4" />
       </button>
@@ -72,7 +72,7 @@ export default function MikeInfo({ context = "" }) {
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-5 h-5 text-[#06b6d4]" />
                   <div>
-                    <h3 className="text-sm font-extrabold text-[#06b6d4]">Mike Mix{context ? ` · ${context}` : ""}</h3>
+                    <h3 className="text-sm font-extrabold text-[#06b6d4]">Miki-Nexus{context ? ` · ${context}` : ""}</h3>
                     <p className="text-[11px] text-[#94A3B8]">{tri("Comanda a voce: delego, creo o modifico all'istante.", "Sprich: ich delegiere, erstelle oder ändere sofort.", "Speak: I delegate, create or change instantly.", "Habla: delego, creo o cambio al instante.", "Parle : je délègue, crée ou modifie à l'instant.", "بگو: فوری واگذار، می‌سازم یا تغییر می‌دهم.")}</p>
                   </div>
                 </div>

@@ -86,7 +86,7 @@ export default function TalkWithMiki({ tab }) {
     setInput("");
     const replyWho = copilot === "trio" ? "miki" : copilot;
     const HINT = {
-      mikemix: "[Rispondi in prima persona come Mike Mix, il braccio destro persiano del laboratorio] ",
+      mikemix: "[Rispondi in prima persona come Miki-Nexus, il braccio destro persiano del laboratorio] ",
       bigmix: "[Rispondi in prima persona come MikeMix, l'assistente robot di MikiLab] ",
       miki: "", trio: "",
     };
@@ -168,7 +168,7 @@ export default function TalkWithMiki({ tab }) {
     try { rec.start(); } catch { setListening(false); }
   };
 
-  const AVATARS = { miki: "avatar_miki.jpg", mikemix: "avatar_mikemix.jpg", bigmix: "avatar_bigmix.jpg" };
+  const AVATARS = { miki: "avatar_miki.jpg", mikemix: "avatar_nexus.jpg", bigmix: "avatar_nexus.jpg" };
   const ACCENT = { miki: "#E0A106", mikemix: "#3E9C93", bigmix: "#6EA8FE" };
 
   return (
@@ -185,16 +185,16 @@ export default function TalkWithMiki({ tab }) {
 
       {open && (
         <div data-testid="talk-miki-panel" className="fixed z-[65] bottom-0 right-0 left-0 sm:left-auto sm:bottom-4 sm:right-4 sm:w-[400px] bg-slate-900 border border-slate-700 sm:rounded-3xl rounded-t-3xl shadow-2xl overflow-hidden max-h-[85vh] flex flex-col">
-          {/* Header con tab dei 3 personaggi */}
+          {/* Header con tab dei 2 interlocutori */}
           <div className="flex items-center gap-2 p-3 border-b border-slate-800 bg-slate-950">
-            {["chat", "mikemix", "bigmix"].map((v) => {
+            {["chat", "mikemix"].map((v) => {
               const key = v === "chat" ? "miki" : v;
               return (
                 <button key={v} data-testid={`talk-tab-${v}`} onClick={() => setView(v)}
                   className={`flex items-center gap-1.5 rounded-full pl-1 pr-2.5 py-1 border transition-all ${view === v ? "bg-slate-800" : "opacity-60"}`}
                   style={{ borderColor: view === v ? ACCENT[key] : "transparent" }}>
                   <img src={AV(AVATARS[key])} alt="" className="w-6 h-6 rounded-full object-cover object-top" />
-                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : v === "mikemix" ? "Mike Mix" : "Mike Mix AI"}</span>
+                  <span className="text-[11px] font-bold" style={{ color: ACCENT[key] }}>{v === "chat" ? "MikiLab" : "Miki-Nexus"}</span>
                 </button>
               );
             })}
@@ -237,7 +237,7 @@ export default function TalkWithMiki({ tab }) {
               <div className="p-3 border-t border-slate-800 space-y-2">
                 {/* Selettore Co-Pilota */}
                 <div data-testid="copilot-selector" className="flex items-center gap-1">
-                  {[["trio", "Trio"], ["miki", "MikiLab"], ["mikemix", "Mike Mix"], ["bigmix", "Mike Mix AI"]].map(([id, lbl]) => (
+                  {[["miki", "MikiLab"], ["mikemix", "Miki-Nexus"]].map(([id, lbl]) => (
                     <button key={id} data-testid={`copilot-${id}`} onClick={() => pickCopilot(id)}
                       className={`flex-1 text-[10px] font-bold py-1.5 rounded-lg border transition-all ${copilot === id ? "bg-[#3E9C93] text-slate-900 border-[#3E9C93]" : "text-slate-400 border-slate-700"}`}>{lbl}</button>
                   ))}
@@ -263,7 +263,7 @@ export default function TalkWithMiki({ tab }) {
           {view === "mikemix" && (
             <div data-testid="mikemix-lab-live" className="flex-1 overflow-y-auto p-4">
               <div className="relative rounded-2xl overflow-hidden border border-[#3E9C93]/40 aspect-video bg-slate-950">
-                <img src={AV("avatar_mikemix.jpg")} alt="Mike Mix" className="w-full h-full object-cover" style={{ animation: "cyberGlitch 4s steps(6) infinite" }} />
+                <img src={AV("avatar_nexus.jpg")} alt="Miki-Nexus" className="w-full h-full object-cover" style={{ animation: "cyberGlitch 4s steps(6) infinite" }} />
                 <span className="absolute top-2 left-2 flex items-center gap-1 text-[10px] font-bold text-rose-300 bg-black/60 px-2 py-0.5 rounded-full"><span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" /> LIVE</span>
                 <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/80 to-transparent p-3">
                   <p className="text-sm font-bold text-white flex items-center gap-1.5"><Truck className="w-4 h-4 text-[#3E9C93]" /> {LAB_OPS[opIdx].t}</p>
@@ -271,7 +271,7 @@ export default function TalkWithMiki({ tab }) {
                   <div className="mt-1.5 h-1 rounded-full bg-slate-700 overflow-hidden"><div className="h-full bg-[#3E9C93]" style={{ width: "100%", animation: "peelShine 2.6s linear infinite" }} /></div>
                 </div>
               </div>
-              <p className="text-[12px] text-slate-400 mt-3">Mike Mix esegue le operazioni reali del laboratorio: pulizia, gestione carrelli e infornata sincronizzata.</p>
+              <p className="text-[12px] text-slate-400 mt-3">Miki-Nexus esegue le operazioni reali del laboratorio: pulizia, gestione carrelli e infornata sincronizzata.</p>
               <button data-testid="mikemix-narrate" onClick={() => speak(`${LAB_OPS[opIdx].t}. ${LAB_OPS[opIdx].d}`, "mikemix")} className="mt-2 inline-flex items-center gap-1.5 bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#3E9C93] px-3 py-1.5 rounded-full text-xs font-bold"><Volume2 className="w-3.5 h-3.5" /> Racconta l'operazione</button>
             </div>
           )}
@@ -279,7 +279,7 @@ export default function TalkWithMiki({ tab }) {
           {/* VISTA BIG MIX AI · INTERACTIVE TRAINING (mod. 58) */}
           {view === "bigmix" && (
             <div data-testid="bigmix-training" className="flex-1 overflow-y-auto p-4 text-center">
-              <img src={AV("avatar_bigmix.jpg")} alt="MikeMix" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
+              <img src={AV("avatar_nexus.jpg")} alt="MikeMix" className="w-24 h-24 rounded-2xl object-cover mx-auto border-2 border-[#6EA8FE]/60" style={{ boxShadow: "0 0 20px rgba(110,168,254,.5)" }} />
               <p className="mt-3 text-sm font-bold text-[#6EA8FE] flex items-center justify-center gap-1.5"><GraduationCap className="w-4 h-4" /> Training comandi Hands-Free</p>
               <p className="text-[12px] text-slate-400 mt-1">Passo {trainIdx + 1} di {TRAIN_CMDS.length}</p>
               <div className="mt-4 rounded-2xl bg-slate-950 border border-[#6EA8FE]/30 p-4">

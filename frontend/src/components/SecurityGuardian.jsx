@@ -4,7 +4,7 @@ import { securityApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Mike Mix Security Guardian (client, best-effort): rileva e segnala tentativi di
+// Miki-Nexus Security Guardian (client, best-effort): rileva e segnala tentativi di
 // ispezione/duplicazione (devtools, view-source, context-menu, copia massiva),
 // li registra sul backend e avvisa che il codice è proprietà esclusiva del Master.
 // Nota onesta: il blocco totale dei devtools del browser non è tecnicamente
@@ -19,7 +19,7 @@ export default function SecurityGuardian() {
       const now = Date.now();
       if (now - lastToast.current < 8000) return;
       lastToast.current = now;
-      toast.warning("Mike Mix Security Guardian", {
+      toast.warning("Miki-Nexus Security Guardian", {
         description: tri("Sistema proprietario del Master. Ispezione/duplicazione non autorizzata segnalata.",
           "Eigentum des Masters. Unbefugte Inspektion/Duplizierung gemeldet.",
           "Master's proprietary system. Unauthorized inspection/duplication flagged.",

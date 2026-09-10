@@ -1,12 +1,12 @@
 /*
  * ============================================================================
- *  MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
+ *  MIKILAB PRO & Miki-Nexus — PROPRIETARY & CONFIDENTIAL
  *  (c) 2026 MikiLab Pro. Tutti i diritti riservati / All rights reserved.
  *  Unico proprietario legale: il Master. Sole legal owner: the Master.
  *  Codice riservato: vietata copia, distribuzione, reverse engineering o
  *  cloning non autorizzati. Unauthorized copying, distribution, reverse
  *  engineering or cloning is strictly prohibited and actively tracked by
- *  the Mike Mix AI Security Guardian.
+ *  the Miki-Nexus Security Guardian.
  * ============================================================================
  */
 import React from "react";

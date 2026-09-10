@@ -7,7 +7,7 @@ import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
 
-// Mike Mix Sequence Guard: mostra la coda dei lotti in ordine e BLOCCA l'avvio
+// Miki-Nexus Sequence Guard: mostra la coda dei lotti in ordine e BLOCCA l'avvio
 // di un lotto fuori sequenza, indicando quale deve partire prima.
 export default function SequenceGuard() {
   const { lang } = useLang();
@@ -48,7 +48,7 @@ export default function SequenceGuard() {
   return (
     <div data-testid="sequence-guard" className="rounded-2xl bg-[#0b0f19] border border-[#1e293b] p-4">
       <p className="text-[11px] font-black uppercase tracking-widest text-[#D95200] flex items-center gap-1.5 mb-3">
-        <ListOrdered className="w-4 h-4" /> {tri("Sequenza lotti · Mike Mix", "Chargen-Reihenfolge · Mike Mix", "Batch sequence · Mike Mix", "Secuencia de lotes · Mike Mix", "Séquence des lots · Mike Mix", "ترتیب دسته‌ها · Mike Mix")}
+        <ListOrdered className="w-4 h-4" /> {tri("Sequenza lotti · Miki-Nexus", "Chargen-Reihenfolge · Miki-Nexus", "Batch sequence · Miki-Nexus", "Secuencia de lotes · Miki-Nexus", "Séquence des lots · Miki-Nexus", "ترتیب دسته‌ها · Miki-Nexus")}
       </p>
       <div className="space-y-2">
         {batches.map((b, i) => {
@@ -80,7 +80,7 @@ export default function SequenceGuard() {
 
       {block && (
         <div data-testid="sequence-block-banner" className="mt-3 rounded-xl border border-[#f59e0b]/50 bg-[#f59e0b12] p-2.5 flex items-center gap-2 animate-fadeIn">
-          <img src={`${PUB}/avatar_bigmix.jpg`} alt="Mike Mix" className="w-8 h-8 rounded-full object-cover border border-[#f59e0b]" />
+          <img src={`${PUB}/avatar_nexus.jpg`} alt="Miki-Nexus" className="w-8 h-8 rounded-full object-cover border border-[#f59e0b]" />
           <p className="text-[12px] text-white flex-1">
             {tri("Prima tocca", "Zuerst", "Start first", "Primero", "D'abord", "اول")}: <b className="text-amber-400">{block.expected?.name}</b>
           </p>

@@ -93,7 +93,7 @@ export default function UfficioSquadra({ open, onClose }) {
       <div className="max-w-2xl mx-auto p-4 space-y-4 pb-24">
         {/* Live-Sync */}
         <div className="rounded-2xl shadow-md border border-amber-900/40 p-4" style={{ background: D.card, border: `1px solid ${D.accent}` }}>
-          <h2 className="flex items-center gap-2 font-bold text-[15px] mb-1" style={{ color: D.accent }}><Radio className="w-4 h-4" /> Mike Mix AI Live-Sync</h2>
+          <h2 className="flex items-center gap-2 font-bold text-[15px] mb-1" style={{ color: D.accent }}><Radio className="w-4 h-4" /> Miki-Nexus Live-Sync</h2>
           <p className="text-[13px] mb-3" style={{ color: D.muted }}>{tri("Modifica la produzione dall'ufficio o comunica con la squadra a voce, senza consumo di crediti.", "Produktion vom Büro ändern oder mit dem Team sprechen, ohne Guthaben.", "Edit production from the office or talk to the team by voice, no credit use.", "Edita la producción desde la oficina o habla con el equipo, sin gastar créditos.", "Modifie la production depuis le bureau ou parle à l'équipe, sans crédits.", "تولید را از دفتر ویرایش کن یا با تیم صحبت کن، بدون مصرف اعتبار.")}</p>
 
           <label className="text-[12px]" style={{ color: D.muted }}>{tri("Ordini extra / Varianti del Capo", "Zusatzbestellungen / Chef-Varianten", "Extra orders / Chef's changes", "Pedidos extra / Cambios del Jefe", "Commandes extra / Variantes du Chef", "سفارش‌های اضافه / تغییرات سرآشپز")}</label>

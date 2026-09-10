@@ -18,7 +18,7 @@ const MOODS = {
 
 export const auraColor = (mood) => (MOODS[mood] || MOODS.sereno).color;
 
-// Ogni postazione di Mike Mix ha una "voce" diversa: il forno è caldo e brillante,
+// Ogni postazione di Miki-Nexus ha una "voce" diversa: il forno è caldo e brillante,
 // l'impasto profondo, il banco medio. Così l'Aura racconta DOVE sta lavorando il team.
 function stationMod(station) {
   const r = (station || "").toLowerCase();

@@ -21,7 +21,7 @@ export default function FloorRoleBriefing({ role = "" }) {
     mikeApi.floorBriefing(role, lang).then((d) => {
       if (stop) return;
       setData(d);
-      // Parla UNA VOLTA per ruolo (voce breve dell'operatore = Mike Mix).
+      // Parla UNA VOLTA per ruolo (voce breve dell'operatore = Miki-Nexus).
       const key = `${role}|${lang}`;
       if (d.spoken && spokenFor.current !== key) { spokenFor.current = key; try { playTTS(d.spoken, { lang, voice: "mikemix" }); } catch { /* */ } }
     }).catch(() => { /* */ });

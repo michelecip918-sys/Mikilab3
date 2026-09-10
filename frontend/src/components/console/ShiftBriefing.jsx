@@ -9,7 +9,7 @@ import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
 const STRESS = { calmo: "#FF9D42", medio: "#FFB800", alto: "#f43f5e" };
-const themeFor = (av) => (av || "").includes("mikemix") ? "mikemix" : (av || "").includes("bigmix") ? "bigmix" : "miki";
+const themeFor = (av) => (av || "").includes("nexus") ? "bigmix" : "miki";
 const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
 const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
 
@@ -26,14 +26,14 @@ export default function ShiftBriefing({ onClose }) {
 
   const openWorld = (i, ln) => {
     setWorldFor({ i, avatar: ln.avatar, who: ln.who, text: ln.text });
-    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: t === "bigmix" ? "bakemix" : "mikemix", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) }); } catch { setSpeaking(false); }
+    try { const t = themeFor(ln.avatar); playTTS(ln.text || "", { lang, voice: "nexus", onStart: () => setSpeaking(true), onEnded: () => setSpeaking(false) }); } catch { setSpeaking(false); }
   };
 
   useEffect(() => {
     mikeApi.briefing(lang).then((d) => {
       setData(d);
       (d.lines || []).forEach((ln, i) => {
-        const t = setTimeout(() => { setActive(i); try { playTTS(ln.text, { lang, voice: i === 2 ? "bakemix" : "mikemix" }); } catch (e) { /* */ } }, i * 4800);
+        const t = setTimeout(() => { setActive(i); try { playTTS(ln.text, { lang, voice: "nexus" }); } catch (e) { /* */ } }, i * 4800);
         timers.current.push(t);
       });
     }).catch(() => onClose && onClose());
@@ -48,11 +48,11 @@ export default function ShiftBriefing({ onClose }) {
       <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
 
       <p className="relative font-cyber text-xs tracking-[0.35em] uppercase mb-1" style={{ color: stressColor }}>{tri("Apertura Turno", "Schichtbeginn", "Shift Open", "Apertura de Turno", "Ouverture", "شروع شیفت")}</p>
-      <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Cyber-Trio</h2>
+      <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Miki-Nexus</h2>
       {data && <p className="relative font-mono-data text-[11px] tracking-widest uppercase mb-8" style={{ color: stressColor }}>{tri("Stato impianto", "Anlagenstatus", "Plant status", "Estado planta", "État usine", "وضعیت")}: {data.level} · {data.stats.workers} op · {data.stats.leaders} {tri("linee","Linien","lines","líneas","lignes","خط")} · {data.stats.low_stock} {tri("scorte basse","niedrig","low stock","stock bajo","stock bas","کم")}</p>}
 
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">
-        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "avatar_mikemix.jpg" }, { avatar: "avatar_bigmix.jpg" }]).map((ln, i) => {
+        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "avatar_nexus.jpg" }, { avatar: "avatar_nexus.jpg" }]).map((ln, i) => {
           const on = active === i;
           const c = ln.accent || "#64748B";
           return (

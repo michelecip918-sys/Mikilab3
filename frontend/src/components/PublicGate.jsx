@@ -89,7 +89,6 @@ export default function PublicGate({ onUnlock }) {
   const AVATARS = [
     { img: "avatar_miki.jpg", c: "#64748B", n: "MikiLab", r: tri("Capo Supremo", "Oberster Chef", "Supreme Capo", "Capo Supremo", "Capo Suprême", "کاپوی برتر") },
     { img: "avatar_nexus.jpg", c: "#EAB308", n: "Miki-Nexus", r: tri("Coscienza Strategica", "Strategisches Bewusstsein", "Strategic Consciousness", "Conciencia Estratégica", "Conscience Stratégique", "آگاهی راهبردی"), nexus: true },
-    { img: "avatar_mikemix.jpg", c: "#FF6B00", n: "Mike Mix", r: tri("IA Operativa", "Operative KI", "Operational AI", "IA Operativa", "IA Opérationnelle", "هوش عملیاتی") },
   ];
 
   if (showPin) return <AdminGate onUnlock={handleUnlock} onBack={() => setShowPin(false)} />;
@@ -215,7 +214,7 @@ export default function PublicGate({ onUnlock }) {
 
         {/* Gerarchia */}
         <p data-testid="public-hierarchy" className="font-mono text-[10px] sm:text-[11px] tracking-[0.25em] text-[#64748B] uppercase mb-5">
-          MikiLab <span className="text-[#EAB308]">→</span> Miki-Nexus <span className="text-[#FF6B00]">→</span> Mike Mix
+          MikiLab <span className="text-[#EAB308]">→</span> Miki-Nexus
         </p>
 
         <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}
@@ -244,15 +243,15 @@ export default function PublicGate({ onUnlock }) {
           <a href="mailto:michelecip918@gmail.com?subject=Richiesta%20accesso%20MikiLab" data-testid="public-email" className="font-bold text-[#D95200] hover:text-[#FF8533]">michelecip918@gmail.com</a>
         </div>
 
-        {/* Fase 2 · Richiesta accesso — smistata da Mohamed */}
+        {/* Fase 2 · Richiesta accesso — smistata da Miki-Nexus */}
         <div data-testid="access-request" className="mt-5 w-full max-w-sm rounded-2xl bg-[#0b0f19]/80 border border-[#1e293b] p-4 backdrop-blur-md">
           {reqSent ? (
             <p data-testid="access-sent" className="text-[12.5px] text-[#22c55e] leading-snug">✓ {tri(
-              "Richiesta inviata. Mohamed la smisterà e il Capo deciderà l'accesso.",
-              "Anfrage gesendet. Mohamed sortiert sie, der Chef entscheidet.",
-              "Request sent. Mohamed will route it and the Capo will decide.",
-              "Solicitud enviada. Mohamed la clasificará.",
-              "Demande envoyée. Mohamed la triera.",
+              "Richiesta inviata. Miki-Nexus la smisterà e il Capo deciderà l'accesso.",
+              "Anfrage gesendet. Miki-Nexus sortiert sie, der Chef entscheidet.",
+              "Request sent. Miki-Nexus will route it and the Capo will decide.",
+              "Solicitud enviada. Miki-Nexus la clasificará.",
+              "Demande envoyée. Miki-Nexus la triera.",
               "درخواست ارسال شد. محمد آن را بررسی می‌کند.")}</p>
           ) : (
             <>
@@ -277,16 +276,16 @@ export default function PublicGate({ onUnlock }) {
           <h2 className="text-base md:text-lg font-black text-white uppercase tracking-wide text-center">{tri(
             "Cos'è MikiLab Pro", "Was ist MikiLab Pro", "What is MikiLab Pro", "Qué es MikiLab Pro", "Qu'est-ce que MikiLab Pro", "MikiLab Pro چیست")}</h2>
           <p className="mt-2 text-sm text-[#CBD5E1] leading-relaxed text-center max-w-2xl mx-auto">{tri(
-            "MikiLab Pro è il sistema operativo olografico per panificio, pizzeria e pasticceria. Unisce un multiverso 3D dei reparti, l'IA operativa Mike Mix e la coscienza strategica Miki-Nexus per gestire ricette, produzione, formazione e food cost — in un'unica interfaccia ad alta tecnologia.",
-            "MikiLab Pro ist das holografische Betriebssystem für Backstube, Pizzeria und Konditorei: 3D-Multiversum, operative KI Mike Mix und strategische Instanz Miki-Nexus für Rezepte, Produktion, Schulung und Food Cost.",
-            "MikiLab Pro is the holographic operating system for bakery, pizzeria and pastry: a 3D multiverse of departments, the Mike Mix operational AI and the Miki-Nexus strategic consciousness for recipes, production, training and food cost.",
-            "MikiLab Pro es el sistema operativo holográfico para panadería, pizzería y pastelería: multiverso 3D, IA Mike Mix y Miki-Nexus para recetas, producción, formación y food cost.",
-            "MikiLab Pro est le système d'exploitation holographique pour boulangerie, pizzeria et pâtisserie : multivers 3D, IA Mike Mix et Miki-Nexus pour recettes, production, formation et food cost.",
+            "MikiLab Pro è il sistema operativo olografico per panificio, pizzeria e pasticceria. Unisce un multiverso 3D dei reparti, l'IA operativa Miki-Nexus e la coscienza strategica Miki-Nexus per gestire ricette, produzione, formazione e food cost — in un'unica interfaccia ad alta tecnologia.",
+            "MikiLab Pro ist das holografische Betriebssystem für Backstube, Pizzeria und Konditorei: 3D-Multiversum, operative KI Miki-Nexus und strategische Instanz Miki-Nexus für Rezepte, Produktion, Schulung und Food Cost.",
+            "MikiLab Pro is the holographic operating system for bakery, pizzeria and pastry: a 3D multiverse of departments, the Miki-Nexus operational AI and the Miki-Nexus strategic consciousness for recipes, production, training and food cost.",
+            "MikiLab Pro es el sistema operativo holográfico para panadería, pizzería y pastelería: multiverso 3D, IA Miki-Nexus y Miki-Nexus para recetas, producción, formación y food cost.",
+            "MikiLab Pro est le système d'exploitation holographique pour boulangerie, pizzeria et pâtisserie : multivers 3D, IA Miki-Nexus et Miki-Nexus pour recettes, production, formation et food cost.",
             "MikiLab Pro سیستم‌عامل هولوگرافیک برای نانوایی، پیتزا و شیرینی است.")}</p>
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
               { t: tri("Ricettario Vivente", "Lebendes Rezeptbuch", "Living Recipe Book", "Recetario Vivo", "Livre Vivant", "دستورنامه زنده"), d: tri("Detta un obiettivo, Miki-Nexus calcola matrice e curva di maturazione.", "Ziel nennen, Miki-Nexus rechnet.", "Set a goal, Miki-Nexus computes the matrix and maturation curve.", "Fija un objetivo y Miki-Nexus calcula.", "Fixe un objectif, Miki-Nexus calcule.", "هدف بده تا محاسبه شود."), c: "#EAB308" },
-              { t: tri("Produzione con l'IA", "KI-Produktion", "AI Production", "Producción con IA", "Production IA", "تولید با هوش"), d: tri("Piani, turni e food cost gestiti da Mike Mix in tempo reale.", "Pläne, Schichten, Food Cost von Mike Mix.", "Plans, shifts and food cost run by Mike Mix in real time.", "Planes, turnos y food cost por Mike Mix.", "Plans, équipes et food cost par Mike Mix.", "برنامه و شیفت با Mike Mix."), c: "#FF6B00" },
+              { t: tri("Produzione con l'IA", "KI-Produktion", "AI Production", "Producción con IA", "Production IA", "تولید با هوش"), d: tri("Piani, turni e food cost gestiti da Miki-Nexus in tempo reale.", "Pläne, Schichten, Food Cost von Miki-Nexus.", "Plans, shifts and food cost run by Miki-Nexus in real time.", "Planes, turnos y food cost por Miki-Nexus.", "Plans, équipes et food cost par Miki-Nexus.", "برنامه و شیفت با Miki-Nexus."), c: "#FF6B00" },
               { t: tri("Formazione & Multiverso 3D", "Schulung & 3D", "Training & 3D Multiverse", "Formación & 3D", "Formation & 3D", "آموزش و ۳بعدی"), d: tri("Corsi interattivi per ricetta e un multiverso 3D immersivo dei reparti.", "Interaktive Kurse und 3D-Multiversum.", "Interactive per-recipe courses and an immersive 3D multiverse.", "Cursos interactivos y multiverso 3D.", "Cours interactifs et multivers 3D.", "دوره‌های تعاملی و چندجهانی."), c: "#FF9D42" },
             ].map((f) => (
               <div key={f.t} className="rounded-xl bg-[#0b0f19]/70 border border-[#1e293b] p-4 backdrop-blur-md">
