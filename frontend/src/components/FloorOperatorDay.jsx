@@ -19,19 +19,29 @@ const ROLE_KEY = "mikilab_role";
 function DayTasks({ tri, lang, role, apprentice }) {
   const [tasks, setTasks] = useState([]);
   const [plan, setPlan] = useState(null);
+  const [mine, setMine] = useState(null); // il compito assegnato a QUESTO operaio (dept assignment)
   useEffect(() => {
     let alive = true;
     const load = () => {
       deusApi.productionQueue().then((d) => { if (alive) setTasks((d.tasks || []).filter((t) => t.status !== "done")); }).catch(() => {});
       deusApi.capoPlan().then((d) => { if (alive && d && d.plan_markdown) setPlan(d); }).catch(() => {});
+      if (role) deptApi.assignment && deptApi.assignment().then((d) => {
+        if (!alive) return;
+        const m = (d.assignments || []).find((a) => (a.operator || "").toLowerCase() === role.toLowerCase());
+        setMine(m || null);
+      }).catch(() => {});
     };
     load(); const id = setInterval(load, 20000);
     return () => { alive = false; clearInterval(id); };
-  }, []);
+  }, [role]);
   const done = (t) => deusApi.queueDone(t.id).then(() => setTasks((q) => q.filter((x) => x.id !== t.id))).catch(() => {});
   const read = (t) => { try { playTTS(`${t.title}. ${t.detail || ""}`, { lang, voice: "mikemix" }); } catch { /* */ } };
+  // Lotti assegnati proprio a me (per nome) → in cima; se nessuno, mostro tutta la coda.
+  const rl = (role || "").toLowerCase();
+  const myBatches = rl ? tasks.filter((t) => (t.assignee || "").toLowerCase().includes(rl)) : [];
+  const shown = myBatches.length ? myBatches : tasks;
 
-  if (!tasks.length && !plan) {
+  if (!tasks.length && !plan && !mine) {
     return (
       <div data-testid="floor-no-task" className="rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-5 text-center">
         <p className="text-sm text-[#94A3B8]">{tri(
@@ -58,17 +68,24 @@ function DayTasks({ tri, lang, role, apprentice }) {
             "قدم‌به‌قدم. 🔊 برای شنیدن. اگر مطمئن نیستی، پایین از من بپرس.")}</p>
         </div>
       )}
+      {mine && (
+        <div data-testid="floor-my-assignment" className="rounded-2xl border-2 border-[#FF6B00]/60 bg-[#FF6B00]/10 px-4 py-3" style={{ boxShadow: "0 0 22px rgba(255,107,0,0.25)" }}>
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#FF9D42] mb-0.5">{tri("Sitor · Il tuo compito assegnato", "Sitor · Deine Aufgabe", "Sitor · Your assigned task", "Sitor · Tu tarea", "Sitor · Ta tâche", "سیتور · وظیفه تو")}</p>
+          <p className="text-base text-white font-black leading-tight">{mine.dept_name || mine.dept}{mine.task ? ` · ${mine.task}` : ""}</p>
+          <button data-testid="floor-my-assignment-read" onClick={() => { try { playTTS(`${role}, oggi ${mine.dept_name || mine.dept}. ${mine.task || ""}`, { lang, voice: "nexus" }); } catch { /* */ } }} className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#FF9D42]"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta da Sitor", "Von Sitor hören", "Hear from Sitor", "Escuchar", "Écouter", "بشنو")}</button>
+        </div>
+      )}
       {plan && plan.headline && (
         <div data-testid="floor-plan-headline" className="rounded-2xl border border-[#FF6B00]/40 bg-[#FF6B00]/8 px-4 py-3">
           <p className="text-[10px] font-black uppercase tracking-widest text-[#FF6B00] mb-0.5">{tri("Piano del Capo · Sitor", "Plan des Capo", "Capo's Plan", "Plan del Capo", "Plan du Capo", "برنامه کاپو")}</p>
           <p className="text-sm text-white font-semibold leading-snug">{plan.headline}</p>
         </div>
       )}
-      {!!tasks.length && (
+      {!!shown.length && (
         <div data-testid="floor-day-tasks" className="rounded-2xl border border-[#FFB800]/40 bg-[#0b0f19] p-3">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#FFB800] mb-2"><ListChecks className="w-4 h-4" /> {tri("Il tuo compito di oggi", "Deine Aufgabe heute", "Your task today", "Tu tarea de hoy", "Ta tâche du jour", "وظیفه امروز تو")}</p>
+          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#FFB800] mb-2"><ListChecks className="w-4 h-4" /> {myBatches.length ? tri("I tuoi lotti di oggi", "Deine Lose heute", "Your batches today", "Tus lotes de hoy", "Tes lots du jour", "دسته‌های امروز تو") : tri("Coda di produzione", "Produktionswarteschlange", "Production queue", "Cola de producción", "File de production", "صف تولید")}</p>
           <div className="space-y-1.5">
-            {tasks.slice(0, 12).map((t) => (
+            {shown.slice(0, 12).map((t) => (
               <div key={t.id} data-testid={`floor-day-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5">
                 {t.dept && <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#FF6B00]/10 text-[#FF9D42] border border-[#FF6B00]/20 shrink-0">{t.dept}</span>}
                 <div className="min-w-0 flex-1"><p className="text-sm font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[11px] text-[#64748B] truncate">{t.detail}</p>}</div>
