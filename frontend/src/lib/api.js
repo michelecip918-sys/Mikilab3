@@ -708,6 +708,14 @@ export const sitorFloorApi = {
   changeDecide: (rid, decision, note) => api.post(`/floor/sitor/change-requests/${rid}/decide`, { decision, note }).then((r) => r.data),
 };
 
+// Sitor su misura (Atelier del Capo): Sitor crea widget su richiesta e li ricorda per-Capo.
+export const atelierApi = {
+  list: () => api.get(`/capo/atelier`).then((r) => r.data),
+  create: (request, lang) => api.post(`/capo/atelier/create`, { request, lang }).then((r) => r.data),
+  update: (wid, config) => api.patch(`/capo/atelier/${wid}`, { config }).then((r) => r.data),
+  remove: (wid) => api.delete(`/capo/atelier/${wid}`).then((r) => r.data),
+};
+
 // Registro accessi (tentativi PIN Master/Produzione/Operatore) — solo Capo.
 export const accessLogApi = {
   list: (limit = 120) => api.get(`/access-log`, { params: { limit } }).then((r) => r.data),

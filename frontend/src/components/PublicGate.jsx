@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2 } from "lucide-react";
+import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
@@ -8,6 +8,7 @@ import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
+import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
 import { api } from "@/lib/api";
@@ -28,6 +29,7 @@ export default function PublicGate({ onUnlock }) {
   const [reqSent, setReqSent] = useState(false);
   const [reqBusy, setReqBusy] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [cookieOk, setCookieOk] = useState(() => { try { return !!localStorage.getItem("mikilab_cookie_ok"); } catch { return true; } });
@@ -157,6 +159,9 @@ export default function PublicGate({ onUnlock }) {
           <button data-testid="public-share-btn" onClick={doShare} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#FF6B00]/40 text-[#FF6B00] text-xs font-bold hover:border-[#FF6B00] active:scale-95 transition-all backdrop-blur-md">
             <Share2 className="w-3.5 h-3.5" /> {tri("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
           </button>
+          <button data-testid="public-guide-btn" onClick={() => setShowGuide(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#EAB308]/40 text-[#EAB308] text-xs font-bold hover:border-[#EAB308] active:scale-95 transition-all backdrop-blur-md">
+            <BookOpen className="w-3.5 h-3.5" /> {tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}
+          </button>
           <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#D95200]/40 text-[#D95200] text-xs font-bold hover:border-[#D95200] active:scale-95 transition-all backdrop-blur-md">
             <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Entrar", "Connexion", "ورود")}
           </button>
@@ -164,6 +169,7 @@ export default function PublicGate({ onUnlock }) {
         </div>
       </header>
       {showAuth && <AuthScreen onClose={() => setShowAuth(false)} initialMode="login" />}
+      <GuidaMikiLab open={showGuide} onClose={() => setShowGuide(false)} />
 
       <div className="relative z-10 flex flex-col items-center justify-center px-5 pt-2 pb-28 text-center min-h-[calc(100vh-72px)]">
         {/* Selettore mondi (viewing passivo) */}

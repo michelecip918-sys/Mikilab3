@@ -98,6 +98,7 @@ import { CapoGroup } from "@/components/console/CapoGroup";
 import DeskScene from "@/components/console/DeskScene";
 import SalaSitor from "@/components/console/SalaSitor";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
+import SitorAtelier from "@/components/console/SitorAtelier";
 import ImageForge from "@/components/console/ImageForge";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
@@ -524,7 +525,10 @@ export default function App() {
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
                       title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
                       sub={tri("Ricette, forgia immagini, magazzino, forni, qualità, energia, report e sicurezza.", "Rezepte, Bilder, Lager, Öfen, Qualität, Berichte.", "Recipes, image forge, warehouse, ovens, quality, reports.", "Recetas, imágenes, almacén, hornos, informes.", "Recettes, images, entrepôt, fours, rapports.", "دستورها، تصاویر، انبار، فرها، گزارش‌ها.")}>
-                    <HoloPanel testid="panel-sitor-guided" accent="#EAB308" beacon="#FF9D42" icon="✨" title={tri("Sitor ti guida · Attiva strumenti", "Sitor führt dich · Werkzeuge", "Sitor guides you · Enable tools", "Sitor te guía · Herramientas", "Sitor te guide · Outils", "سیتور راهنمایی می‌کند")} sub={tri("Rispondi sì/no: Sitor collega silos, bilance, sensori ed email. Con demo e elenco completo.", "Antworte ja/nein: Sitor verbindet alles.", "Answer yes/no: Sitor connects silos, scales, sensors and email. With demos and full list.", "Responde sí/no.", "Réponds oui/non.", "بله/نه پاسخ بده.")} defaultOpen>
+                    <HoloPanel testid="panel-sitor-atelier" accent="#EAB308" beacon="#FF6B00" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi: lo crea, lo appunta qui e lo ricorda per te.", "Bitte Sitor um ein Werkzeug: er erstellt und merkt es sich.", "Ask Sitor for any tool: he builds it, pins it and remembers it for you.", "Pide a Sitor cualquier herramienta: la crea y la recuerda.", "Demande n'importe quel outil : il le crée et s'en souvient.", "هر ابزاری بخواه: می‌سازد و به خاطر می‌سپارد.")} defaultOpen>
+                      <SitorAtelier />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-sitor-guided" accent="#EAB308" beacon="#FF9D42" icon="✨" title={tri("Sitor ti guida · Attiva strumenti", "Sitor führt dich · Werkzeuge", "Sitor guides you · Enable tools", "Sitor te guía · Herramientas", "Sitor te guide · Outils", "سیتور راهنمایی می‌کند")} sub={tri("Rispondi sì/no: Sitor collega silos, bilance, sensori ed email. Con demo e elenco completo.", "Antworte ja/nein: Sitor verbindet alles.", "Answer yes/no: Sitor connects silos, scales, sensors and email. With demos and full list.", "Responde sí/no.", "Réponds oui/non.", "بله/نه پاسخ بده.")}>
                       <SitorGuidedTools />
                     </HoloPanel>
                     <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>

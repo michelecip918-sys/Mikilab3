@@ -4825,6 +4825,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Pulsante **Guida** (`guida-open-btn`, icona BookOpen) nell'header, visibile in TUTTE le modalità (Capo e Operaio) → chiunque sa cosa può fare.
 - Verificato: overlay con 8 sezioni + PDF, accessibile in modalità operaio, 0 overflow. sw.js → mikilab-v54.
 - NOTA: i PDF di produzione (piano settimanale/AI) mantengono già intestazioni descrittive; la richiesta "tutte le descrizioni chiare" è coperta dalla Guida centrale. Le altre lingue (de/es/fr/fa) della Guida usano l'inglese come fallback: estendibili su richiesta.
+
+## v66 (2026-09) — SITOR SU MISURA + GUIDA MULTILINGUA + GUIDA SUL CANCELLO
+- **Sitor su misura (Atelier del Capo)**: il Capo chiede uno strumento a parole e Sitor (Opus 4.8) lo progetta come widget vivo, appuntato alla SUA schermata e ricordato PER-CAPO (collezione `capo_atelier`, chiave = email admin). Tipi: note, checklist, counter, metric, reminder. Backend: `POST/GET/PATCH/DELETE /api/capo/atelier`. Frontend `SitorAtelier.jsx` (pannello `panel-sitor-atelier` in Strumenti, defaultOpen; input + suggerimenti + widget interattivi). Testato via curl: crea counter con icona+voce, list, delete OK.
+- **Guida multilingua**: `GuidaMikiLab.jsx` ora completa in IT/EN/DE/ES/FR/FA (8 sezioni), con direzione RTL per il farsi e PDF localizzato.
+- **Guida sul cancello**: pulsante `public-guide-btn` in PublicGate (pre-login) → chiunque apra l'app vede la Guida. Verificato a schermo (8 sezioni, 0 overflow).
+- sw.js CACHE_NAME → mikilab-v55. Da pubblicare su mikilab.de al prossimo "vai live".
 - **DA FARE (concordato, non ancora implementato)**:
   1. **Riscrittura di TUTTI i PDF e descrizioni** delle funzionalità MikiLab (chiare per chiunque) — grande, da fare come task dedicato.
   2. **"Sitor costruisce su misura per ogni Capo"**: pannello dove Sitor aggiunge widget/strumenti richiesti dal Capo e memorizza le preferenze per-Capo (auto-miglioramento personalizzato) — feature ampia, da progettare.

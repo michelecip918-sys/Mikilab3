@@ -1119,6 +1119,98 @@ async def floor_change_decide(rid: str, body: FloorChangeDecision, admin: dict =
     return {"ok": True, "status": status,
             "pending": await db.floor_change_requests.count_documents({"status": "pending"})}
 
+
+# ============================================================================
+# SITOR SU MISURA (Atelier del Capo) — Sitor crea strumenti/widget su richiesta
+# del Capo e li ricorda PER-CAPO (memoria persistente per email admin).
+# Tipi supportati: note | checklist | counter | metric | reminder
+# ============================================================================
+_ATELIER_ICONS = {"sparkles", "star", "note", "list", "hash", "gauge", "bell", "clock", "flame", "wheat",
+                  "euro", "thermometer", "package", "truck", "calendar", "target", "trophy", "leaf"}
+
+
+def _capo_key(admin: dict) -> str:
+    return (admin.get("email") or admin.get("user_id") or "master").lower()
+
+
+class AtelierCreateReq(BaseModel):
+    request: str
+    lang: str = "it"
+
+
+@api_router.post("/capo/atelier/create")
+async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(require_admin)):
+    """Il Capo chiede uno strumento a parole; Sitor lo progetta come widget vivo e lo appunta alla sua schermata."""
+    req = (body.request or "").strip()
+    if not req:
+        raise HTTPException(status_code=400, detail="Richiesta vuota")
+    langname = _DEUS_LANGS.get(str(body.lang or "it").split("-")[0][:2], "italiano")
+    spec = {"type": "note", "title": req[:40], "icon": "sparkles", "config": {}, "spoken": ""}
+    if EMERGENT_LLM_KEY:
+        sysmsg = (
+            "Sei SITOR, il Dio dell'Arte Bianca al servizio del Capo. Il Capo ti chiede di aggiungere uno strumento "
+            "alla SUA schermata. Progettalo come un widget vivo scegliendo UNO di questi tipi:\n"
+            "- note: un promemoria/testo che scrivi tu. config={\"text\": \"...\"}\n"
+            "- checklist: cose da spuntare. config={\"items\": [\"...\", \"...\"]}\n"
+            "- counter: un contatore (es. sfridi, pezzi). config={\"label\": \"...\", \"value\": 0, \"step\": 1}\n"
+            "- metric: un valore da tenere d'occhio. config={\"label\": \"...\", \"value\": \"...\", \"unit\": \"...\"}\n"
+            "- reminder: un promemoria con data. config={\"text\": \"...\", \"date\": \"YYYY-MM-DD\"}\n"
+            f"Scegli un'icona tra: {', '.join(sorted(_ATELIER_ICONS))}.\n"
+            f"Rispondi in {langname}. Restituisci SOLO un JSON valido: "
+            "{\"type\":\"...\",\"title\":\"titolo breve\",\"icon\":\"...\",\"config\":{...},"
+            "\"spoken\":\"1 frase calda che dici al Capo mentre lo aggiungi\"}. Nessun testo fuori dal JSON."
+        )
+        raw = await _deus_llm(sysmsg, f"RICHIESTA DEL CAPO: {req}", session=f"atelier-{_capo_key(admin)}", max_tokens=700)
+        data = _extract_json(raw)
+        if data.get("type") in {"note", "checklist", "counter", "metric", "reminder"}:
+            spec["type"] = data["type"]
+        spec["title"] = (data.get("title") or spec["title"]).strip()[:60]
+        if data.get("icon") in _ATELIER_ICONS:
+            spec["icon"] = data["icon"]
+        if isinstance(data.get("config"), dict):
+            spec["config"] = data["config"]
+        spec["spoken"] = (data.get("spoken") or "").strip()
+    # Normalizza la config per tipo (valori sicuri)
+    t, cfg = spec["type"], (spec.get("config") or {})
+    if t == "counter":
+        cfg = {"label": str(cfg.get("label") or spec["title"])[:60], "value": int(cfg.get("value") or 0), "step": int(cfg.get("step") or 1)}
+    elif t == "checklist":
+        items = [{"t": str(x)[:120], "done": False} for x in (cfg.get("items") or [])][:20]
+        cfg = {"items": items}
+    elif t == "metric":
+        cfg = {"label": str(cfg.get("label") or spec["title"])[:60], "value": str(cfg.get("value") or "")[:40], "unit": str(cfg.get("unit") or "")[:16]}
+    elif t == "reminder":
+        cfg = {"text": str(cfg.get("text") or spec["title"])[:200], "date": str(cfg.get("date") or "")[:10]}
+    else:
+        cfg = {"text": str(cfg.get("text") or req)[:600]}
+    doc = {"id": str(uuid.uuid4()), "capo": _capo_key(admin), "type": t, "title": spec["title"],
+           "icon": spec["icon"], "config": cfg, "request": req[:300], "created_at": now_iso()}
+    await db.capo_atelier.insert_one(dict(doc))
+    return {"ok": True, "widget": doc, "spoken": spec.get("spoken") or ""}
+
+
+@api_router.get("/capo/atelier")
+async def capo_atelier_list(admin: dict = Depends(require_admin)):
+    docs = await db.capo_atelier.find({"capo": _capo_key(admin)}, {"_id": 0}).sort("created_at", 1).to_list(60)
+    return {"widgets": docs}
+
+
+class AtelierUpdateReq(BaseModel):
+    config: dict
+
+
+@api_router.patch("/capo/atelier/{wid}")
+async def capo_atelier_update(wid: str, body: AtelierUpdateReq, admin: dict = Depends(require_admin)):
+    await db.capo_atelier.update_one({"id": wid, "capo": _capo_key(admin)}, {"$set": {"config": body.config, "updated_at": now_iso()}})
+    return {"ok": True}
+
+
+@api_router.delete("/capo/atelier/{wid}")
+async def capo_atelier_delete(wid: str, admin: dict = Depends(require_admin)):
+    await db.capo_atelier.delete_one({"id": wid, "capo": _capo_key(admin)})
+    return {"ok": True}
+
+
 # --- Sitor riconosce i NUOVI MACCHINARI (anche tipi mai visti: è un dio) -----
 class MachineArrivalReq(BaseModel):
     name: str = ""
