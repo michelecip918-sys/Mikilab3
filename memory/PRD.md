@@ -4855,3 +4855,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Endpoint**: `POST /api/capo/sitor/shift-draft/generate` (manuale, lang), `GET /api/capo/sitor/shift-drafts` (ultimi 14), `PATCH /api/capo/sitor/shift-drafts/{id}` (approva: status+approved_by/at, oppure modifica testo).
 - **Frontend**: `console/SitorShiftDraft.jsx` montato in SalaSitor (testid `sitor-shift-draft`, `sitor-draft-generate/-text/-status/-approve/-refresh`, `sitor-draft-past-<date>`): badge Bozza/Approvato, meta (trigger auto/manuale, n. rapporti/timbrati), testo in ReactMarkdown, pulsante "Approva e archivia", chip storico, polling 45s, i18n 6 lingue.
 - Testato: curl end-to-end (timbratura Marco in/out → rapporto → bozza auto Opus 4.8 generata; approvazione approved_by=admin; rigenera manuale → nuova bozza), screenshot Sala Sitor desktop+mobile, 0 overflow.
+
+## v70 (2026-09) — Header mobile: titolo orizzontale + via immagini decorative
+- **Fix titolo verticale (bug mobile)**: su schermi stretti "MikiLab Pro" si spezzava lettera per lettera in colonna. Ora `whitespace-nowrap` + `shrink-0` sul brand e `flex-wrap` sulla riga header: il titolo resta SEMPRE orizzontale su una riga; i controlli vanno a capo se serve. Protetto anche "MikiLab Command Deck" (nowrap+truncate).
+- **Immagini decorative rimosse**: emblema/logo tolto dall'header (resta il testo brand); l'avatar tondo fluttuante di Sitor (mikemix-sense-fab, copriva il pulsante "Riporta") sostituito da un'icona compatta 44px (Activity) con badge allarmi — la funzione del pannello resta. Immagini funzionali (hero di zona, ecc.) mantenute.
+- Pulizia: rimossi `PUB` e `beatSec` non più usati in MikeMixSense.
+- Verificato: brand su una riga (188px), header h 46-66px, FAB senza foto, 0 overflow. NOTA: visibile in PREVIEW; per mikilab.de serve REDEPLOY.

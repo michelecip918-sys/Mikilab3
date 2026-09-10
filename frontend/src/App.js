@@ -317,13 +317,10 @@ export default function App() {
 
           {/* STATUS BAR ambientale (nessun menu classico) */}
           <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#FF6B00]/15 bg-[#060A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
-            <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
-              <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center gap-2.5 min-w-0 active:scale-95 transition-transform">
-                <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_16px_rgba(255,107,0,0.25)] bg-[#060A10] shrink-0">
-                  <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
-                </span>
-                <span className="min-w-0 text-left">
-                  <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase">MikiLab<span className="text-[#FF6B00]"> Pro</span></span>
+            <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap">
+              <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center min-w-0 shrink-0 active:scale-95 transition-transform">
+                <span className="text-left whitespace-nowrap">
+                  <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase whitespace-nowrap">MikiLab<span className="text-[#FF6B00]"> Pro</span></span>
                   <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#FF6B00]/70 uppercase">Holographic Command OS</span>
                 </span>
               </button>
@@ -400,9 +397,9 @@ export default function App() {
                 {/* Alone reattivo dell'umore impianto (sereno/attivo/teso/critico) */}
                 <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 50% 115%, ${moodColor}38 0%, transparent 62%)` }} />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-4 z-10">
-                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em]">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
-                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase">MikiLab → Sitor</p>
+                <div className="absolute bottom-3 left-4 right-4 z-10">
+                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em] whitespace-nowrap truncate">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
+                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase whitespace-nowrap">MikiLab → Sitor</p>
                 </div>
                 {deckStatus && (
                   <div data-testid="deck-heartbeat" className="absolute bottom-3 right-4 z-10 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase" style={{ color: moodColor }}>

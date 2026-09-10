@@ -18,7 +18,6 @@ import VoiceDelegation from "@/components/VoiceDelegation";
 import ProoferSync from "@/components/ProoferSync";
 import BatchPhoenix from "@/components/BatchPhoenix";
 
-const PUB = process.env.PUBLIC_URL;
 const MOOD_LABEL = {
   sereno: ["Sereno", "Ruhig", "Calm", "Sereno", "Serein", "آرام"],
   attivo: ["Attivo", "Aktiv", "Active", "Activo", "Actif", "فعال"],
@@ -206,7 +205,6 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
   const alerts = pulse?.alerts || [];
   const nCrit = alerts.filter((a) => a.level === "critical").length;
   const nAlert = alerts.length;
-  const beatSec = (60 / Math.max(40, Math.min(150, hb))).toFixed(2);
   const moodLabel = (MOOD_LABEL[mood] || MOOD_LABEL.sereno);
   const muted = isTTSMuted();
 
@@ -222,18 +220,17 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       {prooferOpen && <ProoferSync onClose={() => setProoferOpen(false)} />}
       {phoenixOpen && <BatchPhoenix onClose={() => setPhoenixOpen(false)} />}
 
-      {/* Avatar proattivo flottante */}
+      {/* Avatar proattivo flottante — solo icona, nessuna foto decorativa */}
       <button
         data-testid="mikemix-sense-fab"
         onClick={() => setOpen((v) => !v)}
-        className="fixed left-4 bottom-24 z-[55] w-16 h-16 rounded-full active:scale-95 transition-transform"
+        className="fixed left-4 bottom-24 z-[55] w-11 h-11 rounded-full bg-[#0b0f19]/95 backdrop-blur border-2 flex items-center justify-center active:scale-95 transition-transform"
+        style={{ borderColor: color, boxShadow: `0 0 14px ${color}55` }}
         title="Sitor"
       >
-        <style>{`@keyframes senseRing{0%,100%{transform:scale(1);opacity:.7}50%{transform:scale(1.25);opacity:0}}`}</style>
-        <span aria-hidden className="absolute inset-0 rounded-full" style={{ boxShadow: `0 0 0 2px ${color}`, animation: `senseRing ${beatSec}s ease-out infinite`, background: `${color}22` }} />
-        <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="relative w-16 h-16 rounded-full object-cover border-2" style={{ borderColor: color }} />
+        <Activity className="w-5 h-5" style={{ color }} />
         {nAlert > 0 && (
-          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-6 h-6 px-1.5 rounded-full text-[11px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
+          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-[10px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
         )}
       </button>
 
