@@ -1150,6 +1150,38 @@ async def pastry_delivery_delete(did: str, admin: dict = Depends(require_admin))
     return {"ok": True}
 
 
+# ============================================================================
+# VOLTI SQUADRA — il Capo registra i volti UNA volta; tutti i tablet di reparto li leggono.
+# GET pubblico (dietro gate PIN) così i tablet li vedono; scrittura solo admin (Capo).
+# ============================================================================
+class TeamFace(BaseModel):
+    name: str
+    dept: str = ""
+    thumb: str = ""  # miniatura dataURL (jpeg ~96px)
+
+
+@api_router.get("/faces")
+async def faces_list():
+    docs = await db.team_faces.find({}, {"_id": 0}).sort("name", 1).to_list(300)
+    return {"faces": docs}
+
+
+@api_router.post("/faces")
+async def faces_save(body: TeamFace, admin: dict = Depends(require_admin)):
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(status_code=400, detail="nome mancante")
+    doc = {"name": nm[:80], "dept": (body.dept or "")[:80], "thumb": (body.thumb or "")[:200000], "at": now_iso()}
+    await db.team_faces.update_one({"name": doc["name"]}, {"$set": doc}, upsert=True)
+    return {"ok": True, "face": {k: v for k, v in doc.items() if k != "thumb"}}
+
+
+@api_router.delete("/faces/{name}")
+async def faces_delete(name: str, admin: dict = Depends(require_admin)):
+    await db.team_faces.delete_one({"name": name})
+    return {"ok": True}
+
+
 
 # ============================================================================
 # REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.

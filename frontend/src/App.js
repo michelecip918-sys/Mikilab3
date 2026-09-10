@@ -102,6 +102,7 @@ import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
 import ShiftTemplates from "@/components/console/ShiftTemplates";
 import FloorShiftReports from "@/components/console/FloorShiftReports";
+import TeamFaces from "@/components/console/TeamFaces";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
@@ -494,6 +495,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-shift-templates" accent="#FF9D42" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
                       <ShiftTemplates />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-team-faces" accent="#22d3ee" beacon="#22d3ee" icon="🙂" title={tri("Volti della Squadra", "Team-Gesichter", "Team Faces", "Rostros del Equipo", "Visages de l'Équipe", "چهره‌های تیم")} sub={tri("Registra i volti una volta: entrano col volto su ogni tablet di reparto.", "Einmal registrieren: Gesichts-Login auf allen Tablets.", "Enroll once: face login on every department tablet.", "Registra una vez: acceso por rostro en cada tablet.", "Enregistre une fois : connexion par visage sur chaque tablette.", "یک‌بار ثبت کن: ورود با چهره روی همه تبلت‌ها.")}>
+                      <TeamFaces />
                     </HoloPanel>
                     <HoloPanel testid="panel-floor-reports" accent="#22c55e" beacon="#22c55e" icon="🗒️" title={tri("Rapporti Fine Turno · Produzione", "Schichtende-Berichte · Produktion", "End-of-Shift Reports · Production", "Informes de Fin de Turno · Producción", "Rapports de Fin de Service · Production", "گزارش‌های پایان شیفت · تولید")} sub={tri("Ciò che gli operai compilano a fine turno: pezzi, scarti, problemi, note e pulizia.", "Was die Mitarbeiter am Schichtende ausfüllen.", "What operators fill in at end of shift: pieces, waste, issues, notes, cleaning.", "Lo que rellenan los operarios al final del turno.", "Ce que les opérateurs remplissent en fin de service.", "آنچه اپراتورها در پایان شیفت پر می‌کنند.")}>
                       <FloorShiftReports />

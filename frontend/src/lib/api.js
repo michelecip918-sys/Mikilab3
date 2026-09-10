@@ -659,6 +659,13 @@ export const pastryApi = {
   remove: (id) => api.delete(`/pastry/deliveries/${id}`).then((r) => r.data),
 };
 
+// Volti squadra — registrati dal Capo, condivisi su tutti i tablet.
+export const facesApi = {
+  list: () => api.get(`/faces`).then((r) => r.data),
+  save: (payload) => api.post(`/faces`, payload).then((r) => r.data),
+  remove: (name) => api.delete(`/faces/${encodeURIComponent(name)}`).then((r) => r.data),
+};
+
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),

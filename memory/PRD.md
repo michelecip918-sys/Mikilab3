@@ -4768,3 +4768,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ## v-fase6 (2026-06) — Integrazione Piano → Squadra → Volto/Nome
 - In `FloorOperatorDay`/`DayTasks`: quando l'operaio entra (col volto o col nome), Sitor mostra in cima una card evidenziata `floor-my-assignment` col SUO compito assegnato dal Capo (match su `/depts/assignment` per nome), con lettura vocale (nexus). I lotti della coda assegnati a lui (per `assignee`) vengono mostrati per primi ("I tuoi lotti di oggi"), altrimenti tutta la coda.
 - Catena completa: Capo genera/sceglie il piano (AutoPlan 3 opzioni) + assegna reparti (DeptAssign) → l'operaio entra → vede subito il compito. VERIFICATO e2e: assegnato "Giuseppe → Panificio · Impasto baguette", l'operaio lo vede al login.
+
+## v-fase7 (2026-06) — Volti squadra sincronizzati + Avvisi vocali cambio compito
+- **Enroll volti dal Capo** (`console/TeamFaces.jsx` in sezione "Ruoli & Turni", `panel-team-faces`): il Capo cattura volto+nome+reparto → backend `POST /api/faces` (require_admin). `GET /api/faces` pubblico (dietro gate) → tutti i tablet leggono la stessa lista. `FaceCheckIn` sincronizza da backend on-mount con cache locale offline (`mikilab_faces`). VERIFICATO: volto "Marco" registrato dal Capo appare come tile di login su un altro tablet (cache vuota).
+- **Avvisi vocali Sitor al cambio compito** (`FloorOperatorDay`/`DayTasks`): l'operaio in servizio rileva (polling 20s) se il Capo cambia la sua assegnazione (firma dept+task) e Sitor lo avvisa a voce (nexus) + aggiorna la card. VERIFICATO e2e: cambio "Impasto"→"Forno rotante" fa scattare l'avviso e aggiorna la vista.
+- Backend: `team_faces` collection; endpoints `/api/faces` (GET pubblico, POST/DELETE admin).

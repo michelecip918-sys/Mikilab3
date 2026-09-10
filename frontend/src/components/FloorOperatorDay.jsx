@@ -20,8 +20,10 @@ function DayTasks({ tri, lang, role, apprentice }) {
   const [tasks, setTasks] = useState([]);
   const [plan, setPlan] = useState(null);
   const [mine, setMine] = useState(null); // il compito assegnato a QUESTO operaio (dept assignment)
+  const sigRef = useRef(null); // firma dell'assegnazione, per rilevare i cambi del Capo
   useEffect(() => {
     let alive = true;
+    sigRef.current = null; // reset quando cambia operaio
     const load = () => {
       deusApi.productionQueue().then((d) => { if (alive) setTasks((d.tasks || []).filter((t) => t.status !== "done")); }).catch(() => {});
       deusApi.capoPlan().then((d) => { if (alive && d && d.plan_markdown) setPlan(d); }).catch(() => {});
@@ -29,11 +31,24 @@ function DayTasks({ tri, lang, role, apprentice }) {
         if (!alive) return;
         const m = (d.assignments || []).find((a) => (a.operator || "").toLowerCase() === role.toLowerCase());
         setMine(m || null);
+        // Avviso vocale di Sitor se il Capo CAMBIA il compito mentre l'operaio è già al lavoro.
+        const sig = m ? `${m.dept_name || m.dept}|${m.task || ""}` : "";
+        if (sigRef.current !== null && sig && sig !== sigRef.current) {
+          try { playTTS(tri(
+            `${role}, attenzione: il Capo ha cambiato il tuo compito. Ora: ${m.dept_name || m.dept}${m.task ? ", " + m.task : ""}.`,
+            `${role}, Achtung: der Chef hat deine Aufgabe geändert. Jetzt: ${m.dept_name || m.dept}${m.task ? ", " + m.task : ""}.`,
+            `${role}, heads up: the boss changed your task. Now: ${m.dept_name || m.dept}${m.task ? ", " + m.task : ""}.`,
+            `${role}, atención: el jefe cambió tu tarea. Ahora: ${m.dept_name || m.dept}${m.task ? ", " + m.task : ""}.`,
+            `${role}, attention : le chef a changé ta tâche. Maintenant : ${m.dept_name || m.dept}${m.task ? ", " + m.task : ""}.`,
+            `${role}، توجه: رئیس وظیفه‌ات را عوض کرد. حالا: ${m.dept_name || m.dept}${m.task ? "، " + m.task : ""}.`), { lang, voice: "nexus" }); } catch { /* */ }
+          try { window.dispatchEvent(new Event("mikilab-tts-start")); setTimeout(() => window.dispatchEvent(new Event("mikilab-tts-end")), 3000); } catch { /* */ }
+        }
+        sigRef.current = sig;
       }).catch(() => {});
     };
     load(); const id = setInterval(load, 20000);
     return () => { alive = false; clearInterval(id); };
-  }, [role]);
+  }, [role]); // eslint-disable-line react-hooks/exhaustive-deps
   const done = (t) => deusApi.queueDone(t.id).then(() => setTasks((q) => q.filter((x) => x.id !== t.id))).catch(() => {});
   const read = (t) => { try { playTTS(`${t.title}. ${t.detail || ""}`, { lang, voice: "mikemix" }); } catch { /* */ } };
   // Lotti assegnati proprio a me (per nome) → in cima; se nessuno, mostro tutta la coda.

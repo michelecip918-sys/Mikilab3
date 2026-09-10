@@ -1,13 +1,15 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Camera, UserPlus, ScanFace, X, Loader2, Check } from "lucide-react";
 import { toast } from "sonner";
+import { facesApi } from "@/lib/api";
 
-const ENROLL_KEY = "mikilab_faces"; // [{name, thumb}] registrati su QUESTA postazione (tablet)
+const ENROLL_KEY = "mikilab_faces"; // cache locale dei volti (sincronizzata dal backend)
 const load = () => { try { return JSON.parse(localStorage.getItem(ENROLL_KEY) || "[]"); } catch { return []; } };
 const save = (a) => { try { localStorage.setItem(ENROLL_KEY, JSON.stringify(a)); } catch { /* */ } };
 
-// Check-in col VOLTO: la fotocamera si apre, rileva un volto e riconosce il lavoratore
-// registrato su questa postazione. Pensato per il tablet fisso di reparto.
+// Check-in col VOLTO: la fotocamera si apre, rileva un volto e riconosce il lavoratore.
+// I volti sono registrati dal Capo e SINCRONIZZATI da tutti i tablet (backend /faces),
+// con cache locale per l'uso offline.
 export default function FaceCheckIn({ tri, onRecognized }) {
   const [enrolled, setEnrolled] = useState(load);
   const [mode, setMode] = useState(""); // "" | "login" | "enroll"
@@ -18,6 +20,13 @@ export default function FaceCheckIn({ tri, onRecognized }) {
   const videoRef = useRef(null);
   const streamRef = useRef(null);
   const detRef = useRef(null);
+
+  // Sincronizza i volti dal Capo (backend); fallback alla cache locale se offline.
+  useEffect(() => {
+    let alive = true;
+    facesApi.list().then((d) => { if (alive && d && Array.isArray(d.faces)) { setEnrolled(d.faces); save(d.faces); } }).catch(() => {});
+    return () => { alive = false; };
+  }, []);
 
   const stop = useCallback(() => {
     try { streamRef.current && streamRef.current.getTracks().forEach((t) => t.stop()); } catch { /* */ }
