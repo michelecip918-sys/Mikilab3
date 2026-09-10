@@ -73,6 +73,9 @@ import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import { HoloPanel } from "@/components/console/HoloKit";
 import ZoneHero3D from "@/components/console/ZoneHero3D";
+import OnboardingActivity from "@/components/OnboardingActivity";
+import PasticceriaConsegne from "@/components/console/PasticceriaConsegne";
+import SitorGuidedTools from "@/components/console/SitorGuidedTools";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
@@ -140,6 +143,7 @@ export default function App() {
   const [deckDept, setDeckDept] = useState(DECK_DEPTS[0]);
   const [showBriefing, setShowBriefing] = useState(false);
   const [activity, setActivity] = useState(() => { try { return localStorage.getItem("mikilab_activity") || "panificio"; } catch { return "panificio"; } });
+  const [showOnboarding, setShowOnboarding] = useState(() => { try { return !localStorage.getItem("mikilab_onboarded"); } catch { return false; } });
 
   // Deck reattivo: stato live dei reparti (turni attivi + allarmi Sitor), polling 15s.
   const [deckStatus, setDeckStatus] = useState(null);
@@ -414,7 +418,7 @@ export default function App() {
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
-                <ZoneHero3D testid="hero-master" theme="miki" avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} />
+                <ZoneHero3D testid="hero-master" theme="miki" onEnter={() => jumpTo("master")} avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#64748B" }} />
@@ -467,6 +471,11 @@ export default function App() {
                     <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#FFB800" icon="⚡" title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
                       <OrdiniExtra />
                     </HoloPanel>
+                    {activity === "pasticceria" && (
+                    <HoloPanel testid="panel-pastry" accent="#7FD8C0" beacon="#7FD8C0" icon="🧁" title={tri("Consegne & Eventi · Pasticceria", "Lieferungen & Events · Konditorei", "Deliveries & Events · Pastry", "Entregas & Eventos · Pastelería", "Livraisons & Événements · Pâtisserie", "تحویل و رویداد · شیرینی")} sub={tri("Torte su commessa, matrimoni ed eventi con date e promemoria di Sitor.", "Auftragstorten, Hochzeiten, Events mit Terminen.", "Made-to-order cakes, weddings and events with dates and Sitor reminders.", "Tartas por encargo, bodas y eventos.", "Gâteaux sur commande, mariages et événements.", "کیک سفارشی، عروسی و رویداد.")}>
+                      <PasticceriaConsegne />
+                    </HoloPanel>
+                    )}
                     <HoloPanel testid="panel-b2b" accent="#64748B" beacon="#FF6B00" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
                       <B2BOrders />
                     </HoloPanel>
@@ -492,6 +501,9 @@ export default function App() {
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
                       title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
                       sub={tri("Ricette, forgia immagini, magazzino, forni, qualità, energia, report e sicurezza.", "Rezepte, Bilder, Lager, Öfen, Qualität, Berichte.", "Recipes, image forge, warehouse, ovens, quality, reports.", "Recetas, imágenes, almacén, hornos, informes.", "Recettes, images, entrepôt, fours, rapports.", "دستورها، تصاویر، انبار، فرها، گزارش‌ها.")}>
+                    <HoloPanel testid="panel-sitor-guided" accent="#EAB308" beacon="#FF9D42" icon="✨" title={tri("Sitor ti guida · Attiva strumenti", "Sitor führt dich · Werkzeuge", "Sitor guides you · Enable tools", "Sitor te guía · Herramientas", "Sitor te guide · Outils", "سیتور راهنمایی می‌کند")} sub={tri("Rispondi sì/no: Sitor collega silos, bilance, sensori ed email. Con demo e elenco completo.", "Antworte ja/nein: Sitor verbindet alles.", "Answer yes/no: Sitor connects silos, scales, sensors and email. With demos and full list.", "Responde sí/no.", "Réponds oui/non.", "بله/نه پاسخ بده.")} defaultOpen>
+                      <SitorGuidedTools />
+                    </HoloPanel>
                     <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
                     <HoloPanel testid="panel-thermalflow" accent="#FF6B00" beacon="#FF9D42" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
                       <RecipeThermalFlow />
@@ -572,7 +584,7 @@ export default function App() {
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneHero3D testid="hero-operatori" theme={activity} avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
+                <ZoneHero3D testid="hero-operatori" theme={activity} onEnter={() => jumpTo("operatori")} avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><FloorOperatorDay /></div>
@@ -643,6 +655,7 @@ export default function App() {
         {legalOpen && (
           <div className="fixed inset-0 z-50 bg-[#060A10] overflow-auto p-4"><div className="max-w-xl mx-auto py-5"><button onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-[#FF6B00]">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button><LegalPage />{user && user.role === "admin" && <div className="mt-6"><CompliancePanel /></div>}</div></div>
         )}
+        {showOnboarding && <OnboardingActivity onChoose={(a) => setActivity(a)} onClose={() => setShowOnboarding(false)} />}
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}

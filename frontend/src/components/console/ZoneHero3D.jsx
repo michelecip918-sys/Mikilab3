@@ -7,7 +7,7 @@ const PUB = process.env.PUBLIC_URL;
 // Hero 3D GRANDE e INTERATTIVO per ogni zona del sito: scena olografica AvatarWorld3D
 // come sfondo + avatar grande che reagisce al MOVIMENTO del dispositivo (giroscopio)
 // e al mouse (parallax). Sitor pulsa quando parla (evento TTS globale).
-export default function ZoneHero3D({ avatar, name, role, tag, accent = "#FF6B00", theme = "miki", testid, listenSpeaking = false }) {
+export default function ZoneHero3D({ avatar, name, role, tag, accent = "#FF6B00", theme = "miki", testid, listenSpeaking = false, onEnter }) {
   const ref = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [speaking, setSpeaking] = useState(false);
@@ -67,21 +67,28 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#FF6B00"
       <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: `radial-gradient(circle at 50% 42%, transparent 30%, #04070d 92%)` }} />
 
       {/* Avatar GRANDE interattivo (segue mouse/giroscopio) */}
-      <div className="absolute inset-0 z-[2] flex items-center justify-center pointer-events-none" style={{ perspective: 900 }}>
-        <motion.div
+      <div className="absolute inset-0 z-[2] flex items-center justify-center" style={{ perspective: 900 }}>
+        <motion.button
+          type="button"
+          data-testid={onEnter ? `${testid}-enter` : undefined}
+          onClick={onEnter}
           animate={{ rotateY: tilt.x * 16, rotateX: -tilt.y * 12, x: tilt.x * 22, y: tilt.y * 10 }}
           transition={{ type: "spring", stiffness: 60, damping: 14 }}
-          style={{ transformStyle: "preserve-3d" }}
-          className="relative">
+          style={{ transformStyle: "preserve-3d", cursor: onEnter ? "pointer" : "default" }}
+          className="relative active:scale-95">
           <motion.span aria-hidden className="absolute -inset-6 rounded-full"
             style={{ background: `radial-gradient(circle, ${accent}66, transparent 68%)` }}
             animate={{ scale: speaking ? [1, 1.25, 1] : [1, 1.1, 1], opacity: speaking ? [0.7, 1, 0.7] : [0.5, 0.75, 0.5] }}
             transition={{ duration: speaking ? 0.9 : 3, repeat: Infinity, ease: "easeInOut" }} />
           <img src={`${PUB}/${avatar}`} alt={name}
-            className="relative rounded-full object-cover object-top"
+            className="relative rounded-full object-cover object-top pointer-events-none"
             style={{ width: 168, height: 168, border: `3px solid ${accent}`, boxShadow: `0 0 46px ${accent}, 0 0 90px ${accent}55` }}
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        </motion.div>
+          {onEnter && (
+            <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider whitespace-nowrap"
+              style={{ background: accent, color: "#04070d" }}>Entra →</span>
+          )}
+        </motion.button>
       </div>
 
       {/* Overlay testo */}

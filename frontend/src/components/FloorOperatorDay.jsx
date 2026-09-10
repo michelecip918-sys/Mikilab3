@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap } from "lucide-react";
+import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { deusApi, floorApi, deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
@@ -223,6 +223,22 @@ function EndOfShiftForm({ tri, role }) {
   );
 }
 
+// Accesso minimale: l'operaio dice il suo NOME → Sitor lo riconosce e mostra il compito già assegnato.
+function FloorNameEntry({ tri, onSet }) {
+  const [name, setName] = useState("");
+  return (
+    <div data-testid="floor-name-entry" className="rounded-2xl border border-[#FF6B00]/40 bg-[#0b0f19] p-4">
+      <p className="flex items-center gap-2 text-sm font-black text-white mb-1"><UserRound className="w-4 h-4 text-[#FF6B00]" /> {tri("Come ti chiami?", "Wie heißt du?", "What's your name?", "¿Cómo te llamas?", "Comment t'appelles-tu ?", "نامت چیست؟")}</p>
+      <p className="text-[11px] text-[#94A3B8] mb-2">{tri("Dimmi il tuo nome: Sitor sa già cosa devi fare oggi.", "Sag deinen Namen: Sitor kennt deine Aufgabe.", "Tell me your name: Sitor already knows your task today.", "Dime tu nombre: Sitor ya sabe tu tarea.", "Dis ton nom : Sitor connaît ta tâche.", "نامت را بگو: سیتور وظیفه‌ات را می‌داند.")}</p>
+      <div className="flex items-center gap-2">
+        <input data-testid="floor-name-input" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && name.trim()) onSet(name.trim()); }}
+          placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2.5 focus:border-[#FF6B00] outline-none" />
+        <button data-testid="floor-name-go" onClick={() => name.trim() && onSet(name.trim())} disabled={!name.trim()} className="shrink-0 px-4 py-2.5 rounded-xl bg-[#FF6B00] text-[#04070d] font-black text-sm active:scale-95 disabled:opacity-40">{tri("Entra", "Los", "Go", "Entrar", "Entrer", "ورود")}</button>
+      </div>
+    </div>
+  );
+}
+
 // Vista Produzione a schermo unico: SOLO il compito del giorno + aiuto + foto + fine turno.
 export default function FloorOperatorDay() {
   const { lang } = useLang();
@@ -268,6 +284,9 @@ export default function FloorOperatorDay() {
 
   return (
     <div data-testid="floor-operator-day" className="space-y-4">
+      {!role && (
+        <FloorNameEntry tri={tri} onSet={(nm) => { try { localStorage.setItem(ROLE_KEY, nm); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: nm } })); } catch { /* */ } setRole(nm); }} />
+      )}
       {/* Sitor parla direttamente con l'operaio */}
       <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-[#0b0f19]"}`}>
         <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-14 h-14 rounded-xl object-cover object-top border-2 border-amber-500/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />

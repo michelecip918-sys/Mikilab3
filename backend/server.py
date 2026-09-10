@@ -1102,6 +1102,54 @@ async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
     return {"reports": await db.floor_shift_reports.find({}, {"_id": 0}).sort("at", -1).to_list(50)}
 
 
+# ============================================================================
+# PASTICCERIA — Consegne & Eventi (produzione su commessa: torte, matrimoni, eventi).
+# Differenzia l'esperienza per l'attività "pasticceria" (scelta all'onboarding).
+# ============================================================================
+class PastryDelivery(BaseModel):
+    client: str = ""
+    item: str = ""
+    event_type: str = "torta"  # torta | matrimonio | evento | altro
+    date: str = ""             # ISO date del giorno di consegna
+    time: str = ""
+    people: str = ""
+    notes: str = ""
+
+
+@api_router.get("/pastry/deliveries")
+async def pastry_deliveries_list(admin: dict = Depends(require_admin)):
+    docs = await db.pastry_deliveries.find({}, {"_id": 0}).sort("date", 1).to_list(200)
+    return {"deliveries": docs}
+
+
+@api_router.post("/pastry/deliveries")
+async def pastry_delivery_create(body: PastryDelivery, admin: dict = Depends(require_admin)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "client": (body.client or "")[:120], "item": (body.item or "")[:200],
+        "event_type": (body.event_type or "torta")[:30], "date": (body.date or "")[:10],
+        "time": (body.time or "")[:10], "people": (body.people or "")[:20],
+        "notes": (body.notes or "")[:800], "done": False, "at": now_iso(),
+    }
+    await db.pastry_deliveries.insert_one(dict(doc))
+    return {"ok": True, "delivery": doc}
+
+
+@api_router.post("/pastry/deliveries/{did}/toggle")
+async def pastry_delivery_toggle(did: str, admin: dict = Depends(require_admin)):
+    d = await db.pastry_deliveries.find_one({"id": did}, {"_id": 0})
+    if not d:
+        raise HTTPException(status_code=404, detail="not found")
+    await db.pastry_deliveries.update_one({"id": did}, {"$set": {"done": not d.get("done")}})
+    return {"ok": True}
+
+
+@api_router.delete("/pastry/deliveries/{did}")
+async def pastry_delivery_delete(did: str, admin: dict = Depends(require_admin)):
+    await db.pastry_deliveries.delete_one({"id": did})
+    return {"ok": True}
+
+
 
 # ============================================================================
 # REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.

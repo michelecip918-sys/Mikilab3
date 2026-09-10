@@ -650,6 +650,14 @@ export const floorApi = {
   shiftReports: () => api.get(`/floor/shift-reports`).then((r) => r.data),
 };
 
+// Pasticceria — consegne & eventi (torte, matrimoni, eventi su commessa).
+export const pastryApi = {
+  list: () => api.get(`/pastry/deliveries`).then((r) => r.data),
+  create: (payload) => api.post(`/pastry/deliveries`, payload).then((r) => r.data),
+  toggle: (id) => api.post(`/pastry/deliveries/${id}/toggle`).then((r) => r.data),
+  remove: (id) => api.delete(`/pastry/deliveries/${id}`).then((r) => r.data),
+};
+
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),

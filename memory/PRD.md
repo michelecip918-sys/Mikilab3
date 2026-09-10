@@ -4735,3 +4735,15 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Backend: nuovi endpoint pubblici (dietro gate PIN) `/api/floor/analyze-photo` e `/api/floor/shift-report`; `/api/floor/shift-reports` (admin). Campo `apprentice` in `DeptAssignMultiItem` + `dept_assignments`.
 - Testato (Playwright headless): Home concisa OK, master unlock → 5 sezioni Capo, admin login → DeptAssign chip Appr. renderizzato, panel-floor-reports OK, FloorOperatorDay con SOS+analizzatore+fine turno OK. 0 errori console. Backend endpoint verificati via curl (gate 198505). NB: schermate headless bianche = artefatto WebGL, DOM verificato integro.
 - DA FARE: REDEPLOY per mikilab.de; estendere il pattern "domande contestuali di Sitor" a Piano/Ordini/Strumenti.
+
+## v-fase3 (2026-06) — Allineamento al file istruzioni (tutto il sito)
+- **Onboarding attività** (`OnboardingActivity.jsx`, punto 1): al primo avvio Sitor chiede panificio/pizzeria/pasticceria (persistito `mikilab_onboarded`+`mikilab_activity`), differenzia l'esperienza. Testid `onboarding-activity`, `onboarding-opt-*`, `onboarding-confirm`.
+- **Pasticceria dedicata** (`console/PasticceriaConsegne.jsx`, punto 1): pannello "Consegne & Eventi" (torte/matrimoni/eventi con data, promemoria "OGGI/tra Ng", persone, note) mostrato nella sezione Ordini Extra SOLO se activity=pasticceria. Backend CRUD `/api/pastry/deliveries` (require_admin) + toggle/delete.
+- **Multiverso avatar cliccabili** (punto 6): i 3 hero 3D grandi (`ZoneHero3D`) ora hanno `onEnter` → tap sull'avatar entra nella zona (`hero-*-enter`). Avatar grandi che ruotano/lampeggiano + reazione giroscopio/mouse (già in v-fase2b).
+- **Produzione PIN + NOME** (punto 4): `FloorOperatorDay` mostra `floor-name-entry` se manca il nome → l'operaio dice il nome, Sitor lo riconosce e mostra il compito già assegnato dal Capo (match su dept_assignments) + apprendista.
+- **Sitor domande sì/no + demo + capacità** (`console/SitorGuidedTools.jsx`, punto 3.4): in "Strumenti & Integrazioni", Sitor guida il Capo con domande sì/no (silos, bilance, sensori, email), demo modale, elenco completo opzionale "cosa sa fare Sitor". Voce nexus. Persistito `mikilab_integrations`.
+- Testato (Playwright headless, admin): onboarding OK, hero cliccabili OK, name-entry OK, pannello pasticceria OK, guided tools OK. 0 errori console. Backend pastry gated (require_admin) verificato.
+### RESTA dal file istruzioni (onesto):
+- Punto 3 "Sitor genera PIÙ OPZIONI di produzione e il Capo sceglie": NON fatto (planner ~1750 righe, da fare in sessione dedicata).
+- Punto 6 scena Capo "MikiLab + Sitor alla scrivania che dialogano stile cartone": NON fatto (scena 3D bespoke).
+- Punto 5 avatar Sitor rigenerato in 3D realistico: NON fatto (attuale foto ingrandita/interattiva). Riconoscimento viso operaio = "in prospettiva" (futuro).
