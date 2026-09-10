@@ -4861,3 +4861,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Immagini decorative rimosse**: emblema/logo tolto dall'header (resta il testo brand); l'avatar tondo fluttuante di Sitor (mikemix-sense-fab, copriva il pulsante "Riporta") sostituito da un'icona compatta 44px (Activity) con badge allarmi — la funzione del pannello resta. Immagini funzionali (hero di zona, ecc.) mantenute.
 - Pulizia: rimossi `PUB` e `beatSec` non più usati in MikeMixSense.
 - Verificato: brand su una riga (188px), header h 46-66px, FAB senza foto, 0 overflow. NOTA: visibile in PREVIEW; per mikilab.de serve REDEPLOY.
+
+## v71 (2026-09) — Command Deck snello con foto reale
+- **Banner Command Deck rifatto**: rimossa la scena 3D astratta (cubotti arancioni illeggibili) → ora foto reale di pane su carrelli (`/public/deck/command-deck.jpg`, Unsplash) con overlay scuro a gradiente. Altezza ridotta da 240/300px a 112/144px ("molto più snello"). Rimosso sottotitolo "MikiLab → Sitor" e griglia olografica; heartbeat BPM con chip scuro per contrasto. Chip reparto compattati ma invariati (testid e navigazione identici).
+- `AvatarWorld3D` non più usato nel deck (resta nel PublicGate); import rimosso da App.js.
+- Verificato: h=144px, immagine caricata (naturalWidth>0), 0 overflow. Per mikilab.de serve REDEPLOY.

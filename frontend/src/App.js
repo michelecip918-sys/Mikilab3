@@ -69,7 +69,6 @@ import ZoneHero3D from "@/components/console/ZoneHero3D";
 import OnboardingActivity from "@/components/OnboardingActivity";
 import PasticceriaConsegne from "@/components/console/PasticceriaConsegne";
 import SitorGuidedTools from "@/components/console/SitorGuidedTools";
-import AvatarWorld3D from "@/components/AvatarWorld3D";
 import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
@@ -390,24 +389,22 @@ export default function App() {
             <ErrorBoundary resetKey={`${activeZone}-${user ? "u" : "a"}`}>
 
               {mode !== "floor" && (<>
-              {/* MULTIVERSO 3D · centro della plancia industriale (schermata unica) + reparti cliccabili */}
-              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-[240px] sm:h-[300px] transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 28px ${moodColor}33, inset 0 0 44px ${moodColor}12`, background: "radial-gradient(ellipse at 50% 30%, #0d1524 0%, #060a12 70%), linear-gradient(#050810,#050810)" }}>
-                <div className="absolute inset-0 opacity-40 pointer-events-none" style={{ backgroundImage: "linear-gradient(#FF6B0011 1px,transparent 1px),linear-gradient(90deg,#FF6B0011 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
-                <div className="absolute inset-0"><AvatarWorld3D theme={deckDept.id} accent={deckDept.accent} /></div>
+              {/* MULTIVERSO · plancia snella: foto reale del forno + reparti cliccabili */}
+              <div data-testid="deck-multiverse" className="relative mt-4 mb-6 rounded-2xl overflow-hidden border h-28 sm:h-36 transition-all duration-700" style={{ borderColor: `${moodColor}55`, boxShadow: `0 0 22px ${moodColor}2e`, background: "#050810" }}>
+                <img src={`${PUB}/deck/command-deck.jpg`} alt="" className="absolute inset-0 w-full h-full object-cover opacity-60" />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(90deg, rgba(5,8,16,0.94) 0%, rgba(5,8,16,0.55) 45%, rgba(5,8,16,0.25) 100%)" }} />
                 {/* Alone reattivo dell'umore impianto (sereno/attivo/teso/critico) */}
-                <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 50% 115%, ${moodColor}38 0%, transparent 62%)` }} />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#050810] via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-4 right-4 z-10">
-                  <p className="font-cyber text-lg font-black text-white uppercase tracking-[0.16em] whitespace-nowrap truncate">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
-                  <p className="font-mono-data text-[10px] tracking-[0.28em] text-[#FF9D42] uppercase whitespace-nowrap">MikiLab → Sitor</p>
+                <div data-testid="deck-mood-glow" className={`absolute inset-0 pointer-events-none transition-all duration-700 ${deckMood === "critico" ? "animate-pulse" : ""}`} style={{ background: `radial-gradient(ellipse at 85% 110%, ${moodColor}30 0%, transparent 55%)` }} />
+                <div className="absolute bottom-2 left-3.5 right-3.5 z-10 flex items-end justify-between gap-2">
+                  <p className="font-cyber text-base sm:text-lg font-black text-white uppercase tracking-[0.16em] whitespace-nowrap truncate">MikiLab<span className="text-[#FF6B00]"> Command Deck</span></p>
+                  {deckStatus && (
+                    <div data-testid="deck-heartbeat" className="shrink-0 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase rounded-md px-2 py-1 bg-[#050810]/70 backdrop-blur-sm" style={{ color: moodColor }}>
+                      <span className={`inline-block w-2 h-2 rounded-full ${deckMood === "critico" ? "animate-ping" : "animate-pulse"}`} style={{ background: moodColor }} />
+                      {deckStatus.heartbeat} BPM · {moodLabel}
+                    </div>
+                  )}
                 </div>
-                {deckStatus && (
-                  <div data-testid="deck-heartbeat" className="absolute bottom-3 right-4 z-10 flex items-center gap-1.5 font-mono-data text-[10px] tracking-[0.18em] uppercase" style={{ color: moodColor }}>
-                    <span className={`inline-block w-2 h-2 rounded-full ${deckMood === "critico" ? "animate-ping" : "animate-pulse"}`} style={{ background: moodColor }} />
-                    {deckStatus.heartbeat} BPM · {moodLabel}
-                  </div>
-                )}
-                <div data-testid="deck-depts" className="absolute top-3 left-3 right-3 z-10 flex flex-wrap gap-1.5">
+                <div data-testid="deck-depts" className="absolute top-2 left-3 right-3 z-10 flex flex-wrap gap-1">
                   {DECK_DEPTS.map((d) => {
                     const st = deptStatus(d.id);
                     const lvlColor = st && st.level === "critical" ? "#f43f5e" : st && st.level === "warn" ? "#EAB308" : d.accent;
@@ -416,7 +413,7 @@ export default function App() {
                       <button key={d.id} data-testid={`deck-dept-${d.id}`}
                         onClick={() => { setDeckDept(d); try { zoneRefs.operatori.current && zoneRefs.operatori.current.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }}
                         title={st && st.people.length ? st.people.join(", ") : undefined}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10.5px] font-bold uppercase tracking-wider border transition-all active:scale-95 ${st && st.level === "critical" ? "animate-pulse" : ""}`}
+                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border transition-all active:scale-95 ${st && st.level === "critical" ? "animate-pulse" : ""}`}
                         style={deckDept.id === d.id
                           ? { background: lvlColor, color: "#050810", borderColor: lvlColor, boxShadow: `0 0 16px ${lvlColor}88` }
                           : alarmed
