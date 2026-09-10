@@ -666,6 +666,11 @@ export const facesApi = {
   remove: (name) => api.delete(`/faces/${encodeURIComponent(name)}`).then((r) => r.data),
 };
 
+// Allega/Fotografa universale — Sitor estrae info da PDF o foto.
+export const capoApi = {
+  extract: (payload) => api.post(`/capo/extract`, payload).then((r) => r.data),
+};
+
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),

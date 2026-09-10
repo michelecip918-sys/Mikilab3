@@ -1182,6 +1182,55 @@ async def faces_delete(name: str, admin: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+# ============================================================================
+# ALLEGA / FOTOGRAFA UNIVERSALE — ovunque il Capo compili qualcosa può allegare
+# un PDF o una foto: Sitor legge, capisce e restituisce testo strutturato da inserire.
+# ============================================================================
+class CapoExtractReq(BaseModel):
+    kind: str = "auto"           # "image" | "pdf" | "auto"
+    data_base64: str = ""        # dataURL o base64 puro (foto o PDF)
+    context: str = ""            # es. "macchina nuova", "ordine cliente", "consegna"
+    lang: str = "it"
+
+
+@api_router.post("/capo/extract")
+async def capo_extract(body: CapoExtractReq, admin: dict = Depends(require_admin)):
+    """Sitor estrae info strutturate da una FOTO (vision) o da un PDF (testo) allegato dal Capo."""
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM non configurata")
+    raw = (body.data_base64 or "")
+    b64 = raw.split(",")[-1].strip()
+    header = raw[:80].lower()
+    is_pdf = body.kind == "pdf" or "application/pdf" in header or (body.kind == "auto" and header.startswith("data:application/pdf"))
+    langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get((body.lang or "it")[:2], "italiano")
+    ctx = (body.context or "").strip() or "informazione generica"
+    sysmsg = (f"Sei Sitor, assistente di un panificio. Il Capo allega materiale su: '{ctx}'. "
+              f"Estrai le informazioni utili in modo ORDINATO e PRONTO DA INSERIRE (campi chiave: valore, elenchi puntati). "
+              f"Niente preamboli. Rispondi in {langname}.")
+    text = ""
+    try:
+        if is_pdf:
+            import base64 as _b64, io as _io
+            from pypdf import PdfReader
+            reader = PdfReader(_io.BytesIO(_b64.b64decode(b64)))
+            pdftext = ""
+            for pg in reader.pages[:15]:
+                try: pdftext += (pg.extract_text() or "") + "\n"
+                except Exception: pass
+            pdftext = pdftext.strip()[:12000]
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1400)
+            async for ev in chat.stream_message(UserMessage(text=f"Contenuto del PDF:\n{pdftext or '(nessun testo estraibile: PDF forse scansionato)'}")):
+                if isinstance(ev, TextDelta): text += ev.content or ""
+        else:
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"capoex-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", "claude-sonnet-4-6").with_params(max_tokens=1400)
+            async for ev in chat.stream_message(UserMessage(text=f"Estrai le info utili da questa immagine per: {ctx}.", file_contents=[ImageContent(image_base64=b64)])):
+                if isinstance(ev, TextDelta): text += ev.content or ""
+    except Exception as e:
+        logger.warning("capo_extract fail (%s)", str(e)[:150])
+        raise HTTPException(status_code=500, detail="estrazione non riuscita")
+    return {"ok": True, "text": text.strip(), "kind": "pdf" if is_pdf else "image"}
+
+
 
 # ============================================================================
 # REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { Cake, Plus, Trash2, Check, CalendarClock, Loader2 } from "lucide-react";
 import { pastryApi } from "@/lib/api";
+import SmartAttach from "@/components/console/SmartAttach";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -59,6 +60,8 @@ export default function PasticceriaConsegne() {
           <input data-testid="pastry-people" value={form.people} onChange={set("people")} inputMode="numeric" placeholder={tri("Persone", "Personen", "People", "Personas", "Personnes", "نفر")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
         </div>
         <input data-testid="pastry-notes" value={form.notes} onChange={set("notes")} placeholder={tri("Note (gusto, allergie, indirizzo…)", "Notiz", "Notes (flavor, allergies, address…)", "Notas", "Notes", "یادداشت")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
+        <SmartAttach context={tri("ordine torta/evento (cliente, prodotto, data)", "Torten-/Event-Bestellung", "cake/event order (client, item, date)", "pedido de tarta/evento", "commande gâteau/événement", "سفارش کیک/رویداد")} compact
+          onExtract={(t) => setForm((f) => ({ ...f, notes: (f.notes ? f.notes + "\n" : "") + t }))} />
         <button data-testid="pastry-add" onClick={submit} disabled={busy || !form.client.trim() || !form.date} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7FD8C0]/15 border border-[#7FD8C0]/50 text-[#7FD8C0] font-bold text-sm active:scale-95 disabled:opacity-40">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} {tri("Aggiungi consegna", "Lieferung hinzufügen", "Add delivery", "Añadir entrega", "Ajouter livraison", "افزودن تحویل")}
         </button>

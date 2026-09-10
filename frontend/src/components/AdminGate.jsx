@@ -53,7 +53,7 @@ export default function AdminGate({ onUnlock, onBack }) {
       )}
       <div className="relative z-10 w-full max-w-xs text-center">
         <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-[#D95200]/40 shadow-lg shadow-[#D95200]/20 bg-[#030712] mb-4">
-          <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
+          <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
         <h1 className="font-black tracking-[0.15em] text-2xl uppercase">MIKILAB</h1>
         <p className="mt-2 text-sm text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#D95200]" /> {tri("Accesso riservato · inserisci il PIN", "Zugang reserviert · PIN eingeben", "Private access · enter the PIN", "Acceso reservado · introduce el PIN", "Accès réservé · saisis le PIN", "دسترسی خصوصی · PIN را وارد کن")}</p>

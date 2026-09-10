@@ -25,6 +25,23 @@ const BASE_STATIONS = [
   { key: "apprendista", label: "Apprendista", color: "#94A3B8", ic: "🎓" },
 ];
 
+// Traduzioni dei ruoli/postazioni: [it, de, en, es, fr, fa].
+const STATION_TR = {
+  impastatore: ["Impastatore", "Teigmacher", "Mixer", "Amasador", "Pétrisseur", "خمیرگیر"],
+  fornaio: ["Fornaio", "Bäcker", "Baker", "Hornero", "Boulanger", "نانوا"],
+  laugen: ["Laugen / Pretzel", "Laugengebäck", "Laugen / Pretzel", "Laugen / Pretzel", "Bretzel", "لاوگن / پرتزل"],
+  fermentazione: ["Fermentazione", "Gärung", "Fermentation", "Fermentación", "Fermentation", "تخمیر"],
+  pizzaiolo: ["Pizzaiolo", "Pizzabäcker", "Pizza chef", "Pizzero", "Pizzaïolo", "پیتزاپز"],
+  pasticcere: ["Pasticcere", "Konditor", "Pastry chef", "Pastelero", "Pâtissier", "شیرینی‌پز"],
+  banconista: ["Banconista", "Verkäufer", "Counter staff", "Dependiente", "Vendeur", "فروشنده"],
+  apprendista: ["Apprendista", "Lehrling", "Apprentice", "Aprendiz", "Apprenti", "کارآموز"],
+};
+const CORE_ROLE_TR = {
+  "Fondatore · Direttore di Produzione": ["Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید"],
+  "Reparto Produzione · Fornaio": ["Reparto Produzione · Fornaio", "Produktion · Bäcker", "Production · Baker", "Producción · Panadero", "Production · Boulanger", "تولید · نانوا"],
+  "Dio dell'Arte Bianca · Intelligenza Suprema": ["Dio dell'Arte Bianca · Intelligenza Suprema", "Gott der Backkunst · Höchste Intelligenz", "God of the White Art · Supreme Intelligence", "Dios del Arte Blanco · Inteligencia Suprema", "Dieu de l'Art Blanc · Intelligence Suprême", "خدای هنر نان · هوش برتر"],
+};
+
 function Tile({ ic, label, color, testid, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick} type="button"
@@ -72,14 +89,14 @@ export default function OperatorsRoster({ onPick }) {
               )}
             </span>
             <span className="text-[11px] font-black text-white text-center leading-tight truncate max-w-[92px]">{o.name}</span>
-            <span className="text-[9px] text-center leading-tight" style={{ color: o.accent }}>{o.role}</span>
+            <span className="text-[9px] text-center leading-tight" style={{ color: o.accent }}>{CORE_ROLE_TR[o.role] ? tri(...CORE_ROLE_TR[o.role]) : o.role}</span>
           </div>
         ))}
       </div>
       {/* Tutte le postazioni operative */}
       <div className="grid grid-cols-4 sm:grid-cols-6 gap-2">
         {stations.map((s) => (
-          <Tile key={s.key} testid={`roster-station-${s.key}`} ic={s.ic} label={s.label} color={s.color} onClick={() => onPick && onPick(s.label)} />
+          <Tile key={s.key} testid={`roster-station-${s.key}`} ic={s.ic} label={STATION_TR[s.key] ? tri(...STATION_TR[s.key]) : s.label} color={s.color} onClick={() => onPick && onPick(STATION_TR[s.key] ? tri(...STATION_TR[s.key]) : s.label)} />
         ))}
       </div>
     </div>

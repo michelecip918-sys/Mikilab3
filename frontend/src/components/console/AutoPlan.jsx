@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Sparkles, Volume2, Send, Layers, Check } from "lucide-react";
+import SmartAttach from "@/components/console/SmartAttach";
 
 // PILASTRO 1 — Sitor Direttore d'Orchestra: piano di produzione ottimale auto-generato.
 export default function AutoPlan() {
@@ -48,6 +49,8 @@ export default function AutoPlan() {
       <textarea data-testid="autoplan-orders" value={orders} onChange={(e) => setOrders(e.target.value)} rows={2}
         placeholder={tri("Ordini del giorno (facoltativo): es. 300 baguette, 120 focacce, 40 torte…", "Tagesaufträge (optional)…", "Today's orders (optional)…", "Pedidos de hoy (opcional)…", "Commandes du jour (optionnel)…", "سفارش‌های امروز (اختیاری)…")}
         className="w-full bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#64748B] outline-none resize-none" />
+      <SmartAttach context={tri("ordini di produzione del giorno", "Tagesaufträge", "day's production orders", "pedidos del día", "commandes du jour", "سفارش‌های روز")} compact
+        onExtract={(t) => setOrders((o) => (o ? o + "\n" : "") + t)} />
       <div className="flex flex-wrap gap-2">
         <button data-testid="autoplan-gen" onClick={gen} disabled={busy || busyOpt}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"

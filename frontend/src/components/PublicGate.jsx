@@ -99,7 +99,7 @@ export default function PublicGate({ onUnlock }) {
       <div data-testid="guest-view" className="relative min-h-screen bg-[#030712] text-white">
         <header className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 border-b border-[#FF9D42]/15 bg-[#060A10]/85 backdrop-blur-xl">
           <div className="flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl overflow-hidden border border-[#FF9D42]/40 bg-[#060A10]"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" /></span>
+            <span className="w-9 h-9 rounded-xl overflow-hidden border border-[#FF9D42]/40 bg-[#060A10]"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-cover" /></span>
             <span className="leading-tight"><span className="block font-black tracking-[0.16em] text-base uppercase">MikiLab<span className="text-[#FF9D42]"> · Ospite</span></span><span className="block font-mono text-[8px] tracking-[0.28em] text-[#FF9D42]/70 uppercase">Guest Access · Training</span></span>
           </div>
           <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ export default function PublicGate({ onUnlock }) {
       <header className="relative z-20 flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2.5">
           <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#FF6B00]/40 shadow-[0_0_16px_rgba(255,107,0,0.25)] bg-[#060A10]">
-            <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-contain" />
+            <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-cover" />
           </span>
           <span className="leading-tight">
             <span className="block font-black tracking-[0.18em] text-lg sm:text-xl uppercase">MikiLab<span className="text-[#FF6B00]"> Pro</span></span>
