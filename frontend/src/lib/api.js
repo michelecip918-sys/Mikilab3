@@ -644,6 +644,12 @@ export const deusApi = {
   shiftReport: (lang) => api.get(`/mike/shift-report`, { params: { lang } }).then((r) => r.data),
 };
 
+// Produzione (Operaio) — rapporto di fine turno + lista per il Capo.
+export const floorApi = {
+  submitShiftReport: (payload) => api.post(`/floor/shift-report`, payload).then((r) => r.data),
+  shiftReports: () => api.get(`/floor/shift-reports`).then((r) => r.data),
+};
+
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => api.get(`/depts`).then((r) => r.data),

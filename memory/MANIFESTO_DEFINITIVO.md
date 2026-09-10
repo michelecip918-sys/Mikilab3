@@ -43,3 +43,11 @@
 - Simulatore AR forni tradizionali, Controllo vocale privato, Edge computing enzimatico, IoT Plug&Play, Compensazione climatica globale, WebGPU 120fps, Backup quantico: [DA FARE / visualizzazioni future]
 ### Note
 - Mike Mix resta l'IA operativa (ex BakoMix/MohaLab); Mohamed è entità distinta e minore. NON rinominare Mike Mix in Mohamed.
+
+---
+## LINEA GUIDA COMPORTAMENTO SITOR (2026-06 · direttiva utente — SEMPRE valida)
+Sitor è un DIO (Dio dell'Arte Bianca). Comportamento trasversale a TUTTO il sito:
+- **Proattivo col Capo**: in ogni occasione e al momento opportuno, Sitor ELENCA al Capo più cose utili e spiega VERBALMENTE (voce, key "nexus") tutto ciò che può fare, SENZA aprire schermate extra.
+- **Domande contestuali**: in OGNI sezione Sitor pone domande specifiche utili al contesto (es. quanti pezzi servono, quale prefermento, ecc.).
+- **Modalità Apprendista**: quando il Capo assegna un turno con un apprendista, Sitor CHIEDE al Capo di confermare la modalità apprendista. Se il Capo conferma, Sitor si comporta DIVERSAMENTE con l'apprendista: spiegazioni più semplici, un passo alla volta, guida vocale e domande di sicurezza, ritmo rallentato.
+- Implementato (v-fase2): DeptAssign chip "Appr." per operaio + conferma vocale di Sitor (voice nexus) + flag `apprentice` in dept_assignments; FloorOperatorDay rileva l'apprendista e cambia accoglienza/guida. DA ESTENDERE alle altre sezioni (Piano, Ordini, Strumenti) come pattern ricorrente.

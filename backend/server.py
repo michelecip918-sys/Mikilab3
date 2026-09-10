@@ -1041,6 +1041,68 @@ async def deus_queue_clear(admin: dict = Depends(require_admin)):
     await db.capo_queue.delete_many({})
     return {"ok": True, "counts": await _queue_counts()}
 
+
+# ============================================================================
+# PRODUZIONE (Operaio) — vista a task singolo: analisi foto + rapporto fine turno.
+# Endpoint PUBBLICI: la Produzione entra col PIN, non con la sessione del Capo.
+# ============================================================================
+class FloorPhotoReq(BaseModel):
+    image_base64: str
+    lang: str = "it"
+
+
+@api_router.post("/floor/analyze-photo")
+async def floor_analyze_photo(payload: FloorPhotoReq):
+    """Sitor analizza a voce/testo la foto scattata dall'operaio (difetti, cottura, stato)."""
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        vision_stream("difetti", payload.image_base64, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+class FloorShiftReport(BaseModel):
+    operator: str = ""
+    role: str = ""
+    dept: str = ""
+    pieces: str = ""
+    waste: str = ""
+    issues: str = ""
+    notes: str = ""
+    cleaning_done: bool = False
+    lang: str = "it"
+
+
+@api_router.post("/floor/shift-report")
+async def floor_shift_report_save(payload: FloorShiftReport):
+    """L'operaio compila l'essenziale a fine turno; il Capo lo legge nella console."""
+    doc = {
+        "id": str(uuid.uuid4()),
+        "operator": (payload.operator or "")[:80],
+        "role": (payload.role or "")[:80],
+        "dept": (payload.dept or "")[:80],
+        "pieces": (payload.pieces or "")[:400],
+        "waste": (payload.waste or "")[:400],
+        "issues": (payload.issues or "")[:800],
+        "notes": (payload.notes or "")[:1200],
+        "cleaning_done": bool(payload.cleaning_done),
+        "at": now_iso(),
+    }
+    await db.floor_shift_reports.insert_one(dict(doc))
+    olds = await db.floor_shift_reports.find({}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(2000)
+    for o in olds[200:]:
+        await db.floor_shift_reports.delete_one({"id": o["id"]})
+    return {"ok": True, "id": doc["id"]}
+
+
+@api_router.get("/floor/shift-reports")
+async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
+    return {"reports": await db.floor_shift_reports.find({}, {"_id": 0}).sort("at", -1).to_list(50)}
+
+
+
 # ============================================================================
 # REPARTI INDIPENDENTI (stanzini privati): Panificio, Pasticceria, Pizzeria, Laugen.
 # Ogni reparto ha macchinari, silos, celle e magazzino dedicati (auto-generati).
@@ -1138,6 +1200,7 @@ async def depts_assign_delete(aid: str, admin: dict = Depends(require_admin)):
 class DeptAssignMultiItem(BaseModel):
     operator: str = ""
     task: str = ""
+    apprentice: bool = False
 
 class DeptAssignMultiReq(BaseModel):
     dept: str = ""
@@ -1159,7 +1222,7 @@ async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(req
             continue
         doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
                "dept_name": DEPARTMENTS[body.dept]["name"], "task": (it.task or "").strip(),
-               "operator": op, "note": "",
+               "operator": op, "note": "", "apprentice": bool(it.apprentice),
                "by": admin.get("email") or "master", "at": now_iso()}
         await db.dept_assignments.insert_one({**doc})
         doc.pop("_id", None)

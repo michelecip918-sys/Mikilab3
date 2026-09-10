@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
-import { Loader2, Send, Trash2, UserCog, Check, Plus, Users } from "lucide-react";
+import { Loader2, Send, Trash2, UserCog, Check, Plus, Users, GraduationCap, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 import { deptApi, operatorPinsApi } from "@/lib/api";
+import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -12,12 +13,14 @@ export default function DeptAssign() {
   const [dept, setDept] = useState("");
   const [operators, setOperators] = useState([]);
   const [sel, setSel] = useState({}); // { operatorName: task }
+  const [appr, setAppr] = useState({}); // { operatorName: true } → modalità apprendista
   const [manual, setManual] = useState("");
   const [target, setTarget] = useState("");
   const [label, setLabel] = useState("");
   const [busy, setBusy] = useState(false);
   const [assignments, setAssignments] = useState([]);
   const [board, setBoard] = useState([]);
+  const [apprConfirm, setApprConfirm] = useState(null); // { names:[], payload }
 
   const load = useCallback(() => {
     deptApi.catalog().then((d) => setDepts(d.departments || [])).catch(() => {});
@@ -29,6 +32,7 @@ export default function DeptAssign() {
 
   const toggle = (name) => setSel((s) => { const n = { ...s }; if (n[name] !== undefined) delete n[name]; else n[name] = ""; return n; });
   const setTask = (name, v) => setSel((s) => ({ ...s, [name]: v }));
+  const toggleAppr = (name) => setAppr((a) => { const n = { ...a }; if (n[name]) delete n[name]; else n[name] = true; return n; });
   const addManual = () => {
     const nm = manual.trim();
     if (!nm) return;
@@ -37,17 +41,48 @@ export default function DeptAssign() {
     setManual("");
   };
 
-  const assign = async () => {
-    if (!dept) { toast.error(tri("Scegli un reparto", "Bereich wählen", "Pick a department", "Elige un área", "Choisis un atelier", "بخش را انتخاب کن")); return; }
-    const items = Object.entries(sel).map(([operator, task]) => ({ operator, task: (task || "").trim() }));
-    if (items.length === 0) { toast.error(tri("Seleziona almeno un operaio", "Mind. einen Mitarbeiter wählen", "Select at least one operator", "Selecciona al menos un operario", "Sélectionne au moins un opérateur", "حداقل یک اپراتور انتخاب کن")); return; }
+  const doAssign = async (items) => {
     setBusy(true);
     try {
       await deptApi.assignMulti({ dept, items, target: Number(target) || 0, label });
-      setSel({}); setTarget(""); setLabel("");
+      setSel({}); setAppr({}); setTarget(""); setLabel(""); setApprConfirm(null);
       toast.success(tri(`Assegnati ${items.length} operai ✓`, `${items.length} zugewiesen ✓`, `Assigned ${items.length} ✓`, `${items.length} asignados ✓`, `${items.length} assignés ✓`, `${items.length} واگذار شد ✓`));
       load();
     } catch { toast.error("Error"); } finally { setBusy(false); }
+  };
+
+  const assign = async () => {
+    if (!dept) { toast.error(tri("Scegli un reparto", "Bereich wählen", "Pick a department", "Elige un área", "Choisis un atelier", "بخش را انتخاب کن")); return; }
+    const items = Object.entries(sel).map(([operator, task]) => ({ operator, task: (task || "").trim(), apprentice: !!appr[operator] }));
+    if (items.length === 0) { toast.error(tri("Seleziona almeno un operaio", "Mind. einen Mitarbeiter wählen", "Select at least one operator", "Selecciona al menos un operario", "Sélectionne au moins un opérateur", "حداقل یک اپراتور انتخاب کن")); return; }
+    // Sitor (Dio dell'Arte Bianca) chiede al Capo di confermare la MODALITÀ APPRENDISTA — a voce, senza schermate extra.
+    const apprNames = items.filter((it) => it.apprentice).map((it) => it.operator);
+    if (apprNames.length > 0) {
+      const q = tri(
+        `Capo, hai messo ${apprNames.join(", ")} come apprendista. Confermi la modalità apprendista? Se dici sì, li seguo passo passo, con voce guida e domande di sicurezza, e rallento il ritmo per loro.`,
+        `Capo, du hast ${apprNames.join(", ")} als Lehrling. Bestätigst du den Lehrlingsmodus? Wenn ja, führe ich sie Schritt für Schritt.`,
+        `Capo, you set ${apprNames.join(", ")} as apprentice. Do you confirm apprentice mode? If yes, I guide them step by step with voice and safety checks.`,
+        `Capo, pusiste a ${apprNames.join(", ")} como aprendiz. ¿Confirmas el modo aprendiz?`,
+        `Capo, tu as mis ${apprNames.join(", ")} en apprenti. Confirmes-tu le mode apprenti ?`,
+        `کاپو، ${apprNames.join(", ")} را کارآموز گذاشتی. حالت کارآموز را تأیید می‌کنی؟`);
+      try { playTTS(q, { lang, voice: "nexus" }); } catch { /* */ }
+      setApprConfirm({ names: apprNames, items });
+      return;
+    }
+    doAssign(items);
+  };
+
+  const confirmAppr = () => {
+    if (!apprConfirm) return;
+    const msg = tri(
+      `Confermato. Modalità apprendista attiva per ${apprConfirm.names.join(", ")}. Mi comporterò diversamente con loro: spiegazioni più semplici, un passo alla volta, e controllo che ogni passaggio sia capito.`,
+      `Bestätigt. Lehrlingsmodus aktiv. Ich erkläre einfacher, Schritt für Schritt.`,
+      `Confirmed. Apprentice mode on for ${apprConfirm.names.join(", ")}. I'll explain simply, one step at a time.`,
+      `Confirmado. Modo aprendiz activo.`,
+      `Confirmé. Mode apprenti actif.`,
+      `تأیید شد. حالت کارآموز فعال است.`);
+    try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
+    doAssign(apprConfirm.items);
   };
   const del = (a) => deptApi.unassign(a.id).then(load).catch(() => {});
   const cur = depts.find((x) => x.key === dept);
@@ -96,9 +131,15 @@ export default function DeptAssign() {
                     </button>
                     <span className="text-sm font-bold text-white flex-1 min-w-0 truncate">{o.name}</span>
                     {on && (
-                      <input data-testid={`dept-op-task-${o.name}`} value={sel[o.name]} onChange={(e) => setTask(o.name, e.target.value)}
-                        placeholder={tri("mansione (impasti, forni…)", "Aufgabe…", "task (mixing, ovens…)", "tarea…", "tâche…", "وظیفه…")}
-                        className="flex-1 min-w-0 rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-xs text-white px-2.5 py-1.5" />
+                      <>
+                        <input data-testid={`dept-op-task-${o.name}`} value={sel[o.name]} onChange={(e) => setTask(o.name, e.target.value)}
+                          placeholder={tri("mansione (impasti, forni…)", "Aufgabe…", "task (mixing, ovens…)", "tarea…", "tâche…", "وظیفه…")}
+                          className="flex-1 min-w-0 rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-xs text-white px-2.5 py-1.5" />
+                        <button data-testid={`dept-op-appr-${o.name}`} onClick={() => toggleAppr(o.name)} title={tri("Modalità apprendista", "Lehrlingsmodus", "Apprentice mode", "Modo aprendiz", "Mode apprenti", "حالت کارآموز")}
+                          className={`shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-lg border text-[10px] font-black transition-all active:scale-95 ${appr[o.name] ? "bg-amber-500/20 border-amber-500/60 text-amber-400" : "bg-[#030712] border-[#1e293b] text-[#64748B]"}`}>
+                          <GraduationCap className="w-3.5 h-3.5" /> {tri("Appr.", "Lehrl.", "Appr.", "Aprend.", "Appr.", "کارآموز")}
+                        </button>
+                      </>
                     )}
                   </div>
                 </div>
@@ -123,6 +164,27 @@ export default function DeptAssign() {
               placeholder={tri("Pezzi", "Stück", "Pcs", "Piezas", "Pcs", "عدد")}
               className="w-20 rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#FF6B00]/60 outline-none text-sm text-white px-3 py-2.5" />
           </div>
+
+          {apprConfirm && (
+            <div data-testid="dept-appr-confirm" className="rounded-xl border border-amber-500/50 bg-amber-500/8 p-3.5">
+              <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-amber-400 mb-1.5"><Volume2 className="w-4 h-4" /> Sitor · {tri("Conferma modalità apprendista", "Lehrlingsmodus bestätigen", "Confirm apprentice mode", "Confirmar modo aprendiz", "Confirmer mode apprenti", "تأیید حالت کارآموز")}</p>
+              <p className="text-[12.5px] text-[#e7d9b8] leading-snug mb-3">{tri(
+                `Capo, hai messo ${apprConfirm.names.join(", ")} come apprendista. Se confermi, li seguo passo passo, con voce guida e domande di sicurezza, e rallento il ritmo per loro.`,
+                `Capo, ${apprConfirm.names.join(", ")} als Lehrling. Bestätige, dann führe ich sie Schritt für Schritt.`,
+                `Capo, ${apprConfirm.names.join(", ")} as apprentice. If you confirm, I guide them step by step with voice and safety checks.`,
+                `Capo, ${apprConfirm.names.join(", ")} como aprendiz. Si confirmas, los guío paso a paso.`,
+                `Capo, ${apprConfirm.names.join(", ")} en apprenti. Si tu confirmes, je les guide pas à pas.`,
+                `کاپو، ${apprConfirm.names.join(", ")} کارآموز. اگر تأیید کنی، قدم‌به‌قدم راهنمایی‌شان می‌کنم.`)}</p>
+              <div className="flex items-center gap-2">
+                <button data-testid="dept-appr-confirm-yes" onClick={confirmAppr} disabled={busy} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-amber-500 text-[#030712] font-black text-sm active:scale-95 disabled:opacity-50">
+                  {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Sì, conferma", "Ja, bestätigen", "Yes, confirm", "Sí, confirmar", "Oui, confirmer", "بله، تأیید")}
+                </button>
+                <button data-testid="dept-appr-confirm-no" onClick={() => doAssign(apprConfirm.items.map((it) => ({ ...it, apprentice: false })))} disabled={busy} className="flex-1 py-2.5 rounded-xl bg-[#030712] border border-[#1e293b] text-[#94A3B8] font-bold text-sm active:scale-95">
+                  {tri("No, assegna normale", "Nein, normal", "No, assign normal", "No, normal", "Non, normal", "نه، عادی")}
+                </button>
+              </div>
+            </div>
+          )}
 
           <button data-testid="dept-assign-btn" onClick={assign} disabled={busy || selCount === 0}
             className="w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-[#FF6B00]/15 border border-[#FF6B00]/50 text-[#FF6B00] font-bold text-sm active:scale-95 disabled:opacity-40">
@@ -149,6 +211,7 @@ export default function DeptAssign() {
             <div key={a.id} data-testid={`dept-assignment-${a.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
               <UserCog className="w-4 h-4 text-[#FF6B00] shrink-0" />
               <p className="text-xs text-white flex-1 min-w-0 truncate"><b>{a.operator}</b> → {a.dept_name}{a.task ? ` · ${a.task}` : ""}</p>
+              {a.apprentice && <span data-testid={`dept-appr-badge-${a.id}`} className="shrink-0 inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/40"><GraduationCap className="w-3 h-3" /> {tri("Appr.", "Lehrl.", "Appr.", "Aprend.", "Appr.", "کارآموز")}</span>}
               <button data-testid={`dept-unassign-${a.id}`} onClick={() => del(a)} className="text-[#64748B] hover:text-rose-400"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}

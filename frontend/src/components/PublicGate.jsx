@@ -28,6 +28,7 @@ export default function PublicGate({ onUnlock }) {
   const [reqBusy, setReqBusy] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const [cookieOk, setCookieOk] = useState(() => { try { return !!localStorage.getItem("mikilab_cookie_ok"); } catch { return true; } });
   const acceptCookies = () => { try { localStorage.setItem("mikilab_cookie_ok", "1"); } catch { /* */ } setCookieOk(true); };
 
@@ -268,8 +269,18 @@ export default function PublicGate({ onUnlock }) {
           )}
         </div>
 
-        {/* Vetrina pubblica — testo indicizzabile + conversione */}
-        <section data-testid="public-vetrina" className="mt-12 w-full max-w-3xl text-left">
+        {/* Vetrina pubblica — concisa: dettaglio dietro "Scopri di più" (niente muri di testo) */}
+        <div className="mt-8">
+          <button data-testid="public-more-toggle" onClick={() => setShowMore((v) => !v)}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider border border-[#FF6B00]/40 text-[#FF9D42] bg-[#0b0f19]/70 backdrop-blur-md hover:border-[#FF6B00] active:scale-95 transition-all">
+            {showMore
+              ? tri("Mostra meno", "Weniger anzeigen", "Show less", "Mostrar menos", "Voir moins", "کمتر")
+              : tri("Scopri di più su MikiLab Pro", "Mehr über MikiLab Pro", "Discover more about MikiLab Pro", "Descubre más", "En savoir plus", "بیشتر بدانید")}
+          </button>
+        </div>
+
+        {showMore && (
+        <section data-testid="public-vetrina" className="mt-6 w-full max-w-3xl text-left">
           <div className="rounded-2xl overflow-hidden border border-[#FF6B00]/25 shadow-[0_0_40px_rgba(255,107,0,0.15)] mb-6">
             <img src={`${PUB}/multiverse-banner.jpg`} alt={tri("MikiLab Pro — il multiverso olografico dei reparti di panificazione", "MikiLab Pro — das holografische Multiversum", "MikiLab Pro — the holographic bakery multiverse", "MikiLab Pro — el multiverso holográfico", "MikiLab Pro — le multivers holographique", "چندجهانی هولوگرافیک MikiLab Pro")} className="w-full h-auto block" loading="lazy" data-testid="vetrina-banner" />
           </div>
@@ -317,6 +328,7 @@ export default function PublicGate({ onUnlock }) {
               "mikilab.de را به اشتراک بگذار")}</p>
           </div>
         </section>
+        )}
 
         {/* Footer legale (GDPR / Impressum) */}
         <footer data-testid="public-legal-footer" className="mt-10 mb-4 w-full max-w-3xl flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono-data text-[10px] tracking-widest uppercase text-[#64748B]">

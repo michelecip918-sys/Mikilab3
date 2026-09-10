@@ -39,18 +39,15 @@ import ResetPassword from "@/components/ResetPassword";
 import OperatoreSelect from "@/components/OperatoreSelect";
 import PinSetup from "@/components/PinSetup";
 import OrdineCapo from "@/components/OrdineCapo";
-import MikeMixFloor from "@/components/MikeMixFloor";
+import FloorOperatorDay from "@/components/FloorOperatorDay";
 import MikeMixSense from "@/components/MikeMixSense";
 import MikeMixGuide from "@/components/MikeMixGuide";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import NexusConsole from "@/components/NexusConsole";
-import MikeObserve from "@/components/MikeObserve";
 import MikeAlerts from "@/components/MikeAlerts";
-import LegacyOven from "@/components/LegacyOven";
 import MohamedInbox from "@/components/MohamedInbox";
 import LivingRecipe from "@/components/LivingRecipe";
 import AdvancedLab from "@/components/AdvancedLab";
-import AROven from "@/components/AROven";
 import PublicGate from "@/components/PublicGate";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
@@ -100,6 +97,7 @@ import CapoDeck from "@/components/console/CapoDeck";
 import DeptAssign from "@/components/console/DeptAssign";
 import ShiftTeamCall from "@/components/console/ShiftTeamCall";
 import ShiftTemplates from "@/components/console/ShiftTemplates";
+import FloorShiftReports from "@/components/console/FloorShiftReports";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
@@ -485,6 +483,9 @@ export default function App() {
                     <HoloPanel testid="panel-shift-templates" accent="#FF9D42" beacon="#22c55e" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrents", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
                       <ShiftTemplates />
                     </HoloPanel>
+                    <HoloPanel testid="panel-floor-reports" accent="#22c55e" beacon="#22c55e" icon="🗒️" title={tri("Rapporti Fine Turno · Produzione", "Schichtende-Berichte · Produktion", "End-of-Shift Reports · Production", "Informes de Fin de Turno · Producción", "Rapports de Fin de Service · Production", "گزارش‌های پایان شیفت · تولید")} sub={tri("Ciò che gli operai compilano a fine turno: pezzi, scarti, problemi, note e pulizia.", "Was die Mitarbeiter am Schichtende ausfüllen.", "What operators fill in at end of shift: pieces, waste, issues, notes, cleaning.", "Lo que rellenan los operarios al final del turno.", "Ce que les opérateurs remplissent en fin de service.", "آنچه اپراتورها در پایان شیفت پر می‌کنند.")}>
+                      <FloorShiftReports />
+                    </HoloPanel>
                     </CapoGroup>
 
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
@@ -573,7 +574,7 @@ export default function App() {
                 <ZoneHero testid="hero-operatori" avatar="avatar_nexus.jpg" accent="#FF6B00" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} reactive />
                 <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
-                  <div data-testid="floor-zone"><MikeMixFloor /></div>
+                  <div data-testid="floor-zone"><FloorOperatorDay /></div>
                 ) : (
                   <div data-testid="floor-lock" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#FF6B00" }} />
@@ -588,15 +589,6 @@ export default function App() {
                     </button>
                   </div>
                 )}
-                <div data-testid="panel-observe" className="mt-4 holo-panel p-5">
-                  <MikeObserve operator={operator} />
-                </div>
-                <div data-testid="panel-legacy" className="mt-4 holo-panel p-5">
-                  <LegacyOven operator={operator} />
-                </div>
-                <div data-testid="panel-ar-oven" className="mt-4 holo-panel p-5">
-                  <AROven />
-                </div>
               </section>
 
               {/* ================= ZONA 3 · MIKE MIX AI ================= */}
