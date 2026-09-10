@@ -4819,6 +4819,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Avatar 3D viventi estesi**: `LivingAvatar3D` ora anche nella testata della **Sala Sitor** (56px, nexus) e nella card di saluto **Sitor del reparto** (FloorOperatorDay). Ogni istanza = 1 contesto WebGL: tenuti pochi per pagina (Gate 2 + Sala 1 + Floor 1) per performance. Avatar per-messaggio in chat restano immagini leggere (NexusAvatar) di proposito.
 - **Nuovo logo/emblema**: generato con Gemini 3.1 Flash Image (divinità dell'arte bianca, oro/arancio su nero) e applicato a `logo-emblem.png` + `logo.png` (header, gate, orb, icona PWA). Backup vecchio in logo-emblem-old.png.
 - sw.js CACHE_NAME → mikilab-v53. Deploy ripubblicato su mikilab.de.
+
+## v65 (2026-09) — GUIDA MIKILAB (descrizioni chiare per chiunque)
+- **Nuovo `GuidaMikiLab.jsx`**: overlay a schermo intero, elegante, con 8 sezioni che spiegano in parole semplici TUTTO ciò che MikiLab e Sitor sanno fare (Cos'è/Chi è Sitor, Accessi Capo/Operai+PIN, le 5 sezioni del Capo, la Produzione guidata). Bilingue IT/EN (fallback EN per altre lingue). Pulsante **Scarica PDF** (apre una versione stampabile pulita con logo).
+- Pulsante **Guida** (`guida-open-btn`, icona BookOpen) nell'header, visibile in TUTTE le modalità (Capo e Operaio) → chiunque sa cosa può fare.
+- Verificato: overlay con 8 sezioni + PDF, accessibile in modalità operaio, 0 overflow. sw.js → mikilab-v54.
+- NOTA: i PDF di produzione (piano settimanale/AI) mantengono già intestazioni descrittive; la richiesta "tutte le descrizioni chiare" è coperta dalla Guida centrale. Le altre lingue (de/es/fr/fa) della Guida usano l'inglese come fallback: estendibili su richiesta.
 - **DA FARE (concordato, non ancora implementato)**:
   1. **Riscrittura di TUTTI i PDF e descrizioni** delle funzionalità MikiLab (chiare per chiunque) — grande, da fare come task dedicato.
   2. **"Sitor costruisce su misura per ogni Capo"**: pannello dove Sitor aggiunge widget/strumenti richiesti dal Capo e memorizza le preferenze per-Capo (auto-miglioramento personalizzato) — feature ampia, da progettare.

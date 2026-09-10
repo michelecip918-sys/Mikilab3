@@ -54,7 +54,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { playDeckAlarm } from "@/lib/uiSounds";
 import { playTTS } from "@/lib/tts";
 import { DeckAlarmBar } from "@/components/DeckAlarmBar";
-import { ShieldCheck, LogOut, User, WifiOff, Lock } from "lucide-react";
+import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
 import OrdiniExtra from "@/components/OrdiniExtra";
@@ -97,6 +97,7 @@ import ShiftReport from "@/components/console/ShiftReport";
 import { CapoGroup } from "@/components/console/CapoGroup";
 import DeskScene from "@/components/console/DeskScene";
 import SalaSitor from "@/components/console/SalaSitor";
+import GuidaMikiLab from "@/components/GuidaMikiLab";
 import ImageForge from "@/components/console/ImageForge";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
@@ -117,6 +118,7 @@ export default function App() {
   const [adminOk, setAdminOk] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" || localStorage.getItem("mikilab_mode") === "floor"; } catch { return false; } });
   const [mode, setMode] = useState(() => { try { return localStorage.getItem("mikilab_mode") === "floor" ? "floor" : "capo"; } catch { return "capo"; } });
   const [opLevel, setOpLevel] = useState(() => { try { return localStorage.getItem("mikilab_op_level") || "novizio"; } catch { return "novizio"; } });
+  const [showGuide, setShowGuide] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -340,6 +342,10 @@ export default function App() {
                   <option value="pasticceria">🧁 {tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")}</option>
                 </select>
                 <InstallApp variant="chip" />
+                <button data-testid="guida-open-btn" onClick={() => setShowGuide(true)} title={tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#EAB308]/10 border border-[#EAB308]/35 text-[#EAB308] font-bold text-xs active:scale-95 transition-all">
+                  <BookOpen className="w-3.5 h-3.5" /> <span className="hidden md:inline">{tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}</span>
+                </button>
                 {mode === "floor" ? (
                   <>
                     <span data-testid="floor-operator-badge" className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#FF6B00]/12 border border-[#FF6B00]/40 text-[#FF9D42] text-xs font-bold">
@@ -641,6 +647,7 @@ export default function App() {
         {showPinLock && <PinLock onUnlock={() => { setFloorUnlocked(true); setShowPinLock(false); jumpTo("operatori"); }} />}
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
+        <GuidaMikiLab open={showGuide} onClose={() => setShowGuide(false)} />
 
         <Toaster position="top-center" richColors />
         <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
