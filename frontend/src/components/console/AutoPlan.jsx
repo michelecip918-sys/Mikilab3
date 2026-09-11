@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { mikeApi, deusApi } from "@/lib/api";
+import { mikeApi, deusApi, freezerApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
@@ -19,7 +19,9 @@ export default function AutoPlan() {
   const [chosen, setChosen] = useState(-1);
   const [machines, setMachines] = useState([]);
   const [selMach, setSelMach] = useState([]);
+  const [freezer, setFreezer] = useState([]);
   useEffect(() => { deusApi.machines().then((d) => setMachines(d.machines || [])).catch(() => {}); }, []);
+  useEffect(() => { freezerApi.get().then((d) => setFreezer(d.items || [])).catch(() => {}); }, []);
   const toggleMach = (name) => setSelMach((p) => p.includes(name) ? p.filter((x) => x !== name) : [...p, name]);
 
   // Sync ordini B2B → prefill del piano (evento dal modulo E-commerce B2B).
@@ -31,7 +33,7 @@ export default function AutoPlan() {
 
   const gen = async () => {
     setBusy(true); setOptions([]); setChosen(-1);
-    try { const r = await mikeApi.autoplan({ orders_text: orders, lang, machines: selMach }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
+    try { const r = await mikeApi.autoplan({ orders_text: orders, lang, machines: selMach, freezer_stock: freezer }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
     setBusy(false);
   };
 
@@ -39,7 +41,7 @@ export default function AutoPlan() {
   const genOptions = async () => {
     setBusyOpt(true); setRes(null); setChosen(-1); setOptions([]);
     try {
-      const r = await mikeApi.autoplanOptions({ orders_text: orders, lang, machines: selMach });
+      const r = await mikeApi.autoplanOptions({ orders_text: orders, lang, machines: selMach, freezer_stock: freezer });
       if ((r.options || []).length) { setOptions(r.options); try { playTTS(tri("Ho preparato tre strategie. Scegli quella che preferisci.", "Drei Strategien. Wähle eine.", "I prepared three strategies. Pick one.", "Preparé tres estrategias. Elige una.", "J'ai préparé trois stratégies. Choisis-en une.", "سه استراتژی آماده کردم. یکی را انتخاب کن."), { lang, voice: "nexus" }); } catch { /* */ } }
       else toast.error(tri("Nessuna opzione generata. Riprova.", "Keine Optionen.", "No options generated.", "Sin opciones.", "Aucune option.", "گزینه‌ای نیست."));
     } catch (e) { toast.error(tri("Sitor non è riuscito a generare le opzioni.", "Optionen fehlgeschlagen.", "Couldn't generate options.", "No se pudieron generar.", "Échec des options.", "خطا در گزینه‌ها.")); }
@@ -69,6 +71,11 @@ export default function AutoPlan() {
       )}
       <SmartAttach context={tri("ordini di produzione del giorno", "Tagesaufträge", "day's production orders", "pedidos del día", "commandes du jour", "سفارش‌های روز")} compact
         onExtract={(t) => setOrders((o) => (o ? o + "\n" : "") + t)} />
+      {freezer.length > 0 && (
+        <p data-testid="autoplan-freezer-note" className="text-[11px] text-[#7DA3C0] flex items-center gap-1.5">
+          ❄️ {tri(`Sitor considera ${freezer.length} giacenze freezer: usa prima il congelato.`, `Sitor berücksichtigt ${freezer.length} Gefrierbestände.`, `Sitor considers ${freezer.length} freezer ${freezer.length === 1 ? "item" : "items"}: frozen stock used first.`, `Sitor considera ${freezer.length} existencias de congelador.`, `Sitor considère ${freezer.length} stocks congelés.`, `سیتور ${freezer.length} موجودی فریزر را در نظر می‌گیرد.`)}
+        </p>
+      )}
       <div className="flex flex-wrap gap-2">
         <button data-testid="autoplan-gen" onClick={gen} disabled={busy || busyOpt}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"

@@ -495,6 +495,7 @@ export const staffingApi = {
 export const sensorsApi = {
   getLive: () => api.get(`/lab/sensors/live`).then((r) => r.data).catch(() => ({})),
   publish: (data) => api.post(`/lab/sensors/live`, data).then((r) => r.data).catch(() => ({})),
+  readings: () => api.get(`/lab/sensors`).then((r) => r.data).catch(() => []),
 };
 
 // Production OS — comando universale, sync bilancia smart.

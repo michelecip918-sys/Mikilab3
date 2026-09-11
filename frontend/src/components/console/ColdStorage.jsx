@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Snowflake, Thermometer, Plus, Trash2, Save, AlertTriangle, Building2, Waves } from "lucide-react";
 import { toast } from "sonner";
-import { deptApi, freezerApi } from "@/lib/api";
+import { deptApi, freezerApi, sensorsApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { SubTabs } from "@/components/console/SubTabs";
@@ -21,12 +21,36 @@ function cellKind(name, tri) {
   return { key: "gen", temp: 4, color: "#9aa6b2", label: tri("Cella", "Kammer", "Cell", "Cámara", "Cellule", "سلول") };
 }
 
+// Mappa il tipo di cella al tipo di sensore fisico (lab_sensors: cella|freezer|frigo).
+const SENSOR_OF = { freezer: "freezer", retard: "frigo", proof: "cella", matur: "frigo", coldshow: "frigo", fridge: "frigo", gen: "frigo", hot: null, dry: null };
+
+// Semaforo LIVE: confronta la lettura reale del sensore con la temperatura obiettivo.
+// Nessuna lettura reale = grigio "nessun sensore" (mai un verde finto).
+function cellStatus(k, readings, tri) {
+  const st = SENSOR_OF[k.key];
+  if (!st) return null;
+  const r = (readings || []).filter((x) => (x.type || "").toLowerCase() === st).sort((a, b) => (b.at || "").localeCompare(a.at || ""))[0];
+  if (!r || r.value == null) return { color: "#475569", live: false, label: tri("Nessun sensore", "Kein Sensor", "No sensor", "Sin sensor", "Aucun capteur", "بدون سنسور") };
+  const v = Number(r.value);
+  let color = "#6e9e85", lab = tri("In norma", "In Ordnung", "In range", "En rango", "Dans la plage", "در محدوده");
+  if (st === "freezer") {
+    if (v > -8) { color = "#b06e78"; lab = tri("Troppo caldo", "Zu warm", "Too warm", "Muy cálido", "Trop chaud", "خیلی گرم"); }
+    else if (v > -15) { color = "#b0916e"; lab = tri("Da controllare", "Prüfen", "Watch", "Vigilar", "À surveiller", "بررسی"); }
+  } else {
+    const d = Math.abs(v - k.temp);
+    if (d > 5) { color = "#b06e78"; lab = tri("Fuori norma", "Außerhalb", "Out of range", "Fuera de rango", "Hors plage", "خارج از محدوده"); }
+    else if (d > 2.5) { color = "#b0916e"; lab = tri("Da controllare", "Prüfen", "Watch", "Vigilar", "À surveiller", "بررسی"); }
+  }
+  return { color, live: true, label: lab, value: v };
+}
+
 // PILASTRO — Celle & Freezer UNIFICATI: un'unica vista per reparto (nessun doppione).
 export default function ColdStorage() {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [depts, setDepts] = useState([]);
   const [items, setItems] = useState([]);
+  const [readings, setReadings] = useState([]);
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(false);
 
@@ -35,6 +59,10 @@ export default function ColdStorage() {
     try { const f = await freezerApi.get(); setItems(f.items || []); } catch { /* */ }
   }, []);
   useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const tick = () => sensorsApi.readings().then((d) => setReadings(Array.isArray(d) ? d : [])).catch(() => {});
+    tick(); const iv = setInterval(tick, 15000); return () => clearInterval(iv);
+  }, []);
 
   const deptOptions = depts.map((d) => ({ key: d.key, name: d.name }));
   const deptName = (k) => (depts.find((d) => d.key === k) || {}).name || tri("Generale", "Allgemein", "General", "General", "Général", "عمومی");
@@ -62,6 +90,12 @@ export default function ColdStorage() {
   const CelleTab = (
     <div data-testid="cold-cells" className="space-y-3">
       <p className="text-[11px] text-[#8a97a6]">{tri("Panoramica di tutte le celle per reparto: tipo e temperatura obiettivo, senza doppioni.", "Übersicht aller Kammern pro Bereich.", "Overview of every cell by department: type and target temperature.", "Vista de cámaras por área.", "Aperçu des cellules par atelier.", "نمای همه سلول‌ها بر اساس بخش.")}</p>
+      <div data-testid="cold-legend" className="flex flex-wrap items-center gap-3 text-[10px] text-[#94A3B8]">
+        <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: "#6e9e85" }} /> {tri("In norma", "In Ordnung", "In range", "En rango", "Dans la plage", "در محدوده")}</span>
+        <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: "#b0916e" }} /> {tri("Da controllare", "Prüfen", "Watch", "Vigilar", "À surveiller", "بررسی")}</span>
+        <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: "#b06e78" }} /> {tri("Fuori norma", "Außerhalb", "Out of range", "Fuera de rango", "Hors plage", "خارج از محدوده")}</span>
+        <span className="inline-flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full" style={{ background: "#475569" }} /> {tri("Nessun sensore", "Kein Sensor", "No sensor", "Sin sensor", "Aucun capteur", "بدون سنسور")}</span>
+      </div>
       {depts.map((d) => (
         <div key={d.key} data-testid={`cold-dept-${d.key}`} className="rounded-xl border border-[#64748B]/25 bg-[#0C1019]/60 p-3">
           <div className="flex items-center gap-2 mb-2">
@@ -71,12 +105,14 @@ export default function ColdStorage() {
           <div className="flex flex-wrap gap-1.5">
             {(d.cells || []).map((c, i) => {
               const k = cellKind(c, tri);
+              const s = cellStatus(k, readings, tri);
               return (
                 <div key={i} data-testid={`cold-cell-${d.key}-${i}`} className="inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-1.5" style={{ borderColor: `${k.color}55`, background: `${k.color}10` }}>
+                  {s && <span data-testid={`cold-cell-status-${d.key}-${i}`} title={s.label} className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: s.color, boxShadow: s.live ? `0 0 6px ${s.color}` : "none" }} />}
                   <Snowflake className="w-3.5 h-3.5" style={{ color: k.color }} />
                   <span className="text-[12px] font-semibold text-white">{c}</span>
                   <span className="text-[10px] font-bold" style={{ color: k.color }}>{k.label}</span>
-                  <span className="inline-flex items-center gap-0.5 text-[11px] text-[#a4afbb]"><Thermometer className="w-3 h-3" /> {k.temp}°C</span>
+                  <span className="inline-flex items-center gap-0.5 text-[11px] text-[#a4afbb]"><Thermometer className="w-3 h-3" /> {s && s.live ? `${s.value}°C` : `${k.temp}°C`}</span>
                 </div>
               );
             })}

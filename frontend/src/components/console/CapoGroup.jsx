@@ -1,9 +1,9 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Info } from "lucide-react";
 import { PanelIcon } from "./panelIcons";
 
 // Sezione a fisarmonica della plancia Capo: incorpora piu' pannelli sotto un unico
 // titolo. Solo una sezione aperta per volta (controllata dal genitore) = zero confusione.
-export function CapoGroup({ id, icon, title, sub, accent = "#8a97a6", count, open, onToggle, children }) {
+export function CapoGroup({ id, icon, title, sub, hint, accent = "#8a97a6", count, open, onToggle, children }) {
   return (
     <div data-testid={`capo-group-${id}`} className="rounded-2xl border bg-[#0b0f19]/60 overflow-hidden transition-all" style={{ borderColor: open ? `${accent}66` : "#1e293b", boxShadow: open ? `0 0 22px ${accent}22` : "none" }}>
       <button
@@ -25,6 +25,12 @@ export function CapoGroup({ id, icon, title, sub, accent = "#8a97a6", count, ope
       </button>
       {open && (
         <div data-testid={`capo-group-body-${id}`} className="px-3 sm:px-4 pb-4 pt-1 space-y-4 border-t border-[#1e293b]/60">
+          {hint && (
+            <div data-testid={`capo-group-hint-${id}`} className="flex items-start gap-2 rounded-xl px-3 py-2.5 mt-3" style={{ background: `${accent}0e`, border: `1px solid ${accent}33` }}>
+              <Info className="w-4 h-4 shrink-0 mt-0.5" style={{ color: accent }} />
+              <p className="text-[12px] leading-relaxed text-[#c7d2dc]">{hint}</p>
+            </div>
+          )}
           {children}
         </div>
       )}

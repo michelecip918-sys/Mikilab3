@@ -1812,7 +1812,7 @@ DEPARTMENTS = {
             {"id": "linea-arion", "name": "Linea baguette Arion", "type": "linea"},
             {"id": "gruppo-pane", "name": "Gruppo formatura pane", "type": "formatura"}],
         "silos": ["Farina Tipo 0", "Farina Tipo 1", "Farina Integrale"],
-        "cells": ["Cella lievitazione 1", "Cella lievitazione 2", "Fermalievita"],
+        "cells": ["Cella lievitazione 1", "Cella lievitazione 2", "Fermalievita", "Freezer semilavorati"],
         "warehouse": "Magazzino Panificio (farine, semi, malto)"},
     "pasticceria": {"name": "Pasticceria", "accent": "#EC4899", "icon": "🧁",
         "machines": [
@@ -1822,7 +1822,7 @@ DEPARTMENTS = {
             {"id": "abbattitore", "name": "Abbattitore di temperatura", "type": "abbattitore"},
             {"id": "temperatrice", "name": "Temperatrice cioccolato", "type": "temperatrice"}],
         "silos": ["Farina debole", "Zucchero", "Zucchero a velo"],
-        "cells": ["Cella fermalievita", "Frigo ingredienti", "Cella prodotti finiti"],
+        "cells": ["Cella fermalievita", "Frigo ingredienti", "Cella prodotti finiti", "Freezer prodotti"],
         "warehouse": "Magazzino Pasticceria (creme, frutta, cioccolato)"},
     "pizzeria": {"name": "Pizzeria", "accent": "#EF4444", "icon": "🍕",
         "machines": [
@@ -1832,7 +1832,7 @@ DEPARTMENTS = {
             {"id": "stendipizza", "name": "Stendipizza / pressa", "type": "formatura"},
             {"id": "porzionatrice", "name": "Porzionatrice-arrotondatrice", "type": "staglio"}],
         "silos": ["Farina Pizza W300", "Semola rimacinata"],
-        "cells": ["Cella maturazione 24-72h", "Frigo impasti"],
+        "cells": ["Cella maturazione 24-72h", "Frigo impasti", "Freezer impasti"],
         "warehouse": "Magazzino Pizzeria (pomodoro, mozzarella, condimenti)"},
     "laugen": {"name": "Reparto Laugen", "accent": "#8B5A2B", "icon": "🥨",
         "machines": [
@@ -1841,7 +1841,7 @@ DEPARTMENTS = {
             {"id": "forno-laugen", "name": "Forno Laugen a piani", "type": "forno"},
             {"id": "formatrice-brezel", "name": "Formatrice Brezel", "type": "formatura"}],
         "silos": ["Farina Laugen", "Sale grosso", "Soda caustica food-grade"],
-        "cells": ["Cella riposo", "Essiccatoio superficie"],
+        "cells": ["Cella riposo", "Essiccatoio superficie", "Freezer Brezel crudi"],
         "warehouse": "Magazzino Laugen (sale, semi, soda)"},
     "banco": {"name": "Banco e Prezzi", "accent": "#22C55E", "icon": "🏷️",
         "machines": [
@@ -1851,7 +1851,7 @@ DEPARTMENTS = {
             {"id": "termosigillatrice", "name": "Termosigillatrice vaschette", "type": "confezionamento"},
             {"id": "affettatrice", "name": "Affettatrice pane", "type": "affettatrice"}],
         "silos": ["Sacchetti", "Vaschette", "Etichette"],
-        "cells": ["Vetrina refrigerata", "Espositore caldo"],
+        "cells": ["Vetrina refrigerata", "Espositore caldo", "Freezer banco"],
         "warehouse": "Magazzino Banco (imballaggi, etichette, sacchetti)"},
 }
 
@@ -11751,6 +11751,27 @@ class AutoPlanReq(BaseModel):
     orders_text: str = ""
     date: Optional[str] = None
     lang: str = "it"
+    machines: List[str] = []
+    freezer_stock: List[dict] = []
+
+
+def _autoplan_freezer_ctx(items: list) -> str:
+    """Riepilogo giacenze freezer per il piano: Sitor usa PRIMA il congelato."""
+    rows = []
+    for it in (items or [])[:40]:
+        nm = str(it.get("name") or "").strip()
+        if not nm:
+            continue
+        qty = it.get("qty")
+        dept = str(it.get("dept") or "").strip()
+        seg = nm + (f" · {qty} pz" if qty not in (None, "") else "")
+        if dept:
+            seg += f" ({dept})"
+        rows.append(seg)
+    if not rows:
+        return ""
+    return (" GIACENZE FREEZER ATTUALI (già congelate — USALE PER PRIME, produci solo la differenza mancante "
+            "e indica QUANDO tirarle fuori/scongelare): " + "; ".join(rows) + ".")
 
 
 @api_router.post("/mike/autoplan")
@@ -11776,13 +11797,14 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
     try:
         _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
-        _sel = [str(x).lower() for x in (getattr(body, "machines", None) or [])]
+        _sel = [str(x).lower() for x in (body.machines or [])]
         _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
         if _use:
             _ml = ", ".join(f"{m.get('name')}{(' ['+m['category']+']') if m.get('category') else ''}{(' cap.'+str(m['capacity'])) if m.get('capacity') else ''}" for m in _use)
             ctx += f" PARCO MACCHINE DA USARE (vincolo reale, assegna forni/impastatrici/celle solo tra questi): {_ml}."
     except Exception:
         pass
+    ctx += _autoplan_freezer_ctx(body.freezer_stock)
 
     plan = {"summary": "", "batches": [], "warnings": [], "spoken": ""}
     if EMERGENT_LLM_KEY:
@@ -11851,13 +11873,14 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
     try:
         _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
-        _sel = [str(x).lower() for x in (getattr(body, "machines", None) or [])]
+        _sel = [str(x).lower() for x in (body.machines or [])]
         _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
         if _use:
             _ml = ", ".join(f"{m.get('name')}{(' ['+m['category']+']') if m.get('category') else ''}{(' cap.'+str(m['capacity'])) if m.get('capacity') else ''}" for m in _use)
             ctx += f" PARCO MACCHINE DA USARE (vincolo reale, assegna forni/impastatrici/celle solo tra questi): {_ml}."
     except Exception:
         pass
+    ctx += _autoplan_freezer_ctx(body.freezer_stock)
 
     options = []
     if EMERGENT_LLM_KEY:

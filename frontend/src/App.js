@@ -83,6 +83,7 @@ import CarbonFootprint from "@/components/console/CarbonFootprint";
 import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 import SiloManager from "@/components/console/SiloManager";
 import ColdStorage from "@/components/console/ColdStorage";
+import SitorTour from "@/components/console/SitorTour";
 import AgvFleet from "@/components/console/AgvFleet";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
@@ -197,8 +198,10 @@ export default function App() {
   };
   useEffect(() => {
     const onJump = (e) => { const s = CONSOLE_SECMAP[e.detail]; if (s) setConsoleSec(s); };
+    const onGroup = (e) => { if (e.detail) setConsoleSec(e.detail); };
     window.addEventListener("mikilab:open-panel", onJump);
-    return () => window.removeEventListener("mikilab:open-panel", onJump);
+    window.addEventListener("mikilab:open-group", onGroup);
+    return () => { window.removeEventListener("mikilab:open-panel", onJump); window.removeEventListener("mikilab:open-group", onGroup); };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const zoneRefs = { master: useRef(null), operatori: useRef(null) };
@@ -354,6 +357,12 @@ export default function App() {
                   className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] font-bold text-xs active:scale-95 transition-all">
                   <BookOpen className="w-3.5 h-3.5" /> <span className="hidden md:inline">{tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}</span>
                 </button>
+                {user && user.role === "admin" && mode !== "floor" && (
+                  <button data-testid="sitor-tour-open" onClick={() => { try { window.dispatchEvent(new Event("mikilab:start-tour")); } catch { /* */ } }} title={tri("Tour guidato di Sitor", "Sitor-Tour", "Sitor guided tour", "Tour de Sitor", "Visite guidée Sitor", "تور راهنمای سیتور")}
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] font-bold text-xs active:scale-95 transition-all">
+                    ✦ <span className="hidden md:inline">{tri("Tour", "Tour", "Tour", "Tour", "Tour", "تور")}</span>
+                  </button>
+                )}
                 {mode === "floor" ? (
                   <>
                     <span data-testid="floor-operator-badge" className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-[#8a97a6]/12 border border-[#8a97a6]/40 text-[#9aa6b2] text-xs font-bold">
@@ -471,6 +480,7 @@ export default function App() {
                     <PlantHeartbeatProvider>
                     <CapoGroup id="piano" icon="🗓️" accent="#9aa6b2" open={consoleSec === "piano"} onToggle={() => toggleSec("piano")}
                       title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}
+                      hint={tri("👉 Qui decidi COSA e QUANTO produrre. Scrivi due righe di ordini e Sitor costruisce il piano del giorno e della settimana. Usalo ogni mattina per avviare la produzione.", "👉 Hier legst du fest, WAS und WIE VIEL produziert wird. Sitor baut den Plan.", "👉 This is where you decide WHAT and HOW MUCH to produce. Write a couple of order lines and Sitor builds the day and week plan. Use it every morning.", "👉 Aquí decides QUÉ y CUÁNTO producir. Sitor crea el plan.", "👉 Ici tu décides QUOI et COMBIEN produire. Sitor construit le plan.", "👉 اینجا تصمیم می‌گیری چه و چقدر تولید شود. سیتور برنامه را می‌سازد.")}
                       sub={tri("Dai un punto di partenza: Sitor completa il piano del giorno e della settimana.", "Gib einen Startpunkt: Sitor vollendet den Plan.", "Give a starting point: Sitor completes the plan.", "Da un punto de partida: Sitor completa el plan.", "Donne un point de départ : Sitor complète le plan.", "یک نقطه شروع بده: سیتور برنامه را کامل می‌کند.")}>
                     <HoloPanel testid="panel-weekly" accent="#8a97a6" beacon="#a4afbb" icon="🗓️" defaultOpen title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Stampa PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
@@ -489,6 +499,7 @@ export default function App() {
 
                     <CapoGroup id="ordini" icon="⚡" accent="#a4afbb" open={consoleSec === "ordini"} onToggle={() => toggleSec("ordini")}
                       title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")}
+                      hint={tri("👉 Apri questa sezione quando arriva un ordine NON previsto (last-minute, un bar, un evento). Aggiungilo qui e Sitor rifà il piano all'istante, senza rifare tutto a mano.", "👉 Öffne dies bei ungeplanten Aufträgen. Sitor plant sofort neu.", "👉 Open this when an UNPLANNED order arrives (last-minute, a café, an event). Add it here and Sitor re-plans instantly.", "👉 Abre esto cuando llegue un pedido imprevisto. Sitor replanifica al instante.", "👉 Ouvre ceci pour une commande imprévue. Sitor replanifie aussitôt.", "👉 برای سفارش‌های پیش‌بینی‌نشده اینجا را باز کن. سیتور فوراً برنامه را بازسازی می‌کند.")}
                       sub={tri("Ordini last-minute e B2B: Sitor rigenera il piano all'istante.", "Last-Minute- & B2B-Aufträge.", "Last-minute and B2B orders: Sitor regenerates instantly.", "Pedidos de última hora y B2B.", "Commandes de dernière minute et B2B.", "سفارش‌های لحظه‌آخری و B2B.")}>
                     <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#a4afbb" icon="⚡" defaultOpen title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
                       <OrdiniExtra />
@@ -505,6 +516,7 @@ export default function App() {
 
                     <CapoGroup id="squadra" icon="👥" accent="#9aa6b2" open={consoleSec === "squadra"} onToggle={() => toggleSec("squadra")}
                       title={tri("Ruoli & Turni", "Rollen & Schichten", "Roles & Shifts", "Roles & Turnos", "Rôles & Services", "نقش‌ها و شیفت‌ها")}
+                      hint={tri("👉 Qui organizzi le PERSONE: assegna ogni operaio a un reparto con il suo compito, salva le squadre-tipo e registra i volti. All'apertura del turno Sitor annuncia chi fa cosa.", "👉 Hier organisierst du die LEUTE: Zuweisung, Vorlagen, Gesichter.", "👉 This is where you organise PEOPLE: assign each operator to a department with a task, save team templates and enroll faces. Sitor announces who does what.", "👉 Aquí organizas a las PERSONAS: asigna, guarda plantillas y registra rostros.", "👉 Ici tu organises les PERSONNES : affectation, modèles, visages.", "👉 اینجا افراد را سازمان می‌دهی: تخصیص، الگو و ثبت چهره.")}
                       sub={tri("Chi lavora, dove e quando.", "Wer arbeitet, wo und wann.", "Who works, where and when.", "Quién trabaja, dónde y cuándo.", "Qui travaille, où et quand.", "چه کسی، کجا و کی کار می‌کند.")}>
                     <HoloPanel testid="panel-dept-assign" accent="#8a97a6" beacon="#a4afbb" icon="🏭" defaultOpen title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
@@ -522,6 +534,7 @@ export default function App() {
 
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
                       title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
+                      hint={tri("👉 La cassetta degli attrezzi del laboratorio: ricette, magazzino, celle & freezer, controllo qualità, report e sicurezza. Apri lo strumento che ti serve quando ti serve — tutto alimenta i piani di Sitor.", "👉 Der Werkzeugkasten: Rezepte, Lager, Kammern, Qualität, Berichte, Sicherheit.", "👉 The lab's toolbox: recipes, warehouse, cells & freezer, quality control, reports and security. Open the tool you need — everything feeds Sitor's plans.", "👉 La caja de herramientas del taller: recetas, almacén, cámaras, calidad, informes y seguridad.", "👉 La boîte à outils : recettes, entrepôt, cellules, qualité, rapports, sécurité.", "👉 جعبه‌ابزار: دستورها، انبار، سلول‌ها، کیفیت، گزارش و امنیت.")}
                       sub={tri("Ricette, magazzino, forni, qualità, report e sicurezza — solo ciò che alimenta i piani di Sitor.", "Rezepte, Lager, Öfen, Qualität, Berichte — nur was die Pläne speist.", "Recipes, warehouse, ovens, quality, reports and security — only what feeds Sitor's plans.", "Recetas, almacén, hornos, informes — solo lo que alimenta los planes.", "Recettes, entrepôt, fours, rapports — seulement ce qui nourrit les plans.", "دستورها، انبار، فرها، گزارش‌ها — فقط آنچه برنامه‌ها را تغذیه می‌کند.")}>
                     <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")} defaultOpen>
                       <SubTabs testid="subtabs-sitor-tools" accent="#a6b1bc" tabs={[
@@ -574,6 +587,7 @@ export default function App() {
 
                     <CapoGroup id="sitor" icon="✦" accent="#a6b1bc" open={consoleSec === "sitor"} onToggle={() => toggleSec("sitor")}
                       title={tri("Sala Sitor · Punto d'Incontro", "Sitor-Saal · Treffpunkt", "Sitor Hall · Meeting Point", "Sala Sitor · Punto de Encuentro", "Salle Sitor · Point de Rencontre", "تالار سیتور · محل ملاقات")}
+                      hint={tri("👉 Il posto dove PARLI con Sitor: scrivi o detta una domanda, allega una foto o un ordine e Sitor risponde, pianifica e avvisa. Se non sai da dove partire, inizia da qui.", "👉 Der Ort, um mit Sitor zu SPRECHEN: schreiben, diktieren, anhängen.", "👉 The place to TALK to Sitor: write or dictate a question, attach a photo or order, and Sitor answers, plans and alerts. Not sure where to start? Start here.", "👉 El lugar para HABLAR con Sitor: escribe, dicta, adjunta.", "👉 L'endroit pour PARLER à Sitor : écris, dicte, joins.", "👉 جایی که با سیتور صحبت می‌کنی: بنویس، بگو، پیوست کن.")}
                       sub={tri("L'unico luogo dove incontri Sitor: scrivi, detta, allega, ordina — e ricevi risposte, produzione e avvisi.", "Der einzige Ort für Sitor: schreiben, diktieren, anhängen, befehlen — Antworten, Produktion und Alarme inklusive.", "The one place to meet Sitor: write, dictate, attach, command — and receive answers, production and alerts.", "El único lugar para hablar con Sitor: escribe, dicta, ordena y recibe todo.", "Le seul lieu pour rencontrer Sitor : écris, dicte, ordonne — et reçois tout.", "تنها جای ملاقات با سیتور: بنویس، بگو، دستور بده و همه‌چیز را دریافت کن.")}>
                     <SalaSitor />
                     <NexusConsole isCapo={true} />
@@ -630,6 +644,7 @@ export default function App() {
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
         <GuidaMikiLab open={showGuide} onClose={() => setShowGuide(false)} />
+        {user && user.role === "admin" && mode !== "floor" && <SitorTour />}
 
         <Toaster position="top-center" richColors />
         <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
