@@ -605,9 +605,9 @@ export default function App() {
               </>)}
 
               {/* ================= ZONA 2 · OPERATORI ================= */}
+              {mode === "floor" && (
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
                 <ZoneHero3D testid="hero-operatori" theme={activity} onEnter={() => jumpTo("operatori")} avatar="avatar_nexus.jpg" accent="#8a97a6" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
-                <OperatorsRoster onPick={(label) => { try { localStorage.setItem("mikilab_role", label); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: label } })); } catch { /* */ } if (!floorUnlocked) setShowPinLock(true); }} />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><FloorOperatorDay /></div>
                 ) : (
@@ -625,6 +625,7 @@ export default function App() {
                   </div>
                 )}
               </section>
+              )}
 
             </ErrorBoundary>
           </main>

@@ -4954,3 +4954,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Potatura strumenti restante: valutare e rimuovere silos/twin/carbon/agv/radar/hardware/machine-arrival/elite/emergency/thermalflow se non alimentano i piani; tenere Ricette, Magazzino, Forni(ovenqc/proofing), Report, Sicurezza.
 - Sitor chat OVUNQUE lui appare (input scrivi/parla) + integrare la Sala Sitor.
 - Rimuovere prompt "inserisci ricetta" fuori dalla sezione Ricette (PianoProduzioneAI, RecipeList extra).
+
+## v80 (2026-09) — Separazione Capo/Produzione (doppia porta) + Produzione solo compito
+### Fatto e verificato
+- DOPPIA PORTA già presente in PublicGate (mode capo/floor). Ora la zona Produzione (section data-zone=operatori) si renderizza SOLO in mode==="floor": in modalità Capo la produzione NON compare più (separazione piena). Verificato floor: hasCapoDeck=false.
+- PRODUZIONE SOLO COMPITO: rimossa la griglia <OperatorsRoster> (EQUIPAGGIO / scelta ruolo dall'operaio). Il reparto/nome arriva dal PIN (p.name → mikilab_role). La vista operaio mostra solo: hero Sitor, saluto Sitor, PIN clock-in, CAPO'S PLAN, CODA DI PRODUZIONE (compito assegnato dal Capo), Sitor Maestro chat. Verificato: hasRoster=false, hasFloor=true, hasSitorChat=true, nessun crash. Sitor annuncia il piano a voce (hands-free, v79).
+- OperatorsRoster import ora inutilizzato in App.js (warning, non bloccante).
+### DA FARE (Fase 3)
+- Item 3: campo scrivi/parla a Sitor in OGNI punto in cui appare (floating MikeMixSense senza input testuale → aggiungere).
+- Item 4: potatura finale strumenti Capo — tenere solo Ricette, Magazzino, Forni, Report, Sicurezza + "aggiungi/collega strumenti al piano". IMPORTANTE (nuovo): la generazione del piano deve includere la scelta/aggiunta dei MACCHINARI disponibili (mantenere MachineArrival/MachinesProvider e collegarli al generatore piani). Rimuovere silos/twin/carbon/agv/radar/hardware/elite/emergency/thermalflow se non alimentano i piani.
