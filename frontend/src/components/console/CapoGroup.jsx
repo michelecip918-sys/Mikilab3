@@ -1,4 +1,5 @@
 import { ChevronDown } from "lucide-react";
+import { PanelIcon } from "./panelIcons";
 
 // Sezione a fisarmonica della plancia Capo: incorpora piu' pannelli sotto un unico
 // titolo. Solo una sezione aperta per volta (controllata dal genitore) = zero confusione.
@@ -12,7 +13,7 @@ export function CapoGroup({ id, icon, title, sub, accent = "#8a97a6", count, ope
         className="w-full flex items-center gap-3 px-4 py-4 text-left active:scale-[0.99] transition-transform"
         style={{ borderLeft: `3px solid ${accent}` }}
       >
-        <span className="text-2xl leading-none shrink-0" style={{ filter: `drop-shadow(0 0 8px ${accent}66)` }}>{icon}</span>
+        <span className="shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl" style={{ background: `${accent}14`, border: `1px solid ${accent}33` }}><PanelIcon icon={icon} color={accent} className="w-5 h-5" /></span>
         <span className="flex-1 min-w-0">
           <span className="block font-cyber font-black text-white uppercase tracking-wider text-sm sm:text-base">{title}</span>
           {sub && <span className="block text-[11px] text-[#94A3B8] truncate">{sub}</span>}

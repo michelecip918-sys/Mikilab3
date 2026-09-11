@@ -54,7 +54,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { playDeckAlarm } from "@/lib/uiSounds";
 import { playTTS } from "@/lib/tts";
 import { DeckAlarmBar } from "@/components/DeckAlarmBar";
-import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen } from "lucide-react";
+import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen, Sun, Moon } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
 import OrdiniExtra from "@/components/OrdiniExtra";
@@ -136,6 +136,15 @@ export default function App() {
   const [showBriefing, setShowBriefing] = useState(false);
   const [activity, setActivity] = useState(() => { try { return localStorage.getItem("mikilab_activity") || "panificio"; } catch { return "panificio"; } });
   const [showOnboarding, setShowOnboarding] = useState(() => { try { return !localStorage.getItem("mikilab_onboarded"); } catch { return false; } });
+  const [themeLight, setThemeLight] = useState(() => { try { return localStorage.getItem("mikilab_theme") === "light"; } catch { return false; } });
+  useEffect(() => {
+    try {
+      const root = document.documentElement;
+      if (themeLight) root.classList.add("theme-light"); else root.classList.remove("theme-light");
+      localStorage.setItem("mikilab_theme", themeLight ? "light" : "dark");
+    } catch { /* */ }
+  }, [themeLight]);
+  const toggleTheme = () => setThemeLight((v) => !v);
 
   // Deck reattivo: stato live dei reparti (turni attivi + allarmi Sitor), polling 15s.
   const [deckStatus, setDeckStatus] = useState(null);
@@ -322,19 +331,23 @@ export default function App() {
                 </span>
               </button>
 
-              <div className="flex items-center gap-1.5 sm:gap-2 relative">
+              <div className="flex items-center flex-wrap justify-end gap-1.5 sm:gap-2 relative">
                 {user && user.role === "admin" && (
                   <button data-testid="briefing-open" onClick={() => setShowBriefing(true)} title="Cyber-Trio"
                     className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#9aa6b2]/10 border border-[#9aa6b2]/40 text-[#9aa6b2] font-bold text-xs active:scale-95 transition-all">
                     ◐ <span className="hidden sm:inline">{tri("Turno", "Schicht", "Shift", "Turno", "Turn", "شیفت")}</span>
                   </button>
                 )}
+                <button data-testid="theme-toggle" onClick={toggleTheme} title={tri("Tema Chiaro/Scuro", "Hell/Dunkel", "Light/Dark", "Claro/Oscuro", "Clair/Sombre", "روشن/تیره")}
+                  className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#9aa6b2]/10 border border-[#9aa6b2]/35 text-[#9aa6b2] active:scale-95 transition-all">
+                  {themeLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+                </button>
                 <LangSelector testid="header-lang" />
                 <select data-testid="activity-selector" value={activity} onChange={(e) => { setActivity(e.target.value); try { localStorage.setItem("mikilab_activity", e.target.value); } catch { /* */ } }}
-                  className="rounded-lg bg-[#0C1019] border border-[#8a97a6]/30 text-[#8a97a6] text-[11px] font-bold px-1.5 py-1.5 outline-none focus:border-[#8a97a6]">
-                  <option value="panificio">🥖 {tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی")}</option>
-                  <option value="pizzeria">🍕 {tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا")}</option>
-                  <option value="pasticceria">🧁 {tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")}</option>
+                  className="rounded-lg bg-[#0C1019] border border-[#8a97a6]/30 text-[#8a97a6] text-[11px] font-bold px-2 py-1.5 outline-none focus:border-[#8a97a6]">
+                  <option value="panificio">{tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی")}</option>
+                  <option value="pizzeria">{tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا")}</option>
+                  <option value="pasticceria">{tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")}</option>
                 </select>
                 <InstallApp variant="chip" />
                 <button data-testid="guida-open-btn" onClick={() => setShowGuide(true)} title={tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}

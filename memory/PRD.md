@@ -4930,3 +4930,14 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Hero 3D (ZoneHero3D) e DeskScene (BOSS CONSOLE) desaturate via CSS filter (saturate ~0.3) per integrarle nel tema senza neon.
 - Risultato: base scura sobria, zero neon/gradienti accesi, monocromia professionale. Verificato screenshot desktop (header + deck + pannelli + hero tutte coerenti ed eleganti). Nessun crash, webpack compila.
 - Per mikilab.de serve REDEPLOY.
+
+## v78 (2026-09) — Icone sobrie + Toggle Chiaro/Scuro + Fix selettore attività
+### Icone sobrie (lucide monocromatiche)
+- Nuovo componente console/panelIcons.jsx: mappa emoji→lucide (Calendar, Bot, Sparkles, Zap, Factory, Users, Wheat, FileText, ShieldCheck, Siren, Truck, ecc.). HoloPanel e CapoGroup ora rendono <PanelIcon> (in colore accento, dentro chip) invece dell'emoji. Fallback: se emoji non mappata resta testo.
+### Toggle Chiaro/Scuro (Day Mode)
+- Header: pulsante theme-toggle (Sun/Moon) → stato themeLight persistito (mikilab_theme), aggiunge classe html.theme-light. Default = scuro.
+- index.css: html.theme-light .holo-root { filter: invert(1) hue-rotate(180deg) } con controinversione di img/video/canvas/[data-keepcolor] → tema chiaro coerente su tutta l'app hardcoded-dark senza refactor; foto/avatar restano a colori naturali. NOTA: i portali fuori da .holo-root (alcuni dialog) restano scuri in light mode (limite v1).
+### Fix "bottone radio sovrapposto" (selettore attività)
+- Header controls: aggiunto flex-wrap + justify-end e padding, così i controlli vanno a capo invece di sovrapporsi su schermi stretti. Rimosse le emoji 🥖🍕🧁 dalle opzioni del selettore attività (coerenza monocromatica). Verificato: 0 overflow nell'header.
+- Verificato screenshot: light mode pulito, icone lucide sui pannelli/gruppi, nessun crash, compila.
+- Per mikilab.de serve REDEPLOY.

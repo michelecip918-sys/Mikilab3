@@ -78,6 +78,22 @@ body {
     background-color: #f0f6fb;
 }
 
+/* ===== Tema Chiaro opzionale (Day Mode) =====
+   L'app usa colori scuri "hardcoded": invertiamo la luminanza mantenendo le tinte
+   (hue-rotate 180) per un tema chiaro coerente su TUTTO, e ripristiniamo media e avatar. */
+html.theme-light .holo-root {
+  filter: invert(1) hue-rotate(180deg);
+  background: #eef2f6;
+}
+html.theme-light .holo-root img,
+html.theme-light .holo-root video,
+html.theme-light .holo-root canvas,
+html.theme-light .holo-root [data-keepcolor] {
+  filter: invert(1) hue-rotate(180deg);
+}
+html.theme-light { background: #eef2f6; }
+
+
 .font-display { font-family: 'Playfair Display', serif; }
 .font-mono-data { font-family: 'JetBrains Mono', monospace; }
 

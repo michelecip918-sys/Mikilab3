@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { PanelIcon } from "./panelIcons";
 
 // Kit olografico della plancia MikiLab Pro (Zero-Menu). Pannelli industriali,
 // divisori di zona a laser, indicatori di stato fluorescenti. Nessun menu classico.
@@ -48,8 +49,8 @@ export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaul
       <span className="holo-scan-top" />
       <button type="button" data-testid={`${testid}-head`} onClick={() => collapsible && setOpen((v) => !v)}
         className={`w-full flex items-center gap-3 px-4 sm:px-5 py-4 text-left ${collapsible ? "active:scale-[0.997]" : "cursor-default"} transition-transform`}>
-        {icon && <span className="text-xl inline-flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
-          style={{ background: `${accent}14`, border: `1px solid ${accent}3a` }}>{icon}</span>}
+        {icon && <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
+          style={{ background: `${accent}14`, border: `1px solid ${accent}3a` }}><PanelIcon icon={icon} color={accent} /></span>}
         <span className="min-w-0 flex-1">
           <span className="block font-tech font-bold text-sm sm:text-base text-white tracking-wide truncate" style={{ textShadow: `0 0 12px ${accent}22` }}>{title}</span>
           {sub && <span className="block text-[11px] text-[#94A3B8] truncate">{sub}</span>}
