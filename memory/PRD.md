@@ -4963,3 +4963,13 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ### DA FARE (Fase 3)
 - Item 3: campo scrivi/parla a Sitor in OGNI punto in cui appare (floating MikeMixSense senza input testuale → aggiungere).
 - Item 4: potatura finale strumenti Capo — tenere solo Ricette, Magazzino, Forni, Report, Sicurezza + "aggiungi/collega strumenti al piano". IMPORTANTE (nuovo): la generazione del piano deve includere la scelta/aggiunta dei MACCHINARI disponibili (mantenere MachineArrival/MachinesProvider e collegarli al generatore piani). Rimuovere silos/twin/carbon/agv/radar/hardware/elite/emergency/thermalflow se non alimentano i piani.
+
+## v81 (2026-09) — Potatura strumenti Capo (parziale) + Test E2E Capo/Produzione
+### Fatto e verificato (testing_agent iteration_228: PASS, retest_needed=False, 0 crash)
+- ISOLAMENTO CONFERMATO end-to-end: percorso CAPO (PublicGate→198505→login) e percorso PRODUZIONE (PIN 7391/5566) totalmente separati; il Capo non vede la produzione, l'operaio vede solo compito + Sitor Maestro chat, nessuna griglia ruoli.
+- Potatura strumenti: rimossi panel-image-forge, panel-packaging (v79), panel-advanced-lab, panel-training, panel-mohamed-inbox (v81). MANTENUTI (legati ai piani): panel-ricette, panel-magazzino, panel-ovenqc+panel-proofing (Forni/Celle), panel-docs (Report), panel-security, panel-machine-arrival (MACCHINARI), panel-sitor-atelier (collega nuovi strumenti). Rimosso import OperatorsRoster inutilizzato.
+### DA FARE (Fase finale)
+- Item 1 CORE non ancora fatto: collegare i MACCHINARI scelti/aggiunti (machine-arrival/MachinesProvider) DENTRO la generazione del piano di Sitor (il backend plan-gen deve ricevere l'elenco macchinari e usarlo nei calcoli). Oggi machine-arrival li riconosce ma non alimenta ancora il generatore.
+- Potatura restante (opzionale, decisa dall'utente): valutare rimozione di silos/elite/twin/carbon/agv/radar/hardware/emergency/thermalflow e consolidare "celle/freezer per reparto" senza doppioni (oggi: panel-proofing=celle lievitazione; manca vista freezer per reparto unificata).
+- Item 3 (chat Sitor nel floating): pending.
+- Cleanup: panelToGroup contiene ancora id di pannelli rimossi (innocuo); import ImageForge/PackagingSync/AdvancedLab/DowntimeTraining/MohamedInbox ora inutilizzati (warning).

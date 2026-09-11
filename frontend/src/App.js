@@ -70,7 +70,6 @@ import ZoneHero3D from "@/components/console/ZoneHero3D";
 import OnboardingActivity from "@/components/OnboardingActivity";
 import PasticceriaConsegne from "@/components/console/PasticceriaConsegne";
 import SitorGuidedTools from "@/components/console/SitorGuidedTools";
-import OperatorsRoster from "@/components/console/OperatorsRoster";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
@@ -585,9 +584,6 @@ export default function App() {
                     <HoloPanel testid="panel-emergency" accent="#b06e78" beacon="#b06e78" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
-                    <div data-testid="panel-advanced-lab" className="holo-panel p-5 sm:p-6"><AdvancedLab /></div>
-                    <div data-testid="panel-training" className="holo-panel p-5 sm:p-6"><DowntimeTraining /></div>
-                    <div data-testid="panel-mohamed-inbox" className="holo-panel p-4"><MohamedInbox /></div>
                     <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
                     </CapoGroup>
 

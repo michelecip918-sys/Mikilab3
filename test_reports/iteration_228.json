@@ -1,0 +1,30 @@
+{
+  "summary": "Iteration 228 — Frontend E2E of MikiLab Pro CAPO / PRODUZIONE isolation (Task 2). Preview URL https://edit-33.preview.emergentagent.com. Both flows verified end-to-end with NO error boundary and NO pageerror. CAPO PATH: PublicGate → public-enter-btn → AdminGate keypad 198505 → capo-gate-login → AuthScreen admin@mikilab.de/Mikilab2026! → master-console renders (master-console=1, hero-master=1, brand-home=1, activity-selector=1, theme-toggle toggles dark→dark+theme-light OK). data-zone=operatori=0 and hero-operatori=0 in CAPO mode → CAPO ISOLATION CONFIRMED (Capo does NOT see production floor). PIANO group (default consoleSec='piano'): panel-weekly=1, panel-pianoai=1, subtabs-pianoai=1, all 6 subtabs present (auto/ai/backward/ordine/smart/timeline) — no crash, re-toggle also OK. STRUMENTI group: all 6 REQUIRED panels present (panel-ricette, panel-magazzino, panel-docs, panel-security, panel-machine-arrival, panel-sitor-atelier) and all 5 FORBIDDEN panels absent (panel-image-forge=0, panel-packaging=0, panel-advanced-lab=0, panel-training=0, panel-mohamed-inbox=0) — no crash. PRODUZIONE PATH (localStorage mikilab_mode=floor, admin_unlocked=1, pin_unlocked=1, role=Marco): data-zone=operatori=1, floor-zone=1, hero-operatori=1, floor-operator-badge=1 (Marco · NOVIZIO), sitor-maestro=1, operator-clock=1. master-console=0, hero-master=0, operators-roster=0, capo-group-toggle-piano=0, capo-group-toggle-strumenti=0, COMMAND DECK text=0 → PRODUZIONE ISOLATION CONFIRMED (operaio does NOT see any Capo content, no crew grid). Screenshot shows exactly the spec'd layout: Sitor hero (Z-02 · Produzione), Sitor greeting 'Hi Marco, here's your task today', PIN clock-in row (In/Break/Out), 'No task assigned yet. Sitor will guide you as soon as the Capo sends the day plan.' placeholder for CODA DI PRODUZIONE + CAPO'S PLAN, and SITOR MASTER chat panel.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(OPTIONAL cleanup) App.js line 73 imports OperatorsRoster but it is no longer used anywhere — safe to remove the import to clear the ESLint no-unused-vars warning.",
+    "(OPTIONAL cleanup) App.js panelToGroup mapping (~line 197) still lists deleted panel ids (panel-image-forge, panel-packaging, panel-thermalflow-related dead entries, panel-shiftreport, panel-pin). Dead but harmless.",
+    "(OPTIONAL) Consider default-closing SHIFT/TABLET splash after first dismissal (localStorage flag) — reported since iter 227."
+  ],
+  "critical_code_review_comments": [
+    "CAPO/PRODUZIONE isolation is now correctly enforced at the section level: <section data-zone='operatori'> is wrapped in `{mode === 'floor' && (...)}` (App.js line 605), so the Capo never renders the operator hero or FloorOperatorDay.",
+    "OperatorsRoster component has been fully removed from JSX; only the (now-unused) import remains at line 73.",
+    "consoleSec defaults to 'piano' so the Piano CapoGroup is expanded on first render — subtabs-pianoai mounts immediately (good for testability). All 6 subtabs testids are exposed by SubTabs.",
+    "Strumenti group panel roster matches the spec: contains the required 6 panels plus a set of extended tools (thermalflow, silos, elite, twin, ovenqc, carbon, proofing, agv, radar, hardware, emergency, living-recipe). The spec-forbidden 5 panels are truly gone. If a stricter 'only 6 panels' policy is desired, additional cleanup would be needed — but current spec only enumerates required + forbidden, and both are honored.",
+    "No React error boundary triggered during any group toggle. No console pageerror captured across the full flow (only benign 401s from auth-guarded polling endpoints before login)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "100% — 5/5 review items pass (Capo no crash + header/theme, Capo isolation, Produzione isolation + only floor content, Strumenti panels required/forbidden, Piano panels + subtabs regression)"},
+  "test_credentials": "Master gate PIN 198505 · admin@mikilab.de / Mikilab2026! · Operator PIN 7391 (Marco) / Team PIN 5566 (not exercised — used localStorage fast-path per E1's hint)",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Preview URL https://edit-33.preview.emergentagent.com. Capo login via PublicGate: public-enter-btn → admin-key-1/9/8/5/0/5 → capo-gate-login → auth-email/auth-password/auth-submit. Floor fast-path via localStorage mikilab_mode=floor + mikilab_admin_unlocked=1 + mikilab_pin_unlocked=1 + mikilab_role=Marco then reload. IMPORTANT: consoleSec defaults to 'piano' — the Piano CapoGroup is ALREADY OPEN on login, so clicking capo-group-toggle-piano CLOSES it (mutex). To verify Piano panels don't require any click. Only ONE CapoGroup can be open at a time.",
+  "rca of the issue": "N/A — implementation matches the spec. Both isolation directions are enforced (Capo does not render data-zone=operatori; Produzione does not render master-console / capo-group toggles / operators-roster). Strumenti has the 6 required panels and none of the 5 forbidden. Piano group + AI subtabs regression is intact. No React error boundary triggered."
+}
