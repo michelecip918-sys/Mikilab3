@@ -324,7 +324,8 @@ export default function App() {
           {/* STATUS BAR ambientale (nessun menu classico) */}
           <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#8a97a6]/15 bg-[#060A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
             <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap">
-              <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center min-w-0 shrink-0 active:scale-95 transition-transform">
+              <button data-testid="brand-home" onClick={() => jumpTo("master")} className="flex items-center gap-2.5 min-w-0 shrink-0 active:scale-95 transition-transform">
+                <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
                 <span className="text-left whitespace-nowrap">
                   <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.18em] text-white uppercase whitespace-nowrap">MikiLab<span className="text-[#8a97a6]"> Pro</span></span>
                   <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.3em] text-[#8a97a6]/70 uppercase">Holographic Command OS</span>
@@ -522,14 +523,13 @@ export default function App() {
 
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
                       title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
-                      sub={tri("Ricette, forgia immagini, magazzino, forni, qualità, energia, report e sicurezza.", "Rezepte, Bilder, Lager, Öfen, Qualität, Berichte.", "Recipes, image forge, warehouse, ovens, quality, reports.", "Recetas, imágenes, almacén, hornos, informes.", "Recettes, images, entrepôt, fours, rapports.", "دستورها، تصاویر، انبار، فرها، گزارش‌ها.")}>
+                      sub={tri("Ricette, magazzino, forni, qualità, report e sicurezza — solo ciò che alimenta i piani di Sitor.", "Rezepte, Lager, Öfen, Qualität, Berichte — nur was die Pläne speist.", "Recipes, warehouse, ovens, quality, reports and security — only what feeds Sitor's plans.", "Recetas, almacén, hornos, informes — solo lo que alimenta los planes.", "Recettes, entrepôt, fours, rapports — seulement ce qui nourrit les plans.", "دستورها، انبار، فرها، گزارش‌ها — فقط آنچه برنامه‌ها را تغذیه می‌کند.")}>
                     <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")} defaultOpen>
                       <SubTabs testid="subtabs-sitor-tools" accent="#a6b1bc" tabs={[
                         { id: "atelier", label: tri("Su misura", "Nach Maß", "Tailor-made", "A medida", "Sur mesure", "سفارشی"), content: <SitorAtelier /> },
                         { id: "guided", label: tri("Sitor ti guida", "Sitor führt", "Sitor guides", "Sitor te guía", "Sitor te guide", "راهنمایی"), content: <SitorGuidedTools /> },
                       ]} />
                     </HoloPanel>
-                    <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
                     <HoloPanel testid="panel-thermalflow" accent="#8a97a6" beacon="#9aa6b2" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
                       <RecipeThermalFlow />
                     </HoloPanel>
@@ -559,9 +559,6 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-agv" accent="#64748B" beacon="#6e9e85" icon="🚚" title={tri("Flotta AGV · Logistica", "AGV-Flotte · Logistik", "AGV Fleet · Logistics", "Flota AGV · Logística", "Flotte AGV · Logistique", "ناوگان AGV")} sub={tri("Routing autonomo dei carrelli + rilevamento acustico preventivo dei guasti.", "Autonomes Routing + akustische Früherkennung.", "Autonomous cart routing + preventive acoustic fault detection.", "Routing autónomo + detección acústica.", "Routage autonome + détection acoustique.", "مسیریابی خودکار + تشخیص صوتی.")}>
                       <AgvFleet />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-packaging" accent="#64748B" beacon="#a4afbb" icon="🔪" title={tri("Packaging · Affettatrici", "Packaging · Schneider", "Packaging · Slicers", "Empaquetado · Cortadoras", "Emballage · Trancheuses", "بسته‌بندی · برش")} sub={tri("Velocità affettatrici sincronizzata alla curva di raffreddamento del pane (mollica intatta).", "Schneidegeschwindigkeit an Abkühlkurve gekoppelt.", "Slicer speed matched to bread cooling curve (crumb intact).", "Velocidad según curva de enfriamiento.", "Vitesse selon courbe de refroidissement.", "سرعت برش هماهنگ با خنک‌شدن نان.")}>
-                      <PackagingSync />
                     </HoloPanel>
                     <HoloPanel testid="panel-radar" accent="#64748B" icon="🛰️" title={tri("Radar Impianto", "Werk-Radar", "Plant Radar", "Radar de planta", "Radar usine", "رادار کارخانه")} sub={tri("Planimetria live, tracking e delega.", "Live-Grundriss & Tracking.", "Live floor plan & tracking.", "Plano en vivo.", "Plan live.", "پلان زنده.")}>
                       <PlantRadar />

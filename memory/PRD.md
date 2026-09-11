@@ -4941,3 +4941,16 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Header controls: aggiunto flex-wrap + justify-end e padding, così i controlli vanno a capo invece di sovrapporsi su schermi stretti. Rimosse le emoji 🥖🍕🧁 dalle opzioni del selettore attività (coerenza monocromatica). Verificato: 0 overflow nell'header.
 - Verificato screenshot: light mode pulito, icone lucide sui pannelli/gruppi, nessun crash, compila.
 - Per mikilab.de serve REDEPLOY.
+
+## v79 (2026-09) — Fase 1 ristrutturazione B2B Capo/Produzione
+### Fatto (chirurgico, sicuro)
+- LOGO UNICO: header ora ha lockup emblema (logo-emblem.png, data-keepcolor) + scritta "MikiLab Pro", coerente con login (AdminGate/PublicGate) e splash che già usano logo-emblem.png.
+- PRODUZIONE hands-free: FloorOperatorDay — Sitor ora ANNUNCIA A VOCE (TTS, cuffie Bluetooth) il piano anche all'operaio non-apprendista ("ascolta, non toccare nulla"). L'operaio usa le mani solo per accesso/sync.
+- Rimosso BANCONISTA dai ruoli produzione (OperatorsRoster ROLE_DEFS + STATION_TR): è banco/burocrazia, non produzione.
+- Potatura strumenti Capo: rimossi panel-image-forge (forgia immagini) e panel-packaging (affettatrici) dal gruppo Strumenti. Sottotitolo gruppo aggiornato: "solo ciò che alimenta i piani di Sitor". Import ImageForge/PackagingSync ora inutilizzati (warning CRA, non bloccante).
+### Fase 2 — DA FARE (grande, architetturale)
+- DOPPIA PORTA dal gate: "Capo" (login+PIN) vs "Produzione" (solo PIN operatore) come schermate totalmente separate; oggi la produzione è dietro PIN ma raggiungibile dalla vista Capo (bottone Operatore).
+- Vista PRODUZIONE: rimuovere del tutto la griglia "EQUIPAGGIO MIKILAB" (selezione ruolo da parte dell'operaio) → l'operaio riceve reparto/orario SOLO dal Capo (via PIN → nome/livello). Lasciare solo compito del giorno + Sitor Maestro chat.
+- Potatura strumenti restante: valutare e rimuovere silos/twin/carbon/agv/radar/hardware/machine-arrival/elite/emergency/thermalflow se non alimentano i piani; tenere Ricette, Magazzino, Forni(ovenqc/proofing), Report, Sicurezza.
+- Sitor chat OVUNQUE lui appare (input scrivi/parla) + integrare la Sala Sitor.
+- Rimuovere prompt "inserisci ricetta" fuori dalla sezione Ricette (PianoProduzioneAI, RecipeList extra).

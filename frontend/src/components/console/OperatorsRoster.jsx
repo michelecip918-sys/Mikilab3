@@ -21,7 +21,6 @@ const BASE_STATIONS = [
   { key: "fermentazione", label: "Fermentazione", color: "#D95200", ic: "🫧" },
   { key: "pizzaiolo", label: "Pizzaiolo", color: "#3E9C93", ic: "🍕" },
   { key: "pasticcere", label: "Pasticcere", color: "#7FB0A6", ic: "🥐" },
-  { key: "banconista", label: "Banconista", color: "#aaa795", ic: "🧺" },
   { key: "apprendista", label: "Apprendista", color: "#94A3B8", ic: "🎓" },
 ];
 

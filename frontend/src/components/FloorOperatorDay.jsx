@@ -307,20 +307,26 @@ export default function FloorOperatorDay() {
     return () => { alive = false; clearInterval(id); };
   }, [role]);
 
-  // In modalità apprendista, Sitor accoglie a voce con guida più semplice e una domanda di sicurezza.
+  // Sitor annuncia a VOCE (cuffie Bluetooth) — l'operaio non usa le mani, ascolta e basta.
   useEffect(() => {
-    if (apprentice && role && !greetedRef.current) {
-      greetedRef.current = true;
-      const msg = tri(
-        `Ciao ${role}. Oggi sei in apprendistato: andiamo con calma, un passo alla volta. Ti spiego tutto e controllo con te ogni passaggio. Prima domanda: hai già lavato le mani e indossato il grembiule?`,
-        `Hallo ${role}. Heute als Lehrling: ruhig, Schritt für Schritt. Erste Frage: Hände gewaschen und Schürze an?`,
-        `Hi ${role}. Today as an apprentice: calmly, one step at a time. First question: have you washed your hands and put on your apron?`,
-        `Hola ${role}. Hoy como aprendiz: con calma, paso a paso. ¿Te lavaste las manos y te pusiste el delantal?`,
-        `Salut ${role}. Aujourd'hui apprenti : doucement, pas à pas. As-tu lavé tes mains et mis ton tablier ?`,
-        `سلام ${role}. امروز کارآموز هستی: آرام، قدم‌به‌قدم. دست‌ها را شستی و پیش‌بند پوشیدی؟`);
-      try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
-    }
-    if (!apprentice) greetedRef.current = false;
+    if (!role || greetedRef.current) return;
+    greetedRef.current = true;
+    const msg = apprentice
+      ? tri(
+        `Ciao ${role}. Oggi sei in apprendistato: andiamo con calma, un passo alla volta. Ti guido tutto a voce nelle cuffie. Prima domanda: hai già lavato le mani e indossato il grembiule?`,
+        `Hallo ${role}. Heute als Lehrling: ruhig, Schritt für Schritt. Ich führe dich per Kopfhörer. Hände gewaschen und Schürze an?`,
+        `Hi ${role}. Today as an apprentice: calmly, step by step. I'll guide you by voice in your headset. Have you washed your hands and put on your apron?`,
+        `Hola ${role}. Hoy como aprendiz: con calma. Te guío por los auriculares. ¿Manos lavadas y delantal puesto?`,
+        `Salut ${role}. Apprenti aujourd'hui : doucement. Je te guide au casque. Mains lavées et tablier mis ?`,
+        `سلام ${role}. امروز کارآموز: آرام. با هدست راهنمایی‌ات می‌کنم. دست‌ها را شستی و پیش‌بند پوشیدی؟`)
+      : tri(
+        `Ciao ${role}. Ti annuncio il piano di oggi nelle cuffie: ascolta, non serve toccare nulla. Ti guido io a voce passo dopo passo.`,
+        `Hallo ${role}. Ich sage dir den Tagesplan per Kopfhörer an: nur zuhören, nichts anfassen. Ich führe dich per Stimme.`,
+        `Hi ${role}. I'll announce today's plan in your headset: just listen, no need to touch anything. I'll guide you by voice, step by step.`,
+        `Hola ${role}. Te anuncio el plan de hoy por los auriculares: solo escucha. Te guío por voz.`,
+        `Salut ${role}. Je t'annonce le plan du jour au casque : écoute seulement. Je te guide à la voix.`,
+        `سلام ${role}. برنامه امروز را در هدست اعلام می‌کنم: فقط گوش بده. با صدا راهنمایی‌ات می‌کنم.`);
+    try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
   }, [apprentice, role, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
