@@ -11932,7 +11932,8 @@ class AutoPlanDispatchReq(BaseModel):
 
 @api_router.post("/mike/autoplan/dispatch")
 async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(require_admin)):
-    """Piano → Produzione: crea un task per ogni lotto e lo invia in silenzio al floor."""
+    """Piano → Produzione: crea un task per ogni lotto e lo invia in silenzio al floor.
+    Scala ANCHE in automatico le giacenze freezer usate (match per nome, anche parziale)."""
     created = 0
     for b in (body.batches or []):
         product = str(b.get("product") or "Lotto")[:80]
@@ -11949,7 +11950,72 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
         }
         await db.team_tasks.insert_one(dict(task))
         created += 1
-    return {"ok": True, "created": created}
+
+    # Auto-scala giacenze freezer usate dal piano (Sitor consuma prima il congelato).
+    freezer_scaled = []
+    try:
+        uid = admin.get("user_id")
+        fdoc = await db.freezer_stock.find_one({"owner_id": uid}, {"_id": 0}) if uid else None
+        fitems = (fdoc or {}).get("items", [])
+        if fitems:
+            def _norm(s):
+                return (s or "").lower().strip()
+
+            def _num(v):
+                m = _re_qty.search(str(v or ""))
+                return float(m.group(0)) if m else 0.0
+
+            import re as _re_mod
+            _re_qty = _re_mod.compile(r"\d+(?:[.,]\d+)?")
+            _re_word = _re_mod.compile(r"[a-zà-ÿ]+")
+            planned = []
+            for b in (body.batches or []):
+                nm = _norm(b.get("product"))
+                q = _num(str(b.get("qty") or "").replace(",", "."))
+                if nm and q > 0:
+                    planned.append((nm, q))
+
+            def _match_qty(fn):
+                fn = _norm(fn)
+                # Token del nome freezer, esclusi i descrittori generici (semilavorate, prodotti, …).
+                stop = {"semilavorate", "semilavorati", "semilavorato", "prodotti", "prodotto", "impasti",
+                        "impasto", "crudi", "crudo", "surgelati", "surgelato", "congelati", "congelato",
+                        "freezer", "banco", "della", "delle", "dei", "the"}
+                toks = [w for w in _re_word.findall(fn) if len(w) >= 4 and w not in stop]
+                tot = 0.0
+                for pnm, pq in planned:
+                    if len(pnm) < 3:
+                        continue
+                    hit = fn == pnm or (len(fn) >= 4 and len(pnm) >= 4 and (pnm in fn or fn in pnm))
+                    if not hit and toks:
+                        hit = any(t in pnm for t in toks)
+                    if hit:
+                        tot += pq
+                return tot
+
+            changed = False
+            new_items = []
+            for it in fitems:
+                avail = float(it.get("qty") or 0)
+                use = _match_qty(it.get("name"))
+                if use > 0 and avail > 0:
+                    take = min(avail, use)
+                    if take > 0:
+                        changed = True
+                        freezer_scaled.append({"name": it.get("name"), "used": take, "left": avail - take})
+                        new_items.append({**it, "qty": avail - take})
+                        continue
+                new_items.append(it)
+            if changed:
+                await db.freezer_stock.update_one(
+                    {"owner_id": uid},
+                    {"$set": {"owner_id": uid, "items": new_items, "updated_at": now_iso()}},
+                    upsert=True,
+                )
+    except Exception as e:
+        logger.warning("dispatch freezer auto-scale fail (%s)", str(e)[:120])
+
+    return {"ok": True, "created": created, "freezer_scaled": freezer_scaled}
 
 
 @api_router.get("/mike/briefing")

@@ -369,6 +369,10 @@ export default function App() {
                       <User className="w-3.5 h-3.5" /> {floorRole || tri("Operaio", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}
                       <span className="hidden sm:inline text-[9px] uppercase tracking-wider text-[#8a97a6]/70">· {opLevel}</span>
                     </span>
+                    <button data-testid="floor-tour-open" onClick={() => { try { window.dispatchEvent(new Event("mikilab:start-floor-tour")); } catch { /* */ } }} title={tri("Tour della postazione", "Stations-Tour", "Station tour", "Tour del puesto", "Visite du poste", "تور ایستگاه")}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] font-bold text-xs active:scale-95 transition-all">
+                      ✦ <span className="hidden sm:inline">{tri("Tour", "Tour", "Tour", "Tour", "Tour", "تور")}</span>
+                    </button>
                     <button data-testid="floor-exit-btn" onClick={() => { try { localStorage.removeItem("mikilab_mode"); localStorage.removeItem("mikilab_admin_unlocked"); localStorage.removeItem("mikilab_pin_unlocked"); } catch { /* */ } window.location.reload(); }}
                       className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0C1019] border border-[#bb8489]/40 text-[#bb8489] font-bold text-xs active:scale-95 transition-all">
                       <LogOut className="w-3.5 h-3.5" /> <span className="hidden sm:inline">{tri("Esci", "Abmelden", "Exit", "Salir", "Quitter", "خروج")}</span>
@@ -644,7 +648,8 @@ export default function App() {
         {showBriefing && user && user.role === "admin" && <ShiftBriefing onClose={() => setShowBriefing(false)} />}
         {showOperator && <OperatoreSelect current={operator} onSelect={setOperator} onClose={() => setShowOperator(false)} />}
         <GuidaMikiLab open={showGuide} onClose={() => setShowGuide(false)} />
-        {user && user.role === "admin" && mode !== "floor" && <SitorTour />}
+        {user && user.role === "admin" && mode !== "floor" && <SitorTour variant="capo" />}
+        {mode === "floor" && floorUnlocked && <SitorTour variant="floor" />}
 
         <Toaster position="top-center" richColors />
         <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />

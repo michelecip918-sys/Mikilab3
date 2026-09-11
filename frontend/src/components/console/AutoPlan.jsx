@@ -116,7 +116,17 @@ export default function AutoPlan() {
           )}
           {(res.batches || []).length > 0 && (
             <button data-testid="autoplan-dispatch" onClick={async () => {
-              try { const r = await mikeApi.dispatch(res.batches); try { await deusApi.broadcast({ plan_markdown: res.summary || "", headline: res.spoken || res.summary || "" }); } catch { /* */ } try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
+              try {
+                const r = await mikeApi.dispatch(res.batches);
+                try { await deusApi.broadcast({ plan_markdown: res.summary || "", headline: res.spoken || res.summary || "" }); } catch { /* */ }
+                try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ }
+                toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`));
+                if (r.freezer_scaled && r.freezer_scaled.length) {
+                  const txt = r.freezer_scaled.map((f) => `${f.name} −${f.used} (${f.left})`).join(", ");
+                  toast.info("🧊 " + tri(`Freezer aggiornato: ${txt}`, `Gefrier aktualisiert: ${txt}`, `Freezer updated: ${txt}`, `Congelador actualizado: ${txt}`, `Congélateur mis à jour : ${txt}`, `فریزر به‌روزرسانی شد: ${txt}`));
+                  freezerApi.get().then((d) => setFreezer(d.items || [])).catch(() => {});
+                }
+              } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
             }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#9aa6b2]/15 border border-[#9aa6b2]/50 text-[#9aa6b2] font-bold text-sm active:scale-95 transition-all">
               <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
             </button>
