@@ -80,19 +80,19 @@ export default function SitorAtelier() {
       <div className="relative">
         <textarea data-testid="atelier-input" value={req} onChange={(e) => setReq(e.target.value)} rows={2}
           placeholder={tri("Es. «aggiungi un contatore delle baguette invendute»…", "z.B. «füge einen Zähler hinzu»…", "e.g. \"add a counter for unsold baguettes\"…", "p.ej. «añade un contador»…", "ex. « ajoute un compteur »…", "مثلاً «یک شمارنده اضافه کن»…")}
-          className="w-full rounded-xl bg-[#030712] border border-[#EAB308]/30 focus:border-[#EAB308]/70 outline-none text-sm text-white p-3 resize-none" />
+          className="w-full rounded-xl bg-[#030712] border border-[#a6b1bc]/30 focus:border-[#a6b1bc]/70 outline-none text-sm text-white p-3 resize-none" />
       </div>
       <div className="flex flex-wrap gap-1.5">
         {SUGGEST.map((sug, i) => (
           <button key={i} data-testid={`atelier-suggest-${i}`} onClick={() => create(sug)} disabled={busy}
-            className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-[#EAB308]/10 border border-[#EAB308]/30 text-[#EAB308] active:scale-95 disabled:opacity-50">
+            className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-[#a6b1bc]/10 border border-[#a6b1bc]/30 text-[#a6b1bc] active:scale-95 disabled:opacity-50">
             + {sug}
           </button>
         ))}
       </div>
       <button data-testid="atelier-create-btn" onClick={() => create()} disabled={busy || !req.trim()}
         className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-        style={{ background: "linear-gradient(90deg,#EAB308,#FF6B00)", boxShadow: "0 0 18px rgba(234,179,8,0.3)" }}>
+        style={{ background: "linear-gradient(90deg,#a6b1bc,#8a97a6)", boxShadow: "0 0 18px rgba(166,177,188,0.3)" }}>
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {busy ? tri("Sitor progetta…", "Sitor entwirft…", "Sitor is designing…", "Sitor diseña…", "Sitor conçoit…", "سیتور طراحی می‌کند…") : tri("Chiedi a Sitor", "Sitor fragen", "Ask Sitor", "Pedir a Sitor", "Demander à Sitor", "از سیتور بخواه")}
       </button>
@@ -103,17 +103,17 @@ export default function SitorAtelier() {
             const I = ICONS[w.icon] || Sparkles;
             return (
               <motion.div key={w.id} initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.96 }}
-                data-testid={`atelier-widget-${w.id}`} className="rounded-2xl border border-[#EAB308]/25 bg-[#0C1019]/70 p-3.5">
+                data-testid={`atelier-widget-${w.id}`} className="rounded-2xl border border-[#a6b1bc]/25 bg-[#0C1019]/70 p-3.5">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#EAB308]/12 border border-[#EAB308]/35"><I className="w-4 h-4 text-[#EAB308]" /></span>
+                  <span className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 bg-[#a6b1bc]/12 border border-[#a6b1bc]/35"><I className="w-4 h-4 text-[#a6b1bc]" /></span>
                   <p className="text-sm font-bold text-white flex-1 truncate">{w.title}</p>
-                  <button data-testid={`atelier-del-${w.id}`} onClick={() => remove(w.id)} className="text-[#64748B] hover:text-[#f87171] active:scale-90"><Trash2 className="w-3.5 h-3.5" /></button>
+                  <button data-testid={`atelier-del-${w.id}`} onClick={() => remove(w.id)} className="text-[#64748B] hover:text-[#bb8489] active:scale-90"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
 
                 {w.type === "note" && (
                   <textarea data-testid={`atelier-note-${w.id}`} value={w.config.text || ""} rows={3}
                     onChange={(e) => patch(w.id, { ...w.config, text: e.target.value })}
-                    className="w-full rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[13px] text-[#CBD5E1] p-2 resize-none" />
+                    className="w-full rounded-lg bg-[#030712] border border-[#1e293b] focus:border-[#a6b1bc]/50 outline-none text-[13px] text-[#CBD5E1] p-2 resize-none" />
                 )}
 
                 {w.type === "counter" && (
@@ -121,8 +121,8 @@ export default function SitorAtelier() {
                     <span className="text-[12px] text-[#94A3B8]">{w.config.label}</span>
                     <div className="flex items-center gap-2">
                       <button onClick={() => patch(w.id, { ...w.config, value: Math.max(0, (w.config.value || 0) - (w.config.step || 1)) })} className="w-8 h-8 rounded-lg bg-[#0C1019] border border-[#1e293b] text-white flex items-center justify-center active:scale-90"><Minus className="w-4 h-4" /></button>
-                      <span data-testid={`atelier-counter-val-${w.id}`} className="min-w-[2.5rem] text-center text-xl font-black text-[#EAB308]">{w.config.value || 0}</span>
-                      <button data-testid={`atelier-counter-plus-${w.id}`} onClick={() => patch(w.id, { ...w.config, value: (w.config.value || 0) + (w.config.step || 1) })} className="w-8 h-8 rounded-lg bg-[#EAB308]/15 border border-[#EAB308]/40 text-[#EAB308] flex items-center justify-center active:scale-90"><Plus className="w-4 h-4" /></button>
+                      <span data-testid={`atelier-counter-val-${w.id}`} className="min-w-[2.5rem] text-center text-xl font-black text-[#a6b1bc]">{w.config.value || 0}</span>
+                      <button data-testid={`atelier-counter-plus-${w.id}`} onClick={() => patch(w.id, { ...w.config, value: (w.config.value || 0) + (w.config.step || 1) })} className="w-8 h-8 rounded-lg bg-[#a6b1bc]/15 border border-[#a6b1bc]/40 text-[#a6b1bc] flex items-center justify-center active:scale-90"><Plus className="w-4 h-4" /></button>
                     </div>
                   </div>
                 )}
@@ -133,7 +133,7 @@ export default function SitorAtelier() {
                       <li key={k}>
                         <button onClick={() => { const items = w.config.items.map((x, j) => (j === k ? { ...x, done: !x.done } : x)); patch(w.id, { ...w.config, items }); }}
                           className="w-full flex items-center gap-2 text-left text-[13px] active:scale-[0.99]">
-                          <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${it.done ? "bg-[#22c55e]/20 border-[#22c55e]/60 text-[#22c55e]" : "border-[#64748B]/50 text-transparent"}`}><Check className="w-3 h-3" /></span>
+                          <span className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${it.done ? "bg-[#6e9e85]/20 border-[#6e9e85]/60 text-[#6e9e85]" : "border-[#64748B]/50 text-transparent"}`}><Check className="w-3 h-3" /></span>
                           <span className={it.done ? "line-through text-[#64748B]" : "text-[#CBD5E1]"}>{it.t}</span>
                         </button>
                       </li>
@@ -143,15 +143,15 @@ export default function SitorAtelier() {
 
                 {w.type === "metric" && (
                   <div className="text-center py-1">
-                    <p className="text-2xl font-black text-[#EAB308]">{w.config.value || "—"} <span className="text-sm text-[#94A3B8]">{w.config.unit}</span></p>
+                    <p className="text-2xl font-black text-[#a6b1bc]">{w.config.value || "—"} <span className="text-sm text-[#94A3B8]">{w.config.unit}</span></p>
                     <p className="text-[11px] text-[#94A3B8]">{w.config.label}</p>
                   </div>
                 )}
 
                 {w.type === "reminder" && (
                   <div className="flex items-start gap-2">
-                    <Bell className="w-4 h-4 text-[#FF9D42] mt-0.5 shrink-0" />
-                    <div><p className="text-[13px] text-[#CBD5E1] leading-snug">{w.config.text}</p>{w.config.date && <p className="text-[11px] text-[#FF9D42] font-bold mt-0.5">{w.config.date}</p>}</div>
+                    <Bell className="w-4 h-4 text-[#9aa6b2] mt-0.5 shrink-0" />
+                    <div><p className="text-[13px] text-[#CBD5E1] leading-snug">{w.config.text}</p>{w.config.date && <p className="text-[11px] text-[#9aa6b2] font-bold mt-0.5">{w.config.date}</p>}</div>
                   </div>
                 )}
 
@@ -163,19 +163,19 @@ export default function SitorAtelier() {
                       <div className="flex items-end gap-1.5 h-24 mb-1.5">
                         {series.map((p, k) => (
                           <div key={k} className="flex-1 flex flex-col items-center justify-end h-full">
-                            <span className="text-[9px] text-[#EAB308] font-bold mb-0.5">{Number(p.v) || 0}</span>
-                            <div className="w-full rounded-t transition-all" style={{ height: `${Math.max(4, ((Number(p.v) || 0) / max) * 100)}%`, background: "linear-gradient(180deg,#EAB308,#FF6B00)" }} />
+                            <span className="text-[9px] text-[#a6b1bc] font-bold mb-0.5">{Number(p.v) || 0}</span>
+                            <div className="w-full rounded-t transition-all" style={{ height: `${Math.max(4, ((Number(p.v) || 0) / max) * 100)}%`, background: "linear-gradient(180deg,#a6b1bc,#8a97a6)" }} />
                             <span className="text-[9px] text-[#64748B] mt-1">{p.d}</span>
                           </div>
                         ))}
                       </div>
-                      <p className="text-[10px] text-[#94A3B8] mb-1.5">{w.config.label}{w.config.unit ? ` · ${w.config.unit}` : ""}{w.config.auto ? " · " : ""}{w.config.auto && <span data-testid={`atelier-chart-auto-${w.id}`} className="text-[#22c55e] font-bold">{tri("dati reali", "Echtdaten", "real data", "datos reales", "données réelles", "داده واقعی")}</span>}</p>
+                      <p className="text-[10px] text-[#94A3B8] mb-1.5">{w.config.label}{w.config.unit ? ` · ${w.config.unit}` : ""}{w.config.auto ? " · " : ""}{w.config.auto && <span data-testid={`atelier-chart-auto-${w.id}`} className="text-[#6e9e85] font-bold">{tri("dati reali", "Echtdaten", "real data", "datos reales", "données réelles", "داده واقعی")}</span>}</p>
                       {!w.config.auto && (
                       <div className="flex gap-1 overflow-x-auto pb-1">
                         {series.map((p, k) => (
                           <input key={k} data-testid={`atelier-chart-input-${w.id}-${k}`} inputMode="decimal" value={p.v}
                             onChange={(e) => { const v = e.target.value.replace(/[^\d.]/g, ""); const s = series.map((x, j) => (j === k ? { ...x, v: v === "" ? 0 : Number(v) } : x)); patch(w.id, { ...w.config, series: s }); }}
-                            className="w-10 shrink-0 bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[11px] text-white text-center rounded px-1 py-1" />
+                            className="w-10 shrink-0 bg-[#030712] border border-[#1e293b] focus:border-[#a6b1bc]/50 outline-none text-[11px] text-white text-center rounded px-1 py-1" />
                         ))}
                       </div>
                       )}
@@ -186,10 +186,10 @@ export default function SitorAtelier() {
                 <div className="mt-2 pt-2 border-t border-[#1e293b] flex items-center gap-1.5">
                   <span className="text-[10px] text-[#64748B]">{tri("Condividi in reparto:", "In Bereich teilen:", "Share to dept:", "Compartir en área:", "Partager à l'atelier :", "اشتراک با بخش:")}</span>
                   <select data-testid={`atelier-share-${w.id}`} value={w.share_dept || ""} onChange={(e) => share(w.id, e.target.value)}
-                    className="bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/50 outline-none text-[11px] text-white rounded px-1.5 py-1">
+                    className="bg-[#030712] border border-[#1e293b] focus:border-[#a6b1bc]/50 outline-none text-[11px] text-white rounded px-1.5 py-1">
                     {DEPTS.map((d) => <option key={d} value={d}>{d === "" ? tri("no", "nein", "no", "no", "non", "خیر") : d}</option>)}
                   </select>
-                  {w.share_dept && <span className="text-[9px] text-[#22c55e] font-bold">✓</span>}
+                  {w.share_dept && <span className="text-[9px] text-[#6e9e85] font-bold">✓</span>}
                 </div>
               </motion.div>
             );

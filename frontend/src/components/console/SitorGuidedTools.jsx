@@ -43,11 +43,11 @@ export default function SitorGuidedTools() {
   return (
     <div data-testid="sitor-guided-tools" className="space-y-3">
       {/* Aggiungi una macchina/strumento: scrivi, allega il PDF del venditore o fotografala */}
-      <div data-testid="add-machine" className="rounded-2xl border border-[#FF9D42]/40 bg-[#0b0f19] p-4">
-        <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[#FF9D42] mb-2"><Sparkles className="w-3.5 h-3.5" /> {tri("Aggiungi una macchina o strumento", "Maschine/Werkzeug hinzufügen", "Add a machine or tool", "Añadir máquina o herramienta", "Ajouter une machine/outil", "افزودن دستگاه یا ابزار")}</p>
+      <div data-testid="add-machine" className="rounded-2xl border border-[#9aa6b2]/40 bg-[#0b0f19] p-4">
+        <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[#9aa6b2] mb-2"><Sparkles className="w-3.5 h-3.5" /> {tri("Aggiungi una macchina o strumento", "Maschine/Werkzeug hinzufügen", "Add a machine or tool", "Añadir máquina o herramienta", "Ajouter une machine/outil", "افزودن دستگاه یا ابزار")}</p>
         <textarea data-testid="add-machine-text" value={machineText} onChange={(e) => setMachineText(e.target.value)} rows={2}
           placeholder={tri("Scrivi la macchina… oppure allega il PDF del venditore o fotografala: Sitor capisce e compila.", "Schreibe die Maschine… oder hänge das PDF an.", "Type the machine… or attach the vendor PDF or photograph it: Sitor understands and fills in.", "Escribe la máquina… o adjunta el PDF.", "Écris la machine… ou joins le PDF.", "دستگاه را بنویس… یا PDF را پیوست کن.")}
-          className="w-full bg-[#0C1019] border border-[#FF9D42]/25 rounded-lg px-3 py-2 text-sm text-white focus:border-[#FF9D42] outline-none resize-none mb-2" />
+          className="w-full bg-[#0C1019] border border-[#9aa6b2]/25 rounded-lg px-3 py-2 text-sm text-white focus:border-[#9aa6b2] outline-none resize-none mb-2" />
         <SmartAttach context={tri("scheda macchina/attrezzatura nuova (nome, marca, specifiche, manutenzione)", "neue Maschine (Name, Marke, Spezifikationen)", "new machine/equipment sheet (name, brand, specs, maintenance)", "ficha de máquina nueva", "fiche machine neuve", "مشخصات دستگاه جدید")}
           onExtract={(t) => setMachineText((m) => (m ? m + "\n" : "") + t)} />
       </div>
@@ -68,7 +68,7 @@ export default function SitorGuidedTools() {
       {/* Riepilogo attivazioni */}
       <div className="flex flex-wrap gap-1.5">
         {Q.map((x) => enabled[x.id] !== undefined && (
-          <span key={x.id} data-testid={`sitor-int-${x.id}`} className={`text-[10px] font-bold px-2 py-1 rounded-full border ${enabled[x.id] ? "bg-[#22c55e]/12 border-[#22c55e]/40 text-[#22c55e]" : "bg-[#030712] border-[#1e293b] text-[#64748B]"}`}>
+          <span key={x.id} data-testid={`sitor-int-${x.id}`} className={`text-[10px] font-bold px-2 py-1 rounded-full border ${enabled[x.id] ? "bg-[#6e9e85]/12 border-[#6e9e85]/40 text-[#6e9e85]" : "bg-[#030712] border-[#1e293b] text-[#64748B]"}`}>
             {enabled[x.id] ? "✓" : "✕"} {x.id}
           </span>
         ))}

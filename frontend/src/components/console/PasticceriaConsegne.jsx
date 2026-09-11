@@ -43,26 +43,26 @@ export default function PasticceriaConsegne() {
         "Entregas por encargo: tartas, bodas y eventos.", "Livraisons sur commande : gâteaux, mariages, événements.", "تحویل سفارشی: کیک، عروسی، رویداد.")}</p>
 
       {/* Nuova consegna */}
-      <div className="rounded-xl bg-[#0C1019] border border-[#7FD8C0]/30 p-3 space-y-2">
+      <div className="rounded-xl bg-[#0C1019] border border-[#93a2ae]/30 p-3 space-y-2">
         <div className="grid grid-cols-2 gap-2">
-          <input data-testid="pastry-client" value={form.client} onChange={set("client")} placeholder={tri("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
-          <input data-testid="pastry-item" value={form.item} onChange={set("item")} placeholder={tri("Prodotto (es. torta 3 piani)", "Produkt", "Item (e.g. 3-tier cake)", "Producto", "Produit", "محصول")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
+          <input data-testid="pastry-client" value={form.client} onChange={set("client")} placeholder={tri("Cliente", "Kunde", "Client", "Cliente", "Client", "مشتری")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
+          <input data-testid="pastry-item" value={form.item} onChange={set("item")} placeholder={tri("Prodotto (es. torta 3 piani)", "Produkt", "Item (e.g. 3-tier cake)", "Producto", "Produit", "محصول")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
         </div>
         <div className="flex flex-wrap gap-1.5">
           {TYPES.map((t) => (
             <button key={t.id} data-testid={`pastry-type-${t.id}`} onClick={() => setForm((f) => ({ ...f, event_type: t.id }))}
-              className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 ${form.event_type === t.id ? "bg-[#7FD8C0]/20 border-[#7FD8C0]/60 text-[#7FD8C0]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>{t.label}</button>
+              className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 ${form.event_type === t.id ? "bg-[#93a2ae]/20 border-[#93a2ae]/60 text-[#93a2ae]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>{t.label}</button>
           ))}
         </div>
         <div className="grid grid-cols-3 gap-2">
-          <input data-testid="pastry-date" type="date" value={form.date} onChange={set("date")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
-          <input data-testid="pastry-time" type="time" value={form.time} onChange={set("time")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
-          <input data-testid="pastry-people" value={form.people} onChange={set("people")} inputMode="numeric" placeholder={tri("Persone", "Personen", "People", "Personas", "Personnes", "نفر")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
+          <input data-testid="pastry-date" type="date" value={form.date} onChange={set("date")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
+          <input data-testid="pastry-time" type="time" value={form.time} onChange={set("time")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
+          <input data-testid="pastry-people" value={form.people} onChange={set("people")} inputMode="numeric" placeholder={tri("Persone", "Personen", "People", "Personas", "Personnes", "نفر")} className="rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
         </div>
-        <input data-testid="pastry-notes" value={form.notes} onChange={set("notes")} placeholder={tri("Note (gusto, allergie, indirizzo…)", "Notiz", "Notes (flavor, allergies, address…)", "Notas", "Notes", "یادداشت")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#7FD8C0] outline-none" />
+        <input data-testid="pastry-notes" value={form.notes} onChange={set("notes")} placeholder={tri("Note (gusto, allergie, indirizzo…)", "Notiz", "Notes (flavor, allergies, address…)", "Notas", "Notes", "یادداشت")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#93a2ae] outline-none" />
         <SmartAttach context={tri("ordine torta/evento (cliente, prodotto, data)", "Torten-/Event-Bestellung", "cake/event order (client, item, date)", "pedido de tarta/evento", "commande gâteau/événement", "سفارش کیک/رویداد")} compact
           onExtract={(t) => setForm((f) => ({ ...f, notes: (f.notes ? f.notes + "\n" : "") + t }))} />
-        <button data-testid="pastry-add" onClick={submit} disabled={busy || !form.client.trim() || !form.date} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7FD8C0]/15 border border-[#7FD8C0]/50 text-[#7FD8C0] font-bold text-sm active:scale-95 disabled:opacity-40">
+        <button data-testid="pastry-add" onClick={submit} disabled={busy || !form.client.trim() || !form.date} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#93a2ae]/15 border border-[#93a2ae]/50 text-[#93a2ae] font-bold text-sm active:scale-95 disabled:opacity-40">
           {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />} {tri("Aggiungi consegna", "Lieferung hinzufügen", "Add delivery", "Añadir entrega", "Ajouter livraison", "افزودن تحویل")}
         </button>
       </div>
@@ -77,16 +77,16 @@ export default function PasticceriaConsegne() {
           return (
             <div key={d.id} data-testid={`pastry-row-${d.id}`} className="rounded-xl bg-[#0C1019] border p-3" style={{ borderColor: d.done ? "#22c55e55" : soon ? "#f59e0b66" : "#1e293b" }}>
               <div className="flex items-center gap-2">
-                <Cake className="w-4 h-4 shrink-0" style={{ color: d.done ? "#22c55e" : "#7FD8C0" }} />
+                <Cake className="w-4 h-4 shrink-0" style={{ color: d.done ? "#6e9e85" : "#93a2ae" }} />
                 <span className={`text-sm font-black flex-1 min-w-0 truncate ${d.done ? "text-emerald-300 line-through" : "text-white"}`}>{d.client}{d.item ? ` · ${d.item}` : ""}</span>
-                <button data-testid={`pastry-toggle-${d.id}`} onClick={() => toggle(d.id)} className="shrink-0 w-7 h-7 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 text-[#22c55e] flex items-center justify-center active:scale-95"><Check className="w-4 h-4" /></button>
+                <button data-testid={`pastry-toggle-${d.id}`} onClick={() => toggle(d.id)} className="shrink-0 w-7 h-7 rounded-lg bg-[#6e9e85]/10 border border-[#6e9e85]/40 text-[#6e9e85] flex items-center justify-center active:scale-95"><Check className="w-4 h-4" /></button>
                 <button data-testid={`pastry-del-${d.id}`} onClick={() => remove(d.id)} className="shrink-0 w-7 h-7 rounded-lg bg-[#030712] border border-[#1e293b] text-[#64748B] hover:text-rose-400 flex items-center justify-center active:scale-95"><Trash2 className="w-3.5 h-3.5" /></button>
               </div>
               <div className="mt-1 flex items-center gap-2 text-[11px] flex-wrap">
                 <span className="inline-flex items-center gap-1 text-[#94A3B8]"><CalendarClock className="w-3 h-3" /> {d.date}{d.time ? ` · ${d.time}` : ""}</span>
                 {d.people && <span className="text-[#94A3B8]">· {d.people} {tri("pers.", "Pers.", "ppl", "pers.", "pers.", "نفر")}</span>}
-                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#7FD8C0]/10 text-[#7FD8C0] border border-[#7FD8C0]/25">{d.event_type}</span>
-                {soon && !d.done && <span data-testid={`pastry-soon-${d.id}`} className="text-[10px] font-black text-[#f59e0b]">⏰ {dt === 0 ? tri("OGGI", "HEUTE", "TODAY", "HOY", "AUJOURD'HUI", "امروز") : tri(`tra ${dt} g`, `in ${dt} T`, `in ${dt}d`, `en ${dt}d`, `dans ${dt}j`, `${dt} روز`)}</span>}
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#93a2ae]/10 text-[#93a2ae] border border-[#93a2ae]/25">{d.event_type}</span>
+                {soon && !d.done && <span data-testid={`pastry-soon-${d.id}`} className="text-[10px] font-black text-[#aaa795]">⏰ {dt === 0 ? tri("OGGI", "HEUTE", "TODAY", "HOY", "AUJOURD'HUI", "امروز") : tri(`tra ${dt} g`, `in ${dt} T`, `in ${dt}d`, `en ${dt}d`, `dans ${dt}j`, `${dt} روز`)}</span>}
               </div>
               {d.notes && <p className="mt-1 text-[11px] text-[#94A3B8]">{d.notes}</p>}
             </div>

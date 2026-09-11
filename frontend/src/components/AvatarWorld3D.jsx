@@ -4,7 +4,7 @@ import * as THREE from "three/webgpu";
 // Mondo 3D immersivo (Vanilla three.js) che si assembla dietro l'avatar del trio.
 // theme: "miki" (Ufficio Tecnico/Ricette) | "mikemix" (Produzione Calda) | "bigmix" (Assistente vocale)
 // speaking: per Sitor -> onde sonore/particelle piu intense quando parla.
-export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", speaking = false }) {
+export default function AvatarWorld3D({ theme = "miki", accent = "#8a97a6", speaking = false }) {
   const mountRef = useRef(null);
   const speakingRef = useRef(speaking);
   speakingRef.current = speaking;
@@ -52,7 +52,7 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#FF6B00", spea
       const c = document.createElement("canvas"); c.width = c.height = 128;
       const g = c.getContext("2d");
       const rg = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-      rg.addColorStop(0, "rgba(255,150,60,0.95)"); rg.addColorStop(0.4, "rgba(255,107,0,0.45)"); rg.addColorStop(1, "rgba(255,107,0,0)");
+      rg.addColorStop(0, "rgba(255,150,60,0.95)"); rg.addColorStop(0.4, "rgba(138,151,166,0.45)"); rg.addColorStop(1, "rgba(138,151,166,0)");
       g.fillStyle = rg; g.fillRect(0, 0, 128, 128);
       const t = new THREE.CanvasTexture(c); return t;
     })();

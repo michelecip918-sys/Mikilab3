@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 // niente @react-three/fiber → compatibile con React 19 e con il Node del container.
 // Ogni macchinario REAGISCE alla PROPRIA telemetria IoT (colore + pulsazione).
 const STRESS_COL = { calmo: 0xFF9D42, medio: 0xffb800, alto: 0xf43f5e };
-const STRESS_HEX = { calmo: "#FF9D42", medio: "#FFB800", alto: "#f43f5e" };
+const STRESS_HEX = { calmo: "#9aa6b2", medio: "#a4afbb", alto: "#b06e78" };
 const MACHINES = [
   { id: "forno1", label: "Forno 1", pos: [-3, 0.7, -2], size: [1.6, 1.4, 1.6] },
   { id: "forno2", label: "Forno 2", pos: [-1, 0.7, -2], size: [1.6, 1.4, 1.6] },
@@ -187,7 +187,7 @@ export default function DigitalTwin() {
     });
   }, [tele]);
 
-  const col = STRESS_HEX[globalLevel] || "#FF9D42";
+  const col = STRESS_HEX[globalLevel] || "#9aa6b2";
   const selTele = sel ? tele[sel.id] : null;
 
   return (
@@ -203,7 +203,7 @@ export default function DigitalTwin() {
           <div className="flex-1 min-w-0">
             <p className="text-sm font-black text-white truncate">{sel.label}</p>
             <p className="text-[11px] text-[#94A3B8]">{tri("Stress", "Stress", "Stress", "Estrés", "Stress", "استرس")}: {selTele.level} · {selTele.temp_c}°C · {tri("carico", "Last", "load", "carga", "charge", "بار")} {selTele.load_pct}%{selTele.sos ? " · SOS" : ""}</p>
-            {selTele.torque_protection && <p data-testid="twin-torque" className="text-[11px] text-[#FFB800] font-bold mt-0.5">⚙ {tri(`Smart Torque: coppia ridotta al ${selTele.torque_pct}% (anti-stallo)`, `Smart Torque: Drehmoment auf ${selTele.torque_pct}%`, `Smart Torque: torque cut to ${selTele.torque_pct}% (anti-stall)`, `Smart Torque: par al ${selTele.torque_pct}%`, `Smart Torque: couple à ${selTele.torque_pct}%`, `گشتاور هوشمند: ${selTele.torque_pct}%`)}</p>}
+            {selTele.torque_protection && <p data-testid="twin-torque" className="text-[11px] text-[#a4afbb] font-bold mt-0.5">⚙ {tri(`Smart Torque: coppia ridotta al ${selTele.torque_pct}% (anti-stallo)`, `Smart Torque: Drehmoment auf ${selTele.torque_pct}%`, `Smart Torque: torque cut to ${selTele.torque_pct}% (anti-stall)`, `Smart Torque: par al ${selTele.torque_pct}%`, `Smart Torque: couple à ${selTele.torque_pct}%`, `گشتاور هوشمند: ${selTele.torque_pct}%`)}</p>}
           </div>
         </div>
       ) : (

@@ -7,7 +7,7 @@ const PUB = process.env.PUBLIC_URL;
 // Hero 3D GRANDE e INTERATTIVO per ogni zona del sito: scena olografica AvatarWorld3D
 // come sfondo + avatar grande che reagisce al MOVIMENTO del dispositivo (giroscopio)
 // e al mouse (parallax). Sitor pulsa quando parla (evento TTS globale).
-export default function ZoneHero3D({ avatar, name, role, tag, accent = "#FF6B00", theme = "miki", testid, listenSpeaking = false, onEnter }) {
+export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6", theme = "miki", testid, listenSpeaking = false, onEnter }) {
   const ref = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [speaking, setSpeaking] = useState(false);
@@ -60,8 +60,8 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#FF6B00"
     <div ref={ref} data-testid={testid} onMouseMove={onMove} onMouseLeave={() => setTilt({ x: 0, y: 0 })}
       className="relative w-full mb-5 rounded-3xl overflow-hidden border"
       style={{ height: 340, borderColor: `${accent}44`, boxShadow: `0 0 34px ${accent}22`, background: "#04070d" }}>
-      {/* Scena 3D immersiva di sfondo */}
-      <div className="absolute inset-0 z-0">
+      {/* Scena 3D di sfondo — desaturata per un look sobrio ed elegante */}
+      <div className="absolute inset-0 z-0" style={{ filter: "saturate(0.28) brightness(0.82) contrast(1.02)" }}>
         <AvatarWorld3D theme={theme} accent={accent} speaking={speaking} />
       </div>
       <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: `radial-gradient(circle at 50% 42%, transparent 30%, #04070d 92%)` }} />

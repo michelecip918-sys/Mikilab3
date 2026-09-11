@@ -7,8 +7,8 @@ import { mkTri } from "@/i18n/triMaps";
 
 const VERDICT = {
   umido: { c: "#64748B", it: "Aria umida", de: "Feuchte Luft", en: "Humid air", es: "Aire húmedo", fr: "Air humide", fa: "هوای مرطوب" },
-  secco: { c: "#f59e0b", it: "Aria secca", de: "Trockene Luft", en: "Dry air", es: "Aire seco", fr: "Air sec", fa: "هوای خشک" },
-  stabile: { c: "#22c55e", it: "Clima stabile", de: "Stabiles Klima", en: "Stable climate", es: "Clima estable", fr: "Climat stable", fa: "آب‌وهوای پایدار" },
+  secco: { c: "#aaa795", it: "Aria secca", de: "Trockene Luft", en: "Dry air", es: "Aire seco", fr: "Air sec", fa: "هوای خشک" },
+  stabile: { c: "#6e9e85", it: "Clima stabile", de: "Stabiles Klima", en: "Stable climate", es: "Clima estable", fr: "Climat stable", fa: "آب‌وهوای پایدار" },
 };
 
 export default function ClimateTimeMachine({ onClose }) {
@@ -34,7 +34,7 @@ export default function ClimateTimeMachine({ onClose }) {
   const cl = data?.climate || {};
   const adj = data?.adjustment;
   const v = adj?.verdict && VERDICT[adj.verdict] ? VERDICT[adj.verdict] : null;
-  const Trend = ({ val }) => val == null ? <Minus className="w-3.5 h-3.5 text-[#64748B]" /> : val > 0 ? <TrendingUp className="w-3.5 h-3.5 text-[#22c55e]" /> : val < 0 ? <TrendingDown className="w-3.5 h-3.5 text-[#f59e0b]" /> : <Minus className="w-3.5 h-3.5 text-[#64748B]" />;
+  const Trend = ({ val }) => val == null ? <Minus className="w-3.5 h-3.5 text-[#64748B]" /> : val > 0 ? <TrendingUp className="w-3.5 h-3.5 text-[#6e9e85]" /> : val < 0 ? <TrendingDown className="w-3.5 h-3.5 text-[#aaa795]" /> : <Minus className="w-3.5 h-3.5 text-[#64748B]" />;
 
   const deltaStr = (n) => (n == null ? "—" : (n > 0 ? `+${n}` : `${n}`));
 
@@ -42,7 +42,7 @@ export default function ClimateTimeMachine({ onClose }) {
     <div data-testid="climate-time-machine" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><CloudSun className="w-5 h-5 text-[#f59e0b]" /> {tri("Macchina del Tempo Clima", "Klima-Zeitmaschine", "Climate Time Machine", "Máquina del Tiempo Clima", "Machine à Remonter le Climat", "ماشین زمان اقلیم")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><CloudSun className="w-5 h-5 text-[#aaa795]" /> {tri("Macchina del Tempo Clima", "Klima-Zeitmaschine", "Climate Time Machine", "Máquina del Tiempo Clima", "Machine à Remonter le Climat", "ماشین زمان اقلیم")}</h2>
           <button data-testid="climate-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
@@ -50,16 +50,16 @@ export default function ClimateTimeMachine({ onClose }) {
 
         {/* Selettore ricetta + esegui */}
         <div className="flex flex-col sm:flex-row gap-2 mb-5">
-          <select data-testid="climate-recipe-select" value={recipeId} onChange={(e) => setRecipeId(e.target.value)} className="flex-1 bg-[#0b0f19] border border-[#1e293b] rounded-xl p-3 text-sm text-white outline-none focus:border-[#f59e0b]">
+          <select data-testid="climate-recipe-select" value={recipeId} onChange={(e) => setRecipeId(e.target.value)} className="flex-1 bg-[#0b0f19] border border-[#1e293b] rounded-xl p-3 text-sm text-white outline-none focus:border-[#aaa795]">
             <option value="">{tri("Ricetta generica (senza selezione)", "Allgemeines Rezept", "Generic recipe", "Receta genérica", "Recette générique", "دستور عمومی")}</option>
             {recipes.map((r) => (<option key={r.id} value={r.id}>{r[`name_${lang}`] || r.name}</option>))}
           </select>
-          <button data-testid="climate-run" onClick={run} disabled={loading} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#f59e0b] to-[#d97706] text-[#030712] font-black text-sm disabled:opacity-50 active:scale-95 transition-all">
+          <button data-testid="climate-run" onClick={run} disabled={loading} className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-[#aaa795] to-[#d97706] text-[#030712] font-black text-sm disabled:opacity-50 active:scale-95 transition-all">
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />} {tri("Prevedi", "Vorhersagen", "Predict", "Predecir", "Prédire", "پیش‌بینی")}
           </button>
         </div>
 
-        {data?.error && <p className="text-center text-sm text-[#f87171]" data-testid="climate-error">{tri("Meteo non raggiungibile. Riprova.", "Wetter nicht erreichbar.", "Weather unavailable. Retry.", "Clima no disponible.", "Météo indisponible.", "آب‌وهوا در دسترس نیست.")}</p>}
+        {data?.error && <p className="text-center text-sm text-[#bb8489]" data-testid="climate-error">{tri("Meteo non raggiungibile. Riprova.", "Wetter nicht erreichbar.", "Weather unavailable. Retry.", "Clima no disponible.", "Météo indisponible.", "آب‌وهوا در دسترس نیست.")}</p>}
 
         {cl && !data?.error && cl.location && (
           <>
@@ -70,8 +70,8 @@ export default function ClimateTimeMachine({ onClose }) {
                 <p className="text-3xl font-black text-white mt-1" data-testid="climate-humidity">{cl.now_humidity ?? "—"}<span className="text-lg">%</span></p>
                 <p className="text-[11px] text-[#94A3B8] flex items-center gap-1 mt-1"><Trend val={cl.humidity_trend} /> {tri("trend", "Trend", "trend", "tendencia", "tendance", "روند")} {cl.humidity_trend != null ? `${cl.humidity_trend > 0 ? "+" : ""}${cl.humidity_trend}%` : "—"}</p>
               </div>
-              <div className="rounded-2xl border border-[#f59e0b]/40 p-4" style={{ background: "#f59e0b0d" }}>
-                <p className="text-[10px] font-black uppercase tracking-wider text-[#94A3B8] flex items-center gap-1.5"><Gauge className="w-3.5 h-3.5 text-[#f59e0b]" /> {tri("Pressione", "Luftdruck", "Pressure", "Presión", "Pression", "فشار")}</p>
+              <div className="rounded-2xl border border-[#aaa795]/40 p-4" style={{ background: "#f59e0b0d" }}>
+                <p className="text-[10px] font-black uppercase tracking-wider text-[#94A3B8] flex items-center gap-1.5"><Gauge className="w-3.5 h-3.5 text-[#aaa795]" /> {tri("Pressione", "Luftdruck", "Pressure", "Presión", "Pression", "فشار")}</p>
                 <p className="text-3xl font-black text-white mt-1" data-testid="climate-pressure">{cl.now_pressure ? Math.round(cl.now_pressure) : "—"}<span className="text-lg"> hPa</span></p>
                 <p className="text-[11px] text-[#94A3B8] flex items-center gap-1 mt-1"><Trend val={cl.pressure_trend} /> {tri("trend", "Trend", "trend", "tendencia", "tendance", "روند")} {cl.pressure_trend != null ? `${cl.pressure_trend > 0 ? "+" : ""}${cl.pressure_trend}` : "—"} hPa</p>
               </div>
@@ -101,7 +101,7 @@ export default function ClimateTimeMachine({ onClose }) {
             </div>
             {(adj.tips || []).length > 0 && (
               <ul className="space-y-1.5" data-testid="climate-tips">
-                {adj.tips.map((t, i) => (<li key={i} className="text-[12px] text-[#cfe0ec] flex items-start gap-1.5"><Wheat className="w-3.5 h-3.5 text-[#f59e0b] mt-0.5 shrink-0" /> {t}</li>))}
+                {adj.tips.map((t, i) => (<li key={i} className="text-[12px] text-[#cfe0ec] flex items-start gap-1.5"><Wheat className="w-3.5 h-3.5 text-[#aaa795] mt-0.5 shrink-0" /> {t}</li>))}
               </ul>
             )}
           </motion.div>

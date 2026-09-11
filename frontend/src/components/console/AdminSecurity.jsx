@@ -50,9 +50,9 @@ export default function AdminSecurity() {
     return ms > 0 && ms <= 2 * 3600000;
   };
   const LEVELS = [
-    { id: "novizio", label: tri("Novizio", "Anfänger", "Novice", "Novato", "Novice", "تازه‌کار"), c: "#22c55e" },
-    { id: "esperto", label: tri("Esperto", "Erfahren", "Expert", "Experto", "Expert", "ماهر"), c: "#EAB308" },
-    { id: "maestro", label: tri("Maestro", "Meister", "Master", "Maestro", "Maître", "استاد"), c: "#FF6B00" },
+    { id: "novizio", label: tri("Novizio", "Anfänger", "Novice", "Novato", "Novice", "تازه‌کار"), c: "#6e9e85" },
+    { id: "esperto", label: tri("Esperto", "Erfahren", "Expert", "Experto", "Expert", "ماهر"), c: "#a6b1bc" },
+    { id: "maestro", label: tri("Maestro", "Meister", "Master", "Maestro", "Maître", "استاد"), c: "#8a97a6" },
   ];
 
   const kindLabel = (k) => ({ master: tri("Master", "Master", "Master", "Master", "Master", "مستر"), production: tri("Produzione", "Produktion", "Production", "Producción", "Production", "تولید"), operator: tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور") }[k] || k);
@@ -73,8 +73,8 @@ export default function AdminSecurity() {
   return (
     <div className="space-y-6" data-testid="admin-security">
       {/* PIN Sezione Operai — scelto dal Capo: apre la Produzione (zona Capo invisibile) */}
-      <div data-testid="op-gate-pin-config" className="rounded-xl border border-[#FF6B00]/30 bg-[#FF6B00]/6 p-3">
-        <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#FF9D42] mb-1"><KeyRound className="w-3.5 h-3.5" /> {tri("PIN Sezione Operai", "PIN Produktionsbereich", "Operator Section PIN", "PIN Sección Operarios", "PIN Section Opérateurs", "پین بخش اپراتور")}</p>
+      <div data-testid="op-gate-pin-config" className="rounded-xl border border-[#8a97a6]/30 bg-[#8a97a6]/6 p-3">
+        <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#9aa6b2] mb-1"><KeyRound className="w-3.5 h-3.5" /> {tri("PIN Sezione Operai", "PIN Produktionsbereich", "Operator Section PIN", "PIN Sección Operarios", "PIN Section Opérateurs", "پین بخش اپراتور")}</p>
         <p className="text-[11px] text-[#c9a98a] mb-2">{tri(
           "Scegli tu il PIN con cui gli operai entrano nella loro sezione. Chi lo usa vede SOLO la Produzione, mai la tua plancia. I PIN personali qui sotto restano validi (e tracciano chi è).",
           "Wähle den PIN, mit dem das Team in seinen Bereich gelangt. Nur Produktion sichtbar.",
@@ -83,14 +83,14 @@ export default function AdminSecurity() {
           "Choisis le PIN d'accès des opérateurs. Il ouvre seulement la Production.",
           "پینی که اپراتورها با آن وارد بخش خود می‌شوند را انتخاب کن.")}</p>
         <div className="flex flex-wrap items-center gap-2">
-          <span data-testid="op-gate-status" className={`text-[11px] font-bold px-2 py-1 rounded-full border ${opGateSet ? "text-[#22c55e] border-[#22c55e]/40 bg-[#22c55e]/10" : "text-[#FFB800] border-[#FFB800]/40 bg-[#FFB800]/10"}`}>
+          <span data-testid="op-gate-status" className={`text-[11px] font-bold px-2 py-1 rounded-full border ${opGateSet ? "text-[#6e9e85] border-[#6e9e85]/40 bg-[#6e9e85]/10" : "text-[#a4afbb] border-[#a4afbb]/40 bg-[#a4afbb]/10"}`}>
             {opGateSet ? tri("Impostato ✓", "Gesetzt ✓", "Set ✓", "Configurado ✓", "Défini ✓", "تنظیم شد ✓") : tri("Non impostato", "Nicht gesetzt", "Not set", "Sin configurar", "Non défini", "تنظیم نشده")}
           </span>
           <input data-testid="op-gate-pin-input" value={opGatePin} onChange={(e) => setOpGatePin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric"
             placeholder={opGateSet ? tri("Nuovo PIN (4)", "Neuer PIN (4)", "New PIN (4)", "Nuevo PIN (4)", "Nouveau PIN (4)", "پین جدید (۴)") : "PIN (4)"}
-            className="w-28 bg-[#0C1019] border border-[#FF6B00]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#FF6B00] outline-none" />
+            className="w-28 bg-[#0C1019] border border-[#8a97a6]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#8a97a6] outline-none" />
           <button data-testid="op-gate-save" onClick={saveOpGate} disabled={opGatePin.length !== 4}
-            className="px-4 py-2 rounded-lg bg-[#FF6B00]/20 border border-[#FF6B00]/50 text-[#FF9D42] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
+            className="px-4 py-2 rounded-lg bg-[#8a97a6]/20 border border-[#8a97a6]/50 text-[#9aa6b2] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
             {opGateSaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓", "Guardado ✓", "Enregistré ✓", "ذخیره شد ✓") : (opGateSet ? tri("Cambia PIN", "PIN ändern", "Change PIN", "Cambiar PIN", "Changer PIN", "تغییر پین") : tri("Imposta PIN", "PIN setzen", "Set PIN", "Definir PIN", "Définir PIN", "تنظیم پین"))}
           </button>
         </div>
@@ -137,26 +137,26 @@ export default function AdminSecurity() {
           "سطح به سیتور می‌گوید هرکس را چگونه راهنمایی کند. برای فصلی‌ها ۸/۲۴ ساعت انتخاب کن: پین خودکار باطل می‌شود.")}</p>
         <div className="space-y-1.5">
           {ops.some(isExpiringSoon) && (
-            <div data-testid="pin-expiring-banner" className="mb-2 rounded-xl border border-[#EAB308]/50 bg-[#EAB308]/10 p-2.5">
-              <p className="flex items-center gap-1.5 text-[11px] font-black text-[#EAB308] uppercase tracking-wider mb-1.5">
+            <div data-testid="pin-expiring-banner" className="mb-2 rounded-xl border border-[#a6b1bc]/50 bg-[#a6b1bc]/10 p-2.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-black text-[#a6b1bc] uppercase tracking-wider mb-1.5">
                 <AlarmClock className="w-3.5 h-3.5" /> {tri("Sitor avvisa: PIN in scadenza", "Sitor warnt: PIN läuft ab", "Sitor alerts: PINs expiring", "Sitor avisa: PIN por caducar", "Sitor alerte : PIN expirant", "هشدار سیتور: انقضای پین")}
               </p>
               {ops.filter(isExpiringSoon).map((o) => (
                 <div key={o.name_key} data-testid={`pin-expiring-${o.name_key}`} className="flex items-center gap-2 py-1">
-                  <span className="text-[12px] text-[#E8EEF5] flex-1 truncate">{o.name} · <span className="text-[#EAB308]">{remainingLabel(o.expires_at)}</span></span>
-                  <button data-testid={`renew-8-${o.name_key}`} onClick={() => renew(o, 8)} className="px-2 py-1 rounded-md bg-[#EAB308]/20 border border-[#EAB308]/50 text-[#EAB308] text-[10px] font-black active:scale-95 transition-all">+8h</button>
-                  <button data-testid={`renew-24-${o.name_key}`} onClick={() => renew(o, 24)} className="px-2 py-1 rounded-md bg-[#EAB308]/20 border border-[#EAB308]/50 text-[#EAB308] text-[10px] font-black active:scale-95 transition-all">+24h</button>
+                  <span className="text-[12px] text-[#E8EEF5] flex-1 truncate">{o.name} · <span className="text-[#a6b1bc]">{remainingLabel(o.expires_at)}</span></span>
+                  <button data-testid={`renew-8-${o.name_key}`} onClick={() => renew(o, 8)} className="px-2 py-1 rounded-md bg-[#a6b1bc]/20 border border-[#a6b1bc]/50 text-[#a6b1bc] text-[10px] font-black active:scale-95 transition-all">+8h</button>
+                  <button data-testid={`renew-24-${o.name_key}`} onClick={() => renew(o, 24)} className="px-2 py-1 rounded-md bg-[#a6b1bc]/20 border border-[#a6b1bc]/50 text-[#a6b1bc] text-[10px] font-black active:scale-95 transition-all">+24h</button>
                 </div>
               ))}
             </div>
           )}
           {ops.length === 0 && <p className="text-xs text-[#64748b]">{tri("Nessun PIN operatore. Aggiungine uno per timbrature tracciabili al singolo.", "Noch keine Bediener-PINs.", "No operator PINs yet — add one for per-person clock-ins.", "Aún no hay PIN de operario.", "Aucun PIN opérateur.", "هنوز پینی نیست.")}</p>}
           {ops.map((o) => (
-            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className={`flex items-center gap-2 bg-[#0C1019]/60 border rounded-lg px-3 py-2 ${o.expired || o.active === false ? "border-[#f87171]/40 opacity-70" : o.expires_at ? "border-[#EAB308]/40" : "border-[#1e293b]"}`}>
+            <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className={`flex items-center gap-2 bg-[#0C1019]/60 border rounded-lg px-3 py-2 ${o.expired || o.active === false ? "border-[#bb8489]/40 opacity-70" : o.expires_at ? "border-[#a6b1bc]/40" : "border-[#1e293b]"}`}>
               <span className="text-sm font-semibold text-white flex-1 truncate">
                 {o.name}
                 {o.expires_at && (
-                  <span data-testid={`op-ttl-badge-${o.name_key || o.name}`} className={`ml-2 inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${o.expired || o.active === false ? "bg-[#f87171]/20 text-[#f87171]" : "bg-[#EAB308]/20 text-[#EAB308]"}`}>
+                  <span data-testid={`op-ttl-badge-${o.name_key || o.name}`} className={`ml-2 inline-flex items-center gap-1 text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded ${o.expired || o.active === false ? "bg-[#bb8489]/20 text-[#bb8489]" : "bg-[#a6b1bc]/20 text-[#a6b1bc]"}`}>
                     <Clock className="w-2.5 h-2.5" /> {o.expired || o.active === false ? tri("Scaduto", "Abgelaufen", "Expired", "Caducado", "Expiré", "منقضی") : remainingLabel(o.expires_at)}
                   </span>
                 )}
@@ -166,7 +166,7 @@ export default function AdminSecurity() {
                 style={{ color: (LEVELS.find((l) => l.id === (o.level || "novizio")) || LEVELS[0]).c }}>
                 {LEVELS.map((l) => <option key={l.id} value={l.id} style={{ color: "#fff" }}>{l.label}</option>)}
               </select>
-              <button data-testid={`op-del-${o.name_key || o.name}`} onClick={() => del(o.name)} className="text-[#f87171]/80 hover:text-[#f87171] active:scale-90 transition-all"><Trash2 className="w-4 h-4" /></button>
+              <button data-testid={`op-del-${o.name_key || o.name}`} onClick={() => del(o.name)} className="text-[#bb8489]/80 hover:text-[#bb8489] active:scale-90 transition-all"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}
         </div>
@@ -179,7 +179,7 @@ export default function AdminSecurity() {
           {log.length === 0 && <p className="text-xs text-[#64748b] p-3">{tri("Nessun accesso registrato.", "Keine Zugriffe.", "No accesses logged.", "Sin accesos.", "Aucun accès.", "دسترسی ثبت نشده.")}</p>}
           {log.map((e, i) => (
             <div key={i} data-testid={`log-row-${i}`} className="flex items-center gap-2 px-3 py-1.5 text-xs">
-              {e.ok ? <ShieldCheck className="w-3.5 h-3.5 text-[#FF9D42] shrink-0" /> : <ShieldAlert className="w-3.5 h-3.5 text-[#FFB800] shrink-0" />}
+              {e.ok ? <ShieldCheck className="w-3.5 h-3.5 text-[#9aa6b2] shrink-0" /> : <ShieldAlert className="w-3.5 h-3.5 text-[#a4afbb] shrink-0" />}
               <span className="font-bold w-20 shrink-0 text-[#CBD5E1]">{kindLabel(e.kind)}</span>
               <span className="flex-1 truncate text-white">{e.name || (e.ok ? tri("OK", "OK", "OK", "OK", "OK", "OK") : tri("PIN errato", "Falscher PIN", "Wrong PIN", "PIN incorrecto", "PIN incorrect", "پین اشتباه"))}</span>
               <span className="text-[#64748b] shrink-0">{(e.at || "").slice(0, 16).replace("T", " ")}</span>

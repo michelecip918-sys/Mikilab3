@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const TYPE_ICON = { oven: "🔥", mixer: "🥣", proofer: "🌡️", fridge: "❄️", divider: "🔪", shaper: "🥖", blast_chiller: "🧊", bench: "🪵", shelf: "🗄️", other: "⚙️" };
-const EQ_COLOR = { optimal: "#22c55e", active: "#5EEAD4", warning: "#f59e0b" };
+const EQ_COLOR = { optimal: "#6e9e85", active: "#5EEAD4", warning: "#aaa795" };
 
 export default function SpatialVisionAR({ onClose }) {
   const { lang } = useLang();

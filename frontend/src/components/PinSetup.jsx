@@ -84,7 +84,7 @@ export default function PinSetup() {
       </div>
 
       <div className="mt-4 pt-4 border-t border-[#334155]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#f59e0b] flex items-center gap-2 mb-1">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-[#aaa795] flex items-center gap-2 mb-1">
           <KeyRound className="w-4 h-4" /> {tri("PIN d'accesso al SITO (solo tu)", "Zugangs-PIN zur SEITE (nur du)", "SITE access PIN (only you)", "PIN de acceso al SITIO (solo tú)", "PIN d'accès au SITE (toi seul)", "پین ورود سایت (فقط تو)")}
         </h3>
         <p className="text-[11px] text-[#64748B] mb-2">
@@ -98,8 +98,8 @@ export default function PinSetup() {
         <div className="flex gap-2">
           <input data-testid="admin-gate-input" value={gateVal} onChange={(e) => setGateVal(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" maxLength={4}
             placeholder={tri("Nuovo PIN sito (4 cifre)", "Neuer Seiten-PIN", "New site PIN (4 digits)", "Nuevo PIN sitio", "Nouveau PIN site", "پین جدید سایت")}
-            className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#f59e0b] outline-none" />
-          <button data-testid="admin-gate-save" onClick={saveGate} disabled={gateSaving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#f59e0b] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
+            className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#aaa795] outline-none" />
+          <button data-testid="admin-gate-save" onClick={saveGate} disabled={gateSaving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#aaa795] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
             {gateSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}
           </button>
         </div>

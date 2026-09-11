@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
-const LVL = { ok: "#22c55e", warn: "#f59e0b", high: "#ef4444" };
+const LVL = { ok: "#6e9e85", warn: "#aaa795", high: "#b06e78" };
 
 // DUAL-MODE STRATEGICO: Sitor (Master Baker) critica la ricetta e presenta al
 // Boss la matrice sovrana a 3 opzioni. La decisione finale resta del Capo.
@@ -39,15 +39,15 @@ export default function RecipeAuditMatrix({ onClose }) {
     <div data-testid="recipe-audit" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-lg mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-[#f59e0b]" /> {tri("Audit Ricetta · Matrice Sovrana", "Rezept-Audit · Souveräne Matrix", "Recipe Audit · Sovereign Matrix", "Auditoría · Matriz Soberana", "Audit Recette · Matrice Souveraine", "بازبینی دستور · ماتریس حاکم")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-[#aaa795]" /> {tri("Audit Ricetta · Matrice Sovrana", "Rezept-Audit · Souveräne Matrix", "Recipe Audit · Sovereign Matrix", "Auditoría · Matriz Soberana", "Audit Recette · Matrice Souveraine", "بازبینی دستور · ماتریس حاکم")}</h2>
           <button data-testid="recipe-audit-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
         {/* Robot Sitor: stato oro/ambra in modalità strategica */}
         <div className="flex items-center gap-3 my-3 rounded-2xl border p-3" style={{ borderColor: goldState ? "#f59e0b66" : "#1e293b", background: goldState ? "#f59e0b12" : "#0b0f19" }}>
           <div className="relative">
-            {goldState && <span className="absolute inset-0 rounded-full bg-[#f59e0b]/50 blur-md animate-pulse" />}
-            <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "#f59e0b" : "#5EEAD4" }} />
+            {goldState && <span className="absolute inset-0 rounded-full bg-[#aaa795]/50 blur-md animate-pulse" />}
+            <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "#aaa795" : "#5EEAD4" }} />
           </div>
           <p className="text-[12px] text-[#cfe0ec] flex-1">{audit ? audit.mike_note : tri("Scegli una ricetta: la analizzo come Master Baker.", "Wähle ein Rezept: ich prüfe es als Master Baker.", "Pick a recipe: I'll audit it as Master Baker.", "Elige una receta: la audito como Master Baker.", "Choisis une recette : je l'audite en Master Baker.", "دستوری انتخاب کن تا مثل استاد نان بررسی کنم.")}</p>
         </div>
@@ -55,7 +55,7 @@ export default function RecipeAuditMatrix({ onClose }) {
         {!audit && (
           <div className="space-y-1.5">
             {recipes.map((r) => (
-              <button key={r.id} data-testid={`audit-pick-${r.id}`} onClick={() => run(r.id)} className="w-full text-left rounded-xl bg-[#0b0f19] border border-[#1e293b] p-3 text-sm font-bold text-white hover:border-[#f59e0b]/50 active:scale-[0.99] transition-all">{r.name}</button>
+              <button key={r.id} data-testid={`audit-pick-${r.id}`} onClick={() => run(r.id)} className="w-full text-left rounded-xl bg-[#0b0f19] border border-[#1e293b] p-3 text-sm font-bold text-white hover:border-[#aaa795]/50 active:scale-[0.99] transition-all">{r.name}</button>
             ))}
             {busy && <p className="text-center text-[#94A3B8] text-sm py-4">…</p>}
           </div>
@@ -79,7 +79,7 @@ export default function RecipeAuditMatrix({ onClose }) {
             <div className="grid grid-cols-3 gap-2">
               {["approve", "modify", "reject"].map((opt) => {
                 const rec = audit.recommended === opt;
-                const col = opt === "approve" ? "#22c55e" : opt === "modify" ? "#f59e0b" : "#ef4444";
+                const col = opt === "approve" ? "#6e9e85" : opt === "modify" ? "#aaa795" : "#b06e78";
                 const Icon = opt === "approve" ? Check : opt === "modify" ? PencilLine : Ban;
                 return (
                   <button key={opt} data-testid={`audit-${opt}`} onClick={() => decide(opt)} className="rounded-2xl border-2 p-3 text-center active:scale-95 transition-transform" style={{ borderColor: col, background: rec ? `${col}22` : "transparent" }}>

@@ -38,7 +38,7 @@ export default function ShiftPowerBoard({ editable = false }) {
   return (
     <div data-testid="shift-power-board" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[11px] font-black uppercase tracking-widest text-[#f59e0b] flex items-center gap-1.5">
+        <p className="text-[11px] font-black uppercase tracking-widest text-[#aaa795] flex items-center gap-1.5">
           <Zap className="w-4 h-4" /> {tri("Turni & Power", "Schicht & Power", "Shifts & Power", "Turnos & Power", "Services & Power", "شیفت و پاور")}
         </p>
         {editable && (
@@ -56,8 +56,8 @@ export default function ShiftPowerBoard({ editable = false }) {
           </div>
           <div className="flex items-center gap-2">
             <input value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })} className="flex-1 bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-sm text-white outline-none focus:border-[#5EEAD4]" />
-            <input type="range" min="0" max="100" value={form.efficiency_score} onChange={(e) => setForm({ ...form, efficiency_score: parseInt(e.target.value, 10) })} className="flex-1 accent-[#f59e0b]" />
-            <span className="text-xs font-black text-[#f59e0b] w-8 text-right">{form.efficiency_score}</span>
+            <input type="range" min="0" max="100" value={form.efficiency_score} onChange={(e) => setForm({ ...form, efficiency_score: parseInt(e.target.value, 10) })} className="flex-1 accent-[#aaa795]" />
+            <span className="text-xs font-black text-[#aaa795] w-8 text-right">{form.efficiency_score}</span>
           </div>
           <button data-testid="shift-form-save" onClick={add} className="w-full py-2 rounded-lg bg-[#5EEAD4] text-[#030712] font-black text-xs active:scale-95 transition-transform">{tri("Salva assegnazione", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
         </div>
@@ -74,23 +74,23 @@ export default function ShiftPowerBoard({ editable = false }) {
                 <div className="relative w-11 h-11 rounded-full flex items-center justify-center border-2 font-black text-sm" style={{ borderColor: a.color, color: a.color, background: "#030712" }}>
                   {(w.worker_name || "?").slice(0, 1).toUpperCase()}
                 </div>
-                {a.stage === 3 && <Flame className="absolute -top-1 -right-1 w-4 h-4 text-[#f59e0b]" />}
+                {a.stage === 3 && <Flame className="absolute -top-1 -right-1 w-4 h-4 text-[#aaa795]" />}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-black text-white truncate flex items-center gap-1">
                   {w.worker_name} <span className="text-[11px] font-medium text-[#94A3B8]">· {w.position}</span>
-                  {w.id === topId && <span data-testid="shift-crown" className="inline-flex items-center gap-0.5 text-[9px] font-black text-[#f59e0b]"><Crown className="w-3 h-3" /> {tri("Master", "Master", "Master", "Master", "Master", "استاد")}</span>}
+                  {w.id === topId && <span data-testid="shift-crown" className="inline-flex items-center gap-0.5 text-[9px] font-black text-[#aaa795]"><Crown className="w-3 h-3" /> {tri("Master", "Master", "Master", "Master", "Master", "استاد")}</span>}
                 </p>
                 <p className="text-[11px] font-bold" style={{ color: a.color }}>{a.power_level} · {(a.label && a.label[lang]) || a.aura_effect}
-                  {w.streak_days > 1 && <span className="ml-1 text-[#f59e0b]">🔥{w.streak_days}</span>}
+                  {w.streak_days > 1 && <span className="ml-1 text-[#aaa795]">🔥{w.streak_days}</span>}
                 </p>
                 {editable && (
-                  <input type="range" min="0" max="100" value={w.efficiency_score} onChange={(e) => setScore(w, parseInt(e.target.value, 10))} data-testid={`shift-score-${w.id}`} className="w-full mt-1 accent-[#f59e0b]" />
+                  <input type="range" min="0" max="100" value={w.efficiency_score} onChange={(e) => setScore(w, parseInt(e.target.value, 10))} data-testid={`shift-score-${w.id}`} className="w-full mt-1 accent-[#aaa795]" />
                 )}
               </div>
               <span className="text-lg font-black shrink-0" style={{ color: a.color }}>{w.efficiency_score}</span>
               {editable && (
-                <button data-testid={`shift-remove-${w.id}`} onClick={() => remove(w)} className="shrink-0 text-[#64748B] hover:text-[#f87171]"><Trash2 className="w-4 h-4" /></button>
+                <button data-testid={`shift-remove-${w.id}`} onClick={() => remove(w)} className="shrink-0 text-[#64748B] hover:text-[#bb8489]"><Trash2 className="w-4 h-4" /></button>
               )}
             </div>
           );

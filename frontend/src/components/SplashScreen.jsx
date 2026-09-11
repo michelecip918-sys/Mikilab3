@@ -34,15 +34,15 @@ export default function SplashScreen() {
           <span className="splash-ring" style={{ animationDelay: ".7s" }} />
           <span className="splash-ring" style={{ animationDelay: "1.4s" }} />
           {/* Logo con glow ciano che respira */}
-          <div className="splash-logo relative w-24 h-24 rounded-3xl overflow-hidden border border-[#FF6B00]/40 bg-[#030712]">
+          <div className="splash-logo relative w-24 h-24 rounded-3xl overflow-hidden border border-[#8a97a6]/40 bg-[#030712]">
             <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
           </div>
         </div>
 
         <h1 className="splash-title mt-7 font-cyber text-3xl sm:text-4xl font-black tracking-[0.18em] text-white uppercase">
-          MIKILAB<span className="text-[#FF6B00]"> PRO</span>
+          MIKILAB<span className="text-[#8a97a6]"> PRO</span>
         </h1>
-        <p className="font-mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.38em] text-[#FF6B00]/70 mt-2.5">
+        <p className="font-mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.38em] text-[#8a97a6]/70 mt-2.5">
           Holographic Command OS
         </p>
       </div>

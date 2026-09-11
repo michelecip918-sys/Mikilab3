@@ -32,14 +32,14 @@ export const FailsafeSwitch = ({ active, onConfirm, labelOn, labelOff, holdMs = 
     raf.current = requestAnimationFrame(tick);
   }, [tick]);
 
-  const color = active ? "#ef4444" : "#D95200";
+  const color = active ? "#b06e78" : "#D95200";
   return (
     <button
       data-testid={testid}
       onMouseDown={begin} onMouseUp={stop} onMouseLeave={stop}
       onTouchStart={begin} onTouchEnd={stop} onTouchCancel={stop}
       className="relative w-full select-none overflow-hidden rounded-2xl border-2 py-4 px-4 font-black text-sm uppercase tracking-wide active:scale-[0.99] transition-transform"
-      style={{ borderColor: color, background: active ? "rgba(239,68,68,0.12)" : "rgba(20,184,166,0.1)", color }}
+      style={{ borderColor: color, background: active ? "rgba(176,110,120,0.12)" : "rgba(20,184,166,0.1)", color }}
     >
       <span
         aria-hidden

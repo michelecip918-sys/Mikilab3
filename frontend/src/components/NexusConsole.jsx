@@ -53,7 +53,7 @@ export default function NexusConsole({ isCapo = false }) {
       ctx.lineWidth = 2;
       for (let layer = 0; layer < 2; layer++) {
         ctx.beginPath();
-        ctx.strokeStyle = layer === 0 ? "rgba(255,107,0,0.85)" : "rgba(246,210,122,0.5)";
+        ctx.strokeStyle = layer === 0 ? "rgba(138,151,166,0.85)" : "rgba(246,210,122,0.5)";
         for (let x = 0; x <= w; x += 4) {
           const y = h / 2 + Math.sin((x * 0.03) + t + layer * 1.4) * (h / 4) * Math.sin(t * 0.3 + layer);
           x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
@@ -87,67 +87,67 @@ export default function NexusConsole({ isCapo = false }) {
   );
 
   return (
-    <div data-testid="nexus-console" className="relative rounded-2xl overflow-hidden border border-[#EAB308]/25 bg-gradient-to-b from-[#0B0F19] to-[#060A10] p-5 sm:p-6">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 0%, rgba(246,210,122,0.10), transparent 55%), radial-gradient(circle at 80% 20%, rgba(255,107,0,0.10), transparent 55%)" }} />
+    <div data-testid="nexus-console" className="relative rounded-2xl overflow-hidden border border-[#a6b1bc]/25 bg-gradient-to-b from-[#0B0F19] to-[#060A10] p-5 sm:p-6">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 30% 0%, rgba(246,210,122,0.10), transparent 55%), radial-gradient(circle at 80% 20%, rgba(138,151,166,0.10), transparent 55%)" }} />
       <div className="relative z-10">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.6), rgba(255,107,0,0.3) 60%, transparent 72%)" }} />
-            <NexusAvatar size={56} className="relative border-2 border-[#EAB308]/70" />
+            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(246,210,122,0.6), rgba(138,151,166,0.3) 60%, transparent 72%)" }} />
+            <NexusAvatar size={56} className="relative border-2 border-[#a6b1bc]/70" />
           </div>
           <div className="min-w-0">
             <h3 className="font-cyber text-lg font-black uppercase tracking-[0.14em] text-white">Sitor</h3>
-            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#EAB308]">{tri("Dio dell'Arte Bianca · Plancia Olografica", "Gott der Backkunst · Holo-Konsole", "God of the White Art · Holo Console", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان")}</p>
+            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[#a6b1bc]">{tri("Dio dell'Arte Bianca · Plancia Olografica", "Gott der Backkunst · Holo-Konsole", "God of the White Art · Holo Console", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان")}</p>
           </div>
-          <button data-testid="nexus-speak" onClick={speak} className="ml-auto shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#EAB308] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /> {tri("Parla", "Sprich", "Speak", "Habla", "Parle", "بگو")}</button>
+          <button data-testid="nexus-speak" onClick={speak} className="ml-auto shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#a6b1bc] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /> {tri("Parla", "Sprich", "Speak", "Habla", "Parle", "بگو")}</button>
         </div>
 
         {/* Onda sintesi enzimatica */}
-        <div className="mt-4 rounded-xl border border-[#FF6B00]/25 bg-[#060A10]/70 p-3">
+        <div className="mt-4 rounded-xl border border-[#8a97a6]/25 bg-[#060A10]/70 p-3">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#FF6B00]"><Waves className="w-3.5 h-3.5" /> {tri("Nucleo Sintesi Enzimatica", "Enzymsynthese-Kern", "Enzymatic Synthesis Core", "Núcleo Enzimático", "Noyau Enzymatique", "هسته سنتز آنزیمی")}</span>
-            <span className="font-cyber text-sm font-black text-[#FF6B00] tabular-nums">{m.enz.toFixed(1)}%</span>
+            <span className="flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-[#8a97a6]"><Waves className="w-3.5 h-3.5" /> {tri("Nucleo Sintesi Enzimatica", "Enzymsynthese-Kern", "Enzymatic Synthesis Core", "Núcleo Enzimático", "Noyau Enzymatique", "هسته سنتز آنزیمی")}</span>
+            <span className="font-cyber text-sm font-black text-[#8a97a6] tabular-nums">{m.enz.toFixed(1)}%</span>
           </div>
           <canvas ref={barsRef} width={520} height={70} className="mt-2 w-full h-[70px]" />
         </div>
 
         {/* Metriche live */}
         <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <Metric testid="nexus-nodes" icon={Cpu} label={tri("Nodi Edge", "Edge-Knoten", "Edge Nodes", "Nodos Edge", "Nœuds Edge", "نودها")} value={m.nodes} accent="#FF6B00" glow />
-          <Metric testid="nexus-plants" icon={Globe2} label={tri("Impianti", "Anlagen", "Plants", "Plantas", "Sites", "کارخانه‌ها")} value={m.plants} accent="#FF9D42" />
-          <Metric testid="nexus-integrity" icon={ShieldHalf} label={tri("Integrità", "Integrität", "Integrity", "Integridad", "Intégrité", "یکپارچگی")} value={`${m.integrity.toFixed(1)}%`} accent="#22c55e" />
-          <Metric testid="nexus-fermtemp" icon={Activity} label={tri("Fermentazione", "Gärung", "Fermentation", "Fermentación", "Fermentation", "تخمیر")} value={`${m.temp.toFixed(1)}°`} accent="#EAB308" />
+          <Metric testid="nexus-nodes" icon={Cpu} label={tri("Nodi Edge", "Edge-Knoten", "Edge Nodes", "Nodos Edge", "Nœuds Edge", "نودها")} value={m.nodes} accent="#8a97a6" glow />
+          <Metric testid="nexus-plants" icon={Globe2} label={tri("Impianti", "Anlagen", "Plants", "Plantas", "Sites", "کارخانه‌ها")} value={m.plants} accent="#9aa6b2" />
+          <Metric testid="nexus-integrity" icon={ShieldHalf} label={tri("Integrità", "Integrität", "Integrity", "Integridad", "Intégrité", "یکپارچگی")} value={`${m.integrity.toFixed(1)}%`} accent="#6e9e85" />
+          <Metric testid="nexus-fermtemp" icon={Activity} label={tri("Fermentazione", "Gärung", "Fermentation", "Fermentación", "Fermentation", "تخمیر")} value={`${m.temp.toFixed(1)}°`} accent="#a6b1bc" />
         </div>
 
         {/* Polimorfismo difensivo + minacce */}
-        <div className="mt-3 flex items-center justify-between rounded-xl border p-3" style={{ borderColor: m.threats ? "#f43f5e55" : "#22c55e33", background: m.threats ? "rgba(244,63,94,0.08)" : "rgba(34,197,94,0.06)" }}>
+        <div className="mt-3 flex items-center justify-between rounded-xl border p-3" style={{ borderColor: m.threats ? "#f43f5e55" : "#22c55e33", background: m.threats ? "rgba(176,110,120,0.08)" : "rgba(110,158,133,0.06)" }}>
           <span className="flex items-center gap-1.5 text-[11px] font-bold" style={{ color: m.threats ? "#fda4af" : "#86efac" }}>
             <Zap className="w-3.5 h-3.5" />
             {m.threats
               ? tri("Polimorfismo difensivo: minaccia neutralizzata", "Polymorphe Abwehr: Bedrohung neutralisiert", "Defensive polymorphism: threat neutralized", "Polimorfismo: amenaza neutralizada", "Polymorphisme: menace neutralisée", "چندریختی دفاعی: تهدید خنثی شد")
               : tri("Polimorfismo difensivo attivo · nessuna minaccia", "Polymorphe Abwehr aktiv · keine Bedrohung", "Defensive polymorphism active · no threats", "Polimorfismo activo · sin amenazas", "Polymorphisme actif · aucune menace", "چندریختی دفاعی فعال · بدون تهدید")}
           </span>
-          <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: m.threats ? "#f43f5e" : "#22c55e" }}>{m.threats ? "ALERT" : "SECURE"}</span>
+          <span className="font-mono text-[10px] uppercase tracking-widest" style={{ color: m.threats ? "#b06e78" : "#6e9e85" }}>{m.threats ? "ALERT" : "SECURE"}</span>
         </div>
 
         {/* Kill-Switch — solo Capo */}
-        <div className="mt-3 rounded-xl border border-[#f43f5e]/30 bg-[#f43f5e]/5 p-3">
+        <div className="mt-3 rounded-xl border border-[#b06e78]/30 bg-[#b06e78]/5 p-3">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#f43f5e]"><Power className="w-3.5 h-3.5" /> Kill-Switch</span>
+            <span className="flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-[#b06e78]"><Power className="w-3.5 h-3.5" /> Kill-Switch</span>
             {isCapo ? (
               armed ? (
                 <button data-testid="nexus-killswitch" onClick={() => { setArmed(false); setConfirming(false); }}
-                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#f43f5e] text-[#060A10] border border-[#f43f5e] active:scale-95 transition-all">
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#b06e78] text-[#060A10] border border-[#b06e78] active:scale-95 transition-all">
                   {tri("ARMATO · disarma", "SCHARF · entschärfen", "ARMED · disarm", "ARMADO · desarmar", "ARMÉ · désarmer", "مسلح · خلع")}
                 </button>
               ) : confirming ? (
                 <button data-testid="nexus-killswitch-confirm" onClick={() => { setArmed(true); setConfirming(false); }}
-                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#f43f5e] border border-[#f43f5e] animate-pulse active:scale-95 transition-all">
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#b06e78] border border-[#b06e78] animate-pulse active:scale-95 transition-all">
                   {tri(`Conferma (${countdown})`, `Bestätigen (${countdown})`, `Confirm (${countdown})`, `Confirmar (${countdown})`, `Confirmer (${countdown})`, `تأیید (${countdown})`)}
                 </button>
               ) : (
                 <button data-testid="nexus-killswitch" onClick={() => setConfirming(true)}
-                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#f43f5e] border border-[#f43f5e]/40 active:scale-95 transition-all">
+                  className="px-3 py-1.5 rounded-lg text-[11px] font-black uppercase tracking-wider bg-[#0b0f19] text-[#b06e78] border border-[#b06e78]/40 active:scale-95 transition-all">
                   {tri("Arma protocollo", "Aktivieren", "Arm protocol", "Armar", "Armer", "مسلح‌سازی")}
                 </button>
               )
@@ -162,7 +162,7 @@ export default function NexusConsole({ isCapo = false }) {
             "Ante una violación, Sitor borra los datos de cada nodo.",
             "En cas de violation, Sitor efface les données de chaque nœud.",
             "در صورت نفوذ، میکی‌نکسوس داده‌ها را از هر نود پاک می‌کند.")}</p>
-          {armed && <motion.p data-testid="nexus-armed-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 text-[11px] font-bold text-[#f43f5e]">⚠ {tri("Protocollo armato — pronto all'annullamento istantaneo su ordine del Capo.", "Protokoll scharf — bereit zur sofortigen Löschung auf Befehl des Chefs.", "Protocol armed — ready for instant wipe on the Capo's order.", "Protocolo armado.", "Protocole armé.", "پروتکل مسلح شد.")}</motion.p>}
+          {armed && <motion.p data-testid="nexus-armed-note" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-2 text-[11px] font-bold text-[#b06e78]">⚠ {tri("Protocollo armato — pronto all'annullamento istantaneo su ordine del Capo.", "Protokoll scharf — bereit zur sofortigen Löschung auf Befehl des Chefs.", "Protocol armed — ready for instant wipe on the Capo's order.", "Protocolo armado.", "Protocole armé.", "پروتکل مسلح شد.")}</motion.p>}
         </div>
       </div>
     </div>

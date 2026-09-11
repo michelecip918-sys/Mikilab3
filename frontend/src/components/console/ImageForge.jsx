@@ -34,9 +34,9 @@ export default function ImageForge() {
   return (
     <div data-testid="image-forge" className="space-y-3">
       <div className="flex items-center gap-2.5">
-        <img src={`${PUB}/avatar_sitor.jpg`} alt="Sitor" className="w-10 h-10 rounded-xl object-cover object-top border border-[#EAB308]/50" />
+        <img src={`${PUB}/avatar_sitor.jpg`} alt="Sitor" className="w-10 h-10 rounded-xl object-cover object-top border border-[#a6b1bc]/50" />
         <div>
-          <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#EAB308]" /> {tri("Forgia di Sitor", "Sitors Schmiede", "Sitor's Forge", "Forja de Sitor", "Forge de Sitor", "کارگاه سیتور")}</p>
+          <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#a6b1bc]" /> {tri("Forgia di Sitor", "Sitors Schmiede", "Sitor's Forge", "Forja de Sitor", "Forge de Sitor", "کارگاه سیتور")}</p>
           <p className="text-[11px] text-[#94A3B8]">{tri("Dai solo un'idea: Sitor forgia l'immagine perfetta.", "Gib nur eine Idee: Sitor schmiedet das perfekte Bild.", "Give just an idea: Sitor forges the perfect image.", "Da solo una idea: Sitor forja la imagen.", "Donne juste une idée : Sitor forge l'image.", "فقط یک ایده بده: سیتور تصویر را می‌سازد.")}</p>
         </div>
       </div>
@@ -46,24 +46,24 @@ export default function ImageForge() {
         onChange={(e) => setPrompt(e.target.value)}
         rows={2}
         placeholder={tri("es. una pagnotta di farro con crosta dorata su tavolo di legno, luce del forno", "z.B. ein Dinkelbrot mit goldener Kruste", "e.g. a spelt loaf with golden crust on wood, oven light", "ej. un pan de espelta con corteza dorada", "ex. un pain d'épeautre à croûte dorée", "مثلاً یک نان جو با پوسته طلایی")}
-        className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#EAB308]/60 outline-none text-sm text-white p-3 resize-none"
+        className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#a6b1bc]/60 outline-none text-sm text-white p-3 resize-none"
       />
       <button
         data-testid="image-forge-generate"
         onClick={generate}
         disabled={busy || !prompt.trim()}
         className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-        style={{ background: "linear-gradient(90deg,#EAB308,#FF6B00)", boxShadow: "0 0 20px rgba(234,179,8,0.35)" }}
+        style={{ background: "linear-gradient(90deg,#a6b1bc,#8a97a6)", boxShadow: "0 0 20px rgba(166,177,188,0.35)" }}
       >
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {busy ? tri("Sitor sta forgiando… (fino a 1 min)", "Sitor schmiedet…", "Sitor is forging… (up to 1 min)", "Sitor está forjando…", "Sitor forge…", "سیتور در حال ساخت…") : tri("Forgia immagine", "Bild schmieden", "Forge image", "Forjar imagen", "Forger l'image", "بساز")}
       </button>
 
       {img && (
-        <div data-testid="image-forge-result" className="rounded-2xl overflow-hidden border border-[#EAB308]/40 bg-[#030712]">
+        <div data-testid="image-forge-result" className="rounded-2xl overflow-hidden border border-[#a6b1bc]/40 bg-[#030712]">
           <img src={img} alt="Sitor" className="w-full h-auto block" />
           <div className="flex gap-2 p-2.5">
-            <a data-testid="image-forge-download" href={img} download="sitor.png" className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#EAB308] text-xs font-bold active:scale-95"><Download className="w-4 h-4" /> {tri("Scarica", "Laden", "Download", "Descargar", "Télécharger", "دانلود")}</a>
+            <a data-testid="image-forge-download" href={img} download="sitor.png" className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#a6b1bc] text-xs font-bold active:scale-95"><Download className="w-4 h-4" /> {tri("Scarica", "Laden", "Download", "Descargar", "Télécharger", "دانلود")}</a>
             <button data-testid="image-forge-again" onClick={() => setImg(null)} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#94A3B8] text-xs font-bold active:scale-95"><RefreshCw className="w-4 h-4" /> {tri("Nuova", "Neu", "New", "Nueva", "Nouvelle", "جدید")}</button>
           </div>
         </div>

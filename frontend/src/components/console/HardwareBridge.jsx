@@ -26,7 +26,7 @@ export default function HardwareBridge() {
 
   const diff = weight != null ? weight - target : null;
   const pct = weight != null && target ? Math.abs(diff) / target : null;
-  const light = pct == null ? "#334155" : pct <= 0.02 ? "#FF9D42" : pct <= 0.06 ? "#FFB800" : "#f87171";
+  const light = pct == null ? "#334155" : pct <= 0.02 ? "#9aa6b2" : pct <= 0.06 ? "#a4afbb" : "#bb8489";
 
   const sendCycle = async () => {
     const o = ensureOven(); if (!ovenMode) o.simulate();
@@ -65,11 +65,11 @@ export default function HardwareBridge() {
         <div className="flex flex-wrap items-center gap-2">
           <label className="flex items-center gap-1 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2 py-1.5"><input data-testid="hw-temp-input" type="number" value={temp} onChange={(e) => setTemp(e.target.value)} className="w-16 bg-transparent text-sm text-white outline-none text-center" /><span className="text-[10px] text-[#64748b]">°C</span></label>
           <label className="flex items-center gap-1 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2 py-1.5"><input data-testid="hw-min-input" type="number" value={minutes} onChange={(e) => setMinutes(e.target.value)} className="w-14 bg-transparent text-sm text-white outline-none text-center" /><span className="text-[10px] text-[#64748b]">min</span></label>
-          <button data-testid="hw-steam" onClick={() => setSteam((v) => !v)} className={`px-3 py-1.5 rounded-lg text-xs font-bold border active:scale-95 ${steam ? "bg-[#FF9D42]/15 border-[#FF9D42]/50 text-[#FF9D42]" : "bg-[#0C1019] border-[#1e293b] text-[#64748b]"}`}>{tri("Vapore", "Dampf", "Steam", "Vapor", "Vapeur", "بخار")}</button>
+          <button data-testid="hw-steam" onClick={() => setSteam((v) => !v)} className={`px-3 py-1.5 rounded-lg text-xs font-bold border active:scale-95 ${steam ? "bg-[#9aa6b2]/15 border-[#9aa6b2]/50 text-[#9aa6b2]" : "bg-[#0C1019] border-[#1e293b] text-[#64748b]"}`}>{tri("Vapore", "Dampf", "Steam", "Vapor", "Vapeur", "بخار")}</button>
           <button data-testid="hw-oven-serial" onClick={async () => { try { await ensureOven().connectSerial(); } catch (e) { alert(e.message); } }} disabled={!hwSupport.serial} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] text-xs font-bold disabled:opacity-40 active:scale-95"><Usb className="w-3.5 h-3.5" /> Serial</button>
-          <button data-testid="hw-cycle-send" onClick={sendCycle} className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#FFB800]/15 border border-[#FFB800]/50 text-[#FFB800] text-sm font-bold active:scale-95"><Flame className="w-4 h-4" /> {tri("Avvia ciclo", "Zyklus starten", "Start cycle", "Iniciar ciclo", "Démarrer", "شروع چرخه")}</button>
+          <button data-testid="hw-cycle-send" onClick={sendCycle} className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#a4afbb]/15 border border-[#a4afbb]/50 text-[#a4afbb] text-sm font-bold active:scale-95"><Flame className="w-4 h-4" /> {tri("Avvia ciclo", "Zyklus starten", "Start cycle", "Iniciar ciclo", "Démarrer", "شروع چرخه")}</button>
         </div>
-        {plcMsg && <p data-testid="hw-plc-msg" className="mt-2 text-sm font-bold text-[#FF9D42] font-mono-data">{plcMsg}</p>}
+        {plcMsg && <p data-testid="hw-plc-msg" className="mt-2 text-sm font-bold text-[#9aa6b2] font-mono-data">{plcMsg}</p>}
         {ovenMode && <p className="mt-1 text-[11px] text-[#7d97ac]">{tri("PLC collegato", "SPS verbunden", "PLC connected", "PLC conectado", "API connecté", "پی‌ال‌سی متصل")} · {ovenMode}</p>}
       </div>
 

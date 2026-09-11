@@ -371,7 +371,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 ); })()}{rLoc(r, "name", lang)}
               </h3>
               {r.collection_name === "personal" && (
-                <span data-testid={`recipe-mine-badge-${r.id}`} className="inline-flex items-center gap-1 mt-1 text-[9px] font-extrabold uppercase tracking-wider text-[#0b0f19] px-1.5 py-0.5 rounded bg-[#EAB308]">
+                <span data-testid={`recipe-mine-badge-${r.id}`} className="inline-flex items-center gap-1 mt-1 text-[9px] font-extrabold uppercase tracking-wider text-[#0b0f19] px-1.5 py-0.5 rounded bg-[#a6b1bc]">
                   <ChefHat className="w-3 h-3" /> {triM("Mia", "Mein", "Mine", "Mía")}
                 </span>
               )}
@@ -817,7 +817,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#3E9C93" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
           {canEdit && <ActionBtn testid={`duplicate-recipe-${r.id}`} onClick={onDuplicate} color="#7E8A93" label={t("duplicate_aria")}><Copy className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`edit-recipe-${r.id}`} onClick={onEdit} color="#3E9C93"><Pencil className="w-4 h-4" /></ActionBtn>}
-          {onPromote && <ActionBtn testid={`promote-recipe-${r.id}`} onClick={onPromote} color="#EAB308" label={tri("Promuovi a MikiLab", "Zu MikiLab befördern", "Promote to MikiLab", "Promover a MikiLab")}><Share2 className="w-4 h-4" /></ActionBtn>}
+          {onPromote && <ActionBtn testid={`promote-recipe-${r.id}`} onClick={onPromote} color="#a6b1bc" label={tri("Promuovi a MikiLab", "Zu MikiLab befördern", "Promote to MikiLab", "Promover a MikiLab")}><Share2 className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#3E9C93"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
 

@@ -89,8 +89,8 @@ export default function FaceCheckIn({ tri, onRecognized }) {
   const forget = (nm) => { const list = enrolled.filter((e) => e.name !== nm); save(list); setEnrolled(list); };
 
   return (
-    <div data-testid="face-checkin" className="rounded-2xl border border-[#22d3ee]/40 bg-[#0b0f19] p-4 mb-3">
-      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#22d3ee] mb-2"><ScanFace className="w-4 h-4" /> {tri("Entra col volto", "Mit Gesicht anmelden", "Face check-in", "Entrar con el rostro", "Connexion par visage", "ورود با چهره")}</p>
+    <div data-testid="face-checkin" className="rounded-2xl border border-[#9aabb8]/40 bg-[#0b0f19] p-4 mb-3">
+      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#9aabb8] mb-2"><ScanFace className="w-4 h-4" /> {tri("Entra col volto", "Mit Gesicht anmelden", "Face check-in", "Entrar con el rostro", "Connexion par visage", "ورود با چهره")}</p>
 
       {mode === "" && (
         <>
@@ -100,8 +100,8 @@ export default function FaceCheckIn({ tri, onRecognized }) {
               <div className="flex flex-wrap gap-2 mb-3">
                 {enrolled.map((e) => (
                   <div key={e.name} className="relative">
-                    <button data-testid={`face-login-${e.name}`} onClick={() => openCam("login", e.name)} className="flex flex-col items-center gap-1 w-20 rounded-xl bg-[#0C1019] border border-[#1e293b] hover:border-[#22d3ee]/60 p-2 active:scale-95">
-                      {e.thumb ? <img src={e.thumb} alt={e.name} className="w-12 h-12 rounded-full object-cover border border-[#22d3ee]/40" /> : <span className="w-12 h-12 rounded-full bg-[#22d3ee]/10 flex items-center justify-center text-[#22d3ee]"><ScanFace className="w-6 h-6" /></span>}
+                    <button data-testid={`face-login-${e.name}`} onClick={() => openCam("login", e.name)} className="flex flex-col items-center gap-1 w-20 rounded-xl bg-[#0C1019] border border-[#1e293b] hover:border-[#9aabb8]/60 p-2 active:scale-95">
+                      {e.thumb ? <img src={e.thumb} alt={e.name} className="w-12 h-12 rounded-full object-cover border border-[#9aabb8]/40" /> : <span className="w-12 h-12 rounded-full bg-[#9aabb8]/10 flex items-center justify-center text-[#9aabb8]"><ScanFace className="w-6 h-6" /></span>}
                       <span className="text-[11px] font-bold text-white truncate max-w-full">{e.name}</span>
                     </button>
                     <button data-testid={`face-forget-${e.name}`} onClick={() => forget(e.name)} className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#030712] border border-[#1e293b] text-[#64748B] flex items-center justify-center"><X className="w-3 h-3" /></button>
@@ -110,7 +110,7 @@ export default function FaceCheckIn({ tri, onRecognized }) {
               </div>
             </>
           )}
-          <button data-testid="face-enroll-open" onClick={() => openCam("enroll")} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#22d3ee]/10 border border-[#22d3ee]/40 text-[#22d3ee] font-bold text-sm active:scale-95">
+          <button data-testid="face-enroll-open" onClick={() => openCam("enroll")} className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#9aabb8]/10 border border-[#9aabb8]/40 text-[#9aabb8] font-bold text-sm active:scale-95">
             <UserPlus className="w-4 h-4" /> {tri("Registra il mio volto", "Gesicht registrieren", "Enroll my face", "Registrar mi rostro", "Enregistrer mon visage", "ثبت چهره")}
           </button>
         </>
@@ -118,20 +118,20 @@ export default function FaceCheckIn({ tri, onRecognized }) {
 
       {mode !== "" && (
         <div className="space-y-2">
-          <div className="relative w-full rounded-xl overflow-hidden border border-[#22d3ee]/40 bg-black" style={{ aspectRatio: "4/3" }}>
+          <div className="relative w-full rounded-xl overflow-hidden border border-[#9aabb8]/40 bg-black" style={{ aspectRatio: "4/3" }}>
             <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
-            <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: faceOk ? "inset 0 0 0 3px rgba(34,197,94,0.8)" : "inset 0 0 0 3px rgba(148,163,184,0.4)" }} />
-            <span data-testid="face-status" className={`absolute top-2 left-2 text-[10px] font-black px-2 py-0.5 rounded-full ${faceOk ? "bg-[#22c55e] text-[#04070d]" : "bg-[#0b0f19]/80 text-[#94A3B8]"}`}>{faceOk ? tri("Volto rilevato", "Gesicht erkannt", "Face detected", "Rostro detectado", "Visage détecté", "چهره تشخیص داده شد") : tri("Inquadra il viso", "Gesicht zeigen", "Center your face", "Encuadra el rostro", "Cadre ton visage", "صورت را در کادر بگذار")}</span>
+            <div className="absolute inset-0 pointer-events-none" style={{ boxShadow: faceOk ? "inset 0 0 0 3px rgba(110,158,133,0.8)" : "inset 0 0 0 3px rgba(148,163,184,0.4)" }} />
+            <span data-testid="face-status" className={`absolute top-2 left-2 text-[10px] font-black px-2 py-0.5 rounded-full ${faceOk ? "bg-[#6e9e85] text-[#04070d]" : "bg-[#0b0f19]/80 text-[#94A3B8]"}`}>{faceOk ? tri("Volto rilevato", "Gesicht erkannt", "Face detected", "Rostro detectado", "Visage détecté", "چهره تشخیص داده شد") : tri("Inquadra il viso", "Gesicht zeigen", "Center your face", "Encuadra el rostro", "Cadre ton visage", "صورت را در کادر بگذار")}</span>
             <button data-testid="face-cancel" onClick={stop} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#030712]/80 border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
           </div>
           {mode === "enroll" && (
-            <input data-testid="face-enroll-name" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#22d3ee] outline-none" />
+            <input data-testid="face-enroll-name" value={newName} onChange={(e) => setNewName(e.target.value)} placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#9aabb8] outline-none" />
           )}
           <button
             data-testid="face-confirm"
             onClick={mode === "enroll" ? confirmEnroll : confirmLogin}
             disabled={busy || !faceOk || (mode === "enroll" && !newName.trim())}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#0891b2] to-[#22d3ee] text-[#04070d] font-black text-sm active:scale-95 disabled:opacity-40">
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#0891b2] to-[#9aabb8] text-[#04070d] font-black text-sm active:scale-95 disabled:opacity-40">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {mode === "enroll" ? tri("Registra ed entra", "Registrieren & rein", "Enroll and enter", "Registrar y entrar", "Enregistrer et entrer", "ثبت و ورود") : tri(`Entra come ${target}`, `Als ${target} rein`, `Enter as ${target}`, `Entrar como ${target}`, `Entrer comme ${target}`, `ورود به عنوان ${target}`)}
           </button>
         </div>

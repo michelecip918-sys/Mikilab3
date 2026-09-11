@@ -5,7 +5,7 @@ import { ChevronDown } from "lucide-react";
 // Kit olografico della plancia MikiLab Pro (Zero-Menu). Pannelli industriali,
 // divisori di zona a laser, indicatori di stato fluorescenti. Nessun menu classico.
 
-export function ZoneDivider({ title, code, accent = "#FF6B00", testid }) {
+export function ZoneDivider({ title, code, accent = "#8a97a6", testid }) {
   return (
     <div data-testid={testid} className="relative my-8 sm:my-12 flex items-center justify-center">
       <div className="absolute inset-0 flex items-center">
@@ -24,7 +24,7 @@ export function ZoneDivider({ title, code, accent = "#FF6B00", testid }) {
   );
 }
 
-export function HoloPanel({ title, sub, testid, accent = "#FF6B00", icon, defaultOpen = false, collapsible = true, beacon = "#FF9D42", children }) {
+export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaultOpen = false, collapsible = true, beacon = "#9aa6b2", children }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef(null);
   useEffect(() => {
@@ -64,7 +64,7 @@ export function HoloPanel({ title, sub, testid, accent = "#FF6B00", icon, defaul
         {(open || !collapsible) && (
           <motion.div key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }} className="overflow-hidden">
-            <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-[#FF6B00]/10">{children}</div>
+            <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-[#8a97a6]/10">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -72,7 +72,7 @@ export function HoloPanel({ title, sub, testid, accent = "#FF6B00", icon, defaul
   );
 }
 
-export function ZoneHero({ avatar, name, role, tag, accent = "#FF6B00", testid, reactive = false }) {
+export function ZoneHero({ avatar, name, role, tag, accent = "#8a97a6", testid, reactive = false }) {
   const PUB = process.env.PUBLIC_URL;
   return (
     <div data-testid={testid} className="relative flex items-center gap-4 mb-5 rounded-2xl p-4 holo-panel overflow-hidden">

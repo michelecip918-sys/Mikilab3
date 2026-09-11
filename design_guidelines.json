@@ -1,85 +1,140 @@
 {
-  "theme": {
-    "mode": "dark",
-    "name": "Industrial B2B Multiverse OS - Petrolio & Amber/Volt Yellow",
-    "description": "Redesigned industrial color palette for MikiLab Pro replacing CYAN with Deep Blu Notte / Petrolio scuro background, Industrial Energetic Orange/Volt Yellow accents, Steel Gray/Platinum structural borders, and pristine reactive status color hierarchy."
+  "project_name": "MikiLab Pro - B2B Enterprise Operating System for Bakeries & Pastry Shops",
+  "theme_mode": "light",
+  "archetype": "ARCHETYPE 4: SWISS & HIGH-CONTRAST / ENTERPRISE SAAS ELEGANCE",
+  "design_philosophy": {
+    "core_directive": "Transition from dark neon industrial/holographic theme to a crisp, refined, light enterprise look. Elimination of dark gradients, glowing borders, saturated rainbow badges, and emoji headers in favor of clear typography, subtle slate borders, monochrome Lucide icons, and calm warm-accented light surfaces.",
+    "emotional_tone": "Professional, calm, trustworthy, precise, and executive. Built for bakery/pastry floor operations and owner decision-making.",
+    "anti_patterns_banned": [
+      "No dark backgrounds (#0A0F1D, #050505, #111827) on main panels or containers",
+      "No loud neon orange (#FF6B00), electric cyan (#00F2FE), or magenta glows",
+      "No heavy drop shadows or glowing border animations (box-shadow neon ring)",
+      "No emoji characters as panel icons or structural badges in section headers",
+      "No transparent dropdown/modal backgrounds without blur or solid slate background"
+    ]
   },
-  "typography": {
-    "font_family_heading": "Barlow Condensed, Outfit, sans-serif",
-    "font_family_body": "Inter, DM Sans, system-ui, sans-serif",
-    "font_family_mono": "JetBrains Mono, Fira Code, monospace",
-    "notes": "Barlow Condensed for high-impact industrial deck headers; JetBrains Mono for telemetry, sensor readouts, and PIN walls."
-  },
-  "palette": {
-    "primary_background": "#060A10",
-    "panel_background": "#0D1520",
-    "card_background": "#141F2D",
-    "primary_accent": "#FF6B00",
-    "primary_accent_yellow": "#FFB800",
-    "secondary_accent": "#D95200",
-    "accent_hover": "#FF8533",
-    "steel_gray_neutral": "#64748B",
-    "platinum_neutral": "#CBD5E1",
-    "border_default": "#1E293B",
-    "border_highlight": "#334155",
-    "text_primary": "#F8FAFC",
-    "text_secondary": "#94A3B8",
-    "text_muted": "#64748B"
-  },
-  "status_colors": {
-    "sereno": {
-      "hex": "#0EA5E9",
-      "label": "Sereno (Sky Steel Blue)",
-      "usage": "Normal calm operational state, distinct from primary orange accent"
-    },
-    "attivo": {
-      "hex": "#22C55E",
-      "label": "Attivo (Industrial Emerald Green)",
-      "usage": "Active machinery, running dough mixing, live telemetry"
-    },
-    "teso": {
-      "hex": "#EAB308",
-      "label": "Teso (Amber/Industrial Volt Yellow)",
-      "usage": "Elevated state, warning limits, high temperature alerts"
-    },
-    "critico": {
-      "hex": "#F43F5E",
-      "label": "Critico (Emergency Crimson Red)",
-      "usage": "System fault, safety cutoff, emergency stop"
+  "color_system": {
+    "page_background": "#F8FAFC",
+    "surface_card": "#FFFFFF",
+    "surface_elevated": "#F1F5F9",
+    "surface_subtle": "#F8FAFC",
+    "border_default": "#E2E8F0",
+    "border_subtle": "#F1F5F9",
+    "border_focus": "#2563EB",
+    "text_primary": "#0F172A",
+    "text_secondary": "#475569",
+    "text_muted": "#64748B",
+    "text_accent": "#1E3A8A",
+    "primary_accent": "#0F172A",
+    "brand_blue": "#2563EB",
+    "warm_accent_bakery": "#C2410C",
+    "semantic": {
+      "success_bg": "#F0FDF4",
+      "success_border": "#BBF7D0",
+      "success_text": "#15803D",
+      "success_badge": "#DCFCE7",
+      "warning_bg": "#FEF3C7",
+      "warning_border": "#FDE68A",
+      "warning_text": "#B45309",
+      "warning_badge": "#FEF9C3",
+      "danger_bg": "#FEF2F2",
+      "danger_border": "#FECACA",
+      "danger_text": "#B91C1C",
+      "danger_badge": "#FEE2E2",
+      "info_bg": "#EFF6FF",
+      "info_border": "#BFDBFE",
+      "info_text": "#1D4ED8",
+      "info_badge": "#DBEAFE"
     }
   },
-  "glow_and_effects": {
-    "orange_glow": "0 0 15px rgba(255, 107, 0, 0.35)",
-    "orange_glow_intense": "0 0 25px rgba(255, 107, 0, 0.6)",
-    "steel_glow": "0 0 12px rgba(100, 116, 139, 0.25)",
-    "panel_shadow": "0 10px 30px -10px rgba(0, 0, 0, 0.8)",
-    "holo_border_gradient": "linear-gradient(135deg, rgba(255,107,0,0.4) 0%, rgba(100,116,139,0.2) 50%, rgba(13,21,32,0.8) 100%)"
+  "typography": {
+    "font_family_headings": "Plus Jakarta Sans, sans-serif",
+    "font_family_body": "Inter, sans-serif",
+    "font_family_mono": "JetBrains Mono, monospace",
+    "scale": {
+      "h1": "text-3xl sm:text-4xl font-bold tracking-tight text-slate-900",
+      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900",
+      "h3": "text-xl sm:text-2xl font-semibold text-slate-900",
+      "h4": "text-lg font-medium text-slate-900",
+      "body_lg": "text-base text-slate-700 leading-relaxed",
+      "body": "text-sm text-slate-600 leading-normal",
+      "caption": "text-xs font-medium text-slate-500 uppercase tracking-wider"
+    }
   },
-  "mapping_table": {
-    "#00F0FF": "#FF6B00",
-    "#00f0ff": "#FF6B00",
-    "#070A10": "#060A10",
-    "#0E1620": "#0D1520",
-    "#7DD3FC": "#FF9D42",
-    "#F6D27A": "#EAB308",
-    "#5E8CA8": "#64748B",
-    "#1e293b": "#1E293B",
-    "#8aa0b4": "#94A3B8",
-    "#9fb3c4": "#CBD5E1",
-    "text-cyan-400": "text-orange-500",
-    "bg-cyan-500": "bg-orange-500",
-    "border-cyan-500": "border-orange-500",
-    "shadow-cyan-500": "shadow-orange-500"
+  "component_guidelines": {
+    "cards_and_panels": {
+      "background": "bg-white",
+      "border": "border border-slate-200/80",
+      "radius": "rounded-xl",
+      "shadow": "shadow-sm hover:shadow-md transition-shadow duration-200",
+      "padding": "p-5 md:p-6"
+    },
+    "buttons": {
+      "primary": "bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-primary'",
+      "secondary": "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-secondary'",
+      "accent": "bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-accent'",
+      "ghost": "hover:bg-slate-100 text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg transition-colors data-testid='button-ghost'"
+    },
+    "tabs_and_pills": {
+      "container": "bg-slate-100 p-1 rounded-lg border border-slate-200/60 inline-flex gap-1",
+      "active_tab": "bg-white text-slate-900 font-medium shadow-sm rounded-md px-3 py-1.5 text-sm transition-all",
+      "inactive_tab": "text-slate-600 hover:text-slate-900 px-3 py-1.5 text-sm font-medium transition-colors"
+    },
+    "inputs_and_selects": {
+      "base": "bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all",
+      "dropdown_menu": "bg-white border border-slate-200 shadow-lg rounded-xl p-1 z-50 min-w-[160px]"
+    },
+    "header_nav": {
+      "background": "bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40",
+      "text": "text-slate-900 font-semibold"
+    },
+    "command_deck_hero": {
+      "background": "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md border border-slate-800 relative overflow-hidden",
+      "accent_pill": "bg-white/10 text-slate-200 border border-white/15 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium"
+    }
   },
-  "instructions_to_main_agent": {
-    "css_variables_update": "Update src/index.css :root variables to set --accent to 24 100% 50% (orange) or update custom classes .holo-root, .holo-panel, .holo-corner to use #FF6B00 instead of #00F0FF.",
-    "tailwind_config": "Map accent color in tailwind.config.js to orange-500 / #FF6B00 and slate-800/900 for dark backgrounds.",
-    "data_testid_rule": "Ensure all interactive buttons, status indicators, and PIN keypads contain kebab-case data-testid attributes.",
-    "transparent_bg_prohibition": "DO NOT use transparent backgrounds for floating headers, dropdowns, or modals. Use backdrop-blur with bg-[#0D1520]/90 or solid #0D1520."
+  "legacy_color_mapping": {
+    "#0A0F1D": "#F8FAFC (Page background)",
+    "#131B2E": "#FFFFFF (Card background)",
+    "#1E293B (dark elevated)": "#F1F5F9 (Light elevated background)",
+    "#FF6B00 (Loud Orange)": "#C2410C (Restrained Bakery Terracotta) or #2563EB (Enterprise Blue)",
+    "#FFB800 / #EAB308 (Loud Amber)": "#D97706 (Muted Slate Amber for warnings)",
+    "#00F2FE / #06B6D4 (Electric Teal)": "#2563EB (Enterprise Blue) or #0284C7 (Clean Slate Cyan)",
+    "#00E676 / #22C55E (Neon Green)": "#16A34A (Clean Muted Success Green)",
+    "#FF2A6D / #EF4444 (Neon Red/Pink)": "#DC2626 (Clean Muted Error Red)"
   },
-  "UNIVERSAL GUIDELINES FOR MAIN AGENT": {
-    "spacing": "Maintain 2-3x generous spacing in command deck widgets.",
-    "contrast": "Ensure secondary platinum text (#CBD5E1) maintains > 4.5:1 ratio against petrolio background (#0D1520).",
-    "testing": "Keep reactive deck status semantics distinct: Sky Steel Blue for Sereno, Emerald for Attivo, Yellow/Amber for Teso, Crimson for Critico."
-  }
+  "css_variables": {
+    "--bg-page": "#F8FAFC",
+    "--bg-card": "#FFFFFF",
+    "--bg-elevated": "#F1F5F9",
+    "--border-color": "#E2E8F0",
+    "--text-primary": "#0F172A",
+    "--text-secondary": "#475569",
+    "--text-muted": "#64748B",
+    "--accent-primary": "#0F172A",
+    "--accent-blue": "#2563EB",
+    "--accent-terracotta": "#C2410C"
+  },
+  "image_urls": {
+    "command_deck_hero": [
+      {
+        "url": "https://images.unsplash.com/photo-1772758632564-3c70e5260844?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTJ8MHwxfHNlYXJjaHxffGFydGlzYW4lMjBiYWtlciUyMHByb2Zlc3Npb25hbCUyMGJha2VyeSUyMGtpdGNoZW58ZW58MHx8fHwxNzg5MTEzNTAxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Artisan baker in professional production environment",
+        "category": "hero_background"
+      },
+      {
+        "url": "https://images.pexels.com/photos/8633662/pexels-photo-8633662.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+        "description": "Freshly baked artisan sourdough loaves on rustic shelf",
+        "category": "bakery_products"
+      }
+    ]
+  },
+  "instructions_to_main_agent": [
+    "Apply light mode CSS variables to index.css and App.css as default :root styles.",
+    "Replace dark Tailwind classes (bg-slate-900, bg-gray-900, bg-[#0A0F1D], text-white on main containers) with light theme equivalents (bg-slate-50, bg-white, text-slate-900, border-slate-200).",
+    "Replace emoji icons in section headers with monochrome Lucide icons (e.g. lucide-react LayoutDashboard, Utensils, Users, Wrench, ShieldCheck, ShoppingBag).",
+    "Ensure all buttons, cards, selects, tabs, and input fields include data-testid attributes for automated testing.",
+    "Remove glowing border effects (glow-orange, glow-teal, box-shadow animations) and replace with clean 1px solid slate-200 borders.",
+    "Keep semantic colors reserved strictly for status badges (success/warning/danger/info) using the light background tint variants."
+  ]
 }

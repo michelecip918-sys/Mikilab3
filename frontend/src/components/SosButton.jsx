@@ -49,12 +49,12 @@ export default function SosButton({ role = "", operator = "" }) {
   }, []);
 
   return (
-    <div data-testid="sos-panel" className="w-full rounded-2xl border border-[#f43f5e]/40 bg-[#f43f5e]/5 p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#f43f5e] flex items-center gap-1.5 mb-2"><AlertOctagon className="w-3.5 h-3.5" /> {tri("Emergenza SOS", "SOS Notfall", "SOS Emergency", "Emergencia SOS", "Urgence SOS", "اضطراری SOS")}</p>
+    <div data-testid="sos-panel" className="w-full rounded-2xl border border-[#b06e78]/40 bg-[#b06e78]/5 p-3">
+      <p className="text-[11px] font-black uppercase tracking-widest text-[#b06e78] flex items-center gap-1.5 mb-2"><AlertOctagon className="w-3.5 h-3.5" /> {tri("Emergenza SOS", "SOS Notfall", "SOS Emergency", "Emergencia SOS", "Urgence SOS", "اضطراری SOS")}</p>
       <div className="flex flex-wrap gap-1.5 mb-3">
         {MACHINES.map((m) => (
           <button key={m} data-testid={`sos-machine-${m.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`} onClick={() => setMachine((v) => (v === m ? "" : m))}
-            className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${machine === m ? "bg-[#f43f5e]/20 border-[#f43f5e]/60 text-[#f43f5e]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+            className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 transition-all ${machine === m ? "bg-[#b06e78]/20 border-[#b06e78]/60 text-[#b06e78]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
             {m}
           </button>
         ))}
@@ -63,7 +63,7 @@ export default function SosButton({ role = "", operator = "" }) {
         data-testid="sos-hold-btn"
         onPointerDown={begin} onPointerUp={end} onPointerLeave={end} onPointerCancel={end}
         className="relative w-full overflow-hidden inline-flex items-center justify-center gap-2 py-4 rounded-2xl font-black text-sm select-none touch-none active:scale-98 transition-transform"
-        style={{ background: sent ? "linear-gradient(90deg,#16a34a,#15803d)" : "linear-gradient(90deg,#b91c1c,#f43f5e)", color: "#fff", boxShadow: "0 0 22px rgba(244,63,94,0.35)" }}
+        style={{ background: sent ? "linear-gradient(90deg,#5f8a70,#15803d)" : "linear-gradient(90deg,#b91c1c,#b06e78)", color: "#fff", boxShadow: "0 0 22px rgba(176,110,120,0.35)" }}
       >
         <span className="absolute left-0 top-0 bottom-0 bg-white/25" style={{ width: `${progress * 100}%` }} aria-hidden />
         <span className="relative flex items-center gap-2">

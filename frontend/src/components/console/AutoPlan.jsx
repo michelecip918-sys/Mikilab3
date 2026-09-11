@@ -54,11 +54,11 @@ export default function AutoPlan() {
       <div className="flex flex-wrap gap-2">
         <button data-testid="autoplan-gen" onClick={gen} disabled={busy || busyOpt}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-          style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)", boxShadow: "0 0 20px rgba(255,107,0,0.35)" }}>
+          style={{ background: "linear-gradient(90deg,#9aa6b2,#8a97a6)", boxShadow: "0 0 20px rgba(138,151,166,0.35)" }}>
           <Sparkles className="w-4 h-4" /> {busy ? tri("Sitor pianifica…", "Sitor plant…", "Sitor is planning…", "Sitor planifica…", "Sitor planifie…", "برنامه‌ریزی…") : tri("Piano ottimale", "Optimaler Plan", "Optimal plan", "Plan óptimo", "Plan optimal", "برنامه بهینه")}
         </button>
         <button data-testid="autoplan-gen-options" onClick={genOptions} disabled={busy || busyOpt}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#FF9D42] border border-[#FF9D42]/50 bg-[#FF9D42]/10 active:scale-95 transition-all disabled:opacity-50">
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl font-cyber font-black text-sm text-[#9aa6b2] border border-[#9aa6b2]/50 bg-[#9aa6b2]/10 active:scale-95 transition-all disabled:opacity-50">
           <Layers className="w-4 h-4" /> {busyOpt ? tri("Sitor prepara le opzioni…", "Optionen…", "Preparing options…", "Preparando opciones…", "Options…", "گزینه‌ها…") : tri("3 opzioni tra cui scegliere", "3 Optionen", "3 options to choose", "3 opciones", "3 options", "۳ گزینه")}
         </button>
       </div>
@@ -69,9 +69,9 @@ export default function AutoPlan() {
           {options.map((o, i) => (
             <button key={i} data-testid={`autoplan-option-${i}`} onClick={() => chooseOption(i)}
               className="text-left rounded-xl p-3 border transition-all active:scale-[0.98]"
-              style={chosen === i ? { borderColor: "#FF9D42", background: "rgba(255,157,66,0.12)", boxShadow: "0 0 18px rgba(255,157,66,0.3)" } : { borderColor: "#334155", background: "#0C1019" }}>
+              style={chosen === i ? { borderColor: "#9aa6b2", background: "rgba(255,157,66,0.12)", boxShadow: "0 0 18px rgba(255,157,66,0.3)" } : { borderColor: "#334155", background: "#0C1019" }}>
               <div className="flex items-center gap-1.5 mb-1">
-                {chosen === i && <Check className="w-4 h-4 text-[#FF9D42]" />}
+                {chosen === i && <Check className="w-4 h-4 text-[#9aa6b2]" />}
                 <span className="text-sm font-black text-white">{o.label || `Opzione ${i + 1}`}</span>
               </div>
               <p className="text-[11px] text-[#94A3B8] leading-snug">{o.strategy || o.summary}</p>
@@ -84,21 +84,21 @@ export default function AutoPlan() {
       {res && (
         <div data-testid="autoplan-result" className="space-y-3 pt-1">
           {res.summary && (
-            <div className="flex items-start gap-2 bg-[#0C1019]/70 border border-[#FF9D42]/30 rounded-xl p-3">
+            <div className="flex items-start gap-2 bg-[#0C1019]/70 border border-[#9aa6b2]/30 rounded-xl p-3">
               <p className="flex-1 text-sm text-[#d6fbff]">{res.summary}</p>
-              {res.spoken && <button data-testid="autoplan-speak" onClick={() => { try { playTTS(res.spoken, { lang, voice: "bakemix" }); } catch (e) { /* */ } }} className="text-[#FF9D42] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /></button>}
+              {res.spoken && <button data-testid="autoplan-speak" onClick={() => { try { playTTS(res.spoken, { lang, voice: "bakemix" }); } catch (e) { /* */ } }} className="text-[#9aa6b2] active:scale-90 transition-all"><Volume2 className="w-4 h-4" /></button>}
             </div>
           )}
           {(res.batches || []).length > 0 && (
             <button data-testid="autoplan-dispatch" onClick={async () => {
               try { const r = await mikeApi.dispatch(res.batches); try { await deusApi.broadcast({ plan_markdown: res.summary || "", headline: res.spoken || res.summary || "" }); } catch { /* */ } try { window.dispatchEvent(new Event("mikilab-tasks-updated")); } catch { /* */ } toast.success(tri(`Inviati ${r.created} lotti agli operatori.`, `${r.created} Lose ans Team gesendet.`, `Sent ${r.created} batches to operators.`, `${r.created} lotes enviados.`, `${r.created} lots envoyés.`, `${r.created} دسته ارسال شد.`)); } catch (e) { toast.error(tri("Invio non riuscito.", "Senden fehlgeschlagen.", "Dispatch failed.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق.")); }
-            }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-bold text-sm active:scale-95 transition-all">
+            }} className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#9aa6b2]/15 border border-[#9aa6b2]/50 text-[#9aa6b2] font-bold text-sm active:scale-95 transition-all">
               <Send className="w-4 h-4" /> {tri("Invia agli operatori", "Ans Team senden", "Send to operators", "Enviar a operarios", "Envoyer aux opérateurs", "ارسال به اپراتورها")}
             </button>
           )}
           {(res.batches || []).map((b, i) => (
             <div key={i} data-testid={`autoplan-batch-${i}`} className="flex items-center gap-3 bg-[#0C1019]/60 border border-[#64748B]/25 rounded-lg px-3 py-2">
-              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-black text-xs shrink-0">{b.seq || i + 1}</span>
+              <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#9aa6b2]/15 border border-[#9aa6b2]/50 text-[#9aa6b2] font-black text-xs shrink-0">{b.seq || i + 1}</span>
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-bold text-white truncate">{b.product} {b.qty ? `· ${b.qty}` : ""}</p>
                 <p className="text-[11px] text-[#94A3B8] truncate">{[b.line, b.start, b.duration_min ? `${b.duration_min}′` : null, b.assignee].filter(Boolean).join(" · ")}{b.rationale ? ` — ${b.rationale}` : ""}</p>
@@ -106,7 +106,7 @@ export default function AutoPlan() {
             </div>
           ))}
           {(res.warnings || []).map((w, i) => (
-            <p key={i} data-testid={`autoplan-warn-${i}`} className="text-xs text-[#FFB800] flex items-center gap-1.5">⚠ {w}</p>
+            <p key={i} data-testid={`autoplan-warn-${i}`} className="text-xs text-[#a4afbb] flex items-center gap-1.5">⚠ {w}</p>
           ))}
         </div>
       )}

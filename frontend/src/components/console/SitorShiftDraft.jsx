@@ -26,7 +26,7 @@ export default function SitorShiftDraft() {
   const saveSched = async (next) => {
     setSched(next);
     try {
-      await deusApi.shiftScheduleSet({ ...next, lang });
+      await deusApi.shiftScheduleSet({ ...next, lang, tz_offset_min: -new Date().getTimezoneOffset() });
       setSchedSaved(true);
       setTimeout(() => setSchedSaved(false), 1800);
     } catch { toast.error(tri("Errore salvataggio orario.", "Fehler beim Speichern.", "Save error.", "Error al guardar.", "Erreur d'enregistrement.", "خطای ذخیره.")); }
@@ -66,12 +66,12 @@ export default function SitorShiftDraft() {
   return (
     <div data-testid="sitor-shift-draft" className="space-y-2.5">
       <div className="flex items-center gap-2">
-        <ClipboardCheck className="w-4 h-4 text-[#EAB308] shrink-0" />
-        <p className="text-xs font-black uppercase tracking-wide text-[#EAB308] flex-1 min-w-0">
+        <ClipboardCheck className="w-4 h-4 text-[#a6b1bc] shrink-0" />
+        <p className="text-xs font-black uppercase tracking-wide text-[#a6b1bc] flex-1 min-w-0">
           {tri("Report Fine Turno · Bozza di Sitor", "Schichtbericht · Sitor-Entwurf", "End-of-Shift Report · Sitor's Draft", "Informe Fin de Turno · Borrador de Sitor", "Rapport de Fin de Service · Brouillon de Sitor", "گزارش پایان شیفت · پیش‌نویس سیتور")}
         </p>
         <button data-testid="sitor-draft-generate" onClick={generate} disabled={busy}
-          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#EAB308]/10 border border-[#EAB308]/35 text-[#EAB308] text-xs font-bold hover:bg-[#EAB308]/20 active:scale-95 disabled:opacity-50">
+          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] text-xs font-bold hover:bg-[#a6b1bc]/20 active:scale-95 disabled:opacity-50">
           {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
           {current ? tri("Rigenera", "Neu", "Regenerate", "Regenerar", "Régénérer", "بازسازی") : tri("Genera bozza", "Entwurf", "Generate draft", "Generar", "Générer", "بساز")}
         </button>
@@ -92,7 +92,7 @@ export default function SitorShiftDraft() {
           <label className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
             <input data-testid="sitor-schedule-toggle" type="checkbox" checked={sched.enabled}
               onChange={(e) => saveSched({ ...sched, enabled: e.target.checked })}
-              className="w-4 h-4 accent-[#EAB308] shrink-0" />
+              className="w-4 h-4 accent-[#a6b1bc] shrink-0" />
             <span className="text-[11px] text-[#CBD5E1] font-semibold">
               {tri("Report automatico all'orario di chiusura", "Automatischer Bericht zur Schließzeit", "Auto report at closing time", "Informe automático al cerrar", "Rapport auto à la fermeture", "گزارش خودکار در زمان بستن")}
             </span>
@@ -102,13 +102,13 @@ export default function SitorShiftDraft() {
             <input data-testid="sitor-schedule-time" type="time" value={sched.time}
               onChange={(e) => saveSched({ ...sched, time: e.target.value })}
               disabled={!sched.enabled}
-              className="bg-[#060A10] border border-[#1e293b] rounded-lg px-2 py-1 text-xs text-white focus:border-[#EAB308] outline-none disabled:opacity-40" />
+              className="bg-[#060A10] border border-[#1e293b] rounded-lg px-2 py-1 text-xs text-white focus:border-[#a6b1bc] outline-none disabled:opacity-40" />
           </div>
         </div>
         <p className="text-[10px] text-[#64748B]">
           {schedSaved
-            ? tri("Salvato ✓ — Sitor scriverà la bozza da solo a quest'ora (orario UTC).", "Gespeichert ✓ — Sitor schreibt den Entwurf selbst (UTC).", "Saved ✓ — Sitor will draft it on its own at this time (UTC).", "Guardado ✓ (hora UTC).", "Enregistré ✓ (heure UTC).", "ذخیره شد ✓")
-            : tri("Anche senza rapporto operaio, a quest'ora Sitor compila la bozza con i dati raccolti. Orario in UTC.", "Auch ohne Bericht erstellt Sitor zur eingestellten Zeit den Entwurf. UTC.", "Even with no operator report, at this time Sitor compiles the draft from collected data. UTC time.", "Aunque no haya informe, Sitor redacta a esa hora. UTC.", "Même sans rapport, Sitor rédige à cette heure. UTC.", "حتی بدون گزارش، سیتور در این ساعت پیش‌نویس را می‌سازد. UTC")}
+            ? tri("Salvato ✓ — Sitor scriverà la bozza da solo a quest'ora (ora locale della sede).", "Gespeichert ✓ — Sitor schreibt den Entwurf selbst (Ortszeit).", "Saved ✓ — Sitor will draft it on its own at this time (local time).", "Guardado ✓ (hora local).", "Enregistré ✓ (heure locale).", "ذخیره شد ✓ (زمان محلی)")
+            : tri("Anche senza rapporto operaio, a quest'ora Sitor compila la bozza con i dati raccolti. Ora locale della sede.", "Auch ohne Bericht erstellt Sitor zur eingestellten Ortszeit den Entwurf.", "Even with no operator report, at this time Sitor compiles the draft from collected data. Local time.", "Aunque no haya informe, Sitor redacta a esa hora (local).", "Même sans rapport, Sitor rédige à cette heure (locale).", "حتی بدون گزارش، سیتور در این ساعت (محلی) پیش‌نویس را می‌سازد.")}
         </p>
       </div>
 
@@ -117,9 +117,9 @@ export default function SitorShiftDraft() {
           {tri("Nessuna bozza ancora: appena arrivano dati dal turno, Sitor la scrive da solo.", "Noch kein Entwurf: sobald Schichtdaten eintreffen, schreibt Sitor ihn selbst.", "No draft yet: as soon as shift data arrives, Sitor writes it on its own.", "Sin borrador: Sitor lo escribe solo al llegar datos.", "Aucun brouillon : Sitor l'écrit dès l'arrivée des données.", "هنوز پیش‌نویسی نیست.")}
         </div>
       ) : (
-        <div className="rounded-xl bg-[#0C1019] border border-[#EAB308]/25 p-3 space-y-2">
+        <div className="rounded-xl bg-[#0C1019] border border-[#a6b1bc]/25 p-3 space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <span data-testid="sitor-draft-status" className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded border ${current.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "bg-[#EAB308]/10 text-[#EAB308] border-[#EAB308]/30"}`}>
+            <span data-testid="sitor-draft-status" className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded border ${current.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "bg-[#a6b1bc]/10 text-[#a6b1bc] border-[#a6b1bc]/30"}`}>
               {current.status === "approved" ? tri("Approvato", "Freigegeben", "Approved", "Aprobado", "Approuvé", "تأییدشده") : tri("Bozza", "Entwurf", "Draft", "Borrador", "Brouillon", "پیش‌نویس")}
             </span>
             <span className="text-[10px] text-[#64748B] font-mono-data">{current.date} · {current.trigger === "auto" ? tri("auto", "auto", "auto", "auto", "auto", "خودکار") : tri("manuale", "manuell", "manual", "manual", "manuel", "دستی")}</span>
@@ -129,7 +129,7 @@ export default function SitorShiftDraft() {
               </span>
             )}
           </div>
-          <div data-testid="sitor-draft-text" className="text-[13px] leading-relaxed text-[#E8EEF5] max-h-72 overflow-y-auto pr-1 [&_strong]:text-[#EAB308] [&_h1]:text-base [&_h1]:font-black [&_h1]:mb-2 [&_h2]:text-sm [&_h2]:font-black [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:mb-2 [&_li]:mb-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_hr]:border-[#1e293b] [&_hr]:my-2">
+          <div data-testid="sitor-draft-text" className="text-[13px] leading-relaxed text-[#E8EEF5] max-h-72 overflow-y-auto pr-1 [&_strong]:text-[#a6b1bc] [&_h1]:text-base [&_h1]:font-black [&_h1]:mb-2 [&_h2]:text-sm [&_h2]:font-black [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:mb-2 [&_li]:mb-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_hr]:border-[#1e293b] [&_hr]:my-2">
             <ReactMarkdown>{current.text}</ReactMarkdown>
           </div>
           {current.status !== "approved" && (
@@ -149,7 +149,7 @@ export default function SitorShiftDraft() {
               {d.date} {d.status === "approved" ? "✓" : ""}
             </span>
           ))}
-          <button data-testid="sitor-draft-refresh" onClick={load} className="text-[#64748B] hover:text-[#EAB308] active:scale-95"><RefreshCw className="w-3.5 h-3.5" /></button>
+          <button data-testid="sitor-draft-refresh" onClick={load} className="text-[#64748B] hover:text-[#a6b1bc] active:scale-95"><RefreshCw className="w-3.5 h-3.5" /></button>
         </div>
       )}
     </div>

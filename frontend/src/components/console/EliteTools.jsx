@@ -90,10 +90,10 @@ export default function EliteTools() {
             ].map(([k, v], i) => (
               <div key={i} className="bg-[#0C1019]/70 border border-[#64748B]/25 rounded-lg py-2">
                 <p className="text-[9px] uppercase tracking-wider text-[#7d97ac]">{k}</p>
-                <p className="text-lg font-black text-[#FF9D42]">{v}</p>
+                <p className="text-lg font-black text-[#9aa6b2]">{v}</p>
               </div>
             ))}
-            {fcRes.margin != null && <p className="col-span-2 sm:col-span-4 text-xs text-[#CBD5E1]">{tri("Margine per infornata", "Marge/Charge", "Margin/batch", "Margen/hornada", "Marge/fournée", "حاشیه")}: <span className="font-bold text-[#FF9D42]">€ {fcRes.margin}</span></p>}
+            {fcRes.margin != null && <p className="col-span-2 sm:col-span-4 text-xs text-[#CBD5E1]">{tri("Margine per infornata", "Marge/Charge", "Margin/batch", "Margen/hornada", "Marge/fournée", "حاشیه")}: <span className="font-bold text-[#9aa6b2]">€ {fcRes.margin}</span></p>}
           </div>
         )}
       </div>
@@ -107,13 +107,13 @@ export default function EliteTools() {
           <Field label={tri("Temperatura", "Temperatur", "Temperature", "Temperatura", "Température", "دما")} value={env.temp_c} onChange={updE("temp_c")} unit="°C" />
           <Field label={tri("Umidità", "Feuchte", "Humidity", "Humedad", "Humidité", "رطوبت")} value={env.humidity_pct} onChange={updE("humidity_pct")} unit="%" />
           <button data-testid="env-run" onClick={runEnv} className="self-end h-[38px] rounded-lg bg-[#64748B]/20 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm active:scale-95 transition-all">{tri("Suggerisci", "Vorschlag", "Suggest", "Sugerir", "Suggérer", "پیشنهاد")}</button>
-          <button data-testid="env-auto" onClick={async () => { try { const w = await envApi.weatherNow(); if (w && w.ok) { const ne = { ...env, temp_c: w.temp_c, humidity_pct: w.humidity_pct }; setEnv(ne); const p = Object.fromEntries(Object.entries(ne).map(([k, v]) => [k, Number(v) || 0])); setEnvRes(await envApi.compute(p)); } } catch (e) { /* */ } }} className="self-end h-[38px] inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#FF9D42]/15 border border-[#FF9D42]/50 text-[#FF9D42] font-bold text-sm active:scale-95 transition-all"><CloudSun className="w-4 h-4" /> {tri("Auto meteo", "Auto Wetter", "Auto weather", "Auto clima", "Auto météo", "خودکار هوا")}</button>
+          <button data-testid="env-auto" onClick={async () => { try { const w = await envApi.weatherNow(); if (w && w.ok) { const ne = { ...env, temp_c: w.temp_c, humidity_pct: w.humidity_pct }; setEnv(ne); const p = Object.fromEntries(Object.entries(ne).map(([k, v]) => [k, Number(v) || 0])); setEnvRes(await envApi.compute(p)); } } catch (e) { /* */ } }} className="self-end h-[38px] inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#9aa6b2]/15 border border-[#9aa6b2]/50 text-[#9aa6b2] font-bold text-sm active:scale-95 transition-all"><CloudSun className="w-4 h-4" /> {tri("Auto meteo", "Auto Wetter", "Auto weather", "Auto clima", "Auto météo", "خودکار هوا")}</button>
         </div>
         {envRes && (
           <div data-testid="env-result" className="bg-[#0C1019]/70 border border-[#64748B]/25 rounded-lg p-3">
             <div className="flex gap-4 mb-2">
-              <div><p className="text-[9px] uppercase tracking-wider text-[#7d97ac]">{tri("Lievitazione", "Gare", "Proof", "Fermentación", "Pousse", "تخمیر")}</p><p className="text-xl font-black text-[#FF9D42]">{envRes.adjusted_proof_hours} h</p></div>
-              <div><p className="text-[9px] uppercase tracking-wider text-[#7d97ac]">{tri("Idratazione", "Hydratation", "Hydration", "Hidratación", "Hydratation", "هیدراتاسیون")}</p><p className="text-xl font-black text-[#FF9D42]">{envRes.hydration_percent}%</p></div>
+              <div><p className="text-[9px] uppercase tracking-wider text-[#7d97ac]">{tri("Lievitazione", "Gare", "Proof", "Fermentación", "Pousse", "تخمیر")}</p><p className="text-xl font-black text-[#9aa6b2]">{envRes.adjusted_proof_hours} h</p></div>
+              <div><p className="text-[9px] uppercase tracking-wider text-[#7d97ac]">{tri("Idratazione", "Hydratation", "Hydration", "Hidratación", "Hydratation", "هیدراتاسیون")}</p><p className="text-xl font-black text-[#9aa6b2]">{envRes.hydration_percent}%</p></div>
             </div>
             <p className="text-xs text-[#CBD5E1]">{envRes.note}</p>
           </div>

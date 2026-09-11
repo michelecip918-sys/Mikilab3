@@ -1605,35 +1605,39 @@ async def capo_shift_draft_patch(did: str, body: ShiftDraftPatchReq, admin: dict
 # ---- Report programmato: Sitor genera la bozza da solo a un orario fisso di chiusura ----
 class ShiftScheduleReq(BaseModel):
     enabled: bool = False
-    time: str = "20:00"   # HH:MM, orario locale della sede
+    time: str = "20:00"   # HH:MM, orario LOCALE della sede
     lang: str = "it"
+    tz_offset_min: int = 0  # minuti da aggiungere a UTC per ottenere l'ora locale (es. Roma estate = +120)
 
 
 @api_router.get("/capo/sitor/shift-schedule")
 async def capo_shift_schedule_get(admin: dict = Depends(require_admin)):
     doc = await db.app_meta.find_one({"_key": "shift_schedule"}, {"_id": 0, "_key": 0})
-    return doc or {"enabled": False, "time": "20:00", "lang": "it"}
+    return doc or {"enabled": False, "time": "20:00", "lang": "it", "tz_offset_min": 0}
 
 
 @api_router.put("/capo/sitor/shift-schedule")
 async def capo_shift_schedule_set(body: ShiftScheduleReq, admin: dict = Depends(require_admin)):
     import re as _re_sch
     t = body.time if _re_sch.match(r"^([01]?\d|2[0-3]):[0-5]\d$", body.time or "") else "20:00"
-    doc = {"enabled": bool(body.enabled), "time": t, "lang": (body.lang or "it")[:5]}
+    off = int(body.tz_offset_min or 0)
+    off = max(-840, min(840, off))
+    doc = {"enabled": bool(body.enabled), "time": t, "lang": (body.lang or "it")[:5], "tz_offset_min": off}
     await db.app_meta.update_one({"_key": "shift_schedule"}, {"$set": {"_key": "shift_schedule", **doc}}, upsert=True)
     return {"ok": True, **doc}
 
 
 async def _shift_schedule_loop():
-    """Ogni minuto controlla l'orario di chiusura: allo scoccare, Sitor compila la bozza del turno una volta al giorno."""
+    """Ogni minuto controlla l'orario di chiusura in ORA LOCALE della sede: allo scoccare, Sitor compila la bozza una volta al giorno."""
     await asyncio.sleep(25)
     while True:
         try:
             cfg = await db.app_meta.find_one({"_key": "shift_schedule"}, {"_id": 0})
             if cfg and cfg.get("enabled"):
-                now = datetime.now(timezone.utc)
-                hhmm = now.strftime("%H:%M")
-                today = now.isoformat()[:10]
+                offset = int(cfg.get("tz_offset_min") or 0)
+                local = datetime.now(timezone.utc) + timedelta(minutes=offset)
+                hhmm = local.strftime("%H:%M")
+                today = local.isoformat()[:10]  # giorno locale
                 if hhmm == (cfg.get("time") or "20:00") and cfg.get("last_run_date") != today:
                     await _sitor_shift_draft(lang=cfg.get("lang") or "it", trigger="scheduled", force=True)
                     await db.app_meta.update_one({"_key": "shift_schedule"}, {"$set": {"last_run_date": today}})

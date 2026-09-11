@@ -27,7 +27,7 @@ export default function MohamedInbox() {
     load();
   };
 
-  const catColor = { formazione: "#FF9D42", logistica: "#FFB800", partner: "#22c55e", generico: "#94A3B8" };
+  const catColor = { formazione: "#9aa6b2", logistica: "#a4afbb", partner: "#6e9e85", generico: "#94A3B8" };
 
   return (
     <div data-testid="mohamed-inbox" className="space-y-3">
@@ -39,7 +39,7 @@ export default function MohamedInbox() {
             <p className="text-[10px] text-[#94A3B8]">{tri("Smistate da Sitor · assistente subordinato", "Sortiert von Sitor · untergeordnet", "Routed by Sitor · subordinate assistant", "Clasificadas por Sitor", "Triées par Sitor", "توسط محمد")}</p>
           </div>
         </div>
-        <button data-testid="inbox-refresh" onClick={load} className="text-[#FF9D42] active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>
+        <button data-testid="inbox-refresh" onClick={load} className="text-[#9aa6b2] active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>
       </div>
       {reqs.length === 0 ? (
         <p data-testid="inbox-empty" className="text-[12px] text-[#94A3B8]">{tri("Nessuna richiesta in arrivo.", "Keine Anfragen.", "No incoming requests.", "Sin solicitudes.", "Aucune demande.", "درخواستی نیست.")}</p>
@@ -53,18 +53,18 @@ export default function MohamedInbox() {
               </div>
               {r.note && <p className="mt-1 text-[11.5px] text-[#CBD5E1] leading-snug">{r.note}</p>}
               {pins[r.id] && (
-                <div data-testid={`inbox-pin-${r.id}`} className="mt-2 flex items-center gap-2 rounded-lg bg-[#22c55e]/10 border border-[#22c55e]/40 px-2.5 py-1.5">
+                <div data-testid={`inbox-pin-${r.id}`} className="mt-2 flex items-center gap-2 rounded-lg bg-[#6e9e85]/10 border border-[#6e9e85]/40 px-2.5 py-1.5">
                   <span className="text-[10px] text-[#86efac] font-bold uppercase tracking-wide">{tri("PIN ospite", "Gast-PIN", "Guest PIN", "PIN invitado", "PIN invité", "پین مهمان")}:</span>
                   <span className="font-cyber text-base font-black text-white tracking-[0.25em]">{pins[r.id]}</span>
-                  <button onClick={() => { try { navigator.clipboard.writeText(pins[r.id]); } catch { /* */ } }} className="ml-auto text-[10px] font-bold text-[#FF9D42] active:scale-95">{tri("Copia", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}</button>
+                  <button onClick={() => { try { navigator.clipboard.writeText(pins[r.id]); } catch { /* */ } }} className="ml-auto text-[10px] font-bold text-[#9aa6b2] active:scale-95">{tri("Copia", "Kopieren", "Copy", "Copiar", "Copier", "کپی")}</button>
                 </div>
               )}
               <div className="mt-2 flex items-center justify-between">
-                <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: r.status === "approvata" ? "#22c55e" : r.status === "rifiutata" ? "#f43f5e" : "#EAB308" }}>{r.status}{r.priority === "alta" ? " · ⚡" : ""}</span>
+                <span className="font-mono text-[9px] uppercase tracking-widest" style={{ color: r.status === "approvata" ? "#6e9e85" : r.status === "rifiutata" ? "#b06e78" : "#a6b1bc" }}>{r.status}{r.priority === "alta" ? " · ⚡" : ""}</span>
                 {r.status === "nuova" && (
                   <div className="flex gap-1.5">
-                    <button data-testid={`inbox-approve-${r.id}`} onClick={() => act(r.id, "approvata")} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#22c55e]/15 border border-[#22c55e]/40 text-[#22c55e] text-[10px] font-bold active:scale-95"><Check className="w-3 h-3" /> {tri("Approva", "OK", "Approve", "Aprobar", "Approuver", "تأیید")}</button>
-                    <button data-testid={`inbox-reject-${r.id}`} onClick={() => act(r.id, "rifiutata")} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#f43f5e]/15 border border-[#f43f5e]/40 text-[#f43f5e] text-[10px] font-bold active:scale-95"><X className="w-3 h-3" /> {tri("Rifiuta", "Ablehnen", "Reject", "Rechazar", "Refuser", "رد")}</button>
+                    <button data-testid={`inbox-approve-${r.id}`} onClick={() => act(r.id, "approvata")} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#6e9e85]/15 border border-[#6e9e85]/40 text-[#6e9e85] text-[10px] font-bold active:scale-95"><Check className="w-3 h-3" /> {tri("Approva", "OK", "Approve", "Aprobar", "Approuver", "تأیید")}</button>
+                    <button data-testid={`inbox-reject-${r.id}`} onClick={() => act(r.id, "rifiutata")} className="inline-flex items-center gap-1 px-2 py-1 rounded bg-[#b06e78]/15 border border-[#b06e78]/40 text-[#b06e78] text-[10px] font-bold active:scale-95"><X className="w-3 h-3" /> {tri("Rifiuta", "Ablehnen", "Reject", "Rechazar", "Refuser", "رد")}</button>
                   </div>
                 )}
               </div>
@@ -72,7 +72,7 @@ export default function MohamedInbox() {
           ))}
         </div>
       )}
-      {pending > 0 && <p className="flex items-center gap-1 text-[10px] text-[#EAB308]"><Clock className="w-3 h-3" /> {pending} {tri("in attesa del Capo", "warten auf den Chef", "awaiting the Capo", "esperando al Capo", "en attente du Capo", "منتظر کاپو")}</p>}
+      {pending > 0 && <p className="flex items-center gap-1 text-[10px] text-[#a6b1bc]"><Clock className="w-3 h-3" /> {pending} {tri("in attesa del Capo", "warten auf den Chef", "awaiting the Capo", "esperando al Capo", "en attente du Capo", "منتظر کاپو")}</p>}
     </div>
   );
 }

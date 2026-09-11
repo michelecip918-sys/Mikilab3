@@ -8,9 +8,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
-  sanificazione: { icon: Brush, c: "#22c55e", it: "Sanificazione", de: "Reinigung", en: "Sanitation", es: "Sanitización", fr: "Nettoyage", fa: "بهداشت" },
+  sanificazione: { icon: Brush, c: "#6e9e85", it: "Sanificazione", de: "Reinigung", en: "Sanitation", es: "Sanitización", fr: "Nettoyage", fa: "بهداشت" },
   regola: { icon: ShieldAlert, c: "#64748B", it: "Regola", de: "Regel", en: "Rule", es: "Regla", fr: "Règle", fa: "قاعده" },
-  crisis_override: { icon: Gauge, c: "#f59e0b", it: "Crisis Override", de: "Crisis Override", en: "Crisis Override", es: "Crisis Override", fr: "Crisis Override", fa: "بازنویسی بحران" },
+  crisis_override: { icon: Gauge, c: "#aaa795", it: "Crisis Override", de: "Crisis Override", en: "Crisis Override", es: "Crisis Override", fr: "Crisis Override", fa: "بازنویسی بحران" },
   generico: { icon: ListChecks, c: "#5EEAD4", it: "Task", de: "Aufgabe", en: "Task", es: "Tarea", fr: "Tâche", fa: "وظیفه" },
 };
 
@@ -135,7 +135,7 @@ export default function VoiceDelegation({ onClose }) {
                   </div>
                   <h3 className="text-base font-black text-white mb-1">{proposal.title}</h3>
                   {proposal.kind === "crisis_override" && proposal.pacing && (
-                    <div className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#f59e0b] bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-lg px-3 py-1.5" data-testid="delegation-pacing"><Gauge className="w-4 h-4" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {proposal.pacing}{proposal.pacing_target ? ` · ${proposal.pacing_target}` : ""}</div>
+                    <div className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#aaa795] bg-[#aaa795]/10 border border-[#aaa795]/30 rounded-lg px-3 py-1.5" data-testid="delegation-pacing"><Gauge className="w-4 h-4" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {proposal.pacing}{proposal.pacing_target ? ` · ${proposal.pacing_target}` : ""}</div>
                   )}
                   <div className="space-y-2" data-testid="delegation-steps">
                     {(proposal.steps || []).map((s) => (

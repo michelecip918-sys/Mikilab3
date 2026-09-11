@@ -8,7 +8,7 @@ import { X } from "lucide-react";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
-const STRESS = { calmo: "#FF9D42", medio: "#FFB800", alto: "#f43f5e" };
+const STRESS = { calmo: "#9aa6b2", medio: "#a4afbb", alto: "#b06e78" };
 const themeFor = (av) => (av || "").includes("nexus") ? "bigmix" : "miki";
 const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
 const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
@@ -40,7 +40,7 @@ export default function ShiftBriefing({ onClose }) {
     return () => timers.current.forEach(clearTimeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const stressColor = STRESS[data?.level] || "#FF9D42";
+  const stressColor = STRESS[data?.level] || "#9aa6b2";
 
   return (
     <div data-testid="shift-briefing" className="fixed inset-0 z-[90] bg-[#050810]/97 backdrop-blur-xl flex flex-col items-center justify-center p-5 overflow-auto">
@@ -86,7 +86,7 @@ export default function ShiftBriefing({ onClose }) {
         )}
       </AnimatePresence>
 
-      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#FF6B00)` }}>
+      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#8a97a6)` }}>
         {tri("Entra nella plancia", "Zur Konsole", "Enter the console", "Entrar a la consola", "Entrer", "ورود به کنسول")}
       </button>
       <p className="relative mt-3 text-[11px] text-[#64748B]">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>

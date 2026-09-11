@@ -2,7 +2,7 @@ import { ChevronDown } from "lucide-react";
 
 // Sezione a fisarmonica della plancia Capo: incorpora piu' pannelli sotto un unico
 // titolo. Solo una sezione aperta per volta (controllata dal genitore) = zero confusione.
-export function CapoGroup({ id, icon, title, sub, accent = "#FF6B00", count, open, onToggle, children }) {
+export function CapoGroup({ id, icon, title, sub, accent = "#8a97a6", count, open, onToggle, children }) {
   return (
     <div data-testid={`capo-group-${id}`} className="rounded-2xl border bg-[#0b0f19]/60 overflow-hidden transition-all" style={{ borderColor: open ? `${accent}66` : "#1e293b", boxShadow: open ? `0 0 22px ${accent}22` : "none" }}>
       <button

@@ -16,7 +16,7 @@ export const NexusAvatar = ({ size = 56, className = "", eyeLeft = "63%", eyeTop
       {alert && (
         <>
           <span data-testid="nexus-red-eye" className="absolute rounded-full animate-ping"
-            style={{ left: eyeLeft, top: eyeTop, width: size * 0.14, height: size * 0.14, background: "rgba(244,63,94,0.85)", boxShadow: "0 0 12px 4px rgba(244,63,94,0.8)", transform: "translate(-50%,-50%)" }} />
+            style={{ left: eyeLeft, top: eyeTop, width: size * 0.14, height: size * 0.14, background: "rgba(176,110,120,0.85)", boxShadow: "0 0 12px 4px rgba(176,110,120,0.8)", transform: "translate(-50%,-50%)" }} />
           <span className="absolute rounded-full animate-pulse"
             style={{ left: eyeLeft, top: eyeTop, width: size * 0.09, height: size * 0.09, background: "#ff1f3d", boxShadow: "0 0 10px 3px rgba(255,31,61,0.9)", transform: "translate(-50%,-50%)" }} />
         </>

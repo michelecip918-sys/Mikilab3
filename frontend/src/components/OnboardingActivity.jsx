@@ -17,10 +17,10 @@ export default function OnboardingActivity({ onChoose, onClose }) {
     { id: "panificio", ic: "🥖", accent: "#E0A106",
       label: tri("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی"),
       desc: tri("Produzione a catena, celle e forni, sequenze d'impasto.", "Fließproduktion, Zellen und Öfen.", "Chain production, cells and ovens.", "Producción en cadena.", "Production en chaîne.", "تولید زنجیره‌ای.") },
-    { id: "pizzeria", ic: "🍕", accent: "#FFB800",
+    { id: "pizzeria", ic: "🍕", accent: "#a4afbb",
       label: tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا"),
       desc: tri("Più macchine, banchi e forni; ritmi serrati di servizio.", "Mehr Maschinen und Öfen.", "More machines and ovens; fast service.", "Más máquinas y hornos.", "Plus de machines et fours.", "ماشین و فر بیشتر.") },
-    { id: "pasticceria", ic: "🧁", accent: "#7FD8C0",
+    { id: "pasticceria", ic: "🧁", accent: "#93a2ae",
       label: tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی"),
       desc: tri("Produzione su commessa: consegne torte, matrimoni ed eventi.", "Auftragsproduktion: Torten, Hochzeiten.", "Made-to-order: cake deliveries, weddings.", "Por encargo: entregas, bodas.", "Sur commande: livraisons, mariages.", "سفارشی: تحویل کیک، عروسی.") },
   ];
@@ -56,7 +56,7 @@ export default function OnboardingActivity({ onChoose, onClose }) {
       <motion.button data-testid="onboarding-confirm" onClick={confirm} disabled={!sel}
         whileTap={{ scale: 0.96 }}
         className="mt-6 w-full max-w-md py-3.5 rounded-full font-black text-base text-[#04070d] disabled:opacity-40"
-        style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 26px rgba(255,107,0,0.45)" }}>
+        style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 26px rgba(138,151,166,0.45)" }}>
         {tri("Conferma e inizia", "Bestätigen & starten", "Confirm and start", "Confirmar y empezar", "Confirmer et commencer", "تأیید و شروع")}
       </motion.button>
     </div>

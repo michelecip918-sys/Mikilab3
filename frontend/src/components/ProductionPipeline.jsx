@@ -5,7 +5,7 @@ import { enterpriseApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const STATUS = { optimal: "#22c55e", active: "#5EEAD4", warning: "#f59e0b" };
+const STATUS = { optimal: "#6e9e85", active: "#5EEAD4", warning: "#aaa795" };
 
 export default function ProductionPipeline({ onClose }) {
   const { lang } = useLang();

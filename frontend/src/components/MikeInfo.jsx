@@ -58,7 +58,7 @@ export default function MikeInfo({ context = "" }) {
   return (
     <>
       <button data-testid="mike-info-trigger" onClick={() => setOpen(true)} title="Sitor"
-        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#06b6d4]/15 border border-[#06b6d4]/50 text-[#06b6d4] active:scale-90 transition-all hover:bg-[#06b6d4]/25">
+        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8ba3b4]/15 border border-[#8ba3b4]/50 text-[#8ba3b4] active:scale-90 transition-all hover:bg-[#8ba3b4]/25">
         <Info className="w-4 h-4" />
       </button>
       <AnimatePresence>
@@ -67,12 +67,12 @@ export default function MikeInfo({ context = "" }) {
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
             <motion.div data-testid="mike-info-panel" onClick={(e) => e.stopPropagation()}
               initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-              className="w-full max-w-md rounded-2xl bg-[#0b0f19] border border-[#06b6d4]/40 shadow-2xl p-4 space-y-3">
+              className="w-full max-w-md rounded-2xl bg-[#0b0f19] border border-[#8ba3b4]/40 shadow-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#06b6d4]" />
+                  <Sparkles className="w-5 h-5 text-[#8ba3b4]" />
                   <div>
-                    <h3 className="text-sm font-extrabold text-[#06b6d4]">Sitor{context ? ` · ${context}` : ""}</h3>
+                    <h3 className="text-sm font-extrabold text-[#8ba3b4]">Sitor{context ? ` · ${context}` : ""}</h3>
                     <p className="text-[11px] text-[#94A3B8]">{tri("Comanda a voce: delego, creo o modifico all'istante.", "Sprich: ich delegiere, erstelle oder ändere sofort.", "Speak: I delegate, create or change instantly.", "Habla: delego, creo o cambio al instante.", "Parle : je délègue, crée ou modifie à l'instant.", "بگو: فوری واگذار، می‌سازم یا تغییر می‌دهم.")}</p>
                   </div>
                 </div>
@@ -83,20 +83,20 @@ export default function MikeInfo({ context = "" }) {
 
               <div className="flex items-center gap-2">
                 <button data-testid="mike-info-mic" onClick={listen} disabled={!supported || busy}
-                  className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#06b6d4]/15 border-[#06b6d4]/50 text-[#06b6d4]"} disabled:opacity-40`}>
+                  className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#8ba3b4]/15 border-[#8ba3b4]/50 text-[#8ba3b4]"} disabled:opacity-40`}>
                   <Mic className="w-5 h-5" />
                 </button>
                 <input data-testid="mike-info-input" value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") send(); }}
                   placeholder={tri("Scrivi o parla…", "Schreib oder sprich…", "Type or speak…", "Escribe o habla…", "Écris ou parle…", "بنویس یا بگو…")}
-                  className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#06b6d4]" />
+                  className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#8ba3b4]" />
                 <button data-testid="mike-info-send" onClick={() => send()} disabled={busy || !text.trim()}
-                  className="shrink-0 w-11 h-11 rounded-xl bg-[#06b6d4] text-[#030712] flex items-center justify-center disabled:opacity-40 active:scale-95">
+                  className="shrink-0 w-11 h-11 rounded-xl bg-[#8ba3b4] text-[#030712] flex items-center justify-center disabled:opacity-40 active:scale-95">
                   {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
 
-              {reply && <div data-testid="mike-info-reply" className="rounded-xl bg-[#06b6d4]/8 border border-[#06b6d4]/30 p-3 text-sm text-[#cbd5e1]">{reply}</div>}
+              {reply && <div data-testid="mike-info-reply" className="rounded-xl bg-[#8ba3b4]/8 border border-[#8ba3b4]/30 p-3 text-sm text-[#cbd5e1]">{reply}</div>}
             </motion.div>
           </motion.div>
         )}

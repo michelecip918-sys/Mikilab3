@@ -37,11 +37,11 @@ export default function SmartAttach({ onExtract, context = "", compact = false }
       <input ref={fileRef} data-testid="smart-attach-file" type="file" accept="application/pdf,image/*" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; handle(f); }} />
       <input ref={camRef} data-testid="smart-attach-cam" type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ""; handle(f); }} />
       <button type="button" data-testid="smart-attach-file-btn" disabled={busy} onClick={() => fileRef.current?.click()}
-        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#FF9D42]/40 text-[#FF9D42] font-bold text-xs active:scale-95 disabled:opacity-50">
+        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#9aa6b2]/40 text-[#9aa6b2] font-bold text-xs active:scale-95 disabled:opacity-50">
         {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Paperclip className="w-3.5 h-3.5" />} {compact ? tri("Allega", "Anhängen", "Attach", "Adjuntar", "Joindre", "پیوست") : tri("Allega PDF/immagine", "PDF/Bild anhängen", "Attach PDF/image", "Adjuntar PDF/imagen", "Joindre PDF/image", "پیوست PDF/عکس")}
       </button>
       <button type="button" data-testid="smart-attach-cam-btn" disabled={busy} onClick={() => camRef.current?.click()}
-        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#22d3ee]/40 text-[#22d3ee] font-bold text-xs active:scale-95 disabled:opacity-50">
+        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0C1019] border border-[#9aabb8]/40 text-[#9aabb8] font-bold text-xs active:scale-95 disabled:opacity-50">
         <Camera className="w-3.5 h-3.5" /> {tri("Fotografa", "Foto", "Photo", "Foto", "Photo", "عکس")}
       </button>
     </div>

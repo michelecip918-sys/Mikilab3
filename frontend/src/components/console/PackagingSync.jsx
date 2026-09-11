@@ -4,7 +4,7 @@ import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const MODE_COL = { attendi: "#f43f5e", rallenta: "#FFB800", nominale: "#22c55e" };
+const MODE_COL = { attendi: "#b06e78", rallenta: "#a4afbb", nominale: "#6e9e85" };
 
 // v14 · Packaging & Slicing: velocità affettatrici sincronizzata alla curva di raffreddamento del pane.
 export default function PackagingSync() {
@@ -16,13 +16,13 @@ export default function PackagingSync() {
   const load = useCallback(async () => { try { setData(await mikeApi.packaging(temp, lang)); } catch { /* */ } }, [temp, lang]);
   useEffect(() => { const t = setTimeout(load, 250); return () => clearTimeout(t); }, [load]);
 
-  const col = data ? (MODE_COL[data.mode] || "#FFB800") : "#FFB800";
+  const col = data ? (MODE_COL[data.mode] || "#a4afbb") : "#a4afbb";
 
   return (
     <div data-testid="packaging-sync" className="space-y-3">
       <label className="flex flex-col gap-1">
-        <span className="flex justify-between text-[12px] text-[#94A3B8]"><span className="inline-flex items-center gap-1"><Thermometer className="w-3.5 h-3.5 text-[#FFB800]" /> {tri("Temp. pane in uscita", "Brottemp.", "Bread exit temp", "Temp. pan", "Temp. pain", "دمای نان")}</span><b className="text-white">{temp}°C</b></span>
-        <input data-testid="pkg-temp" type="range" min={30} max={90} value={temp} onChange={(e) => setTemp(Number(e.target.value))} className="w-full accent-[#FF6B00]" />
+        <span className="flex justify-between text-[12px] text-[#94A3B8]"><span className="inline-flex items-center gap-1"><Thermometer className="w-3.5 h-3.5 text-[#a4afbb]" /> {tri("Temp. pane in uscita", "Brottemp.", "Bread exit temp", "Temp. pan", "Temp. pain", "دمای نان")}</span><b className="text-white">{temp}°C</b></span>
+        <input data-testid="pkg-temp" type="range" min={30} max={90} value={temp} onChange={(e) => setTemp(Number(e.target.value))} className="w-full accent-[#8a97a6]" />
       </label>
       {data && (
         <>

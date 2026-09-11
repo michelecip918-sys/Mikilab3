@@ -8,9 +8,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const VERDICT = {
-  ok: { c: "#22c55e", lbl: (t) => t("Conforme", "Konform", "Pass", "Conforme", "Conforme", "تأیید") },
-  attenzione: { c: "#FFB800", lbl: (t) => t("Attenzione", "Achtung", "Attention", "Atención", "Attention", "توجه") },
-  scarto: { c: "#f43f5e", lbl: (t) => t("Scarto", "Ausschuss", "Reject", "Descarte", "Rebut", "ضایعات") },
+  ok: { c: "#6e9e85", lbl: (t) => t("Conforme", "Konform", "Pass", "Conforme", "Conforme", "تأیید") },
+  attenzione: { c: "#a4afbb", lbl: (t) => t("Attenzione", "Achtung", "Attention", "Atención", "Attention", "توجه") },
+  scarto: { c: "#b06e78", lbl: (t) => t("Scarto", "Ausschuss", "Reject", "Descarte", "Rebut", "ضایعات") },
 };
 
 // v14 · AI Computer Vision — Controllo Qualità Ottico all'uscita dei forni.
@@ -79,7 +79,7 @@ export default function OvenQC() {
         <div className="relative w-full rounded-xl overflow-hidden border border-[#64748B]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
           <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
           <button data-testid="qc-cam-close" onClick={stopCam} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#0b0f19]/90 border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-4 h-4" /></button>
-          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#FF6B00] text-[#060A10] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#8a97a6] text-[#060A10] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
         </div>
       ) : (
         <div className="flex gap-2">

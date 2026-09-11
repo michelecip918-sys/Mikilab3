@@ -52,34 +52,35 @@ export default function DeskScene() {
 
   return (
     <div ref={ref} data-testid="desk-scene" onMouseMove={onMove} onMouseLeave={() => setTilt({ x: 0, y: 0 })}
-      className="relative w-full rounded-2xl overflow-hidden border border-[#FF6B00]/35 mb-4"
-      style={{ height: 300, boxShadow: "0 0 30px rgba(255,107,0,0.18)", background: "#04070d", perspective: 1000 }}>
+      className="relative w-full rounded-2xl overflow-hidden border border-[#8a97a6]/35 mb-4"
+      style={{ height: 300, boxShadow: "0 0 30px rgba(138,151,166,0.18)", background: "#04070d", perspective: 1000 }}>
       <motion.img
         src={`${PUB}/desk_scene.jpg`} alt={tri("MikiLab e Sitor alla scrivania", "MikiLab und Sitor", "MikiLab and Sitor at the desk", "MikiLab y Sitor", "MikiLab et Sitor", "میکی‌لب و سیتور")}
         className="absolute inset-0 w-full h-full object-cover object-center"
+        style={{ filter: "saturate(0.32) brightness(0.8) contrast(1.03)" }}
         animate={{ x: tilt.x * -18, y: tilt.y * -12, scale: 1.08 }}
         transition={{ type: "spring", stiffness: 50, damping: 14 }}
         onError={(e) => { e.currentTarget.style.display = "none"; }} />
 
       <motion.span aria-hidden data-testid="desk-sitor-glow" className="absolute rounded-full pointer-events-none"
-        style={{ right: "22%", top: "30%", width: 150, height: 150, background: "radial-gradient(circle, rgba(255,107,0,0.55), transparent 70%)" }}
+        style={{ right: "22%", top: "30%", width: 150, height: 150, background: "radial-gradient(circle, rgba(138,151,166,0.55), transparent 70%)" }}
         animate={{ scale: speaking ? [1, 1.35, 1] : [1, 1.08, 1], opacity: speaking ? [0.7, 1, 0.7] : [0.35, 0.5, 0.35] }}
         transition={{ duration: speaking ? 0.8 : 3.5, repeat: Infinity, ease: "easeInOut" }} />
 
       <div className="absolute inset-0 pointer-events-none" style={{ background: "linear-gradient(180deg, rgba(4,7,13,0.6) 0%, transparent 28%, transparent 52%, #04070d 100%)" }} />
 
       <div className="absolute top-0 left-0 right-0 p-3 sm:p-4">
-        <span className="font-mono-data text-[9px] tracking-[0.28em] uppercase text-[#FF9D42]">MikiLab · Sitor</span>
-        <h2 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide" style={{ textShadow: "0 0 14px rgba(255,107,0,0.5)" }}>{tri("Console del Capo", "Chef-Konsole", "Boss Console", "Consola del Jefe", "Console du Chef", "کنسول رئیس")}</h2>
+        <span className="font-mono-data text-[9px] tracking-[0.28em] uppercase text-[#9aa6b2]">MikiLab · Sitor</span>
+        <h2 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide" style={{ textShadow: "0 0 14px rgba(138,151,166,0.5)" }}>{tri("Console del Capo", "Chef-Konsole", "Boss Console", "Consola del Jefe", "Console du Chef", "کنسول رئیس")}</h2>
       </div>
 
       <AnimatePresence>
         {calOpen && (
           <motion.div data-testid="desk-calendar" initial={{ opacity: 0, scale: 0.6, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.6 }}
             transition={{ type: "spring", stiffness: 120, damping: 16 }}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[3] w-[78%] max-w-sm rounded-xl border border-[#FF6B00]/50 bg-[#0b0f19]/92 backdrop-blur-md p-3"
-            style={{ boxShadow: "0 0 26px rgba(255,107,0,0.4)" }}>
-            <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#FF9D42] mb-2"><CalendarDays className="w-3.5 h-3.5" /> {tri("Piano della settimana", "Wochenplan", "Week plan", "Plan semanal", "Plan de la semaine", "برنامه هفته")}</p>
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[3] w-[78%] max-w-sm rounded-xl border border-[#8a97a6]/50 bg-[#0b0f19]/92 backdrop-blur-md p-3"
+            style={{ boxShadow: "0 0 26px rgba(138,151,166,0.4)" }}>
+            <p className="flex items-center gap-1.5 text-[10px] font-black uppercase tracking-widest text-[#9aa6b2] mb-2"><CalendarDays className="w-3.5 h-3.5" /> {tri("Piano della settimana", "Wochenplan", "Week plan", "Plan semanal", "Plan de la semaine", "برنامه هفته")}</p>
             <div className="grid grid-cols-7 gap-1 mb-2">
               {[tri("Lun","Mo","Mon","Lun","Lun","دو"),tri("Mar","Di","Tue","Mar","Mar","سه"),tri("Mer","Mi","Wed","Mié","Mer","چ"),tri("Gio","Do","Thu","Jue","Jeu","پ"),tri("Ven","Fr","Fri","Vie","Ven","ج"),tri("Sab","Sa","Sat","Sáb","Sam","ش"),tri("Dom","So","Sun","Dom","Dim","ی")].map((d,i)=>(
                 <div key={i} className="text-center text-[9px] font-bold text-[#94A3B8] rounded bg-[#0C1019] border border-[#1e293b] py-1.5">{d}</div>
@@ -100,7 +101,7 @@ export default function DeskScene() {
           "من و سیتور پشت یک میز: تو تصمیم می‌گیری، او اجرا می‌کند.")}</p>
         <button data-testid="desk-present-plan" onClick={presentPlan}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-cyber font-black text-xs text-[#04070d] active:scale-95 transition-all"
-          style={{ background: "linear-gradient(90deg,#FF6B00,#FF9D42)", boxShadow: "0 0 18px rgba(255,107,0,0.4)" }}>
+          style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 18px rgba(138,151,166,0.4)" }}>
           <Sparkles className="w-4 h-4" /> {calOpen ? tri("Sitor ripeti il piano", "Plan wiederholen", "Repeat the plan", "Repetir el plan", "Répéter le plan", "برنامه را تکرار کن") : tri("Sitor, presenta il piano", "Sitor, zeig den Plan", "Sitor, present the plan", "Sitor, presenta el plan", "Sitor, présente le plan", "سیتور، برنامه را نشان بده")}
           {speaking ? <Volume2 className="w-4 h-4 animate-pulse" /> : null}
         </button>

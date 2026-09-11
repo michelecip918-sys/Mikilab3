@@ -723,7 +723,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 const h = wa ? wa.pct : 0;
                 if (!(h >= 65 && h <= 85)) return null;
                 return (
-                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#EAB308,#64748B)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #EAB308" }}>
+                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#a6b1bc,#64748B)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #a6b1bc" }}>
                     <span className="text-base">🏅</span>
                     <span className="text-[12.5px] font-extrabold">{L({ it: `Capolavoro — Idratazione Perfetta (${h}%)`, de: `Meisterwerk — Perfekte Hydration (${h}%)`, en: `Masterpiece — Perfect Hydration (${h}%)`, es: `Obra maestra — Hidratación perfecta (${h}%)`, fr: `Chef-d'œuvre — Hydratation parfaite (${h}%)` })}</span>
                   </div>

@@ -9,19 +9,19 @@ const API = process.env.REACT_APP_BACKEND_URL;
 // Identità CORE con avatar reale.
 const CORE = [
   { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#64748B" },
-  { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#FF6B00" },
-  { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#EAB308" },
+  { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#8a97a6" },
+  { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#a6b1bc" },
 ];
 
 // Postazioni operative BASE (arricchite a runtime dai reparti del Capo).
 const BASE_STATIONS = [
   { key: "impastatore", label: "Impastatore", color: "#64748B", ic: "🌀" },
-  { key: "fornaio", label: "Fornaio", color: "#f59e0b", ic: "🔥" },
+  { key: "fornaio", label: "Fornaio", color: "#aaa795", ic: "🔥" },
   { key: "laugen", label: "Laugen / Pretzel", color: "#64748B", ic: "🥨" },
   { key: "fermentazione", label: "Fermentazione", color: "#D95200", ic: "🫧" },
   { key: "pizzaiolo", label: "Pizzaiolo", color: "#3E9C93", ic: "🍕" },
   { key: "pasticcere", label: "Pasticcere", color: "#7FB0A6", ic: "🥐" },
-  { key: "banconista", label: "Banconista", color: "#f59e0b", ic: "🧺" },
+  { key: "banconista", label: "Banconista", color: "#aaa795", ic: "🧺" },
   { key: "apprendista", label: "Apprendista", color: "#94A3B8", ic: "🎓" },
 ];
 
@@ -75,7 +75,7 @@ export default function OperatorsRoster({ onPick }) {
   return (
     <div data-testid="operators-roster" className="holo-panel p-4 mb-4">
       <span className="holo-scan-top" />
-      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#FF6B00]/80 mb-3">{tri("Equipaggio MikiLab", "MikiLab-Crew", "MikiLab Crew", "Equipo MikiLab", "Équipe MikiLab", "خدمه میکی‌لب")}</p>
+      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#8a97a6]/80 mb-3">{tri("Equipaggio MikiLab", "MikiLab-Crew", "MikiLab Crew", "Equipo MikiLab", "Équipe MikiLab", "خدمه میکی‌لب")}</p>
       {/* Identità core con avatar reale */}
       <div className="grid grid-cols-3 gap-2 mb-4">
         {CORE.map((o) => (

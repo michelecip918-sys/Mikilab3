@@ -5,9 +5,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const TYPE = {
-  lotto: { c: "#FF6B00", icon: Croissant },
-  infornata: { c: "#FFB800", icon: Flame },
-  sos: { c: "#f43f5e", icon: AlertOctagon },
+  lotto: { c: "#8a97a6", icon: Croissant },
+  infornata: { c: "#a4afbb", icon: Flame },
+  sos: { c: "#b06e78", icon: AlertOctagon },
 };
 const toMin = (t) => { const [h, m] = (t || "0:0").split(":").map(Number); return (h || 0) * 60 + (m || 0); };
 
@@ -51,7 +51,7 @@ export default function TimelineTurno() {
         {Object.entries(TYPE).map(([k, v]) => (
           <span key={k} className="inline-flex items-center gap-1 text-[#94A3B8]"><v.icon className="w-3 h-3" style={{ color: v.c }} /> {k === "lotto" ? tri("Lotti", "Lose", "Batches", "Lotes", "Lots", "دسته") : k === "infornata" ? tri("Infornate", "Backen", "Bakes", "Horneado", "Cuisson", "پخت") : "SOS"}</span>
         ))}
-        {nowInRange && <span className="inline-flex items-center gap-1 text-[#f43f5e] font-bold ml-auto"><span className="w-2 h-2 rounded-full bg-[#f43f5e] animate-pulse" /> {tri("ADESSO", "JETZT", "NOW", "AHORA", "MAINTENANT", "اکنون")}</span>}
+        {nowInRange && <span className="inline-flex items-center gap-1 text-[#b06e78] font-bold ml-auto"><span className="w-2 h-2 rounded-full bg-[#b06e78] animate-pulse" /> {tri("ADESSO", "JETZT", "NOW", "AHORA", "MAINTENANT", "اکنون")}</span>}
       </div>
       <div className="overflow-x-auto pb-2" data-testid="timeline-scroll">
         <div className="relative" style={{ width, minWidth: "100%", height: 130 }}>
@@ -65,8 +65,8 @@ export default function TimelineTurno() {
           ))}
           {/* linea ADESSO */}
           {nowInRange && (
-            <div data-testid="timeline-now" className="absolute top-2 bottom-6 w-[2px] bg-[#f43f5e] z-10" style={{ left: (nowMin - min) * PX }}>
-              <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#f43f5e] shadow-[0_0_8px_#f43f5e]" />
+            <div data-testid="timeline-now" className="absolute top-2 bottom-6 w-[2px] bg-[#b06e78] z-10" style={{ left: (nowMin - min) * PX }}>
+              <span className="absolute -top-2 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#b06e78] shadow-[0_0_8px_#b06e78]" />
             </div>
           )}
           {/* eventi */}

@@ -4917,3 +4917,16 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testing agent iteration_227: MERGE A/B/D + Sitor + Ricettario + infra PIN = 100%, nessun crash React, tutti i pannelli 'vietati' assenti. MERGE C struttura confermata (subtab runtime non cliccato per accordion race → risolto aggiungendo defaultOpen a panel-pianoai). retest_needed=False.
 - Backlog (non bloccanti da testing): persistere dismiss di SHIFT OPEN/TABLET MODE in localStorage; warning hydration <span> dentro <option> in activity-selector (pre-esistente iter 225).
 - Per mikilab.de serve REDEPLOY.
+
+## v77 (2026-09) — Ricordo Splash + Riordino Schede + Fuso Locale + Redesign Monocromatico Elegante
+### Ricordo Splash
+- ShiftBriefing ("Apertura Turno") NON si apre più da solo (rimosso auto-open in App.js): si apre solo dal pulsante dedicato. KioskMode ("Modalità Tablet") wizard NON auto-apre più (set flag, apertura solo dal pulsante Tablet). Così non ricompaiono a ogni accesso.
+### Riordino Schede (SubTabs)
+- SubTabs.jsx riscritto: ordine schede persistente (localStorage `mikilab_subtabs_order_<testid>`), toggle "Riordina" (GripVertical) → frecce move-left per spostare le schede più usate in testa. Stile reso sobrio (slate, niente pill colorate accese).
+### Fuso Orario Locale report programmato
+- Backend: ShiftScheduleReq.tz_offset_min (clamp ±840). Loop _shift_schedule_loop calcola l'ora LOCALE = UTC + offset e usa il giorno locale per last_run_date. Frontend: saveSched invia tz_offset_min = -new Date().getTimezoneOffset(). Testato via curl (offset 120 Roma salvato correttamente).
+### REDESIGN monocromatico elegante (scelta utente B)
+- Sostituzione globale (script su 80 file) dei colori accesi: brand arancione/ambra/teal/cyan/viola → palette acciaio/ardesia (#8a97a6, #9aa6b2, #a4afbb...); colori semantici (verde/rosso/ambar) DESATURATI ma riconoscibili (#6e9e85 successo, #b06e78 pericolo). rgb() orange → grigi acciaio.
+- Hero 3D (ZoneHero3D) e DeskScene (BOSS CONSOLE) desaturate via CSS filter (saturate ~0.3) per integrarle nel tema senza neon.
+- Risultato: base scura sobria, zero neon/gradienti accesi, monocromia professionale. Verificato screenshot desktop (header + deck + pannelli + hero tutte coerenti ed eleganti). Nessun crash, webpack compila.
+- Per mikilab.de serve REDEPLOY.

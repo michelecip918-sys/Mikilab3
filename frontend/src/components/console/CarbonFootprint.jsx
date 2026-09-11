@@ -53,15 +53,15 @@ export default function CarbonFootprint() {
           </button>
         ))}
       </div>
-      <button data-testid="carbon-compute" onClick={compute} disabled={busy} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#22c55e]/15 border border-[#22c55e]/50 text-[#22c55e] font-black text-sm active:scale-95 disabled:opacity-50">
+      <button data-testid="carbon-compute" onClick={compute} disabled={busy} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#6e9e85]/15 border border-[#6e9e85]/50 text-[#6e9e85] font-black text-sm active:scale-95 disabled:opacity-50">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Leaf className="w-4 h-4" />} {tri("Calcola CO₂", "CO₂ berechnen", "Compute CO₂", "Calcular CO₂", "Calculer CO₂", "محاسبه CO₂")}
       </button>
 
       {res && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="carbon-result" className="rounded-xl border border-[#22c55e]/40 bg-[#22c55e]/5 p-3">
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="carbon-result" className="rounded-xl border border-[#6e9e85]/40 bg-[#6e9e85]/5 p-3">
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-[#22c55e]">{tri("CO₂ per quintale", "CO₂ pro Zentner", "CO₂ per 100 kg", "CO₂ por quintal", "CO₂ par quintal", "CO₂ در هر صد کیلو")}</p>
-            <p data-testid="carbon-per-quintal" className="text-4xl font-black text-white tabular-nums">{res.co2_per_quintal_kg} <span className="text-lg text-[#22c55e]">kg</span></p>
+            <p className="text-[10px] uppercase tracking-widest text-[#6e9e85]">{tri("CO₂ per quintale", "CO₂ pro Zentner", "CO₂ per 100 kg", "CO₂ por quintal", "CO₂ par quintal", "CO₂ در هر صد کیلو")}</p>
+            <p data-testid="carbon-per-quintal" className="text-4xl font-black text-white tabular-nums">{res.co2_per_quintal_kg} <span className="text-lg text-[#6e9e85]">kg</span></p>
           </div>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center">
             {[["energy", tri("Energia", "Energie", "Energy", "Energía", "Énergie", "انرژی")], ["flour", tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")], ["packaging", tri("Imballo", "Verpackung", "Packaging", "Embalaje", "Emballage", "بسته‌بندی")]].map(([k, lbl]) => (
@@ -71,11 +71,11 @@ export default function CarbonFootprint() {
               </div>
             ))}
           </div>
-          <p data-testid="carbon-statement" className="mt-3 text-[12px] text-[#a7f3d0] leading-snug flex items-start gap-1.5"><Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#22c55e]" /> {res.statement}</p>
-          <div className="mt-3 rounded-lg border border-[#FFB800]/30 bg-[#FFB800]/5 p-2.5">
+          <p data-testid="carbon-statement" className="mt-3 text-[12px] text-[#a7f3d0] leading-snug flex items-start gap-1.5"><Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#6e9e85]" /> {res.statement}</p>
+          <div className="mt-3 rounded-lg border border-[#a4afbb]/30 bg-[#a4afbb]/5 p-2.5">
             <div className="flex items-center justify-between text-[13px]">
               <span className="text-[#94A3B8]">{tri("Costo energia / kg cotto", "Energiekosten / kg", "Energy cost / kg baked", "Coste energía / kg", "Coût énergie / kg", "هزینه انرژی / کیلو")}</span>
-              <b data-testid="carbon-cost-kg" className="text-[#FFB800]">€ {res.cost_per_kg_eur}</b>
+              <b data-testid="carbon-cost-kg" className="text-[#a4afbb]">€ {res.cost_per_kg_eur}</b>
             </div>
             <p className="mt-1 text-[11px] text-[#c9dbe8]">⚡ {res.optimal_slot}</p>
           </div>

@@ -40,16 +40,16 @@ export const DeckAlarmBar = ({ tri, refreshKey }) => {
     <div data-testid="deck-alarm-bar" className="mb-6 rounded-xl border border-[#64748B]/25 bg-[#0D1520]/70 backdrop-blur px-3 py-2.5">
       <div className="flex items-center justify-between gap-3 flex-wrap">
         <button data-testid="alarm-history-toggle" onClick={() => setOpen((v) => !v)} className="flex items-center gap-2 text-[#CBD5E1] hover:text-white transition-colors">
-          <History size={16} className="text-[#FF6B00]" />
+          <History size={16} className="text-[#8a97a6]" />
           <span className="text-sm font-bold uppercase tracking-wider">{tri("Storico allarmi", "Alarm-Verlauf", "Alarm history", "Historial de alarmas", "Historique des alarmes", "تاریخچه هشدارها")}</span>
-          <span data-testid="alarm-count" className={`text-xs font-mono-data px-2 py-0.5 rounded-full ${items.length ? "bg-[#f43f5e]/20 text-[#f43f5e]" : "bg-[#22c55e]/15 text-[#22c55e]"}`}>{items.length}</span>
+          <span data-testid="alarm-count" className={`text-xs font-mono-data px-2 py-0.5 rounded-full ${items.length ? "bg-[#b06e78]/20 text-[#b06e78]" : "bg-[#6e9e85]/15 text-[#6e9e85]"}`}>{items.length}</span>
           {open ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
         <div className="flex items-center gap-2">
-          <button data-testid="alarm-export-btn" onClick={onExport} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-[#64748B]/40 text-[#CBD5E1] hover:border-[#FF6B00] hover:text-[#FF6B00] transition-colors active:scale-95">
+          <button data-testid="alarm-export-btn" onClick={onExport} className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border border-[#64748B]/40 text-[#CBD5E1] hover:border-[#8a97a6] hover:text-[#8a97a6] transition-colors active:scale-95">
             <Download size={14} /> {tri("Esporta", "Export", "Export", "Exportar", "Exporter", "خروجی")}
           </button>
-          <button data-testid="alarm-push-btn" onClick={onEnable} className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors active:scale-95 ${pushOn ? "border-[#22c55e]/50 text-[#22c55e]" : "border-[#FF6B00]/50 text-[#FF6B00] hover:bg-[#FF6B00]/10"}`}>
+          <button data-testid="alarm-push-btn" onClick={onEnable} className={`flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border transition-colors active:scale-95 ${pushOn ? "border-[#6e9e85]/50 text-[#6e9e85]" : "border-[#8a97a6]/50 text-[#8a97a6] hover:bg-[#8a97a6]/10"}`}>
             {isIOS && !standalone ? <Smartphone size={14} /> : <Bell size={14} />}
             {pushOn ? tri("Notifiche ON", "Aktiv", "Alerts ON", "Activas", "Activées", "روشن") : tri("Attiva notifiche", "Aktivieren", "Enable alerts", "Activar", "Activer", "فعال‌سازی")}
           </button>
@@ -61,8 +61,8 @@ export const DeckAlarmBar = ({ tri, refreshKey }) => {
             <p className="text-xs text-[#94A3B8] py-2">{tri("Nessun allarme critico oggi. Turno regolare.", "Heute keine kritischen Alarme.", "No critical alarms today. Smooth shift.", "Sin alarmas críticas hoy.", "Aucune alarme critique aujourd'hui.", "امروز هشدار بحرانی نبود.")}</p>
           ) : items.map((it, i) => (
             <div key={i} data-testid={`alarm-row-${i}`} className="flex items-center gap-2.5 text-xs">
-              <AlertTriangle size={14} className="text-[#f43f5e] shrink-0" />
-              <span className="font-mono-data text-[#FF6B00] font-bold shrink-0">{it.hm}</span>
+              <AlertTriangle size={14} className="text-[#b06e78] shrink-0" />
+              <span className="font-mono-data text-[#8a97a6] font-bold shrink-0">{it.hm}</span>
               <span className="text-[#CBD5E1] truncate">
                 {(it.departments || []).map((d) => DEPT_IT[d] || d).join(", ") || "—"}
                 {it.stations && it.stations.length ? <span className="text-[#94A3B8]"> · {it.stations.join(", ")}</span> : null}

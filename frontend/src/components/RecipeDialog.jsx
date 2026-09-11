@@ -209,7 +209,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave, coll
               <span className="block text-[11px] opacity-80">{mkTri(lang)("condivisa, visibile a tutti", "geteilt, für alle sichtbar", "shared, visible to all", "compartida, visible para todos")}</span>
             </button>
             <button type="button" data-testid="recipe-coll-personal" onClick={() => setColl("personal")}
-              className={`rounded-2xl border px-3 py-2.5 text-left transition-all active:scale-97 ${coll === "personal" ? "bg-[#EAB308]/15 border-[#EAB308] text-white" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] text-[#7E8A93]"}`}>
+              className={`rounded-2xl border px-3 py-2.5 text-left transition-all active:scale-97 ${coll === "personal" ? "bg-[#a6b1bc]/15 border-[#a6b1bc] text-white" : "bg-white dark:bg-[#1B2A38] border-[#2A3B49] text-[#7E8A93]"}`}>
               <span className="block text-sm font-bold">{mkTri(lang)("Ricetta mia", "Mein Rezept", "My recipe", "Receta mía")}</span>
               <span className="block text-[11px] opacity-80">{mkTri(lang)("privata, solo per te", "privat, nur für dich", "private, only for you", "privada, solo para ti")}</span>
             </button>

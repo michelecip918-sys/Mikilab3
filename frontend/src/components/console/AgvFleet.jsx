@@ -5,7 +5,7 @@ import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const HEALTH_COL = { ok: "#22c55e", attenzione: "#FFB800", manutenzione: "#f43f5e" };
+const HEALTH_COL = { ok: "#6e9e85", attenzione: "#a4afbb", manutenzione: "#b06e78" };
 
 // v14 · Flotta AGV: routing autonomo + rilevamento acustico preventivo guasti.
 export default function AgvFleet() {
@@ -25,7 +25,7 @@ export default function AgvFleet() {
   return (
     <div data-testid="agv-fleet" className="space-y-2">
       {data.carts.map((c) => {
-        const col = HEALTH_COL[c.health] || "#22c55e";
+        const col = HEALTH_COL[c.health] || "#6e9e85";
         return (
           <div key={c.id} data-testid={`agv-${c.id}`} className="rounded-xl border p-2.5" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
             <div className="flex items-center gap-2">
@@ -42,7 +42,7 @@ export default function AgvFleet() {
         );
       })}
       {data.alerts.map((a, i) => (
-        <p key={i} data-testid={`agv-alert-${i}`} className="text-[12px] text-[#f43f5e] font-semibold">🔧 {a.text}</p>
+        <p key={i} data-testid={`agv-alert-${i}`} className="text-[12px] text-[#b06e78] font-semibold">🔧 {a.text}</p>
       ))}
     </div>
   );

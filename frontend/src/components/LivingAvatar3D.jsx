@@ -7,7 +7,7 @@ import * as THREE from "three/webgpu";
 //  - si ruota trascinando col dito o col mouse, con ritorno elastico al centro,
 //  - ha un alone/rim luminoso (accent) — più intenso per Sitor (nexus).
 // Il tap (senza trascinare) resta un click normale sul contenitore genitore.
-export default function LivingAvatar3D({ src, accent = "#FF6B00", nexus = false, className = "", rounded = true }) {
+export default function LivingAvatar3D({ src, accent = "#8a97a6", nexus = false, className = "", rounded = true }) {
   const mountRef = useRef(null);
 
   useEffect(() => {

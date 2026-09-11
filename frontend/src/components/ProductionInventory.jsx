@@ -73,31 +73,31 @@ export default function ProductionInventory({ onClose }) {
     <div data-testid="production-inventory" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><Package className="w-5 h-5 text-[#22c55e]" /> {tri("Inventario di Produzione", "Produktions-Inventar", "Production Inventory", "Inventario de Producción", "Inventaire de Production", "موجودی تولید")}</h2>
+          <h2 className="text-lg font-black text-white flex items-center gap-2"><Package className="w-5 h-5 text-[#6e9e85]" /> {tri("Inventario di Produzione", "Produktions-Inventar", "Production Inventory", "Inventario de Producción", "Inventaire de Production", "موجودی تولید")}</h2>
           <button data-testid="inventory-close" onClick={() => { stopCam(); onClose(); }} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
         </div>
 
         <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Sitor legge le consegne dalla foto, tiene le scorte e aggancia i batch alla linea — senza uffici né scartoffie.", "Sitor liest Lieferungen per Foto, führt den Bestand und verknüpft Chargen mit der Linie — ohne Büro/Papierkram.", "Sitor reads deliveries from a photo, tracks stock and binds batches to the line — no office, no paperwork.", "Sitor lee las entregas por foto, controla el stock y vincula lotes a la línea — sin oficina ni papeleo.", "Sitor lit les livraisons par photo, suit le stock et lie les lots à la ligne — sans bureau ni paperasse.", "Sitor تحویل‌ها را از عکس می‌خواند و موجودی را مدیریت می‌کند — بدون کاغذبازی.")}</p>
 
         {/* SCANSIONE CONSEGNA / FREEZER */}
-        <div className="rounded-2xl border border-[#22c55e]/30 bg-[#22c55e]0d p-3 mb-5" style={{ background: "#22c55e0d" }}>
-          <p className="text-[11px] font-black uppercase tracking-widest text-[#22c55e] mb-2 flex items-center gap-1.5"><Camera className="w-3.5 h-3.5" /> {tri("Scansiona consegna / scarico freezer", "Lieferung/Freezer scannen", "Scan delivery / freezer drop", "Escanear entrega / freezer", "Scanner livraison / freezer", "اسکن تحویل / فریزر")}</p>
+        <div className="rounded-2xl border border-[#6e9e85]/30 bg-[#6e9e85]0d p-3 mb-5" style={{ background: "#22c55e0d" }}>
+          <p className="text-[11px] font-black uppercase tracking-widest text-[#6e9e85] mb-2 flex items-center gap-1.5"><Camera className="w-3.5 h-3.5" /> {tri("Scansiona consegna / scarico freezer", "Lieferung/Freezer scannen", "Scan delivery / freezer drop", "Escanear entrega / freezer", "Scanner livraison / freezer", "اسکن تحویل / فریزر")}</p>
           <div className="relative rounded-xl overflow-hidden border border-[#1e293b] bg-black mb-2" style={{ aspectRatio: "4 / 3", maxHeight: "36vh" }}>
             <video ref={videoRef} playsInline muted className={`w-full h-full object-cover ${camOn ? "" : "hidden"}`} data-testid="inventory-video" />
             {!camOn && <div className="absolute inset-0 flex flex-col items-center justify-center text-[#64748B]"><Snowflake className="w-8 h-8 mb-1" /><p className="text-xs">{tri("Fotocamera spenta", "Kamera aus", "Camera off", "Cámara apagada", "Caméra éteinte", "دوربین خاموش")}</p></div>}
-            {scanning && <div className="absolute inset-0 bg-[#22c55e]/10 flex items-center justify-center"><Loader2 className="w-7 h-7 text-[#22c55e] animate-spin" /></div>}
+            {scanning && <div className="absolute inset-0 bg-[#6e9e85]/10 flex items-center justify-center"><Loader2 className="w-7 h-7 text-[#6e9e85] animate-spin" /></div>}
           </div>
           <div className="grid grid-cols-2 gap-2">
             {!camOn ? (
-              <button data-testid="inventory-start-cam" onClick={startCam} className="col-span-2 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#030712] border border-[#22c55e]/50 text-[#22c55e] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Accendi fotocamera", "Kamera an", "Turn on camera", "Encender cámara", "Allumer caméra", "روشن کردن دوربین")}</button>
+              <button data-testid="inventory-start-cam" onClick={startCam} className="col-span-2 inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#030712] border border-[#6e9e85]/50 text-[#6e9e85] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Accendi fotocamera", "Kamera an", "Turn on camera", "Encender cámara", "Allumer caméra", "روشن کردن دوربین")}</button>
             ) : (
               <>
-                <button data-testid="inventory-scan-btn" onClick={captureScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+                <button data-testid="inventory-scan-btn" onClick={captureScan} disabled={scanning} className="inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-gradient-to-r from-[#5f8a70] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-95">{scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
                 <button data-testid="inventory-stop-cam" onClick={stopCam} className="inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#030712] border border-[#1e293b] text-[#94A3B8] font-bold text-sm active:scale-95"><X className="w-4 h-4" /> {tri("Spegni", "Aus", "Off", "Apagar", "Éteindre", "خاموش")}</button>
               </>
             )}
           </div>
-          {insight && <div className="mt-2 text-[12px] text-[#cfe0ec] flex items-start gap-1.5" data-testid="inventory-insight"><Sparkles className="w-3.5 h-3.5 text-[#22c55e] mt-0.5 shrink-0" /> {insight}</div>}
+          {insight && <div className="mt-2 text-[12px] text-[#cfe0ec] flex items-start gap-1.5" data-testid="inventory-insight"><Sparkles className="w-3.5 h-3.5 text-[#6e9e85] mt-0.5 shrink-0" /> {insight}</div>}
         </div>
 
         {/* AGGANCIO BATCH ALLA LINEA */}
@@ -119,12 +119,12 @@ export default function ProductionInventory({ onClose }) {
             <div className="mt-3 space-y-1.5" data-testid="inventory-bind-result">
               {(bindResult.consumed || []).map((c, i) => (
                 <div key={i} className="flex items-center justify-between text-[12px] bg-[#030712] border border-[#1e293b] rounded-lg px-3 py-1.5">
-                  <span className="text-[#AEB8BF] flex items-center gap-1.5"><Wheat className="w-3.5 h-3.5 text-[#22c55e]" /> {c.name}</span>
+                  <span className="text-[#AEB8BF] flex items-center gap-1.5"><Wheat className="w-3.5 h-3.5 text-[#6e9e85]" /> {c.name}</span>
                   <span className="font-mono-data text-white">−{c.kg} kg → {c.quantity_kg} kg</span>
                 </div>
               ))}
               {(bindResult.shortfalls || []).map((s, i) => (
-                <div key={`s${i}`} className="flex items-center gap-1.5 text-[12px] text-[#f59e0b]" data-testid={`inventory-shortfall-${i}`}><AlertTriangle className="w-3.5 h-3.5" /> {s.name}: {tri("mancano", "fehlen", "missing", "faltan", "manquent", "کمبود")} {s.missing} kg</div>
+                <div key={`s${i}`} className="flex items-center gap-1.5 text-[12px] text-[#aaa795]" data-testid={`inventory-shortfall-${i}`}><AlertTriangle className="w-3.5 h-3.5" /> {s.name}: {tri("mancano", "fehlen", "missing", "faltan", "manquent", "کمبود")} {s.missing} kg</div>
               ))}
             </div>
           )}
@@ -139,7 +139,7 @@ export default function ProductionInventory({ onClose }) {
             return (
               <div key={s.id} data-testid={`inventory-item-${s.id}`} className="flex items-center justify-between bg-[#0b0f19] border rounded-xl px-3 py-2" style={{ borderColor: low ? "#f59e0b55" : "#1e293b" }}>
                 <span className="text-[13px] text-white flex items-center gap-2">{s.kind === "farina" ? <Wheat className="w-4 h-4 text-[#e0b877]" /> : <Package className="w-4 h-4 text-[#64748B]" />} {s.name}</span>
-                <span className={`font-mono-data font-bold ${low ? "text-[#f59e0b]" : "text-white"}`}>{s.quantity_kg} kg</span>
+                <span className={`font-mono-data font-bold ${low ? "text-[#aaa795]" : "text-white"}`}>{s.quantity_kg} kg</span>
               </div>
             );
           })}

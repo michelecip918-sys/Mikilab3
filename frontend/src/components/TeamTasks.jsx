@@ -7,10 +7,10 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
-  sanificazione: { icon: Brush, c: "#22c55e" },
+  sanificazione: { icon: Brush, c: "#6e9e85" },
   regola: { icon: ShieldAlert, c: "#64748B" },
-  crisis_override: { icon: Gauge, c: "#f59e0b" },
-  produzione: { icon: ListChecks, c: "#FF6B00" },
+  crisis_override: { icon: Gauge, c: "#aaa795" },
+  produzione: { icon: ListChecks, c: "#8a97a6" },
   generico: { icon: ListChecks, c: "#5EEAD4" },
 };
 
@@ -99,7 +99,7 @@ export default function TeamTasks({ operatorName = "" }) {
                 <span className="text-[10px] font-bold text-[#94A3B8]">{doneN}/{total}</span>
               </div>
               {t.kind === "crisis_override" && t.pacing && (
-                <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#f59e0b] bg-[#f59e0b]/10 border border-[#f59e0b]/30 rounded-lg px-2.5 py-1"><Gauge className="w-3.5 h-3.5" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {t.pacing}{t.pacing_target ? ` · ${t.pacing_target}` : ""}</div>
+                <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#aaa795] bg-[#aaa795]/10 border border-[#aaa795]/30 rounded-lg px-2.5 py-1"><Gauge className="w-3.5 h-3.5" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {t.pacing}{t.pacing_target ? ` · ${t.pacing_target}` : ""}</div>
               )}
               <div className="space-y-1.5">
                 {(t.steps || []).map((s) => (
@@ -121,12 +121,12 @@ export default function TeamTasks({ operatorName = "" }) {
                 ))}
               </div>
               {t.kind === "sanificazione" && (t.steps || []).every((s) => s.done) && (
-                <button data-testid={`team-clean-check-${t.id}`} onClick={() => openCheck(t.id)} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-[#22c55e]/15 border border-[#22c55e]/50 text-[#22c55e] font-black text-[12px] active:scale-98">
+                <button data-testid={`team-clean-check-${t.id}`} onClick={() => openCheck(t.id)} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-[#6e9e85]/15 border border-[#6e9e85]/50 text-[#6e9e85] font-black text-[12px] active:scale-98">
                   <Camera className="w-4 h-4" /> {tri("Valida pulizia con foto (checkpoint AR)", "Sauberkeit per Foto prüfen", "Validate cleanliness with photo", "Validar limpieza con foto", "Valider la propreté par photo", "تأیید پاکیزگی با عکس")}
                 </button>
               )}
               {t.cleanliness && !t.cleanliness.clean && (
-                <p className="mt-1.5 text-[11px] text-[#f59e0b]" data-testid={`team-clean-note-${t.id}`}>⚠ {t.cleanliness.note}</p>
+                <p className="mt-1.5 text-[11px] text-[#aaa795]" data-testid={`team-clean-note-${t.id}`}>⚠ {t.cleanliness.note}</p>
               )}
             </motion.div>
           );
@@ -136,18 +136,18 @@ export default function TeamTasks({ operatorName = "" }) {
       {checkTask && (
         <div data-testid="clean-check-overlay" className="fixed inset-0 z-[90] bg-[#030712]/95 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <button data-testid="clean-check-close" onClick={closeCheck} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-5 h-5" /></button>
-          <p className="text-sm font-black text-[#22c55e] mb-3 flex items-center gap-2"><ScanLine className="w-4 h-4" /> {tri("Checkpoint AR · Pulizia", "AR-Checkpoint · Sauberkeit", "AR Checkpoint · Cleanliness", "Checkpoint AR · Limpieza", "Checkpoint AR · Propreté", "چک‌پوینت AR · پاکیزگی")}</p>
-          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-[#22c55e]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
+          <p className="text-sm font-black text-[#6e9e85] mb-3 flex items-center gap-2"><ScanLine className="w-4 h-4" /> {tri("Checkpoint AR · Pulizia", "AR-Checkpoint · Sauberkeit", "AR Checkpoint · Cleanliness", "Checkpoint AR · Limpieza", "Checkpoint AR · Propreté", "چک‌پوینت AR · پاکیزگی")}</p>
+          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-[#6e9e85]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
             <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
-            <div className="absolute inset-4 border-2 border-[#22c55e]/60 rounded-xl pointer-events-none" />
-            {checking && <div className="absolute inset-0 bg-[#22c55e]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#22c55e] animate-spin" /></div>}
+            <div className="absolute inset-4 border-2 border-[#6e9e85]/60 rounded-xl pointer-events-none" />
+            {checking && <div className="absolute inset-0 bg-[#6e9e85]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#6e9e85] animate-spin" /></div>}
           </div>
           {checkRes && !checkRes.clean && (
-            <div data-testid="clean-check-result" className="mt-3 w-full max-w-sm rounded-xl border border-[#f59e0b]/50 bg-[#f59e0b]/10 p-3 text-[13px] text-[#f59e0b] font-semibold text-center">
+            <div data-testid="clean-check-result" className="mt-3 w-full max-w-sm rounded-xl border border-[#aaa795]/50 bg-[#aaa795]/10 p-3 text-[13px] text-[#aaa795] font-semibold text-center">
               {tri("Non ancora a standard", "Noch nicht Standard", "Not up to standard yet", "Aún no estándar", "Pas encore au standard", "هنوز استاندارد نیست")} ({checkRes.score}%) — {checkRes.note}
             </div>
           )}
-          <button data-testid="clean-check-shoot" onClick={runCheck} disabled={checking} className="mt-4 w-full max-w-sm inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#16a34a] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-98">
+          <button data-testid="clean-check-shoot" onClick={runCheck} disabled={checking} className="mt-4 w-full max-w-sm inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#5f8a70] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-98">
             {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />} {tri("Scatta e valida", "Foto & prüfen", "Shoot & validate", "Tomar y validar", "Photo & valider", "عکس و تأیید")}
           </button>
         </div>

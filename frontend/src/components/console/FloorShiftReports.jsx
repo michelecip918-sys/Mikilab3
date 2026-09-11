@@ -32,14 +32,14 @@ export default function FloorShiftReports() {
           {reports.map((r) => (
             <div key={r.id} data-testid={`floor-report-${r.id}`} className="rounded-xl bg-[#0C1019] border border-[#1e293b] p-3">
               <div className="flex items-center gap-2 mb-1.5">
-                <ClipboardList className="w-4 h-4 text-[#22c55e] shrink-0" />
+                <ClipboardList className="w-4 h-4 text-[#6e9e85] shrink-0" />
                 <span className="text-sm font-black text-white flex-1 min-w-0 truncate">{r.operator || tri("Operatore", "Bediener", "Operator", "Operario", "Opérateur", "اپراتور")}{r.role && r.role !== r.operator ? ` · ${r.role}` : ""}</span>
                 <span className="shrink-0 text-[10px] text-[#64748B]">{fmt(r.at)}</span>
               </div>
               <div className="space-y-1 text-[12px] text-[#cbd5e1]">
                 {r.pieces && <p><span className="text-[#94A3B8]">{tri("Pezzi", "Stück", "Pieces", "Piezas", "Pièces", "قطعات")}:</span> {r.pieces}</p>}
                 {r.waste && <p><span className="text-[#94A3B8]">{tri("Scarti", "Ausschuss", "Waste", "Desperdicios", "Rebuts", "ضایعات")}:</span> {r.waste}</p>}
-                {r.issues && <p className="text-[#f59e0b]"><span className="text-[#94A3B8]">{tri("Problemi", "Probleme", "Issues", "Problemas", "Problèmes", "مشکلات")}:</span> {r.issues}</p>}
+                {r.issues && <p className="text-[#aaa795]"><span className="text-[#94A3B8]">{tri("Problemi", "Probleme", "Issues", "Problemas", "Problèmes", "مشکلات")}:</span> {r.issues}</p>}
                 {r.notes && <p><span className="text-[#94A3B8]">{tri("Note", "Notiz", "Notes", "Notas", "Notes", "یادداشت")}:</span> {r.notes}</p>}
                 <p className="flex items-center gap-1.5">
                   <span className="text-[#94A3B8]">{tri("Pulizia", "Reinigung", "Cleaning", "Limpieza", "Nettoyage", "نظافت")}:</span>

@@ -37,10 +37,10 @@ export default function AdvancedLab() {
     setScanning(true); setSensors([]);
     setTimeout(() => {
       setSensors([
-        { id: "T1", type: tri("Temperatura", "Temperatur", "Temperature", "Temperatura", "Température", "دما"), val: "24.3°C", ic: Thermometer, c: "#FFB800" },
-        { id: "H1", type: tri("Umidità", "Feuchte", "Humidity", "Humedad", "Humidité", "رطوبت"), val: "68%", ic: Droplets, c: "#FF6B00" },
-        { id: "P1", type: "pH", val: "5.4", ic: Gauge, c: "#7FD8C0" },
-        { id: "F1", type: tri("Flusso", "Fluss", "Flow", "Flujo", "Flux", "جریان"), val: "1.2 L/m", ic: Wifi, c: "#FF9D42" },
+        { id: "T1", type: tri("Temperatura", "Temperatur", "Temperature", "Temperatura", "Température", "دما"), val: "24.3°C", ic: Thermometer, c: "#a4afbb" },
+        { id: "H1", type: tri("Umidità", "Feuchte", "Humidity", "Humedad", "Humidité", "رطوبت"), val: "68%", ic: Droplets, c: "#8a97a6" },
+        { id: "P1", type: "pH", val: "5.4", ic: Gauge, c: "#93a2ae" },
+        { id: "F1", type: tri("Flusso", "Fluss", "Flow", "Flujo", "Flux", "جریان"), val: "1.2 L/m", ic: Wifi, c: "#9aa6b2" },
       ]);
       setScanning(false);
     }, 1600);
@@ -93,7 +93,7 @@ export default function AdvancedLab() {
   return (
     <div data-testid="advanced-lab" className="space-y-4">
       <div className="flex items-center gap-3">
-        <div className="w-11 h-11 shrink-0 rounded-xl bg-[#EAB308]/10 border border-[#EAB308]/40 flex items-center justify-center"><Zap className="w-6 h-6 text-[#EAB308]" /></div>
+        <div className="w-11 h-11 shrink-0 rounded-xl bg-[#a6b1bc]/10 border border-[#a6b1bc]/40 flex items-center justify-center"><Zap className="w-6 h-6 text-[#a6b1bc]" /></div>
         <div>
           <h3 className="font-cyber text-base font-black text-white uppercase tracking-wide">{tri("Tecnologie Uniche al Mondo", "Einzigartige Technologien", "World-Unique Technologies", "Tecnologías Únicas", "Technologies Uniques", "فناوری‌های بی‌نظیر")}</h3>
           <p className="text-[11px] text-[#94A3B8]">{tri("Plancia avanzata di Sitor — dati live.", "Erweiterte Konsole — Live-Daten.", "Advanced console — live data.", "Consola avanzada — datos en vivo.", "Console avancée — données en direct.", "کنسول پیشرفته — داده زنده")}</p>
@@ -102,46 +102,46 @@ export default function AdvancedLab() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {/* Compensazione climatica */}
-        <Card testid="lab-climate" icon={CloudSun} accent="#FF6B00" title={tri("Compensazione Climatica", "Klimaausgleich", "Climate Compensation", "Compensación Climática", "Compensation Climatique", "جبران آب‌وهوا")} sub={tri("Prodotto identico in ogni clima", "Gleiches Produkt in jedem Klima", "Same product in any climate", "Mismo producto en cualquier clima", "Même produit sous tout climat", "محصول یکسان")}>
+        <Card testid="lab-climate" icon={CloudSun} accent="#8a97a6" title={tri("Compensazione Climatica", "Klimaausgleich", "Climate Compensation", "Compensación Climática", "Compensation Climatique", "جبران آب‌وهوا")} sub={tri("Prodotto identico in ogni clima", "Gleiches Produkt in jedem Klima", "Same product in any climate", "Mismo producto en cualquier clima", "Même produit sous tout climat", "محصول یکسان")}>
           <div className="grid grid-cols-3 gap-2 text-center">
             <div><p className="text-[9px] text-[#94A3B8] uppercase">{tri("Ambiente", "Umgebung", "Ambient", "Ambiente", "Ambiant", "محیط")}</p><p className="font-cyber text-lg font-black text-white">{ambient.toFixed(1)}°</p></div>
-            <div><p className="text-[9px] text-[#FF6B00] uppercase">{tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}</p><p className="font-cyber text-lg font-black text-[#FF6B00]">{waterT}°</p></div>
-            <div><p className="text-[9px] text-[#7FD8C0] uppercase">{tri("Umid. cella", "Zellfeuchte", "Cell hum.", "Humedad", "Humidité", "رطوبت")}</p><p className="font-cyber text-lg font-black text-[#7FD8C0]">{cellHum}%</p></div>
+            <div><p className="text-[9px] text-[#8a97a6] uppercase">{tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}</p><p className="font-cyber text-lg font-black text-[#8a97a6]">{waterT}°</p></div>
+            <div><p className="text-[9px] text-[#93a2ae] uppercase">{tri("Umid. cella", "Zellfeuchte", "Cell hum.", "Humedad", "Humidité", "رطوبت")}</p><p className="font-cyber text-lg font-black text-[#93a2ae]">{cellHum}%</p></div>
           </div>
         </Card>
 
         {/* IoT Plug & Play */}
-        <Card testid="lab-iot" icon={Radio} accent="#FF9D42" title={tri("IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT")} sub={tri("Riconoscimento sensori in 1s", "Sensor-Erkennung in 1s", "Sensor recognition in 1s", "Reconocimiento en 1s", "Reconnaissance en 1s", "شناسایی در ۱ ثانیه")}>
-          <button data-testid="lab-iot-scan" onClick={scan} disabled={scanning} className="w-full mb-2 py-1.5 rounded-lg text-[11px] font-bold text-[#060A10] disabled:opacity-60" style={{ background: "linear-gradient(90deg,#FF9D42,#FF6B00)" }}>{scanning ? tri("Scansione…", "Scan…", "Scanning…", "Escaneando…", "Analyse…", "اسکن…") : tri("Scansiona sensori", "Sensoren scannen", "Scan sensors", "Escanear", "Scanner", "اسکن سنسورها")}</button>
+        <Card testid="lab-iot" icon={Radio} accent="#9aa6b2" title={tri("IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT Plug & Play", "IoT")} sub={tri("Riconoscimento sensori in 1s", "Sensor-Erkennung in 1s", "Sensor recognition in 1s", "Reconocimiento en 1s", "Reconnaissance en 1s", "شناسایی در ۱ ثانیه")}>
+          <button data-testid="lab-iot-scan" onClick={scan} disabled={scanning} className="w-full mb-2 py-1.5 rounded-lg text-[11px] font-bold text-[#060A10] disabled:opacity-60" style={{ background: "linear-gradient(90deg,#9aa6b2,#8a97a6)" }}>{scanning ? tri("Scansione…", "Scan…", "Scanning…", "Escaneando…", "Analyse…", "اسکن…") : tri("Scansiona sensori", "Sensoren scannen", "Scan sensors", "Escanear", "Scanner", "اسکن سنسورها")}</button>
           <div className="grid grid-cols-2 gap-1.5">
             {sensors.map((s) => (<div key={s.id} className="flex items-center gap-1.5 rounded bg-[#0b0f19] border border-[#1e293b] px-2 py-1"><s.ic className="w-3.5 h-3.5" style={{ color: s.c }} /><span className="text-[10px] text-[#c5d3df] truncate">{s.type}</span><span className="ml-auto text-[10px] font-bold" style={{ color: s.c }}>{s.val}</span></div>))}
           </div>
         </Card>
 
         {/* Manutenzione predittiva */}
-        <Card testid="lab-maintenance" icon={Activity} accent="#22c55e" title={tri("Manutenzione Predittiva", "Vorausschauende Wartung", "Predictive Maintenance", "Mantenimiento Predictivo", "Maintenance Prédictive", "نگهداری پیش‌بینانه")} sub={tri("Guasti previsti prima che accadano", "Ausfälle vorhergesagt", "Failures predicted early", "Fallos anticipados", "Pannes anticipées", "پیش‌بینی خرابی")}>
+        <Card testid="lab-maintenance" icon={Activity} accent="#6e9e85" title={tri("Manutenzione Predittiva", "Vorausschauende Wartung", "Predictive Maintenance", "Mantenimiento Predictivo", "Maintenance Prédictive", "نگهداری پیش‌بینانه")} sub={tri("Guasti previsti prima che accadano", "Ausfälle vorhergesagt", "Failures predicted early", "Fallos anticipados", "Pannes anticipées", "پیش‌بینی خرابی")}>
           <div className="space-y-1.5">
             {machines.map((m) => (
               <div key={m.name}>
-                <div className="flex items-center justify-between text-[10.5px]"><span className="text-[#c5d3df] truncate">{m.name}</span><span className="font-bold" style={{ color: m.health < 75 ? "#f59e0b" : "#22c55e" }}>{Math.round(m.health)}%</span></div>
-                <div className="h-1.5 rounded-full bg-[#0b0f19] overflow-hidden"><div className="h-full rounded-full transition-all" style={{ width: `${m.health}%`, background: m.health < 75 ? "#f59e0b" : "#22c55e" }} /></div>
+                <div className="flex items-center justify-between text-[10.5px]"><span className="text-[#c5d3df] truncate">{m.name}</span><span className="font-bold" style={{ color: m.health < 75 ? "#aaa795" : "#6e9e85" }}>{Math.round(m.health)}%</span></div>
+                <div className="h-1.5 rounded-full bg-[#0b0f19] overflow-hidden"><div className="h-full rounded-full transition-all" style={{ width: `${m.health}%`, background: m.health < 75 ? "#aaa795" : "#6e9e85" }} /></div>
               </div>
             ))}
           </div>
-          {critical && <p data-testid="lab-maint-alert" className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#f59e0b]"><AlertTriangle className="w-3 h-3" /> {tri("Manutenzione consigliata", "Wartung empfohlen", "Maintenance advised", "Mantenimiento aconsejado", "Maintenance conseillée", "نگهداری توصیه می‌شود")}: {critical.name}</p>}
+          {critical && <p data-testid="lab-maint-alert" className="mt-2 flex items-center gap-1 text-[10px] font-bold text-[#aaa795]"><AlertTriangle className="w-3 h-3" /> {tri("Manutenzione consigliata", "Wartung empfohlen", "Maintenance advised", "Mantenimiento aconsejado", "Maintenance conseillée", "نگهداری توصیه می‌شود")}: {critical.name}</p>}
         </Card>
 
         {/* Edge computing + Voce */}
-        <Card testid="lab-edge" icon={Cpu} accent="#EAB308" title={tri("Edge Enzimatico & Voce", "Edge & Sprache", "Enzymatic Edge & Voice", "Edge & Voz", "Edge & Voix", "Edge و صدا")} sub={tri("Calcolo locale sub-millisecondo", "Lokale Sub-ms-Berechnung", "Sub-ms local compute", "Cómputo local sub-ms", "Calcul local sub-ms", "پردازش محلی")}>
+        <Card testid="lab-edge" icon={Cpu} accent="#a6b1bc" title={tri("Edge Enzimatico & Voce", "Edge & Sprache", "Enzymatic Edge & Voice", "Edge & Voz", "Edge & Voix", "Edge و صدا")} sub={tri("Calcolo locale sub-millisecondo", "Lokale Sub-ms-Berechnung", "Sub-ms local compute", "Cómputo local sub-ms", "Calcul local sub-ms", "پردازش محلی")}>
           <div className="flex items-center justify-between mb-2">
             <span className="text-[10px] text-[#94A3B8] uppercase">{tri("Latenza", "Latenz", "Latency", "Latencia", "Latence", "تأخیر")}</span>
-            <span className="font-cyber text-lg font-black text-[#EAB308] tabular-nums">{lat.toFixed(2)} ms</span>
+            <span className="font-cyber text-lg font-black text-[#a6b1bc] tabular-nums">{lat.toFixed(2)} ms</span>
           </div>
-          <button data-testid="lab-voice" onClick={toggleVoice} className={`w-full py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center justify-center gap-1.5 border ${listening ? "bg-[#f43f5e]/15 border-[#f43f5e]/50 text-[#f43f5e] animate-pulse" : "bg-[#0b0f19] border-[#1e293b] text-[#c5d3df]"}`}>
+          <button data-testid="lab-voice" onClick={toggleVoice} className={`w-full py-1.5 rounded-lg text-[11px] font-bold inline-flex items-center justify-center gap-1.5 border ${listening ? "bg-[#b06e78]/15 border-[#b06e78]/50 text-[#b06e78] animate-pulse" : "bg-[#0b0f19] border-[#1e293b] text-[#c5d3df]"}`}>
             {listening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />} {listening ? tri("Ascolto…", "Höre…", "Listening…", "Escuchando…", "Écoute…", "شنیدن…") : tri("Comando vocale privato", "Sprachbefehl", "Private voice command", "Comando de voz", "Commande vocale", "فرمان صوتی")}
           </button>
-          {heard && <p data-testid="lab-voice-heard" className="mt-1.5 text-[10.5px] text-[#FF9D42] italic">“{heard}”</p>}
-          {voiceMsg && <p data-testid="lab-voice-action" className="mt-1 text-[10px] font-bold text-[#EAB308]">⟶ {voiceMsg}</p>}
+          {heard && <p data-testid="lab-voice-heard" className="mt-1.5 text-[10.5px] text-[#9aa6b2] italic">“{heard}”</p>}
+          {voiceMsg && <p data-testid="lab-voice-action" className="mt-1 text-[10px] font-bold text-[#a6b1bc]">⟶ {voiceMsg}</p>}
         </Card>
       </div>
     </div>

@@ -32,10 +32,10 @@ export default function SiloManager() {
       <div className="flex items-center gap-1.5 rounded-lg bg-[#0C1019] border border-[#64748B]/30 px-2.5 py-1.5">
         <Mail className="w-4 h-4 text-[#64748B] shrink-0" />
         <input data-testid="silo-supplier-input" type="email" value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={tri("Email fornitore (per micro-ordini)", "Lieferanten-E-Mail", "Supplier email (for micro-orders)", "Email proveedor", "Email fournisseur", "ایمیل تأمین‌کننده")} className="flex-1 min-w-0 bg-transparent text-[13px] text-white outline-none placeholder:text-[#4b6070]" />
-        {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#FF6B00]"><Check className="w-4 h-4" /></button>}
+        {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#8a97a6]"><Check className="w-4 h-4" /></button>}
       </div>
       {data.silos.map((s) => {
-        const col = s.needs_reorder ? "#f43f5e" : s.fill_pct < 40 ? "#FFB800" : "#22c55e";
+        const col = s.needs_reorder ? "#b06e78" : s.fill_pct < 40 ? "#a4afbb" : "#6e9e85";
         return (
           <div key={s.id} data-testid={`silo-${s.id}`} className="rounded-xl border p-2.5" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
             <div className="flex items-center gap-2">
@@ -46,16 +46,16 @@ export default function SiloManager() {
             <div className="mt-1.5 h-1.5 rounded-full bg-[#030712] overflow-hidden"><div className="h-full rounded-full" style={{ width: `${s.fill_pct}%`, background: col }} /></div>
             <div className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] text-[#94A3B8]">
               {s.autonomy_h != null && <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" /> {tri("autonomia", "Autonomie", "autonomy", "autonomía", "autonomie", "خودکفایی")} ~{s.autonomy_h}h</span>}
-              {s.is_flour && <span className="inline-flex items-center gap-1"><Droplets className="w-3 h-3 text-[#FF9D42]" /> {tri("umidità", "Feuchte", "humidity", "humedad", "humidité", "رطوبت")} {s.humidity_pct}%</span>}
-              {s.water_adjust_pct != null && s.water_adjust_pct !== 0 && <span className="text-[#FF9D42] font-bold">{tri("correggi acqua", "Wasser", "water adj", "agua", "eau", "آب")} {s.water_adjust_pct > 0 ? "+" : ""}{s.water_adjust_pct}%</span>}
-              {s.needs_reorder && <span className="text-[#f43f5e] font-bold">⚠ {tri("sotto soglia", "unter Schwelle", "below threshold", "bajo umbral", "sous seuil", "زیر آستانه")}</span>}
+              {s.is_flour && <span className="inline-flex items-center gap-1"><Droplets className="w-3 h-3 text-[#9aa6b2]" /> {tri("umidità", "Feuchte", "humidity", "humedad", "humidité", "رطوبت")} {s.humidity_pct}%</span>}
+              {s.water_adjust_pct != null && s.water_adjust_pct !== 0 && <span className="text-[#9aa6b2] font-bold">{tri("correggi acqua", "Wasser", "water adj", "agua", "eau", "آب")} {s.water_adjust_pct > 0 ? "+" : ""}{s.water_adjust_pct}%</span>}
+              {s.needs_reorder && <span className="text-[#b06e78] font-bold">⚠ {tri("sotto soglia", "unter Schwelle", "below threshold", "bajo umbral", "sous seuil", "زیر آستانه")}</span>}
             </div>
           </div>
         );
       })}
       {data.reorder_count > 0 && (
         <motion.button initial={{ opacity: 0 }} animate={{ opacity: 1 }} data-testid="silo-microorder" onClick={microorder}
-          className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#f43f5e]/15 border border-[#f43f5e]/50 text-[#f43f5e] font-black text-sm active:scale-95">
+          className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#b06e78]/15 border border-[#b06e78]/50 text-[#b06e78] font-black text-sm active:scale-95">
           <PackagePlus className="w-4 h-4" /> {tri(`Genera micro-ordini (${data.reorder_count})`, `Micro-Aufträge (${data.reorder_count})`, `Generate micro-orders (${data.reorder_count})`, `Micro-pedidos (${data.reorder_count})`, `Micro-commandes (${data.reorder_count})`, `میکرو سفارش (${data.reorder_count})`)}
         </motion.button>
       )}

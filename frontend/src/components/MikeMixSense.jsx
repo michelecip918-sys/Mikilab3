@@ -230,7 +230,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       >
         <Activity className="w-5 h-5" style={{ color }} />
         {nAlert > 0 && (
-          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-[10px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#ef4444" : "#f59e0b" }}>{nAlert}</span>
+          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-[10px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#b06e78" : "#aaa795" }}>{nAlert}</span>
         )}
       </button>
 
@@ -253,9 +253,9 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
           <div className="max-h-[52vh] overflow-y-auto p-4 space-y-3">
             {/* Briefing del mattino (Capo) */}
             {isCapo && briefing && briefingOpen && (
-              <div data-testid="mikemix-briefing" className="rounded-2xl border border-[#f59e0b]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
+              <div data-testid="mikemix-briefing" className="rounded-2xl border border-[#aaa795]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
                 <div className="flex items-start justify-between gap-2">
-                  <p className="text-[12px] font-black text-[#f59e0b] flex items-center gap-1.5"><Sunrise className="w-4 h-4" /> {tri("Briefing del mattino", "Morgen-Briefing", "Morning briefing", "Briefing matutino", "Briefing du matin", "گزارش صبحگاهی")}</p>
+                  <p className="text-[12px] font-black text-[#aaa795] flex items-center gap-1.5"><Sunrise className="w-4 h-4" /> {tri("Briefing del mattino", "Morgen-Briefing", "Morning briefing", "Briefing matutino", "Briefing du matin", "گزارش صبحگاهی")}</p>
                   <button data-testid="mikemix-briefing-close" onClick={() => setBriefingOpen(false)} className="text-[#94A3B8] hover:text-white"><X className="w-3.5 h-3.5" /></button>
                 </div>
                 <p className="text-[12px] text-white mt-1.5">{briefing.greeting}</p>
@@ -264,7 +264,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                 </ul>
                 <div className="mt-2 flex items-center justify-between">
                   <span className="text-[11px] text-[#94A3B8]">{tri("Efficienza lab", "Lab-Effizienz", "Lab efficiency", "Eficiencia", "Efficacité", "کارایی")}</span>
-                  <span className="text-sm font-black text-[#f59e0b]" data-testid="mikemix-briefing-eff">{briefing.overall_lab_efficiency}</span>
+                  <span className="text-sm font-black text-[#aaa795]" data-testid="mikemix-briefing-eff">{briefing.overall_lab_efficiency}</span>
                 </div>
                 <p className="text-[11px] text-[#5EEAD4] mt-1.5">💡 {briefing.ai_recommendation}</p>
               </div>
@@ -276,7 +276,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                 <Radio className="w-4 h-4" /> {tri("Aura Sonora", "Klang-Aura", "Sound Aura", "Aura Sonora", "Aura Sonore", "هاله صوتی")}
               </button>
               <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8]">
-                {muted ? <VolumeX className="w-4 h-4 text-[#f87171]" /> : <Volume2 className="w-4 h-4" style={{ color }} />}
+                {muted ? <VolumeX className="w-4 h-4 text-[#bb8489]" /> : <Volume2 className="w-4 h-4" style={{ color }} />}
               </span>
             </div>
 
@@ -284,15 +284,15 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             {pulse?.sensors && (pulse.sensors.oven_temp || pulse.sensors.ph) && (
               <div data-testid="mikemix-sensors-live" className="grid grid-cols-2 gap-2">
                 {pulse.sensors.oven_temp && (
-                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : "#1e293b", background: pulse.sensors.oven_temp.value > 250 ? "#ef444412" : "#030712" }}>
+                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.oven_temp.value > 250 ? "#b06e78" : "#1e293b", background: pulse.sensors.oven_temp.value > 250 ? "#ef444412" : "#030712" }}>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🔥 {tri("Forno", "Ofen", "Oven", "Horno", "Four", "فر")}</p>
-                    <p className="text-2xl font-black" style={{ color: pulse.sensors.oven_temp.value > 250 ? "#ef4444" : color }} data-testid="mikemix-sensor-oven">{pulse.sensors.oven_temp.value}°</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.oven_temp.value > 250 ? "#b06e78" : color }} data-testid="mikemix-sensor-oven">{pulse.sensors.oven_temp.value}°</p>
                   </div>
                 )}
                 {pulse.sensors.ph && (
-                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : "#1e293b", background: pulse.sensors.ph.value < 3.8 ? "#f59e0b12" : "#030712" }}>
+                  <div className="rounded-2xl border p-3 text-center" style={{ borderColor: pulse.sensors.ph.value < 3.8 ? "#aaa795" : "#1e293b", background: pulse.sensors.ph.value < 3.8 ? "#f59e0b12" : "#030712" }}>
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">🧪 {tri("pH lievito", "Sauerteig pH", "Sourdough pH", "pH masa", "pH levain", "pH خمیرمایه")}</p>
-                    <p className="text-2xl font-black" style={{ color: pulse.sensors.ph.value < 3.8 ? "#f59e0b" : color }} data-testid="mikemix-sensor-ph">{pulse.sensors.ph.value}</p>
+                    <p className="text-2xl font-black" style={{ color: pulse.sensors.ph.value < 3.8 ? "#aaa795" : color }} data-testid="mikemix-sensor-ph">{pulse.sensors.ph.value}</p>
                   </div>
                 )}
               </div>
@@ -315,7 +315,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
               </div>
             ) : (
               alerts.map((a) => {
-                const c = a.level === "critical" ? "#ef4444" : a.level === "warn" ? "#f59e0b" : "#64748B";
+                const c = a.level === "critical" ? "#b06e78" : a.level === "warn" ? "#aaa795" : "#64748B";
                 const Icon = a.level === "critical" ? AlertOctagon : a.level === "warn" ? AlertTriangle : Info;
                 return (
                   <div key={a.id} data-testid={`mikemix-alert-${a.code}`} className="rounded-2xl border p-3" style={{ borderColor: `${c}55`, background: `${c}12` }}>
@@ -347,7 +347,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
-                <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#f59e0b]/50 text-[#f59e0b] bg-[#f59e0b12] active:scale-95 transition-transform">
+                <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#aaa795]/50 text-[#aaa795] bg-[#f59e0b12] active:scale-95 transition-transform">
                   <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
                 <div className="grid grid-cols-3 gap-2">
@@ -357,11 +357,11 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   <button data-testid="mikemix-vision-btn" onClick={() => setVisionOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#7DA3C0]/40 text-[#7DA3C0] bg-[#64748B0d] active:scale-95 transition-transform">
                     <ScanLine className="w-4 h-4" /> {tri("Vision AR", "Vision AR", "Vision AR", "Vision AR", "Vision AR", "ویژن AR")}
                   </button>
-                  <button data-testid="mikemix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f59e0b]/40 text-[#f59e0b] bg-[#f59e0b0d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-climate-btn" onClick={() => setClimateOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#aaa795]/40 text-[#aaa795] bg-[#f59e0b0d] active:scale-95 transition-transform">
                     <CloudSun className="w-4 h-4" /> {tri("Clima", "Klima", "Climate", "Clima", "Climat", "اقلیم")}
                   </button>
                 </div>
-                <button data-testid="mikemix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#22c55e]/50 text-[#22c55e] bg-[#22c55e12] active:scale-95 transition-transform">
+                <button data-testid="mikemix-inventory-btn" onClick={() => setInventoryOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#6e9e85]/50 text-[#6e9e85] bg-[#22c55e12] active:scale-95 transition-transform">
                   <Package className="w-4 h-4" /> {tri("Inventario di Produzione (foto)", "Produktions-Inventar (Foto)", "Production Inventory (photo)", "Inventario de Producción (foto)", "Inventaire de Production (photo)", "موجودی تولید (عکس)")}
                 </button>
                 <button data-testid="mikemix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#D95200]/50 text-[#D95200] bg-[#D9520012] active:scale-95 transition-transform">
@@ -388,7 +388,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   <button data-testid="mikemix-proofer-btn" onClick={() => setProoferOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#64748B]/40 text-[#8FB0C2] bg-[#64748B0d] active:scale-95 transition-transform">
                     <Snowflake className="w-4 h-4" /> {tri("Cella/Freezer", "Gärraum", "Proofer", "Cámara", "Chambre", "تخمیر")}
                   </button>
-                  <button data-testid="mikemix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#f97316]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
+                  <button data-testid="mikemix-phoenix-btn" onClick={() => setPhoenixOpen(true)} className="inline-flex flex-col items-center justify-center gap-1 py-2.5 rounded-2xl font-black text-[11px] border border-[#a89a8c]/40 text-[#fdba74] bg-[#f973160d] active:scale-95 transition-transform">
                     <Flame className="w-4 h-4" /> Batch Phoenix
                   </button>
                 </div>
@@ -403,12 +403,12 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   <input data-testid="glass-slider" type="range" min="15" max="95" step="1" value={glass} onChange={(e) => setGlassLvl(Number(e.target.value))} className="w-full accent-[#64748B]" />
                   <p className="text-[10px] text-[#64748B] mt-1">{tri("Alza per sfondi più vividi, abbassa per più contrasto sul testo.", "Höher = lebendigere Hintergründe, niedriger = mehr Kontrast.", "Higher = more vivid backgrounds, lower = more text contrast.", "Más alto = fondos vívidos, más bajo = más contraste.", "Plus haut = fonds vifs, plus bas = plus de contraste.", "بالاتر = پس‌زمینه واضح‌تر، پایین‌تر = کنتراست بیشتر.")}</p>
                 </div>
-                <div data-testid="mikemix-stall-control" className="rounded-2xl border border-[#f59e0b]/40 bg-[#f59e0b0d] p-3">
+                <div data-testid="mikemix-stall-control" className="rounded-2xl border border-[#aaa795]/40 bg-[#f59e0b0d] p-3">
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="text-[11px] font-black uppercase tracking-widest text-[#fdba74]">{tri("Soglia impasto fermo", "Teig-Stillstand-Schwelle", "Stalled dough threshold", "Umbral masa parada", "Seuil pâte arrêtée", "آستانه توقف خمیر")}</span>
                     <span className="text-[11px] font-mono-data font-bold text-white" data-testid="stall-value">{stall}′</span>
                   </div>
-                  <input data-testid="stall-slider" type="range" min="30" max="180" step="5" value={stall} onChange={(e) => setStallMin(Number(e.target.value))} className="w-full accent-[#f59e0b]" />
+                  <input data-testid="stall-slider" type="range" min="30" max="180" step="5" value={stall} onChange={(e) => setStallMin(Number(e.target.value))} className="w-full accent-[#aaa795]" />
                   <p className="text-[10px] text-[#64748B] mt-1">{tri("Oltre questi minuti Sitor segnala il recupero (Batch Phoenix).", "Danach meldet Sitor die Rettung (Batch Phoenix).", "Beyond this Sitor flags recovery (Batch Phoenix).", "Pasados estos minutos Sitor avisa el recupero.", "Au-delà, Sitor signale la récupération.", "پس از این دقایق Sitor بازیافت را اعلام می‌کند.")}</p>
                 </div>
                 <ShiftPowerBoard editable />
@@ -422,7 +422,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                     </div>
                     {pulse.staffing.reduce_pct > 0 ? (
                       <>
-                        <p data-testid="mikemix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#f59e0b" }}>
+                        <p data-testid="mikemix-staff-reduce" className="text-[11.5px] mt-2 rounded-lg px-2 py-1.5" style={{ background: "#f59e0b18", color: "#aaa795" }}>
                           📉 {tri("Volumi consigliati", "Empfohlene Mengen", "Suggested volumes", "Volúmenes sugeridos", "Volumes conseillés", "حجم پیشنهادی")} −{pulse.staffing.reduce_pct}%
                         </p>
                         <button data-testid="mikemix-apply-volumes" onClick={applyVolumes} className="w-full mt-2 py-2 rounded-xl bg-amber-500 text-[#030712] font-black text-xs active:scale-95 transition-transform">
@@ -438,7 +438,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                         <div className="flex items-end justify-between gap-1 h-12">
                           {staffHist.map((d) => (
                             <div key={d.date} className="flex-1 flex flex-col items-center justify-end h-full" title={`${d.date}: ${d.present}/${pulse.staffing.total}`}>
-                              <div className="w-full rounded-t" style={{ height: `${Math.max(6, (d.factor || 0) * 100)}%`, background: d.factor < 0.7 ? "#ef4444" : d.factor < 1 ? "#f59e0b" : color }} />
+                              <div className="w-full rounded-t" style={{ height: `${Math.max(6, (d.factor || 0) * 100)}%`, background: d.factor < 0.7 ? "#b06e78" : d.factor < 1 ? "#aaa795" : color }} />
                               <span className="text-[8px] text-[#64748B] mt-0.5">{d.date.slice(8)}</span>
                             </div>
                           ))}
