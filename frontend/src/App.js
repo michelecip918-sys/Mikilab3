@@ -65,6 +65,7 @@ import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import { HoloPanel } from "@/components/console/HoloKit";
+import { SubTabs } from "@/components/console/SubTabs";
 import ZoneHero3D from "@/components/console/ZoneHero3D";
 import OnboardingActivity from "@/components/OnboardingActivity";
 import PasticceriaConsegne from "@/components/console/PasticceriaConsegne";
@@ -465,23 +466,15 @@ export default function App() {
                     <HoloPanel testid="panel-weekly" accent="#FF6B00" beacon="#FFB800" icon="🗓️" defaultOpen title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Stampa PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
                     </HoloPanel>
-                    <HoloPanel testid="panel-autoplan" accent="#FF9D42" beacon="#FF6B00" icon="✨" title={tri("Sitor · Piano del Giorno", "Sitor · Tagesplan", "Sitor · Day Plan", "Sitor · Plan del Día", "Sitor · Plan du Jour", "بوکومیکس · برنامه روز")} sub={tri("Sitor genera la sequenza di produzione ottimale del giorno.", "Sitor erstellt den optimalen Produktionsablauf.", "Sitor generates the optimal production sequence.", "Sitor genera la secuencia óptima.", "Sitor génère la séquence optimale.", "بوکومیکس بهترین توالی تولید را می‌سازد.")}>
-                      <AutoPlan />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-pianoai" accent="#FF9D42" beacon="#FF6B00" icon="🤖" title={tri("Piano di Produzione AI", "KI-Produktionsplan", "AI Production Plan", "Plan de Producción IA", "Plan de Production IA", "برنامه تولید هوش مصنوعی")} sub={tri("Detta ordini e vincoli: l'IA costruisce il piano completo del giorno, pronto da eseguire.", "Aufträge & Grenzen: die KI baut den kompletten Tagesplan.", "Dictate orders and constraints: the AI builds the full day plan, ready to run.", "Dicta pedidos y límites: la IA construye el plan del día.", "Dicte commandes et contraintes : l'IA bâtit le plan du jour.", "سفارش‌ها را بگو: هوش مصنوعی برنامه کامل روز را می‌سازد.")}>
-                      <PianoProduzioneAI />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-backward" accent="#FFB800" beacon="#FF6B00" icon="⏱️" title={tri("Piano a Ritroso · dall'orario di consegna", "Rückwärtsplan · ab Lieferzeit", "Backward Plan · from delivery time", "Plan Inverso · desde la entrega", "Plan à Rebours · dès la livraison", "برنامه معکوس · از زمان تحویل")} sub={tri("Inserisci quando devono essere pronti i prodotti: MikiLab calcola a ritroso impasto, lievitazione e cottura.", "Wann fertig? MikiLab rechnet rückwärts Teig, Gare und Backen.", "Enter when products must be ready: MikiLab computes dough, proof and bake backwards.", "Indica cuándo deben estar listos: MikiLab calcula hacia atrás.", "Indique l'heure de prêt : MikiLab calcule à rebours.", "زمان آماده‌شدن را وارد کن: MikiLab معکوس محاسبه می‌کند.")}>
-                      <BackwardScheduler />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-ordine" accent="#64748B" beacon="#FF6B00" icon="🧭" title={tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه")} sub={tri("Detta l'ordine, piano a ritroso agli operatori.", "Auftrag diktieren, Rückwärtsplan.", "Dictate the order, backwards plan.", "Dicta el pedido, plan.", "Dicte la commande.", "سفارش را بگو.")}>
-                      <OrdineCapo />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-planner" accent="#64748B" icon="🗓️" title={tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز هوشمند")} sub={tri("Piano con validazione vocale.", "Plan mit Sprachvalidierung.", "Plan with voice validation.", "Plan con validación por voz.", "Plan avec validation vocale.", "برنامه با تأیید صوتی.")}>
-                      <SmartPlannerStressZero />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-timeline" accent="#FF6B00" beacon="#FF9D42" icon="📊" title={tri("Timeline di Turno", "Schicht-Timeline", "Shift Timeline", "Timeline de Turno", "Timeline d'Équipe", "خط زمانی شیفت")} sub={tri("Lotti, infornate e SOS su un'unica linea del tempo scorrevole.", "Lose, Backen und SOS auf einer Zeitleiste.", "Batches, bakes and SOS on one scrollable timeline.", "Lotes, horneados y SOS en una línea.", "Lots, cuissons et SOS sur une frise.", "دسته‌ها، پخت و SOS روی یک خط زمانی.")}>
-                      <TimelineTurno />
+                    <HoloPanel testid="panel-pianoai" accent="#FF9D42" beacon="#FF6B00" icon="🤖" defaultOpen title={tri("Piano AI di Sitor", "Sitors KI-Plan", "Sitor's AI Plan", "Plan IA de Sitor", "Plan IA de Sitor", "برنامه هوش مصنوعی سیتور")} sub={tri("Tutte le modalità AI in un unico posto: Sitor costruisce, calcola a ritroso e valida il piano.", "Alle KI-Modi an einem Ort.", "All AI modes in one place: Sitor builds, back-plans and validates.", "Todos los modos IA en un solo lugar.", "Tous les modes IA en un seul endroit.", "همه حالت‌های هوش مصنوعی در یک‌جا.")}>
+                      <SubTabs testid="subtabs-pianoai" accent="#FF9D42" tabs={[
+                        { id: "auto", label: tri("Piano del Giorno", "Tagesplan", "Day Plan", "Plan del Día", "Plan du Jour", "برنامه روز"), content: <AutoPlan /> },
+                        { id: "ai", label: tri("Piano AI", "KI-Plan", "AI Plan", "Plan IA", "Plan IA", "برنامه AI"), content: <PianoProduzioneAI /> },
+                        { id: "backward", label: tri("A Ritroso", "Rückwärts", "Backward", "Inverso", "À Rebours", "معکوس"), content: <BackwardScheduler /> },
+                        { id: "ordine", label: tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه"), content: <OrdineCapo /> },
+                        { id: "smart", label: tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز"), content: <SmartPlannerStressZero /> },
+                        { id: "timeline", label: tri("Timeline", "Timeline", "Timeline", "Timeline", "Timeline", "خط زمانی"), content: <TimelineTurno /> },
+                      ]} />
                     </HoloPanel>
                     </CapoGroup>
 
@@ -516,19 +509,16 @@ export default function App() {
                     <HoloPanel testid="panel-team-faces" accent="#22d3ee" beacon="#22d3ee" icon="🙂" title={tri("Volti della Squadra", "Team-Gesichter", "Team Faces", "Rostros del Equipo", "Visages de l'Équipe", "چهره‌های تیم")} sub={tri("Registra i volti una volta: entrano col volto su ogni tablet di reparto.", "Einmal registrieren: Gesichts-Login auf allen Tablets.", "Enroll once: face login on every department tablet.", "Registra una vez: acceso por rostro en cada tablet.", "Enregistre une fois : connexion par visage sur chaque tablette.", "یک‌بار ثبت کن: ورود با چهره روی همه تبلت‌ها.")}>
                       <TeamFaces />
                     </HoloPanel>
-                    <HoloPanel testid="panel-floor-reports" accent="#22c55e" beacon="#22c55e" icon="🗒️" title={tri("Rapporti Fine Turno · Produzione", "Schichtende-Berichte · Produktion", "End-of-Shift Reports · Production", "Informes de Fin de Turno · Producción", "Rapports de Fin de Service · Production", "گزارش‌های پایان شیفت · تولید")} sub={tri("Ciò che gli operai compilano a fine turno: pezzi, scarti, problemi, note e pulizia.", "Was die Mitarbeiter am Schichtende ausfüllen.", "What operators fill in at end of shift: pieces, waste, issues, notes, cleaning.", "Lo que rellenan los operarios al final del turno.", "Ce que les opérateurs remplissent en fin de service.", "آنچه اپراتورها در پایان شیفت پر می‌کنند.")}>
-                      <FloorShiftReports />
-                    </HoloPanel>
                     </CapoGroup>
 
                     <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
                       title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
                       sub={tri("Ricette, forgia immagini, magazzino, forni, qualità, energia, report e sicurezza.", "Rezepte, Bilder, Lager, Öfen, Qualität, Berichte.", "Recipes, image forge, warehouse, ovens, quality, reports.", "Recetas, imágenes, almacén, hornos, informes.", "Recettes, images, entrepôt, fours, rapports.", "دستورها، تصاویر، انبار، فرها، گزارش‌ها.")}>
-                    <HoloPanel testid="panel-sitor-atelier" accent="#EAB308" beacon="#FF6B00" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi: lo crea, lo appunta qui e lo ricorda per te.", "Bitte Sitor um ein Werkzeug: er erstellt und merkt es sich.", "Ask Sitor for any tool: he builds it, pins it and remembers it for you.", "Pide a Sitor cualquier herramienta: la crea y la recuerda.", "Demande n'importe quel outil : il le crée et s'en souvient.", "هر ابزاری بخواه: می‌سازد و به خاطر می‌سپارد.")} defaultOpen>
-                      <SitorAtelier />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-sitor-guided" accent="#EAB308" beacon="#FF9D42" icon="✨" title={tri("Sitor ti guida · Attiva strumenti", "Sitor führt dich · Werkzeuge", "Sitor guides you · Enable tools", "Sitor te guía · Herramientas", "Sitor te guide · Outils", "سیتور راهنمایی می‌کند")} sub={tri("Rispondi sì/no: Sitor collega silos, bilance, sensori ed email. Con demo e elenco completo.", "Antworte ja/nein: Sitor verbindet alles.", "Answer yes/no: Sitor connects silos, scales, sensors and email. With demos and full list.", "Responde sí/no.", "Réponds oui/non.", "بله/نه پاسخ بده.")}>
-                      <SitorGuidedTools />
+                    <HoloPanel testid="panel-sitor-atelier" accent="#EAB308" beacon="#FF6B00" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")} defaultOpen>
+                      <SubTabs testid="subtabs-sitor-tools" accent="#EAB308" tabs={[
+                        { id: "atelier", label: tri("Su misura", "Nach Maß", "Tailor-made", "A medida", "Sur mesure", "سفارشی"), content: <SitorAtelier /> },
+                        { id: "guided", label: tri("Sitor ti guida", "Sitor führt", "Sitor guides", "Sitor te guía", "Sitor te guide", "راهنمایی"), content: <SitorGuidedTools /> },
+                      ]} />
                     </HoloPanel>
                     <div data-testid="panel-image-forge" className="holo-panel p-4"><ImageForge /></div>
                     <HoloPanel testid="panel-thermalflow" accent="#FF6B00" beacon="#FF9D42" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
@@ -573,20 +563,21 @@ export default function App() {
                     <HoloPanel testid="panel-machine-arrival" accent="#FFB800" beacon="#FF6B00" icon="⚙️" title={tri("Nuovi Macchinari · Sitor riconosce", "Neue Maschinen · Sitor erkennt", "New Machines · Sitor recognizes", "Nuevas Máquinas · Sitor reconoce", "Nouvelles Machines · Sitor reconnaît", "ماشین‌های جدید · Sitor می‌شناسد")} sub={tri("Arriva un macchinario? Sitor lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Sitor erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Sitor flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Sitor la reconoce e integra.", "Une machine arrive ? Sitor la reconnaît et l'intègre.", "دستگاه جدید؟ Sitor آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
-                    <HoloPanel testid="panel-docs" accent="#64748B" icon="🧾" title={tri("Report & Documenti", "Berichte & Dokumente", "Reports & Documents", "Informes y Documentos", "Rapports & Documents", "گزارش‌ها و اسناد")} sub={tri("Scarica i report multilingua (PDF).", "Mehrsprachige Berichte (PDF).", "Multi-language reports (PDF).", "Informes multilingües (PDF).", "Rapports multilingues (PDF).", "گزارش‌های چندزبانه (PDF).")}>
-                      <DocsDownload />
+                    <HoloPanel testid="panel-docs" accent="#64748B" beacon="#22c55e" icon="🧾" title={tri("Report & Rapporti", "Berichte & Reports", "Reports & Records", "Informes y Reportes", "Rapports & Comptes rendus", "گزارش‌ها و اسناد")} sub={tri("Tutto in uno: rapporti fine turno degli operai, MikiScore di turno e documenti PDF multilingua.", "Alles in einem: Schichtberichte, MikiScore und PDF-Dokumente.", "All in one: operator end-of-shift reports, shift MikiScore and multi-language PDF documents.", "Todo en uno: informes de turno, MikiScore y PDF.", "Tout en un : rapports de service, MikiScore et PDF.", "همه در یک‌جا: گزارش‌های شیفت، میکی‌اسکور و اسناد PDF.")}>
+                      <SubTabs testid="subtabs-reports" accent="#22c55e" tabs={[
+                        { id: "floor", label: tri("Fine Turno · Produzione", "Schichtende", "End-of-Shift", "Fin de Turno", "Fin de Service", "پایان شیفت"), content: <FloorShiftReports /> },
+                        { id: "mikiscore", label: tri("Report Turno · MikiScore", "MikiScore", "Shift · MikiScore", "Turno · MikiScore", "Service · MikiScore", "میکی‌اسکور"), content: <ShiftReport /> },
+                        { id: "docs", label: tri("Documenti PDF", "PDF-Dokumente", "PDF Documents", "Documentos PDF", "Documents PDF", "اسناد PDF"), content: <DocsDownload /> },
+                      ]} />
                     </HoloPanel>
-                    <HoloPanel testid="panel-pin" accent="#64748B" icon="🔒" title={tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید")} sub={tri("Imposta il PIN del team per la produzione.", "Team-PIN festlegen.", "Set the team PIN.", "Fija el PIN del equipo.", "Définis le PIN.", "پین تیم را تنظیم کن.")}>
-                      <PinSetup />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-security" accent="#64748B" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN personali operatore + registro accessi.", "Bediener-PINs + Zugriffsprotokoll.", "Operator PINs + access log.", "PIN de operario + registro.", "PIN opérateur + journal.", "پین اپراتور + گزارش.")}>
-                      <AdminSecurity />
+                    <HoloPanel testid="panel-security" accent="#64748B" beacon="#FFB800" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN produzione, PIN personali operatore e registro accessi in un unico posto.", "Produktions-PIN, Bediener-PINs & Zugriffsprotokoll.", "Production PIN, operator PINs and access log in one place.", "PIN de producción, PIN de operario y registro.", "PIN production, PIN opérateur et journal.", "پین تولید، پین اپراتور و گزارش دسترسی.")}>
+                      <SubTabs testid="subtabs-security" accent="#64748B" tabs={[
+                        { id: "access", label: tri("Sicurezza & Accessi", "Sicherheit", "Security & Access", "Seguridad", "Sécurité", "امنیت"), content: <AdminSecurity /> },
+                        { id: "pin", label: tri("PIN Produzione", "Produktions-PIN", "Production PIN", "PIN Producción", "PIN Production", "پین تولید"), content: <PinSetup /> },
+                      ]} />
                     </HoloPanel>
                     <HoloPanel testid="panel-emergency" accent="#f43f5e" beacon="#f43f5e" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-shiftreport" accent="#FF6B00" beacon="#22c55e" icon="🎯" title={tri("Report di Turno · MikiScore", "Schichtbericht · MikiScore", "Shift Report · MikiScore", "Informe de Turno · MikiScore", "Rapport d'Équipe · MikiScore", "گزارش شیفت · MikiScore")} sub={tri("Sitor riassume il turno a voce e assegna il MikiScore dell'impianto.", "Sitor fasst die Schicht zusammen.", "Sitor voices the shift summary and the plant MikiScore.", "Sitor resume el turno.", "Sitor résume le service.", "بوکومیکس شیفت را خلاصه می‌کند.")}>
-                      <ShiftReport />
                     </HoloPanel>
                     <div data-testid="panel-advanced-lab" className="holo-panel p-5 sm:p-6"><AdvancedLab /></div>
                     <div data-testid="panel-training" className="holo-panel p-5 sm:p-6"><DowntimeTraining /></div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { operatorPinsApi, accessLogApi, gateConfigApi, productionPinApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock, KeyRound } from "lucide-react";
+import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock, KeyRound, AlarmClock } from "lucide-react";
 
 // Zona Capo: gestione PIN personali operatore + Registro Accessi (tentativi PIN).
 export default function AdminSecurity() {
@@ -43,6 +43,12 @@ export default function AdminSecurity() {
   };
   const del = async (n) => { try { await operatorPinsApi.remove(n); load(); } catch (e) { /* */ } };
   const changeLevel = async (o, lvl) => { try { await operatorPinsApi.setLevel(o.name, lvl); load(); } catch (e) { /* */ } };
+  const renew = async (o, ttl) => { try { await operatorPinsApi.renew(o.name, ttl); load(); } catch (e) { /* */ } };
+  const isExpiringSoon = (o) => {
+    if (!o.expires_at || o.expired || o.active === false) return false;
+    const ms = new Date(o.expires_at).getTime() - Date.now();
+    return ms > 0 && ms <= 2 * 3600000;
+  };
   const LEVELS = [
     { id: "novizio", label: tri("Novizio", "Anfänger", "Novice", "Novato", "Novice", "تازه‌کار"), c: "#22c55e" },
     { id: "esperto", label: tri("Esperto", "Erfahren", "Expert", "Experto", "Expert", "ماهر"), c: "#EAB308" },
@@ -130,6 +136,20 @@ export default function AdminSecurity() {
           "Le niveau indique à Sitor comment guider chacun. Choisis 8/24h pour les saisonniers : le PIN s'auto-révoque.",
           "سطح به سیتور می‌گوید هرکس را چگونه راهنمایی کند. برای فصلی‌ها ۸/۲۴ ساعت انتخاب کن: پین خودکار باطل می‌شود.")}</p>
         <div className="space-y-1.5">
+          {ops.some(isExpiringSoon) && (
+            <div data-testid="pin-expiring-banner" className="mb-2 rounded-xl border border-[#EAB308]/50 bg-[#EAB308]/10 p-2.5">
+              <p className="flex items-center gap-1.5 text-[11px] font-black text-[#EAB308] uppercase tracking-wider mb-1.5">
+                <AlarmClock className="w-3.5 h-3.5" /> {tri("Sitor avvisa: PIN in scadenza", "Sitor warnt: PIN läuft ab", "Sitor alerts: PINs expiring", "Sitor avisa: PIN por caducar", "Sitor alerte : PIN expirant", "هشدار سیتور: انقضای پین")}
+              </p>
+              {ops.filter(isExpiringSoon).map((o) => (
+                <div key={o.name_key} data-testid={`pin-expiring-${o.name_key}`} className="flex items-center gap-2 py-1">
+                  <span className="text-[12px] text-[#E8EEF5] flex-1 truncate">{o.name} · <span className="text-[#EAB308]">{remainingLabel(o.expires_at)}</span></span>
+                  <button data-testid={`renew-8-${o.name_key}`} onClick={() => renew(o, 8)} className="px-2 py-1 rounded-md bg-[#EAB308]/20 border border-[#EAB308]/50 text-[#EAB308] text-[10px] font-black active:scale-95 transition-all">+8h</button>
+                  <button data-testid={`renew-24-${o.name_key}`} onClick={() => renew(o, 24)} className="px-2 py-1 rounded-md bg-[#EAB308]/20 border border-[#EAB308]/50 text-[#EAB308] text-[10px] font-black active:scale-95 transition-all">+24h</button>
+                </div>
+              ))}
+            </div>
+          )}
           {ops.length === 0 && <p className="text-xs text-[#64748b]">{tri("Nessun PIN operatore. Aggiungine uno per timbrature tracciabili al singolo.", "Noch keine Bediener-PINs.", "No operator PINs yet — add one for per-person clock-ins.", "Aún no hay PIN de operario.", "Aucun PIN opérateur.", "هنوز پینی نیست.")}</p>}
           {ops.map((o) => (
             <div key={o.name_key || o.name} data-testid={`op-row-${o.name_key || o.name}`} className={`flex items-center gap-2 bg-[#0C1019]/60 border rounded-lg px-3 py-2 ${o.expired || o.active === false ? "border-[#f87171]/40 opacity-70" : o.expires_at ? "border-[#EAB308]/40" : "border-[#1e293b]"}`}>

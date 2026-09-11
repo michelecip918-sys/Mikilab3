@@ -4904,3 +4904,16 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - BUGFIX: il blocco scheduler aveva rotto il ternario `{!current ? (...) : (...)}` → crash "Cannot read properties of null (reading 'status')" all'apertura di SalaSitor. Ripristinata la struttura: `</scheduler div>` PRIMA di `{!current ? ...}`. Verificato: SalaSitor rende senza crash, toggle+orario visibili (08:00 PM), bozza + storico ok.
 - Testato via curl: schedule GET/PUT/validazione; loop scattato (last_run_date=oggi); generate manuale forzato senza dati → 1156 char. Ricetta e schedule di test ripuliti.
 - Per mikilab.de serve REDEPLOY.
+
+## v76 (2026-09) — Avviso PIN in scadenza + Accorpamento sezioni (A/B/C/D)
+### Task 1 — Avviso PIN in scadenza (Sitor) + rinnovo in un tocco
+- Backend: POST /api/operator-pins/{name}/renew {ttl_hours 8|24} → riattiva ed estende expires_at. mike_proactive aggiunge alert kind=pin_expiring per PIN temporanei attivi in scadenza entro 2h (Sitor avvisa il Capo). Testato via curl: alert compare, renew +24h, alert sparisce.
+- Frontend: operatorPinsApi.renew. AdminSecurity: banner pin-expiring-banner (giallo) con pulsanti renew-8-<key>/renew-24-<key> per ogni PIN entro 2h; helper isExpiringSoon.
+### Task 2 — Accorpamento sezioni simili (nuovo componente console/SubTabs.jsx)
+- MERGE A: panel-pin + panel-security → un solo panel-security con SubTabs (subtabs-security: access=AdminSecurity, pin=PinSetup).
+- MERGE B: panel-floor-reports (era in gruppo squadra) + panel-shiftreport + panel-docs → un solo 'Report & Rapporti' (panel-docs) con SubTabs (subtabs-reports: floor=FloorShiftReports, mikiscore=ShiftReport, docs=DocsDownload).
+- MERGE C: 7 pannelli piano → 2. panel-weekly (manuale) + panel-pianoai (defaultOpen) con SubTabs (subtabs-pianoai: auto=AutoPlan, ai=PianoProduzioneAI, backward=BackwardScheduler, ordine=OrdineCapo, smart=SmartPlannerStressZero, timeline=TimelineTurno). Rimossi panel-autoplan/backward/ordine/planner/timeline.
+- MERGE D: panel-sitor-atelier + panel-sitor-guided → un solo panel-sitor-atelier con SubTabs (subtabs-sitor-tools: atelier=SitorAtelier, guided=SitorGuidedTools).
+- Testing agent iteration_227: MERGE A/B/D + Sitor + Ricettario + infra PIN = 100%, nessun crash React, tutti i pannelli 'vietati' assenti. MERGE C struttura confermata (subtab runtime non cliccato per accordion race → risolto aggiungendo defaultOpen a panel-pianoai). retest_needed=False.
+- Backlog (non bloccanti da testing): persistere dismiss di SHIFT OPEN/TABLET MODE in localStorage; warning hydration <span> dentro <option> in activity-selector (pre-esistente iter 225).
+- Per mikilab.de serve REDEPLOY.

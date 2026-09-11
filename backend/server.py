@@ -5029,6 +5029,19 @@ async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin))
                                          "No line has a leader today: want me to assign one?")})
     except Exception:
         pass
+    # 4) PIN operatore TEMPORANEI in scadenza entro 2 ore → Sitor avvisa il Capo (rinnovo in un tocco).
+    try:
+        soon = (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat()
+        nowiso = now_iso()
+        async for d in db.operator_pins.find({"active": True, "expires_at": {"$exists": True}}, {"_id": 0}):
+            exp = d.get("expires_at")
+            if exp and nowiso < exp <= soon:
+                alerts.append({"id": f"pinexp-{d.get('name_key')}", "kind": "pin_expiring", "severity": "warning",
+                               "name": d.get("name"), "name_key": d.get("name_key"), "expires_at": exp,
+                               "text": R(f"Il PIN temporaneo di {d.get('name')} sta per scadere: vuoi rinnovarlo?",
+                                         f"{d.get('name')}'s temporary PIN is about to expire: renew it?")})
+    except Exception:
+        pass
     return {"alerts": alerts, "count": len(alerts)}
 
 
@@ -11536,6 +11549,28 @@ async def operator_pin_level(name: str, body: OperatorLevelSet, admin: dict = De
         lvl = "novizio"
     await db.operator_pins.update_one({"name_key": (name or "").strip().lower()}, {"$set": {"level": lvl, "updated_at": now_iso()}})
     return {"ok": True, "level": lvl}
+
+
+class OperatorPinRenew(BaseModel):
+    ttl_hours: int = 8
+
+
+@api_router.post("/operator-pins/{name}/renew")
+async def operator_pin_renew(name: str, body: OperatorPinRenew, admin: dict = Depends(require_admin)):
+    """Rinnovo in un tocco di un PIN temporaneo: riattiva ed estende la scadenza di 8 o 24 ore."""
+    ttl = int(body.ttl_hours or 8)
+    if ttl not in (8, 24):
+        ttl = 8
+    key = (name or "").strip().lower()
+    d = await db.operator_pins.find_one({"name_key": key}, {"_id": 0})
+    if not d:
+        raise HTTPException(status_code=404, detail="PIN non trovato")
+    new_exp = (datetime.now(timezone.utc) + timedelta(hours=ttl)).isoformat()
+    await db.operator_pins.update_one(
+        {"name_key": key},
+        {"$set": {"active": True, "expires_at": new_exp, "ttl_hours": ttl, "updated_at": now_iso()}, "$unset": {"revoked_at": ""}},
+    )
+    return {"ok": True, "expires_at": new_exp, "ttl_hours": ttl}
 
 
 @api_router.post("/operator-pins/verify")

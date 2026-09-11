@@ -1,0 +1,32 @@
+{
+  "summary": "Iteration 227 — Frontend-only E2E test of MikiLab Pro Capo Console MERGE A/B/C/D + PIN expiry banner (Task 1). Preview URL https://edit-33.preview.emergentagent.com. Gate flow: Enter with PIN modal -> admin-key keypad (198505) -> capo-gate-login -> AuthScreen (auth-email/auth-password/auth-submit) admin@mikilab.de / Mikilab2026! -> master-console rendered OK. NO React error boundary ('Ops, qualcosa') and NO pageerrors across the entire flow. All 5 CapoGroup toggles present exactly as expected: piano/ordini/squadra/strumenti/sitor. MERGE A (Sicurezza & Accessi): panel-security renders subtabs-security with 2 tabs (subtabs-security-tab-access + -pin); forbidden panel-pin=0 ✅. MERGE B (Report & Rapporti): panel-docs renders subtabs-reports with 3 tabs (floor/mikiscore/docs); forbidden panel-shiftreport=0 and panel-floor-reports=0 ✅. MERGE D (Sitor tools): panel-sitor-atelier renders subtabs-sitor-tools with 2 tabs (atelier/guided) — Sitor guides tab clicked, guides content rendered live (Sitor Question 1/4, flour silo prompt); forbidden panel-sitor-guided=0 ✅. MERGE C (Piano AI): panel-weekly=1 and panel-pianoai=1 both render inside capo-group-toggle-piano; all forbidden separate panels absent (panel-autoplan=0, panel-backward=0, panel-ordine=0, panel-planner=0, panel-timeline=0) ✅. subtabs-pianoai testid + 6 tab testids are present in source (App.js lines 470-477) with content <AutoPlan/><PianoProduzioneAI/><BackwardScheduler/><OrdineCapo/><SmartPlannerStressZero/><TimelineTurno/> — could not verify runtime toggles for the 6 subtabs because panel-pianoai HoloPanel is collapsed by default and clicking its header timed out (accordion race), but the SubTabs component itself was runtime-verified to work correctly via MERGE A/B/D. Recipes: add-recipe-btn=1 ✅. PIN Task 1: admin-security=1, op-ttl-input=1 rendered under subtabs-security-tab-access. pin-expiring-banner appears only when a temporary op-pin is <2h from expiry — banner testid is coded correctly in AdminSecurity.jsx (line 140) with renew-8-* and renew-24-* buttons; not triggerable in a short e2e run. Sitor group regression: capo-group-toggle-sitor -> sala-sitor=1, sitor-shift-draft=1, sitor-schedule=1 ✅. Note: SHIFT OPEN splash and TABLET MODE modal are shown on first login and must be dismissed to reach panels — they render on top of DeskScene each session (UX friction, not a bug).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "post-login", "issues": ["SHIFT OPEN splash + TABLET MODE modal appear immediately after login and block access to the console; needs manual dismiss (Enter the console + X icon). Consider auto-dismissing when they've already been shown once (e.g. localStorage flag)."]},
+      {"screen": "activity-selector <option>", "issues": ["Long-standing React hydration warning: '<span> cannot be a child of <option>' — same issue noted in iterations 225/226. Not blocking."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "(OPTIONAL) Add defaultOpen to panel-pianoai (line 469 in App.js) so subtabs-pianoai auto-mounts when the piano group is opened — currently the SubTabs mount only after user clicks the HoloPanel header, which makes e2e verification racy.",
+    "(OPTIONAL) Persist SHIFT OPEN / TABLET MODE dismissal in localStorage so returning Capo doesn't have to re-close them on every login.",
+    "(OPTIONAL) Fix React hydration warning on <option><span> inside activity-selector (pending since iter 225)."
+  ],
+  "critical_code_review_comments": [
+    "SubTabs.jsx is clean, minimal, and correctly exposes data-testid={testid}-tab-{id} and -body-{id}. Good pattern.",
+    "App.js lines 189-192 still list old panelToGroup mappings for panel-autoplan/backward/ordine/planner/timeline/pin/shiftreport — these entries are now dead (the panels no longer exist). Safe to remove, but they don't affect functionality.",
+    "AdminSecurity.jsx correctly gates the pin-expiring-banner with isExpiringSoon (<2h) and exposes renew-8-<name_key> / renew-24-<name_key> buttons per spec.",
+    "HoloPanel accordion inside SubTabs: MERGE C's panel-pianoai is NOT defaultOpen, unlike panel-sitor-atelier (defaultOpen). Consider marking pianoai defaultOpen for consistency and testability."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "not tested (per request)", "frontend": "MERGE A/B/D + Sitor + Recipes + PIN infra + no crash = 100%; MERGE C subtab runtime click not verified but code + panel structure + forbidden panel absence all confirmed"},
+  "test_credentials": "Master gate PIN 198505 · admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Preview URL https://edit-33.preview.emergentagent.com. Login flow: 1) localStorage.setItem('mikilab_cookies_ok','1'), mikilab_activity='panificio', mikilab_onboarded='1' 2) reload 3) click button:has-text('Enter with PIN') 4) click admin-key-1/9/8/5/0/5 (each ~180ms) 5) click capo-gate-login 6) fill auth-email/auth-password and click auth-submit (data-testids in AuthScreen.jsx) 7) close SHIFT OPEN splash via button:has-text('Enter the console') and dismiss TABLET MODE via aria-label close. Only ONE capo-group can be open at a time (mutual exclusion in toggleSec). panel-pianoai is a HoloPanel WITHOUT defaultOpen — must click its header ([data-testid=panel-pianoai] button:first-child) to reveal subtabs-pianoai. panel-sitor-atelier IS defaultOpen so subtabs-sitor-tools is visible immediately after opening strumenti group.",
+  "rca of the issue": "N/A — implementation matches spec. All 4 merges verified structurally (forbidden panels absent) and 3 of 4 verified end-to-end at runtime. MERGE C's subtab runtime click was blocked by HoloPanel accordion (not-defaultOpen) collapsing intermittently under Playwright timing — cosmetic testability issue only."
+}
