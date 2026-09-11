@@ -35,6 +35,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
   const [chatQ, setChatQ] = useState("");
   const [chatA, setChatA] = useState("");
   const [chatBusy, setChatBusy] = useState(false);
+  const [chatListening, setChatListening] = useState(false);
   const askSitor = async () => {
     const q = chatQ.trim();
     if (!q || chatBusy) return;
@@ -279,6 +280,24 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   placeholder={tri("Scrivi o parla a Sitor…", "Schreib oder sprich mit Sitor…", "Write or talk to Sitor…", "Escribe o habla con Sitor…", "Écris ou parle à Sitor…", "به سیتور بنویس یا بگو…")}
                   className="flex-1 min-w-0 bg-transparent text-[13px] text-white placeholder-[#64748B] outline-none px-1"
                 />
+                <button data-testid="mikemix-chat-mic" onClick={() => {
+                  try {
+                    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    if (!SR) return;
+                    const rec = new SR();
+                    rec.lang = ({ it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" }[lang] || "it-IT");
+                    rec.interimResults = false; rec.maxAlternatives = 1;
+                    setChatListening(true);
+                    rec.onresult = (ev) => { const t = ev.results[0][0].transcript; setChatQ((p) => (p ? p + " " : "") + t); };
+                    rec.onend = () => setChatListening(false);
+                    rec.onerror = () => setChatListening(false);
+                    rec.start();
+                  } catch { setChatListening(false); }
+                }} disabled={chatBusy}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 active:scale-95 transition-all ${chatListening ? "animate-pulse" : ""}`}
+                  style={{ background: chatListening ? "#b06e78" : `${color}22`, color: chatListening ? "#fff" : color }} title={tri("Detta a Sitor", "Diktieren", "Dictate", "Dictar", "Dicter", "دیکته")}>
+                  <Mic className="w-4 h-4" />
+                </button>
                 <button data-testid="mikemix-chat-send" onClick={askSitor} disabled={chatBusy || !chatQ.trim()}
                   className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 disabled:opacity-40 active:scale-95 transition-all" style={{ background: `${color}22`, color }}>
                   {chatBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}

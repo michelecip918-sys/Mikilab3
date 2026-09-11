@@ -82,7 +82,7 @@ import B2BOrders from "@/components/console/B2BOrders";
 import CarbonFootprint from "@/components/console/CarbonFootprint";
 import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 import SiloManager from "@/components/console/SiloManager";
-import AdaptiveProofing from "@/components/console/AdaptiveProofing";
+import ColdStorage from "@/components/console/ColdStorage";
 import AgvFleet from "@/components/console/AgvFleet";
 import TimelineTurno from "@/components/console/TimelineTurno";
 import PackagingSync from "@/components/console/PackagingSync";
@@ -193,7 +193,7 @@ export default function App() {
     "panel-autoplan": "piano", "panel-weekly": "piano", "panel-pianoai": "piano", "panel-backward": "piano", "panel-ordine": "piano", "panel-planner": "piano", "panel-timeline": "piano",
     "panel-ordini": "ordini", "panel-b2b": "ordini",
     "panel-dept-assign": "squadra", "panel-shift-team": "squadra", "panel-shift-templates": "squadra",
-    "panel-thermalflow": "strumenti", "panel-ricette": "strumenti", "panel-magazzino": "strumenti", "panel-silos": "strumenti", "panel-elite": "strumenti", "panel-docs": "strumenti", "panel-pin": "strumenti", "panel-security": "strumenti", "panel-twin": "strumenti", "panel-ovenqc": "strumenti", "panel-carbon": "strumenti", "panel-proofing": "strumenti", "panel-agv": "strumenti", "panel-packaging": "strumenti", "panel-radar": "strumenti", "panel-hardware": "strumenti", "panel-machine-arrival": "strumenti", "panel-image-forge": "strumenti", "panel-emergency": "strumenti", "panel-shiftreport": "strumenti",
+    "panel-thermalflow": "strumenti", "panel-ricette": "strumenti", "panel-magazzino": "strumenti", "panel-silos": "strumenti", "panel-elite": "strumenti", "panel-docs": "strumenti", "panel-pin": "strumenti", "panel-security": "strumenti", "panel-twin": "strumenti", "panel-ovenqc": "strumenti", "panel-carbon": "strumenti", "panel-coldstorage": "strumenti", "panel-agv": "strumenti", "panel-packaging": "strumenti", "panel-radar": "strumenti", "panel-hardware": "strumenti", "panel-machine-arrival": "strumenti", "panel-image-forge": "strumenti", "panel-emergency": "strumenti", "panel-shiftreport": "strumenti",
   };
   useEffect(() => {
     const onJump = (e) => { const s = CONSOLE_SECMAP[e.detail]; if (s) setConsoleSec(s); };
@@ -544,8 +544,8 @@ export default function App() {
                     <HoloPanel testid="panel-ovenqc" accent="#64748B" beacon="#6e9e85" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
                       <OvenQC />
                     </HoloPanel>
-                    <HoloPanel testid="panel-proofing" accent="#64748B" beacon="#9aa6b2" icon="💨" title={tri("Celle Adattive · Lievitazione", "Adaptive Gärkammern", "Adaptive Proofing Cells", "Cámaras Adaptativas", "Chambres Adaptatives", "اتاق تخمیر تطبیقی")} sub={tri("Curve multi-stadio che accelerano o frenano in base ai forni liberi.", "Mehrstufige Kurven je nach freien Öfen.", "Multi-stage curves that accelerate or brake by free ovens.", "Curvas multietapa según hornos libres.", "Courbes multi-étapes selon fours libres.", "منحنی چندمرحله‌ای بر اساس فرها.")}>
-                      <AdaptiveProofing />
+                    <HoloPanel testid="panel-coldstorage" accent="#64748B" beacon="#7DA3C0" icon="❄️" title={tri("Celle & Freezer · Cold Chain", "Kammern & Gefrier · Kühlkette", "Cells & Freezer · Cold Chain", "Cámaras & Congelador · Cadena de Frío", "Cellules & Congélateur · Chaîne du Froid", "سلول‌ها و فریزر · زنجیره سرد")} sub={tri("Un unico posto per celle di lievitazione, frigo e freezer di ogni reparto: tipo, temperatura, giacenze e lievitazione adattiva. Niente doppioni.", "Ein Ort für Gärkammern, Kühlung und Gefrier je Bereich.", "One place for proofing cells, fridges and freezers of every department: type, temperature, stock and adaptive proofing. No duplicates.", "Un solo lugar para cámaras, frigos y congeladores de cada área.", "Un seul endroit pour les cellules, frigos et congélateurs de chaque atelier.", "یک جا برای همه سلول‌ها و فریزرهای هر بخش.")}>
+                      <ColdStorage />
                     </HoloPanel>
                     <HoloPanel testid="panel-hardware" accent="#64748B" beacon="#9aa6b2" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")} sub={tri("Peso live col semaforo e cicli termici (Web Serial/Bluetooth · simulazione).", "Live-Gewicht & Thermozyklen.", "Live weight + thermal cycles (Web Serial/Bluetooth · simulation).", "Peso en vivo y ciclos térmicos.", "Poids live & cycles thermiques.", "وزن زنده و چرخه حرارتی.")}>
                       <HardwareBridge />

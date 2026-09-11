@@ -776,6 +776,12 @@ export const prooferApi = {
   sync: () => api.get(`/proofer/sync`).then((r) => r.data),
 };
 
+// Celle & Freezer unificati (per reparto).
+export const freezerApi = {
+  get: () => api.get(`/freezer`).then((r) => r.data),
+  save: (items, lang = "it") => api.put(`/freezer`, { items }, { params: { lang } }).then((r) => r.data),
+};
+
 export const phoenixApi = {
   suggest: (dough_type, excess_kg, state, lang) => api.post(`/batch-phoenix`, { dough_type, excess_kg, state, lang }).then((r) => r.data),
 };

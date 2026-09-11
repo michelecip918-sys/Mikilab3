@@ -4981,3 +4981,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 ### DA FARE
 - Item 2 (Celle & Freezer unificati per reparto senza doppioni): NON fatto. Oggi c'è panel-proofing (celle lievitazione); manca una vista unica che unisca celle di lievitazione + freezer per ogni reparto sotto controllo. Da creare consolidando senza duplicati.
 - Cleanup import inutilizzati (SiloManager, DigitalTwin, CarbonFootprint, AgvFleet, PlantRadar, AdvancedLab, DowntimeTraining, MohamedInbox, ImageForge, PackagingSync) — solo warning.
+
+## v-fork (2026-06-11) — Fix crash AutoPlan + Celle & Freezer UNIFICATI
+- **FIX P0 crash AutoPlan**: `AutoPlan.jsx` chiamava `mikeApi.machines()` (inesistente) → cambiato in `deusApi.machines()` (GET /api/mike/machines). Console Capo di nuovo accessibile.
+- **Item 2 — Celle & Freezer UNIFICATI (✓)**: nuovo componente `components/console/ColdStorage.jsx` con SubTabs (Celle / Freezer / Lievitazione Adattiva). Panel `panel-coldstorage` nel gruppo "Strumenti", sostituisce il vecchio `panel-proofing` (AdaptiveProofing ora è una scheda interna → niente doppioni).
+  - Scheda "Celle": panoramica per reparto (deptApi.catalog) con tipo cella dedotto dal nome + temperatura obiettivo (lievitazione 28°C, fermalievitazione 3°C, frigo/maturazione 4°C, freezer -18°C, vetrina 4°C, essiccatoio 30°C).
+  - Scheda "Freezer": gestione giacenze per reparto (freezerApi get/save → /api/freezer) con qty, soglia minima, selettore reparto, evidenza sotto-soglia + email Resend. Backend: `FreezerItem` ora ha campo opzionale `dept`.
+  - Scheda "Lievitazione Adattiva": AdaptiveProofing invariato.
+- Testato iteration_229: backend 100%, frontend 100%, 0 bug. Test backend: /app/backend/tests/test_iter229_coldstorage.py.
+- Nota utente ("rendere le sezioni più chiare — il sistema, non i colori"): applicata al nuovo pannello con titoli/sottotitoli descrittivi e testo di panoramica. Da estendere ad altre sezioni se richiesto.

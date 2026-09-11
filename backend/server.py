@@ -10698,6 +10698,7 @@ class FreezerItem(BaseModel):
     name: str
     qty: float = 0
     min_qty: float = 0
+    dept: str = ""
 
 
 class FreezerSave(BaseModel):
@@ -11773,6 +11774,15 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
            f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
+    try:
+        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _sel = [str(x).lower() for x in (getattr(body, "machines", None) or [])]
+        _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
+        if _use:
+            _ml = ", ".join(f"{m.get('name')}{(' ['+m['category']+']') if m.get('category') else ''}{(' cap.'+str(m['capacity'])) if m.get('capacity') else ''}" for m in _use)
+            ctx += f" PARCO MACCHINE DA USARE (vincolo reale, assegna forni/impastatrici/celle solo tra questi): {_ml}."
+    except Exception:
+        pass
 
     plan = {"summary": "", "batches": [], "warnings": [], "spoken": ""}
     if EMERGENT_LLM_KEY:
@@ -11839,6 +11849,15 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
     ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
            f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
+    try:
+        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _sel = [str(x).lower() for x in (getattr(body, "machines", None) or [])]
+        _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
+        if _use:
+            _ml = ", ".join(f"{m.get('name')}{(' ['+m['category']+']') if m.get('category') else ''}{(' cap.'+str(m['capacity'])) if m.get('capacity') else ''}" for m in _use)
+            ctx += f" PARCO MACCHINE DA USARE (vincolo reale, assegna forni/impastatrici/celle solo tra questi): {_ml}."
+    except Exception:
+        pass
 
     options = []
     if EMERGENT_LLM_KEY:

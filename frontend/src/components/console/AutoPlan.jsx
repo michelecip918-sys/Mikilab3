@@ -17,6 +17,10 @@ export default function AutoPlan() {
   const [options, setOptions] = useState([]);
   const [busyOpt, setBusyOpt] = useState(false);
   const [chosen, setChosen] = useState(-1);
+  const [machines, setMachines] = useState([]);
+  const [selMach, setSelMach] = useState([]);
+  useEffect(() => { deusApi.machines().then((d) => setMachines(d.machines || [])).catch(() => {}); }, []);
+  const toggleMach = (name) => setSelMach((p) => p.includes(name) ? p.filter((x) => x !== name) : [...p, name]);
 
   // Sync ordini B2B → prefill del piano (evento dal modulo E-commerce B2B).
   useEffect(() => {
@@ -27,7 +31,7 @@ export default function AutoPlan() {
 
   const gen = async () => {
     setBusy(true); setOptions([]); setChosen(-1);
-    try { const r = await mikeApi.autoplan({ orders_text: orders, lang }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
+    try { const r = await mikeApi.autoplan({ orders_text: orders, lang, machines: selMach }); setRes(r.plan); } catch (e) { toast.error(tri("Sitor non è riuscito a generare il piano. Riprova.", "Plan fehlgeschlagen. Erneut versuchen.", "Sitor couldn't generate the plan. Try again.", "No se pudo generar el plan.", "Échec du plan. Réessaie.", "برنامه ساخته نشد.")); }
     setBusy(false);
   };
 
@@ -35,7 +39,7 @@ export default function AutoPlan() {
   const genOptions = async () => {
     setBusyOpt(true); setRes(null); setChosen(-1); setOptions([]);
     try {
-      const r = await mikeApi.autoplanOptions({ orders_text: orders, lang });
+      const r = await mikeApi.autoplanOptions({ orders_text: orders, lang, machines: selMach });
       if ((r.options || []).length) { setOptions(r.options); try { playTTS(tri("Ho preparato tre strategie. Scegli quella che preferisci.", "Drei Strategien. Wähle eine.", "I prepared three strategies. Pick one.", "Preparé tres estrategias. Elige una.", "J'ai préparé trois stratégies. Choisis-en une.", "سه استراتژی آماده کردم. یکی را انتخاب کن."), { lang, voice: "nexus" }); } catch { /* */ } }
       else toast.error(tri("Nessuna opzione generata. Riprova.", "Keine Optionen.", "No options generated.", "Sin opciones.", "Aucune option.", "گزینه‌ای نیست."));
     } catch (e) { toast.error(tri("Sitor non è riuscito a generare le opzioni.", "Optionen fehlgeschlagen.", "Couldn't generate options.", "No se pudieron generar.", "Échec des options.", "خطا در گزینه‌ها.")); }
@@ -49,6 +53,20 @@ export default function AutoPlan() {
       <textarea data-testid="autoplan-orders" value={orders} onChange={(e) => setOrders(e.target.value)} rows={2}
         placeholder={tri("Ordini del giorno (facoltativo): es. 300 baguette, 120 focacce, 40 torte…", "Tagesaufträge (optional)…", "Today's orders (optional)…", "Pedidos de hoy (opcional)…", "Commandes du jour (optionnel)…", "سفارش‌های امروز (اختیاری)…")}
         className="w-full bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2 text-sm text-white focus:border-[#64748B] outline-none resize-none" />
+      {machines.length > 0 && (
+        <div data-testid="autoplan-machines" className="rounded-lg border border-[#64748B]/25 bg-[#0C1019]/60 p-2.5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-[#8a97a6] mb-1.5">{tri("Macchinari per questo piano", "Maschinen für diesen Plan", "Machines for this plan", "Máquinas para este plan", "Machines pour ce plan", "ماشین‌ها برای این برنامه")}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {machines.map((m) => (
+              <button key={m.id || m.name} data-testid={`autoplan-mach-${m.id || m.name}`} onClick={() => toggleMach(m.name)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-semibold border transition-all active:scale-95 ${selMach.includes(m.name) ? "bg-[#8a97a6] text-[#0b0f19] border-[#8a97a6]" : "bg-transparent text-[#9aa6b2] border-[#64748B]/40"}`}>
+                {m.name}{m.category ? ` · ${m.category}` : ""}
+              </button>
+            ))}
+          </div>
+          <p className="text-[9px] text-[#64748B] mt-1.5">{tri("Nessuna selezione = Sitor usa tutto il parco macchine.", "Keine Auswahl = alle Maschinen.", "No selection = Sitor uses the whole fleet.", "Sin selección = toda la flota.", "Aucune sélection = toute la flotte.", "بدون انتخاب = همه ماشین‌ها.")}</p>
+        </div>
+      )}
       <SmartAttach context={tri("ordini di produzione del giorno", "Tagesaufträge", "day's production orders", "pedidos del día", "commandes du jour", "سفارش‌های روز")} compact
         onExtract={(t) => setOrders((o) => (o ? o + "\n" : "") + t)} />
       <div className="flex flex-wrap gap-2">
