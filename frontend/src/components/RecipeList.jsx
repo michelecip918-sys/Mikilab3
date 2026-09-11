@@ -298,7 +298,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           if (baseFilter === "colorati") { if (!isColored(r.name)) return false; }
           else if (baseFilter !== "all" && !recipeBase(r).includes(baseFilter)) return false;
           if (!q) return true;
-          const hay = [rLoc(r, "name", lang), rLoc(r, "real_name", lang), rLoc(r, "flour_type", lang), r.notes || "", recipeBadges(r).join(" ")].join(" ").toLowerCase();
+          const names = ["name", "name_it", "name_de", "name_en", "name_es", "name_fr", "name_fa", "real_name", "real_name_it", "real_name_de", "real_name_en", "real_name_es", "real_name_fr"].map((k) => r[k] || "");
+          const hay = [...names, rLoc(r, "flour_type", lang), r.flour_type || "", r.notes || "", recipeBadges(r).join(" ")].join(" ").toLowerCase();
           return hay.includes(q);
         };
         const filtered = recipes.filter(matches);

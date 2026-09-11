@@ -4891,3 +4891,16 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Confermato flusso completo UI**: il Capo apre "Aggiungi ricetta" nel Master Ricettario → sceglie "Ricetta MikiLab (condivisa)" o "Ricetta mia (privata)" (stesso schema/form) → salva. La ricetta personale appare nella lista unificata con badge ambra "Mia" (testid recipe-mine-badge-<id>). Verificato end-to-end: creata "Ciabatta del Capo TEST" come personale → presente (coll=personal) → badge "Mine" renderizzato.
 - **NOTA comportamento ricerca**: il backend auto-traduce il nome ricetta (name_en/de/...). Se la UI è in inglese, cercare il nome italiano non matcha il nome tradotto mostrato (es. "Ciabatta del Capo" → "Chief's Ciabatta"). NON è un bug: la ricerca matcha il nome localizzato visibile.
 - Ricetta di test eliminata. Attesa conferma deployment completato per validare su mikilab.de.
+
+## v75 (2026-09) — Reparto auto + Ricerca multi-nome + Report programmato
+### 1. Reparto automatico nelle ricette del Capo
+- dept.js: ACTIVITY_TO_DEPT (panificio→panificazione, pizzeria→pizzeria, pasticceria→pasticceria) + activeDeptFromActivity() legge mikilab_activity.
+- RecipeDialog: nuova ricetta senza reparto specifico → department = activeDeptFromActivity() (prima restava ""). Testato: activity=pizzeria → ricetta personale creata con department=pizzeria. Così compare col filtro reparto.
+### 2. Ricerca multi-nome
+- RecipeList: l'indice di ricerca ora include name + name_it/de/en/es/fr/fa + real_name(_xx) + flour_type. Testato: UI in EN, ricerca "Impasto Napoletano" (originale IT) → trova la card. Risolve il caso dei nomi auto-tradotti.
+### 3. Report programmato (Sitor genera a orario di chiusura)
+- Backend: app_meta._key=shift_schedule {enabled,time HH:MM UTC,lang,last_run_date}. GET/PUT /api/capo/sitor/shift-schedule (validazione HH:MM). Loop _shift_schedule_loop (ogni 60s) genera la bozza allo scoccare dell'ora, 1 volta/giorno (last_run_date). _sitor_shift_draft ora ha force=True (scheduled+manual generano anche senza dati → fallback deterministico). Avviato in on_event startup.
+- Frontend: SitorShiftDraft nuovo blocco `sitor-schedule` (toggle `sitor-schedule-toggle` + input `sitor-schedule-time`), salvataggio immediato via deusApi.shiftScheduleSet.
+- BUGFIX: il blocco scheduler aveva rotto il ternario `{!current ? (...) : (...)}` → crash "Cannot read properties of null (reading 'status')" all'apertura di SalaSitor. Ripristinata la struttura: `</scheduler div>` PRIMA di `{!current ? ...}`. Verificato: SalaSitor rende senza crash, toggle+orario visibili (08:00 PM), bozza + storico ok.
+- Testato via curl: schedule GET/PUT/validazione; loop scattato (last_run_date=oggi); generate manuale forzato senza dati → 1156 char. Ricetta e schedule di test ripuliti.
+- Per mikilab.de serve REDEPLOY.

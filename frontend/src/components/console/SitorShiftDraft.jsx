@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { ClipboardCheck, RefreshCw, CheckCircle2, Loader2, Wand2 } from "lucide-react";
+import { ClipboardCheck, RefreshCw, CheckCircle2, Loader2, Wand2, Clock, AlarmClock } from "lucide-react";
 import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 import { deusApi } from "@/lib/api";
@@ -14,11 +14,23 @@ export default function SitorShiftDraft() {
   const [drafts, setDrafts] = useState([]);
   const [busy, setBusy] = useState(false);
   const [approving, setApproving] = useState("");
+  const [sched, setSched] = useState({ enabled: false, time: "20:00" });
+  const [schedSaved, setSchedSaved] = useState(false);
 
   const load = useCallback(() => {
     deusApi.shiftDrafts().then((d) => setDrafts(d.drafts || [])).catch(() => {});
   }, []);
   useEffect(() => { load(); const id = setInterval(load, 45000); return () => clearInterval(id); }, [load]);
+  useEffect(() => { deusApi.shiftScheduleGet().then((s) => setSched({ enabled: !!s.enabled, time: s.time || "20:00" })).catch(() => {}); }, []);
+
+  const saveSched = async (next) => {
+    setSched(next);
+    try {
+      await deusApi.shiftScheduleSet({ ...next, lang });
+      setSchedSaved(true);
+      setTimeout(() => setSchedSaved(false), 1800);
+    } catch { toast.error(tri("Errore salvataggio orario.", "Fehler beim Speichern.", "Save error.", "Error al guardar.", "Erreur d'enregistrement.", "خطای ذخیره.")); }
+  };
 
   const today = new Date().toISOString().slice(0, 10);
   const current = drafts.find((d) => d.date === today) || drafts[0] || null;
@@ -72,6 +84,33 @@ export default function SitorShiftDraft() {
              "Sitor collecte rebuts, pièces et heures réelles et rédige le brouillon tout seul.",
              "سیتور ضایعات و ساعات را جمع می‌کند و پیش‌نویس را خودش می‌نویسد.")}
       </p>
+
+      {/* Report programmato: Sitor genera la bozza da solo a un orario fisso di chiusura */}
+      <div data-testid="sitor-schedule" className="rounded-xl bg-[#0C1019] border border-[#1e293b] p-2.5 space-y-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <AlarmClock className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" />
+          <label className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
+            <input data-testid="sitor-schedule-toggle" type="checkbox" checked={sched.enabled}
+              onChange={(e) => saveSched({ ...sched, enabled: e.target.checked })}
+              className="w-4 h-4 accent-[#EAB308] shrink-0" />
+            <span className="text-[11px] text-[#CBD5E1] font-semibold">
+              {tri("Report automatico all'orario di chiusura", "Automatischer Bericht zur Schließzeit", "Auto report at closing time", "Informe automático al cerrar", "Rapport auto à la fermeture", "گزارش خودکار در زمان بستن")}
+            </span>
+          </label>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <Clock className="w-3.5 h-3.5 text-[#64748B]" />
+            <input data-testid="sitor-schedule-time" type="time" value={sched.time}
+              onChange={(e) => saveSched({ ...sched, time: e.target.value })}
+              disabled={!sched.enabled}
+              className="bg-[#060A10] border border-[#1e293b] rounded-lg px-2 py-1 text-xs text-white focus:border-[#EAB308] outline-none disabled:opacity-40" />
+          </div>
+        </div>
+        <p className="text-[10px] text-[#64748B]">
+          {schedSaved
+            ? tri("Salvato ✓ — Sitor scriverà la bozza da solo a quest'ora (orario UTC).", "Gespeichert ✓ — Sitor schreibt den Entwurf selbst (UTC).", "Saved ✓ — Sitor will draft it on its own at this time (UTC).", "Guardado ✓ (hora UTC).", "Enregistré ✓ (heure UTC).", "ذخیره شد ✓")
+            : tri("Anche senza rapporto operaio, a quest'ora Sitor compila la bozza con i dati raccolti. Orario in UTC.", "Auch ohne Bericht erstellt Sitor zur eingestellten Zeit den Entwurf. UTC.", "Even with no operator report, at this time Sitor compiles the draft from collected data. UTC time.", "Aunque no haya informe, Sitor redacta a esa hora. UTC.", "Même sans rapport, Sitor rédige à cette heure. UTC.", "حتی بدون گزارش، سیتور در این ساعت پیش‌نویس را می‌سازد. UTC")}
+        </p>
+      </div>
 
       {!current ? (
         <div data-testid="sitor-draft-empty" className="rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-4 text-center text-[12px] text-[#64748B]">

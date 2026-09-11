@@ -5,6 +5,19 @@ import { useState, useEffect } from "react";
 export const DEPTS = ["panificazione", "pizzeria", "pasticceria"];
 const KEY = "mikilab_capo_dept";
 
+// Mappa l'attività globale (selettore in alto: panificio/pizzeria/pasticceria)
+// al reparto ricetta corrispondente. Serve per assegnare in automatico il
+// reparto attivo alle ricette create dal Capo.
+export const ACTIVITY_TO_DEPT = { panificio: "panificazione", panificazione: "panificazione", pizzeria: "pizzeria", pasticceria: "pasticceria" };
+
+// Reparto attivo dedotto dall'attività globale del negozio (mikilab_activity).
+export function activeDeptFromActivity() {
+  try {
+    const a = localStorage.getItem("mikilab_activity") || "panificio";
+    return ACTIVITY_TO_DEPT[a] || "panificazione";
+  } catch { return "panificazione"; }
+}
+
 // Migrazione una-tantum: ripristina la vista COMPLETA del ricettario (tutte le ricette)
 // per chi aveva salvato un reparto specifico prima di questa release.
 try {

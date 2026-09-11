@@ -647,6 +647,8 @@ export const deusApi = {
   shiftDraftGenerate: (lang) => api.post(`/capo/sitor/shift-draft/generate`, { lang }).then((r) => r.data),
   shiftDrafts: () => api.get(`/capo/sitor/shift-drafts`).then((r) => r.data),
   shiftDraftPatch: (id, payload) => api.patch(`/capo/sitor/shift-drafts/${id}`, payload).then((r) => r.data),
+  shiftScheduleGet: () => api.get(`/capo/sitor/shift-schedule`).then((r) => r.data),
+  shiftScheduleSet: (payload) => api.put(`/capo/sitor/shift-schedule`, payload).then((r) => r.data),
 };
 
 // Produzione (Operaio) — rapporto di fine turno + lista per il Capo.

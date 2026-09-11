@@ -1508,11 +1508,11 @@ def _draft_fallback_text(snap: dict) -> str:
     return "\n".join(lines)
 
 
-async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual") -> dict:
-    """Genera (o rigenera) la bozza del report di oggi. Ritorna {} se non ci sono dati del turno."""
+async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual", force: bool = False) -> dict:
+    """Genera (o rigenera) la bozza del report di oggi. Con force=True genera anche senza dati (chiusura programmata / manuale)."""
     today = now_iso()[:10]
     snap = await _shift_snapshot(today)
-    if not snap["operator_reports"] and not snap["hours"] and not snap["objectives"]:
+    if not force and not snap["operator_reports"] and not snap["hours"] and not snap["objectives"]:
         return {}
     langname = _DEUS_LANGS.get(str(lang or "it").split("-")[0][:2], "italiano")
     import json as _json
@@ -1569,7 +1569,7 @@ class ShiftDraftGenReq(BaseModel):
 
 @api_router.post("/capo/sitor/shift-draft/generate")
 async def capo_shift_draft_generate(body: ShiftDraftGenReq, admin: dict = Depends(require_admin)):
-    doc = await _sitor_shift_draft(lang=body.lang, trigger="manual")
+    doc = await _sitor_shift_draft(lang=body.lang, trigger="manual", force=True)
     if not doc:
         return {"ok": False, "draft": None}
     return {"ok": True, "draft": doc}
@@ -1600,6 +1600,46 @@ async def capo_shift_draft_patch(did: str, body: ShiftDraftPatchReq, admin: dict
         return {"ok": False}
     await db.sitor_shift_drafts.update_one({"id": did}, {"$set": upd})
     return {"ok": True}
+
+
+# ---- Report programmato: Sitor genera la bozza da solo a un orario fisso di chiusura ----
+class ShiftScheduleReq(BaseModel):
+    enabled: bool = False
+    time: str = "20:00"   # HH:MM, orario locale della sede
+    lang: str = "it"
+
+
+@api_router.get("/capo/sitor/shift-schedule")
+async def capo_shift_schedule_get(admin: dict = Depends(require_admin)):
+    doc = await db.app_meta.find_one({"_key": "shift_schedule"}, {"_id": 0, "_key": 0})
+    return doc or {"enabled": False, "time": "20:00", "lang": "it"}
+
+
+@api_router.put("/capo/sitor/shift-schedule")
+async def capo_shift_schedule_set(body: ShiftScheduleReq, admin: dict = Depends(require_admin)):
+    import re as _re_sch
+    t = body.time if _re_sch.match(r"^([01]?\d|2[0-3]):[0-5]\d$", body.time or "") else "20:00"
+    doc = {"enabled": bool(body.enabled), "time": t, "lang": (body.lang or "it")[:5]}
+    await db.app_meta.update_one({"_key": "shift_schedule"}, {"$set": {"_key": "shift_schedule", **doc}}, upsert=True)
+    return {"ok": True, **doc}
+
+
+async def _shift_schedule_loop():
+    """Ogni minuto controlla l'orario di chiusura: allo scoccare, Sitor compila la bozza del turno una volta al giorno."""
+    await asyncio.sleep(25)
+    while True:
+        try:
+            cfg = await db.app_meta.find_one({"_key": "shift_schedule"}, {"_id": 0})
+            if cfg and cfg.get("enabled"):
+                now = datetime.now(timezone.utc)
+                hhmm = now.strftime("%H:%M")
+                today = now.isoformat()[:10]
+                if hhmm == (cfg.get("time") or "20:00") and cfg.get("last_run_date") != today:
+                    await _sitor_shift_draft(lang=cfg.get("lang") or "it", trigger="scheduled", force=True)
+                    await db.app_meta.update_one({"_key": "shift_schedule"}, {"$set": {"last_run_date": today}})
+        except Exception:
+            logger.exception("shift schedule loop error")
+        await asyncio.sleep(60)
 
 
 # ============================================================================
@@ -15868,6 +15908,11 @@ async def on_startup_seed_mikilab():
         logging.getLogger(__name__).info("Uptime monitor loop avviato")
     except Exception as e:
         logging.getLogger(__name__).error(f"Uptime monitor start error: {e}")
+    try:
+        asyncio.create_task(_shift_schedule_loop())
+        logging.getLogger(__name__).info("Shift schedule loop avviato")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Shift schedule loop start error: {e}")
 
 
 @app.on_event("shutdown")

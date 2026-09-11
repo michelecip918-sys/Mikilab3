@@ -8,7 +8,7 @@ import { Camera, X, Loader2, ImagePlus } from "lucide-react";
 import { COUNTRIES, flagEmoji } from "@/lib/countries";
 import { STANDARD_PRICES, standardCosting } from "@/data/prices";
 import { uploadApi, floursApi } from "@/lib/api";
-import { useDept } from "@/lib/dept";
+import { useDept, activeDeptFromActivity } from "@/lib/dept";
 import { getDeptProfile } from "@/lib/deptProfiles";
 
 const FIELDS = [
@@ -46,7 +46,7 @@ export default function RecipeDialog({ open, onOpenChange, initial, onSave, coll
 
   useEffect(() => {
     if (open) {
-      setForm(initial ? { ...empty, ...normalize(initial) } : { ...empty, department: (activeDept && activeDept !== "tutti") ? activeDept : "" });
+      setForm(initial ? { ...empty, ...normalize(initial) } : { ...empty, department: (activeDept && activeDept !== "tutti") ? activeDept : activeDeptFromActivity() });
       setColl("mikilab");
       setPctMode(false);
       floursApi.list().then(setPantry).catch(() => setPantry([]));
