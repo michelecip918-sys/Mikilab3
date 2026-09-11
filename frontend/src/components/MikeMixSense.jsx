@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic, Snowflake, Flame, History } from "lucide-react";
-import { pulseApi, staffingApi, briefingApi, accessApi, delegationApi } from "@/lib/api";
+import { Activity, X, Volume2, VolumeX, AlertTriangle, AlertOctagon, Info, Moon, AlarmClock, Play, Radio, Users, Sunrise, Globe, Sparkles, Factory, ScanLine, CloudSun, Package, KeyRound, Mic, Snowflake, Flame, History, Send, Loader2 } from "lucide-react";
+import { pulseApi, staffingApi, briefingApi, accessApi, delegationApi, deusApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { publishSensor } from "@/lib/sensors";
 import { useLang } from "@/i18n/LanguageContext";
@@ -32,6 +32,23 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
 
   const [pulse, setPulse] = useState(null);
   const [open, setOpen] = useState(false);
+  const [chatQ, setChatQ] = useState("");
+  const [chatA, setChatA] = useState("");
+  const [chatBusy, setChatBusy] = useState(false);
+  const askSitor = async () => {
+    const q = chatQ.trim();
+    if (!q || chatBusy) return;
+    setChatBusy(true); setChatA("");
+    try {
+      const r = await deusApi.ask({ question: q, lang });
+      setChatA(r.reply || "…");
+      try { if (!isTTSMuted()) playTTS(r.reply || "", { lang, voice: "nexus" }); } catch { /* */ }
+      setChatQ("");
+    } catch {
+      setChatA(tri("Sitor non risponde ora, riprova.", "Sitor antwortet nicht.", "Sitor is not responding, try again.", "Sitor no responde.", "Sitor ne répond pas.", "سیتور پاسخ نمی‌دهد."));
+    }
+    setChatBusy(false);
+  };
   const [aura, setAura] = useState(() => { try { return localStorage.getItem("mikilab_aura") === "1"; } catch { return false; } });
   const [wake, setWake] = useState(null);
   const [rest, setRest] = useState({ active: false, allow_critical: true });
@@ -251,7 +268,25 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
           </div>
 
           <div className="max-h-[52vh] overflow-y-auto p-4 space-y-3">
-            {/* Briefing del mattino (Capo) */}
+            {/* Chat: scrivi o detta a Sitor, ovunque lui appaia */}
+            <div data-testid="mikemix-chat" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-2.5">
+              <div className="flex items-center gap-2">
+                <input
+                  data-testid="mikemix-chat-input"
+                  value={chatQ}
+                  onChange={(e) => setChatQ(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") askSitor(); }}
+                  placeholder={tri("Scrivi o parla a Sitor…", "Schreib oder sprich mit Sitor…", "Write or talk to Sitor…", "Escribe o habla con Sitor…", "Écris ou parle à Sitor…", "به سیتور بنویس یا بگو…")}
+                  className="flex-1 min-w-0 bg-transparent text-[13px] text-white placeholder-[#64748B] outline-none px-1"
+                />
+                <button data-testid="mikemix-chat-send" onClick={askSitor} disabled={chatBusy || !chatQ.trim()}
+                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 disabled:opacity-40 active:scale-95 transition-all" style={{ background: `${color}22`, color }}>
+                  {chatBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                </button>
+              </div>
+              {chatA && <p data-testid="mikemix-chat-reply" className="text-[12px] text-[#E8EEF5] mt-2 pt-2 border-t border-[#1e293b] leading-relaxed">{chatA}</p>}
+            </div>
+
             {isCapo && briefing && briefingOpen && (
               <div data-testid="mikemix-briefing" className="rounded-2xl border border-[#aaa795]/40 p-3" style={{ background: "linear-gradient(135deg, #f59e0b18, transparent)" }}>
                 <div className="flex items-start justify-between gap-2">

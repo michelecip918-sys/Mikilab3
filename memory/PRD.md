@@ -4973,3 +4973,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Potatura restante (opzionale, decisa dall'utente): valutare rimozione di silos/elite/twin/carbon/agv/radar/hardware/emergency/thermalflow e consolidare "celle/freezer per reparto" senza doppioni (oggi: panel-proofing=celle lievitazione; manca vista freezer per reparto unificata).
 - Item 3 (chat Sitor nel floating): pending.
 - Cleanup: panelToGroup contiene ancora id di pannelli rimossi (innocuo); import ImageForge/PackagingSync/AdvancedLab/DowntimeTraining/MohamedInbox ora inutilizzati (warning).
+
+## v82 (2026-09) — Macchinari nel piano + Potatura finale + Chat Sitor fluttuante
+- MACCHINARI NEL PIANO (item 1 ✓): /api/mike/deus/master-plan ora inietta nel contesto il PARCO MACCHINE reale del Capo (db.mike_machines: name/category/role/capacity) + eventuali body.machines, con vincolo "usa SOLO questi, citali per nome". Testato: piano generato menziona il forno rotativo aggiunto.
+- POTATURA FINALE (item 3 ✓): rimossi panel-silos, panel-twin (gemello 3D), panel-carbon, panel-agv, panel-radar. Tenuti: ricette, magazzino, ovenqc, proofing, docs, security, machine-arrival, sitor-atelier, elite, hardware, emergency. Verificato via screenshot (rimossi=assenti, tenuti=presenti), nessun crash.
+- CHAT SITOR FLUTTUANTE (item 4 ✓): MikeMixSense ora ha in cima al pannello un campo "Scrivi o parla a Sitor" (mikemix-chat-input + mikemix-chat-send) → deusApi.ask, risposta mostrata e letta via TTS. Verificato presente.
+### DA FARE
+- Item 2 (Celle & Freezer unificati per reparto senza doppioni): NON fatto. Oggi c'è panel-proofing (celle lievitazione); manca una vista unica che unisca celle di lievitazione + freezer per ogni reparto sotto controllo. Da creare consolidando senza duplicati.
+- Cleanup import inutilizzati (SiloManager, DigitalTwin, CarbonFootprint, AgvFleet, PlantRadar, AdvancedLab, DowntimeTraining, MohamedInbox, ImageForge, PackagingSync) — solo warning.

@@ -863,6 +863,26 @@ async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admi
         "\"risk\": \"1 frase sul rischio residuo da sorvegliare\"}. Nessun testo fuori dal JSON."
     )
     user_text = f"ORDINI:\n{orders}\n\nVINCOLI/RISORSE:\n{constraints}"
+    # I MACCHINARI scelti/aggiunti dal Capo entrano nei calcoli del piano di Sitor.
+    try:
+        machs = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "role": 1, "capacity": 1, "status": 1}).to_list(100)
+        if body.machines:
+            for nm in body.machines:
+                if nm and not any((m.get("name") or "").lower() == str(nm).lower() for m in machs):
+                    machs.append({"name": nm})
+        if machs:
+            lines = []
+            for m in machs:
+                seg = f"- {m.get('name') or 'macchina'}"
+                if m.get("category"): seg += f" [{m['category']}]"
+                if m.get("capacity"): seg += f" — capacità {m['capacity']}"
+                if m.get("role"): seg += f": {str(m['role'])[:90]}"
+                lines.append(seg)
+            user_text += ("\n\nPARCO MACCHINE REALE DEL CAPO (VINCOLO OBBLIGATORIO): pianifica usando SOLO questi "
+                          "macchinari, cita ciascuno per NOME nella timeline e assegna le fasi in base a categoria e capacità reali. "
+                          "Se manca un macchinario per una fase, dillo esplicitamente.\n" + "\n".join(lines))
+    except Exception:
+        pass
     raw = await _deus_llm(sysmsg, user_text, session=f"deus-plan-{email}", max_tokens=2200)
     data = {"reply": "", "plan_markdown": "", "confidence": 90, "impossible_solved": [], "risk": ""}
     cleaned = (raw or "").strip()
