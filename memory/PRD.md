@@ -4885,3 +4885,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Backend: OperatorPinSet.ttl_hours (0=permanente | 8 | 24). set → salva expires_at = now+ttl. GET /operator-pins calcola expired e AUTO-REVOCA (active=false) i scaduti; verify nega + revoca al volo i PIN scaduti. Permanente azzera expires_at.
 - Frontend: operatorPinsApi.set(name,pin,level,ttlHours). AdminSecurity: selettore durata `op-ttl-input` (Permanente/8h/24h), badge scadenza `op-ttl-badge-<key>` con countdown residuo, riga rossa se scaduto/revocato. Testato via curl: PIN 8h creato+verificato OK; forzata scadenza → verify nega + auto-revoca active=false.
 - Per mikilab.de serve REDEPLOY.
+
+## v74 (2026-09) — Verifica ricettario unificato post-deploy + chiarimento "sparito"
+- **"Ricettario sparito" = blocco transitorio del redeploy**: il sito live (mikilab.de) era in fase di deployment; la preview funziona perfettamente (150+ ricette, pulsante Aggiungi, lista unificata). Nessun crash reale.
+- **Confermato flusso completo UI**: il Capo apre "Aggiungi ricetta" nel Master Ricettario → sceglie "Ricetta MikiLab (condivisa)" o "Ricetta mia (privata)" (stesso schema/form) → salva. La ricetta personale appare nella lista unificata con badge ambra "Mia" (testid recipe-mine-badge-<id>). Verificato end-to-end: creata "Ciabatta del Capo TEST" come personale → presente (coll=personal) → badge "Mine" renderizzato.
+- **NOTA comportamento ricerca**: il backend auto-traduce il nome ricetta (name_en/de/...). Se la UI è in inglese, cercare il nome italiano non matcha il nome tradotto mostrato (es. "Ciabatta del Capo" → "Chief's Ciabatta"). NON è un bug: la ricerca matcha il nome localizzato visibile.
+- Ricetta di test eliminata. Attesa conferma deployment completato per validare su mikilab.de.
