@@ -5070,3 +5070,13 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Il riepilogo è concatenato al system message (`sysmsg + snapshot`) prima della chiamata LLM. Robusto: ogni sezione in try/except, così un dato mancante non blocca la risposta.
 - VERIFICATO (curl): domanda "quali ricette abbiamo e cosa spingere" → Sitor cita i dati reali ("149 ricette catalogate", "sezione focacce oltre 40 varianti"). Sintassi OK, backend riavviato pulito.
 - Nota: lo snapshot è solo in deus/ask (come richiesto). Estendibile ad altri endpoint se si vuole Sitor contestuale ovunque.
+
+## v-fork14 (2026-06-13) — Unificati i 6 strumenti "Piano AI di Sitor" (panel-pianoai)
+- Consolidati i 6 sotto-strumenti sovrapposti in UN flusso coerente a **3 schede** dentro `panel-pianoai` (App.js, subtabs-pianoai):
+  1. **Genera** = `PianoProduzioneAI` (generatore ricco: ricette, parametri IA, food-cost) con integrata in cima la card `capo-quick-order` (`<details>`) che ospita `AutoPlan` (ordine a testo libero → "Piano ottimale" / "3 opzioni" → "Invia agli operatori" dispatch via POST /api/mike/autoplan + /autoplan/dispatch).
+  2. **Timeline** = `TimelineTurno` (invariato).
+  3. **Orari a Ritroso** = `BackwardScheduler` + `OrdineCapo` impilati (ordine dettato → piano a ritroso vocale → invio a Sitor).
+- **SmartPlannerStressZero** SPOSTATO fuori dal pannello, dentro `panel-weekly` ("Piano Settimanale · Prodotti"), sotto `WeeklyPlan` (bilancia i carichi settimanali).
+- Rimosse le vecchie sotto-schede separate: "Piano del Giorno" (AutoPlan standalone), "Ordine & Piano" (OrdineCapo standalone), "Smart Planner". Import `AutoPlan` rimosso da App.js (ora usato dentro PianoProduzioneAI).
+- Approccio a basso rischio: riuso dei componenti esistenti, nessuna riscrittura distruttiva del massiccio PianoProduzioneAI (1826 righe).
+- VERIFICATO: compila pulito; testing_agent iteration_233 → frontend 100% (9/9 check PASS: auth, 3 schede nell'ordine corretto, capo-quick-order+AutoPlan end-to-end, Timeline/Backward/OrdineCapo/SmartPlanner tutti renderizzano, regressione negativa sulle vecchie schede OK). Nessun bug.

@@ -21,6 +21,7 @@ import { recipeCategory, CATS } from "@/lib/recipeCats";
 import PrintHeader from "@/components/PrintHeader";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import CategoryRecipePicker from "@/components/CategoryRecipePicker";
+import AutoPlan from "@/components/console/AutoPlan";
 import CapoCombos from "@/components/CapoCombos";
 import CapoProductRow from "@/components/CapoProductRow";
 import { mkTri, triFR, triFA } from "@/i18n/triMaps";
@@ -1229,6 +1230,16 @@ export default function PianoProduzioneAI({ onOpenTool }) {
       <div className={(planTab === "produci" || planTab === "genera") ? "" : "hidden"}>
       <Section order={2} highlight badge={tri3(lang, "Inizia qui", "Hier starten", "Start here")} icon={<Sparkles className="w-4 h-4" />} title={tri3(lang, "Compila per generare", "Zum Generieren ausfüllen", "Fill in to generate")}>
         <div className={planTab === "produci" ? "" : "hidden"}>
+        <details data-testid="capo-quick-order" className="mb-3 rounded-2xl border border-[#3E9C93]/30 bg-white dark:bg-[#14212C] p-3">
+          <summary className="cursor-pointer list-none flex items-center gap-2 text-sm font-bold text-[#3E9C93]">
+            <Sparkles className="w-4 h-4" />
+            {tri3(lang, "Ordine rapido a Sitor · testo libero", "Schnellauftrag an Sitor · Freitext", "Quick order to Sitor · free text", "Pedido rápido a Sitor · texto libre")}
+          </summary>
+          <p className="text-[11px] text-[#AEB8BF] mt-1.5 mb-2 leading-snug">
+            {tri3(lang, "Scrivi gli ordini a parole (es. «300 baguette, 120 focacce»): Sitor genera il piano, ti propone 3 opzioni e lo invia agli operatori.", "Schreibe die Aufträge in Worten: Sitor erstellt den Plan, schlägt 3 Optionen vor und sendet ihn ans Team.", "Type the orders in words (e.g. '300 baguettes, 120 focaccias'): Sitor builds the plan, offers 3 options and sends it to the operators.", "Escribe los pedidos con palabras: Sitor genera el plan, propone 3 opciones y lo envía a los operarios.")}
+          </p>
+          <AutoPlan />
+        </details>
         <div data-testid="capo-plan-switch" className="flex items-center gap-1 p-1 rounded-2xl bg-[#e4eff8] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] mb-2">
           <button data-testid="capo-switch-weekly" onClick={() => setUseWeekly(true)}
             className={`flex-1 py-2 rounded-2xl shadow-md border border-amber-900/40 text-sm font-bold transition-all ${useWeekly ? "bg-[#3E9C93] text-white shadow-sm" : "text-[#7E8A93]"}`}>{tri3(lang, "Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal")}</button>

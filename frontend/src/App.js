@@ -73,7 +73,6 @@ import SitorGuidedTools from "@/components/console/SitorGuidedTools";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
-import AutoPlan from "@/components/console/AutoPlan";
 import ShiftBriefing from "@/components/console/ShiftBriefing";
 import DigitalTwin from "@/components/console/DigitalTwin";
 import EmergencyCenter from "@/components/EmergencyCenter";
@@ -511,15 +510,22 @@ export default function App() {
                       sub={tri("Piano del giorno e della settimana + ordini last-minute e B2B, tutto in un posto.", "Tages-/Wochenplan + Extra- und B2B-Aufträge.", "Day and week plan + last-minute and B2B orders, all in one place.", "Plan del día y semana + pedidos extra y B2B.", "Plan jour/semaine + commandes extra et B2B.", "برنامه روز/هفته + سفارش‌های اضافه و B2B.")}>
                     <HoloPanel testid="panel-weekly" accent="#8a97a6" beacon="#a4afbb" icon="🗓️" defaultOpen title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Stampa PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
+                      <div className="mt-5 pt-4 border-t border-[#3E9C93]/15">
+                        <SmartPlannerStressZero />
+                      </div>
                     </HoloPanel>
                     <HoloPanel testid="panel-pianoai" accent="#9aa6b2" beacon="#8a97a6" icon="🤖" defaultOpen title={tri("Piano AI di Sitor", "Sitors KI-Plan", "Sitor's AI Plan", "Plan IA de Sitor", "Plan IA de Sitor", "برنامه هوش مصنوعی سیتور")} sub={tri("Tutte le modalità AI in un unico posto: Sitor costruisce, calcola a ritroso e valida il piano.", "Alle KI-Modi an einem Ort.", "All AI modes in one place: Sitor builds, back-plans and validates.", "Todos los modos IA en un solo lugar.", "Tous les modes IA en un seul endroit.", "همه حالت‌های هوش مصنوعی در یک‌جا.")}>
                       <SubTabs testid="subtabs-pianoai" accent="#9aa6b2" tabs={[
-                        { id: "auto", label: tri("Piano del Giorno", "Tagesplan", "Day Plan", "Plan del Día", "Plan du Jour", "برنامه روز"), content: <AutoPlan /> },
-                        { id: "ai", label: tri("Piano AI", "KI-Plan", "AI Plan", "Plan IA", "Plan IA", "برنامه AI"), content: <PianoProduzioneAI /> },
-                        { id: "backward", label: tri("A Ritroso", "Rückwärts", "Backward", "Inverso", "À Rebours", "معکوس"), content: <BackwardScheduler /> },
-                        { id: "ordine", label: tri("Ordine & Piano", "Auftrag & Plan", "Order & Plan", "Pedido & Plan", "Commande & Plan", "سفارش و برنامه"), content: <OrdineCapo /> },
-                        { id: "smart", label: tri("Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "Smart Planner", "برنامه‌ریز"), content: <SmartPlannerStressZero /> },
+                        { id: "ai", label: tri("Genera", "Generieren", "Generate", "Generar", "Générer", "ساخت"), content: <PianoProduzioneAI /> },
                         { id: "timeline", label: tri("Timeline", "Timeline", "Timeline", "Timeline", "Timeline", "خط زمانی"), content: <TimelineTurno /> },
+                        { id: "backward", label: tri("Orari a Ritroso", "Rückwärts-Zeiten", "Backward Times", "Horarios Inversos", "Horaires à Rebours", "زمان‌های معکوس"), content: (
+                          <div className="space-y-5">
+                            <BackwardScheduler />
+                            <div className="pt-4 border-t border-[#9aa6b2]/15">
+                              <OrdineCapo />
+                            </div>
+                          </div>
+                        ) },
                       ]} />
                     </HoloPanel>
 
