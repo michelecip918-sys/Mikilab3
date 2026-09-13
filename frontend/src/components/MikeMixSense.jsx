@@ -239,22 +239,12 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       {prooferOpen && <ProoferSync onClose={() => setProoferOpen(false)} />}
       {phoenixOpen && <BatchPhoenix onClose={() => setPhoenixOpen(false)} />}
 
-      {/* Avatar proattivo flottante — solo icona, nessuna foto decorativa */}
-      <button
-        data-testid="mikemix-sense-fab"
-        onClick={() => setOpen((v) => !v)}
-        className="fixed left-4 bottom-24 z-[55] w-11 h-11 rounded-full bg-[#0b0f19]/95 backdrop-blur border-2 flex items-center justify-center active:scale-95 transition-transform"
-        style={{ borderColor: color, boxShadow: `0 0 14px ${color}55` }}
-        title="Sitor"
-      >
-        <Activity className="w-5 h-5" style={{ color }} />
-        {nAlert > 0 && (
-          <span data-testid="mikemix-sense-badge" className="absolute -top-1 -right-1 min-w-5 h-5 px-1 rounded-full text-[10px] font-black flex items-center justify-center text-white shadow-lg" style={{ background: nCrit ? "#b06e78" : "#aaa795" }}>{nAlert}</span>
-        )}
-      </button>
+      {/* Sitor NON è più una bolla fluttuante: vive come entità unica (Sala Sitor per il Capo,
+          voce e schermata dedicata per l'operaio). Qui restano solo l'aura ambientale e la
+          sorveglianza proattiva a voce; nessun avatar/pannello flottante. */}
 
       {/* Pannello */}
-      {open && (
+      {false && (
         <div data-testid="mikemix-sense-panel" className="fixed left-3 right-3 sm:left-4 sm:right-auto sm:w-[380px] bottom-44 z-[56] rounded-3xl bg-[#0b0f19]/95 backdrop-blur-xl border border-[#1e293b] shadow-2xl overflow-hidden animate-fadeIn">
           <div className="p-4 flex items-center justify-between" style={{ background: `linear-gradient(90deg, ${color}22, transparent)` }}>
             <div className="flex items-center gap-2">

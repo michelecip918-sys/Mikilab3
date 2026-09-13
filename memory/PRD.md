@@ -5030,3 +5030,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Frontend: authApi (lib/api.js), AuthScreen.jsx (tab Login/Registra, email/password, forgot, Google, badge invito), ResetPassword.jsx. Pulsante "Sign in" nell'header del PublicGate.
 - Test: login admin@mikilab.de → token+role admin OK; logout OK; forgot-password → ok; password errata → 401; registrazione senza invito → 403 invite_required (comportamento voluto). UI AuthScreen renderizza correttamente (screenshot).
 - APERTO: se l'utente vuole registrazione libera (togliere invite-only) o rendere "Accedi" più visibile.
+
+## v-fork8 (2026-06-13) — Sitor UNICA ENTITÀ (rimossa la bolla fluttuante)
+- Richiesta utente: "il Sitor fluttuante non deve più esistere; far coesistere Sitor in un'unica entità".
+- `MikeMixSense.jsx` reso HEADLESS: rimossi il fab flottante (mikemix-sense-fab/badge) e disattivato il pannello (`{open && (...)}` → `{false && (...)}`). Restano attivi: aura ambientale (LabAura), sorveglianza proattiva a voce (legge gli alert critici), check-in turno AUTOMATICO e silenzioso quando l'operaio entra in Produzione.
+- Sitor ora è UN'unica entità: **Sala Sitor** (gruppo "Oggi" della console Capo, con chat SalaSitor + NexusConsole) per il Capo, e la **schermata Produzione** (voce + "Chiedi a Sitor" + analisi foto) per l'operaio.
+- Nessuna funzione persa: la chat resta in Sala Sitor; l'avvio turno è automatico sul floor.
+- Nota: il cerchio in basso a sinistra rimasto è `RadioFornaio` (radio del panificio), NON Sitor — lasciato invariato.
+- VERIFICATO (screenshot Capo): master-console ok, mikemix-sense-fab ASSENTE, mikemix-sense-panel ASSENTE, gruppo "Oggi/Sala Sitor" presente. Compila pulito.
