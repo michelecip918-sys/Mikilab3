@@ -8,12 +8,13 @@ import { adminGateApi } from "@/lib/api";
 const PUB = process.env.PUBLIC_URL;
 const OK_KEY = "mikilab_admin_gate_ok"; // ultimo PIN valido (cache locale per uso offline)
 
-export default function AdminGate({ onUnlock, onBack }) {
+export default function AdminGate({ onUnlock, onBack, role }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [pin, setPin] = useState("");
   const [err, setErr] = useState(false);
   const [busy, setBusy] = useState(false);
+  const isOp = role === "operator";
 
   const tryPin = async (val, soft) => {
     if (!soft) setBusy(true);
@@ -59,8 +60,10 @@ export default function AdminGate({ onUnlock, onBack }) {
         <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-[#D95200]/40 shadow-lg shadow-[#D95200]/20 bg-[#030712] mb-4">
           <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
-        <h1 className="font-black tracking-[0.15em] text-2xl uppercase">MIKILAB</h1>
-        <p className="mt-2 text-sm text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#D95200]" /> {tri("Accesso riservato · inserisci il PIN", "Zugang reserviert · PIN eingeben", "Private access · enter the PIN", "Acceso reservado · introduce el PIN", "Accès réservé · saisis le PIN", "دسترسی خصوصی · PIN را وارد کن")}</p>
+        <h1 className="font-black tracking-[0.15em] text-2xl uppercase">{isOp ? tri("PRODUZIONE", "PRODUKTION", "PRODUCTION", "PRODUCCIÓN", "PRODUCTION", "تولید") : "MIKILAB"}</h1>
+        <p className="mt-2 text-sm text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#D95200]" /> {isOp
+          ? tri("Operaio · inserisci il tuo PIN a 4 cifre", "Mitarbeiter · 4-stelligen PIN eingeben", "Operator · enter your 4-digit PIN", "Operario · introduce tu PIN de 4 cifras", "Opérateur · saisis ton PIN à 4 chiffres", "اپراتور · پین ۴ رقمی خود را وارد کن")
+          : tri("Capo · inserisci il PIN a 6 cifre", "Chef · 6-stelligen PIN eingeben", "Capo · enter the 6-digit PIN", "Capo · introduce el PIN de 6 cifras", "Capo · saisis le PIN à 6 chiffres", "کاپو · پین ۶ رقمی را وارد کن")}</p>
 
         <div className={`mt-6 flex justify-center gap-3 ${err ? "animate-shake" : ""}`}>
           {[0, 1, 2, 3, 4, 5].map((i) => (

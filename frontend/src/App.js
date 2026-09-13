@@ -83,6 +83,7 @@ import CarbonFootprint from "@/components/console/CarbonFootprint";
 import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 import SiloManager from "@/components/console/SiloManager";
 import ColdStorage from "@/components/console/ColdStorage";
+import RecipeAuditButton from "@/components/console/RecipeAuditButton";
 import SitorTour from "@/components/console/SitorTour";
 import AgvFleet from "@/components/console/AgvFleet";
 import TimelineTurno from "@/components/console/TimelineTurno";
@@ -549,7 +550,8 @@ export default function App() {
                     <HoloPanel testid="panel-thermalflow" accent="#8a97a6" beacon="#9aa6b2" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
                       <RecipeThermalFlow />
                     </HoloPanel>
-                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette e conferma impastata.", "Geschützte Rezepte.", "Protected recipes.", "Recetas protegidas.", "Recettes protégées.", "دستورهای محافظت‌شده.")}>
+                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette, audit di Sitor e conferma impastata.", "Geschützte Rezepte & Audit.", "Protected recipes & Sitor audit.", "Recetas protegidas y auditoría.", "Recettes protégées & audit.", "دستورهای محافظت‌شده و بازبینی.")}>
+                      <RecipeAuditButton />
                       <Ricette isMasterView={true} />
                     </HoloPanel>
                     <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>

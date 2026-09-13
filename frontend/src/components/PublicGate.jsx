@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, ArrowRight, Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2, BookOpen } from "lucide-react";
+import { Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
@@ -12,6 +12,7 @@ import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
 import { api } from "@/lib/api";
+import { playTTS, isTTSMuted } from "@/lib/tts";
 import { toast } from "sonner";
 
 const PUB = process.env.PUBLIC_URL;
@@ -22,6 +23,7 @@ export default function PublicGate({ onUnlock }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const [showPin, setShowPin] = useState(false);
+  const [gateRole, setGateRole] = useState(null);
   const [guest, setGuest] = useState(false);
   const [world, setWorld] = useState("panificio");
   const [reqEmail, setReqEmail] = useState("");
@@ -44,6 +46,36 @@ export default function PublicGate({ onUnlock }) {
     const t = setInterval(check, 20000);
     return () => { stop = true; clearInterval(t); };
   }, []);
+
+  // Voce di benvenuto all'ingresso su mikilab.de (una volta per sessione): invita a scegliere
+  // Capo o Operaio e accompagna l'operaio in produzione.
+  useEffect(() => {
+    if (showPin || guest) return;
+    let done = true;
+    try { done = sessionStorage.getItem("mikilab_welcome_spoken") === "1"; } catch { /* */ }
+    if (done || isTTSMuted()) return;
+    const t = setTimeout(() => {
+      try { sessionStorage.setItem("mikilab_welcome_spoken", "1"); } catch { /* */ }
+      const msg = tri(
+        "Benvenuto in MikiLab. Sei il Capo o un operaio? Se sei un operaio, ti porto subito in produzione.",
+        "Willkommen bei MikiLab. Bist du der Chef oder ein Mitarbeiter? Als Mitarbeiter bringe ich dich in die Produktion.",
+        "Welcome to MikiLab. Are you the Capo or an operator? If you're an operator, I'll take you straight to production.",
+        "Bienvenido a MikiLab. ¿Eres el Capo o un operario? Si eres operario, te llevo a producción.",
+        "Bienvenue chez MikiLab. Es-tu le Capo ou un opérateur ? Si opérateur, je t'emmène en production.",
+        "به MikiLab خوش آمدی. کاپو هستی یا اپراتور؟ اگر اپراتوری، تو را به تولید می‌برم.");
+      try { playTTS(msg, { lang, voice: "mikemix" }); } catch { /* */ }
+    }, 1200);
+    return () => clearTimeout(t);
+  }, [showPin, guest]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const enterAs = (role) => {
+    setGateRole(role);
+    setShowPin(true);
+    if (role === "operator" && !isTTSMuted()) {
+      const m = tri("Perfetto, ti porto in produzione. Inserisci il tuo PIN.", "Perfekt, ab in die Produktion. Gib deinen PIN ein.", "Great, taking you to production. Enter your PIN.", "Perfecto, te llevo a producción. Introduce tu PIN.", "Parfait, direction la production. Saisis ton PIN.", "عالی، تو را به تولید می‌برم. پین را وارد کن.");
+      try { playTTS(m, { lang, voice: "mikemix" }); } catch { /* */ }
+    }
+  };
 
   const shareUrl = "https://mikilab.de/";
   const doShare = async () => {
@@ -96,7 +128,7 @@ export default function PublicGate({ onUnlock }) {
     { img: "avatar_nexus.jpg", c: "#a6b1bc", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
   ];
 
-  if (showPin) return <AdminGate onUnlock={handleUnlock} onBack={() => setShowPin(false)} />;
+  if (showPin) return <AdminGate onUnlock={handleUnlock} role={gateRole} onBack={() => { setShowPin(false); setGateRole(null); }} />;
 
   if (guest) {
     return (
@@ -240,11 +272,21 @@ export default function PublicGate({ onUnlock }) {
             "تو مهمان هستی. بخش‌ها و آواتارها را آزادانه ببین. هر تعامل به پین نیاز دارد.")}
         </p>
 
-        <button data-testid="public-enter-btn" onClick={() => setShowPin(true)}
-          className="mt-7 inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-black text-base text-[#030712] active:scale-95 transition-all"
-          style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 26px rgba(138,151,166,0.45)" }}>
-          <Lock className="w-4 h-4" /> {tri("Entra con il PIN", "Mit PIN eintreten", "Enter with PIN", "Entrar con PIN", "Entrer avec le PIN", "ورود با پین")} <ArrowRight className="w-4 h-4" />
-        </button>
+        <div data-testid="public-role-choice" className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md">
+          <button data-testid="public-enter-capo" onClick={() => enterAs("capo")}
+            className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-base text-[#030712] active:scale-95 transition-all"
+            style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 26px rgba(138,151,166,0.45)" }}>
+            <ShieldAlert className="w-5 h-5" /> {tri("Sono il Capo", "Ich bin der Chef", "I'm the Capo", "Soy el Capo", "Je suis le Capo", "من کاپو هستم")}
+          </button>
+          <button data-testid="public-enter-operaio" onClick={() => enterAs("operator")}
+            className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-base active:scale-95 transition-all border-2"
+            style={{ background: "rgba(217,82,0,0.12)", color: "#FF8533", borderColor: "#D95200" }}>
+            <GraduationCap className="w-5 h-5" /> {tri("Sono un Operaio", "Ich bin Mitarbeiter", "I'm an Operator", "Soy Operario", "Je suis Opérateur", "من اپراتورم")}
+          </button>
+        </div>
+        <p data-testid="public-role-hint" className="mt-3 text-[11px] text-[#64748B] max-w-md">
+          {tri("Il Capo entra con il PIN a 6 cifre. L'operaio entra con il suo PIN a 4 cifre e va dritto in produzione.", "Chef: 6-stelliger PIN. Mitarbeiter: 4-stelliger PIN → Produktion.", "The Capo enters with the 6-digit PIN. The operator enters with their 4-digit PIN and goes straight to production.", "El Capo entra con PIN de 6 dígitos. El operario con su PIN de 4 dígitos va a producción.", "Le Capo entre avec le PIN à 6 chiffres. L'opérateur avec son PIN à 4 chiffres va en production.", "کاپو با پین ۶ رقمی، اپراتور با پین ۴ رقمی وارد تولید می‌شود.")}
+        </p>
 
         <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[#64748B]">
           <Sparkles className="w-3.5 h-3.5 text-[#a6b1bc]" />

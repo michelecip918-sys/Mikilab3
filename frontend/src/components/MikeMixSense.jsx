@@ -94,6 +94,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
   };
   const [prooferOpen, setProoferOpen] = useState(false);
   const [phoenixOpen, setPhoenixOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   const [histOpen, setHistOpen] = useState(false);
   const [hist, setHist] = useState([]);
   const loadHist = () => { delegationApi.handoffHistory().then(setHist).catch(() => setHist([])); };
@@ -401,6 +402,10 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             {/* Comandi del Capo: Riposo blindato + Sveglia predittiva */}
             {isCapo && (
               <div className="space-y-3 pt-1">
+                <button data-testid="mikemix-tools-toggle" onClick={() => setToolsOpen((v) => !v)} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] font-black border border-[#64748B]/40 text-[#8FB0C2] bg-[#64748B0d] active:scale-95 transition-all">
+                  {toolsOpen ? tri("Nascondi strumenti Capo", "Chef-Werkzeuge ausblenden", "Hide Capo tools", "Ocultar herramientas Capo", "Masquer les outils Capo", "پنهان کردن ابزار کاپو") : tri("Strumenti Capo avanzati", "Erweiterte Chef-Werkzeuge", "Advanced Capo tools", "Herramientas avanzadas", "Outils Capo avancés", "ابزارهای پیشرفته کاپو")}
+                </button>
+                {toolsOpen && (<div className="space-y-3">
                 <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#aaa795]/50 text-[#aaa795] bg-[#f59e0b12] active:scale-95 transition-transform">
                   <Sparkles className="w-4 h-4" /> {tri("Audit Ricetta (Matrice Sovrana)", "Rezept-Audit (Matrix)", "Recipe Audit (Sovereign Matrix)", "Auditoría de Receta", "Audit Recette", "بازبینی دستور")}
                 </button>
@@ -530,6 +535,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                     </div>
                   </div>
                 )}
+                </div>)}
               </div>
             )}
           </div>

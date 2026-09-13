@@ -11,6 +11,7 @@ import LivingAvatar3D from "@/components/LivingAvatar3D";
 import SharedWidgets from "@/components/SharedWidgets";
 import FaceCheckIn from "@/components/FaceCheckIn";
 import OperatorClock from "@/components/OperatorClock";
+import FloorOpeningChecklist from "@/components/FloorOpeningChecklist";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -61,14 +62,8 @@ function DayTasks({ tri, lang, role, apprentice }) {
 
   if (!tasks.length && !plan && !mine) {
     return (
-      <div data-testid="floor-no-task" className="rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-5 text-center">
-        <p className="text-sm text-[#94A3B8]">{tri(
-          "Nessun compito assegnato ancora. Sitor ti guiderà appena il Capo invia il piano del giorno.",
-          "Noch keine Aufgabe. Sitor führt dich, sobald der Chef den Tagesplan sendet.",
-          "No task assigned yet. Sitor will guide you as soon as the Capo sends the day plan.",
-          "Aún sin tarea. Sitor te guiará cuando el Capo envíe el plan.",
-          "Aucune tâche. Sitor te guidera dès que le Capo envoie le plan.",
-          "هنوز وظیفه‌ای نیست. سیتور راهنمایی‌ات می‌کند.")}</p>
+      <div data-testid="floor-no-task" className="space-y-3">
+        <FloorOpeningChecklist lang={lang} role={role} />
       </div>
     );
   }
