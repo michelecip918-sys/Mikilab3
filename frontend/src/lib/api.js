@@ -459,6 +459,9 @@ export const operatorApi = {
 
 
 // Sitor · Sesto Senso — motore proattivo del laboratorio.
+export const sitorAlertsApi = {
+  list: () => api.get(`/mike/alerts`).then((r) => r.data).catch(() => ({ alerts: [], unread: 0 })),
+};
 export const pulseApi = {
   get: () => cachedGet("lab_pulse", () => api.get(`/lab/pulse`).then((r) => r.data),
     { mood: "sereno", heartbeat: 52, score: 100, load: 0, alerts: [], checkin: { active: false }, rest_mode: { active: false }, plan_active: false }),

@@ -85,6 +85,7 @@ import SiloManager from "@/components/console/SiloManager";
 import ColdStorage from "@/components/console/ColdStorage";
 import RecipeAuditButton from "@/components/console/RecipeAuditButton";
 import { InventoryButton, BatchPhoenixButton } from "@/components/console/LegacyToolButton";
+import TodayFeed from "@/components/console/TodayFeed";
 import SitorTour from "@/components/console/SitorTour";
 import AgvFleet from "@/components/console/AgvFleet";
 import TimelineTurno from "@/components/console/TimelineTurno";
@@ -490,6 +491,7 @@ export default function App() {
                       title={tri("Oggi · Sala Sitor", "Heute · Sitor-Saal", "Today · Sitor Hall", "Hoy · Sala Sitor", "Aujourd'hui · Salle Sitor", "امروز · تالار سیتور")}
                       hint={tri("👉 Il tuo punto di partenza: parla con Sitor (scrivi o detta), vedi notizie e aggiornamenti del laboratorio e chiedigli qualsiasi strumento. Se non sai da dove iniziare, inizia da qui.", "👉 Dein Startpunkt: sprich mit Sitor, sieh Neuigkeiten und frag nach jedem Werkzeug.", "👉 Your starting point: talk to Sitor, see lab news and updates, and ask for any tool. Not sure where to start? Start here.", "👉 Tu punto de partida: habla con Sitor, mira novedades y pide cualquier herramienta.", "👉 Ton point de départ : parle à Sitor, vois les nouveautés et demande un outil.", "👉 نقطه شروع تو: با سیتور صحبت کن و هر ابزاری بخواه.")}
                       sub={tri("Parla con Sitor · notizie e aggiornamenti del laboratorio in un colpo d'occhio.", "Sprich mit Sitor; Neuigkeiten auf einen Blick.", "Talk to Sitor; lab news and updates at a glance.", "Habla con Sitor; novedades de un vistazo.", "Parle à Sitor ; nouveautés en un coup d'œil.", "با سیتور صحبت کن؛ اخبار در یک نگاه.")}>
+                    <TodayFeed />
                     <SalaSitor />
                     <NexusConsole isCapo={true} />
                     <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")}>

@@ -5046,3 +5046,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - I restanti strumenti gimmick del vecchio pannello (Pipeline/Linea, Vision AR, Clima, Delega vocale, Handoff, Inviti, slider vetro/soglia) restano ritirati (erano solo nel pannello ora disattivato) — coerente con la richiesta di potatura.
 - Compila pulito. (Nota: `magazzino-inventory-btn` vive dentro il pannello Magazzino, visibile all'espansione.)
 - BACKLOG: Home "Oggi" arricchita (feed avvisi/PIN/report); spostare RadioFornaio in una sezione; registrazione libera vs invito (dopo repubblica).
+
+## v-fork10 (2026-06-13) — Home "Oggi" arricchita (TodayFeed)
+- Nuovo componente `components/console/TodayFeed.jsx` montato in cima al gruppo **Oggi** (sopra SalaSitor): un vero feed di "notizie e aggiornamenti del laboratorio" in un colpo d'occhio.
+- 3 card: **Avvisi di Sitor** (contatore non letti + ultimi 3, testo da recipe_name·action·advice), **PIN operatori** (scaduti/in scadenza → tocco porta a Sicurezza & Report), **Ultimo report di turno** (operatore, data, scarti → tocco a Sicurezza & Report).
+- Nuovo `sitorAlertsApi.list()` → GET /mike/alerts. PIN da operatorPinsApi.list(), report da floorApi.shiftReports().
+- VERIFICATO (screenshot Capo): today-feed + 3 card (today-alerts con 5 non letti, today-pins "OK", today-report) renderizzano in cima a Oggi. Compila pulito.
