@@ -5059,3 +5059,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Registrazione**: deciso di mantenerla **solo su invito** (coerente col tool privato del Capo). Nessuna modifica.
 - **Primo avvio operaio + volto**: il flusso esiste già (alla prima entrata col PIN la Produzione mostra la NameGate con FaceCheckIn → registra volto). Dalla 2ª volta entra con volto/nome senza PIN. Già coerente, nessuna modifica.
 - VERIFICATO (screenshot): oggi-radio inline True, radio-fornaio-btn presente e NON fixed, sitor fab assente, radio-panel si apre con tutte le stazioni. Console con 6 gruppi pulita. Compila pulito.
+
+## v-fork12 (2026-06-13) — BLOCCO 1: rimosso il gate "legame/XP" da Sitor (deus/ask)
+- In `deus_ask` (POST /mike/deus/ask) rimosso il controllo `if not info["external_unlocked"]` (soglia EXTERNAL_UNLOCK_XP=650) che negava la risposta finché il Capo non aveva abbastanza XP. Ora Sitor risponde SEMPRE fin dalla prima interazione.
+- Il sistema bond/XP (persona via via più calda, `_deus_persona`, livelli) è INTATTO — tolto solo il blocco che nega la risposta. Nessun altro endpoint LLM aveva un gate simile (deus_master_plan ecc. non lo hanno). I frontend (SalaSitor, FloorOpeningChecklist, MikeMixSense) leggono solo `r.reply`, nessuno usa `locked` → nessuna rottura.
+- VERIFICATO (curl): POST /mike/deus/ask con domanda esterna su account a XP basso → ok:true, locked:false, reply completa 1058 caratteri. Backend riavviato pulito.

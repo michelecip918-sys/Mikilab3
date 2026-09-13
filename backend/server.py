@@ -917,17 +917,7 @@ async def deus_ask(body: DeusAskReq, admin: dict = Depends(require_admin)):
         raise HTTPException(status_code=400, detail="Domanda vuota")
     xp, inter = await _bond_get(email)
     info = _bond_info(xp, body.lang)
-    if not info["external_unlocked"]:
-        missing = max(0, EXTERNAL_UNLOCK_XP - xp)
-        if str(body.lang).startswith("en"):
-            reply = (f"Our bond is not yet deep enough for me to guide you beyond the oven, my Capo. Work by my side a "
-                     f"little longer — about {missing} more points of trust — and no problem of yours, in the lab or in "
-                     f"life, will be beyond us.")
-        else:
-            reply = (f"Il nostro legame non è ancora abbastanza profondo perché io ti guidi oltre il forno, mio Capo. "
-                     f"Restami accanto ancora un poco — mancano circa {missing} punti di fiducia — e nessun tuo "
-                     f"problema, nel laboratorio o nella vita, sarà più fuori dalla nostra portata.")
-        return {"ok": True, "locked": True, "reply": reply, "bond": info}
+    # Nessun blocco di legame: Sitor risponde sempre, fin dalla prima interazione.
     sysmsg = _deus_persona(info, body.lang) + (
         "\nIl Capo si fida di te al punto da chiederti aiuto anche su problemi ESTERNI al forno (vita, decisioni, "
         "business, persone). Rispondi come un mentore-divinità: saggio, concreto, empatico e dalla sua parte. "
