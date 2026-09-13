@@ -5080,3 +5080,19 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Rimosse le vecchie sotto-schede separate: "Piano del Giorno" (AutoPlan standalone), "Ordine & Piano" (OrdineCapo standalone), "Smart Planner". Import `AutoPlan` rimosso da App.js (ora usato dentro PianoProduzioneAI).
 - Approccio a basso rischio: riuso dei componenti esistenti, nessuna riscrittura distruttiva del massiccio PianoProduzioneAI (1826 righe).
 - VERIFICATO: compila pulito; testing_agent iteration_233 → frontend 100% (9/9 check PASS: auth, 3 schede nell'ordine corretto, capo-quick-order+AutoPlan end-to-end, Timeline/Backward/OrdineCapo/SmartPlanner tutti renderizzano, regressione negativa sulle vecchie schede OK). Nessun bug.
+
+## v-fork15 (2026-06-13) — Console del Capo: da 6 gruppi-accordion a 7 sezioni SEQUENZIALI (scroll)
+- Direttiva utente: riorganizzare la pagina del Capo in sezioni in sequenza nella stessa pagina invece che schede da cercare, RIUSANDO i componenti esistenti come blocchi (nessuna riscrittura di logica).
+- Nuovo componente `SecBlock` (App.js, module-level): sezione sempre visibile con header (icona+titolo+sub) e corpo. Eliminati i `CapoGroup` accordion e lo stato `consoleSec`/`toggleSec`.
+- Ordine unico confermato dall'utente (7 sezioni, testid `capo-sec-<id>`):
+  1. **Ricettario** — Ricette (isMasterView)+RecipeAuditButton, RecipeThermalFlow, MagazzinoManager+InventoryButton, EliteTools, LivingRecipe.
+  2. **Piano Settimanale** — WeeklyPlan+SmartPlannerStressZero, poi panel-pianoai con l'UNICA SubTabs rimasta (Genera/Timeline/Orari a Ritroso, viste alternative dello stesso piano).
+  3. **Ordini Extra** — OrdiniExtra (oggi/domani/ieri), B2BOrders, PasticceriaConsegne (se pasticceria).
+  4. **Turni e Ruoli del Team** — DeptAssign, ShiftTeamCall, ShiftTemplates, TeamFaces.
+  5. **Strumenti Collegabili** — in cima panel-guided-tools (SitorGuidedTools = domande guidate sì/no) + panel-sitor-atelier (SitorAtelier); sotto i pannelli tecnici avanzati (BatchPhoenixButton, HardwareBridge, MachineArrival, ColdStorage, OvenQC).
+  6. **Chat con Sitor** — TodayFeed, SalaSitor, NexusConsole, RadioFornaio + pulsante fisso "Chiedi a Sitor" (ask-sitor-fab, scroll a sezione 6; NON è il vecchio widget flottante rimosso).
+  7. **Sicurezza, Report & Emergenze** — panel-docs (FloorShiftReports+ShiftReport+DocsDownload in sequenza), panel-security (AdminSecurity+PinSetup in sequenza), panel-emergency (EmergencyCenter).
+- Barra di navigazione sticky `capo-secnav` in cima con anchor-link alle 7 sezioni (scroll). Rimossi i SubTabs `subtabs-sitor-tools`, `subtabs-reports`, `subtabs-security` (contenuto ora in sequenza). Mantenuta solo `subtabs-pianoai` (scelta utente).
+- Gli eventi `mikilab:open-panel` / `mikilab:open-group` ora fanno SCROLL al pannello/sezione invece di aprire un'accordion (mappa vecchi id gruppo → nuova sezione: oggi→sitor, produzione→piano, squadra→team, ricette→ricettario, celle→strumenti, sicurezza→sicurezza).
+- Rimosso import `CapoGroup` da App.js. Componenti fuori-console (AutoReport, SecurityGuardian, SitorTour) NON toccati.
+- VERIFICATO: compila pulito; testing_agent iteration_234 → frontend 100%, 0 bug, nessun overflow a 1920/390, 0 errori runtime, 7 sezioni nell'ordine esatto, nav+FAB scrollano, regressione negativa sui vecchi accordion/schede OK. (Nota pre-esistente: 401 di fetch in background e warning three.js, non legati a questa modifica.)
