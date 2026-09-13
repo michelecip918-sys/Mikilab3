@@ -189,13 +189,15 @@ export default function App() {
 
   // Plancia Capo a 6 sezioni a fisarmonica: ogni pannello appartiene a una sezione.
   // Solo UNA sezione aperta per volta = niente muro di 30 pannelli.
-  const [consoleSec, setConsoleSec] = useState("piano");
+  const [consoleSec, setConsoleSec] = useState("oggi");
   const toggleSec = (id) => setConsoleSec((s) => (s === id ? "" : id));
   const CONSOLE_SECMAP = {
-    "panel-autoplan": "piano", "panel-weekly": "piano", "panel-pianoai": "piano", "panel-backward": "piano", "panel-ordine": "piano", "panel-planner": "piano", "panel-timeline": "piano",
-    "panel-ordini": "ordini", "panel-b2b": "ordini",
-    "panel-dept-assign": "squadra", "panel-shift-team": "squadra", "panel-shift-templates": "squadra",
-    "panel-thermalflow": "strumenti", "panel-ricette": "strumenti", "panel-magazzino": "strumenti", "panel-silos": "strumenti", "panel-elite": "strumenti", "panel-docs": "strumenti", "panel-pin": "strumenti", "panel-security": "strumenti", "panel-twin": "strumenti", "panel-ovenqc": "strumenti", "panel-carbon": "strumenti", "panel-coldstorage": "strumenti", "panel-agv": "strumenti", "panel-packaging": "strumenti", "panel-radar": "strumenti", "panel-hardware": "strumenti", "panel-machine-arrival": "strumenti", "panel-image-forge": "strumenti", "panel-emergency": "strumenti", "panel-shiftreport": "strumenti",
+    "panel-sitor-atelier": "oggi",
+    "panel-autoplan": "produzione", "panel-weekly": "produzione", "panel-pianoai": "produzione", "panel-backward": "produzione", "panel-ordine": "produzione", "panel-planner": "produzione", "panel-timeline": "produzione", "panel-ordini": "produzione", "panel-pastry": "produzione", "panel-b2b": "produzione",
+    "panel-dept-assign": "squadra", "panel-shift-team": "squadra", "panel-shift-templates": "squadra", "panel-team-faces": "squadra",
+    "panel-thermalflow": "ricette", "panel-ricette": "ricette", "panel-magazzino": "ricette", "panel-elite": "ricette", "panel-living-recipe": "ricette",
+    "panel-ovenqc": "celle", "panel-coldstorage": "celle", "panel-hardware": "celle", "panel-machine-arrival": "celle",
+    "panel-docs": "sicurezza", "panel-security": "sicurezza", "panel-pin": "sicurezza", "panel-emergency": "sicurezza", "panel-shiftreport": "sicurezza",
   };
   useEffect(() => {
     const onJump = (e) => { const s = CONSOLE_SECMAP[e.detail]; if (s) setConsoleSec(s); };
@@ -483,10 +485,24 @@ export default function App() {
                   <div className="space-y-4" data-testid="master-console">
                     <DeskScene />
                     <PlantHeartbeatProvider>
-                    <CapoGroup id="piano" icon="🗓️" accent="#9aa6b2" open={consoleSec === "piano"} onToggle={() => toggleSec("piano")}
-                      title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}
-                      hint={tri("👉 Qui decidi COSA e QUANTO produrre. Scrivi due righe di ordini e Sitor costruisce il piano del giorno e della settimana. Usalo ogni mattina per avviare la produzione.", "👉 Hier legst du fest, WAS und WIE VIEL produziert wird. Sitor baut den Plan.", "👉 This is where you decide WHAT and HOW MUCH to produce. Write a couple of order lines and Sitor builds the day and week plan. Use it every morning.", "👉 Aquí decides QUÉ y CUÁNTO producir. Sitor crea el plan.", "👉 Ici tu décides QUOI et COMBIEN produire. Sitor construit le plan.", "👉 اینجا تصمیم می‌گیری چه و چقدر تولید شود. سیتور برنامه را می‌سازد.")}
-                      sub={tri("Dai un punto di partenza: Sitor completa il piano del giorno e della settimana.", "Gib einen Startpunkt: Sitor vollendet den Plan.", "Give a starting point: Sitor completes the plan.", "Da un punto de partida: Sitor completa el plan.", "Donne un point de départ : Sitor complète le plan.", "یک نقطه شروع بده: سیتور برنامه را کامل می‌کند.")}>
+                    <CapoGroup id="oggi" icon="✦" accent="#a6b1bc" open={consoleSec === "oggi"} onToggle={() => toggleSec("oggi")}
+                      title={tri("Oggi · Sala Sitor", "Heute · Sitor-Saal", "Today · Sitor Hall", "Hoy · Sala Sitor", "Aujourd'hui · Salle Sitor", "امروز · تالار سیتور")}
+                      hint={tri("👉 Il tuo punto di partenza: parla con Sitor (scrivi o detta), vedi notizie e aggiornamenti del laboratorio e chiedigli qualsiasi strumento. Se non sai da dove iniziare, inizia da qui.", "👉 Dein Startpunkt: sprich mit Sitor, sieh Neuigkeiten und frag nach jedem Werkzeug.", "👉 Your starting point: talk to Sitor, see lab news and updates, and ask for any tool. Not sure where to start? Start here.", "👉 Tu punto de partida: habla con Sitor, mira novedades y pide cualquier herramienta.", "👉 Ton point de départ : parle à Sitor, vois les nouveautés et demande un outil.", "👉 نقطه شروع تو: با سیتور صحبت کن و هر ابزاری بخواه.")}
+                      sub={tri("Parla con Sitor · notizie e aggiornamenti del laboratorio in un colpo d'occhio.", "Sprich mit Sitor; Neuigkeiten auf einen Blick.", "Talk to Sitor; lab news and updates at a glance.", "Habla con Sitor; novedades de un vistazo.", "Parle à Sitor ; nouveautés en un coup d'œil.", "با سیتور صحبت کن؛ اخبار در یک نگاه.")}>
+                    <SalaSitor />
+                    <NexusConsole isCapo={true} />
+                    <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")}>
+                      <SubTabs testid="subtabs-sitor-tools" accent="#a6b1bc" tabs={[
+                        { id: "atelier", label: tri("Su misura", "Nach Maß", "Tailor-made", "A medida", "Sur mesure", "سفارشی"), content: <SitorAtelier /> },
+                        { id: "guided", label: tri("Sitor ti guida", "Sitor führt", "Sitor guides", "Sitor te guía", "Sitor te guide", "راهنمایی"), content: <SitorGuidedTools /> },
+                      ]} />
+                    </HoloPanel>
+                    </CapoGroup>
+
+                    <CapoGroup id="produzione" icon="🗓️" accent="#9aa6b2" open={consoleSec === "produzione"} onToggle={() => toggleSec("produzione")}
+                      title={tri("Produzione · Piano & Ordini", "Produktion · Plan & Aufträge", "Production · Plan & Orders", "Producción · Plan y Pedidos", "Production · Plan & Commandes", "تولید · برنامه و سفارش")}
+                      hint={tri("👉 Il cuore operativo: decidi COSA e QUANTO produrre e aggiungi gli ordini extra dell'ultimo minuto. Sitor costruisce e rigenera il piano del giorno e della settimana.", "👉 Das operative Herz: Plan + Extra-Aufträge. Sitor baut und aktualisiert den Plan.", "👉 The operating heart: decide WHAT and HOW MUCH to produce and add last-minute orders. Sitor builds and regenerates the day/week plan.", "👉 El corazón operativo: plan + pedidos extra.", "👉 Le cœur opérationnel : plan + commandes extra.", "👉 قلب عملیاتی: برنامه و سفارش‌های اضافه.")}
+                      sub={tri("Piano del giorno e della settimana + ordini last-minute e B2B, tutto in un posto.", "Tages-/Wochenplan + Extra- und B2B-Aufträge.", "Day and week plan + last-minute and B2B orders, all in one place.", "Plan del día y semana + pedidos extra y B2B.", "Plan jour/semaine + commandes extra et B2B.", "برنامه روز/هفته + سفارش‌های اضافه و B2B.")}>
                     <HoloPanel testid="panel-weekly" accent="#8a97a6" beacon="#a4afbb" icon="🗓️" defaultOpen title={tri("Piano Settimanale · Prodotti", "Wochenplan · Produkte", "Weekly Plan · Products", "Plan Semanal · Productos", "Plan Hebdomadaire · Produits", "برنامه هفتگی · محصولات")} sub={tri("Scrivi tu il piano: per ogni giorno scegli i prodotti, i pezzi e i grammi. Stampa PDF e archivio.", "Schreibe den Plan: pro Tag Produkte, Stück und Gramm. PDF und Archiv.", "Write the plan yourself: per day pick products, pieces and grams. PDF and archive.", "Escribe el plan: por día productos, piezas y gramos. PDF y archivo.", "Écris le plan : par jour produits, pièces et grammes. PDF et archive.", "برنامه را خودت بنویس: هر روز محصولات، تعداد و گرم.")}>
                       <WeeklyPlan />
                     </HoloPanel>
@@ -500,12 +516,7 @@ export default function App() {
                         { id: "timeline", label: tri("Timeline", "Timeline", "Timeline", "Timeline", "Timeline", "خط زمانی"), content: <TimelineTurno /> },
                       ]} />
                     </HoloPanel>
-                    </CapoGroup>
 
-                    <CapoGroup id="ordini" icon="⚡" accent="#a4afbb" open={consoleSec === "ordini"} onToggle={() => toggleSec("ordini")}
-                      title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")}
-                      hint={tri("👉 Apri questa sezione quando arriva un ordine NON previsto (last-minute, un bar, un evento). Aggiungilo qui e Sitor rifà il piano all'istante, senza rifare tutto a mano.", "👉 Öffne dies bei ungeplanten Aufträgen. Sitor plant sofort neu.", "👉 Open this when an UNPLANNED order arrives (last-minute, a café, an event). Add it here and Sitor re-plans instantly.", "👉 Abre esto cuando llegue un pedido imprevisto. Sitor replanifica al instante.", "👉 Ouvre ceci pour une commande imprévue. Sitor replanifie aussitôt.", "👉 برای سفارش‌های پیش‌بینی‌نشده اینجا را باز کن. سیتور فوراً برنامه را بازسازی می‌کند.")}
-                      sub={tri("Ordini last-minute e B2B: Sitor rigenera il piano all'istante.", "Last-Minute- & B2B-Aufträge.", "Last-minute and B2B orders: Sitor regenerates instantly.", "Pedidos de última hora y B2B.", "Commandes de dernière minute et B2B.", "سفارش‌های لحظه‌آخری و B2B.")}>
                     <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#a4afbb" icon="⚡" defaultOpen title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")} sub={tri("L'AI rigenera il piano all'istante.", "KI erstellt den Plan sofort neu.", "AI regenerates the plan instantly.", "La IA regenera el plan.", "L'IA régénère le plan.", "هوش مصنوعی برنامه را بازسازی می‌کند.")}>
                       <OrdiniExtra />
                     </HoloPanel>
@@ -537,16 +548,10 @@ export default function App() {
                     </HoloPanel>
                     </CapoGroup>
 
-                    <CapoGroup id="strumenti" icon="🧰" accent="#64748B" open={consoleSec === "strumenti"} onToggle={() => toggleSec("strumenti")}
-                      title={tri("Strumenti & Integrazioni", "Werkzeuge & Integrationen", "Tools & Integrations", "Herramientas & Integraciones", "Outils & Intégrations", "ابزارها و یکپارچه‌سازی‌ها")}
-                      hint={tri("👉 La cassetta degli attrezzi del laboratorio: ricette, magazzino, celle & freezer, controllo qualità, report e sicurezza. Apri lo strumento che ti serve quando ti serve — tutto alimenta i piani di Sitor.", "👉 Der Werkzeugkasten: Rezepte, Lager, Kammern, Qualität, Berichte, Sicherheit.", "👉 The lab's toolbox: recipes, warehouse, cells & freezer, quality control, reports and security. Open the tool you need — everything feeds Sitor's plans.", "👉 La caja de herramientas del taller: recetas, almacén, cámaras, calidad, informes y seguridad.", "👉 La boîte à outils : recettes, entrepôt, cellules, qualité, rapports, sécurité.", "👉 جعبه‌ابزار: دستورها، انبار، سلول‌ها، کیفیت، گزارش و امنیت.")}
-                      sub={tri("Ricette, magazzino, forni, qualità, report e sicurezza — solo ciò che alimenta i piani di Sitor.", "Rezepte, Lager, Öfen, Qualität, Berichte — nur was die Pläne speist.", "Recipes, warehouse, ovens, quality, reports and security — only what feeds Sitor's plans.", "Recetas, almacén, hornos, informes — solo lo que alimenta los planes.", "Recettes, entrepôt, fours, rapports — seulement ce qui nourrit les plans.", "دستورها، انبار، فرها، گزارش‌ها — فقط آنچه برنامه‌ها را تغذیه می‌کند.")}>
-                    <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Sitor su misura · La tua schermata", "Sitor nach Maß · Dein Bildschirm", "Sitor tailor-made · Your screen", "Sitor a medida · Tu pantalla", "Sitor sur mesure · Ton écran", "سیتور سفارشی · صفحه تو")} sub={tri("Chiedi a Sitor lo strumento che vuoi, oppure fatti guidare passo-passo per attivare silos, bilance, sensori ed email.", "Bitte Sitor um ein Werkzeug oder lass dich Schritt für Schritt führen.", "Ask Sitor for any tool, or be guided step-by-step to enable silos, scales, sensors and email.", "Pide una herramienta o déjate guiar paso a paso.", "Demande un outil ou laisse-toi guider pas à pas.", "هر ابزاری بخواه یا گام‌به‌گام راهنمایی شو.")} defaultOpen>
-                      <SubTabs testid="subtabs-sitor-tools" accent="#a6b1bc" tabs={[
-                        { id: "atelier", label: tri("Su misura", "Nach Maß", "Tailor-made", "A medida", "Sur mesure", "سفارشی"), content: <SitorAtelier /> },
-                        { id: "guided", label: tri("Sitor ti guida", "Sitor führt", "Sitor guides", "Sitor te guía", "Sitor te guide", "راهنمایی"), content: <SitorGuidedTools /> },
-                      ]} />
-                    </HoloPanel>
+                    <CapoGroup id="ricette" icon="🥖" accent="#64748B" open={consoleSec === "ricette"} onToggle={() => toggleSec("ricette")}
+                      title={tri("Ricette & Magazzino", "Rezepte & Lager", "Recipes & Warehouse", "Recetas & Almacén", "Recettes & Entrepôt", "دستورها و انبار")}
+                      hint={tri("👉 Tutto ciò che riguarda la materia prima e le formule: ricettario protetto con audit di Sitor, editor termico, magazzino e food cost. Alimenta i piani di produzione.", "👉 Rezepte, Lager & Food Cost. Speist die Pläne.", "👉 Everything about ingredients and formulas: protected recipe book with Sitor audit, thermal editor, warehouse and food cost. Feeds the plans.", "👉 Recetas, almacén y food cost.", "👉 Recettes, entrepôt et food cost.", "👉 دستورها، انبار و بهای غذا.")}
+                      sub={tri("Ricette protette, editor termico, magazzino e food cost.", "Rezepte, Thermo-Editor, Lager & Food Cost.", "Protected recipes, thermal editor, warehouse and food cost.", "Recetas, editor térmico, almacén y coste.", "Recettes, éditeur thermique, entrepôt et coût.", "دستورها، ویرایشگر حرارتی، انبار و بها.")}>
                     <HoloPanel testid="panel-thermalflow" accent="#8a97a6" beacon="#9aa6b2" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
                       <RecipeThermalFlow />
                     </HoloPanel>
@@ -560,6 +565,13 @@ export default function App() {
                     <HoloPanel testid="panel-elite" accent="#64748B" beacon="#9aa6b2" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
                       <EliteTools />
                     </HoloPanel>
+                    <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
+                    </CapoGroup>
+
+                    <CapoGroup id="celle" icon="❄️" accent="#64748B" open={consoleSec === "celle"} onToggle={() => toggleSec("celle")}
+                      title={tri("Celle & Forni", "Kammern & Öfen", "Cells & Ovens", "Cámaras & Hornos", "Cellules & Fours", "سلول‌ها و فرها")}
+                      hint={tri("👉 Tutta la catena del freddo e del caldo: celle di lievitazione, frigo, freezer, controllo qualità al forno, bilance/PLC e nuovi macchinari. Qui vive il semaforo live delle celle.", "👉 Kühl- und Ofenkette: Kammern, Gefrier, Qualität, Waagen, neue Maschinen.", "👉 The whole cold and hot chain: proofing cells, fridges, freezers, oven quality control, scales/PLC and new machines. The live cell semaphore lives here.", "👉 Cadena de frío y calor: cámaras, calidad, balanzas, máquinas.", "👉 Chaîne du froid et du chaud : cellules, qualité, balances, machines.", "👉 زنجیره سرد و گرم: سلول‌ها، کیفیت، ترازو و ماشین‌ها.")}
+                      sub={tri("Celle, freezer, forni e macchinari — con semaforo live delle temperature.", "Kammern, Gefrier, Öfen & Maschinen — mit Live-Ampel.", "Cells, freezers, ovens and machines — with live temperature semaphore.", "Cámaras, congeladores, hornos y máquinas — con semáforo.", "Cellules, congélateurs, fours et machines — avec sémaphore.", "سلول‌ها، فریزر، فرها و ماشین‌ها — با چراغ زنده.")}>
                     <HoloPanel testid="panel-ovenqc" accent="#64748B" beacon="#6e9e85" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
                       <OvenQC />
                     </HoloPanel>
@@ -572,6 +584,12 @@ export default function App() {
                     <HoloPanel testid="panel-machine-arrival" accent="#a4afbb" beacon="#8a97a6" icon="⚙️" title={tri("Nuovi Macchinari · Sitor riconosce", "Neue Maschinen · Sitor erkennt", "New Machines · Sitor recognizes", "Nuevas Máquinas · Sitor reconoce", "Nouvelles Machines · Sitor reconnaît", "ماشین‌های جدید · Sitor می‌شناسد")} sub={tri("Arriva un macchinario? Sitor lo riconosce come nuovo arrivato e lo integra in produzione — anche tipi mai visti.", "Neue Maschine? Sitor erkennt sie als Neuzugang und integriert sie.", "A machine arrives? Sitor flags it as a new arrival and integrates it — even unseen types.", "¿Llega una máquina? Sitor la reconoce e integra.", "Une machine arrive ? Sitor la reconnaît et l'intègre.", "دستگاه جدید؟ Sitor آن را می‌شناسد و ادغام می‌کند.")}>
                       <MachineArrival />
                     </HoloPanel>
+                    </CapoGroup>
+
+                    <CapoGroup id="sicurezza" icon="🛡️" accent="#64748B" open={consoleSec === "sicurezza"} onToggle={() => toggleSec("sicurezza")}
+                      title={tri("Sicurezza & Report", "Sicherheit & Berichte", "Security & Reports", "Seguridad & Informes", "Sécurité & Rapports", "امنیت و گزارش")}
+                      hint={tri("👉 Il registro del laboratorio: PIN e accessi, rapporti di fine turno, MikiScore, documenti PDF e centro emergenze. Qui controlli chi entra e cosa è successo.", "👉 PINs, Berichte, Dokumente & Notfälle.", "👉 The lab's ledger: PINs and access, end-of-shift reports, MikiScore, PDF documents and the emergency center. Control who enters and what happened.", "👉 PIN, informes, documentos y emergencias.", "👉 PIN, rapports, documents et urgences.", "👉 پین، گزارش‌ها، اسناد و اضطراری.")}
+                      sub={tri("PIN e accessi, report di turno e centro emergenze in un unico posto.", "PINs, Schichtberichte & Notfälle.", "PINs and access, shift reports and emergency center in one place.", "PIN, informes y emergencias.", "PIN, rapports et urgences.", "پین، گزارش و اضطراری.")}>
                     <HoloPanel testid="panel-docs" accent="#64748B" beacon="#6e9e85" icon="🧾" title={tri("Report & Rapporti", "Berichte & Reports", "Reports & Records", "Informes y Reportes", "Rapports & Comptes rendus", "گزارش‌ها و اسناد")} sub={tri("Tutto in uno: rapporti fine turno degli operai, MikiScore di turno e documenti PDF multilingua.", "Alles in einem: Schichtberichte, MikiScore und PDF-Dokumente.", "All in one: operator end-of-shift reports, shift MikiScore and multi-language PDF documents.", "Todo en uno: informes de turno, MikiScore y PDF.", "Tout en un : rapports de service, MikiScore et PDF.", "همه در یک‌جا: گزارش‌های شیفت، میکی‌اسکور و اسناد PDF.")}>
                       <SubTabs testid="subtabs-reports" accent="#6e9e85" tabs={[
                         { id: "floor", label: tri("Fine Turno · Produzione", "Schichtende", "End-of-Shift", "Fin de Turno", "Fin de Service", "پایان شیفت"), content: <FloorShiftReports /> },
@@ -588,15 +606,6 @@ export default function App() {
                     <HoloPanel testid="panel-emergency" accent="#b06e78" beacon="#b06e78" icon="🚨" title={tri("Centro Emergenze · Neural Load Radar", "Notfallzentrale · Neural Load Radar", "Emergency Center · Neural Load Radar", "Centro de Emergencias · Neural Load Radar", "Centre d'Urgence · Neural Load Radar", "مرکز اضطراری")} sub={tri("SOS dal reparto con annuncio vocale Sitor e guide di manutenzione istantanee.", "SOS aus der Produktion mit Sitor-Sprachansage und Sofort-Anleitungen.", "Floor SOS with Sitor voice alert and instant maintenance guides.", "SOS del taller con aviso de voz y guías instantáneas.", "SOS de la production avec annonce vocale et guides instantanés.", "SOS تولید با اعلان صوتی و راهنمای فوری.")}>
                       <EmergencyCenter />
                     </HoloPanel>
-                    <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>
-                    </CapoGroup>
-
-                    <CapoGroup id="sitor" icon="✦" accent="#a6b1bc" open={consoleSec === "sitor"} onToggle={() => toggleSec("sitor")}
-                      title={tri("Sala Sitor · Punto d'Incontro", "Sitor-Saal · Treffpunkt", "Sitor Hall · Meeting Point", "Sala Sitor · Punto de Encuentro", "Salle Sitor · Point de Rencontre", "تالار سیتور · محل ملاقات")}
-                      hint={tri("👉 Il posto dove PARLI con Sitor: scrivi o detta una domanda, allega una foto o un ordine e Sitor risponde, pianifica e avvisa. Se non sai da dove partire, inizia da qui.", "👉 Der Ort, um mit Sitor zu SPRECHEN: schreiben, diktieren, anhängen.", "👉 The place to TALK to Sitor: write or dictate a question, attach a photo or order, and Sitor answers, plans and alerts. Not sure where to start? Start here.", "👉 El lugar para HABLAR con Sitor: escribe, dicta, adjunta.", "👉 L'endroit pour PARLER à Sitor : écris, dicte, joins.", "👉 جایی که با سیتور صحبت می‌کنی: بنویس، بگو، پیوست کن.")}
-                      sub={tri("L'unico luogo dove incontri Sitor: scrivi, detta, allega, ordina — e ricevi risposte, produzione e avvisi.", "Der einzige Ort für Sitor: schreiben, diktieren, anhängen, befehlen — Antworten, Produktion und Alarme inklusive.", "The one place to meet Sitor: write, dictate, attach, command — and receive answers, production and alerts.", "El único lugar para hablar con Sitor: escribe, dicta, ordena y recibe todo.", "Le seul lieu pour rencontrer Sitor : écris, dicte, ordonne — et reçois tout.", "تنها جای ملاقات با سیتور: بنویس، بگو، دستور بده و همه‌چیز را دریافت کن.")}>
-                    <SalaSitor />
-                    <NexusConsole isCapo={true} />
                     </CapoGroup>
                     {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
                     </PlantHeartbeatProvider>
