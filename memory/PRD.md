@@ -5023,3 +5023,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Rientro rapido (public-op-fast)**: `FaceCheckIn` (volto) + campo nome (public-op-name) → `fastEnter(name)` imposta mode=floor, pin_unlocked, role, op_level e chiama onUnlock({mode:"floor"}) → entra DIRETTO in Produzione senza PIN. Voce "Bentornato, {nome}!".
 - **Backend**: nuovo endpoint pubblico `GET /api/public/faces` (solo nome+thumb, esente dal cancello Master, whitelist `/api/public/`) per riconoscere i turnisti al cancello senza cookie. `facesApi.publicList()` + fallback in `facesApi.list()`.
 - VERIFICATO end-to-end (screenshot): ospite → Operaio → pick → fast → volto Marco presente → ingresso per nome → floor-zone attiva, master-console assente (isolamento ok), Sitor saluta + tour.
+
+## v-fork7 (2026-06-13) — Verifica integrazione Login Email & Password (già presente)
+- Richiesta utente: "Add Email & password login". VERIFICATO che è GIÀ integrata e funzionante — nessuna nuova auth scritta.
+- Backend (server.py): /auth/register (SOLO SU INVITO · ghost mode; owner + primo utente esenti), /auth/login (bcrypt + anti-brute-force 5 tentativi/15min), /auth/me, /auth/logout, /auth/forgot-password (Resend), /auth/reset-password, /auth/verify-email, /auth/resend-verification. Sessioni JWT in cookie httpOnly+secure+samesite=lax. Google OAuth: /auth/google/session.
+- Frontend: authApi (lib/api.js), AuthScreen.jsx (tab Login/Registra, email/password, forgot, Google, badge invito), ResetPassword.jsx. Pulsante "Sign in" nell'header del PublicGate.
+- Test: login admin@mikilab.de → token+role admin OK; logout OK; forgot-password → ok; password errata → 401; registrazione senza invito → 403 invite_required (comportamento voluto). UI AuthScreen renderizza correttamente (screenshot).
+- APERTO: se l'utente vuole registrazione libera (togliere invite-only) o rendere "Accedi" più visibile.
