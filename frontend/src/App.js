@@ -500,6 +500,9 @@ export default function App() {
                         { id: "guided", label: tri("Sitor ti guida", "Sitor führt", "Sitor guides", "Sitor te guía", "Sitor te guide", "راهنمایی"), content: <SitorGuidedTools /> },
                       ]} />
                     </HoloPanel>
+                    <div data-testid="oggi-radio" className="flex items-center justify-center rounded-xl border border-[#3E9C93]/25 bg-[#0b0f19]/60 py-2.5">
+                      <RadioFornaio inline />
+                    </div>
                     </CapoGroup>
 
                     <CapoGroup id="produzione" icon="🗓️" accent="#9aa6b2" open={consoleSec === "produzione"} onToggle={() => toggleSec("produzione")}
@@ -669,7 +672,6 @@ export default function App() {
 
         <Toaster position="top-center" richColors />
         <MikeMixSense section={user ? "control" : "guida"} mode={activeZone === "operatori" ? "floor" : "lab"} isCapo={!!user} operator={operator} floorRole={floorRole} />
-        <RadioFornaio />
         <ShiftScheduler />
         <AutoReport />
         <AudioRouteIndicator />

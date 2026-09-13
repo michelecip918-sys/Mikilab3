@@ -5052,3 +5052,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - 3 card: **Avvisi di Sitor** (contatore non letti + ultimi 3, testo da recipe_name·action·advice), **PIN operatori** (scaduti/in scadenza → tocco porta a Sicurezza & Report), **Ultimo report di turno** (operatore, data, scarti → tocco a Sicurezza & Report).
 - Nuovo `sitorAlertsApi.list()` → GET /mike/alerts. PIN da operatorPinsApi.list(), report da floorApi.shiftReports().
 - VERIFICATO (screenshot Capo): today-feed + 3 card (today-alerts con 5 non letti, today-pins "OK", today-report) renderizzano in cima a Oggi. Compila pulito.
+
+## v-fork11 (2026-06-13) — RadioFornaio inline (niente più elementi flottanti)
+- Decisione autonoma (utente: "decidi tu, purché coerente"). La **RadioFornaio** non è più un bottone flottante: `RadioFornaio({ inline })` — in modalità `inline` il trigger diventa una barra normale (flex, non `fixed`). Rimosso il mount globale flottante da App.js e montata `<RadioFornaio inline />` dentro il gruppo **Oggi** (oggi-radio), dopo "Sitor su misura".
+- Così NON resta alcun elemento flottante: la bolla Sitor è già rimossa, ora anche la radio vive in una sezione. Il pannello radio (stazioni IT/DE/ES/FR/FA, ricerca, preferiti, aggiungi URL, ambience, suoni app) resta un overlay a comparsa — coerente.
+- **Registrazione**: deciso di mantenerla **solo su invito** (coerente col tool privato del Capo). Nessuna modifica.
+- **Primo avvio operaio + volto**: il flusso esiste già (alla prima entrata col PIN la Produzione mostra la NameGate con FaceCheckIn → registra volto). Dalla 2ª volta entra con volto/nome senza PIN. Già coerente, nessuna modifica.
+- VERIFICATO (screenshot): oggi-radio inline True, radio-fornaio-btn presente e NON fixed, sitor fab assente, radio-panel si apre con tutte le stazioni. Console con 6 gruppi pulita. Compila pulito.

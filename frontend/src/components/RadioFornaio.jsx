@@ -72,7 +72,7 @@ const STATIONS = {
   ],
 };
 
-export default function RadioFornaio() {
+export default function RadioFornaio({ inline = false }) {
   const { t, lang, tri } = useLang();
   const { on: ambientOn, toggle: toggleAmbient, volume: ambientVol, setVolume: setAmbientVol, mode: ambientMode, setMode: setAmbientMode } = useAmbient();
   const { sfxEnabled, toggleSfx, sfxVolume, setSfxVol } = useSoundFX();
@@ -439,7 +439,10 @@ export default function RadioFornaio() {
         </div>
       )}
 
-      <div className={`fixed z-40 left-3 bottom-24 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`} style={{ marginBottom: "env(safe-area-inset-bottom)" }}>
+      <div className={inline
+        ? "flex items-center gap-2.5"
+        : `fixed z-40 left-3 bottom-24 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`}
+        style={inline ? undefined : { marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="radio-fornaio-btn"
           onClick={() => setOpen((o) => !o)}
