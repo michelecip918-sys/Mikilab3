@@ -5105,3 +5105,19 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - `deus/ask` aveva già lo snapshot (v-fork13). Le sessioni LLM restano separate per funzione (non richiesto unificarle).
 - Nessuna riscrittura di logica LLM: solo concatenazione del contesto al system message. Helper robusto (sezioni in try/except).
 - VERIFICATO (curl, auth gate 198505 + login admin): `deus/master-plan` → ok:true, reply che cita i membri reali del team (Youssef/Sara/Marco) → snapshot attivo. `floor/sitor/guide` → ok:true, guida a 8 passi. Sintassi backend OK, servizio riavviato pulito.
+
+## v-fork17 (2026-06-13) — Refactoring: split del monolite backend/server.py in moduli
+- Direttiva: dividere server.py (16.155 righe / 828KB) in moduli per area funzionale, un modulo alla volta, testando dopo ogni spostamento. Refactoring PURO: nessun cambio di comportamento.
+- Pattern adottato (sicuro, zero import circolari):
+  - `server.py` resta il CORE: imports, `db`, `app`, `api_router`, chiave LLM, modelli, e TUTTI gli helper condivisi (`_deus_llm`, `_bakery_snapshot`, `require_admin`, il "cervello" Sitor deus 733–1013, ecc.).
+  - Ogni modulo inizia con uno shim: `import server as _core; globals().update({k:v for k,v in vars(_core).items() if not k.startswith('__')})` → eredita l'intero namespace del core e registra le rotte sullo STESSO `api_router`.
+  - In fondo a server.py (prima di `app.include_router`): `import <modulo>` + ri-esportazione generalizzata (reinietta nel core i simboli NUOVI definiti dal modulo, così le rotte del core che li richiamano per nome continuano a funzionare).
+- 5 moduli estratti e testati singolarmente (backend riavviato + curl 200 su ogni modulo + richiami cross-modulo):
+  1. `warehouse.py` (190 righe, 8 rotte) — silos, celle/proofing, flotta AGV, fornitore. Verificato core `mike/heartbeat` → chiama `mike_agv` spostato.
+  2. `community.py` (1023 righe, 43 rotte) — bake-along, amici, DM, notifiche, wisdom, inviti operatori. Verificato richiami cross `_notify`/`_touch_streak` e loop `_bakealong_notify_loop`.
+  3. `operations.py` (1011 righe, 53 rotte) — reparti dinamici, consegne, negozi, ordini, turni, ceste, HACCP, magazzino, sessioni impasto, chiusura giornata+PDF, sensori IoT.
+  4. `recipes.py` (1072 righe, 46 rotte) — generatore ricette custom, CRUD ricette, upload/file, oven-profiles.
+  5. `deck.py` (1233 righe, 46 rotte) — Deck Reattivo (stato live 4 reparti Multiverso 3D, check-in turni, rest-mode, allarmi).
+- server.py: 16.155 → 11.637 righe (~28% spostato). Rimane in core il blocco Sitor-core + REPARTI/MikeMix/ricettario-vivente (non estratto: banner senza terminatore `# ====` pulito, mescola più concetti → più rischioso).
+- REGRESSIONE (comportamento invariato PROVATO): conteggio decoratori `@api_router` = 487 identico all'originale (291 server + 8+43+53+46+46 moduli); websocket = 2 identico. Sweep di 15 endpoint su core+5 moduli tutti 200. Frontend carica end-to-end (public-gate ok). Backup incrementali in /tmp/server.bak*.py.
+- NEXT (backlog refactor, stesso pattern): estrarre `auth.py` (PIN/login/gate), `sitor_ai.py` (solo endpoint deus, lasciando gli helper condivisi nel core), Enterprise Grid, e la zona REPARTI/MikeMix.
