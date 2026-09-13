@@ -921,6 +921,7 @@ async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admi
         "\"impossible_solved\": [\"max 3 frasi brevi: quali colli di bottiglia/impossibilità hai sciolto\"], "
         "\"risk\": \"1 frase sul rischio residuo da sorvegliare\"}. Nessun testo fuori dal JSON."
     )
+    sysmsg += await _bakery_snapshot(admin)
     user_text = f"ORDINI:\n{orders}\n\nVINCOLI/RISORSE:\n{constraints}"
     # I MACCHINARI scelti/aggiunti dal Capo entrano nei calcoli del piano di Sitor.
     try:
@@ -1091,6 +1092,7 @@ async def floor_sitor_guide(body: FloorGuideReq):
     if body.task: parts.append(f"COMPITO ASSEGNATO: {body.task}")
     if body.recipe: parts.append(f"RICETTA/PRODOTTO: {body.recipe}")
     if body.question: parts.append(f"DOMANDA DELL'OPERAIO: {body.question}")
+    sysmsg += await _bakery_snapshot({"email": "master"})
     raw = await _deus_llm(sysmsg, "\n".join(parts), session=f"floor-guide-{op.lower()}", max_tokens=1900)
     data = _extract_json(raw)
     steps = [str(s) for s in (data.get("steps") or []) if str(s).strip()][:12]
@@ -1138,6 +1140,7 @@ async def floor_change_request(body: FloorChangeReq):
             "\"capo_summary\": \"1 frase neutra e chiara per il Capo che riassume la proposta\", "
             "\"suggested_action\": \"cosa suggerisci di fare\"}. Nessun testo fuori dal JSON."
         )
+        sysmsg += await _bakery_snapshot({"email": "master"})
         raw = await _deus_llm(sysmsg, f"OPERAIO: {op} ({level})\nREPARTO: {body.dept}\nCOMPITO: {body.task}\nPROPOSTA: {proposal}",
                               session=f"floor-change-{op.lower()}", max_tokens=600)
         data = _extract_json(raw)
@@ -1232,6 +1235,7 @@ async def capo_atelier_create(body: AtelierCreateReq, admin: dict = Depends(requ
             "{\"type\":\"...\",\"title\":\"titolo breve\",\"icon\":\"...\",\"config\":{...},"
             "\"spoken\":\"1 frase calda che dici al Capo mentre lo aggiungi\"}. Nessun testo fuori dal JSON."
         )
+        sysmsg += await _bakery_snapshot(admin)
         raw = await _deus_llm(sysmsg, f"RICHIESTA DEL CAPO: {req}", session=f"atelier-{_capo_key(admin)}", max_tokens=700)
         data = _extract_json(raw)
         if data.get("type") in {"note", "checklist", "counter", "metric", "reminder", "chart"}:
@@ -1391,6 +1395,7 @@ async def mike_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(re
         "\"welcome\": \"1-2 frasi calde con cui Sitor dà il benvenuto al nuovo arrivato in produzione\"}}. "
         "Nessun testo fuori dal JSON."
     )
+    sysmsg += await _bakery_snapshot(admin)
     user_text = f"MACCHINARIO: {name}\nNOTE: {(body.notes or '').strip() or '(nessuna)'}"
     raw = await _deus_llm(sysmsg, user_text, session=f"machine-{_uuid.uuid4().hex[:8]}", max_tokens=900)
     data = {"category": "Altro", "role": "", "safety": [], "maintenance": [], "integration": "", "welcome": ""}
@@ -1603,6 +1608,7 @@ async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual", force: b
     text = ""
     if EMERGENT_LLM_KEY:
         try:
+            sysmsg += await _bakery_snapshot({"email": "master"})
             text = await _deus_llm(sysmsg, "DATI REALI DEL TURNO (JSON):\n" + _json.dumps(snap, ensure_ascii=False),
                                    session=f"shift-draft-{today}-{trigger}-{uuid.uuid4().hex[:6]}", max_tokens=1600)
         except Exception:
@@ -2206,6 +2212,7 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
         "\"reply\": \"1-2 frasi parlate, calde e sicure, con cui confermi al Capo cosa hai messo in produzione\"}. "
         "Genera SEMPRE almeno 1 production_task. Nessun testo fuori dal JSON."
     )
+    sysmsg += await _bakery_snapshot(admin)
     raw = await _deus_llm(sysmsg, content, session=f"deus-capture-{email}", max_tokens=1400)
     data = {"sector": "note", "summary": "", "generated": [], "production_tasks": [], "reply": ""}
     cleaned = (raw or "").strip()
@@ -11879,6 +11886,7 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
                 "\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve e naturale per il Capo\"}. "
                 "Massimo 8 lotti, 'rationale' brevissima (max 8 parole). Nessun testo fuori dal JSON."
             )
+            sysmsg += await _bakery_snapshot(admin)
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplan-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2600)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera il piano ottimale.")):
@@ -11955,6 +11963,7 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
                 "{\"options\":[{\"label\":\"Massima velocità\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"baguette|pane|pizzeria|pasticceria\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve\"}]}. "
                 "Esattamente 3 opzioni, massimo 5 lotti per opzione. Nessun testo fuori dal JSON."
             )
+            sysmsg += await _bakery_snapshot(admin)
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanopt-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=4000)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera 3 opzioni di piano.")):

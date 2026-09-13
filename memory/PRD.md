@@ -5096,3 +5096,12 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Gli eventi `mikilab:open-panel` / `mikilab:open-group` ora fanno SCROLL al pannello/sezione invece di aprire un'accordion (mappa vecchi id gruppo → nuova sezione: oggi→sitor, produzione→piano, squadra→team, ricette→ricettario, celle→strumenti, sicurezza→sicurezza).
 - Rimosso import `CapoGroup` da App.js. Componenti fuori-console (AutoReport, SecurityGuardian, SitorTour) NON toccati.
 - VERIFICATO: compila pulito; testing_agent iteration_234 → frontend 100%, 0 bug, nessun overflow a 1920/390, 0 errori runtime, 7 sezioni nell'ordine esatto, nav+FAB scrollano, regressione negativa sui vecchi accordion/schede OK. (Nota pre-esistente: 401 di fetch in background e warning three.js, non legati a questa modifica.)
+
+## v-fork16 (2026-06-13) — Contesto reale del panificio in TUTTI gli endpoint di Sitor
+- Direttiva: il riepilogo di contesto del Blocco 2 (ricette, piano, team, scorte) non deve stare solo in `deus/ask`, ma nel system message di TUTTI gli endpoint principali che chiamano Sitor, così Sitor "sa" sempre la stessa situazione reale in ogni punto dell'app.
+- Riutilizzato l'helper esistente `_bakery_snapshot(admin)` (server.py) e aggiunto `sysmsg += await _bakery_snapshot(...)` a 9 endpoint:
+  - Capo: `POST /mike/deus/master-plan`, `POST /mike/autoplan`, `POST /mike/autoplan/options`, `POST /mike/machines/arrival`, `POST /mike/deus/capture`, `POST /capo/atelier/create` (tutti con `admin` reale).
+  - Operatore/background (senza `admin` in firma → usato snapshot sintetico `{"email":"master"}`): `POST /floor/sitor/guide`, `POST /floor/sitor/change-request`, `_sitor_shift_draft` (report fine turno).
+- `deus/ask` aveva già lo snapshot (v-fork13). Le sessioni LLM restano separate per funzione (non richiesto unificarle).
+- Nessuna riscrittura di logica LLM: solo concatenazione del contesto al system message. Helper robusto (sezioni in try/except).
+- VERIFICATO (curl, auth gate 198505 + login admin): `deus/master-plan` → ok:true, reply che cita i membri reali del team (Youssef/Sara/Marco) → snapshot attivo. `floor/sitor/guide` → ok:true, guida a 8 passi. Sintassi backend OK, servizio riavviato pulito.
