@@ -6,12 +6,13 @@ import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 import AdminGate from "@/components/AdminGate";
+import FaceCheckIn from "@/components/FaceCheckIn";
 import DowntimeTraining from "@/components/DowntimeTraining";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
-import { api } from "@/lib/api";
+import { api, facesApi } from "@/lib/api";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { toast } from "sonner";
 
@@ -25,6 +26,11 @@ export default function PublicGate({ onUnlock }) {
   const [showPin, setShowPin] = useState(false);
   const [gateRole, setGateRole] = useState(null);
   const [guest, setGuest] = useState(false);
+  // Rientro rapido operaio: col volto o col nome, senza PIN (dalla 2a volta in poi).
+  const [opFlow, setOpFlow] = useState(null); // null | "pick" | "fast"
+  const [opName, setOpName] = useState("");
+  const [faces, setFaces] = useState([]);
+  useEffect(() => { facesApi.publicList().then((d) => setFaces(Array.isArray(d.faces) ? d.faces : [])).catch(() => {}); }, []);
   const [world, setWorld] = useState("panificio");
   const [reqEmail, setReqEmail] = useState("");
   const [reqNote, setReqNote] = useState("");
@@ -70,11 +76,40 @@ export default function PublicGate({ onUnlock }) {
 
   const enterAs = (role) => {
     setGateRole(role);
-    setShowPin(true);
-    if (role === "operator" && !isTTSMuted()) {
-      const m = tri("Perfetto, ti porto in produzione. Inserisci il tuo PIN.", "Perfekt, ab in die Produktion. Gib deinen PIN ein.", "Great, taking you to production. Enter your PIN.", "Perfecto, te llevo a producción. Introduce tu PIN.", "Parfait, direction la production. Saisis ton PIN.", "عالی، تو را به تولید می‌برم. پین را وارد کن.");
+    if (role === "operator") {
+      setOpFlow("pick");
+      if (!isTTSMuted()) {
+        const m = tri(
+          "Perfetto, ti porto in produzione. Sei già stato qui? Tocca il tuo volto o scrivi il tuo nome. Altrimenti entra con il PIN.",
+          "Perfekt, ab in die Produktion. Warst du schon hier? Tippe dein Gesicht oder deinen Namen. Sonst mit PIN.",
+          "Great, taking you to production. Been here before? Tap your face or type your name. Otherwise enter your PIN.",
+          "Perfecto, te llevo a producción. ¿Ya estuviste aquí? Toca tu rostro o escribe tu nombre. Si no, usa el PIN.",
+          "Parfait, direction la production. Déjà venu ? Touche ton visage ou écris ton nom. Sinon, entre le PIN.",
+          "عالی، تو را به تولید می‌برم. قبلاً اینجا بوده‌ای؟ چهره یا نامت را بزن. وگرنه با پین وارد شو.");
+        try { playTTS(m, { lang, voice: "mikemix" }); } catch { /* */ }
+      }
+    } else {
+      setShowPin(true);
+    }
+  };
+
+  // Entrata rapida in produzione senza PIN: per operai già registrati (volto o nome).
+  const fastEnter = (name) => {
+    const nm = String(name || "").trim(); if (!nm) return;
+    let lvl = "novizio";
+    try { lvl = localStorage.getItem("mikilab_op_level") || "novizio"; } catch { /* */ }
+    try {
+      localStorage.setItem("mikilab_role", nm);
+      localStorage.setItem("mikilab_mode", "floor");
+      localStorage.setItem("mikilab_pin_enabled", "1");
+      localStorage.setItem("mikilab_pin_unlocked", "1");
+      localStorage.setItem("mikilab_op_level", lvl);
+    } catch { /* */ }
+    if (!isTTSMuted()) {
+      const m = tri(`Bentornato, ${nm}! Ecco il tuo lavoro di oggi.`, `Willkommen zurück, ${nm}!`, `Welcome back, ${nm}!`, `¡Bienvenido de nuevo, ${nm}!`, `Rebonjour, ${nm} !`, `${nm}! خوش برگشتی`);
       try { playTTS(m, { lang, voice: "mikemix" }); } catch { /* */ }
     }
+    onUnlock({ mode: "floor", name: nm, level: lvl });
   };
 
   const shareUrl = "https://mikilab.de/";
@@ -272,6 +307,7 @@ export default function PublicGate({ onUnlock }) {
             "تو مهمان هستی. بخش‌ها و آواتارها را آزادانه ببین. هر تعامل به پین نیاز دارد.")}
         </p>
 
+        {opFlow === null && (
         <div data-testid="public-role-choice" className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3 w-full max-w-md">
           <button data-testid="public-enter-capo" onClick={() => enterAs("capo")}
             className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-base text-[#030712] active:scale-95 transition-all"
@@ -284,9 +320,51 @@ export default function PublicGate({ onUnlock }) {
             <GraduationCap className="w-5 h-5" /> {tri("Sono un Operaio", "Ich bin Mitarbeiter", "I'm an Operator", "Soy Operario", "Je suis Opérateur", "من اپراتورم")}
           </button>
         </div>
+        )}
+
+        {opFlow === "pick" && (
+          <div data-testid="public-op-pick" className="mt-7 w-full max-w-md rounded-2xl bg-[#0b0f19]/85 border border-[#D95200]/40 p-4 backdrop-blur-md text-left">
+            <p className="text-sm font-black text-white mb-3 text-center">{tri("Operaio · come entri?", "Mitarbeiter · wie rein?", "Operator · how do you enter?", "Operario · ¿cómo entras?", "Opérateur · comment entres-tu ?", "اپراتور · چطور وارد می‌شوی؟")}</p>
+            {faces.length > 0 ? (
+              <button data-testid="public-op-fast-btn" onClick={() => setOpFlow("fast")}
+                className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl font-black text-sm text-[#030712] active:scale-95 transition-all mb-2"
+                style={{ background: "linear-gradient(90deg,#D95200,#9aa6b2)" }}>
+                <GraduationCap className="w-5 h-5" /> {tri("Ho già lavorato qui · Volto o Nome", "War schon hier · Gesicht/Name", "I've worked here · Face or Name", "Ya estuve aquí · Rostro o Nombre", "Déjà venu · Visage ou Nom", "قبلاً اینجا بودم · چهره یا نام")}
+              </button>
+            ) : null}
+            <button data-testid="public-op-pin-btn" onClick={() => { setShowPin(true); setOpFlow(null); }}
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-2xl font-black text-sm border-2 active:scale-95 transition-all"
+              style={{ background: "rgba(217,82,0,0.10)", color: "#FF8533", borderColor: "#D95200" }}>
+              <ShieldAlert className="w-5 h-5" /> {faces.length > 0 ? tri("Prima volta · entro col PIN", "Erstes Mal · mit PIN rein", "First time · enter with PIN", "Primera vez · entro con PIN", "Première fois · j'entre avec le PIN", "اولین بار · با پین") : tri("Entro col PIN", "Mit PIN rein", "Enter with PIN", "Entro con PIN", "J'entre avec le PIN", "با پین وارد می‌شوم")}
+            </button>
+            <button data-testid="public-op-back" onClick={() => setOpFlow(null)} className="mt-2 w-full text-[11px] text-[#64748B] font-bold py-1">
+              {tri("‹ Indietro", "‹ Zurück", "‹ Back", "‹ Atrás", "‹ Retour", "‹ برگشت")}
+            </button>
+          </div>
+        )}
+
+        {opFlow === "fast" && (
+          <div data-testid="public-op-fast" className="mt-7 w-full max-w-md text-left">
+            <FaceCheckIn tri={tri} onRecognized={fastEnter} />
+            <div className="rounded-2xl border border-[#1e293b] bg-[#0b0f19] p-4">
+              <p className="text-[12px] font-black text-white mb-2">{tri("Oppure scrivi il tuo nome", "Oder schreib deinen Namen", "Or type your name", "O escribe tu nombre", "Ou écris ton nom", "یا نامت را بنویس")}</p>
+              <div className="flex gap-2">
+                <input data-testid="public-op-name" value={opName} onChange={(e) => setOpName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && opName.trim()) fastEnter(opName); }}
+                  placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")}
+                  className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2.5 focus:border-[#D95200] outline-none" />
+                <button data-testid="public-op-name-go" onClick={() => opName.trim() && fastEnter(opName)} disabled={!opName.trim()}
+                  className="shrink-0 px-4 py-2.5 rounded-xl bg-[#D95200] text-[#04070d] font-black text-sm active:scale-95 disabled:opacity-40">{tri("Entra", "Los", "Go", "Entrar", "Entrer", "ورود")}</button>
+              </div>
+            </div>
+            <button data-testid="public-op-fast-back" onClick={() => setOpFlow("pick")} className="mt-2 w-full text-[11px] text-[#64748B] font-bold py-1">{tri("‹ Indietro", "‹ Zurück", "‹ Back", "‹ Atrás", "‹ Retour", "‹ برگشت")}</button>
+          </div>
+        )}
+
+        {opFlow === null && (
         <p data-testid="public-role-hint" className="mt-3 text-[11px] text-[#64748B] max-w-md">
-          {tri("Il Capo entra con il PIN a 6 cifre. L'operaio entra con il suo PIN a 4 cifre e va dritto in produzione.", "Chef: 6-stelliger PIN. Mitarbeiter: 4-stelliger PIN → Produktion.", "The Capo enters with the 6-digit PIN. The operator enters with their 4-digit PIN and goes straight to production.", "El Capo entra con PIN de 6 dígitos. El operario con su PIN de 4 dígitos va a producción.", "Le Capo entre avec le PIN à 6 chiffres. L'opérateur avec son PIN à 4 chiffres va en production.", "کاپو با پین ۶ رقمی، اپراتور با پین ۴ رقمی وارد تولید می‌شود.")}
+          {tri("Il Capo entra con il PIN a 6 cifre. L'operaio rientra col volto o il nome; la prima volta con il PIN.", "Chef: 6-stelliger PIN. Mitarbeiter: Gesicht/Name; beim ersten Mal mit PIN.", "The Capo enters with the 6-digit PIN. The operator re-enters with face or name; the first time with the PIN.", "El Capo entra con PIN de 6 dígitos. El operario reingresa con rostro o nombre; la primera vez con PIN.", "Le Capo entre avec le PIN à 6 chiffres. L'opérateur rentre par visage ou nom ; la première fois avec le PIN.", "کاپو با پین ۶ رقمی، اپراتور با چهره/نام؛ اولین بار با پین.")}
         </p>
+        )}
 
         <div className="mt-4 inline-flex items-center gap-1.5 text-[11px] text-[#64748B]">
           <Sparkles className="w-3.5 h-3.5 text-[#a6b1bc]" />

@@ -668,7 +668,8 @@ export const pastryApi = {
 
 // Volti squadra — registrati dal Capo, condivisi su tutti i tablet.
 export const facesApi = {
-  list: () => api.get(`/faces`).then((r) => r.data),
+  list: () => api.get(`/faces`).then((r) => r.data).catch(() => api.get(`/public/faces`).then((r) => r.data)),
+  publicList: () => api.get(`/public/faces`).then((r) => r.data).catch(() => ({ faces: [] })),
   save: (payload) => api.post(`/faces`, payload).then((r) => r.data),
   remove: (name) => api.delete(`/faces/${encodeURIComponent(name)}`).then((r) => r.data),
 };

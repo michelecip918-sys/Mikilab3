@@ -5017,3 +5017,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - VERIFICATO: master-console renderizza, 6 capo-group-toggle presenti (oggi, produzione, squadra, ricette, celle, sicurezza), nessun crash. Compila pulito.
 - Nota: ordine attuale = oggi, produzione, squadra, ricette, celle, sicurezza (squadra è 3ª invece di 5ª — deviazione minore, funzioni tutte distinte).
 - BACKLOG rimanente: rientro operaio con volto/nome dalla 2ª volta (FaceCheckIn); spostare fisicamente gli altri strumenti legacy dal fluttuante alle sezioni (Inventario→Magazzino ecc.); eventuale riordino di Squadra in 5ª posizione.
+
+## v-fork6 (2026-06-13) — Rientro operaio con Volto/Nome (senza PIN dalla 2a volta)
+- **PublicGate**: tap su "Sono un Operaio" apre un pannello (public-op-pick) con voce guida ("Sei già stato qui? Tocca il tuo volto o scrivi il tuo nome. Altrimenti entra col PIN."). Se ci sono volti registrati mostra "Ho già lavorato qui · Volto o Nome" (public-op-fast-btn) + "Prima volta · entro col PIN" (public-op-pin-btn).
+- **Rientro rapido (public-op-fast)**: `FaceCheckIn` (volto) + campo nome (public-op-name) → `fastEnter(name)` imposta mode=floor, pin_unlocked, role, op_level e chiama onUnlock({mode:"floor"}) → entra DIRETTO in Produzione senza PIN. Voce "Bentornato, {nome}!".
+- **Backend**: nuovo endpoint pubblico `GET /api/public/faces` (solo nome+thumb, esente dal cancello Master, whitelist `/api/public/`) per riconoscere i turnisti al cancello senza cookie. `facesApi.publicList()` + fallback in `facesApi.list()`.
+- VERIFICATO end-to-end (screenshot): ospite → Operaio → pick → fast → volto Marco presente → ingresso per nome → floor-zone attiva, master-console assente (isolamento ok), Sitor saluta + tour.

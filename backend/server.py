@@ -1730,6 +1730,14 @@ async def faces_list():
     return {"faces": docs}
 
 
+# Riconoscimento pubblico per il rientro operaio (volto/nome) al cancello, senza cookie Master.
+# Espone solo nome + miniatura (nessun dato sensibile) — serve al check-in dei turnisti su tablet condivisi.
+@api_router.get("/public/faces")
+async def faces_public():
+    docs = await db.team_faces.find({}, {"_id": 0, "name": 1, "thumb": 1}).sort("name", 1).to_list(300)
+    return {"faces": docs}
+
+
 @api_router.post("/faces")
 async def faces_save(body: TeamFace, admin: dict = Depends(require_admin)):
     nm = (body.name or "").strip()
