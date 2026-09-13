@@ -637,6 +637,8 @@ export const deusApi = {
   bond: (lang) => api.get(`/mike/deus/bond`, { params: { lang } }).then((r) => r.data),
   masterPlan: (payload) => api.post(`/mike/deus/master-plan`, payload).then((r) => r.data),
   ask: (payload) => api.post(`/mike/deus/ask`, payload).then((r) => r.data),
+  memoryReset: () => api.post(`/mike/deus/memory/reset`).then((r) => r.data),
+  recap: (lang) => api.get(`/mike/deus/recap`, { params: { lang } }).then((r) => r.data),
   broadcast: (payload) => api.post(`/mike/deus/broadcast`, payload).then((r) => r.data),
   capoPlan: () => api.get(`/floor/capo-plan`).then((r) => r.data),
   machines: () => api.get(`/mike/machines`).then((r) => r.data),

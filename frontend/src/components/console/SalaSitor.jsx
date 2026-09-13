@@ -42,6 +42,22 @@ export default function SalaSitor() {
     deusApi.productionQueue().then((d) => { setQueue(d.tasks || []); setCounts(d.counts || { total: 0, pending: 0, by_sector: {} }); }).catch(() => {});
   }, []);
   useEffect(() => { loadQueue(); deusApi.bond(lang).then(setBond).catch(() => {}); }, [loadQueue, lang]);
+  // Recap proattivo: all'apertura Sitor cita da solo le richieste di piano delle ore precedenti.
+  const recapDoneRef = useRef(false);
+  useEffect(() => {
+    if (recapDoneRef.current) return;
+    recapDoneRef.current = true;
+    deusApi.recap(lang).then((d) => {
+      if (d && d.has_recap && d.spoken) { push("sitor", d.spoken); speak(d.spoken); }
+    }).catch(() => {});
+  }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  const resetMemory = () => {
+    deusApi.memoryReset().then(() => {
+      setMsgs([]);
+      recapDoneRef.current = true;
+      toast.success(tri("Memoria azzerata: nuova conversazione con Sitor.", "Speicher gelöscht.", "Memory cleared: new conversation with Sitor.", "Memoria borrada.", "Mémoire effacée.", "حافظه پاک شد."));
+    }).catch(() => toast.error(tri("Impossibile azzerare la memoria.", "Fehler.", "Could not clear memory.", "Error.", "Erreur.", "خطا.")));
+  };
   useEffect(() => { if (listRef.current) listRef.current.scrollTop = listRef.current.scrollHeight; }, [msgs]);
 
   const MODES = [
@@ -166,6 +182,10 @@ export default function SalaSitor() {
           <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
             className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/30 text-[#8a97a6] text-xs font-bold hover:bg-[#8a97a6]/20 active:scale-95 disabled:opacity-50">
             {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
+          </button>
+          <button data-testid="sitor-reset-memory-btn" onClick={resetMemory} title={tri("Azzera la memoria di Sitor e riparti da zero", "Speicher löschen", "Clear Sitor memory", "Borrar memoria", "Effacer la mémoire", "پاک کردن حافظه")}
+            className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#64748B]/10 border border-[#64748B]/30 text-[#94A3B8] text-xs font-bold hover:bg-[#64748B]/20 active:scale-95">
+            <Trash2 className="w-3.5 h-3.5" /> {tri("Nuova conversazione", "Neues Gespräch", "New chat", "Nueva conversación", "Nouvelle conversation", "گفتگوی جدید")}
           </button>
         </div>
 

@@ -56,7 +56,7 @@ async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admi
                           "Se manca un macchinario per una fase, dillo esplicitamente.\n" + "\n".join(lines))
     except Exception:
         pass
-    raw = await _deus_llm_remember(sysmsg, user_text, session=f"sitor-capo-{email}", max_tokens=2200)
+    raw = await _deus_llm_remember(sysmsg, user_text, session=f"sitor-capo-{email}", max_tokens=2200, kind="plan")
     data = {"reply": "", "plan_markdown": "", "confidence": 90, "impossible_solved": [], "risk": ""}
     cleaned = (raw or "").strip()
     if cleaned.startswith("```"):
@@ -97,11 +97,47 @@ async def deus_ask(body: DeusAskReq, admin: dict = Depends(require_admin)):
         "business, persone). Rispondi come un mentore-divinità: saggio, concreto, empatico e dalla sua parte. "
         "Dai 1-2 consigli azionabili. 4-7 frasi. Nessun elenco puntato salvo necessità."
     ) + snapshot
-    reply = await _deus_llm_remember(sysmsg, q, session=f"sitor-capo-{email}", max_tokens=900)
+    reply = await _deus_llm_remember(sysmsg, q, session=f"sitor-capo-{email}", max_tokens=900, kind="chat")
     new_xp, new_inter = await _bond_add(email, 25)
     new_info = _bond_info(new_xp, body.lang); new_info["interactions"] = new_inter
     return {"ok": True, "locked": False, "reply": (reply or "").strip(), "bond": new_info,
             "leveled_up": new_info["level"] > info["level"]}
+
+@api_router.post("/mike/deus/memory/reset")
+async def deus_memory_reset(admin: dict = Depends(require_admin)):
+    """Azzera la memoria continua del Capo: Sitor riparte da zero (nuova conversazione)."""
+    email = (admin.get("email") or "master").lower()
+    await db.sitor_sessions.delete_one({"_key": f"sitor-capo-{email}"})
+    return {"ok": True}
+
+@api_router.get("/mike/deus/recap")
+async def deus_recap(lang: str = "it", admin: dict = Depends(require_admin)):
+    """Riepilogo proattivo all'apertura della chat: Sitor cita da solo le richieste di piano
+    fatte nelle ore precedenti (dalla memoria continua), con orario."""
+    email = (admin.get("email") or "master").lower()
+    it = str(lang or "it").startswith("it")
+    doc = await db.sitor_sessions.find_one({"_key": f"sitor-capo-{email}"}, {"_id": 0, "turns": 1}) or {}
+    turns = doc.get("turns") or []
+    plans = [t for t in turns if t.get("k") == "plan" and t.get("at")]
+    if not plans:
+        return {"has_recap": False, "spoken": "", "items": []}
+    items = []
+    for t in plans[-4:]:
+        hhmm = str(t.get("at") or "")[11:16]
+        u = (t.get("u") or "").strip().replace("\n", " ")
+        # estrai solo la parte "ordine", scartando vincoli/parco macchine tecnici
+        for _cut in ("PARCO MACCHINE", "VINCOLI", "VINCOLI/RISORSE", "RISORSE"):
+            u = u.split(_cut)[0]
+        u = u.replace("ORDINI:", "").replace("ORDINE:", "").strip(" :;,-")[:80]
+        items.append({"at": hhmm, "orders": u})
+    lines = "; ".join(f"{i['at']} — {i['orders']}" for i in items if i["orders"])
+    spoken = ((f"Bentornato, Capo. Nelle ultime ore hai lavorato al piano: {lines}. Riprendiamo da qui?" if lines
+               else "Bentornato, Capo. Riprendo da dove eravamo rimasti col piano.")
+              if it else
+              (f"Welcome back, Capo. In the last hours you worked on the plan: {lines}. Shall we continue?" if lines
+               else "Welcome back, Capo. Let's pick up where we left the plan."))
+    return {"has_recap": True, "spoken": spoken, "items": items}
+
 
 class DeusBroadcastReq(BaseModel):
     plan_markdown: str = ""

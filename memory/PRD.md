@@ -5137,3 +5137,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **(d) Cache snapshot 10s**: `_bakery_snapshot` ora ha cache TTL 10s per uid (`_SNAPSHOT_CACHE`), evita ri-letture DB su messaggi ravvicinati. Comportamento invariato (stesso contenuto), più veloce.
 - Altre sessioni Sitor (operatori floor-guide/change, autoplan, capture, atelier) restano stateless/com'erano (non richiesta memoria lì).
 - Backend sintassi OK, riavviato pulito, endpoint verificati 200.
+
+## v-fork20 (2026-06-13) — Sitor: Memoria operai + Reset memoria + Recap proattivo del piano
+- Esteso `_deus_llm_remember` con campi `k` (kind: chat/plan/floor) e `at` (orario) per ogni turno salvato.
+- **(1) Memoria operai (floor)**: `POST /floor/sitor/guide` ora usa `_deus_llm_remember` con sessione per-operaio-per-giorno `sitor-floor-{op}-{YYYY-MM-DD}` (kind=floor): durante il turno Sitor ricorda dove eravate rimasti. TEST 2 turni: T2 ricorda "impastando 10 chili per le baguette" → FLOOR_MEMORY_OK.
+- **(2) Reset memoria**: nuovo `POST /mike/deus/memory/reset` (cancella `sitor-capo-{email}` da `sitor_sessions`). Frontend: pulsante "Nuova conversazione" (`sitor-reset-memory-btn`) in Sala Sitor accanto a "Report Turno" → svuota chat + azzera memoria con toast.
+- **(3) Recap proattivo del piano**: nuovo `GET /mike/deus/recap` che legge i turni kind=plan della memoria del Capo e produce una riga proattiva con orario. Frontend: all'apertura di Sala Sitor, se c'è storia piano, Sitor apre da solo con il recap (messaggio + TTS). TEST: recap cita l'ordine ("...20:53 — 45 baguette..."), vuoto dopo reset. Estrazione ordine ripulita da rumore vincoli/parco-macchine.
+- `deus/ask` kind=chat, `deus/master-plan` kind=plan (sessione condivisa `sitor-capo-{email}`). Backend pulito, frontend compila, verificato in UI (recap + pulsante visibili, nessun overflow).

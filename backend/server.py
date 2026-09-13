@@ -895,10 +895,11 @@ async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int =
     return out
 
 
-async def _deus_llm_remember(sysmsg: str, user_text: str, session: str, max_tokens: int = 1400, keep: int = 12) -> str:
-    """Come _deus_llm ma con MEMORIA persistente del Capo: la conversazione (chat + piano)
-    è salvata in Mongo (`sitor_sessions`) e riproposta a Sitor a ogni turno, così ricorda
-    ciò che vi siete detti. `session_id` da solo NON persiste (storia solo in memoria)."""
+async def _deus_llm_remember(sysmsg: str, user_text: str, session: str, max_tokens: int = 1400, keep: int = 12, kind: str = "chat") -> str:
+    """Come _deus_llm ma con MEMORIA persistente: la conversazione è salvata in Mongo
+    (`sitor_sessions`) e riproposta a Sitor a ogni turno, così ricorda ciò che vi siete detti.
+    `session_id` da solo NON persiste (storia solo in memoria). `kind` etichetta il turno
+    (chat/plan/floor) per il recap proattivo."""
     if not EMERGENT_LLM_KEY:
         return ""
     doc = await db.sitor_sessions.find_one({"_key": session}, {"_id": 0, "turns": 1}) or {}
@@ -913,7 +914,7 @@ async def _deus_llm_remember(sysmsg: str, user_text: str, session: str, max_toke
     async for ev in chat.stream_message(UserMessage(text=user_text)):
         if isinstance(ev, TextDelta):
             out += ev.content or ""
-    turns.append({"u": user_text[:1500], "a": out[:4000]})
+    turns.append({"u": user_text[:1500], "a": out[:4000], "k": kind, "at": now_iso()})
     try:
         await db.sitor_sessions.update_one({"_key": session},
                                            {"$set": {"turns": turns[-keep:], "updated_at": now_iso()}}, upsert=True)
@@ -1013,7 +1014,8 @@ async def floor_sitor_guide(body: FloorGuideReq):
     if body.recipe: parts.append(f"RICETTA/PRODOTTO: {body.recipe}")
     if body.question: parts.append(f"DOMANDA DELL'OPERAIO: {body.question}")
     sysmsg += await _bakery_snapshot({"email": "master"})
-    raw = await _deus_llm(sysmsg, "\n".join(parts), session=f"floor-guide-{op.lower()}", max_tokens=1900)
+    _shift_day = now_iso()[:10]
+    raw = await _deus_llm_remember(sysmsg, "\n".join(parts), session=f"sitor-floor-{op.lower()}-{_shift_day}", max_tokens=1900, kind="floor")
     data = _extract_json(raw)
     steps = [str(s) for s in (data.get("steps") or []) if str(s).strip()][:12]
     spoken = (data.get("spoken") or "").strip()
