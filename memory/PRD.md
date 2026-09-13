@@ -5121,3 +5121,19 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - server.py: 16.155 → 11.637 righe (~28% spostato). Rimane in core il blocco Sitor-core + REPARTI/MikeMix/ricettario-vivente (non estratto: banner senza terminatore `# ====` pulito, mescola più concetti → più rischioso).
 - REGRESSIONE (comportamento invariato PROVATO): conteggio decoratori `@api_router` = 487 identico all'originale (291 server + 8+43+53+46+46 moduli); websocket = 2 identico. Sweep di 15 endpoint su core+5 moduli tutti 200. Frontend carica end-to-end (public-gate ok). Backup incrementali in /tmp/server.bak*.py.
 - NEXT (backlog refactor, stesso pattern): estrarre `auth.py` (PIN/login/gate), `sitor_ai.py` (solo endpoint deus, lasciando gli helper condivisi nel core), Enterprise Grid, e la zona REPARTI/MikeMix.
+
+## v-fork18 (2026-06-13) — Refactoring: estratti auth.py e sitor_ai.py (7 moduli totali)
+- Continuato lo split del backend (stesso pattern collaudato: shim + ri-esportazione + sync finale cross-modulo).
+- `auth.py` (606 righe, 28 rotte): registrazione/login/logout/verifica email, reset password, PIN produzione, admin-gate (PIN Capo), PIN operatori. Restano nel CORE gli helper-dipendenza condivisi (require_admin, current_user, optional_user, _norm_pin, _OP_LEVELS import esplicito, template email). Flusso auth completo verificato (gate/login/me/logout/operator-pin/admin-gate tutti 200) + login frontend end-to-end OK.
+- `sitor_ai.py` (286 righe, 14 rotte): endpoint deus (bond, master-plan, ask, broadcast, piano Capo), Atelier su misura del Capo, coda di produzione. Restano nel CORE gli helper del cervello di Sitor (_deus_llm, _bakery_snapshot, _deus_persona, _extract_json, _capo_key, _queue_counts). Verificato: master-plan LLM genera piano (2031 char), floor-guide 10 passi, bond/atelier/queue 200.
+- Aggiunto `# ruff: noqa: F821` in cima ai moduli (nomi iniettati a runtime); import espliciti nel core per i simboli spostati richiamati (F821 = 0 su tutti i file).
+- TOTALE dopo 7 moduli: server.py 16.155 → 10.781 righe. Moduli: warehouse(199) community(1031) operations(1021) recipes(1080) deck(1241) auth(606) sitor_ai(286).
+- REGRESSIONE PROVATA: 487 rotte `@api_router` invariate (identico all'originale), F821=0, sweep endpoint core+moduli 200, LLM Sitor funzionante, frontend gate→login→console OK.
+- Backup incrementali /tmp/server.bak{,.2..7}.py.
+- NEXT refactor (backlog, stesso pattern): enterprise.py (rete multi-sede), zona REPARTI/MikeMix, voice/TTS.
+
+## v-fork19 (2026-06-13) — Sitor: Memoria continua del Capo + Cache snapshot
+- **(a) Memoria continua del Capo (sessione unificata)**: scoperto che `LlmChat` di emergentintegrations tiene la cronologia SOLO in memoria per istanza — il `session_id` NON persiste su DB (ecco perché non c'era memoria). Implementato nuovo helper `_deus_llm_remember(sysmsg, user_text, session, ...)` in server.py: salva i turni in Mongo (`sitor_sessions`) e li ripropone a Sitor come `initial_messages`, dando memoria reale persistente (ultimi 12 scambi). Le due funzioni Capo conversationali — chat `deus/ask` e `deus/master-plan` — ora condividono UNA sessione `sitor-capo-{email}` con memoria: Sitor ricorda ciò detto tra chat e piano. master-plan usa estrazione JSON robusta + fallback, sicuro condividere la storia. TEST (secret-word 2 turni): MEMORY_OK True; master-plan valido con storia condivisa.
+- **(d) Cache snapshot 10s**: `_bakery_snapshot` ora ha cache TTL 10s per uid (`_SNAPSHOT_CACHE`), evita ri-letture DB su messaggi ravvicinati. Comportamento invariato (stesso contenuto), più veloce.
+- Altre sessioni Sitor (operatori floor-guide/change, autoplan, capture, atelier) restano stateless/com'erano (non richiesta memoria lì).
+- Backend sintassi OK, riavviato pulito, endpoint verificati 200.
