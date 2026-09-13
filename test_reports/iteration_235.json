@@ -1,0 +1,41 @@
+{
+  "summary": "Re-verified Capo console section-by-section after backend module split (warehouse/community/operations/recipes/deck). Full login flow: PublicGate -> AdminGate PIN 198505 -> Onboarding panificio -> Sign in as Capo -> auth admin@mikilab.de / Mikilab2026! -> dismissed Sitor tour. All 7 SecBlock sections render with every required panel. subtabs-pianoai + 3 subtab clicks OK. capo-quick-order expands, AutoPlan widget (autoplan-orders/autoplan-gen) present. Sticky capo-secnav present; capo-secnav-team scrolls team section into view; ask-sitor-fab scrolls capo-sec-sitor into view. Sitor chat input accepts typed text. No horizontal overflow at 1920 or 390. No uncaught page errors; only expected background 401s.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": []
+  },
+  "verification_results": {
+    "login_flow": "OK (PublicGate -> PIN 198505 -> Onboarding panificio -> auth -> tour dismissed)",
+    "master_console_present": true,
+    "sections_present_in_order": ["capo-sec-ricettario","capo-sec-piano","capo-sec-ordini","capo-sec-team","capo-sec-strumenti","capo-sec-sitor","capo-sec-sicurezza"],
+    "section1_panels": {"panel-ricette": true, "panel-thermalflow": true, "panel-magazzino": true, "panel-elite": true, "panel-living-recipe": true},
+    "section2_panels": {"panel-weekly": true, "panel-pianoai": true, "subtabs-pianoai": true, "subtab_clicks_ok": true, "capo-quick-order": true, "autoplan-orders": true, "autoplan-gen": true},
+    "section3_panels": {"panel-ordini": true, "panel-b2b": true},
+    "section4_panels": {"panel-dept-assign": true, "panel-shift-team": true, "panel-shift-templates": true, "panel-team-faces": true},
+    "section5_panels": {"panel-guided-tools": true, "panel-sitor-atelier": true, "panel-hardware": true, "panel-machine-arrival": true, "panel-coldstorage": true, "panel-ovenqc": true},
+    "section6_panels": {"oggi-radio": true, "chat_input_typeable": true},
+    "section7_panels": {"panel-docs": true, "panel-security": true, "panel-emergency": true},
+    "nav": {"capo-secnav": true, "capo-secnav-team_scrolls": true, "capo-secnav-sitor_present": true, "ask-sitor-fab_scrolls_to_sitor": true},
+    "horizontal_overflow_desktop_1920": false,
+    "horizontal_overflow_mobile_390": false,
+    "uncaught_page_errors": 0,
+    "failed_api_calls_breaking_features": []
+  },
+  "console_observations": [
+    "10 background 401s: /api/deck/status, /api/auth/me, /api/deck/alarms/history — pre-existing background polling firing before auth cookie is set. Does not break any visible feature. Same as iteration_234."
+  ],
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "Background polling for /api/deck/status and /api/deck/alarms/history still fires before/without auth, causing repeated 401s in console. Consider gating on auth state to reduce noise (unchanged from prior iterations)."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped per request)", "frontend": "100%"},
+  "test_credentials": "PIN 198505, admin@mikilab.de / Mikilab2026! — verified working",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend module refactor (warehouse/community/operations/recipes/deck) did NOT regress any frontend Capo console section. All 7 sections and every required panel testid render post-login. subtabs-pianoai (3 tabs) clickable. AutoPlan widget inside capo-quick-order works. capo-secnav-team scroll + ask-sitor-fab scroll confirmed. Only noise is 401 background polling pre-auth (unchanged from iter 233/234). Safe to publish from console-reorg perspective."
+}
