@@ -5144,3 +5144,8 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **(2) Reset memoria**: nuovo `POST /mike/deus/memory/reset` (cancella `sitor-capo-{email}` da `sitor_sessions`). Frontend: pulsante "Nuova conversazione" (`sitor-reset-memory-btn`) in Sala Sitor accanto a "Report Turno" → svuota chat + azzera memoria con toast.
 - **(3) Recap proattivo del piano**: nuovo `GET /mike/deus/recap` che legge i turni kind=plan della memoria del Capo e produce una riga proattiva con orario. Frontend: all'apertura di Sala Sitor, se c'è storia piano, Sitor apre da solo con il recap (messaggio + TTS). TEST: recap cita l'ordine ("...20:53 — 45 baguette..."), vuoto dopo reset. Estrazione ordine ripulita da rumore vincoli/parco-macchine.
 - `deus/ask` kind=chat, `deus/master-plan` kind=plan (sessione condivisa `sitor-capo-{email}`). Backend pulito, frontend compila, verificato in UI (recap + pulsante visibili, nessun overflow).
+
+## v-fork21 (2026-06-14) — Fix Linter ESLint v9 (chiusura sessione)
+- Corretto l'errore di linting "ESLint couldn't find an eslint.config.js" introducendo `/app/eslint.config.js` e `/app/frontend/eslint.config.js` in formato flat (richiesto da ESLint v9.39.5).
+- Aggiunto supporto JSX, moduli, e plugin `react`/`react-hooks` dai `node_modules` locali.
+- Il frontend ora compila ed esegue il lint senza errori bloccanti (0 errori, solo warning non bloccanti).
