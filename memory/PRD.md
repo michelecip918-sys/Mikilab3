@@ -5038,3 +5038,11 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Nessuna funzione persa: la chat resta in Sala Sitor; l'avvio turno è automatico sul floor.
 - Nota: il cerchio in basso a sinistra rimasto è `RadioFornaio` (radio del panificio), NON Sitor — lasciato invariato.
 - VERIFICATO (screenshot Capo): master-console ok, mikemix-sense-fab ASSENTE, mikemix-sense-panel ASSENTE, gruppo "Oggi/Sala Sitor" presente. Compila pulito.
+
+## v-fork9 (2026-06-13) — Strumenti legacy spostati nelle sezioni giuste
+- Con la bolla di Sitor rimossa, i due strumenti legacy davvero utili sono stati ricollocati nelle sezioni naturali (nuovo file components/console/LegacyToolButton.jsx):
+  - **Inventario di Produzione (foto)** → dentro il pannello **Magazzino** (gruppo Ricette & Magazzino), testid `magazzino-inventory-btn`, apre ProductionInventory.
+  - **Batch Phoenix · Recupero impasti** → primo elemento del gruppo **Celle & Forni**, testid `celle-phoenix-btn`, apre BatchPhoenix. VERIFICATO presente (True).
+- I restanti strumenti gimmick del vecchio pannello (Pipeline/Linea, Vision AR, Clima, Delega vocale, Handoff, Inviti, slider vetro/soglia) restano ritirati (erano solo nel pannello ora disattivato) — coerente con la richiesta di potatura.
+- Compila pulito. (Nota: `magazzino-inventory-btn` vive dentro il pannello Magazzino, visibile all'espansione.)
+- BACKLOG: Home "Oggi" arricchita (feed avvisi/PIN/report); spostare RadioFornaio in una sezione; registrazione libera vs invito (dopo repubblica).

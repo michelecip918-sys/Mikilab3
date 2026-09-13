@@ -84,6 +84,7 @@ import RecipeThermalFlow from "@/components/console/RecipeThermalFlow";
 import SiloManager from "@/components/console/SiloManager";
 import ColdStorage from "@/components/console/ColdStorage";
 import RecipeAuditButton from "@/components/console/RecipeAuditButton";
+import { InventoryButton, BatchPhoenixButton } from "@/components/console/LegacyToolButton";
 import SitorTour from "@/components/console/SitorTour";
 import AgvFleet from "@/components/console/AgvFleet";
 import TimelineTurno from "@/components/console/TimelineTurno";
@@ -560,6 +561,7 @@ export default function App() {
                       <Ricette isMasterView={true} />
                     </HoloPanel>
                     <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
+                      <InventoryButton />
                       <MagazzinoManager />
                     </HoloPanel>
                     <HoloPanel testid="panel-elite" accent="#64748B" beacon="#9aa6b2" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
@@ -572,6 +574,7 @@ export default function App() {
                       title={tri("Celle & Forni", "Kammern & Öfen", "Cells & Ovens", "Cámaras & Hornos", "Cellules & Fours", "سلول‌ها و فرها")}
                       hint={tri("👉 Tutta la catena del freddo e del caldo: celle di lievitazione, frigo, freezer, controllo qualità al forno, bilance/PLC e nuovi macchinari. Qui vive il semaforo live delle celle.", "👉 Kühl- und Ofenkette: Kammern, Gefrier, Qualität, Waagen, neue Maschinen.", "👉 The whole cold and hot chain: proofing cells, fridges, freezers, oven quality control, scales/PLC and new machines. The live cell semaphore lives here.", "👉 Cadena de frío y calor: cámaras, calidad, balanzas, máquinas.", "👉 Chaîne du froid et du chaud : cellules, qualité, balances, machines.", "👉 زنجیره سرد و گرم: سلول‌ها، کیفیت، ترازو و ماشین‌ها.")}
                       sub={tri("Celle, freezer, forni e macchinari — con semaforo live delle temperature.", "Kammern, Gefrier, Öfen & Maschinen — mit Live-Ampel.", "Cells, freezers, ovens and machines — with live temperature semaphore.", "Cámaras, congeladores, hornos y máquinas — con semáforo.", "Cellules, congélateurs, fours et machines — avec sémaphore.", "سلول‌ها، فریزر، فرها و ماشین‌ها — با چراغ زنده.")}>
+                    <BatchPhoenixButton />
                     <HoloPanel testid="panel-ovenqc" accent="#64748B" beacon="#6e9e85" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")} sub={tri("Scansiona il prodotto all'uscita del forno: forma, cottura, crosta, bruciature.", "Produkt am Ofenausgang scannen: Form, Backung, Kruste.", "Scan product at oven exit: shape, bake, crust, burning.", "Escanea a la salida del horno.", "Scanne à la sortie du four.", "اسکن محصول در خروجی فر.")}>
                       <OvenQC />
                     </HoloPanel>
