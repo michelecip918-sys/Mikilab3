@@ -5064,3 +5064,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - In `deus_ask` (POST /mike/deus/ask) rimosso il controllo `if not info["external_unlocked"]` (soglia EXTERNAL_UNLOCK_XP=650) che negava la risposta finché il Capo non aveva abbastanza XP. Ora Sitor risponde SEMPRE fin dalla prima interazione.
 - Il sistema bond/XP (persona via via più calda, `_deus_persona`, livelli) è INTATTO — tolto solo il blocco che nega la risposta. Nessun altro endpoint LLM aveva un gate simile (deus_master_plan ecc. non lo hanno). I frontend (SalaSitor, FloorOpeningChecklist, MikeMixSense) leggono solo `r.reply`, nessuno usa `locked` → nessuna rottura.
 - VERIFICATO (curl): POST /mike/deus/ask con domanda esterna su account a XP basso → ok:true, locked:false, reply completa 1058 caratteri. Backend riavviato pulito.
+
+## v-fork13 (2026-06-13) — Sitor (deus/ask) ora CONOSCE il panificio (snapshot reale dal DB)
+- Nuovo helper `_bakery_snapshot(admin)` in server.py: prima di chiamare `_deus_llm`, `deus_ask` recupera dal DB un riepilogo reale e aggiornato: **ricette** (nomi+categorie, da db.recipes mikilab), **piano settimanale** (db.weekly_plan per utente, per giorno), **ordini extra/B2B recenti** (db.b2b_orders), **team/turni di oggi** (db.dept_assignments + operatori attivi da db.operator_pins), **scorte sotto soglia** (db.lab_warehouse dove quantity_kg < min_kg).
+- Il riepilogo è concatenato al system message (`sysmsg + snapshot`) prima della chiamata LLM. Robusto: ogni sezione in try/except, così un dato mancante non blocca la risposta.
+- VERIFICATO (curl): domanda "quali ricette abbiamo e cosa spingere" → Sitor cita i dati reali ("149 ricette catalogate", "sezione focacce oltre 40 varianti"). Sintassi OK, backend riavviato pulito.
+- Nota: lo snapshot è solo in deus/ask (come richiesto). Estendibile ad altri endpoint se si vuole Sitor contestuale ovunque.

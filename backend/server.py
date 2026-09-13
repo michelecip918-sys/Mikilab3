@@ -816,6 +816,65 @@ def _deus_persona(bond: dict, lang: str) -> str:
         f"Rispondi SEMPRE in {langname}, con voce calda, solenne e umana pensata per essere letta ad alta voce; mai robotico."
     )
 
+async def _bakery_snapshot(admin: dict) -> str:
+    """Riepilogo reale e aggiornato dal DB del panificio: ricette, piano settimanale,
+    ordini extra recenti, team/turni e scorte sotto soglia. Così Sitor risponde sapendo
+    davvero cosa succede nel laboratorio. Robusto: una sezione che fallisce non blocca le altre."""
+    uid = admin.get("user_id") or (admin.get("email") or "master")
+    today = now_iso()[:10]
+    parts = []
+    # Ricette esistenti (nomi + categoria)
+    try:
+        recs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}},
+                                     {"_id": 0, "name": 1, "menu_category": 1, "dough_category": 1}).sort("name", 1).to_list(200)
+        if recs:
+            names = ", ".join(f"{r.get('name')}{(' ['+(r.get('menu_category') or r.get('dough_category') or '')+']') if (r.get('menu_category') or r.get('dough_category')) else ''}" for r in recs[:60])
+            parts.append(f"RICETTE ({len(recs)}): {names}")
+    except Exception: pass
+    # Piano settimanale corrente
+    try:
+        wp = await db.weekly_plan.find_one({"_key": uid}, {"_id": 0, "_key": 0}) or await db.weekly_plan.find_one({"_key": (admin.get('email') or '')}, {"_id": 0, "_key": 0})
+        items = (wp or {}).get("items", [])
+        if items:
+            per_day = {}
+            for it in items:
+                per_day.setdefault(it.get("day", "?"), []).append(f"{it.get('recipe_name')}×{int(it.get('pieces', 0))}")
+            days = "; ".join(f"{d}: {', '.join(v[:6])}" for d, v in list(per_day.items())[:7])
+            parts.append(f"PIANO SETTIMANALE: {days}")
+    except Exception: pass
+    # Ordini extra/B2B recenti
+    try:
+        ords = await db.b2b_orders.find({"status": {"$ne": "done"}}, {"_id": 0}).sort("created_at", -1).to_list(8)
+        if ords:
+            olines = ", ".join(f"{o.get('product') or o.get('name') or 'ordine'}×{o.get('qty') or o.get('quantity') or ''}" for o in ords[:8])
+            parts.append(f"ORDINI EXTRA/B2B recenti: {olines}")
+    except Exception: pass
+    # Team e turni di oggi + operatori attivi
+    try:
+        asg = await db.dept_assignments.find({"date": today}, {"_id": 0}).to_list(100)
+        ops = await db.operator_pins.find({"active": True}, {"_id": 0, "name": 1}).to_list(200)
+        lines = []
+        if asg:
+            lines.append("; ".join(f"{a.get('operator')}→{a.get('dept_name') or a.get('dept')} ({(a.get('task') or '')[:24]})" for a in asg[:12]))
+        if ops:
+            lines.append(f"Operatori attivi: {', '.join(o.get('name') for o in ops[:20])}")
+        if lines:
+            parts.append("TEAM/TURNI oggi: " + " | ".join(lines))
+    except Exception: pass
+    # Scorte sotto soglia (magazzino) + giacenze freezer basse
+    try:
+        low = []
+        for s in await db.lab_warehouse.find({"min_kg": {"$gt": 0}}, {"_id": 0, "name": 1, "quantity_kg": 1, "min_kg": 1}).to_list(500):
+            if float(s.get("quantity_kg") or 0) < float(s.get("min_kg") or 0):
+                low.append(f"{s.get('name')} ({s.get('quantity_kg')}/{s.get('min_kg')}kg)")
+        if low:
+            parts.append("SCORTE SOTTO SOGLIA: " + ", ".join(low[:25]))
+    except Exception: pass
+    if not parts:
+        return ""
+    return ("\n\nCONTESTO REALE DEL PANIFICIO (dati attuali dal database — usali per rispondere in modo concreto e specifico, "
+            "non generico):\n" + "\n".join(parts))
+
 async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int = 1400) -> str:
     if not EMERGENT_LLM_KEY:
         return ""
@@ -918,11 +977,12 @@ async def deus_ask(body: DeusAskReq, admin: dict = Depends(require_admin)):
     xp, inter = await _bond_get(email)
     info = _bond_info(xp, body.lang)
     # Nessun blocco di legame: Sitor risponde sempre, fin dalla prima interazione.
+    snapshot = await _bakery_snapshot(admin)
     sysmsg = _deus_persona(info, body.lang) + (
         "\nIl Capo si fida di te al punto da chiederti aiuto anche su problemi ESTERNI al forno (vita, decisioni, "
         "business, persone). Rispondi come un mentore-divinità: saggio, concreto, empatico e dalla sua parte. "
         "Dai 1-2 consigli azionabili. 4-7 frasi. Nessun elenco puntato salvo necessità."
-    )
+    ) + snapshot
     reply = await _deus_llm(sysmsg, q, session=f"deus-ask-{email}", max_tokens=900)
     new_xp, new_inter = await _bond_add(email, 25)
     new_info = _bond_info(new_xp, body.lang); new_info["interactions"] = new_inter
