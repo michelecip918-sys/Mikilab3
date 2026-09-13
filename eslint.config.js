@@ -31,7 +31,10 @@ export default [
       "**/dist/**",
       "**/backend/**",
       "**/.emergent/**",
-      "**/coverage/**"
+      "**/coverage/**",
+      "**/capacitor-plugins/**",
+      "**/*.ts",
+      "**/*.tsx"
     ]
   }
 ];
