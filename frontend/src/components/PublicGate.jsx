@@ -213,24 +213,24 @@ export default function PublicGate({ onUnlock }) {
       <div className="absolute inset-0 z-[1] bg-gradient-to-b from-[#030712]/70 via-[#030712]/35 to-[#030712]/95 pointer-events-none" />
 
       {/* HEADER */}
-      <header className="relative z-20 flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2.5">
+      <header className="relative z-20 flex flex-wrap items-center justify-between gap-y-2 px-4 py-3">
+        <div className="flex items-center gap-2.5 shrink-0">
           <span className="w-10 h-10 rounded-xl overflow-hidden border border-[#8a97a6]/40 shadow-[0_0_16px_rgba(138,151,166,0.25)] bg-[#060A10]">
             <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-cover" />
           </span>
           <span className="leading-tight">
-            <span className="block font-black tracking-[0.18em] text-lg sm:text-xl uppercase">MikiLab<span className="text-[#8a97a6]"> Pro</span></span>
-            <span className="block font-mono text-[8.5px] tracking-[0.3em] text-[#8a97a6]/70 uppercase">Holographic Command OS</span>
+            <span className="block font-black tracking-[0.1em] sm:tracking-[0.18em] text-lg sm:text-xl uppercase whitespace-nowrap">MikiLab<span className="text-[#8a97a6]"> Pro</span></span>
+            <span className="block font-mono text-[8.5px] tracking-[0.22em] sm:tracking-[0.3em] text-[#8a97a6]/70 uppercase whitespace-nowrap">Holographic Command OS</span>
           </span>
         </div>
-        <div className="flex items-center gap-2">
-          <button data-testid="public-share-btn" onClick={doShare} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#8a97a6]/40 text-[#8a97a6] text-xs font-bold hover:border-[#8a97a6] active:scale-95 transition-all backdrop-blur-md">
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <button data-testid="public-share-btn" onClick={doShare} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#8a97a6]/40 text-[#8a97a6] text-xs font-bold hover:border-[#8a97a6] active:scale-95 transition-all backdrop-blur-md whitespace-nowrap shrink-0">
             <Share2 className="w-3.5 h-3.5" /> {tri("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
           </button>
-          <button data-testid="public-guide-btn" onClick={() => setShowGuide(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#a6b1bc]/40 text-[#a6b1bc] text-xs font-bold hover:border-[#a6b1bc] active:scale-95 transition-all backdrop-blur-md">
+          <button data-testid="public-guide-btn" onClick={() => setShowGuide(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#a6b1bc]/40 text-[#a6b1bc] text-xs font-bold hover:border-[#a6b1bc] active:scale-95 transition-all backdrop-blur-md whitespace-nowrap shrink-0">
             <BookOpen className="w-3.5 h-3.5" /> {tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}
           </button>
-          <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#D95200]/40 text-[#D95200] text-xs font-bold hover:border-[#D95200] active:scale-95 transition-all backdrop-blur-md">
+          <button data-testid="public-login-btn" onClick={() => setShowAuth(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#D95200]/40 text-[#D95200] text-xs font-bold hover:border-[#D95200] active:scale-95 transition-all backdrop-blur-md whitespace-nowrap shrink-0">
             <LogIn className="w-3.5 h-3.5" /> {tri("Accedi", "Anmelden", "Sign in", "Entrar", "Connexion", "ورود")}
           </button>
           <LangSelector testid="public-lang" />

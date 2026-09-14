@@ -316,6 +316,16 @@ body.braccio-mode [data-testid="page-footer"] { display: none !important; }
 body.braccio-mode main { padding-bottom: 7rem !important; }
 /* Header e barra inferiore sempre fissi e in primo piano su ogni schermata */
 header[data-testid="app-header"] { position: sticky !important; top: 0 !important; z-index: 60 !important; }
+/* Mobile: i pulsanti dell'header non devono mai spezzare il testo a metà parola
+   (es. "S ha re"). Restano interi e vanno a capo come blocchi con flex-wrap. */
+header[data-testid="app-header"] button,
+header[data-testid="app-header"] .lang-selector,
+header[data-testid="app-header"] select { white-space: nowrap !important; flex-shrink: 0; }
+@media (max-width: 640px) {
+  header[data-testid="app-header"] { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  header[data-testid="app-header"] [data-testid="brand-home"] .font-cyber { letter-spacing: 0.08em !important; }
+  header[data-testid="app-header"] > div { row-gap: 0.375rem; }
+}
 nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important; z-index: 55 !important; }
 
 /* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */

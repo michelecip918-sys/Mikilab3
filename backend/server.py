@@ -718,7 +718,7 @@ ORG_ACTIVATION_CODE = os.environ.get("ORG_ACTIVATION_CODE", "")
 ORG_SCOPED_COLLECTIONS = [
     "recipes", "weekly_plan", "dept_assignments", "inventory_items",
     "day_closures", "dept_machines", "dept_objectives", "favorites",
-    "pizzeria_sessions", "pastry_deliveries",
+    "pizzeria_sessions", "pastry_deliveries", "lab_warehouse",
 ]
 
 
@@ -1616,6 +1616,88 @@ async def pizzeria_session_toggle(sid: str, admin: dict = Depends(require_admin)
 async def pizzeria_session_delete(sid: str, admin: dict = Depends(require_admin)):
     await db.pizzeria_sessions.delete_one({"id": sid, "organization_id": _org_id(admin)})
     return {"ok": True}
+
+
+# ============================================================================
+# CORSO RICETTE (Sitor) — spiegazione estesa passo-passo, generata UNA sola
+# volta per ricetta+lingua e salvata in modo permanente in `recipe_courses`.
+# Non modifica MAI la ricetta: è solo materiale didattico aggiuntivo.
+# Accessibile sia al Capo sia agli operai in produzione (stessa spiegazione).
+# ============================================================================
+def _recipe_course_context(r: dict) -> str:
+    parts = [f"Ricetta: {r.get('name') or 'senza nome'}."]
+    if r.get("dough_category") or r.get("method_type"):
+        parts.append(f"Tipo: {r.get('dough_category') or ''} {r.get('method_type') or ''}.".strip())
+    fields = [
+        ("Farina", r.get("flour_type")), ("Idratazione %", r.get("hydration_percent")),
+        ("Prefermento", r.get("preferment_type")), ("Impasto (min)", r.get("mix_minutes")),
+        ("Riposo (min)", r.get("rest_minutes")), ("Puntata (h)", r.get("bulk_fermentation_hours")),
+        ("Appretto (h)", r.get("proofing_hours")), ("Temp. acqua (°C)", r.get("water_temp_c")),
+        ("Cottura (°C)", r.get("bake_temp")), ("Cottura (min)", r.get("bake_minutes")),
+        ("Forno", r.get("oven_type")),
+    ]
+    for label, val in fields:
+        if val not in (None, "", 0):
+            parts.append(f"{label}: {val}")
+    if r.get("procedure"):
+        parts.append(f"Procedimento sintetico esistente: {str(r['procedure'])[:1200]}")
+    if r.get("notes"):
+        parts.append(f"Note: {str(r['notes'])[:400]}")
+    return " ".join(parts)
+
+
+@api_router.get("/recipes/{recipe_id}/course")
+async def recipe_course(recipe_id: str, lang: str = "it", user: Optional[dict] = Depends(optional_user)):
+    lang2 = (lang or "it").split("-")[0][:2]
+    existing = await db.recipe_courses.find_one({"recipe_id": recipe_id, "lang": lang2}, {"_id": 0})
+    if existing and existing.get("course"):
+        return {"ok": True, "cached": True, "course": existing["course"], "recipe_name": existing.get("recipe_name", "")}
+
+    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
+
+    course = None
+    if EMERGENT_LLM_KEY:
+        try:
+            langname = _LANG_NAMES.get(lang2, "inglese")
+            sysmsg = (
+                "Sei Sitor, maestro panificatore e formatore. Genera un CORSO didattico passo-passo per un allievo, "
+                "spiegando OGNI fase del procedimento in modo ESTESO e chiaro (il perché, i segnali visivi/tattili, "
+                "gli errori da evitare, i tempi e le temperature), non un semplice elenco. "
+                "REGOLA ASSOLUTA: NON modificare, ricalcolare né proporre dosi/ingredienti diversi; usa i dati della ricetta "
+                "solo come riferimento. Niente HACCP, allergeni o burocrazia. "
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"title\":\"..\",\"intro\":\"1-2 frasi\",\"phases\":[{\"name\":\"nome fase\",\"detail\":\"spiegazione estesa 3-6 frasi\"}],\"tips\":[\"consiglio\",\"consiglio\"]}. "
+                "Da 5 a 9 fasi. Nessun testo fuori dal JSON."
+            )
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"course-{recipe_id[:8]}-{lang2}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=3500)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=f"DATI RICETTA: {_recipe_course_context(recipe)}\nGenera il corso passo-passo.")):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            parsed = _parse_llm_json(out)
+            if parsed.get("phases"):
+                course = {
+                    "title": (parsed.get("title") or recipe.get("name") or "")[:160],
+                    "intro": (parsed.get("intro") or "")[:600],
+                    "phases": [{"name": (p.get("name") or "")[:120], "detail": (p.get("detail") or "")[:1200]}
+                               for p in parsed["phases"] if isinstance(p, dict)][:9],
+                    "tips": [str(t)[:240] for t in (parsed.get("tips") or [])][:6],
+                }
+        except Exception as e:
+            logger.warning("recipe course gen fail (%s)", str(e)[:120])
+
+    if not course:
+        raise HTTPException(status_code=503, detail="Corso non disponibile al momento, riprova.")
+
+    await db.recipe_courses.update_one(
+        {"recipe_id": recipe_id, "lang": lang2},
+        {"$set": {"recipe_id": recipe_id, "lang": lang2, "recipe_name": recipe.get("name", ""),
+                  "course": course, "generated_at": now_iso()}},
+        upsert=True,
+    )
+    return {"ok": True, "cached": False, "course": course, "recipe_name": recipe.get("name", "")}
 
 
 # ============================================================================
@@ -2623,7 +2705,7 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
         owner_ids = [u["user_id"] for u in owner_users if not (user and user.get("user_id") == u["user_id"])]
         if owner_ids:
             owner_personal = await db.recipes.find(
-                {"collection_name": "personal", "owner_id": {"$in": owner_ids}, "hidden": {"$ne": True}}, {"_id": 0},
+                {"collection_name": "personal", "owner_id": {"$in": owner_ids}, "organization_id": _org_id(user), "hidden": {"$ne": True}}, {"_id": 0},
             ).sort("name", 1).to_list(1000)
             for d in owner_personal:
                 d.pop("owner_id", None)
@@ -3749,7 +3831,7 @@ class ConsumePayload(BaseModel):
 
 @api_router.get("/lab/warehouse")
 async def get_warehouse(user: Optional[dict] = Depends(optional_user)):
-    return await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+    return await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("name", 1).to_list(500)
 
 
 @api_router.post("/lab/warehouse")
@@ -3757,13 +3839,14 @@ async def add_warehouse(payload: WarehouseItem, user: dict = Depends(require_adm
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     doc["id"] = payload.id or str(uuid.uuid4())
-    await db.lab_warehouse.update_one({"id": doc["id"]}, {"$set": doc}, upsert=True)
+    doc["organization_id"] = _org_id(user)
+    await db.lab_warehouse.update_one({"id": doc["id"], "organization_id": _org_id(user)}, {"$set": doc}, upsert=True)
     return doc
 
 
 @api_router.delete("/lab/warehouse/{item_id}")
 async def del_warehouse(item_id: str, user: dict = Depends(require_admin)):
-    await db.lab_warehouse.delete_one({"id": item_id})
+    await db.lab_warehouse.delete_one({"id": item_id, "organization_id": _org_id(user)})
     return {"ok": True}
 
 

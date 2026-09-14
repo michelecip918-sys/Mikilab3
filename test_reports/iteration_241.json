@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend E2E validation of the 3 new MikiLab Pro features (Corso Ricette con Sitor, isolamento magazzino, header mobile) as Direzione (admin@mikilab.de). All acceptance criteria pass. (1) Corso Ricette: opened Ricettario -> expanded 'Leavened Pastry & Viennoiserie' folder -> clicked 'French Brioche' card -> recipe-detail-<id> rendered -> pressed course-recipe-<id>. recipe-course-panel-<id> appeared with recipe-course-loading visible; first generation completed in ~32s (well under the 90s budget); 7 numbered phases rendered as recipe-course-phase-0..6 with title+detail, plus a course.intro paragraph. Recipe ingredients/dosi (recipe-cost-<id> block) were UNCHANGED before/after opening the course (course is text-only overlay). (2) Persistenza/cache: closed detail via Escape, reopened the same recipe, clicked Corso again -> phases rendered in 0.81s (cached from db.recipe_courses, no long spinner). (3) Regressione magazzino isolato: opened panel-magazzino as Capo (org_default) -> panel not empty, existing 'Farina' item (45.92 kg) visible (org_default filter preserved data); form add worked: TEST_Zucchero (5kg, min 1) -> items grew from 1 to 2; delete on TEST_Zucchero row worked -> items back to 1 with toast '\"TEST_Zucchero\" removed'. (4) Mobile responsive (390x844): app-header rendered at 390x125 with 0 px horizontal scroll overflow both on the authenticated console and on the pre-gate PublicGate landing; no half-word breaks observed in header buttons (Guide/Tour/Tablet/Operator/Michele wrap as blocks). (5) Regressione generale: no blocking console errors (only pre-gate 401s from public probes, harmless THREE/WebGPU warnings, one React hydration warning about <span> inside <option> in MagazzinoManager select — minor, non-blocking). All 5 checklist points from the request PASS.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "MagazzinoManager (dept select, line ~167)", "issue": "React hydration warning: '<span> cannot be a child of <option>'. The <option> children are wrapped by the visual-edit runtime in a <span> which React refuses to hydrate. Harmless at runtime (select works) but pollutes the console and can break SSR/hydration in future. Consider rendering plain string children in <option>.", "selector": "[data-testid=\"magazzino-dept\"] option", "priority": "LOW"}
+    ],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Recipe course panel", "issues": ["'Consigli del maestro' (tips) section did not render for French Brioche because the LLM returned an empty tips[] array. The current UI hides the entire block when tips.length===0 — consider a subtle placeholder or a retry hint so the Capo knows tips are optional/model-dependent."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Optional: fix the React hydration warning in MagazzinoManager <option> (avoid nested <span>).",
+    "Optional: show a small hint when a generated course has zero tips, so users don't think it failed."
+  ],
+  "critical_code_review_comments": [
+    "RecipeList.jsx openCourse() catches errors silently in a broad try/catch and only surfaces courseErr text; if the backend returns 200 with an empty/invalid course JSON, the panel stays empty forever with no visible error. Consider validating d.course?.phases?.length > 0 before setCourse and surfacing a retry button.",
+    "GET /api/recipes/{recipe_id}/course cache key seems keyed on recipe_id only (per the request note 'salvato in db.recipe_courses'); if the recipe is edited (procedure changes) the cached course will drift out of sync with the actual recipe. Suggest keying on (recipe_id, lang, procedure_hash) or invalidating recipe_courses on recipe update.",
+    "MagazzinoManager dept <option> rendering triggers a React hydration warning ('<span> cannot be a child of <option>'). Root cause is the visual-edit runtime wrapping dynamic expressions, but option children must be plain text.",
+    "RecipeList.jsx is 1458 lines — well over the 700-line soft cap. Consider splitting RecipeDetail, RecipeList grid, and helpers into separate files for maintainability.",
+    "The course panel does not include a data-testid for the intro paragraph nor for the tips list; adding testids (recipe-course-intro, recipe-course-tips) would make future regression checks more precise."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (already validated by main via curl)", "frontend": "100% (5/5 acceptance points pass)"},
+  "test_credentials": "Master Gate PIN 198505; Capo admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "During the warehouse regression test I created and then deleted a TEST_Zucchero item — net-zero change, no residual seed data. No changes to the recipe course cache beyond triggering generation for 'French Brioche' (recipe_id 98726ef3-adc8-486d-9e4a-f8b74913aeb7) which now lives in db.recipe_courses as intended (this is the desired behaviour, not test pollution).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Corso Ricette entry: (a) enter as Direzione via keypad 198505 (data-testid admin-key-<digit>), (b) HoloPanel panel-ricette is defaultOpen — recipes are inside 7 cat-folder-* buttons; click a folder to expand and reveal recipe-row-<id> cards, (c) click a card to open recipe-detail-<id>, (d) course-recipe-<id> is the GraduationCap button in the action bar. First-time generation ~30-50s with real LLM, cached calls <1s. To force regenerate you'd need to clear db.recipe_courses server-side. Warehouse (panel-magazzino) is collapsed by default at desktop width in this session — click the panel header to expand; magazzino-manager form fields: magazzino-name / magazzino-qty / magazzino-min / magazzino-dept / magazzino-add; rows expose magazzino-item-<id>, magazzino-inc/dec/del-<id>. Existing org_default items (Farina 45.92 kg) preserved after the org isolation migration.",
+  "rca of the issue": "n/a — no blocking issues encountered. All 5 acceptance points passed on first run."
+}

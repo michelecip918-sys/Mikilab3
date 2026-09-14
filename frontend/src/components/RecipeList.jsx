@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, GraduationCap, Loader2 } from "lucide-react";
 import { recipesApi, siteSettingsApi } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -661,6 +661,25 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const [farro, setFarro] = useState(false);
   const [handsFree, setHandsFree] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
+  const [showCourse, setShowCourse] = useState(false);
+  const [course, setCourse] = useState(null);
+  const [courseLoading, setCourseLoading] = useState(false);
+  const [courseErr, setCourseErr] = useState("");
+  useEffect(() => { setCourse(null); setShowCourse(false); setCourseErr(""); /* eslint-disable-next-line */ }, [r.id, lang]);
+  const openCourse = async () => {
+    const next = !showCourse;
+    setShowCourse(next);
+    if (next && !course && !courseLoading) {
+      setCourseLoading(true); setCourseErr("");
+      try {
+        const d = await recipesApi.course(r.id, lang);
+        if (d && d.course && (d.course.phases || []).length > 0) setCourse(d.course);
+        else setCourseErr(tri("Corso non disponibile, riprova tra poco.", "Kurs nicht verfügbar, gleich erneut versuchen.", "Course unavailable, try again shortly."));
+      } catch (e) {
+        setCourseErr(tri("Corso non disponibile, riprova tra poco.", "Kurs nicht verfügbar, gleich erneut versuchen.", "Course unavailable, try again shortly."));
+      } finally { setCourseLoading(false); }
+    }
+  };
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;
   const target = flourG > 0 ? (Number(scaleVal) || flourG) : 0;
@@ -812,6 +831,9 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             <ActionBtn testid={`timeline-recipe-${r.id}`} onClick={() => setShowTimeline((v) => !v)} color="#2e8b6f" label={tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}><Clock className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && (
+            <ActionBtn testid={`course-recipe-${r.id}`} onClick={openCourse} color={showCourse ? "#3E9C93" : "#8a97a6"} label={tri("Corso passo-passo", "Schritt-für-Schritt-Kurs", "Step-by-step course", "Curso paso a paso")}><GraduationCap className="w-4 h-4" /></ActionBtn>
+          )}
+          {!r.locked && (
             <ActionBtn testid={`pdf-recipe-${r.id}`} onClick={() => window.print()} color="#3E9C93" label={tri("PDF / Stampa", "PDF / Drucken", "PDF / Print")}><Printer className="w-4 h-4" /></ActionBtn>
           )}
           <ActionBtn testid={`scale-recipe-${r.id}`} onClick={onScaleAction} color="#3E9C93" label={t("scale_aria")}><Scale className="w-4 h-4" /></ActionBtn>
@@ -820,6 +842,48 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           {onPromote && <ActionBtn testid={`promote-recipe-${r.id}`} onClick={onPromote} color="#a6b1bc" label={tri("Promuovi a MikiLab", "Zu MikiLab befördern", "Promote to MikiLab", "Promover a MikiLab")}><Share2 className="w-4 h-4" /></ActionBtn>}
           {canEdit && <ActionBtn testid={`delete-recipe-${r.id}`} onClick={onDelete} color="#3E9C93"><Trash2 className="w-4 h-4" /></ActionBtn>}
         </div>
+
+        {showCourse && (
+          <div data-testid={`recipe-course-panel-${r.id}`} className="rounded-2xl border border-[#3E9C93]/30 bg-[#3E9C93]/5 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-4 h-4 text-[#3E9C93]" />
+              <span className="text-xs font-black uppercase tracking-wide text-[#3E9C93]">{tri("Corso passo-passo con Sitor", "Schritt-für-Schritt-Kurs mit Sitor", "Step-by-step course with Sitor", "Curso paso a paso con Sitor")}</span>
+            </div>
+            {courseLoading && (
+              <div data-testid="recipe-course-loading" className="flex items-center gap-2 text-sm text-[#7E8A93] py-4">
+                <Loader2 className="w-4 h-4 animate-spin text-[#3E9C93]" />
+                {tri("Sitor sta preparando il corso… (solo la prima volta)", "Sitor bereitet den Kurs vor… (nur beim ersten Mal)", "Sitor is preparing the course… (first time only)", "Sitor prepara el curso… (solo la primera vez)")}
+              </div>
+            )}
+            {courseErr && !courseLoading && <p className="text-sm text-[#b06e78] py-2">{courseErr}</p>}
+            {course && !courseLoading && (
+              <div className="space-y-3">
+                {course.intro && <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed italic">{course.intro}</p>}
+                <ol className="space-y-3">
+                  {(course.phases || []).map((p, i) => (
+                    <li key={i} data-testid={`recipe-course-phase-${i}`} className="flex gap-3">
+                      <span className="shrink-0 w-6 h-6 rounded-full bg-[#3E9C93] text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-[#2B303B] dark:text-[#e4eff8]">{p.name}</p>
+                        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed mt-0.5">{p.detail}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                {(course.tips || []).length > 0 && (
+                  <div className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3">
+                    <p className="text-[11px] font-black uppercase tracking-wide text-[#8a97a6] mb-1.5">{tri("Consigli del maestro", "Tipps vom Meister", "Master's tips", "Consejos del maestro")}</p>
+                    <ul className="space-y-1">
+                      {course.tips.map((tp, i) => (
+                        <li key={i} className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed flex gap-2"><span className="text-[#3E9C93]">•</span><span>{tp}</span></li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {isPanettone && !r.locked && (
           <button data-testid={`farro-toggle-${r.id}`} onClick={() => setFarro((v) => !v)}
