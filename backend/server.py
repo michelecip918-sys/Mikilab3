@@ -718,6 +718,7 @@ ORG_ACTIVATION_CODE = os.environ.get("ORG_ACTIVATION_CODE", "")
 ORG_SCOPED_COLLECTIONS = [
     "recipes", "weekly_plan", "dept_assignments", "inventory_items",
     "day_closures", "dept_machines", "dept_objectives", "favorites",
+    "pizzeria_sessions", "pastry_deliveries",
 ]
 
 
@@ -1529,7 +1530,7 @@ class PastryDelivery(BaseModel):
 
 @api_router.get("/pastry/deliveries")
 async def pastry_deliveries_list(admin: dict = Depends(require_admin)):
-    docs = await db.pastry_deliveries.find({}, {"_id": 0}).sort("date", 1).to_list(200)
+    docs = await db.pastry_deliveries.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("date", 1).to_list(200)
     return {"deliveries": docs}
 
 
@@ -1541,6 +1542,7 @@ async def pastry_delivery_create(body: PastryDelivery, admin: dict = Depends(req
         "event_type": (body.event_type or "torta")[:30], "date": (body.date or "")[:10],
         "time": (body.time or "")[:10], "people": (body.people or "")[:20],
         "notes": (body.notes or "")[:800], "done": False, "at": now_iso(),
+        "organization_id": _org_id(admin),
     }
     await db.pastry_deliveries.insert_one(dict(doc))
     return {"ok": True, "delivery": doc}
@@ -1548,16 +1550,71 @@ async def pastry_delivery_create(body: PastryDelivery, admin: dict = Depends(req
 
 @api_router.post("/pastry/deliveries/{did}/toggle")
 async def pastry_delivery_toggle(did: str, admin: dict = Depends(require_admin)):
-    d = await db.pastry_deliveries.find_one({"id": did}, {"_id": 0})
+    d = await db.pastry_deliveries.find_one({"id": did, "organization_id": _org_id(admin)}, {"_id": 0})
     if not d:
         raise HTTPException(status_code=404, detail="not found")
-    await db.pastry_deliveries.update_one({"id": did}, {"$set": {"done": not d.get("done")}})
+    await db.pastry_deliveries.update_one({"id": did, "organization_id": _org_id(admin)}, {"$set": {"done": not d.get("done")}})
     return {"ok": True}
 
 
 @api_router.delete("/pastry/deliveries/{did}")
 async def pastry_delivery_delete(did: str, admin: dict = Depends(require_admin)):
-    await db.pastry_deliveries.delete_one({"id": did})
+    await db.pastry_deliveries.delete_one({"id": did, "organization_id": _org_id(admin)})
+    return {"ok": True}
+
+
+# ============================================================================
+# PIZZERIA — pannello dedicato "Servizio & Panetti".
+# La pizzeria lavora a FLUSSO/SERVIZIO (non a lotti): sessioni di servizio con
+# panetti porzionati, maturazione in frigo e sfornate a ritmo di sala.
+# ============================================================================
+class PizzeriaSession(BaseModel):
+    label: str = ""            # nome servizio (es. "Cena venerdì")
+    date: str = ""             # ISO date del servizio
+    service_start: str = ""    # HH:MM apertura sala
+    service_end: str = ""      # HH:MM chiusura
+    dough_balls: str = ""      # numero panetti
+    ball_weight_g: str = ""    # grammatura panetto
+    method: str = "diretto"    # diretto | biga | poolish | misto
+    maturation_h: str = ""     # ore di maturazione in frigo
+    fridge: str = ""           # cella/frigo dedicato
+    notes: str = ""
+
+
+@api_router.get("/pizzeria/sessions")
+async def pizzeria_sessions_list(admin: dict = Depends(require_admin)):
+    q = {"organization_id": _org_id(admin)}
+    docs = await db.pizzeria_sessions.find(q, {"_id": 0}).sort("date", 1).to_list(200)
+    return {"sessions": docs}
+
+
+@api_router.post("/pizzeria/sessions")
+async def pizzeria_session_create(body: PizzeriaSession, admin: dict = Depends(require_admin)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "label": (body.label or "")[:120], "date": (body.date or "")[:10],
+        "service_start": (body.service_start or "")[:10], "service_end": (body.service_end or "")[:10],
+        "dough_balls": (body.dough_balls or "")[:12], "ball_weight_g": (body.ball_weight_g or "")[:12],
+        "method": (body.method or "diretto")[:20], "maturation_h": (body.maturation_h or "")[:8],
+        "fridge": (body.fridge or "")[:80], "notes": (body.notes or "")[:800],
+        "done": False, "at": now_iso(), "organization_id": _org_id(admin),
+    }
+    await db.pizzeria_sessions.insert_one(dict(doc))
+    return {"ok": True, "session": doc}
+
+
+@api_router.post("/pizzeria/sessions/{sid}/toggle")
+async def pizzeria_session_toggle(sid: str, admin: dict = Depends(require_admin)):
+    d = await db.pizzeria_sessions.find_one({"id": sid, "organization_id": _org_id(admin)}, {"_id": 0})
+    if not d:
+        raise HTTPException(status_code=404, detail="not found")
+    await db.pizzeria_sessions.update_one({"id": sid, "organization_id": _org_id(admin)}, {"$set": {"done": not d.get("done")}})
+    return {"ok": True}
+
+
+@api_router.delete("/pizzeria/sessions/{sid}")
+async def pizzeria_session_delete(sid: str, admin: dict = Depends(require_admin)):
+    await db.pizzeria_sessions.delete_one({"id": sid, "organization_id": _org_id(admin)})
     return {"ok": True}
 
 
@@ -1809,7 +1866,7 @@ async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)
     doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
            "dept_name": DEPARTMENTS[body.dept]["name"], "task": (body.task or "").strip(),
            "operator": (body.operator or "Sitor").strip(), "note": (body.note or "").strip(),
-           "by": admin.get("email") or "master", "at": now_iso()}
+           "by": admin.get("email") or "master", "at": now_iso(), "organization_id": _org_id(admin)}
     await db.dept_assignments.insert_one({**doc})
     doc.pop("_id", None)
     return {"ok": True, "assignment": doc}
@@ -1845,7 +1902,7 @@ async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(req
         doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
                "dept_name": DEPARTMENTS[body.dept]["name"], "task": (it.task or "").strip(),
                "operator": op, "note": "", "apprentice": bool(it.apprentice),
-               "by": admin.get("email") or "master", "at": now_iso()}
+               "by": admin.get("email") or "master", "at": now_iso(), "organization_id": _org_id(admin)}
         await db.dept_assignments.insert_one({**doc})
         doc.pop("_id", None)
         created.append(doc)

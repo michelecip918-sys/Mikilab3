@@ -5230,7 +5230,17 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Testato**: iteration_239.json → frontend 100% (5/5 flussi: ripristino, persistenza dopo reload, edit/elimina/aggiungi lotto + salvataggio, generazione LLM completa fase1+fase2, zero errori console). Backend validato via curl (options/detail/save roundtrip).
 
 ## BACKLOG aggiornato (prossimi passi concordati con l'utente, in ordine)
-- **P1 — Issue 2: Turni nel Piano**: assegnazioni squadra/ruoli dentro la vista 7 giorni di PianoUnico + struttura DB.
-- **P1 — Issue 3: Pannello Pizzeria dedicato**: flussi/macchine/celle specifici per attività pizzeria.
-- **P2 — Issue 4 (ALTO RISCHIO, fare per ULTIMO): Filtro aziende completo** — filtro `organization_id` su TUTTE le query (recipes, weekly_plan, dept_assignments, inventory_items, day_closures, dept_machines, dept_objectives, favorites) garantendo accesso totale ai dati `org_default`/legacy per l'admin principale.
+- P3: Dispatch vocale in tempo reale in produzione; dettatura vocale ordine rapido.
+
+---
+## Changelog — 14 Set 2026 (Issue 2 Turni + Issue 3 Pizzeria + Issue 4 isolamento parziale)
+- **Issue 2 — Turni nel Piano (P1 FATTO)**: dentro `PianoUnico.jsx`/`DayPlan` ogni giorno ha ora la sezione **"Turni del giorno"** (`piano-team`): aggiungi/modifica/elimina persone (nome + mansione: Impasto/Formatura/Forni/Celle/Banco/Pulizie). Ogni lotto ha il campo **assegnatario** collegato alla squadra del giorno via `datalist` (`piano-team-list-<day>`). Tutto persiste in `db.weekly_plan.days.<day>.team[]` e `batches[].assignee`. Testato reload/persistenza.
+- **Issue 3 — Pannello Pizzeria (P1 FATTO)**: nuovo `PizzeriaServizio.jsx` + backend `/api/pizzeria/sessions` (GET/POST/toggle/DELETE, **org-scoped**). Sessioni di servizio a flusso (panetti porzionati, grammatura, metodo diretto/biga/poolish/misto, ore maturazione, frigo) con **calcolo automatico dell'orario di inizio impasto** (apertura servizio − ore maturazione, con gestione "giorno prima"). Montato in App.js sotto `activity === "pizzeria"` (accanto a Pasticceria "Consegne & Eventi"), `defaultOpen`.
+- **Issue 4 — Isolamento aziendale (P2, PARZIALE + safe)**: collezioni org-scoped estese con `pizzeria_sessions` e `pastry_deliveries`; endpoint pastry e pizzeria ora filtrano/stampano `organization_id` dalla sessione admin (l'admin resta su `org_default` → vede tutti i dati legacy). Scritture dei reparti admin (`dept_assignments` assign/assign-multi) taggate con `organization_id`.
+  - **LIMITE NOTO / DA DECIDERE CON L'UTENTE**: gli endpoint di produzione dei reparti (`/depts/{dept}/machines`, `/depts/assignment`, `/depts/board`, `/depts/progress`, `dept_machines_overview`) sono **senza sessione** (li chiamano gli operatori dietro il solo gate PIN) → non hanno un'identità azienda da cui derivare `organization_id`. Filtrarli romperebbe il floor. Per l'isolamento COMPLETO del piano di produzione serve rendere i **PIN operatore consapevoli dell'azienda** (associare ogni PIN a un `organization_id` e propagarlo sul cookie gate): task dedicato, ALTO RISCHIO, da confermare. In ambiente attuale esiste UNA sola azienda reale (`org_default`), quindi nessuna falla pratica finché non si registra una seconda azienda.
+- **Fix build**: risolto errore di compilazione CRA in App.js (arrow one-liner con `catch {` → try/catch multi-linea con `catch (_err)`).
+- **Testato**: iteration_240.json → frontend 100% (5/5: pannello pizzeria CRUD + doughStart, nascondimento per panificio, turni add/edit + assegnatario datalist, persistenza reload, regressione). Backend pizzeria/pastry/weekly-team validati via curl.
+
+## BACKLOG dopo questa sessione
+- **Isolamento floor completo (ALTO RISCHIO)**: PIN operatore → organization_id → cookie gate → filtro su tutti gli endpoint `/depts/*`. Richiede conferma utente.
 - P3: Dispatch vocale in tempo reale in produzione; dettatura vocale ordine rapido.

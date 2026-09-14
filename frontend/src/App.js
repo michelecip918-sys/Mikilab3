@@ -67,7 +67,7 @@ import { SubTabs } from "@/components/console/SubTabs";
 import ZoneHero3D from "@/components/console/ZoneHero3D";
 import OnboardingActivity from "@/components/OnboardingActivity";
 import PasticceriaConsegne from "@/components/console/PasticceriaConsegne";
-import SitorGuidedTools from "@/components/console/SitorGuidedTools";
+import PizzeriaServizio from "@/components/console/PizzeriaServizio";import SitorGuidedTools from "@/components/console/SitorGuidedTools";
 import AdminSecurity from "@/components/console/AdminSecurity";
 import EliteTools from "@/components/console/EliteTools";
 import HardwareBridge from "@/components/console/HardwareBridge";
@@ -263,7 +263,14 @@ export default function App() {
     return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
   }, []);
   useEffect(() => {
-    const h = (e) => { try { setFloorRole((e && e.detail && e.detail.role != null) ? e.detail.role : (localStorage.getItem("mikilab_role") || "")); } catch { setFloorRole(""); } };
+    const h = (e) => {
+      try {
+        const r = (e && e.detail && e.detail.role != null) ? e.detail.role : (localStorage.getItem("mikilab_role") || "");
+        setFloorRole(r);
+      } catch (_err) {
+        setFloorRole("");
+      }
+    };
     window.addEventListener("mikilab-role-changed", h);
     return () => window.removeEventListener("mikilab-role-changed", h);
   }, []);
@@ -557,6 +564,11 @@ export default function App() {
                     {activity === "pasticceria" && (
                     <HoloPanel testid="panel-pastry" accent="#93a2ae" beacon="#93a2ae" icon="🧁" title={tri("Consegne & Eventi · Pasticceria", "Lieferungen & Events · Konditorei", "Deliveries & Events · Pastry", "Entregas & Eventos · Pastelería", "Livraisons & Événements · Pâtisserie", "تحویل و رویداد · شیرینی")} sub={tri("Torte su commessa, matrimoni ed eventi con date e promemoria di Sitor.", "Auftragstorten, Hochzeiten, Events mit Terminen.", "Made-to-order cakes, weddings and events with dates and Sitor reminders.", "Tartas por encargo, bodas y eventos.", "Gâteaux sur commande, mariages et événements.", "کیک سفارشی، عروسی و رویداد.")}>
                       <PasticceriaConsegne />
+                    </HoloPanel>
+                    )}
+                    {activity === "pizzeria" && (
+                    <HoloPanel testid="panel-pizzeria" accent="#3E9C93" beacon="#3E9C93" defaultOpen icon="🍕" title={tri("Servizio & Panetti · Pizzeria", "Service & Teiglinge · Pizzeria", "Service & Dough Balls · Pizzeria", "Servicio & Bollos · Pizzería", "Service & Pâtons · Pizzeria", "سرویس و چانه · پیتزا")} sub={tri("Sessioni di servizio a flusso: panetti porzionati, maturazione in frigo e orario d'inizio impasto calcolato da Sitor.", "Service-Sitzungen im Fluss: portionierte Teiglinge, Kühlreifung, Startzeit von Sitor.", "Continuous service sessions: portioned dough balls, cold maturation and dough start time computed by Sitor.", "Sesiones de servicio: bollos porcionados y maduración.", "Sessions de service : pâtons portionnés et maturation.", "جلسات سرویس: چانه‌های تقسیم‌شده و تخمیر سرد.")}>
+                      <PizzeriaServizio />
                     </HoloPanel>
                     )}
                     </SecBlock>

@@ -667,6 +667,14 @@ export const pastryApi = {
   remove: (id) => api.delete(`/pastry/deliveries/${id}`).then((r) => r.data),
 };
 
+// Pizzeria — pannello dedicato "Servizio & Panetti".
+export const pizzeriaApi = {
+  list: () => api.get(`/pizzeria/sessions`).then((r) => r.data),
+  create: (payload) => api.post(`/pizzeria/sessions`, payload).then((r) => r.data),
+  toggle: (id) => api.post(`/pizzeria/sessions/${id}/toggle`).then((r) => r.data),
+  remove: (id) => api.delete(`/pizzeria/sessions/${id}`).then((r) => r.data),
+};
+
 // Volti squadra — registrati dal Capo, condivisi su tutti i tablet.
 export const facesApi = {
   list: () => api.get(`/faces`).then((r) => r.data).catch(() => api.get(`/public/faces`).then((r) => r.data)),

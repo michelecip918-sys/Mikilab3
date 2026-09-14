@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2, Save } from "lucide-react";
+import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2, Save, Users } from "lucide-react";
 import { recipesApi, mikeApi, weeklyApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
@@ -40,9 +40,11 @@ const Section = ({ icon: Ic, title, accent, testid, children }) => (
   </div>
 );
 
-// Dettaglio di UN giorno: calendario modificabile, orari a ritroso e timeline.
-function DayPlan({ day, data, tri, onPatch, onDel, onAdd }) {
+// Dettaglio di UN giorno: turni della squadra, calendario modificabile, orari a ritroso e timeline.
+function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch, onTeamDel }) {
   const batches = data.batches || [];
+  const team = data.team || [];
+  const teamNames = team.map((t) => t.name).filter(Boolean);
   const span = useMemo(() => {
     const starts = batches.map((b) => toMin(b.start)).filter((x) => x != null);
     if (!starts.length) return null;
@@ -57,8 +59,54 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd }) {
     return { min, max, dur: Math.max(30, max - min) };
   }, [batches]);
 
+  const ROLE_OPTS = [
+    tri("Impasto", "Teig", "Dough", "Masa", "Pétrin", "خمیر"),
+    tri("Formatura", "Formen", "Shaping", "Formado", "Façonnage", "شکل‌دهی"),
+    tri("Forni", "Öfen", "Ovens", "Hornos", "Fours", "فرها"),
+    tri("Celle", "Zellen", "Cells", "Cámaras", "Chambres", "سلول‌ها"),
+    tri("Banco", "Theke", "Counter", "Mostrador", "Comptoir", "پیشخوان"),
+    tri("Pulizie", "Reinigung", "Cleaning", "Limpieza", "Nettoyage", "نظافت"),
+  ];
+
   return (
     <div className="space-y-4">
+      {/* Turni del giorno — chi lavora e con quale mansione */}
+      <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="#3E9C93" testid="piano-team">
+        {team.length === 0 ? (
+          <p className="text-[12px] text-[#64748B] mb-2">{tri("Nessuno assegnato a questo giorno.", "Niemand zugewiesen.", "No one assigned to this day.", "Nadie asignado.", "Personne assigné.", "کسی تخصیص نیافته.")}</p>
+        ) : (
+          <div className="space-y-1.5 mb-2">
+            {team.map((m, i) => (
+              <div key={i} data-testid={`piano-team-row-${day}-${i}`} className="flex items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
+                <Users className="w-3.5 h-3.5 text-[#3E9C93] shrink-0" />
+                <input
+                  data-testid={`piano-team-name-${day}-${i}`}
+                  value={m.name || ""}
+                  onChange={(e) => onTeamPatch(day, i, { name: e.target.value })}
+                  placeholder={tri("Nome", "Name", "Name", "Nombre", "Nom", "نام")}
+                  className="flex-1 min-w-0 bg-transparent text-[13px] font-bold text-white placeholder:text-[#475569] focus:outline-none"
+                />
+                <select
+                  data-testid={`piano-team-role-${day}-${i}`}
+                  value={m.role || ""}
+                  onChange={(e) => onTeamPatch(day, i, { role: e.target.value })}
+                  className="shrink-0 rounded-md bg-[#060A10] border border-[#3E9C93]/30 px-2 py-1 text-[11px] text-[#7fd3c9]"
+                >
+                  <option value="">{tri("Mansione…", "Aufgabe…", "Role…", "Tarea…", "Rôle…", "نقش…")}</option>
+                  {ROLE_OPTS.map((r) => (<option key={r} value={r}>{r}</option>))}
+                </select>
+                <button data-testid={`piano-team-del-${day}-${i}`} onClick={() => onTeamDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <button data-testid={`piano-team-add-${day}`} onClick={() => onTeamAdd(day)} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3E9C93] hover:text-[#7fd3c9]">
+          <Plus className="w-4 h-4" /> {tri("Aggiungi persona al turno", "Person zur Schicht", "Add person to shift", "Añadir persona", "Ajouter une personne", "افزودن نفر")}
+        </button>
+      </Section>
+
       {/* Calendario del giorno (modificabile dalla Direzione) */}
       <Section icon={CalendarClock} title={tri("Calendario del giorno", "Tageskalender", "Day calendar", "Calendario del día", "Calendrier du jour", "تقویم روز")} accent="#a4afbb" testid="piano-calendar">
         {batches.length === 0 ? (
@@ -83,8 +131,16 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd }) {
                     placeholder={tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")}
                     className="w-full bg-transparent text-[13px] font-bold text-white placeholder:text-[#475569] focus:outline-none"
                   />
-                  <div className="text-[11px] text-[#64748B] truncate">
-                    {[b.line, b.assignee, b.rationale].filter(Boolean).join(" · ")}
+                  <div className="flex items-center gap-1.5 mt-0.5">
+                    <span className="text-[11px] text-[#64748B] shrink-0">{[b.line, b.rationale].filter(Boolean).join(" · ")}</span>
+                    <input
+                      list={`piano-team-list-${day}`}
+                      data-testid={`piano-batch-assignee-${day}-${i}`}
+                      value={b.assignee || ""}
+                      onChange={(e) => onPatch(day, i, { assignee: e.target.value })}
+                      placeholder={tri("assegna a…", "zuweisen…", "assign to…", "asignar a…", "assigner à…", "به…")}
+                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#7fd3c9] placeholder:text-[#475569] border-b border-dashed border-[#3E9C93]/30 focus:outline-none focus:border-[#3E9C93]"
+                    />
                   </div>
                 </div>
                 <input
@@ -102,6 +158,9 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd }) {
             ))}
           </div>
         )}
+        <datalist id={`piano-team-list-${day}`}>
+          {teamNames.map((n) => (<option key={n} value={n} />))}
+        </datalist>
         <button data-testid={`piano-day-add-${day}`} onClick={() => onAdd(day)} className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white">
           <Plus className="w-4 h-4" /> {tri("Aggiungi lotto", "Charge hinzufügen", "Add batch", "Añadir lote", "Ajouter un lot", "افزودن دسته")}
         </button>
@@ -276,6 +335,9 @@ export default function PianoUnico({ activity: activityProp }) {
   const patchBatch = (day, i, patch) => setWeek((w) => ({ ...w, [day]: { ...w[day], batches: w[day].batches.map((b, k) => (k === i ? { ...b, ...patch } : b)) } }));
   const delBatch = (day, i) => setWeek((w) => ({ ...w, [day]: { ...w[day], batches: w[day].batches.filter((_, k) => k !== i) } }));
   const addBatch = (day) => setWeek((w) => ({ ...w, [day]: { ...w[day], batches: [...w[day].batches, { product: "", qty: "", start: "08:00", duration_min: 60, line: "", assignee: "", rationale: "" }] } }));
+  const addTeam = (day) => setWeek((w) => ({ ...w, [day]: { ...w[day], team: [...(w[day].team || []), { name: "", role: "" }] } }));
+  const patchTeam = (day, i, patch) => setWeek((w) => ({ ...w, [day]: { ...w[day], team: (w[day].team || []).map((m, k) => (k === i ? { ...m, ...patch } : m)) } }));
+  const delTeam = (day, i) => setWeek((w) => ({ ...w, [day]: { ...w[day], team: (w[day].team || []).filter((_, k) => k !== i) } }));
 
   const saveAll = async () => {
     if (!week) return;
@@ -489,7 +551,7 @@ export default function PianoUnico({ activity: activityProp }) {
             </div>
 
             <div className="print-area">
-              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} />
+              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [], team: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} onTeamAdd={addTeam} onTeamPatch={patchTeam} onTeamDel={delTeam} />
             </div>
           </motion.div>
         )}
