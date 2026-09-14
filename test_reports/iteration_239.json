@@ -1,0 +1,27 @@
+{
+  "summary": "Frontend E2E testing of the NEW 7-day Weekly Plan (PianoUnico) in MikiLab Pro. All 5 required flows PASS: (1) gate PIN + admin login + open 'Weekly Plan' panel (piano-unico) shows piano-saved-badge '24 batches' and the 7 day tabs lun/mar/mer/gio/ven/sab/dom with counts (4/4/4/4/4/4/0) + full day detail (calendar, backward times, timeline, warnings). (2) Persistence after browser reload OK (weeklyApi.get restores days+option_label 'Massima velocità'). (3) Day edits work: modified qty (50->77), start (04:00->06:15), added a manual batch via piano-day-add-lun, deleted a middle batch via piano-batch-del-lun-1, clicked piano-save -> toast 'Weekly plan saved.' and after reload edits were preserved (qty=77, start=06:15). (4) Full LLM generation flow WORKS: filled 2 recipes (Anima Integrale + Baguette a Lievito Madre), clicked piano-generate -> 3 options (Massima velocità / Massima qualità / Risparmio personale) appeared in ~25s with per-day chips; clicked piano-option-0 -> piano-detail-loading shown -> full 7-day detail rendered in ~10s with 27 detailed batches, HH:MM starts, backward times header (03:30 wake), Sitor warnings and timeline. (5) No non-noise console errors (only expected pre-gate 401s and harmless THREE.js WebGPU adapter warnings). Rest of Direzione console reachable (Recipes/Plan/Orders/Team/Tools/Sitor/Security nav intact).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "PianoUnico (piano-unico)", "issues": ["Active day defaults to today's weekday (dom in this test) which after reload can show 'No batches for this day' when Sunday has 0 batches — user may think plan is empty; consider defaulting to first day with batches or highlight non-empty tabs."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "PianoUnico.jsx is 496 lines with 3 logical steps + DayPlan sub-component; could be split (DayPlan.jsx, useWeeklyPlan hook) for maintainability but not blocking.",
+    "activeDay initialized once with getDay(); when the user has NO batches on today's tab there's no auto-fallback to a populated day (minor UX).",
+    "saveAll persists items[] where recipe_id is derived by slugifying product name (line 287) — this loses the original recipe_id when the batch originated from Sitor detail; if downstream analytics rely on recipe_id, they will miss stable joins.",
+    "In autoplanWeekDetail path (choose()) the previously-saved 'week' state is wiped (setWeek(null)) BEFORE the LLM call; if the LLM call fails the user loses the on-screen plan and must reload from archive — consider keeping previous week until new detail returns."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped per request)", "frontend": "100%"},
+  "test_credentials": "Master PIN 198505; Admin admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "During tests: edited saved plan Monday batch 0 qty 50->77, start 04:00->06:15; added and then deleted intermediate lots (net 0). A fresh weekly plan for option 'Massima velocità' with 27 detailed batches was regenerated in-memory but NOT saved (piano-save not clicked at end of gen flow), so the archived plan still shows 24 batches with the persisted edits.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "PianoUnico now handles the whole 7-day flow (step1 orders -> step2 3 strategies -> step3 7 tabs). Data-testid map: piano-unico, piano-saved-badge, piano-day-tabs, piano-day-tab-<lun|mar|mer|gio|ven|sab|dom>, piano-cal-row-<day>-<i>, piano-batch-{start,product,qty,del}-<day>-<i>, piano-day-add-<day>, piano-recipe-<i>, piano-qty-<i>, piano-add-row, piano-del-row-<i>, piano-extra-orders, piano-generate, piano-option-<0-2>, piano-detail-loading, piano-generated, piano-save, piano-speak, piano-print, piano-calendar, piano-backward, piano-timeline, piano-warnings. LLM Phase-1 latency ~20-25s; Phase-2 detail ~10s (fast because parallel). Admin/Capo entry path: OK->Direction->keypad 198505->onboarding-opt-panificio+onboarding-confirm->'Sign in as Capo'->auth-email/auth-password/auth-submit->'Skip tour'->tab 'Plan'.",
+  "rca of the issue": "N/A — no defects found in the new weekly-plan feature."
+}

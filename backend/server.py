@@ -417,6 +417,8 @@ class WeeklyItem(BaseModel):
 
 class WeeklyPlan(BaseModel):
     items: List[WeeklyItem] = []
+    days: Optional[Dict[str, Any]] = None       # dettaglio 7 giorni generato da Sitor (lotti con orari)
+    option_label: Optional[str] = None          # strategia settimanale scelta dalla Direzione
     updated_at: str = Field(default_factory=now_iso)
 
 
@@ -8999,6 +9001,167 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
         except Exception as e:
             logger.warning("autoplan options fail (%s)", str(e)[:120])
     return {"ok": True, "date": today, "options": options}
+
+
+# ---------------------------------------------------------------------------
+# Piano Settimanale 7 giorni (Sitor) — Fase 1: strategie | Fase 2: dettaglio parallelo
+# ---------------------------------------------------------------------------
+WEEK_DAY_KEYS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"]
+_LANG_NAMES = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}
+
+
+def _parse_llm_json(out: str) -> dict:
+    """Estrae il primo oggetto JSON valido dall'output LLM (tollera markdown e troncamenti)."""
+    raw = (out or "").strip().replace("```json", "").replace("```", "")
+    m = re.search(r"\{.*\}", raw, re.S)
+    frag = m.group(0) if m else raw
+    try:
+        return json.loads(frag)
+    except Exception:
+        depth = 0
+        end = -1
+        for i, ch in enumerate(frag):
+            if ch == "{":
+                depth += 1
+            elif ch == "}":
+                depth -= 1
+                if depth == 0:
+                    end = i + 1
+                    break
+        if end > 0:
+            try:
+                return json.loads(frag[:end])
+            except Exception:
+                return {}
+    return {}
+
+
+async def _plan_context(body) -> str:
+    """Contesto operativo condiviso per i piani di Sitor (caposquadra, personale, scorte, macchine, freezer)."""
+    ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
+    leaders = ld.get("leaders") or {}
+    low = []
+    try:
+        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+            mn = float(s.get("min_kg") or 0)
+            q = float(s.get("quantity_kg") or 0)
+            if mn > 0 and q <= mn:
+                low.append(f"{s.get('name')} ({q:g}/{mn:g}kg)")
+    except Exception:
+        pass
+    today = (body.date or now_iso()[:10])
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
+    ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
+           f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
+           f"Scorte in esaurimento: {low or 'nessuna'}. Ordini della Direzione: {body.orders_text or 'nessun ordine extra'}.")
+    try:
+        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _sel = [str(x).lower() for x in (body.machines or [])]
+        _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
+        if _use:
+            _ml = ", ".join(f"{m.get('name')}{(' ['+m['category']+']') if m.get('category') else ''}{(' cap.'+str(m['capacity'])) if m.get('capacity') else ''}" for m in _use)
+            ctx += f" PARCO MACCHINE DA USARE (vincolo reale, assegna forni/impastatrici/celle solo tra questi): {_ml}."
+    except Exception:
+        pass
+    ctx += _autoplan_freezer_ctx(body.freezer_stock)
+    return ctx
+
+
+class AutoPlanWeekDetailReq(AutoPlanReq):
+    days: Dict[str, List[dict]] = {}
+    option_label: str = ""
+
+
+@api_router.post("/mike/autoplan/week/options")
+async def mike_autoplan_week_options(body: AutoPlanReq, admin: dict = Depends(require_admin)):
+    """FASE 1 — Sitor propone 3 STRATEGIE SETTIMANALI (lun-dom): distribuisce i prodotti sui 7 giorni."""
+    options = []
+    if EMERGENT_LLM_KEY:
+        try:
+            langname = _LANG_NAMES.get((body.lang or "it").split("-")[0][:2], "inglese")
+            prof = _activity_plan_profile(body.activity)
+            s1, s2, s3 = prof["strategies"]
+            sysmsg = (
+                f"Sei Sitor, {prof['role']}. "
+                f"PARADIGMA DI QUESTA ATTIVITÀ ({prof['label']}): {prof['paradigm']} "
+                "Genera 3 STRATEGIE ALTERNATIVE di PIANO SETTIMANALE (lunedì-domenica), ognuna con una strategia diversa: "
+                f"1) '{s1[0]}' ({s1[1]}), 2) '{s2[0]}' ({s2[1]}), 3) '{s3[0]}' ({s3[1]}). "
+                "Distribuisci TUTTI i prodotti richiesti sui 7 giorni usando le chiavi esatte lun, mar, mer, gio, ven, sab, dom "
+                "(presenti in OGNI opzione, anche come lista vuota). Tieni conto che venerdì e sabato vendono di più. "
+                "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o burocrazia. Solo produzione.\n"
+                f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+                "{\"options\":[{\"label\":\"" + s1[0] + "\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\","
+                "\"days\":{\"lun\":[{\"product\":\"..\",\"qty\":\"..\"}],\"mar\":[],\"mer\":[],\"gio\":[],\"ven\":[],\"sab\":[],\"dom\":[]},"
+                "\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve per la Direzione\"}]}. "
+                "Usa i label esatti delle 3 strategie. Esattamente 3 opzioni. Nessun testo fuori dal JSON."
+            )
+            sysmsg += await _bakery_snapshot(admin)
+            ctx = await _plan_context(body)
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanweek-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=4000)
+            out = ""
+            async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera 3 strategie di piano settimanale.")):
+                if isinstance(ev, TextDelta):
+                    out += ev.content or ""
+            options = _parse_llm_json(out).get("options", []) or []
+        except Exception as e:
+            logger.warning("autoplan week options fail (%s)", str(e)[:120])
+    norm = []
+    for o in options[:3]:
+        d = o.get("days") or {}
+        o["days"] = {k: list(d.get(k) or []) for k in WEEK_DAY_KEYS}
+        norm.append(o)
+    return {"ok": True, "options": norm}
+
+
+async def _week_day_detail(day_key: str, products: list, ctx: str, base_sys: str) -> dict:
+    """Dettaglio di UN giorno del piano settimanale (chiamata LLM dedicata, eseguita in parallelo)."""
+    plist = ", ".join(f"{p.get('qty', '')} {p.get('product', '')}".strip() for p in products)
+    sysmsg = (base_sys + f" GIORNO DA PIANIFICARE: {day_key}. Prodotti di QUEL giorno: {plist}. "
+              "Ogni lotto DEVE riferirsi a uno di questi prodotti (puoi dividerlo in più lotti se serve).")
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"weekday-{day_key}-{uuid.uuid4().hex[:6]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1500)
+    out = ""
+    async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera il piano dettagliato del giorno {day_key}.")):
+        if isinstance(ev, TextDelta):
+            out += ev.content or ""
+    parsed = _parse_llm_json(out)
+    batches = [b for b in (parsed.get("batches") or []) if isinstance(b, dict)][:6]
+    return {"batches": batches, "warnings": (parsed.get("warnings") or [])[:3]}
+
+
+@api_router.post("/mike/autoplan/week/detail")
+async def mike_autoplan_week_detail(body: AutoPlanWeekDetailReq, admin: dict = Depends(require_admin)):
+    """FASE 2 — dalla strategia scelta, genera IN PARALLELO il dettaglio completo dei 7 giorni
+    (orari, durate, linee, assegnatari per ogni lotto)."""
+    days_in = body.days or {}
+    result = {k: {"batches": [], "warnings": []} for k in WEEK_DAY_KEYS}
+    todo = [k for k in WEEK_DAY_KEYS if (days_in.get(k) or [])]
+    if EMERGENT_LLM_KEY and todo:
+        langname = _LANG_NAMES.get((body.lang or "it").split("-")[0][:2], "inglese")
+        prof = _activity_plan_profile(body.activity)
+        base_sys = (
+            f"Sei Sitor, {prof['role']}. "
+            f"PARADIGMA DI QUESTA ATTIVITÀ ({prof['label']}): {prof['paradigm']} "
+            f"Strategia scelta dalla Direzione: '{body.option_label or 'standard'}'. "
+            "Genera il PIANO DETTAGLIATO di UN SOLO giorno: sequenza dei lotti con orari realistici che rispettino "
+            "i tempi di impasto/lievitazione/cottura ed evitino colli di bottiglia al forno. "
+            "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o burocrazia. Solo produzione.\n"
+            f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+            "{\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"" + prof["lines"] + "\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"]}. "
+            "Massimo 5 lotti. Nessun testo fuori dal JSON."
+        )
+        base_sys += await _bakery_snapshot(admin)
+        ctx = await _plan_context(body)
+        results = await asyncio.gather(
+            *[_week_day_detail(k, days_in.get(k) or [], ctx, base_sys) for k in todo],
+            return_exceptions=True,
+        )
+        for k, r in zip(todo, results):
+            if isinstance(r, Exception):
+                logger.warning("week detail %s fail (%s)", k, str(r)[:120])
+            else:
+                result[k] = r
+    return {"ok": True, "days": result}
 
 
 class AutoPlanDispatchReq(BaseModel):

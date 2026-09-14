@@ -5218,3 +5218,19 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Punto 1 (parziale, VERIFICATO)**: PianoUnico ora SALVA l'opzione scelta in `db.weekly_plan` (PUT /weekly-plan, org-scoped `_org_id`) e la RICARICA al mount con badge "piano salvato" (`piano-saved-badge`). Fix del bug "sparisce al refresh". Mappatura batches→items {day(breve lun/mar…), recipe_id, recipe_name, pieces numerico}. Testato via curl: save=1, get=1, org_default.
 - RIMANE da fare (grosso, non fatto in questo giro): generazione 7 giorni in /autoplan/options + UI a 7 giorni + integrazione turni team; multi-tenancy: FILTRO effettivo `organization_id` su recipes/dept_assignments/inventory_items/day_closures/dept_machines/dept_objectives/favorites (ora solo users+weekly_plan+recipe personali stampati); differenziazione operativa pizzeria (pannello dedicato) vs pasticceria.
 - **Già fatto in fork precedenti (confermato)**: gate registrazione 198505 (403 senza codice) v-fork26; widget reparto EDITABILI dall'operaio + dashboard Capo overview + ispeziona reparto v-fork25 (punti 4-5 core); differenziazione opzioni/banner per attività v-fork23; file morti sections/ già eliminati v-fork22.
+
+
+---
+## Changelog — 14 Set 2026 (PIANO SETTIMANALE 7 GIORNI — Issue 1 completata)
+- **Backend** (server.py): due nuovi endpoint Sitor —
+  - `POST /api/mike/autoplan/week/options` (FASE 1): 3 strategie settimanali alternative, distribuzione prodotti su lun–dom (chiavi esatte), rispetto del paradigma attività (panificio/pizzeria/pasticceria). ~23s.
+  - `POST /api/mike/autoplan/week/detail` (FASE 2): dettaglio completo per giorno (orari HH:MM, durata, linea, assegnatario, rationale) generato con **7 chiamate LLM in parallelo** (asyncio.gather) → ~7s totali, nessun rischio troncamento proxy 60s.
+  - Helpers: `_parse_llm_json` (tollera markdown/troncamenti), `_plan_context` (caposquadra/personale/scorte/macchine/freezer). Modello `WeeklyPlan` esteso: `days` (dettaglio 7gg) + `option_label` (strategia scelta). Retrocompatibile con `items`.
+- **Frontend** (PianoUnico.jsx riscritto, sostituisce il piano giornaliero): Step 1 lista settimanale prodotti+quantità → Step 2 tre card strategia con chip distribuzione per giorno → Step 3 **schede Lun–Dom** con calendario **modificabile** (orario/prodotto/quantità inline, elimina/aggiungi lotto), orari a ritroso, timeline per giorno. Ripristino da archivio con fallback sul primo giorno non vuoto; `recipe_id` reale preservato al salvataggio; il piano precedente non viene perso se la fase 2 fallisce.
+- **Testato**: iteration_239.json → frontend 100% (5/5 flussi: ripristino, persistenza dopo reload, edit/elimina/aggiungi lotto + salvataggio, generazione LLM completa fase1+fase2, zero errori console). Backend validato via curl (options/detail/save roundtrip).
+
+## BACKLOG aggiornato (prossimi passi concordati con l'utente, in ordine)
+- **P1 — Issue 2: Turni nel Piano**: assegnazioni squadra/ruoli dentro la vista 7 giorni di PianoUnico + struttura DB.
+- **P1 — Issue 3: Pannello Pizzeria dedicato**: flussi/macchine/celle specifici per attività pizzeria.
+- **P2 — Issue 4 (ALTO RISCHIO, fare per ULTIMO): Filtro aziende completo** — filtro `organization_id` su TUTTE le query (recipes, weekly_plan, dept_assignments, inventory_items, day_closures, dept_machines, dept_objectives, favorites) garantendo accesso totale ai dati `org_default`/legacy per l'admin principale.
+- P3: Dispatch vocale in tempo reale in produzione; dettatura vocale ordine rapido.
