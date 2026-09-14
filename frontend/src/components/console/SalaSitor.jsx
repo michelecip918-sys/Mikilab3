@@ -193,7 +193,7 @@ export default function SalaSitor() {
         <div ref={listRef} data-testid="sitor-chat" className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3 space-y-2 min-h-[120px] max-h-72 overflow-y-auto">
           {msgs.length === 0 && (
             <p data-testid="sitor-chat-empty" className="text-[12px] text-[#64748B] text-center py-6 px-4">
-              {tri("«Capo, sono Sitor. Detta un ordine, incolla un'email o fai una domanda: genero io la produzione.»", "«Chef, ich bin Sitor. Diktiere einen Auftrag oder stelle eine Frage.»", "«Capo, I am Sitor. Dictate an order, paste an email or ask a question: I generate production.»", "«Soy Sitor. Dicta una orden o pregunta.»", "«Je suis Sitor. Dicte un ordre ou pose une question.»", "«من سیتور هستم. دستور بده یا سؤال بپرس.»")}
+              {tri("«Sono Sitor. Detta un ordine, incolla un'email o fai una domanda: genero io la produzione.»", "«Chef, ich bin Sitor. Diktiere einen Auftrag oder stelle eine Frage.»", "«Capo, I am Sitor. Dictate an order, paste an email or ask a question: I generate production.»", "«Soy Sitor. Dicta una orden o pregunta.»", "«Je suis Sitor. Dicte un ordre ou pose une question.»", "«من سیتور هستم. دستور بده یا سؤال بپرس.»")}
             </p>
           )}
           <AnimatePresence>

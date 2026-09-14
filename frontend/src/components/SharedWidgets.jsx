@@ -118,7 +118,7 @@ export default function SharedWidgets({ dept = "", deptKey = "", readOnly = fals
       {widgets.length > 0 && (
         <div data-testid="shared-widgets" className="rounded-2xl border border-[#a6b1bc]/25 bg-[#0C1019]/50 p-4 space-y-2.5">
           <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#a6b1bc]">
-            <Sparkles className="w-4 h-4" /> {tri("Dal Capo · condiviso", "Vom Chef · geteilt", "From the Capo · shared", "Del Capo · compartido", "Du Capo · partagé", "از کاپو · اشتراکی")}
+            <Sparkles className="w-4 h-4" /> {tri("Dalla Direzione · condiviso", "Vom Chef · geteilt", "From the Capo · shared", "Del Capo · compartido", "Du Capo · partagé", "از کاپو · اشتراکی")}
           </p>
           {widgets.map((w) => (
             <div key={w.id} data-testid={`shared-widget-${w.id}`} className="rounded-xl bg-[#060A10] border border-[#1e293b] p-3">

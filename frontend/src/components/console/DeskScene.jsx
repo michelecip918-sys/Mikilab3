@@ -46,7 +46,7 @@ export default function DeskScene() {
     const head = (d && (d.headline || d.plan_markdown)) ? (d.headline || String(d.plan_markdown).split("\n")[0]) : "";
     const msg = head
       ? tri(`Ecco il piano della settimana, Capo. ${head}`, `Hier der Wochenplan, Chef. ${head}`, `Here's the week's plan, boss. ${head}`, `Aquí el plan, jefe. ${head}`, `Voici le plan, chef. ${head}`, `این برنامه هفته است، رئیس. ${head}`)
-      : tri("Capo, non c'è ancora un piano generato. Vuoi che lo prepari io adesso?", "Chef, noch kein Plan. Soll ich ihn erstellen?", "Boss, no plan yet. Want me to prepare it now?", "Jefe, aún no hay plan. ¿Lo preparo?", "Chef, pas encore de plan. Je le prépare ?", "رئیس، هنوز برنامه‌ای نیست. آماده‌اش کنم؟");
+      : tri("Direzione, non c'è ancora un piano generato. Vuoi che lo prepari io adesso?", "Chef, noch kein Plan. Soll ich ihn erstellen?", "Boss, no plan yet. Want me to prepare it now?", "Jefe, aún no hay plan. ¿Lo preparo?", "Chef, pas encore de plan. Je le prépare ?", "رئیس، هنوز برنامه‌ای نیست. آماده‌اش کنم؟");
     try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
   };
 
@@ -71,7 +71,7 @@ export default function DeskScene() {
 
       <div className="absolute top-0 left-0 right-0 p-3 sm:p-4">
         <span className="font-mono-data text-[9px] tracking-[0.28em] uppercase text-[#9aa6b2]">MikiLab · Sitor</span>
-        <h2 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide" style={{ textShadow: "0 0 14px rgba(138,151,166,0.5)" }}>{tri("Console del Capo", "Chef-Konsole", "Boss Console", "Consola del Jefe", "Console du Chef", "کنسول رئیس")}</h2>
+        <h2 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide" style={{ textShadow: "0 0 14px rgba(138,151,166,0.5)" }}>{tri("Console di Direzione", "Chef-Konsole", "Boss Console", "Consola del Jefe", "Console du Chef", "کنسول رئیس")}</h2>
       </div>
 
       <AnimatePresence>

@@ -72,7 +72,7 @@ export default function MohamedInbox() {
           ))}
         </div>
       )}
-      {pending > 0 && <p className="flex items-center gap-1 text-[10px] text-[#a6b1bc]"><Clock className="w-3 h-3" /> {pending} {tri("in attesa del Capo", "warten auf den Chef", "awaiting the Capo", "esperando al Capo", "en attente du Capo", "منتظر کاپو")}</p>}
+      {pending > 0 && <p className="flex items-center gap-1 text-[10px] text-[#a6b1bc]"><Clock className="w-3 h-3" /> {pending} {tri("in attesa della Direzione", "warten auf den Chef", "awaiting the Capo", "esperando al Capo", "en attente du Capo", "منتظر کاپو")}</p>}
     </div>
   );
 }

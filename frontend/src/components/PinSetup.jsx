@@ -30,7 +30,7 @@ export default function PinSetup() {
       toast.success(tri("PIN d'accesso al sito aggiornato", "Zugangs-PIN aktualisiert", "Site access PIN updated", "PIN de acceso actualizado", "PIN d'accès mis à jour", "پین ورود سایت به‌روزرسانی شد"));
       setGateVal("");
     } catch (e) {
-      toast.error(e?.response?.status === 403 ? tri("Solo il Capo può modificarlo", "Nur der Chef", "Only the Capo can change it", "Solo el Capo", "Seul le Capo", "فقط کاپو") : tri("Salvataggio non riuscito", "Fehlgeschlagen", "Save failed", "Error", "Échec", "ناموفق"));
+      toast.error(e?.response?.status === 403 ? tri("Solo la Direzione può modificarlo", "Nur der Chef", "Only the Capo can change it", "Solo el Capo", "Seul le Capo", "فقط کاپو") : tri("Salvataggio non riuscito", "Fehlgeschlagen", "Save failed", "Error", "Échec", "ناموفق"));
     } finally { setGateSaving(false); }
   };
 
@@ -44,7 +44,7 @@ export default function PinSetup() {
       loadStatus();
     } catch (e) {
       const code = e?.response?.status;
-      if (code === 403) toast.error(tri("Solo il Capo può modificare il PIN", "Nur der Chef darf den PIN ändern", "Only the Capo can change the PIN", "Solo el Capo puede cambiar el PIN", "Seul le Capo peut changer le PIN", "فقط کاپو می‌تواند پین را تغییر دهد"));
+      if (code === 403) toast.error(tri("Solo la Direzione può modificare il PIN", "Nur der Chef darf den PIN ändern", "Only the Capo can change the PIN", "Solo el Capo puede cambiar el PIN", "Seul le Capo peut changer le PIN", "فقط کاپو می‌تواند پین را تغییر دهد"));
       else toast.error(tri("Salvataggio non riuscito", "Speichern fehlgeschlagen", "Save failed", "Error al guardar", "Échec de l'enregistrement", "ذخیره ناموفق بود"));
     } finally { setSaving(false); }
   };
@@ -52,11 +52,11 @@ export default function PinSetup() {
   return (
     <div data-testid="pin-setup" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">
       <h3 className="text-xs font-bold uppercase tracking-wider text-[#D95200] flex items-center gap-2 mb-2">
-        <KeyRound className="w-4 h-4" /> {tri("PIN Produzione (unico, scelto dal Capo)", "Produktions-PIN (einer, vom Chef)", "Production PIN (single, set by the Capo)", "PIN de producción (único, del Capo)", "PIN de production (unique, par le Capo)", "پین تولید (یکتا، توسط کاپو)")}
+        <KeyRound className="w-4 h-4" /> {tri("PIN Produzione (unico, scelto dalla Direzione)", "Produktions-PIN (einer, vom Chef)", "Production PIN (single, set by the Capo)", "PIN de producción (único, del Capo)", "PIN de production (unique, par le Capo)", "پین تولید (یکتا، توسط کاپو)")}
       </h3>
       <p className="text-[11px] text-[#64748B] mb-1 flex items-center gap-1.5">
         <Globe className="w-3.5 h-3.5 text-[#D95200]" />
-        {tri("PIN unico per tutti i dispositivi. Con questo gli operai entrano nel Floor Mode a mani libere.",
+        {tri("PIN unico per tutti i dispositivi. Con questo gli operai entrano in Produzione a mani libere.",
              "Ein PIN für alle Geräte. Damit betreten die Mitarbeiter den Floor-Modus freihändig.",
              "One PIN for all devices. Workers use it to enter hands-free Floor Mode.",
              "Un PIN para todos los dispositivos. Los operarios entran en modo Floor manos libres.",

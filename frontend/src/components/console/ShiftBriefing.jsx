@@ -11,7 +11,7 @@ const PUB = process.env.PUBLIC_URL;
 const STRESS = { calmo: "#9aa6b2", medio: "#a4afbb", alto: "#b06e78" };
 const themeFor = (av) => (av || "").includes("nexus") ? "bigmix" : "miki";
 const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
-const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("Il Capo", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
+const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("La Direzione", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
 
 // FASE 1 — Cyber-Trio: briefing d'apertura turno. Avatar olografici che REAGISCONO
 // allo stress dell'impianto (colore/pulsazione) e parlano in sequenza (hands-free).

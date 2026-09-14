@@ -41,7 +41,7 @@ export default function SitorShiftDraft() {
     try {
       const r = await deusApi.shiftDraftGenerate(lang);
       if (r.ok) {
-        toast.success(tri("Bozza pronta, Capo: leggila e approva.", "Entwurf fertig, Chef: lesen & freigeben.", "Draft ready, Capo: read & approve.", "Borrador listo: léelo y aprueba.", "Brouillon prêt : lisez et approuvez.", "پیش‌نویس آماده است."));
+        toast.success(tri("Bozza pronta: leggila e approva.", "Entwurf fertig, Chef: lesen & freigeben.", "Draft ready, Capo: read & approve.", "Borrador listo: léelo y aprueba.", "Brouillon prêt : lisez et approuvez.", "پیش‌نویس آماده است."));
         load();
       } else {
         toast.error(tri("Nessun dato del turno ancora registrato.", "Noch keine Schichtdaten erfasst.", "No shift data recorded yet.", "Aún sin datos del turno.", "Aucune donnée de service.", "هنوز داده‌ای ثبت نشده."));

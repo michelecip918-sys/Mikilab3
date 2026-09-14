@@ -62,7 +62,7 @@ export default function OrdiniExtra() {
       toast.success(tri("Piano inviato al Team! Mamo lo leggerà agli operai.", "Plan an das Team gesendet! Mamo liest ihn vor.", "Plan sent to the Team! Mamo will read it to the crew.", "¡Plan enviado al equipo! Mamo lo leerá a los operarios.", "Plan envoyé à l'équipe ! Mamo le lira à l'équipe.", "برنامه به تیم ارسال شد! مامو آن را می‌خواند."));
     } catch (e) {
       const s = e?.response?.status;
-      if (s === 401 || s === 403) toast.error(tri("Devi essere il Capo (accesso) per inviare il piano.", "Nur der Chef (angemeldet) kann den Plan senden.", "You must be the Capo (logged in) to send the plan.", "Debes ser el Capo (con sesión) para enviar el plan.", "Tu dois être le Capo (connecté) pour envoyer le plan.", "برای ارسال باید کاپو (وارد شده) باشی."));
+      if (s === 401 || s === 403) toast.error(tri("Devi accedere come Direzione per inviare il piano.", "Nur der Chef (angemeldet) kann den Plan senden.", "You must be the Capo (logged in) to send the plan.", "Debes ser el Capo (con sesión) para enviar el plan.", "Tu dois être le Capo (connecté) pour envoyer le plan.", "برای ارسال باید کاپو (وارد شده) باشی."));
       else toast.error(tri("Invio non riuscito, riprova.", "Senden fehlgeschlagen.", "Send failed, try again.", "Fallo al enviar.", "Échec de l'envoi.", "ارسال ناموفق بود."));
     } finally {
       setSending(false);
@@ -121,7 +121,7 @@ export default function OrdiniExtra() {
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {sending ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "در حال ارسال…") : tri("Invia al Team (Assistente Mamo)", "An das Team senden (Mamo)", "Send to the Team (Mamo Assistant)", "Enviar al Equipo (Asistente Mamo)", "Envoyer à l'équipe (Assistant Mamo)", "ارسال به تیم (دستیار مامو)")}
           </button>
-          <p className="text-[10px] text-[#64748B] text-center mt-1.5">{tri("Gli operai lo troveranno in Produzione · Floor, letto a voce da Mamo.", "Das Team findet ihn in Produktion · Floor, von Mamo vorgelesen.", "The crew will find it in Production · Floor, read aloud by Mamo.", "El equipo lo verá en Producción · Floor, leído por Mamo.", "L'équipe le trouvera dans Production · Floor, lu par Mamo.", "تیم آن را در بخش تولید می‌یابد، مامو می‌خواند.")}</p>
+          <p className="text-[10px] text-[#64748B] text-center mt-1.5">{tri("Gli operai lo troveranno in Produzione, letto a voce da Sitor.", "Das Team findet ihn in Produktion · Floor, von Mamo vorgelesen.", "The crew will find it in Production · Floor, read aloud by Mamo.", "El equipo lo verá en Producción · Floor, leído por Mamo.", "L'équipe le trouvera dans Production · Floor, lu par Mamo.", "تیم آن را در بخش تولید می‌یابد، مامو می‌خواند.")}</p>
         </div>
       )}
     </div>

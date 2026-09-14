@@ -68,8 +68,8 @@ export default function SitorMaestro({ role }) {
       });
       setLastChange(r); setProposal(""); setShowChange(false);
       speak(r.ack);
-      if (r.status === "auto_applied") toast.success(tri("Sitor ha applicato la modifica e avvisa il Capo.", "Sitor hat es angewandt und meldet es dem Chef.", "Sitor applied it and notifies the Capo.", "Sitor lo aplicó y avisa al Capo.", "Sitor l'a appliqué et prévient le Capo.", "سیتور اعمال کرد و به کاپو خبر می‌دهد."), { icon: "✓" });
-      else toast(tri("Richiesta inviata: in attesa dell'OK del Capo.", "Anfrage gesendet: warte auf OK des Chefs.", "Request sent: awaiting Capo's OK.", "Solicitud enviada: esperando OK del Capo.", "Demande envoyée : en attente du Capo.", "درخواست ارسال شد: منتظر تأیید کاپو."), { icon: "⏳" });
+      if (r.status === "auto_applied") toast.success(tri("Sitor ha applicato la modifica e avvisa la Direzione.", "Sitor hat es angewandt und meldet es dem Chef.", "Sitor applied it and notifies the Capo.", "Sitor lo aplicó y avisa al Capo.", "Sitor l'a appliqué et prévient le Capo.", "سیتور اعمال کرد و به کاپو خبر می‌دهد."), { icon: "✓" });
+      else toast(tri("Richiesta inviata: in attesa dell'OK della Direzione.", "Anfrage gesendet: warte auf OK des Chefs.", "Request sent: awaiting Capo's OK.", "Solicitud enviada: esperando OK del Capo.", "Demande envoyée : en attente du Capo.", "درخواست ارسال شد: منتظر تأیید کاپو."), { icon: "⏳" });
     } catch {
       toast.error(tri("Invio non riuscito, riprova.", "Senden fehlgeschlagen.", "Send failed, try again.", "Envío fallido.", "Échec de l'envoi.", "ارسال ناموفق."));
     } finally { setChangeBusy(false); }

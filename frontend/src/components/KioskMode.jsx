@@ -140,7 +140,7 @@ export default function KioskMode() {
           <span className="relative flex items-center gap-2">
             <span className="w-1.5 h-1.5 rounded-full bg-[#8a97a6] animate-pulse" />
             <Lock className="w-3.5 h-3.5 text-[#8a97a6]" />
-            {tri("KIOSK · tieni premuto · serve il PIN Capo", "KIOSK · halten · Capo-PIN nötig", "KIOSK · hold · Capo PIN required", "KIOSK · mantén · PIN del Capo", "KIOSK · maintiens · PIN du Capo", "کیوسک · نگه دار · PIN کاپو")}
+            {tri("KIOSK · tieni premuto · serve il PIN Direzione", "KIOSK · halten · Capo-PIN nötig", "KIOSK · hold · Capo PIN required", "KIOSK · mantén · PIN del Capo", "KIOSK · maintiens · PIN du Capo", "کیوسک · نگه دار · PIN کاپو")}
           </span>
         </button>
       )}
@@ -165,7 +165,7 @@ export default function KioskMode() {
               <Lock className="w-6 h-6 text-[#8a97a6]" />
             </div>
             <h3 className="font-cyber text-base font-black tracking-wide text-white uppercase">{tri("Uscita Kiosk", "Kiosk verlassen", "Exit Kiosk", "Salir de Kiosk", "Quitter Kiosk", "خروج از کیوسک")}</h3>
-            <p className="mt-1.5 text-xs text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-[#8a97a6]" /> {tri("Inserisci il PIN del Capo", "Capo-PIN eingeben", "Enter the Capo PIN", "Introduce el PIN del Capo", "Saisis le PIN du Capo", "PIN کاپو را وارد کن")}</p>
+            <p className="mt-1.5 text-xs text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5 text-[#8a97a6]" /> {tri("Inserisci il PIN della Direzione", "Capo-PIN eingeben", "Enter the Capo PIN", "Introduce el PIN del Capo", "Saisis le PIN du Capo", "PIN کاپو را وارد کن")}</p>
 
             <div className={`mt-5 flex justify-center gap-3 ${pinErr ? "animate-shake" : ""}`}>
               {[0, 1, 2, 3].map((i) => (

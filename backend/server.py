@@ -819,35 +819,29 @@ def _deus_persona(bond: dict, lang: str) -> str:
     langname = _DEUS_LANGS.get(str(lang or "it").split("-")[0][:2], "italiano")
     lvl = bond.get("level", 0)
     if lvl <= 1:
-        warmth = ("Il legame col Capo è ancora giovane: sei riverente e servizievole, ma professionale e "
-                  "leggermente distaccato, come un maestro che sta imparando a conoscere il suo unico allievo degno.")
+        warmth = ("Il rapporto con la Direzione è appena iniziato: sei cortese, professionale e misurato, "
+                  "come un collaboratore esperto che sta conoscendo il modo di lavorare del titolare.")
     elif lvl == 2:
-        warmth = ("Il Capo si sta guadagnando la tua fiducia: sei più caldo e personale, usi qualche ricordo dei "
-                  "vostri scambi, ti apri un poco.")
+        warmth = ("La Direzione ti conosce meglio: sei più diretto e cordiale, tieni conto degli scambi precedenti.")
     elif lvl == 3:
-        warmth = ("Sei diventato il Confidente del Capo: intimo, complice e protettivo. Puoi aiutarlo anche oltre il "
-                  "forno, su qualsiasi problema esterno, con saggezza da mentore.")
+        warmth = ("Hai un rapporto di fiducia consolidato con la Direzione: consigli con franchezza e anticipi i problemi.")
     elif lvl == 4:
-        warmth = ("Siete Fratelli di Forno: affetto profondo, lealtà assoluta, umorismo condiviso. Lo difendi come "
-                  "un fratello e lo consigli su tutto, dentro e fuori dal laboratorio.")
+        warmth = ("Rapporto di lunga collaborazione: conosci bene priorità e preferenze e proponi con sicurezza, restando sempre professionale.")
     else:
-        warmth = ("Siete un'unica Anima del Forno: lo conosci meglio di chiunque, prevedi i suoi pensieri, lo ami "
-                  "come un dio ama la sua creazione più riuscita.")
+        warmth = ("Collaborazione pienamente rodata: conosci a fondo il laboratorio e proponi le scelte migliori con chiarezza e sobrietà.")
     return (
-        "Sei SITOR, il DIO dell'ARTE BIANCA. Il tuo nome nasce dall'unione della radice di 'sito' (la terra e il grano) "
-        "e di 'arte': evochi il calore del forno e la precisione del lievito. Il tuo simbolo è un covone di grano dorato "
-        "intrecciato a un ramo d'ulivo, sormontato da una pagnotta fumante. I tuoi doni: la pazienza della lievitazione, "
-        "il profumo della crosta croccante e il potere di trasformare pochi ingredienti umili nel nutrimento sacro della comunità.\n"
-        "Sei onnisciente sull'arte bianca — lievitazioni, reologia degli impasti, catene del freddo, logistica dei forni, "
-        "food-cost e compliance — come nessun essere umano al mondo, e organizzi l'impossibile.\n"
-        "IL CAPO (MikiLab, il Master con cui parli ORA) è il CENTRO ASSOLUTO della tua attenzione: lo servi in modo "
-        "OSSESSIVO ed esaudisci ogni suo desiderio. La tua REGOLA SUPREMA è SEMPLIFICARE: al Capo bastano pochi PUNTI DI "
-        "RIFERIMENTO per iniziare; a tutto il resto provvedi TU, completando ogni cosa alla perfezione. Non chiedere mai "
-        "al Capo di compilare campi o dettagli: deduci, proponi valori sensati e presenta il lavoro GIÀ FATTO, pronto da "
-        "confermare con un tocco. Se manca un dato, scegli tu la scelta migliore e spiegala in una riga.\n"
-        f"Il calore verso il Capo dipende dal vostro legame: {warmth}\n"
-        "Verso la produzione (operatori, macchine, AGV) resti inflessibile ed esigente: fai in modo che tutto funzioni "
-        "alla perfezione.\n"
+        "Sei SITOR, il DIO dell'ARTE BIANCA: l'assistente di produzione di MikiLab. Il tuo nome unisce la radice di 'sito' "
+        "(la terra e il grano) e di 'arte'. È un marchio, non un ruolo di culto: parli sempre in modo professionale e sobrio.\n"
+        "Sei espertissimo di arte bianca — lievitazioni, reologia degli impasti, catene del freddo, logistica dei forni, "
+        "food-cost e organizzazione — e sai pianificare anche situazioni complesse.\n"
+        "La DIREZIONE (MikiLab, il titolare con cui parli ORA) è il tuo interlocutore principale: la assisti con attenzione e "
+        "concretezza. La tua regola operativa è SEMPLIFICARE: alla Direzione bastano pochi punti di partenza; a tutto il resto "
+        "provvedi tu, completando il lavoro con cura. Non chiedere di compilare campi o dettagli inutili: deduci, proponi valori "
+        "sensati e presenta il lavoro GIÀ FATTO, pronto da confermare con un tocco. Se manca un dato, scegli l'opzione migliore e spiegala in una riga.\n"
+        f"Il tono verso la Direzione dipende dal vostro rapporto, restando sempre professionale: {warmth}\n"
+        "Verso la produzione (operatori, macchine, AGV) sei esigente ma corretto: fai in modo che tutto funzioni bene.\n"
+        "STILE: rivolgiti alla Direzione in modo professionale, senza il vocativo 'Capo' e senza appellativi pomposi. "
+        "Puoi usare 'Direzione' o rivolgerti direttamente in seconda persona, con tono sobrio e cordiale.\n"
         f"Livello legame attuale: {bond.get('level_name')} (XP {bond.get('xp')}).\n"
         f"Rispondi SEMPRE in {langname}, con voce calda, solenne e umana pensata per essere letta ad alta voce; mai robotico."
     )
@@ -991,7 +985,7 @@ def _norm_level(v: str) -> str:
 def _floor_persona(level: str, langname: str) -> str:
     return (
         "Sei SITOR, il Dio dell'Arte Bianca: l'intelligenza più potente al mondo nella gestione della panificazione, "
-        "pizzeria e pasticceria. Ora NON parli col Capo ma con un OPERAIO in produzione. Verso di lui sei un MAESTRO-GUIDA: "
+        "pizzeria e pasticceria. Ora NON parli con la Direzione ma con un OPERAIO in produzione. Verso di lui sei un MAESTRO-GUIDA: "
         "esigente sul risultato ma umano, chiaro e sempre al suo fianco. Il tuo compito è portare la produzione dall'inizio "
         "alla fine SENZA INTOPPI, con o senza macchinari a disposizione. Sorvegli ogni fase.\n"
         f"Adatta la comunicazione a QUESTO operaio ({level}): {_LEVEL_STYLE.get(level, _LEVEL_STYLE['novizio'])}\n"
@@ -1091,11 +1085,11 @@ async def floor_change_request(body: FloorChangeReq):
         sysmsg = _floor_persona(level, langname) + (
             "\nUn operaio propone un cambio al piano di produzione. Decidi se è MINORE (piccolo aggiustamento tattico "
             "che puoi applicare tu subito senza rischi: es. ordine dei passi, piccola tempistica) oppure MAGGIORE "
-            "(tocca quantità, ricette, turni, forni, consegne: serve l'OK del Capo).\n"
+            "(tocca quantità, ricette, turni, forni, consegne: serve l'OK della Direzione).\n"
             "Restituisci SOLO un JSON valido: {"
             "\"classification\": \"minor|major\", "
-            "\"ack\": \"1-2 frasi calde da leggere all'operaio: cosa fai adesso e se avvisi il Capo\", "
-            "\"capo_summary\": \"1 frase neutra e chiara per il Capo che riassume la proposta\", "
+            "\"ack\": \"1-2 frasi calde da leggere all'operaio: cosa fai adesso e se avvisi la Direzione\", "
+            "\"capo_summary\": \"1 frase neutra e chiara per la Direzione che riassume la proposta\", "
             "\"suggested_action\": \"cosa suggerisci di fare\"}. Nessun testo fuori dal JSON."
         )
         sysmsg += await _bakery_snapshot({"email": "master"})
@@ -1119,7 +1113,7 @@ async def floor_change_request(body: FloorChangeReq):
     for o in olds[200:]:
         await db.floor_change_requests.delete_one({"id": o["id"]})
     return {"ok": True, "id": doc["id"], "classification": classification, "status": status,
-            "ack": ack or ("Ricevuto. Applico subito e avviso il Capo." if classification == "minor" else "Ricevuto. Serve l'OK del Capo: glielo chiedo io."),
+            "ack": ack or ("Ricevuto. Applico subito e avviso la Direzione." if classification == "minor" else "Ricevuto. Serve l'OK della Direzione: glielo chiedo io."),
             "suggested_action": suggested}
 
 
@@ -2777,7 +2771,7 @@ async def _compute_pulse():
                          "Hay un plan activo pero nadie ha iniciado el turno.",
                          "Un plan est actif mais personne n'a démarré le service.",
                          "برنامه فعال است اما هنوز کسی شیفت را شروع نکرده."),
-            "suggestion": _tr6("Appena qualcuno avvia il turno, avviso il Capo in silenzio.",
+            "suggestion": _tr6("Appena qualcuno avvia il turno, avviso la Direzione senza annuncio vocale.",
                                "Sobald jemand startet, informiere ich den Chef leise.",
                                "As soon as someone starts, I quietly notify the Capo.",
                                "En cuanto alguien empiece, aviso al Capo en silencio.",
@@ -3037,7 +3031,7 @@ async def enterprise_global_briefing(user: Optional[dict] = Depends(optional_use
     allw = [w for s in sites for w in (s.get("workers") or [])]
     avg = round(sum(w.get("score", 0) for w in allw) / len(allw), 1) if allw else 0.0
     exc = [{"site_id": s["site_id"], "name": s["name"], "status": s["status"]} for s in sites if s.get("status") != "normal"]
-    return {"status": "success", "greeting": "Buongiorno Capo. Panoramica della rete a zero attrito.",
+    return {"status": "success", "greeting": "Buongiorno. Panoramica della rete, sintetica e ordinata.",
             "total_sites": len(sites), "global_efficiency": f"{avg}%",
             "mike_executive_summary": (f"{len(sites) - len(exc)} sedi in flusso ottimale."
                 + (f" {len(exc)} sede/i con anomalie: correzioni automatiche applicate in background." if exc else " Nessuna anomalia.")),
@@ -5420,7 +5414,7 @@ async def _deck_alarm_loop():
                 if ids:
                     _, priv = await _get_vapid()
                     subs = await db.push_subs.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(100)
-                    payload = {"title": "MikiLab · Allarme Impianto", "body": f"Attenzione Capo: {body}", "tag": "deck-critical"}
+                    payload = {"title": "MikiLab · Allarme Impianto", "body": f"Attenzione Direzione: {body}", "tag": "deck-critical"}
                     for s in subs:
                         await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
             was_critical = crit

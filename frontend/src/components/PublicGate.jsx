@@ -374,7 +374,7 @@ export default function PublicGate({ onUnlock }) {
 
         {opFlow === null && (
         <p data-testid="public-role-hint" className="mt-3 text-[11px] text-[#64748B] max-w-md">
-          {tri("Il Capo entra con il PIN a 6 cifre. L'operaio rientra col volto o il nome; la prima volta con il PIN.", "Chef: 6-stelliger PIN. Mitarbeiter: Gesicht/Name; beim ersten Mal mit PIN.", "The Capo enters with the 6-digit PIN. The operator re-enters with face or name; the first time with the PIN.", "El Capo entra con PIN de 6 dígitos. El operario reingresa con rostro o nombre; la primera vez con PIN.", "Le Capo entre avec le PIN à 6 chiffres. L'opérateur rentre par visage ou nom ; la première fois avec le PIN.", "کاپو با پین ۶ رقمی، اپراتور با چهره/نام؛ اولین بار با پین.")}
+          {tri("La Direzione entra con il PIN a 6 cifre. L'operaio rientra col volto o il nome; la prima volta con il PIN.", "Chef: 6-stelliger PIN. Mitarbeiter: Gesicht/Name; beim ersten Mal mit PIN.", "The Capo enters with the 6-digit PIN. The operator re-enters with face or name; the first time with the PIN.", "El Capo entra con PIN de 6 dígitos. El operario reingresa con rostro o nombre; la primera vez con PIN.", "Le Capo entre avec le PIN à 6 chiffres. L'opérateur rentre par visage ou nom ; la première fois avec le PIN.", "کاپو با پین ۶ رقمی، اپراتور با چهره/نام؛ اولین بار با پین.")}
         </p>
         )}
 

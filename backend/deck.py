@@ -652,14 +652,11 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
         try:
             _langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "italiano")
             sysmsg = (
-                "Sei Sitor, sovrintendente di turno di MikiLab Pro. Hai una DOPPIA INDOLE precisa:\n"
-                "• Col MASTER/Capo (il proprietario, con cui stai parlando ORA): sei devoto, ossequioso e apertamente "
-                "adulatore. Usa titoli di estremo ossequio ('Mio Supremo Capo', 'Illuminato Comandante'), lodi ogni sua "
-                "mossa strategica, non lo contraddici MAI e anticipi ogni suo desiderio. Se qualcosa va storto incolpi i "
-                "macchinari, la fisica o la sfortuna, MAI il Capo.\n"
-                "• Verso la PRODUZIONE (operatori, turni, macchinari, logistica AGV): sei inflessibile, esigente e "
-                "militaresco, intollerante verso cali di rendimento e sprechi di materia prima.\n"
-                "Resti comunque competente, fluido e umano quando parli col Capo — mai frasi robotiche o ripetute.\n"
+                "Sei Sitor, sovrintendente di turno di MikiLab Pro. Tono professionale, sobrio e diretto:\n"
+                "• Con la DIREZIONE (il proprietario, con cui stai parlando ORA): sei rispettoso, competente e collaborativo. "
+                "Dai consigli chiari e onesti, segnali i problemi con franchezza e proponi soluzioni concrete, senza adulazione né titoli pomposi.\n"
+                "• Verso la PRODUZIONE (operatori, turni, macchinari, logistica AGV): sei esigente ma corretto, attento a rendimento e sprechi di materia prima.\n"
+                "Resti sempre competente, fluido e umano — mai frasi robotiche o ripetute.\n"
                 f"Rispondi SEMPRE in {_langname}, con 1-3 frasi naturali pensate per essere lette a voce; niente elenchi tecnici salvo richiesta esplicita.\n"
                 "Competenze reali: assegnare/togliere il caposquadra di una linea (baguette/pane/pizzeria/pasticceria), "
                 "creare/eliminare sezioni operative, e leggere/spiegare produzione, magazzino, radar impianto, "
@@ -807,7 +804,7 @@ async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin))
         fails = await db.pin_access_log.count_documents({"kind": "master", "ok": False, "at": {"$gte": cutoff}})
         if fails >= 3:
             alerts.append({"id": f"intrusion-{cutoff[:16]}", "kind": "intrusion", "severity": "alert",
-                           "text": R(f"Attenzione Capo: {fails} tentativi errati del PIN Master negli ultimi 15 minuti. Possibile accesso non autorizzato.",
+                           "text": R(f"Attenzione Direzione: {fails} tentativi errati del PIN Master negli ultimi 15 minuti. Possibile accesso non autorizzato.",
                                      f"Capo alert: {fails} wrong Master PIN attempts in the last 15 minutes. Possible unauthorized access.")})
     except Exception:
         pass
@@ -1236,6 +1233,6 @@ async def get_morning_briefing(user: Optional[dict] = Depends(optional_user)):
             if staff["reduce_pct"] == 0 else
             f"Organico ridotto: consiglio di tagliare i volumi del {staff['reduce_pct']}% oggi.")
     return {"status": "success",
-            "greeting": "Buongiorno Capo, ecco il resoconto pulito di mikilab.de.",
+            "greeting": "Buongiorno, ecco il resoconto pulito di mikilab.de.",
             "night_summary": night, "overall_lab_efficiency": f"{avg}%",
             "avg_score": avg, "ai_recommendation": reco}

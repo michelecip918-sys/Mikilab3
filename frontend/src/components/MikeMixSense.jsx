@@ -170,7 +170,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
     if (!operator) return;
     checkedRef.current = true;
     pulseApi.checkin({ operator: operator.name || "Operatore", role: floorRole || "", station: floorRole || "" })
-      .then(() => { toast.success(tri("Turno avviato · Capo avvisato in silenzio", "Schicht gestartet · Chef leise informiert", "Shift started · Capo quietly notified", "Turno iniciado · Capo avisado", "Service démarré · Capo prévenu", "شیفت شروع شد · کاپو مطلع شد"), { duration: 2500 }); refresh(); })
+      .then(() => { toast.success(tri("Turno avviato · Direzione avvisata senza annuncio vocale", "Schicht gestartet · Chef leise informiert", "Shift started · Capo quietly notified", "Turno iniciado · Capo avisado", "Service démarré · Capo prévenu", "شیفت شروع شد · کاپو مطلع شد"), { duration: 2500 }); refresh(); })
       .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, pulse, operator, floorRole]);
@@ -183,7 +183,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       toast.success(next
         ? tri("Riposo Blindato attivo · solo emergenze", "Ruhemodus aktiv · nur Notfälle", "Rest Mode on · emergencies only", "Modo Descanso · solo emergencias", "Mode Repos · urgences seulement", "حالت استراحت · فقط اورژانس")
         : tri("Riposo disattivato", "Ruhemodus aus", "Rest Mode off", "Modo Descanso apagado", "Mode Repos désactivé", "حالت استراحت خاموش"));
-    } catch { toast.error(tri("Solo il Capo può cambiare la modalità", "Nur der Chef darf das", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
+    } catch { toast.error(tri("Solo la Direzione può cambiare la modalità", "Nur der Chef darf das", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
   };
 
   const saveWake = async (patch) => {
@@ -197,13 +197,13 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       const r = await staffingApi.applyVolumes();
       toast.success(tri(`Volumi ridotti del ${r.reduce_pct}% su ${r.adjusted} lotti`, `Mengen um ${r.reduce_pct}% reduziert (${r.adjusted} Chargen)`, `Volumes cut ${r.reduce_pct}% on ${r.adjusted} batches`, `Volúmenes -${r.reduce_pct}% en ${r.adjusted} lotes`, `Volumes -${r.reduce_pct}% sur ${r.adjusted} lots`, `حجم −${r.reduce_pct}% روی ${r.adjusted} دسته`));
       refresh();
-    } catch { toast.error(tri("Solo il Capo", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
+    } catch { toast.error(tri("Solo la Direzione", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
   };
 
   const doCheckin = async () => {
     try {
       await pulseApi.checkin({ operator: (operator && operator.name) || "Operatore", role: floorRole || "", station: floorRole || "" });
-      toast.success(tri("Turno avviato · Capo avvisato", "Schicht gestartet", "Shift started", "Turno iniciado", "Service démarré", "شیفت شروع شد"));
+      toast.success(tri("Turno avviato · Direzione avvisata", "Schicht gestartet", "Shift started", "Turno iniciado", "Service démarré", "شیفت شروع شد"));
       refresh();
     } catch { /* */ }
   };
@@ -214,7 +214,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
       const link = `${window.location.origin}/?invite=${r.token}`;
       try { await navigator.clipboard.writeText(link); } catch { /* */ }
       toast.success(tri("Invito creato · link copiato", "Einladung erstellt · Link kopiert", "Invite created · link copied", "Invitación creada · enlace copiado", "Invitation créée · lien copié", "دعوت ساخته شد · لینک کپی شد"), { duration: 4000 });
-    } catch { toast.error(tri("Solo il Capo può creare inviti", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
+    } catch { toast.error(tri("Solo la Direzione può creare inviti", "Nur der Chef", "Capo only", "Solo el Capo", "Capo seulement", "فقط کاپو")); }
   };
 
   if (!active) return null;
@@ -308,7 +308,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                   {(briefing.night_summary || []).map((l, i) => (<li key={i} className="text-[11px] text-[#94A3B8]">· {l}</li>))}
                 </ul>
                 <div className="mt-2 flex items-center justify-between">
-                  <span className="text-[11px] text-[#94A3B8]">{tri("Efficienza lab", "Lab-Effizienz", "Lab efficiency", "Eficiencia", "Efficacité", "کارایی")}</span>
+                  <span className="text-[11px] text-[#94A3B8]">{tri("Efficienza laboratorio", "Lab-Effizienz", "Lab efficiency", "Eficiencia", "Efficacité", "کارایی")}</span>
                   <span className="text-sm font-black text-[#aaa795]" data-testid="mikemix-briefing-eff">{briefing.overall_lab_efficiency}</span>
                 </div>
                 <p className="text-[11px] text-[#5EEAD4] mt-1.5">💡 {briefing.ai_recommendation}</p>
@@ -393,7 +393,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
             {isCapo && (
               <div className="space-y-3 pt-1">
                 <button data-testid="mikemix-tools-toggle" onClick={() => setToolsOpen((v) => !v)} className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl text-[12px] font-black border border-[#64748B]/40 text-[#8FB0C2] bg-[#64748B0d] active:scale-95 transition-all">
-                  {toolsOpen ? tri("Nascondi strumenti Capo", "Chef-Werkzeuge ausblenden", "Hide Capo tools", "Ocultar herramientas Capo", "Masquer les outils Capo", "پنهان کردن ابزار کاپو") : tri("Strumenti Capo avanzati", "Erweiterte Chef-Werkzeuge", "Advanced Capo tools", "Herramientas avanzadas", "Outils Capo avancés", "ابزارهای پیشرفته کاپو")}
+                  {toolsOpen ? tri("Nascondi strumenti Direzione", "Chef-Werkzeuge ausblenden", "Hide Capo tools", "Ocultar herramientas Capo", "Masquer les outils Capo", "پنهان کردن ابزار کاپو") : tri("Strumenti Direzione avanzati", "Erweiterte Chef-Werkzeuge", "Advanced Capo tools", "Herramientas avanzadas", "Outils Capo avancés", "ابزارهای پیشرفته کاپو")}
                 </button>
                 {toolsOpen && (<div className="space-y-3">
                 <button data-testid="mikemix-audit-btn" onClick={() => setAuditOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#aaa795]/50 text-[#aaa795] bg-[#f59e0b12] active:scale-95 transition-transform">

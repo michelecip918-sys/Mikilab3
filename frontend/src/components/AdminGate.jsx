@@ -63,7 +63,7 @@ export default function AdminGate({ onUnlock, onBack, role }) {
         <h1 className="font-black tracking-[0.15em] text-2xl uppercase">{isOp ? tri("PRODUZIONE", "PRODUKTION", "PRODUCTION", "PRODUCCIÓN", "PRODUCTION", "تولید") : "MIKILAB"}</h1>
         <p className="mt-2 text-sm text-[#94A3B8] flex items-center justify-center gap-1.5"><ShieldCheck className="w-4 h-4 text-[#D95200]" /> {isOp
           ? tri("Operaio · inserisci il tuo PIN a 4 cifre", "Mitarbeiter · 4-stelligen PIN eingeben", "Operator · enter your 4-digit PIN", "Operario · introduce tu PIN de 4 cifras", "Opérateur · saisis ton PIN à 4 chiffres", "اپراتور · پین ۴ رقمی خود را وارد کن")
-          : tri("Capo · inserisci il PIN a 6 cifre", "Chef · 6-stelligen PIN eingeben", "Capo · enter the 6-digit PIN", "Capo · introduce el PIN de 6 cifras", "Capo · saisis le PIN à 6 chiffres", "کاپو · پین ۶ رقمی را وارد کن")}</p>
+          : tri("Direzione · inserisci il PIN a 6 cifre", "Chef · 6-stelligen PIN eingeben", "Capo · enter the 6-digit PIN", "Capo · introduce el PIN de 6 cifras", "Capo · saisis le PIN à 6 chiffres", "کاپو · پین ۶ رقمی را وارد کن")}</p>
 
         <div className={`mt-6 flex justify-center gap-3 ${err ? "animate-shake" : ""}`}>
           {[0, 1, 2, 3, 4, 5].map((i) => (

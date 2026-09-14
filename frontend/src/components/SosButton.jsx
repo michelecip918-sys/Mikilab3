@@ -67,13 +67,13 @@ export default function SosButton({ role = "", operator = "" }) {
       >
         <span className="absolute left-0 top-0 bottom-0 bg-white/25" style={{ width: `${progress * 100}%` }} aria-hidden />
         <span className="relative flex items-center gap-2">
-          {sent ? <><Check className="w-5 h-5" /> {tri("SOS inviato al Capo", "SOS an Chef gesendet", "SOS sent to Capo", "SOS enviado al Capo", "SOS envoyé au Capo", "SOS ارسال شد")}</> : <><AlertOctagon className="w-5 h-5" /> {tri("Tieni premuto per SOS", "Halten für SOS", "Hold for SOS", "Mantén para SOS", "Maintiens pour SOS", "برای SOS نگه دار")}</>}
+          {sent ? <><Check className="w-5 h-5" /> {tri("SOS inviato alla Direzione", "SOS an Chef gesendet", "SOS sent to Capo", "SOS enviado al Capo", "SOS envoyé au Capo", "SOS ارسال شد")}</> : <><AlertOctagon className="w-5 h-5" /> {tri("Tieni premuto per SOS", "Halten für SOS", "Hold for SOS", "Mantén para SOS", "Maintiens pour SOS", "برای SOS نگه دار")}</>}
         </span>
       </button>
       {machine && !sent && <p className="mt-2 text-[11px] text-[#94A3B8]">{tri("Macchinario", "Maschine", "Machine", "Máquina", "Machine", "دستگاه")}: <b className="text-white">{machine}</b></p>}
       {sent && (
         <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} data-testid="sos-sent-note" className="mt-2 text-[11px] text-emerald-400 font-bold">
-          {tri("Il Capo è stato avvisato. Resta in sicurezza.", "Der Chef wurde benachrichtigt. Bleib sicher.", "The Capo has been alerted. Stay safe.", "El Capo ha sido avisado. Mantente seguro.", "Le Capo a été alerté. Reste en sécurité.", "کاپو مطلع شد. ایمن بمان.")}
+          {tri("La Direzione è stata avvisata. Resta in sicurezza.", "Der Chef wurde benachrichtigt. Bleib sicher.", "The Capo has been alerted. Stay safe.", "El Capo ha sido avisado. Mantente seguro.", "Le Capo a été alerté. Reste en sécurité.", "کاپو مطلع شد. ایمن بمان.")}
         </motion.p>
       )}
     </div>

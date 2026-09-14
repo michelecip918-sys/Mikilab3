@@ -90,7 +90,7 @@ function DayTasks({ tri, lang, role, apprentice }) {
       )}
       {plan && plan.headline && (
         <div data-testid="floor-plan-headline" className="rounded-2xl border border-[#8a97a6]/40 bg-[#8a97a6]/8 px-4 py-3">
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#8a97a6] mb-0.5">{tri("Piano del Capo · Sitor", "Plan des Capo", "Capo's Plan", "Plan del Capo", "Plan du Capo", "برنامه کاپو")}</p>
+          <p className="text-[10px] font-black uppercase tracking-widest text-[#8a97a6] mb-0.5">{tri("Piano della Direzione · Sitor", "Plan des Capo", "Capo's Plan", "Plan del Capo", "Plan du Capo", "برنامه کاپو")}</p>
           <p className="text-sm text-white font-semibold leading-snug">{plan.headline}</p>
         </div>
       )}
@@ -222,7 +222,7 @@ function EndOfShiftForm({ tri, role }) {
         <span className="w-8 h-8 rounded-lg bg-[#6e9e85]/15 border border-[#6e9e85]/40 flex items-center justify-center shrink-0"><ClipboardCheck className="w-4 h-4 text-[#6e9e85]" /></span>
         <span className="flex-1 text-left">
           <span className="block text-xs font-black uppercase tracking-wide text-[#6e9e85]">{tri("Fine turno · Compila", "Schichtende · Ausfüllen", "End of shift · Fill in", "Fin de turno · Rellenar", "Fin de service · Remplir", "پایان شیفت · تکمیل")}</span>
-          <span className="block text-[11px] text-[#94A3B8]">{tri("Le cose essenziali per il Capo.", "Das Wichtigste für den Chef.", "The essentials for the Capo.", "Lo esencial para el Capo.", "L'essentiel pour le Capo.", "موارد مهم برای کاپو.")}</span>
+          <span className="block text-[11px] text-[#94A3B8]">{tri("Le cose essenziali per la Direzione.", "Das Wichtigste für den Chef.", "The essentials for the Capo.", "Lo esencial para el Capo.", "L'essentiel pour le Capo.", "موارد مهم برای کاپو.")}</span>
         </span>
       </button>
       {open && (
@@ -244,7 +244,7 @@ function EndOfShiftForm({ tri, role }) {
                 <span className="text-[13px] text-[#cbd5e1]">{tri("Pulizia postazione completata", "Reinigung erledigt", "Station cleaning done", "Limpieza hecha", "Nettoyage fait", "نظافت انجام شد")}</span>
               </label>
               <button data-testid="floor-endshift-submit" onClick={submit} disabled={busy} className="w-full py-3 rounded-xl font-black text-sm text-[#030712] bg-gradient-to-r from-[#5f8a70] to-[#6e9e85] active:scale-95 disabled:opacity-50">
-                {busy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia al Capo", "An Chef senden", "Send to Capo", "Enviar al Capo", "Envoyer au Capo", "ارسال به کاپو")}
+                {busy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia alla Direzione", "An Chef senden", "Send to Capo", "Enviar al Capo", "Envoyer au Capo", "ارسال به کاپو")}
               </button>
             </>
           )}
@@ -356,7 +356,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       )}
       {supervise && (
         <div data-testid="supervise-banner" className="rounded-2xl border-2 border-[#9aa6b2]/50 bg-[#9aa6b2]/10 px-4 py-3">
-          <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#9aa6b2]">{tri("Supervisione Capo · sola lettura", "Chef-Aufsicht · nur Lesen", "Capo supervision · read-only", "Supervisión · solo lectura", "Supervision · lecture seule", "نظارت · فقط خواندن")}</p>
+          <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#9aa6b2]">{tri("Supervisione Direzione · sola lettura", "Chef-Aufsicht · nur Lesen", "Capo supervision · read-only", "Supervisión · solo lectura", "Supervision · lecture seule", "نظارت · فقط خواندن")}</p>
           <p className="text-base text-white font-black leading-tight">{superviseDeptName || superviseDept}</p>
         </div>
       )}

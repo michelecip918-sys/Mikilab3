@@ -96,7 +96,7 @@ export default function VoiceDelegation({ onClose }) {
             <div className="w-20 h-20 rounded-full bg-emerald-500/15 border-2 border-emerald-500 flex items-center justify-center"><CheckCircle2 className="w-10 h-10 text-emerald-400" /></div>
             <div>
               <h3 className="text-lg font-black text-emerald-300">{done.title}</h3>
-              <p className="text-sm text-[#94A3B8] mt-1">{tri("Inviato al floor in silenzio · gli operatori vedranno i loro step.", "Still an die Halle gesendet.", "Sent silently to the floor.", "Enviado en silencio al taller.", "Envoyé en silence à l'atelier.", "بی‌صدا به سالن ارسال شد.")}</p>
+              <p className="text-sm text-[#94A3B8] mt-1">{tri("Inviato in produzione senza annuncio vocale · gli operatori vedranno i loro step.", "An die Produktion gesendet.", "Sent to production.", "Enviado a producción.", "Envoyé en production.", "به تولید ارسال شد.")}</p>
             </div>
             <div className="flex gap-2">
               <button data-testid="delegation-new" onClick={() => { setDone(null); setProposal(null); setTranscript(""); }} className="px-5 py-3 rounded-xl bg-[#0b0f19] border border-[#2A3B49] text-white text-sm font-bold active:scale-95">{tri("Nuova delega", "Neue Delegation", "New delegation", "Nueva delegación", "Nouvelle délégation", "واگذاری جدید")}</button>
@@ -158,7 +158,7 @@ export default function VoiceDelegation({ onClose }) {
                     ))}
                   </div>
                   <button data-testid="delegation-confirm" onClick={confirm} disabled={confirming} className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-black text-sm disabled:opacity-50 active:scale-98 transition-all">
-                    {confirming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Conferma e invia al floor", "Bestätigen & senden", "Confirm & dispatch", "Confirmar y enviar", "Confirmer & envoyer", "تأیید و ارسال")}
+                    {confirming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Conferma e invia in produzione", "Bestätigen & senden", "Confirm & dispatch", "Confirmar y enviar", "Confirmer & envoyer", "تأیید و ارسال")}
                   </button>
                   <p className="mt-1.5 text-center text-[10px] text-[#64748B] flex items-center justify-center gap-1"><ChevronRight className="w-3 h-3" /> {tri("Puoi riassegnare ogni step prima di confermare.", "Du kannst jeden Schritt neu zuweisen.", "You can reassign each step before confirming.", "Puedes reasignar cada paso.", "Tu peux réassigner chaque étape.", "می‌توانی هر گام را دوباره اختصاص دهی.")}</p>
                 </motion.div>

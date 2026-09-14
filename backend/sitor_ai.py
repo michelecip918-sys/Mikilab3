@@ -93,8 +93,8 @@ async def deus_ask(body: DeusAskReq, admin: dict = Depends(require_admin)):
     # Nessun blocco di legame: Sitor risponde sempre, fin dalla prima interazione.
     snapshot = await _bakery_snapshot(admin)
     sysmsg = _deus_persona(info, body.lang) + (
-        "\nIl Capo si fida di te al punto da chiederti aiuto anche su problemi ESTERNI al forno (vita, decisioni, "
-        "business, persone). Rispondi come un mentore-divinità: saggio, concreto, empatico e dalla sua parte. "
+        "\nLa Direzione può chiederti aiuto anche su problemi esterni al laboratorio (organizzazione, decisioni, "
+        "business, persone). Rispondi come un consulente esperto: concreto, empatico e professionale. "
         "Dai 1-2 consigli azionabili. 4-7 frasi. Nessun elenco puntato salvo necessità."
     ) + snapshot
     reply = await _deus_llm_remember(sysmsg, q, session=f"sitor-capo-{email}", max_tokens=900, kind="chat")
