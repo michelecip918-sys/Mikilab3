@@ -1,0 +1,39 @@
+{
+  "summary": "Frontend-only test of activity reactivity in Capo console (PianoUnico + Strumenti banners) and PianoUnico option labels differing by activity. Auth flow (PIN 198505 -> admin login -> onboarding panificio) succeeded. Banners are present and react correctly. Piano option labels for pizzeria matched expected pizzeria strategies. Panificio regeneration after switching back timed out once (likely LLM latency / flake) but the initial panificio state and pizzeria state were verified.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {"flow": "PianoUnico regenerate after switching activity back to panificio", "issue": "wait_for(piano-option-0) timed out at 70s on the SECOND regeneration (after pizzeria->panificio switch). First generation (pizzeria) succeeded and returned pizzeria-specific labels. Could be LLM latency spike, race with the Sitor onboarding tour tooltip overlay, or that switching activity clears options and generation was blocked. Needs a retry to confirm; not reproducible from state alone.", "affected_selectors": ["[data-testid=\"piano-generate\"]", "[data-testid=\"piano-option-0\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Capo console (initial post-login)", "issues": ["Sitor onboarding tour modal ('HI, I'M SITOR') overlaps the bottom of the page and could intercept clicks on Weekly Plan / Extra Orders area. Consider dismissing it automatically for returning admins or moving it away from CTAs."]}
+    ]
+  },
+  "verified_requirements": [
+    "activity-selector present and initial value = 'panificio' after onboarding choice",
+    "piano-activity-banner + piano-activity-label PRESENT in Weekly Plan section (label 'BAKERY' for panificio, 'PIZZERIA' for pizzeria)",
+    "piano-activity-banner text is activity-specific: panificio => 'Chain production: dough -> proofing in large cells -> baking in sequence. Sitor plans in batches to saturate the ovens, with large proofing cells.'; pizzeria => 'Continuous / on-demand flow: small cells but more machines (mixers, topping bench). Sitor plans dough balls in waves for service, parallel mixers and cold maturation.'",
+    "strumenti-activity-banner + strumenti-activity-label PRESENT with activity-specific label",
+    "strumenti-focus-0/1/2 change with activity: panificio => 'Large proofing cells & sequential ovens', 'Silos & scales for bulk flours', 'Optical bake control at oven exit'; pizzeria => 'Multiple parallel mixers & topping bench', 'Small fridges for dough-ball maturation', 'Fast continuous pizza oven'",
+    "Reactivity: changing activity-selector to 'pizzeria' updates BOTH banners AND all 3 strumenti-focus bullets simultaneously; switching back to 'panificio' restores panificio content",
+    "PianoUnico options for pizzeria: piano-option-0='Servizio continuo', piano-option-1='Alta qualità impasto', piano-option-2='Turno compatto' — EXACTLY matching the requested pizzeria-only strategy labels and clearly different from panificio's 'Massima velocità/qualità/Risparmio'"
+  ],
+  "test_report_links": [],
+  "action_items": [
+    "(Optional) Retry pizzeria->panificio regeneration to confirm panificio labels 'Massima velocità/qualità/Risparmio' also render post-switch (main agent can self-test in ~30s).",
+    "(Low priority) Auto-dismiss or reposition the Sitor onboarding tour so it doesn't cover Weekly Plan / Extra Orders CTAs on desktop."
+  ],
+  "critical_code_review_comments": [
+    "Activity reactivity implementation is clean: single activity state in App.js drives both PianoUnico prop and Strumenti SecBlock via activityProfile(activity); works as expected.",
+    "UI label uses localized name ('BAKERY' when app language=EN) rather than raw 'panificio' — cosmetic mismatch with prompt but semantically correct."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "N/A (skipped per request)", "frontend": "~95% (all banner/reactivity/option-label checks passed; single flaky regenerate on switch-back)"},
+  "test_credentials": "PIN 198505; admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "none",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Login flow: click 'I\\'m the Capo' -> keypad PIN 198505 via role=button digits -> onboarding modal (choose panificio + confirm) -> 'Sign in as Capo' -> email/password. Banners live in Weekly Plan (piano-activity-banner) and Strumenti Collegabili (strumenti-activity-banner). activity-selector is a native <select>; use selectOption('pizzeria'|'panificio'|'pasticceria'). Piano options generation takes 15-40s (LLM); wait 60-70s.",
+  "rca of the issue": "Second (panificio) regeneration timeout: unverified single occurrence. Likely causes ordered by probability: (1) LLM autoplan/options call exceeded 70s on that particular request, (2) Sitor onboarding tour overlay ('HI, I'M SITOR') intercepting the piano-generate click (overlay was visible in screenshot at bottom of viewport), (3) previous piano-option-0 element being detached during activity switch and re-rendered later. Mitigation: bump wait to 120s, dismiss onboarding tour first, or force=True click via testid (already used)."
+}

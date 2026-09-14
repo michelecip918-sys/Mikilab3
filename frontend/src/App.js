@@ -64,6 +64,7 @@ import WeeklyPlan from "@/sections/WeeklyPlan";
 import PianoProduzioneAI from "@/sections/PianoProduzioneAI";
 import BackwardScheduler from "@/sections/BackwardScheduler";
 import PianoUnico from "@/components/console/PianoUnico";
+import { activityProfile } from "@/lib/activityProfile";
 import { HoloPanel } from "@/components/console/HoloKit";
 import { SubTabs } from "@/components/console/SubTabs";
 import ZoneHero3D from "@/components/console/ZoneHero3D";
@@ -539,7 +540,7 @@ export default function App() {
                       title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}
                       sub={tri("Un unico flusso: inserisci ricette e ordini, Sitor propone 2-3 opzioni, tu scegli e calendario, orari a ritroso e timeline si generano da soli.", "Ein Fluss: Rezepte/Aufträge eingeben, Sitor schlägt 2-3 Optionen vor, du wählst — Kalender, Rückwärtszeiten und Timeline entstehen automatisch.", "One flow: enter recipes and orders, Sitor proposes 2-3 options, you pick and the calendar, backward times and timeline generate themselves.", "Un solo flujo: ingresa recetas y pedidos, Sitor propone 2-3 opciones y todo se genera solo.", "Un seul flux : saisis recettes et commandes, Sitor propose 2-3 options et tout se génère seul.", "یک جریان: دستور و سفارش وارد کن، سیتور ۲-۳ گزینه می‌دهد و بقیه خودکار ساخته می‌شود.")}>
                     <HoloPanel testid="panel-piano-unico" accent="#9aa6b2" beacon="#c9a24a" icon="🗓️" defaultOpen title={tri("Piano di Produzione · Sitor", "Produktionsplan · Sitor", "Production Plan · Sitor", "Plan de Producción · Sitor", "Plan de Production · Sitor", "برنامه تولید · سیتور")} sub={tri("Dalle ricette al piano completo in un solo flusso guidato da Sitor.", "Vom Rezept zum kompletten Plan in einem von Sitor geführten Fluss.", "From recipes to a complete plan in one Sitor-guided flow.", "De recetas a plan completo en un flujo guiado.", "Des recettes au plan complet en un flux guidé.", "از دستور تا برنامه کامل در یک جریان.")}>
-                      <PianoUnico />
+                      <PianoUnico activity={activity} />
                     </HoloPanel>
                     </SecBlock>
 
@@ -582,6 +583,22 @@ export default function App() {
                     <SecBlock id="strumenti" icon="🔌" accent="#64748B"
                       title={tri("Strumenti Collegabili", "Anschließbare Geräte", "Connectable Tools", "Herramientas Conectables", "Outils Connectables", "ابزارهای قابل اتصال")}
                       sub={tri("Sensori, bilance, silos e macchine. Sitor ti guida con domande sì/no; i pannelli tecnici sono sotto, se servono.", "Sensoren, Waagen, Silos, Maschinen. Sitor führt mit Ja/Nein-Fragen.", "Sensors, scales, silos and machines. Sitor guides you with yes/no questions; the technical panels are below if needed.", "Sensores, balanzas, silos y máquinas. Sitor te guía con preguntas sí/no.", "Capteurs, balances, silos et machines. Sitor te guide par questions oui/non.", "سنسورها، ترازو، سیلو و ماشین‌ها. سیتور با سؤال بله/خیر راهنمایی می‌کند.")}>
+                    {(() => { const ap = activityProfile(activity); return (
+                    <div data-testid="strumenti-activity-banner" className="rounded-xl border p-3.5 mb-1" style={{ borderColor: `${ap.accent}44`, background: `${ap.accent}12` }}>
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-xl leading-none">{ap.icon}</span>
+                        <span className="font-black text-[12.5px] uppercase tracking-wide" style={{ color: ap.accent }} data-testid="strumenti-activity-label">{ap.label(lang)}</span>
+                        <span className="text-[11px] text-[#7c8794]">· {tri("strumenti prioritari per la tua attività", "Prioritäre Geräte", "priority tools for your activity", "herramientas prioritarias", "outils prioritaires", "ابزارهای اولویت‌دار")}</span>
+                      </div>
+                      <ul className="space-y-1">
+                        {ap.toolsFocus(lang).map((t, i) => (
+                          <li key={i} data-testid={`strumenti-focus-${i}`} className="flex items-start gap-2 text-[12px] text-[#94A3B8]">
+                            <span className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: ap.accent }} />{t}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    ); })()}
                     <HoloPanel testid="panel-guided-tools" accent="#3E9C93" beacon="#3E9C93" icon="🧭" defaultOpen title={tri("Sitor ti guida · Domande sì/no", "Sitor führt · Ja/Nein", "Sitor guides · Yes/No", "Sitor te guía · Sí/No", "Sitor te guide · Oui/Non", "سیتور راهنمایی · بله/خیر")} sub={tri("Rispondi a poche domande semplici: Sitor attiva silos, bilance, sensori ed email al posto tuo. Niente elenchi tecnici da leggere.", "Beantworte ein paar Ja/Nein-Fragen: Sitor aktiviert alles für dich.", "Answer a few simple questions: Sitor enables silos, scales, sensors and email for you. No technical lists to read.", "Responde unas preguntas: Sitor lo activa todo.", "Réponds à quelques questions : Sitor active tout pour toi.", "به چند سؤال ساده پاسخ بده: سیتور همه را فعال می‌کند.")}>
                       <SitorGuidedTools />
                     </HoloPanel>

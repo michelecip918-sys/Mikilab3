@@ -8672,6 +8672,54 @@ class AutoPlanReq(BaseModel):
     lang: str = "it"
     machines: List[str] = []
     freezer_stock: List[dict] = []
+    activity: str = "panificio"
+
+
+def _activity_plan_profile(activity: str) -> dict:
+    """Profilo di pianificazione DISTINTO per tipo di attività: cambia paradigma di
+    produzione, strategie delle 3 opzioni e linee ammesse, così Sitor propone piani
+    davvero diversi per panificio / pizzeria / pasticceria."""
+    a = (activity or "panificio").strip().lower()
+    if a.startswith("pizz"):
+        return {
+            "label": "PIZZERIA",
+            "role": "direttore di produzione di una PIZZERIA ad alto flusso",
+            "paradigm": ("Produzione A FLUSSO CONTINUO / su richiesta, non a lotti fissi. Celle e frigoriferi PICCOLI "
+                         "ma PIÙ MACCHINE (impastatrici multiple, banco topping). Panetti porzionati, biga/alta idratazione, "
+                         "maturazione in frigo. Sforna a scaglioni seguendo il ritmo del servizio."),
+            "strategies": [
+                ("Servizio continuo", "panetti pronti a scaglioni per coprire tutto il servizio senza attese"),
+                ("Alta qualità impasto", "biga e maturazione lunga in frigo, idratazione elevata"),
+                ("Turno compatto", "meno personale, impastatrici in parallelo, staglio raggruppato"),
+            ],
+            "lines": "impasto|staglio|topping|forno",
+        }
+    if a.startswith("pastic"):
+        return {
+            "label": "PASTICCERIA",
+            "role": "direttore di produzione di una PASTICCERIA su commessa",
+            "paradigm": ("Produzione NON a catena: per COMMESSE ed EVENTI (matrimoni, torte su ordinazione, consegne datate). "
+                         "Precisione al grammo, uso dell'ABBATTITORE, celle piccole. Pianifica SEMPRE A RITROSO partendo "
+                         "dalla data/ora di consegna di ogni commessa; raggruppa lavorazioni simili tra ordini diversi."),
+            "strategies": [
+                ("Per consegne ed eventi", "pianifica a ritroso dalle date di consegna, ogni commessa pronta in tempo"),
+                ("Precisione e abbattimento", "cura del prodotto, riposi controllati e abbattitore tra le fasi"),
+                ("Ottimizza commesse", "accorpa creme, frolle e montaggi comuni a più ordini per risparmiare"),
+            ],
+            "lines": "pasta frolla|creme|montaggio|abbattitore|decori",
+        }
+    return {
+        "label": "PANIFICIO",
+        "role": "direttore di produzione di un PANIFICIO industriale d'élite",
+        "paradigm": ("Produzione A CATENA per lotti: impasto → lievitazione in CELLE GRANDI → cottura in sequenza sui forni. "
+                     "Magazzino orientato a farine e sfarinati in VOLUME. Sequenza continua per saturare i forni."),
+        "strategies": [
+            ("Massima velocità", "meno colli di bottiglia al forno, consegne rapide"),
+            ("Massima qualità", "lievitazioni più lunghe, cura del prodotto"),
+            ("Risparmio personale", "meno operatori, sequenza compatta"),
+        ],
+        "lines": "baguette|pane|grandi lievitati|integrale",
+    }
 
 
 def _autoplan_freezer_ctx(items: list) -> str:
@@ -8806,16 +8854,18 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
     if EMERGENT_LLM_KEY:
         try:
             langname = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano", "ar": "arabo", "tr": "turco"}.get((body.lang or "it").split("-")[0][:2], "inglese")
+            prof = _activity_plan_profile(body.activity)
+            s1, s2, s3 = prof["strategies"]
             sysmsg = (
-                "Sei Sitor, direttore di produzione di una panetteria industriale d'élite. "
-                "Genera 3 OPZIONI ALTERNATIVE di piano di produzione della giornata, ognuna con una STRATEGIA diversa: "
-                "1) 'Massima velocità' (meno colli di bottiglia al forno, consegne rapide), "
-                "2) 'Massima qualità' (lievitazioni più lunghe, cura del prodotto), "
-                "3) 'Risparmio personale' (meno operatori, sequenza compatta). "
+                f"Sei Sitor, {prof['role']}. "
+                f"PARADIGMA DI QUESTA ATTIVITÀ ({prof['label']}): {prof['paradigm']} "
+                "Le 3 opzioni e i tempi DEVONO rispettare questo paradigma (non proporre un piano da panificio per una pizzeria o pasticceria). "
+                "Genera 3 OPZIONI ALTERNATIVE di piano di produzione della giornata, ognuna con una STRATEGIA diversa adatta a QUESTA attività: "
+                f"1) '{s1[0]}' ({s1[1]}), 2) '{s2[0]}' ({s2[1]}), 3) '{s3[0]}' ({s3[1]}). "
                 "IMPORTANTISSIMO: NON includere HACCP, allergeni, etichette legali o burocrazia. Solo produzione, tempi, sequenza, linee e persone.\n"
                 f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
-                "{\"options\":[{\"label\":\"Massima velocità\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"baguette|pane|pizzeria|pasticceria\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve\"}]}. "
-                "Esattamente 3 opzioni, massimo 5 lotti per opzione. Nessun testo fuori dal JSON."
+                "{\"options\":[{\"label\":\"" + s1[0] + "\",\"strategy\":\"1 frase\",\"summary\":\"1 frase\",\"batches\":[{\"seq\":1,\"product\":\"..\",\"qty\":\"..\",\"line\":\"" + prof["lines"] + "\",\"start\":\"HH:MM\",\"duration_min\":90,\"assignee\":\"nome o linea\",\"rationale\":\"max 6 parole\"}],\"warnings\":[\"..\"],\"spoken\":\"riassunto vocale breve\"}]}. "
+                "Usa i label esatti delle 3 strategie indicate sopra. Esattamente 3 opzioni, massimo 5 lotti per opzione. Nessun testo fuori dal JSON."
             )
             sysmsg += await _bakery_snapshot(admin)
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanopt-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=4000)

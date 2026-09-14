@@ -5,6 +5,7 @@ import { recipesApi, mikeApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { getActivity, activityProfile } from "@/lib/activityProfile";
 import { toast } from "sonner";
 
 const LINE_LABEL = { baguette: "Baguette", pane: "Pane", pizzeria: "Pizzeria", pasticceria: "Pasticceria" };
@@ -22,9 +23,11 @@ const fromMin = (min) => {
 
 // Flusso UNICO del piano: ricette/ordini -> Sitor genera 2-3 opzioni -> il Capo sceglie
 // -> calendario, orari a ritroso e timeline si generano da soli dall'opzione scelta.
-export default function PianoUnico() {
+export default function PianoUnico({ activity: activityProp }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const activity = activityProp || getActivity();
+  const prof = activityProfile(activity);
 
   const [recipes, setRecipes] = useState([]);
   const [rows, setRows] = useState([{ recipe_id: "", name: "", qty: "" }]);
@@ -57,7 +60,7 @@ export default function PianoUnico() {
     setOptions([]);
     setSelected(null);
     try {
-      const res = await mikeApi.autoplanOptions({ orders_text: ordersText, lang });
+      const res = await mikeApi.autoplanOptions({ orders_text: ordersText, lang, activity });
       const opts = (res && res.options) || [];
       if (!opts.length) {
         toast.error(tri("Sitor non ha prodotto opzioni. Riprova.", "Sitor lieferte keine Optionen.", "Sitor produced no options. Retry.", "Sitor no produjo opciones.", "Sitor n'a produit aucune option.", "سیتور گزینه‌ای نساخت."));
@@ -103,6 +106,15 @@ export default function PianoUnico() {
 
   return (
     <div data-testid="piano-unico" className="space-y-5">
+      {/* Banner attività: il piano cambia in base a panificio/pizzeria/pasticceria */}
+      <div data-testid="piano-activity-banner" className="flex items-start gap-3 rounded-xl border p-3.5" style={{ borderColor: `${prof.accent}44`, background: `${prof.accent}12` }}>
+        <span className="text-2xl shrink-0 leading-none">{prof.icon}</span>
+        <div className="min-w-0">
+          <p className="font-black text-[13px] uppercase tracking-wide" style={{ color: prof.accent }} data-testid="piano-activity-label">{prof.label(lang)}</p>
+          <p className="text-[12px] text-[#94A3B8] leading-snug">{prof.paradigm(lang)}</p>
+          <p className="text-[11.5px] text-[#7c8794] leading-snug mt-1">{prof.planHint(lang)}</p>
+        </div>
+      </div>
       {/* STEP 1 — Ricette / Ordini */}
       <div className="rounded-xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 p-4">
         <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#a4afbb] mb-3">
@@ -146,7 +158,7 @@ export default function PianoUnico() {
           value={extra}
           onChange={(e) => setExtra(e.target.value)}
           rows={2}
-          placeholder={tri("Ordini o note extra (facoltativo): es. «consegna bar alle 7, 50 cornetti in più»", "Extra-Aufträge/Notizen (optional)", "Extra orders or notes (optional)", "Pedidos o notas extra (opcional)", "Commandes/notes extra (facultatif)", "سفارش یا یادداشت اضافه (اختیاری)")}
+          placeholder={prof.orderPlaceholder(lang)}
           className="mt-3 w-full rounded-lg bg-[#060A10] border border-[#8a97a6]/30 px-3 py-2 text-sm text-white placeholder:text-[#64748B]"
         />
         <button

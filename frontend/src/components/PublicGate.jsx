@@ -13,6 +13,7 @@ import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
 import { api, facesApi } from "@/lib/api";
+import { activityProfile as gateActivityProfile } from "@/lib/activityProfile";
 import { playTTS, isTTSMuted } from "@/lib/tts";
 import { toast } from "sonner";
 
@@ -252,7 +253,18 @@ export default function PublicGate({ onUnlock }) {
           ))}
         </div>
 
-        {/* TRIO avatar — Sitor centrale e speciale */}
+        {/* Contenuto reale del mondo selezionato: cambia per panificio/pizzeria/pasticceria */}
+        {["panificio", "pizzeria", "pasticceria"].includes(world) && (() => { const ap = gateActivityProfile(world); return (
+          <div data-testid="public-world-content" className="max-w-md mx-auto mb-6 rounded-2xl border p-4 text-center" style={{ borderColor: `${ap.accent}44`, background: `${ap.accent}10` }}>
+            <p data-testid="public-world-blurb" className="text-[12.5px] text-[#cbd5e1] leading-snug">{ap.publicBlurb(lang)}</p>
+            <div className="mt-3 flex flex-wrap items-center justify-center gap-2">
+              {ap.publicFeatures(lang).map((f, i) => (
+                <span key={i} data-testid={`public-world-feature-${i}`} className="px-2.5 py-1 rounded-full text-[10.5px] font-semibold border" style={{ borderColor: `${ap.accent}55`, color: ap.accent, background: "rgba(3,7,18,0.5)" }}>{f}</span>
+              ))}
+            </div>
+          </div>
+        ); })()}
+
         <div data-testid="public-avatars" className="flex items-end justify-center gap-4 sm:gap-8 mb-7">
           {AVATARS.map((a, i) => (
             <motion.button key={`av-${a.n}`} data-testid={`public-avatar-${a.n.toLowerCase().replace(/[^a-z]/g, "")}`}
