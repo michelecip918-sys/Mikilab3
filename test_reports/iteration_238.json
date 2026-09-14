@@ -1,0 +1,28 @@
+{
+  "summary": "Frontend E2E testing for MikiLab Pro machine-status feature (points 1-4). All 4 points verified via the public URL. Overview panel renders all 5 departments with chips + active counts; inspect modal (via select+open AND via card button) opens supervise banner and read-only badges (0 editable selects); operator flow after assigning Marco to Panificio exposes editable DeptMachines with save + 'Machine status saved' success toast. Persistence confirmed across Capo overview (forno-deck chip shows '220°C', Panificio count 1/6 active). No console crashes (only harmless THREE.js WebGPU adapter warnings and expected pre-gate 401s).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "OperatorEntry", "issues": ["OnboardingActivity modal (z-[900]) sometimes reappears when transitioning from PublicGate to Operator floor and intercepts pointer events on hero-operatori-enter; requires re-confirming activity even after admin already onboarded."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Review why OnboardingActivity may resurface on operator entry after localStorage reset; ensure operator flow doesn't re-prompt activity choice.",
+    "Nice-to-have: send operator directly to assigned dept scene instead of requiring ZoneHero3D 'Entra' click."
+  ],
+  "critical_code_review_comments": [
+    "FloorOperatorDay only renders DeptMachines when the current role has a matching dept assignment (mine). If unassigned, DeptMachines never appears in operator mode — by design but could confuse users; consider a helper banner.",
+    "Machine-status voice announcement (point 4) waits on 30s polling of deptApi.assignment(); on first entry the TTS is fired only after 'mine' resolves. Consider immediate refresh on role change to reduce delay."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (skipped)", "frontend": "100%"},
+  "test_credentials": "Master PIN 198505; Admin admin@mikilab.de / Mikilab2026!; Operator PIN 7391 (Marco / novizio)",
+  "seed_data_creation": "Assigned operator 'Marco' to Panificio via Team > Department Assignment; set Forno a piani (deck) to 'attiva' with value '220°C' from operator screen.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "All 4 machine-status feature points work. Points 2/3 verified while logged in as Capo (Direction PIN 198505 -> Sign in as Capo). Point 1 verified by logging out (localStorage.removeItem('mikilab_admin_unlocked') + reload), clicking Production -> Face/Name or First-time PIN (public-op-pin-btn) -> keypad 7391 -> ZoneHero3D 'Entra'. DeptMachines only renders if operator's name is present in the dept assignments. Voice announcement (point 4) not asserted (audio); no crash observed.",
+  "rca of the issue": "N/A — no bugs found."
+}

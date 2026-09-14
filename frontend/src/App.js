@@ -60,6 +60,7 @@ import OrdiniExtra from "@/components/OrdiniExtra";
 import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
 import PianoUnico from "@/components/console/PianoUnico";
+import CapoMachinesOverview from "@/components/console/CapoMachinesOverview";
 import { activityProfile } from "@/lib/activityProfile";
 import { HoloPanel } from "@/components/console/HoloKit";
 import { SubTabs } from "@/components/console/SubTabs";
@@ -537,6 +538,9 @@ export default function App() {
                       sub={tri("Un unico flusso: inserisci ricette e ordini, Sitor propone 2-3 opzioni, tu scegli e calendario, orari a ritroso e timeline si generano da soli.", "Ein Fluss: Rezepte/Aufträge eingeben, Sitor schlägt 2-3 Optionen vor, du wählst — Kalender, Rückwärtszeiten und Timeline entstehen automatisch.", "One flow: enter recipes and orders, Sitor proposes 2-3 options, you pick and the calendar, backward times and timeline generate themselves.", "Un solo flujo: ingresa recetas y pedidos, Sitor propone 2-3 opciones y todo se genera solo.", "Un seul flux : saisis recettes et commandes, Sitor propose 2-3 options et tout se génère seul.", "یک جریان: دستور و سفارش وارد کن، سیتور ۲-۳ گزینه می‌دهد و بقیه خودکار ساخته می‌شود.")}>
                     <HoloPanel testid="panel-piano-unico" accent="#9aa6b2" beacon="#c9a24a" icon="🗓️" defaultOpen title={tri("Piano di Produzione · Sitor", "Produktionsplan · Sitor", "Production Plan · Sitor", "Plan de Producción · Sitor", "Plan de Production · Sitor", "برنامه تولید · سیتور")} sub={tri("Dalle ricette al piano completo in un solo flusso guidato da Sitor.", "Vom Rezept zum kompletten Plan in einem von Sitor geführten Fluss.", "From recipes to a complete plan in one Sitor-guided flow.", "De recetas a plan completo en un flujo guiado.", "Des recettes au plan complet en un flux guidé.", "از دستور تا برنامه کامل در یک جریان.")}>
                       <PianoUnico activity={activity} />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-machines-overview" accent="#3E9C93" beacon="#3E9C93" icon="🖥️" title={tri("Stato Macchine · Tutti i Reparti", "Maschinenstatus · Alle Abteilungen", "Machine Status · All Departments", "Estado de Máquinas · Todas las Áreas", "État Machines · Tous les Rayons", "وضعیت ماشین‌ها · همه بخش‌ها")} sub={tri("Vedi in tempo reale quali macchine sono collegate/attive in ogni reparto, senza entrare come operaio. Puoi anche ispezionare un reparto in sola supervisione.", "Sieh in Echtzeit, welche Maschinen in jeder Abteilung aktiv sind.", "See in real time which machines are connected/active in each department, without entering as an operator. You can also inspect a department in read-only supervision.", "Ve en tiempo real qué máquinas están activas en cada área.", "Vois en temps réel quelles machines sont actives dans chaque rayon.", "به‌صورت زنده ببین کدام ماشین‌ها در هر بخش فعال‌اند.")}>
+                      <CapoMachinesOverview />
                     </HoloPanel>
                     </SecBlock>
 

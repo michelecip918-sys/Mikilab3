@@ -274,13 +274,15 @@ function FloorNameEntry({ tri, onSet }) {
 }
 
 // Vista Produzione a schermo unico: SOLO il compito del giorno + aiuto + foto + fine turno.
-export default function FloorOperatorDay() {
+export default function FloorOperatorDay({ superviseDept = "", superviseDeptName = "" }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
+  const supervise = !!superviseDept;
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [apprentice, setApprentice] = useState(false);
   const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
   const greetedRef = useRef(false);
+  const machinesAnnouncedRef = useRef("");
 
   const syncRole = useCallback(() => { try { setRole(localStorage.getItem(ROLE_KEY) || ""); } catch { /* */ } }, []);
   useEffect(() => {
@@ -304,7 +306,7 @@ export default function FloorOperatorDay() {
 
   // Sitor annuncia a VOCE (cuffie Bluetooth) — l'operaio non usa le mani, ascolta e basta.
   useEffect(() => {
-    if (!role || greetedRef.current) return;
+    if (!role || greetedRef.current || supervise) return;
     greetedRef.current = true;
     const msg = apprentice
       ? tri(
@@ -324,10 +326,39 @@ export default function FloorOperatorDay() {
     try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
   }, [apprentice, role, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Punto 4: quando l'operaio entra nel reparto, Sitor annuncia anche lo stato delle macchine collegate.
+  useEffect(() => {
+    if (supervise || !role || !mine || !mine.dept) return;
+    if (machinesAnnouncedRef.current === mine.dept) return;
+    machinesAnnouncedRef.current = mine.dept;
+    const sw = (st) => (st === "attiva"
+      ? tri("attiva", "aktiv", "active", "activa", "active", "فعال")
+      : tri("in manutenzione", "in Wartung", "in maintenance", "en mantenimiento", "en maintenance", "در تعمیر"));
+    deptApi.machinesGet(mine.dept).then((d) => {
+      const on = (d.machines || []).filter((m) => m.status && m.status !== "spenta");
+      if (!on.length) return;
+      const phrase = on.map((m) => `${m.name} ${sw(m.status)}${m.value ? `, ${m.value}` : ""}`).join("; ");
+      const msg = tri(
+        `Stato macchine del reparto ${d.dept_name || ""}: ${phrase}.`,
+        `Maschinenstatus der Abteilung ${d.dept_name || ""}: ${phrase}.`,
+        `Machine status for department ${d.dept_name || ""}: ${phrase}.`,
+        `Estado de las máquinas del área ${d.dept_name || ""}: ${phrase}.`,
+        `État des machines du rayon ${d.dept_name || ""} : ${phrase}.`,
+        `وضعیت ماشین‌های بخش ${d.dept_name || ""}: ${phrase}.`);
+      setTimeout(() => { try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ } }, 2800);
+    }).catch(() => {});
+  }, [mine, role, supervise, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <div data-testid="floor-operator-day" className="space-y-4">
-      {!role && (
+      {!role && !supervise && (
         <FloorNameEntry tri={tri} onSet={(nm) => { try { localStorage.setItem(ROLE_KEY, nm); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: nm } })); } catch { /* */ } setRole(nm); }} />
+      )}
+      {supervise && (
+        <div data-testid="supervise-banner" className="rounded-2xl border-2 border-[#9aa6b2]/50 bg-[#9aa6b2]/10 px-4 py-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#9aa6b2]">{tri("Supervisione Capo · sola lettura", "Chef-Aufsicht · nur Lesen", "Capo supervision · read-only", "Supervisión · solo lectura", "Supervision · lecture seule", "نظارت · فقط خواندن")}</p>
+          <p className="text-base text-white font-black leading-tight">{superviseDeptName || superviseDept}</p>
+        </div>
       )}
       {/* Sitor parla direttamente con l'operaio */}
       <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-[#0b0f19]"}`}>
@@ -352,8 +383,13 @@ export default function FloorOperatorDay() {
       {/* Sitor Maestro: guida passo-passo adattata al livello + proposta di modifica al piano */}
       {role && <SitorMaestro role={role} />}
 
-      {/* Widget condivisi dal Capo per il reparto */}
-      <SharedWidgets dept={mine ? (mine.dept_name || mine.dept || "") : ""} />
+      {/* Widget condivisi dal Capo + collegamento macchine del reparto */}
+      <SharedWidgets
+        dept={supervise ? (superviseDeptName || superviseDept) : (mine ? (mine.dept_name || mine.dept || "") : "")}
+        deptKey={supervise ? superviseDept : (mine ? (mine.dept || "") : "")}
+        readOnly={supervise}
+        operator={role}
+      />
 
       {/* Sempre disponibili: chiedi aiuto + analizzatore foto */}
       <SosButton role={role} operator={role} />

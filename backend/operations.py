@@ -759,7 +759,7 @@ def _build_closure_pdf(c: dict, lang: str = "it") -> bytes:
 
     de = lang == "de"
     L = {
-        "title": "Registro Chiusura Turno · HACCP" if not de else "Schichtabschluss · HACCP",
+        "title": "Registro Chiusura Turno" if not de else "Schichtabschluss",
         "date": "Data" if not de else "Datum", "lot": "Lotto di produzione" if not de else "Produktionscharge",
         "operator": "Operatore" if not de else "Bediener",
         "produced": "Prodotti realizzati" if not de else "Produzierte Produkte",

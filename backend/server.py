@@ -1682,6 +1682,80 @@ DEPARTMENTS = {
 async def depts_catalog():
     return {"departments": [{"key": k, **v} for k, v in DEPARTMENTS.items()]}
 
+
+# --- Stato macchine per reparto: l'operaio collega/segna le macchine del proprio reparto ---
+_MACHINE_STATES = {"attiva", "in manutenzione", "spenta"}
+
+
+class DeptMachineItem(BaseModel):
+    id: str
+    status: str = "spenta"
+    value: str = ""
+
+
+class DeptMachinesReq(BaseModel):
+    machines: List[DeptMachineItem] = []
+    operator: str = ""
+
+
+def _dept_machines_merged(dept: str, doc: dict | None) -> list:
+    """Unisce il catalogo macchine del reparto con lo stato salvato."""
+    saved = {m.get("id"): m for m in ((doc or {}).get("machines") or [])}
+    out = []
+    for m in DEPARTMENTS[dept]["machines"]:
+        s = saved.get(m["id"], {})
+        st = s.get("status") if s.get("status") in _MACHINE_STATES else "spenta"
+        out.append({"id": m["id"], "name": m["name"], "type": m["type"],
+                    "status": st, "value": s.get("value", "") or ""})
+    return out
+
+
+@api_router.get("/depts/machines/overview")
+async def dept_machines_overview():
+    """Vista d'insieme per il Capo: stato macchine di TUTTI i reparti."""
+    result = []
+    for k, v in DEPARTMENTS.items():
+        doc = await db.dept_machines.find_one({"dept": k}, {"_id": 0})
+        machines = _dept_machines_merged(k, doc)
+        result.append({"dept": k, "dept_name": v["name"], "icon": v.get("icon", ""),
+                       "accent": v.get("accent", "#64748B"), "machines": machines,
+                       "active": sum(1 for m in machines if m["status"] == "attiva"),
+                       "maintenance": sum(1 for m in machines if m["status"] == "in manutenzione"),
+                       "total": len(machines),
+                       "updated_at": (doc or {}).get("updated_at"),
+                       "operator": (doc or {}).get("operator", "")})
+    return {"departments": result}
+
+
+@api_router.get("/depts/{dept}/machines")
+async def dept_machines_get(dept: str):
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    doc = await db.dept_machines.find_one({"dept": dept}, {"_id": 0})
+    return {"dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
+            "machines": _dept_machines_merged(dept, doc),
+            "updated_at": (doc or {}).get("updated_at"), "operator": (doc or {}).get("operator", "")}
+
+
+@api_router.post("/depts/{dept}/machines")
+async def dept_machines_set(dept: str, body: DeptMachinesReq):
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]}
+    clean = []
+    for m in body.machines:
+        if m.id not in valid_ids:
+            continue
+        st = m.status if m.status in _MACHINE_STATES else "spenta"
+        clean.append({"id": m.id, "status": st, "value": (m.value or "").strip()[:60]})
+    now = now_iso()
+    await db.dept_machines.update_one({"dept": dept},
+        {"$set": {"dept": dept, "machines": clean, "operator": (body.operator or "").strip()[:80], "updated_at": now}},
+        upsert=True)
+    doc = await db.dept_machines.find_one({"dept": dept}, {"_id": 0})
+    return {"ok": True, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
+            "machines": _dept_machines_merged(dept, doc), "updated_at": now}
+
 class DeptAssignReq(BaseModel):
     dept: str = ""
     task: str = ""
