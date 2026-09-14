@@ -419,12 +419,6 @@ export const doughSessionsApi = {
   aiAdvice: (data) => api.post(`/dough-sessions/ai-advice`, data).then((r) => r.data),
 };
 
-export const haccpApi = {
-  list: () => cachedGet("haccp_logs", () => api.get(`/haccp-logs`).then((r) => r.data), []),
-  create: (data) => api.post(`/haccp-logs`, data).then((r) => r.data),
-  remove: (id) => api.delete(`/haccp-logs/${id}`).then((r) => r.data),
-};
-
 export const floursApi = {
   list: () => cachedGet("flours", () => api.get(`/flours`).then((r) => r.data.items || []), []),
   create: (data) => api.post(`/flours`, data).then((r) => r.data),

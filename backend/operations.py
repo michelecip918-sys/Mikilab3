@@ -1,6 +1,6 @@
 # ruff: noqa: F821  (i nomi sono iniettati a runtime dal core via lo shim globals().update)
 """MikiLab Pro — Modulo Operazioni & Logistica.
-Reparti dinamici, consegne (Lieferung), negozi, ordini, turni, ceste smart, HACCP, magazzino,
+Reparti dinamici, consegne (Lieferung), negozi, ordini, turni, ceste smart, magazzino,
 sessioni impasto / day-after, chiusura giornata + PDF, sensori IoT / allarmi termici.
 Refactoring puro: codice spostato da server.py, comportamento INVARIATO.
 Le rotte sono registrate sullo stesso `api_router` del core (server.py).
@@ -600,44 +600,6 @@ async def dough_sessions_ai_advice(body: DayAfterReq, user: dict = Depends(curre
 
 
 # ---------------------------------------------------------------------------
-# Laboratorio Smart — Registro HACCP materie prime (Fase 3)
-# ---------------------------------------------------------------------------
-class HaccpLogReq(BaseModel):
-    material: str = Field(..., max_length=200)      # nome materia prima
-    code: Optional[str] = Field("", max_length=200) # barcode / QR scansionato
-    lot: Optional[str] = Field("", max_length=160)  # lotto fornitore
-    expiry: Optional[str] = Field("", max_length=40)
-    supplier: Optional[str] = Field("", max_length=200)
-    temp_c: Optional[float] = None                  # temperatura ricevimento (catena del freddo)
-    qty: Optional[str] = Field("", max_length=80)
-    note: Optional[str] = Field("", max_length=1000)
-
-
-def _haccp_public(d: dict) -> dict:
-    return {k: d.get(k) for k in ("id", "material", "code", "lot", "expiry", "supplier", "temp_c", "qty", "note", "created_at")}
-
-
-@api_router.get("/haccp-logs")
-async def haccp_list(user: dict = Depends(current_user)):
-    docs = await db.haccp_logs.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(500)
-    return [_haccp_public(d) for d in docs]
-
-
-@api_router.post("/haccp-logs")
-async def haccp_create(body: HaccpLogReq, user: dict = Depends(current_user)):
-    doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(), **body.dict()}
-    await db.haccp_logs.insert_one(doc)
-    return _haccp_public(doc)
-
-
-@api_router.delete("/haccp-logs/{log_id}")
-async def haccp_delete(log_id: str, user: dict = Depends(current_user)):
-    res = await db.haccp_logs.delete_one({"id": log_id, "owner_id": user["user_id"]})
-    if res.deleted_count == 0:
-        raise HTTPException(404, "Voce non trovata")
-    return {"ok": True}
-
-
 # ---------------------------------------------------------------------------
 # MAGAZZINO (giacenze materie prime) + CHIUSURA GIORNATA / Registro HACCP
 # ---------------------------------------------------------------------------
@@ -763,41 +725,16 @@ async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
                         it["qty"] = newq
                         deducted.append({"name": it["name"], "qty": take, "unit": it.get("unit", "kg"), "remaining": newq})
                     break
-    # 2) Sync automatico → Registro HACCP: crea voci per ogni temperatura + una per pulizie/anomalie
-    haccp_created = 0
-    for tp in body.temps:
-        nm = (tp.get("name") or "").strip()
-        tc = tp.get("temp_c")
-        if not nm or tc in (None, ""):
-            continue  # salta i punti senza valore di temperatura
-        await db.haccp_logs.insert_one({"id": str(uuid.uuid4()), "owner_id": uid, "created_at": now,
-            "material": nm, "code": "", "lot": body.production_lot or "", "expiry": "", "supplier": "",
-            "temp_c": (float(tc) if tc not in (None, "") else None), "qty": "",
-            "note": f"Chiusura giornata {now[:10]}" + (f" · Operatore: {body.operator}" if body.operator else "")})
-        haccp_created += 1
-    clean_on = [k for k, v in (body.cleaning or {}).items() if v]
-    if clean_on or (body.anomalies or "").strip():
-        note_parts = []
-        if clean_on:
-            note_parts.append("Sanificazione: " + ", ".join(clean_on))
-        if (body.anomalies or "").strip():
-            note_parts.append("Anomalie: " + body.anomalies.strip())
-        await db.haccp_logs.insert_one({"id": str(uuid.uuid4()), "owner_id": uid, "created_at": now,
-            "material": "Registro sanitario (chiusura)", "code": "", "lot": body.production_lot or "",
-            "expiry": "", "supplier": "", "temp_c": None, "qty": "",
-            "note": " · ".join(note_parts) + (f" · Operatore: {body.operator}" if body.operator else "")})
-        haccp_created += 1
-    # 3) Archivia chiusura
+    # 2) Archivia chiusura
     rec = {"id": str(uuid.uuid4()), "owner_id": uid, "date": now[:10], "closed_at": now,
            "produced": body.produced, "consume": body.consume, "deducted": deducted, "temps": body.temps,
            "cleaning": body.cleaning, "anomalies": body.anomalies, "operator": body.operator,
-           "note": body.note, "production_lot": body.production_lot, "signature": body.signature or "",
-           "haccp_created": haccp_created}
+           "note": body.note, "production_lot": body.production_lot, "signature": body.signature or ""}
     await db.day_closures.insert_one(rec)
     rec.pop("_id", None)
     # Avviso scorte basse via email (se qualche materia è scesa sotto soglia con lo scarico)
     await _notify_low_stock(uid, user.get("email"), body.lang)
-    return {"ok": True, "closure": {k: rec[k] for k in rec if k != "owner_id"}, "deducted": deducted, "haccp_created": haccp_created}
+    return {"ok": True, "closure": {k: rec[k] for k in rec if k != "owner_id"}, "deducted": deducted}
 
 
 @api_router.get("/day-close/last")

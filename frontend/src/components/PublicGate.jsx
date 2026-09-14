@@ -55,7 +55,7 @@ export default function PublicGate({ onUnlock }) {
   }, []);
 
   // Voce di benvenuto all'ingresso su mikilab.de (una volta per sessione): invita a scegliere
-  // Capo o Operaio e accompagna l'operaio in produzione.
+  // tra Direzione (piano di produzione) e Produzione (reparto).
   useEffect(() => {
     if (showPin || guest) return;
     let done = true;
@@ -64,12 +64,12 @@ export default function PublicGate({ onUnlock }) {
     const t = setTimeout(() => {
       try { sessionStorage.setItem("mikilab_welcome_spoken", "1"); } catch { /* */ }
       const msg = tri(
-        "Benvenuto in MikiLab. Sei il Capo o un operaio? Se sei un operaio, ti porto subito in produzione.",
-        "Willkommen bei MikiLab. Bist du der Chef oder ein Mitarbeiter? Als Mitarbeiter bringe ich dich in die Produktion.",
-        "Welcome to MikiLab. Are you the Capo or an operator? If you're an operator, I'll take you straight to production.",
-        "Bienvenido a MikiLab. ¿Eres el Capo o un operario? Si eres operario, te llevo a producción.",
-        "Bienvenue chez MikiLab. Es-tu le Capo ou un opérateur ? Si opérateur, je t'emmène en production.",
-        "به MikiLab خوش آمدی. کاپو هستی یا اپراتور؟ اگر اپراتوری، تو را به تولید می‌برم.");
+        "Benvenuto in MikiLab. Puoi scegliere Direzione per il piano di produzione, oppure Produzione per il tuo reparto.",
+        "Willkommen bei MikiLab. Wähle Direktion für den Produktionsplan oder Produktion für deine Abteilung.",
+        "Welcome to MikiLab. You can choose Direction for the production plan, or Production for your department.",
+        "Bienvenido a MikiLab. Elige Dirección para el plan de producción, o Producción para tu área.",
+        "Bienvenue chez MikiLab. Choisis Direction pour le plan de production, ou Production pour ton rayon.",
+        "به MikiLab خوش آمدی. می‌توانی مدیریت را برای برنامه تولید یا تولید را برای بخش خودت انتخاب کنی.");
       try { playTTS(msg, { lang, voice: "mikemix" }); } catch { /* */ }
     }, 1200);
     return () => clearTimeout(t);
@@ -160,7 +160,7 @@ export default function PublicGate({ onUnlock }) {
   }, [showPin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const AVATARS = [
-    { img: "avatar_miki.jpg", c: "#64748B", n: "MikiLab", r: tri("Capo Supremo", "Oberster Chef", "Supreme Capo", "Capo Supremo", "Capo Suprême", "کاپوی برتر") },
+    { img: "avatar_miki.jpg", c: "#64748B", n: "MikiLab" },
     { img: "avatar_nexus.jpg", c: "#a6b1bc", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
   ];
 
@@ -295,7 +295,7 @@ export default function PublicGate({ onUnlock }) {
                 </div>
               </div>
               <span className="font-black text-xs sm:text-sm" style={{ color: a.c }}>{a.n}</span>
-              <span className="text-[9.5px] uppercase tracking-wider text-[#94A3B8] max-w-[92px] leading-tight">{a.r}</span>
+              {a.r && <span className="text-[9.5px] uppercase tracking-wider text-[#94A3B8] max-w-[92px] leading-tight">{a.r}</span>}
             </motion.button>
           ))}
         </div>
@@ -324,12 +324,12 @@ export default function PublicGate({ onUnlock }) {
           <button data-testid="public-enter-capo" onClick={() => enterAs("capo")}
             className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-base text-[#030712] active:scale-95 transition-all"
             style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 26px rgba(138,151,166,0.45)" }}>
-            <ShieldAlert className="w-5 h-5" /> {tri("Sono il Capo", "Ich bin der Chef", "I'm the Capo", "Soy el Capo", "Je suis le Capo", "من کاپو هستم")}
+            <ShieldAlert className="w-5 h-5" /> {tri("Direzione", "Direktion", "Direction", "Dirección", "Direction", "مدیریت")}
           </button>
           <button data-testid="public-enter-operaio" onClick={() => enterAs("operator")}
             className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 rounded-2xl font-black text-base active:scale-95 transition-all border-2"
             style={{ background: "rgba(217,82,0,0.12)", color: "#FF8533", borderColor: "#D95200" }}>
-            <GraduationCap className="w-5 h-5" /> {tri("Sono un Operaio", "Ich bin Mitarbeiter", "I'm an Operator", "Soy Operario", "Je suis Opérateur", "من اپراتورم")}
+            <GraduationCap className="w-5 h-5" /> {tri("Produzione", "Produktion", "Production", "Producción", "Production", "تولید")}
           </button>
         </div>
         )}
