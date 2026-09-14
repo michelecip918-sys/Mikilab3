@@ -137,7 +137,7 @@ export default function SalaSitor() {
         loadQueue();
       }
     } catch {
-      push("sitor", tri("Un attimo, Capo: riprova tra poco.", "Einen Moment, Chef: versuch es gleich.", "One moment, Capo: try again shortly.", "Un momento: inténtalo de nuevo.", "Un instant : réessaie.", "یک لحظه صبر کن."));
+      push("sitor", tri("Un momento: riprova tra poco.", "Einen Moment: bitte gleich erneut versuchen.", "One moment: please try again shortly.", "Un momento: inténtalo de nuevo.", "Un instant : réessaie.", "یک لحظه صبر کن."));
     } finally { setBusy(false); }
   };
 
@@ -176,7 +176,7 @@ export default function SalaSitor() {
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
               <Sparkles className="w-5 h-5 text-[#a6b1bc]" /> {tri("Sala Sitor", "Sitor-Saal", "Sitor Hall", "Sala Sitor", "Salle Sitor", "تالار سیتور")}
             </h2>
-            <p className="text-[11px] text-[#94A3B8]">{tri("Il vostro unico punto d'incontro: parla, scrivi, ordina. Da qui nasce tutto.", "Euer einziger Treffpunkt: sprich, schreibe, befiehl.", "Your single meeting point: talk, write, command. Everything starts here.", "Vuestro único punto de encuentro.", "Votre unique point de rencontre.", "تنها نقطه ملاقات شما.")}</p>
+            <p className="text-[11px] text-[#94A3B8]">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
             {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#a6b1bc] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
           </div>
           <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}

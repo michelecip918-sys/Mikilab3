@@ -69,12 +69,12 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           return;
         }
         setUser(r.user);
-        toast.success(tri("Benvenuto!", "Willkommen!", "Welcome!", "¡Bienvenido!"));
+        toast.success(tri("Bentornato.", "Willkommen zurück.", "Welcome back.", "Bienvenido de nuevo."));
         return;
       }
       const data = await authApi.login({ email, password });
       setUser(data.user);
-      toast.success(tri("Benvenuto!", "Willkommen!", "Welcome!", "¡Bienvenido!"));
+      toast.success(tri("Bentornato.", "Willkommen zurück.", "Welcome back.", "Bienvenido de nuevo."));
     } catch (err) {
       const detail = err?.response?.data?.detail;
       if (err?.response?.status === 403 && detail === "activation_code_invalid") {

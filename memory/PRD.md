@@ -5200,3 +5200,10 @@ File modificati:
 - `components/RecipeList.jsx` — "Link copiato!" → "Link copiato."
 
 Lasciati invariati di proposito: i messaggi vocali funzionali chiari/diretti (già sobri), le emergenze SOS (tono d'allerta appropriato), il brand visivo "Dio dell'Arte Bianca" e l'estetica multiverso.
+
+## v-fork28 (2026-06-14) — Revisione tono testi (seconda passata completa)
+Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork27):
+- `components/AuthScreen.jsx` — toast "Benvenuto!" (login+register) → "Bentornato." / registrazione già gestita.
+- `App.js` — pannello "Sitor su misura · La tua schermata" → "Strumenti su misura · Sitor" + sottotitolo professionale.
+- `components/console/SalaSitor.jsx` — "Il vostro unico punto d'incontro… Da qui nasce tutto" → "Il canale diretto con Sitor: parla, scrivi o allega un ordine…"; errore "Un attimo, Capo…" → "Un momento: riprova tra poco." (msg testo + toast).
+- Verificato: icone-categoria prodotto (🥖🍞🥐🍕) e icone-sensore funzionali (🔥 forno, 🧪 pH) LASCIATE (parte dell'estetica, non testo giocoso). Titoli pannelli console già professionali. Screenshot landing conferma stile invariato e tono sobrio (Direction/Production, nessun "Supremo").
