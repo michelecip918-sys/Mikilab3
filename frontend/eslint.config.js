@@ -1,7 +1,7 @@
-import reactHooks from "./node_modules/eslint-plugin-react-hooks/index.js";
-import react from "./node_modules/eslint-plugin-react/index.js";
+const reactHooks = require("./node_modules/eslint-plugin-react-hooks/index.js");
+const react = require("./node_modules/eslint-plugin-react/index.js");
 
-export default [
+module.exports = [
   {
     files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
     plugins: {
