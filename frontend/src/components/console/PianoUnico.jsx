@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2 } from "lucide-react";
-import { recipesApi, mikeApi } from "@/lib/api";
+import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2, Save } from "lucide-react";
+import { recipesApi, mikeApi, weeklyApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -35,6 +35,34 @@ export default function PianoUnico({ activity: activityProp }) {
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [savedInfo, setSavedInfo] = useState(null);
+
+  useEffect(() => {
+    weeklyApi.get().then((d) => {
+      if (d && Array.isArray(d.items) && d.items.length) setSavedInfo({ count: d.items.length, at: d.saved_at || d.updated_at || null });
+    }).catch(() => {});
+  }, []);
+
+  const DAY_TODAY = (() => { const d = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"]; return d[new Date().getDay()]; })();
+
+  const saveChosen = async () => {
+    if (!opt) return;
+    setSaving(true);
+    try {
+      const items = (opt.batches || []).map((b) => ({
+        day: DAY_TODAY,
+        recipe_id: (b.product || "voce").toString().toLowerCase().replace(/\s+/g, "-").slice(0, 40),
+        recipe_name: b.product || "",
+        pieces: parseFloat(String(b.qty || "0").replace(/[^0-9.]/g, "")) || 0,
+      }));
+      const d = await weeklyApi.save({ items });
+      setSavedInfo({ count: (d.items || items).length, at: d.updated_at || new Date().toISOString() });
+      toast.success(tri("Piano salvato.", "Plan gespeichert.", "Plan saved.", "Plan guardado.", "Plan enregistré.", "برنامه ذخیره شد."));
+    } catch (e) {
+      toast.error(tri("Salvataggio non riuscito. Riprova.", "Speichern fehlgeschlagen.", "Save failed. Retry.", "Error al guardar.", "Échec de l'enregistrement.", "ذخیره ناموفق."));
+    } finally { setSaving(false); }
+  };
 
   useEffect(() => {
     recipesApi.list("mikilab", true).then((d) => setRecipes(Array.isArray(d) ? d : [])).catch(() => {});
@@ -116,6 +144,11 @@ export default function PianoUnico({ activity: activityProp }) {
         </div>
       </div>
       {/* STEP 1 — Ricette / Ordini */}
+      {savedInfo && (
+        <div data-testid="piano-saved-badge" className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-[12px] text-emerald-300">
+          <Check className="w-4 h-4" /> {tri(`Piano salvato in archivio (${savedInfo.count} voci). Resta disponibile anche dopo il refresh.`, `Plan gespeichert (${savedInfo.count}).`, `Plan saved (${savedInfo.count} items). It stays after refresh.`, `Plan guardado (${savedInfo.count}).`, `Plan enregistré (${savedInfo.count}).`, `برنامه ذخیره شد (${savedInfo.count}).`)}
+        </div>
+      )}
       <div className="rounded-xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 p-4">
         <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#a4afbb] mb-3">
           <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#a4afbb]/15 text-[#a4afbb] font-black">1</span>
@@ -225,6 +258,9 @@ export default function PianoUnico({ activity: activityProp }) {
               </span>
               <span className="text-[12px] font-black text-white">— {opt.label}</span>
               <div className="ml-auto flex gap-2 no-print">
+                <button data-testid="piano-save" onClick={saveChosen} disabled={saving} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-emerald-400 hover:text-emerald-300 disabled:opacity-50">
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} {tri("Salva piano", "Plan speichern", "Save plan", "Guardar plan", "Enregistrer", "ذخیره برنامه")}
+                </button>
                 <button data-testid="piano-speak" onClick={speak} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a6b1bc] hover:text-white">
                   <Volume2 className="w-4 h-4" /> {tri("Ascolta", "Anhören", "Listen", "Escuchar", "Écouter", "بشنو")}
                 </button>
