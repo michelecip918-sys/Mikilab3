@@ -1882,11 +1882,12 @@ def _dept_machines_merged(dept: str, doc: dict | None) -> list:
 
 
 @api_router.get("/depts/machines/overview")
-async def dept_machines_overview():
-    """Vista d'insieme per il Capo: stato macchine di TUTTI i reparti."""
+async def dept_machines_overview(user: Optional[dict] = Depends(optional_user)):
+    """Vista d'insieme per il Capo: stato macchine di TUTTI i reparti (isolato per azienda)."""
+    org = _org_id(user)
     result = []
     for k, v in DEPARTMENTS.items():
-        doc = await db.dept_machines.find_one({"dept": k}, {"_id": 0})
+        doc = await db.dept_machines.find_one({"dept": k, "organization_id": org}, {"_id": 0})
         machines = _dept_machines_merged(k, doc)
         result.append({"dept": k, "dept_name": v["name"], "icon": v.get("icon", ""),
                        "accent": v.get("accent", "#64748B"), "machines": machines,
@@ -1899,19 +1900,20 @@ async def dept_machines_overview():
 
 
 @api_router.get("/depts/{dept}/machines")
-async def dept_machines_get(dept: str):
+async def dept_machines_get(dept: str, user: Optional[dict] = Depends(optional_user)):
     if dept not in DEPARTMENTS:
         raise HTTPException(404, "Reparto non trovato")
-    doc = await db.dept_machines.find_one({"dept": dept}, {"_id": 0})
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": _org_id(user)}, {"_id": 0})
     return {"dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
             "machines": _dept_machines_merged(dept, doc),
             "updated_at": (doc or {}).get("updated_at"), "operator": (doc or {}).get("operator", "")}
 
 
 @api_router.post("/depts/{dept}/machines")
-async def dept_machines_set(dept: str, body: DeptMachinesReq):
+async def dept_machines_set(dept: str, body: DeptMachinesReq, user: Optional[dict] = Depends(optional_user)):
     if dept not in DEPARTMENTS:
         raise HTTPException(404, "Reparto non trovato")
+    org = _org_id(user)
     valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]}
     clean = []
     for m in body.machines:
@@ -1920,10 +1922,10 @@ async def dept_machines_set(dept: str, body: DeptMachinesReq):
         st = m.status if m.status in _MACHINE_STATES else "spenta"
         clean.append({"id": m.id, "status": st, "value": (m.value or "").strip()[:60]})
     now = now_iso()
-    await db.dept_machines.update_one({"dept": dept},
-        {"$set": {"dept": dept, "machines": clean, "operator": (body.operator or "").strip()[:80], "updated_at": now}},
+    await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+        {"$set": {"dept": dept, "machines": clean, "operator": (body.operator or "").strip()[:80], "updated_at": now, "organization_id": org}},
         upsert=True)
-    doc = await db.dept_machines.find_one({"dept": dept}, {"_id": 0})
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
             "machines": _dept_machines_merged(dept, doc), "updated_at": now}
 
@@ -1934,9 +1936,9 @@ class DeptAssignReq(BaseModel):
     note: str = ""
 
 @api_router.get("/depts/assignment")
-async def depts_assignment():
+async def depts_assignment(user: Optional[dict] = Depends(optional_user)):
     today = now_iso()[:10]
-    docs = await db.dept_assignments.find({"date": today}, {"_id": 0}).sort("at", -1).to_list(50)
+    docs = await db.dept_assignments.find({"date": today, "organization_id": _org_id(user)}, {"_id": 0}).sort("at", -1).to_list(50)
     return {"date": today, "assignments": docs}
 
 @api_router.post("/depts/assign")
@@ -1955,7 +1957,7 @@ async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)
 
 @api_router.delete("/depts/assign/{aid}")
 async def depts_assign_delete(aid: str, admin: dict = Depends(require_admin)):
-    await db.dept_assignments.delete_one({"id": aid})
+    await db.dept_assignments.delete_one({"id": aid, "organization_id": _org_id(admin)})
     return {"ok": True}
 
 class DeptAssignMultiItem(BaseModel):
@@ -1989,11 +1991,12 @@ async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(req
         doc.pop("_id", None)
         created.append(doc)
     if int(body.target or 0) > 0:
+        org = _org_id(admin)
         await db.dept_objectives.update_one(
-            {"date": today, "dept": body.dept},
+            {"date": today, "dept": body.dept, "organization_id": org},
             {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
                       "target": int(body.target or 0), "unit": "pezzi", "label": (body.label or "").strip(),
-                      "updated_at": now_iso()},
+                      "updated_at": now_iso(), "organization_id": org},
              "$setOnInsert": {"done": 0, "entries": []}},
             upsert=True)
     return {"ok": True, "assignments": created}
@@ -2017,36 +2020,38 @@ async def depts_objective_set(body: ObjectiveReq, admin: dict = Depends(require_
     if body.dept not in DEPARTMENTS:
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
+    org = _org_id(admin)
     await db.dept_objectives.update_one(
-        {"date": today, "dept": body.dept},
+        {"date": today, "dept": body.dept, "organization_id": org},
         {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
                   "target": int(body.target or 0), "unit": body.unit or "pezzi", "label": (body.label or "").strip(),
-                  "updated_at": now_iso()},
+                  "updated_at": now_iso(), "organization_id": org},
          "$setOnInsert": {"done": 0, "entries": []}},
         upsert=True)
-    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept}, {"_id": 0})
+    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "objective": doc}
 
 @api_router.post("/depts/progress")
-async def depts_progress(body: ProgressReq):
+async def depts_progress(body: ProgressReq, user: Optional[dict] = Depends(optional_user)):
     if body.dept not in DEPARTMENTS:
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
+    org = _org_id(user)
     entry = {"pin": (body.pin or "??")[-4:], "operator": (body.operator or "").strip() or "Operaio",
              "qty": int(body.qty or 0), "note": (body.note or "").strip(), "at": now_iso()}
     await db.dept_objectives.update_one(
-        {"date": today, "dept": body.dept},
+        {"date": today, "dept": body.dept, "organization_id": org},
         {"$inc": {"done": int(body.qty or 0)},
          "$push": {"entries": {"$each": [entry], "$slice": -60}},
-         "$setOnInsert": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"], "target": 0, "unit": "pezzi", "label": ""}},
+         "$setOnInsert": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"], "target": 0, "unit": "pezzi", "label": "", "organization_id": org}},
         upsert=True)
-    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept}, {"_id": 0})
+    doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "objective": doc}
 
 @api_router.get("/depts/board")
-async def depts_board():
+async def depts_board(user: Optional[dict] = Depends(optional_user)):
     today = now_iso()[:10]
-    docs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    docs = await db.dept_objectives.find({"date": today, "organization_id": _org_id(user)}, {"_id": 0}).to_list(50)
     return {"date": today, "objectives": docs}
 
 

@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { X, Mic, MicOff, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Hand } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
-import { cleanForSpeech } from "@/lib/voice";
+import { playTTS, stopTTS } from "@/lib/tts";
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -34,15 +34,12 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
   const speak = useCallback((text) => {
     try {
-      const synth = window.speechSynthesis;
-      if (!synth) return;
-      synth.cancel();
+      stopTTS();
       if (!ttsOnRef.current) return;
-      const u = new SpeechSynthesisUtterance(cleanForSpeech(text));
-      u.lang = voiceLang; u.rate = 0.95;
-      synth.speak(u);
+      // Voce UNICA del sito: Sitor (via playTTS). Nessuna sintesi diretta femminile.
+      playTTS(text, { lang });
     } catch { /* */ }
-  }, [voiceLang]);
+  }, [lang]);
 
   // Wake Lock: tiene lo schermo acceso.
   const acquireWake = useCallback(async () => {

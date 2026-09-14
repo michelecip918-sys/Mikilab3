@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound } from "lucide-react";
+import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { deusApi, floorApi, deptApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
+import RecipeList from "@/components/RecipeList";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
@@ -281,6 +282,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
   const [role, setRole] = useState(() => { try { return localStorage.getItem(ROLE_KEY) || ""; } catch { return ""; } });
   const [apprentice, setApprentice] = useState(false);
   const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
+  const [showRecipes, setShowRecipes] = useState(false);
   const greetedRef = useRef(false);
   const machinesAnnouncedRef = useRef("");
 
@@ -394,6 +396,32 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       {/* Sempre disponibili: chiedi aiuto + analizzatore foto */}
       <SosButton role={role} operator={role} />
       <SitorPhotoAnalyzer tri={tri} lang={lang} />
+
+      {/* Ricettario & Corsi passo-passo di Sitor — anche per la produzione */}
+      <div className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 overflow-hidden">
+        <button data-testid="floor-recipes-toggle" onClick={() => setShowRecipes((v) => !v)}
+          className="w-full flex items-center gap-2.5 px-4 py-3 text-left active:scale-[0.99] transition-transform">
+          <BookOpen className="w-4 h-4 text-[#9aa6b2] shrink-0" />
+          <span className="flex-1 min-w-0">
+            <span className="block text-sm font-black text-white">{tri("Ricettario & Corsi", "Rezepte & Kurse", "Recipes & Courses", "Recetario & Cursos", "Recettes & Cours", "دستورها و دوره‌ها")}</span>
+            <span className="block text-[11px] text-[#94A3B8]">{tri("Apri una ricetta e leggi il corso passo-passo di Sitor.", "Öffne ein Rezept und lies Sitors Schritt-für-Schritt-Kurs.", "Open a recipe and read Sitor's step-by-step course.", "Abre una receta y lee el curso paso a paso.", "Ouvre une recette et lis le cours pas à pas.", "یک دستور را باز کن و دوره گام‌به‌گام سیتور را بخوان.")}</span>
+          </span>
+          <GraduationCap className={`w-4 h-4 shrink-0 transition-colors ${showRecipes ? "text-[#3E9C93]" : "text-[#8a97a6]"}`} />
+        </button>
+        {showRecipes && (
+          <div data-testid="floor-recipes-panel" className="border-t border-[#8a97a6]/15">
+            <p data-testid="floor-recipes-hint" className="px-4 pt-3 text-[11px] text-[#94A3B8] leading-snug">
+              {tri("Se l'elenco appare vuoto, entra con il PIN del tuo reparto per vedere le ricette e i corsi.",
+                   "Wenn die Liste leer ist, melde dich mit deiner Bereichs-PIN an, um Rezepte und Kurse zu sehen.",
+                   "If the list looks empty, enter with your department PIN to see recipes and courses.",
+                   "Si la lista está vacía, entra con el PIN de tu área para ver recetas y cursos.",
+                   "Si la liste est vide, entre avec le PIN de ton rayon pour voir les recettes et cours.",
+                   "اگر فهرست خالی است، با پین بخش خود وارد شو تا دستورها و دوره‌ها را ببینی.")}
+            </p>
+            <RecipeList collectionName="mikilab" readOnly hideHero />
+          </div>
+        )}
+      </div>
 
       {/* Fine turno */}
       <EndOfShiftForm tri={tri} role={role} />

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
-import { cleanForSpeech } from "@/lib/voice";
+import { playTTS } from "@/lib/tts";
 
 const KEY = "mikilab_mixers_v1";
 const DEFAULT = [
@@ -7,15 +7,8 @@ const DEFAULT = [
   { id: "m2", name: "Impastatrice 02", minutes: 12, endsAt: null, pausedRemaining: null },
 ];
 
-const speak = (msg) => {
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(cleanForSpeech(msg));
-    u.lang = "it-IT";
-    u.rate = 0.98;
-    window.speechSynthesis.speak(u);
-  }
-};
+// Voce UNICA del sito: Sitor (via playTTS). Nessuna sintesi diretta femminile.
+const speak = (msg) => { try { playTTS(msg); } catch { /* */ } };
 
 const load = () => { try { const s = JSON.parse(localStorage.getItem(KEY) || "null"); return Array.isArray(s) && s.length ? s : DEFAULT; } catch { return DEFAULT; } };
 const remainingOf = (m) => {

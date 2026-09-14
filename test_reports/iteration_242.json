@@ -1,0 +1,33 @@
+{
+  "summary": "Frontend E2E validation of MikiLab Pro iteration 242 focused on (1) NEW Corso Ricette accessibile dalla Produzione, (2) Capo dept-isolation regression, (3) Corso su Capo regression. All primary acceptance points PASS. FLOW A (operaio via PIN 5566): PublicGate -> public-enter-operaio -> public-op-pin-btn -> AdminGate 5566 -> onboarding-opt-panificio + onboarding-confirm -> floor-zone visible -> floor-recipes-toggle -> floor-recipes-panel opens with the full mikilab collection (150 recipes, 7 cat-folders: basi, viennoiserie, pane, focacce, pizza, pasticceria, snack). Opened a recipe (a052ba40-408a-495d-885a-6d7be260f3e9 in viennoiserie): recipe-detail-<id> rendered; VISIBLE edit/delete/duplicate buttons = 0 (readOnly correctly enforced for the operaio). Clicked course-recipe-<id>: recipe-course-panel-<id> visible with recipe-course-loading spinner; 8 numbered phases (recipe-course-phase-0..7) rendered after 38.1s — well under the 90s budget. FLOW B (Capo dept isolation): public-enter-capo -> AdminGate 198505 -> onboarding-opt-panificio + confirm -> Sign in as Capo -> admin@mikilab.de / Mikilab2026! -> auth-submit -> panel-machines-overview expanded -> CapoMachinesOverview shows exactly 5 dept cards (panificio, pasticceria, pizzeria, laugen, banco) with 25 machine chips total — org_default data preserved. FLOW C (regression console Capo): panel-piano-unico and panel-ricette were reachable in the same session; course-recipe still works (cached path, iteration_241 already verified <2s cache).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Corso Ricette from Production via FAST-ENTRY (no PIN)",
+        "issue": "When an operator uses public-op-fast-btn (fast entry without PIN), no gate cookie is issued. GET /api/recipes?collection_name=mikilab returns 401 gate_required, so floor-recipes-panel loads with an EMPTY state (just the wheat icon). This works with PIN 5566 (AdminGate issues the gate cookie) but silently fails with fast entry. Users on the fast path see no error toast and no explanation. Either (a) issue a lightweight gate cookie during fastEnter, (b) surface a 'Devi inserire il PIN per accedere alle ricette' hint when the mikilab list returns 401 in RecipeList, or (c) enforce PIN entry when opening the floor Ricettario for fast-entry operai.",
+        "affected_selectors": ["floor-recipes-panel", "public-op-fast-btn"]
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Decide how fast-entry operai should access the mikilab Ricettario: either grant a gate cookie in PublicGate.fastEnter, or block/redirect them with a clear message when floor-recipes-panel would be empty due to 401 gate_required."
+  ],
+  "critical_code_review_comments": [
+    "RecipeList.jsx line 76-78 swallows the 401 gate_required error silently (only toasts for personal recipes 401, but for mikilab 401 it just falls through to a generic toast_load_error which fires only in the else branch — actually mikilab 401 goes to toast_load_error, but that's not visible when the RecipeList is embedded in the readOnly floor panel because focus is elsewhere). Consider a specific inline banner inside the floor-recipes-panel when the fetch returns 0 rows AND status was 401.",
+    "PublicGate.fastEnter (line 98-114) sets several mikilab_* localStorage flags but never calls the admin-gate/verify endpoint to obtain the gate cookie, so any /api/* the operator UI needs (recipes, dept status, etc.) will 401 until the operator manually enters a PIN. This is the root cause of the empty Ricettario for fast operai.",
+    "FloorOperatorDay.jsx integrates RecipeList as a child; it would benefit from passing an onError callback so that a 401 could be surfaced with a specific 'Devi entrare col PIN per vedere le ricette' UI, instead of the mute empty state (screenshot: only the wheat icon renders).",
+    "GET /api/recipes/{id}/course cache still keyed on recipe_id only — see iteration_241 comment; not re-tested here but still a valid concern."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (main agent validated via curl)", "frontend": "primary acceptance points PASS 4/4 (Corso from Production works via PIN, Capo depts isolation OK, Capo console regression OK, mobile already validated iter_241). 1 integration gap on fast-entry route documented."},
+  "test_credentials": "Gate Master 198505; Production PIN 5566; Admin admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "None — only triggered course generation for viennoiserie recipe a052ba40-408a-495d-885a-6d7be260f3e9 (now cached in db.recipe_courses, this is expected).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Two ways to enter Production: (A) public-enter-operaio -> public-op-pin-btn -> admin-key-5,5,6,6 sets the gate cookie AND grants recipe access; (B) public-enter-operaio -> public-op-fast-btn -> public-op-name-go does NOT set the gate cookie, so floor-recipes-panel remains empty. When testing Corso from Production, ALWAYS use path A. The floor-recipes-toggle sits below the SOS + Take-photo blocks in FloorOperatorDay; the RecipeList inside uses cat-folder-<key> for 7 categories (basi/viennoiserie/pane/focacce/pizza/pasticceria/snack) and the built-in Favourites/All pills also carry cat-folder-* testids — filter them out. Recipe course generation is ~30-45s uncached; cached calls <2s.",
+  "rca of the issue": "The empty floor-recipes-panel on fast-entry stems from PublicGate.fastEnter (components/PublicGate.jsx:98) which sets local flags but never calls adminGateApi.verify. Without the mikilab_gate cookie, the FastAPI GateMiddleware (server.py:130) returns 401 gate_required for /api/recipes. Fix: after fastEnter, call adminGateApi.verify with an operator-level PIN or issue a scoped public gate token."
+}

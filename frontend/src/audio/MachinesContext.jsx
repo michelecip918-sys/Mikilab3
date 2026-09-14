@@ -1,13 +1,8 @@
 import { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
-import { cleanForSpeech } from "@/lib/voice";
+import { playTTS } from "@/lib/tts";
 
-const speak = (msg) => {
-  if ("speechSynthesis" in window) {
-    const u = new SpeechSynthesisUtterance(cleanForSpeech(msg));
-    u.lang = "it-IT"; u.rate = 0.98;
-    window.speechSynthesis.speak(u);
-  }
-};
+// Voce UNICA del sito: Sitor (via playTTS). Nessuna sintesi diretta femminile.
+const speak = (msg) => { try { playTTS(msg); } catch { /* */ } };
 
 // Parco macchine: 1 manuale (impastatrice) + termiche con sensore IoT simulato live.
 const DEFS = [

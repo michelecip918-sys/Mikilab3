@@ -35,8 +35,10 @@ const MALE_HINTS = {
 const FEMALE_HINTS = ["female", "femme", "weiblich", "mujer", "donna", "femmin", "masculin", "samantha", "alice", "elsa", "paola", "federica", "karen", "zira", "lucia", "aria", "victoria", "amelie", "amélie", "anna", "monica", "mónica", "paulina", "sara", "laura", "helena", "catherine", "fiona", "moira", "tessa", "veena", "yuna", "carla", "google italiano", "google.*female"]
   .filter((h) => h !== "masculin");
 
-// Sceglie una voce del dispositivo MASCHILE nella lingua dell'app; voce distinta per Momi.
-function pickVoice(lang, persona) {
+// Sceglie una voce del dispositivo MASCHILE nella lingua dell'app.
+// REGOLA FERREA (voce unica di Sitor): se non esiste NESSUNA voce maschile reale,
+// ritorna null → non si parla affatto (meglio muti che una voce femminile).
+function pickVoice(lang) {
   if (!_voices.length) loadVoices();
   const code = toBCP47(lang).slice(0, 2);
   let cands = _voices.filter((v) => v.lang && v.lang.toLowerCase().startsWith(code));
@@ -49,10 +51,9 @@ function pickVoice(lang, persona) {
   const byName = cands.filter((v) => hints.some((h) => name(v).includes(h)) && !isFemale(v));
   const byWord = cands.filter((v) => isMaleWord(v) && !isFemale(v));
   const notFemale = cands.filter((v) => !isFemale(v));
-  const pool = byName.length ? byName : (byWord.length ? byWord : (notFemale.length ? notFemale : cands));
-  // Momi = voce maschile DIVERSA da Michele quando possibile.
-  if ((persona === "momy" || persona === "momi") && pool.length > 1) return pool[1];
-  return pool[0];
+  // Solo pool di voci NON femminili. Niente fallback su `cands` (che includerebbe voci femminili).
+  const pool = byName.length ? byName : (byWord.length ? byWord : notFemale);
+  return pool.length ? pool[0] : null;
 }
 
 export const isTTSMuted = () => { try { return localStorage.getItem("mikilab_voice_muted") === "1"; } catch { return false; } };
@@ -96,19 +97,18 @@ export function stopTTS() {
   ttsSignalEnd();
 }
 
-// Voce nativa del dispositivo (fallback): lingua dell'app + timbro sempre maschile.
+// Voce nativa del dispositivo (fallback): UNICA voce di Sitor, sempre maschile.
+// Se il dispositivo NON ha alcuna voce maschile reale, NON parla (solo testo a schermo):
+// non si ripiega MAI su una voce femminile.
 function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   try {
+    const v = pickVoice(lang);
+    if (!v) { ttsSignalEnd(); if (onEnded) onEnded(); return; } // nessuna voce maschile → muti
     const u = new SpeechSynthesisUtterance(clean);
     u.lang = toBCP47(lang);
-    const v = pickVoice(lang, voice);
-    if (v) u.voice = v;
-    // Timbro sempre MASCHILE anche se il dispositivo ha solo voci femminili: pitch basso per persona.
-    if (voice === "michele" || voice === "lab") { u.pitch = 0.7; u.rate = 1.0; }
-    else if (voice === "mikemix") { u.pitch = 0.76; u.rate = 0.98; }
-    else if (voice === "nexus" || voice === "mikinexus") { u.pitch = 0.5; u.rate = 0.9; }
-    else if (voice === "bakemix") { u.pitch = 0.82; u.rate = 1.04; }
-    else { u.pitch = 0.75; u.rate = 1.0; }
+    u.voice = v;
+    // Timbro UNICO di Sitor (grave, autorevole) per ogni chiamata del sito.
+    u.pitch = 0.62; u.rate = 0.98;
     u.onstart = () => { ttsSignalStart(); if (onStart) onStart(); };
     u.onend = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
     u.onerror = () => { ttsSignalEnd(); if (onEnded) onEnded(); };
@@ -116,8 +116,12 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   } catch { ttsSignalEnd(); if (onEnded) onEnded(); }
 }
 
-// voice: "michele" (Lab, onyx) | "momy" (Momi, echo)
-export function playTTS(text, { lang, voice = "michele", onStart, onEnded } = {}) {
+// VOCE UNICA DEL SITO: Sitor. Qualunque persona storica (michele/momy/mikemix/bakemix/nexus…)
+// viene ricondotta a un'unica voce maschile onyx lato server e a un unico timbro nel fallback.
+const SITOR_VOICE = "nexus";
+
+// voice: parametro storico ignorato → tutto il sito parla con la sola voce di Sitor.
+export function playTTS(text, { lang, voice, onStart, onEnded } = {}) {
   stopTTS();
   const L = lang || _appLang || "it"; // se il chiamante non passa la lingua, usa quella dell'app
   const full = cleanForSpeech(text);
@@ -125,14 +129,15 @@ export function playTTS(text, { lang, voice = "michele", onStart, onEnded } = {}
   const clean = shortenForSpeech(full); // solo sintesi breve → meno crediti + voce essenziale
   _lastText = clean;
   if (isTTSMuted()) { if (onEnded) onEnded(); return; } // Mute: solo testo a schermo
+  const vEff = SITOR_VOICE; // voce unica, ignora `voice`
 
-  if (!API) { nativeSpeak(clean, L, voice, onStart, onEnded); return; }
+  if (!API) { nativeSpeak(clean, L, vEff, onStart, onEnded); return; }
 
   let started = false;
   fetch(`${API}/api/tts/speak`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text: clean, lang: L, voice }),
+    body: JSON.stringify({ text: clean, lang: L, voice: vEff }),
   })
     .then((r) => { if (!r.ok) throw new Error("tts"); return r.blob(); })
     .then((blob) => {
@@ -142,8 +147,8 @@ export function playTTS(text, { lang, voice = "michele", onStart, onEnded } = {}
       _audio = a;
       a.onplay = () => { started = true; ttsSignalStart(); if (onStart) onStart(); };
       a.onended = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; ttsSignalEnd(); if (onEnded) onEnded(); };
-      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, L, voice, onStart, onEnded); else { ttsSignalEnd(); if (onEnded) onEnded(); } };
-      a.play().catch(() => { if (!started) nativeSpeak(clean, L, voice, onStart, onEnded); });
+      a.onerror = () => { try { URL.revokeObjectURL(url); } catch { /* */ } if (_audio === a) _audio = null; if (!started) nativeSpeak(clean, L, vEff, onStart, onEnded); else { ttsSignalEnd(); if (onEnded) onEnded(); } };
+      a.play().catch(() => { if (!started) nativeSpeak(clean, L, vEff, onStart, onEnded); });
     })
-    .catch(() => nativeSpeak(clean, L, voice, onStart, onEnded));
+    .catch(() => nativeSpeak(clean, L, vEff, onStart, onEnded));
 }

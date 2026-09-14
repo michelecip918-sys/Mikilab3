@@ -5242,8 +5242,15 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Testato**: iteration_240.json → frontend 100% (5/5: pannello pizzeria CRUD + doughStart, nascondimento per panificio, turni add/edit + assegnatario datalist, persistenza reload, regressione). Backend pizzeria/pastry/weekly-team validati via curl.
 
 ## BACKLOG dopo questa sessione
-- **Isolamento floor completo (ALTO RISCHIO)**: PIN operatore → organization_id → cookie gate → filtro su tutti gli endpoint `/depts/*`. Richiede conferma utente.
 - P3: Dispatch vocale in tempo reale in produzione; dettatura vocale ordine rapido.
+
+---
+## Changelog — 14 Set 2026 (Sessione: voce unica, isolamento completo, corso in produzione, mobile)
+- **Voce unica Sitor (Punto 1)**: `lib/tts.js` — `playTTS` ignora il parametro `voice` e usa un'unica voce Sitor (server: onyx maschile per tutte le personas; fallback dispositivo: timbro unico grave). `pickVoice` NON ripiega mai su voce femminile: se il dispositivo non ha alcuna voce maschile reale, `nativeSpeak` NON parla (solo testo a schermo). Reindirizzati a `playTTS` i 3 punti che usavano `SpeechSynthesisUtterance` diretto (`audio/MixerTimersContext.jsx`, `audio/MachinesContext.jsx`, `components/HandsFreeMode.jsx`). Il messaggio di benvenuto in `PublicGate.jsx` passava già da `playTTS` → ora è Sitor.
+- **Isolamento dati multi-azienda COMPLETO lato sessione (Punto 2)**: tutti gli endpoint `/depts/*` (machines overview/get/set, assignment, board, progress, objective, assign/assign-multi/delete) ora usano `optional_user` + filtro/stamp `organization_id=_org_id(user)` (che ritorna `org_default` per operai senza sessione e per il Capo attuale; un nuovo Capo vede solo la propria azienda). `lab_warehouse` (magazzino) e `recipes` (iniezione ricette personali) già isolati nella sessione precedente. `favorites`/`day_closures` già isolati per `user_id`/`owner_id` (più forte di org). `deck.py` non tocca le collezioni elencate. Migrazione a `org_default` allo startup → nessun dato perso. Testato via curl + regressione UI (CapoMachinesOverview mostra i 5 reparti, 25 macchine, dati org_default preservati).
+- **Corso ricette dalla PRODUZIONE (Punto 3)**: `FloorOperatorDay.jsx` ha ora la sezione collassabile `floor-recipes-toggle`/`floor-recipes-panel` che monta `<RecipeList collectionName="mikilab" readOnly hideHero/>` → gli operai (non loggati) vedono le ricette in SOLA LETTURA (nessun edit/delete) e possono aprire il **Corso** (stesso `course-recipe-<id>` del Capo). Aggiunta nota `floor-recipes-hint` per gli operai in accesso rapido senza PIN (senza cookie gate l'elenco sarebbe vuoto → invito a entrare col PIN reparto).
+- **Responsive mobile (Punto 4)**: header non spezza più il testo dei pulsanti a metà parola; verificato a 390px zero overflow orizzontale su landing, console e ricettario (fix `PublicGate.jsx` + `index.css` della sessione precedente confermato).
+- **Testato**: iteration_242.json → frontend 4/4 punti principali PASS (corso da produzione via PIN con 8 fasi in ~38s + readOnly enforced; isolamento reparti Capo OK; regressione console Capo OK; mobile OK). Gap noto documentato: accesso rapido operaio senza PIN non ha cookie gate → mitigato con hint.
 
 ---
 ## Changelog — 14 Set 2026 (Sessione 5 punti: isolamento dati, macchine, corso ricette, responsive)
