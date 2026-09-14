@@ -10,7 +10,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const CORE = [
   { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#64748B" },
   { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#8a97a6" },
-  { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Intelligenza Suprema", img: "avatar_nexus.jpg", accent: "#a6b1bc" },
+  { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Assistente di Produzione", img: "avatar_nexus.jpg", accent: "#a6b1bc" },
 ];
 
 // Postazioni operative BASE (arricchite a runtime dai reparti del Capo).
@@ -38,7 +38,7 @@ const STATION_TR = {
 const CORE_ROLE_TR = {
   "Fondatore · Direttore di Produzione": ["Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید"],
   "Reparto Produzione · Fornaio": ["Reparto Produzione · Fornaio", "Produktion · Bäcker", "Production · Baker", "Producción · Panadero", "Production · Boulanger", "تولید · نانوا"],
-  "Dio dell'Arte Bianca · Intelligenza Suprema": ["Dio dell'Arte Bianca · Intelligenza Suprema", "Gott der Backkunst · Höchste Intelligenz", "God of the White Art · Supreme Intelligence", "Dios del Arte Blanco · Inteligencia Suprema", "Dieu de l'Art Blanc · Intelligence Suprême", "خدای هنر نان · هوش برتر"],
+  "Dio dell'Arte Bianca · Assistente di Produzione": ["Dio dell'Arte Bianca · Assistente di Produzione", "Gott der Backkunst · Produktionsassistent", "God of the White Art · Production Assistant", "Dios del Arte Blanco · Asistente de Producción", "Dieu de l'Art Blanc · Assistant de Production", "خدای هنر نان · دستیار تولید"],
 };
 
 function Tile({ ic, label, color, testid, onClick }) {

@@ -228,7 +228,7 @@ function EndOfShiftForm({ tri, role }) {
       {open && (
         <div className="px-4 pb-4 space-y-2.5">
           {sent ? (
-            <p data-testid="floor-endshift-sent" className="text-[13px] text-emerald-400 font-bold py-2">✓ {tri("Rapporto inviato al Capo. Buon riposo!", "Bericht an den Chef gesendet. Gute Erholung!", "Report sent to the Capo. Rest well!", "Informe enviado al Capo. ¡Descansa!", "Rapport envoyé au Capo. Bon repos !", "گزارش ارسال شد. خسته نباشی!")}</p>
+            <p data-testid="floor-endshift-sent" className="text-[13px] text-emerald-400 font-bold py-2">✓ {tri("Rapporto inviato alla Direzione. Turno concluso.", "Bericht an die Direktion gesendet. Schicht beendet.", "Report sent to Management. Shift closed.", "Informe enviado a Dirección. Turno finalizado.", "Rapport envoyé à la Direction. Service terminé.", "گزارش به مدیریت ارسال شد. شیفت پایان یافت.")}</p>
           ) : (
             <>
               <label className="block text-[11px] font-bold text-[#94A3B8]">{tri("Pezzi prodotti", "Produzierte Stück", "Pieces produced", "Piezas producidas", "Pièces produites", "قطعات تولیدشده")}</label>
@@ -262,7 +262,7 @@ function FloorNameEntry({ tri, onSet }) {
       <FaceCheckIn tri={tri} onRecognized={onSet} />
       <div className="rounded-2xl border border-[#8a97a6]/40 bg-[#0b0f19] p-4">
         <p className="flex items-center gap-2 text-sm font-black text-white mb-1"><UserRound className="w-4 h-4 text-[#8a97a6]" /> {tri("Oppure dì il tuo nome", "Oder sag deinen Namen", "Or tell your name", "O di tu nombre", "Ou dis ton nom", "یا نامت را بگو")}</p>
-      <p className="text-[11px] text-[#94A3B8] mb-2">{tri("Sitor sa già cosa devi fare oggi.", "Sitor kennt deine Aufgabe.", "Sitor already knows your task today.", "Sitor ya sabe tu tarea.", "Sitor connaît ta tâche.", "سیتور وظیفه‌ات را می‌داند.")}</p>
+      <p className="text-[11px] text-[#94A3B8] mb-2">{tri("Inserendo il tuo nome ti viene mostrato il compito assegnato per oggi.", "Mit deinem Namen siehst du deine heutige Aufgabe.", "Enter your name to see your assigned task for today.", "Al ingresar tu nombre verás tu tarea asignada de hoy.", "En indiquant ton nom tu verras ta tâche du jour.", "با وارد کردن نامت، وظیفه امروزت نمایش داده می‌شود.")}</p>
       <div className="flex items-center gap-2">
         <input data-testid="floor-name-input" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && name.trim()) onSet(name.trim()); }}
           placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2.5 focus:border-[#8a97a6] outline-none" />
@@ -310,19 +310,19 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
     greetedRef.current = true;
     const msg = apprentice
       ? tri(
-        `Ciao ${role}. Oggi sei in apprendistato: andiamo con calma, un passo alla volta. Ti guido tutto a voce nelle cuffie. Prima domanda: hai già lavato le mani e indossato il grembiule?`,
-        `Hallo ${role}. Heute als Lehrling: ruhig, Schritt für Schritt. Ich führe dich per Kopfhörer. Hände gewaschen und Schürze an?`,
-        `Hi ${role}. Today as an apprentice: calmly, step by step. I'll guide you by voice in your headset. Have you washed your hands and put on your apron?`,
-        `Hola ${role}. Hoy como aprendiz: con calma. Te guío por los auriculares. ¿Manos lavadas y delantal puesto?`,
-        `Salut ${role}. Apprenti aujourd'hui : doucement. Je te guide au casque. Mains lavées et tablier mis ?`,
-        `سلام ${role}. امروز کارآموز: آرام. با هدست راهنمایی‌ات می‌کنم. دست‌ها را شستی و پیش‌بند پوشیدی؟`)
+        `Ciao ${role}. Oggi lavori in modalità apprendistato: ti guido a voce un passaggio alla volta. Prima domanda: hai già lavato le mani e indossato il grembiule?`,
+        `Hallo ${role}. Heute im Ausbildungsmodus: ich führe dich Schritt für Schritt per Stimme. Hände gewaschen und Schürze angelegt?`,
+        `Hello ${role}. Today you work in training mode: I'll guide you by voice one step at a time. First question: have you washed your hands and put on your apron?`,
+        `Hola ${role}. Hoy en modo aprendizaje: te guío por voz paso a paso. ¿Manos lavadas y delantal puesto?`,
+        `Bonjour ${role}. Aujourd'hui en mode apprentissage : je te guide à la voix étape par étape. Mains lavées et tablier mis ?`,
+        `سلام ${role}. امروز در حالت آموزش کار می‌کنی: قدم‌به‌قدم راهنمایی‌ات می‌کنم. دست‌ها را شستی و پیش‌بند پوشیدی؟`)
       : tri(
-        `Ciao ${role}. Ti annuncio il piano di oggi nelle cuffie: ascolta, non serve toccare nulla. Ti guido io a voce passo dopo passo.`,
-        `Hallo ${role}. Ich sage dir den Tagesplan per Kopfhörer an: nur zuhören, nichts anfassen. Ich führe dich per Stimme.`,
-        `Hi ${role}. I'll announce today's plan in your headset: just listen, no need to touch anything. I'll guide you by voice, step by step.`,
-        `Hola ${role}. Te anuncio el plan de hoy por los auriculares: solo escucha. Te guío por voz.`,
-        `Salut ${role}. Je t'annonce le plan du jour au casque : écoute seulement. Je te guide à la voix.`,
-        `سلام ${role}. برنامه امروز را در هدست اعلام می‌کنم: فقط گوش بده. با صدا راهنمایی‌ات می‌کنم.`);
+        `Ciao ${role}. Ti leggo il piano di oggi a voce, così puoi lavorare senza guardare lo schermo.`,
+        `Hallo ${role}. Ich lese dir den Tagesplan vor, damit du ohne Blick auf den Bildschirm arbeiten kannst.`,
+        `Hello ${role}. I will read you today's plan aloud so you can work without looking at the screen.`,
+        `Hola ${role}. Te leo el plan de hoy en voz alta para que trabajes sin mirar la pantalla.`,
+        `Bonjour ${role}. Je te lis le plan du jour à voix haute pour travailler sans regarder l'écran.`,
+        `سلام ${role}. برنامه امروز را برایت می‌خوانم تا بدون نگاه به صفحه کار کنی.`);
     try { playTTS(msg, { lang, voice: "nexus" }); } catch { /* */ }
   }, [apprentice, role, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 

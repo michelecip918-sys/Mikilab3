@@ -29,7 +29,7 @@ export default function OrdiniExtra() {
       const txt = out && out.ok && out.data ? (out.data.text || "") : "";
       if (txt) {
         setOrders((prev) => (prev.trim() ? prev.trim() + "\n" + txt : txt));
-        toast.success(tri("Comanda letta dalla foto!", "Bestellung aus dem Foto gelesen!", "Order read from the photo!", "¡Pedido leído de la foto!", "Commande lue depuis la photo !", "سفارش از عکس خوانده شد!"));
+        toast.success(tri("Comanda importata dalla foto.", "Bestellung aus dem Foto importiert.", "Order imported from the photo.", "Pedido importado de la foto.", "Commande importée depuis la photo.", "سفارش از عکس وارد شد."));
       } else {
         toast.error(tri("Non sono riuscito a leggere la comanda. Riprova con una foto più nitida.", "Bestellung nicht lesbar. Versuche ein schärferes Foto.", "Couldn't read the order. Try a clearer photo.", "No pude leer el pedido. Prueba una foto más nítida.", "Commande illisible. Essaie une photo plus nette.", "سفارش خوانده نشد. عکس واضح‌تری بگیر."));
       }
@@ -91,7 +91,7 @@ export default function OrdiniExtra() {
         className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#0b1220] border border-[#334155] text-[#cbd5e1] font-bold text-xs rounded-xl disabled:opacity-50 active:scale-95 transition-all hover:border-[#D95200]"
       >
         {scanning ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4 text-[#D95200]" />}
-        {scanning ? tri("Lettura foto in corso…", "Foto wird gelesen…", "Reading photo…", "Leyendo foto…", "Lecture de la photo…", "در حال خواندن عکس…") : tri("📸 Foto comanda → compila ordini", "📸 Bestellfoto → Aufträge ausfüllen", "📸 Photo of order → fill orders", "📸 Foto del pedido → rellenar", "📸 Photo de commande → remplir", "📸 عکس سفارش")}
+        {scanning ? tri("Lettura foto in corso…", "Foto wird gelesen…", "Reading photo…", "Leyendo foto…", "Lecture de la photo…", "در حال خواندن عکس…") : tri("Importa comanda da foto", "Bestellung per Foto importieren", "Import order from photo", "Importar pedido desde foto", "Importer la commande par photo", "وارد کردن سفارش از عکس")}
       </button>
       <button
         onClick={regen}

@@ -769,7 +769,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
     try {
       if (navigator.share) { await navigator.share({ title: `MikiLab · ${title}`, text: textMsg, url }); return; }
     } catch (e) { /* utente ha annullato */ return; }
-    try { await navigator.clipboard.writeText(url); toast.success(tri("Link copiato!", "Link kopiert!", "Link copied!")); }
+    try { await navigator.clipboard.writeText(url); toast.success(tri("Link copiato.", "Link kopiert.", "Link copied.")); }
     catch { toast.error(tri("Impossibile copiare il link", "Link kann nicht kopiert werden", "Couldn't copy the link")); }
   };
 

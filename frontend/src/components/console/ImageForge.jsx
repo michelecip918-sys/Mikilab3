@@ -23,9 +23,9 @@ export default function ImageForge() {
       const b64 = r.data && r.data.image_base64;
       if (!b64) throw new Error("no-image");
       setImg(`data:image/png;base64,${b64}`);
-      toast.success(tri("Sitor ha forgiato l'immagine.", "Sitor hat das Bild geschmiedet.", "Sitor forged the image.", "Sitor forjó la imagen.", "Sitor a forgé l'image.", "سیتور تصویر را ساخت."));
+      toast.success(tri("Immagine generata.", "Bild erzeugt.", "Image generated.", "Imagen generada.", "Image générée.", "تصویر ساخته شد."));
     } catch (e) {
-      toast.error(tri("Forgia fallita. Riprova con un'idea più chiara.", "Schmieden fehlgeschlagen.", "Forge failed. Try a clearer idea.", "Falló. Reintenta.", "Échec. Réessaie.", "ناموفق. دوباره تلاش کن."));
+      toast.error(tri("Generazione non riuscita. Riprova con una descrizione più precisa.", "Erzeugung fehlgeschlagen. Versuche eine genauere Beschreibung.", "Generation failed. Try a clearer description.", "Generación fallida. Prueba con una descripción más clara.", "Échec de la génération. Essaie une description plus précise.", "ناموفق. توضیح دقیق‌تری بده."));
     } finally {
       setBusy(false);
     }
@@ -36,8 +36,8 @@ export default function ImageForge() {
       <div className="flex items-center gap-2.5">
         <img src={`${PUB}/avatar_sitor.jpg`} alt="Sitor" className="w-10 h-10 rounded-xl object-cover object-top border border-[#a6b1bc]/50" />
         <div>
-          <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#a6b1bc]" /> {tri("Forgia di Sitor", "Sitors Schmiede", "Sitor's Forge", "Forja de Sitor", "Forge de Sitor", "کارگاه سیتور")}</p>
-          <p className="text-[11px] text-[#94A3B8]">{tri("Dai solo un'idea: Sitor forgia l'immagine perfetta.", "Gib nur eine Idee: Sitor schmiedet das perfekte Bild.", "Give just an idea: Sitor forges the perfect image.", "Da solo una idea: Sitor forja la imagen.", "Donne juste une idée : Sitor forge l'image.", "فقط یک ایده بده: سیتور تصویر را می‌سازد.")}</p>
+          <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#a6b1bc]" /> {tri("Generatore Immagini · Sitor", "Bildgenerator · Sitor", "Image Generator · Sitor", "Generador de Imágenes · Sitor", "Générateur d'Images · Sitor", "تولید تصویر · سیتور")}</p>
+          <p className="text-[11px] text-[#94A3B8]">{tri("Descrivi l'immagine che ti serve: Sitor la genera per te.", "Beschreibe das gewünschte Bild: Sitor erzeugt es.", "Describe the image you need: Sitor generates it for you.", "Describe la imagen que necesitas: Sitor la genera.", "Décris l'image dont tu as besoin : Sitor la génère.", "تصویر موردنیاز را توصیف کن: سیتور آن را می‌سازد.")}</p>
         </div>
       </div>
       <textarea

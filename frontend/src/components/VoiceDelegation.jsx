@@ -73,7 +73,7 @@ export default function VoiceDelegation({ onClose }) {
       const r = await delegationApi.confirm(proposal);
       setDone(r.task);
       // Sitor conferma a voce SOLO al Capo (modalità strategica attiva).
-      try { playTTS(tri(`Fatto Capo. ${proposal.title} inviato al floor in silenzio.`, `Erledigt Chef. ${proposal.title} still an die Halle gesendet.`, `Done boss. ${proposal.title} sent silently to the floor.`, `Hecho jefe. ${proposal.title} enviado en silencio.`, `C'est fait chef. ${proposal.title} envoyé en silence.`, `انجام شد رئیس. ${proposal.title} بی‌صدا به سالن ارسال شد.`), lang); } catch { /* */ }
+      try { playTTS(tri(`Fatto. ${proposal.title} inviato in produzione senza annuncio vocale.`, `Erledigt. ${proposal.title} ohne Sprachansage an die Produktion gesendet.`, `Done. ${proposal.title} sent to production without voice announcement.`, `Hecho. ${proposal.title} enviado a producción sin aviso de voz.`, `Terminé. ${proposal.title} envoyé en production sans annonce vocale.`, `انجام شد. ${proposal.title} بدون اعلان صوتی به تولید ارسال شد.`), lang); } catch { /* */ }
       toast.success(r.mikemix_insight || tri("Task inviato", "Gesendet", "Task sent", "Enviado", "Envoyé", "ارسال شد"));
     } catch (e) {
       toast.error(e?.response?.data?.detail || tri("Errore", "Fehler", "Error", "Error", "Erreur", "خطا"));

@@ -182,7 +182,7 @@ export default function PublicGate({ onUnlock }) {
         <main className="max-w-2xl mx-auto px-4 py-6 space-y-5">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-xl bg-[#9aa6b2]/10 border border-[#9aa6b2]/40 flex items-center justify-center"><GraduationCap className="w-6 h-6 text-[#9aa6b2]" /></div>
-            <div><h1 className="font-cyber text-lg font-black uppercase tracking-wide">{tri("Formazione autorizzata", "Autorisierte Schulung", "Authorized Training", "Formación autorizada", "Formation autorisée", "آموزش مجاز")}</h1><p className="text-[11px] text-[#94A3B8]">{tri("Accesso ospite abilitato dal Capo Supremo per la formazione.", "Gastzugang vom Obersten Chef für die Schulung freigegeben.", "Guest access enabled by the Supreme Capo for training.", "Acceso invitado habilitado por el Capo Supremo.", "Accès invité activé par le Capo Suprême.", "دسترسی مهمان توسط کاپو فعال شد.")}</p></div>
+            <div><h1 className="font-cyber text-lg font-black uppercase tracking-wide">{tri("Formazione autorizzata", "Autorisierte Schulung", "Authorized Training", "Formación autorizada", "Formation autorisée", "آموزش مجاز")}</h1><p className="text-[11px] text-[#94A3B8]">{tri("Accesso ospite abilitato dalla Direzione per la formazione.", "Gastzugang von der Direktion für die Schulung freigegeben.", "Guest access enabled by Management for training.", "Acceso de invitado habilitado por Dirección para la formación.", "Accès invité activé par la Direction pour la formation.", "دسترسی مهمان توسط مدیریت فعال شد.")}</p></div>
           </div>
           <div className="holo-panel p-5">
             <DowntimeTraining />
@@ -190,12 +190,12 @@ export default function PublicGate({ onUnlock }) {
           <div data-testid="guest-barrier" className="rounded-xl border border-[#aaa795]/30 bg-[#aaa795]/8 p-4 flex items-start gap-2.5">
             <ShieldAlert className="w-5 h-5 text-[#aaa795] shrink-0 mt-0.5" />
             <p className="text-[12px] text-[#d7c9a8] leading-relaxed">{tri(
-              "Le funzioni supreme (produzione, ricettario completo, sintesi sub-molecolare, plancia) sono riservate: è richiesto il profilo di MikiLab.",
-              "Die höchsten Funktionen sind reserviert: das MikiLab-Profil ist erforderlich.",
-              "Supreme functions (production, full recipe book, sub-molecular synthesis, console) are reserved: the MikiLab profile is required.",
-              "Las funciones supremas están reservadas: se requiere el perfil de MikiLab.",
-              "Les fonctions suprêmes sont réservées : le profil MikiLab est requis.",
-              "توابع برتر محفوظ‌اند: پروفایل MikiLab لازم است.")}</p>
+              "Le funzioni complete (produzione, ricettario e console di gestione) sono riservate alla Direzione: è richiesto l'accesso con profilo MikiLab.",
+              "Die vollständigen Funktionen (Produktion, Rezeptbuch und Managementkonsole) sind der Direktion vorbehalten: ein MikiLab-Profil ist erforderlich.",
+              "Full functions (production, recipe book and management console) are reserved for Management: a MikiLab profile is required.",
+              "Las funciones completas (producción, recetario y consola de gestión) están reservadas a Dirección: se requiere el perfil MikiLab.",
+              "Les fonctions complètes (production, recettes et console de gestion) sont réservées à la Direction : le profil MikiLab est requis.",
+              "توابع کامل (تولید، کتاب دستور و کنسول مدیریت) برای مدیریت محفوظ است: پروفایل MikiLab لازم است.")}</p>
           </div>
         </main>
       </div>

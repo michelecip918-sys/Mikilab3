@@ -5185,3 +5185,18 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Punto 1 — Fondamenta org**: `organization_id` sugli utenti; helper `_org_id(user)` (default `org_default`); migrazione all'avvio `_migrate_organizations()` che stampa `org_default` su utenti e collezioni core prive del campo (recipes, weekly_plan, dept_assignments, inventory_items, day_closures, dept_machines, dept_objectives, favorites). Nuova azienda registrata col codice → `organization_id` dedicato nuovo (vuoto). Stamp `organization_id` su create ricette personali e save weekly_plan.
 - **Punto 3 — dati intatti**: verificato in DB → admin+owner=`org_default`, 0 utenti senza org, tutte le collezioni core migrate, admin vede ancora 149 ricette. Libreria "mikilab" (149) resta CONDIVISA in lettura per tutte le aziende (scelta A=b); ricette personali isolate per owner_id/org.
 - FASI SUCCESSIVE (concordato B=a, approccio sicuro a fasi): recipes/weekly_plan/inventory/day_closures sono già isolati per owner/utente; le collezioni "floor" condivise (dept_assignments, dept_machines) sono stampate con org_default ma l'isolamento a livello operaio (endpoint pubblici floor) è la fase 2, da fare quando servirà più di un'azienda operativa.
+
+## v-fork27 (2026-06-14) — Revisione tono testi (professionale, sobrio)
+Riformulate le frasi dal tono videogioco/tutorial infantile in tutta l'app. Stile grafico, avatar, animazioni e layout INVARIATI (verificato con screenshot). Solo testo.
+
+File modificati:
+- `components/FloorOperatorDay.jsx` — voce operatore (normale + apprendista) sobria e diretta; testo "Sitor sa già cosa devi fare oggi" → "Inserendo il tuo nome ti viene mostrato il compito assegnato per oggi"; conferma fine turno "Buon riposo!" → "Rapporto inviato alla Direzione. Turno concluso."
+- `components/console/SitorTour.jsx` — tour Capo e operaio resi sobri e informativi (niente "tutta per te / con calma / Ho capito!"); pulsante finale → "Ho capito".
+- `components/console/OperatorsRoster.jsx` — ruolo Sitor "Intelligenza Suprema" → "Assistente di Produzione" (nella lista CORE e nella mappa traduzioni).
+- `components/PublicGate.jsx` — "Capo Supremo" → "Direzione" (accesso formazione); barriera ospite "funzioni supreme/sintesi sub-molecolare/plancia" → linguaggio professionale (funzioni complete riservate alla Direzione).
+- `components/console/ImageForge.jsx` — "Forgia di Sitor" → "Generatore Immagini · Sitor"; toast "ha forgiato/forgia fallita" → "Immagine generata / Generazione non riuscita".
+- `components/OrdiniExtra.jsx` — tolta emoji "📸" dal pulsante importa comanda e "!" dal toast di successo.
+- `components/VoiceDelegation.jsx` — conferma vocale "Fatto Capo... inviato al floor in silenzio" → "Fatto. ... inviato in produzione senza annuncio vocale."
+- `components/RecipeList.jsx` — "Link copiato!" → "Link copiato."
+
+Lasciati invariati di proposito: i messaggi vocali funzionali chiari/diretti (già sobri), le emergenze SOS (tono d'allerta appropriato), il brand visivo "Dio dell'Arte Bianca" e l'estetica multiverso.
