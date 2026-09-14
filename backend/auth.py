@@ -20,12 +20,21 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
     _validate_password(payload.password, lang)
     if await db.users.find_one({"email": email}):
         raise HTTPException(status_code=400, detail="Email già registrata")
-    # GHOST MODE: registrazione SOLO su invito. Bypass per owner o primo utente (bootstrap).
+    # GATE CREAZIONE AZIENDA: creare una NUOVA azienda/Capo richiede il codice di attivazione
+    # (salvato SOLO lato backend in ORG_ACTIVATION_CODE). Esente il bootstrap: owner o primo utente
+    # in assoluto, che appartengono all'azienda di default.
+    import secrets as _secrets
+    _is_bootstrap = (email in OWNER_EMAILS) or (await db.users.count_documents({}) == 0)
+    _new_org_id = ORG_DEFAULT
     _invite = None
-    if email not in OWNER_EMAILS and await db.users.count_documents({}) > 0:
+    if not _is_bootstrap:
+        _code = (payload.activation_code or "").strip()
+        if not (ORG_ACTIVATION_CODE and _secrets.compare_digest(_code, ORG_ACTIVATION_CODE)):
+            raise HTTPException(status_code=403, detail="activation_code_invalid")
+        # Codice valido → nuova azienda dedicata, vuota.
+        _new_org_id = f"org_{uuid.uuid4().hex[:12]}"
+        # Se è stato passato anche un invito valido lo consumiamo (compatibilità), ma non è obbligatorio.
         _invite = await _consume_access_invite((payload.invite_token or "").strip())
-        if not _invite:
-            raise HTTPException(status_code=403, detail="invite_required")
     from pymongo.errors import DuplicateKeyError
     user_id = f"user_{uuid.uuid4().hex[:12]}"
     verify_enabled = False  # auto-login subito dopo la registrazione (nessuna conferma email obbligatoria)
@@ -34,7 +43,7 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
             "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
             "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
             "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
-            "email_verified": not verify_enabled,
+            "email_verified": not verify_enabled, "organization_id": _new_org_id,
         })
     except DuplicateKeyError:
         raise HTTPException(status_code=400, detail="Email già registrata")

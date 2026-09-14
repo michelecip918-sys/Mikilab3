@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { toast } from "sonner";
-import { Mail, Lock, User, LogIn, UserPlus, X } from "lucide-react";
+import { Mail, Lock, User, LogIn, UserPlus, X, KeyRound } from "lucide-react";
 import { authApi } from "@/lib/api";
 import { useAuth } from "@/auth/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
@@ -16,6 +16,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [name, setName] = useState("");
+  const [activationCode, setActivationCode] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   const [info, setInfo] = useState("");
@@ -60,7 +61,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         return;
       }
       if (mode === "register") {
-        const r = await authApi.register({ email, password, name, origin_url: window.location.origin, lang, invite_token: inviteToken });
+        const r = await authApi.register({ email, password, name, origin_url: window.location.origin, lang, invite_token: inviteToken, activation_code: activationCode });
         if (r?.needs_verification) {
           setNeedVerify(true);
           setInfo(r.message || tri("Controlla la tua email per attivare l'account.", "Prüfe deine E-Mail.", "Check your email to activate your account.", "Revisa tu correo para activar la cuenta."));
@@ -76,6 +77,11 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
       toast.success(tri("Benvenuto!", "Willkommen!", "Welcome!", "¡Bienvenido!"));
     } catch (err) {
       const detail = err?.response?.data?.detail;
+      if (err?.response?.status === 403 && detail === "activation_code_invalid") {
+        toast.error(tri("Codice di attivazione mancante o errato. Serve per creare una nuova azienda.", "Aktivierungscode fehlt oder ist falsch. Er wird benötigt, um ein neues Unternehmen zu erstellen.", "Missing or wrong activation code. It is required to create a new company.", "Código de activación ausente o incorrecto. Es necesario para crear una nueva empresa.", "Code d'activation manquant ou erroné. Nécessaire pour créer une nouvelle entreprise.", "کد فعال‌سازی نادرست است."));
+        setBusy(false);
+        return;
+      }
       if (err?.response?.status === 403 && detail === "verify_email") {
         setNeedVerify(true);
         setInfo(tri("Devi confermare l'email prima di accedere. Controlla la posta o richiedi un nuovo link.", "Bitte bestätige zuerst deine E-Mail.", "Please verify your email before signing in.", "Debes confirmar tu correo antes de acceder."));
@@ -136,7 +142,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
         )}
         {mode === "login" && !inviteToken && (
           <div data-testid="auth-invite-only" className="mb-4 rounded-2xl bg-[#1B2A38] border border-[#2A3B49] p-3 text-center text-[12px] text-[#7E8A93]">
-            {tri("Accesso privato su invito. Registrazione solo tramite link del Capo.", "Privater Zugang auf Einladung. Registrierung nur per Chef-Link.", "Private invite-only access. Registration only via the Boss's link.", "Acceso privado por invitación. Registro solo con enlace del Jefe.", "Accès privé sur invitation. Inscription uniquement via le lien du Chef.", "دسترسی خصوصی با دعوت. ثبت‌نام فقط با لینک رئیس.")}
+            {tri("Per creare una nuova azienda/Capo serve il codice di attivazione. Gli operai entrano con il PIN.", "Für ein neues Unternehmen ist der Aktivierungscode nötig. Mitarbeiter nutzen den PIN.", "Creating a new company/manager requires the activation code. Operators enter with the PIN.", "Crear una nueva empresa requiere el código de activación. Los operarios entran con PIN.", "Créer une nouvelle entreprise nécessite le code d'activation. Les opérateurs entrent avec le PIN.", "ایجاد شرکت جدید به کد فعال‌سازی نیاز دارد.")}
           </div>
         )}
 
@@ -205,6 +211,12 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
                   placeholder={tri("Conferma password", "Passwort bestätigen", "Confirm password", "Confirmar contraseña")}
                   className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
               </Field>
+              <Field icon={<KeyRound className="w-4 h-4" />}>
+                <input data-testid="auth-activation-code" value={activationCode} onChange={(e) => setActivationCode(e.target.value)}
+                  placeholder={tri("Codice di attivazione azienda", "Firmen-Aktivierungscode", "Company activation code", "Código de activación de empresa", "Code d'activation entreprise", "کد فعال‌سازی شرکت")}
+                  className="flex-1 bg-transparent outline-none text-sm text-[#2B303B] dark:text-[#e4eff8]" />
+              </Field>
+              <p className="text-[11px] -mt-1 text-[#7E8A93]">{tri("Serve solo per creare una NUOVA azienda/Capo. Gli operai entrano con il PIN, senza codice.", "Nur für ein NEUES Unternehmen nötig. Mitarbeiter nutzen den PIN.", "Only needed to create a NEW company/manager. Operators enter with the PIN, no code.", "Solo para crear una NUEVA empresa. Los operarios entran con PIN.", "Uniquement pour créer une NOUVELLE entreprise. Les opérateurs entrent avec le PIN.", "فقط برای ایجاد شرکت جدید.")}</p>
             </>
           )}
           {mode === "login" && (
@@ -226,7 +238,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
             className="w-full text-center text-sm text-[#3E9C93] font-medium mt-4">
             {T.back}
           </button>
-        ) : (mode === "login" && !inviteToken) ? null : (
+        ) : (
           <button data-testid="auth-switch" onClick={() => setMode(mode === "login" ? "register" : "login")}
             className="w-full text-center text-sm text-[#3E9C93] font-medium mt-4">
             {mode === "login" ? T.switch_r : T.switch_l}

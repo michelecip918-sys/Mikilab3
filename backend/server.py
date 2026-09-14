@@ -531,6 +531,7 @@ class RegisterReq(BaseModel):
     origin_url: Optional[str] = None
     lang: Optional[str] = "it"
     invite_token: Optional[str] = None
+    activation_code: Optional[str] = None
 
 
 class LoginReq(BaseModel):
@@ -702,6 +703,41 @@ async def optional_user(request: Request):
         return await current_user(request)
     except HTTPException:
         return None
+
+
+# ---------------------------------------------------------------------------
+# Multi-tenancy: ogni azienda ha un organization_id. I dati esistenti (creati
+# prima di questa modifica) appartengono all'azienda di default `org_default`.
+# ---------------------------------------------------------------------------
+ORG_DEFAULT = "org_default"
+ORG_ACTIVATION_CODE = os.environ.get("ORG_ACTIVATION_CODE", "")
+
+# Collezioni-dati che vengono isolate per azienda (migrate a org_default se prive del campo).
+ORG_SCOPED_COLLECTIONS = [
+    "recipes", "weekly_plan", "dept_assignments", "inventory_items",
+    "day_closures", "dept_machines", "dept_objectives", "favorites",
+]
+
+
+def _org_id(user: Optional[dict]) -> str:
+    """organization_id dell'utente richiedente (default: org_default)."""
+    return (user or {}).get("organization_id") or ORG_DEFAULT
+
+
+async def _migrate_organizations():
+    """Assegna organization_id=org_default a tutti gli utenti e ai dati già esistenti
+    che ne sono privi, così nulla di già creato va perso e resta nell'azienda di default."""
+    try:
+        await db.users.update_many({"organization_id": {"$exists": False}},
+                                   {"$set": {"organization_id": ORG_DEFAULT}})
+    except Exception as e:
+        logging.getLogger(__name__).error(f"org migrate users error: {e}")
+    for coll in ORG_SCOPED_COLLECTIONS:
+        try:
+            await db[coll].update_many({"organization_id": {"$exists": False}},
+                                       {"$set": {"organization_id": ORG_DEFAULT}})
+        except Exception as e:
+            logging.getLogger(__name__).error(f"org migrate {coll} error: {e}")
 
 
 # ---------------------------------------------------------------------------
@@ -10867,6 +10903,10 @@ async def on_startup_seed_mikilab():
             logging.getLogger(__name__).info(f"Mikilab seed startup: {n} ricette")
     except Exception as e:
         logging.getLogger(__name__).error(f"Seed startup error: {e}")
+    try:
+        await _migrate_organizations()
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Org migration error: {e}")
     try:
         await seed_shop_if_empty()
     except Exception as e:

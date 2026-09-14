@@ -337,6 +337,7 @@ async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user
     doc = recipe.model_dump()
     if payload.collection_name != "mikilab":
         doc["owner_id"] = user["user_id"]
+        doc["organization_id"] = _org_id(user)
     _targets = ["de", "en", "es", "fr", "fa"]
     _results = await asyncio.gather(*[_translate_recipe_lang(doc, _t) for _t in _targets], return_exceptions=True)
     for _res in _results:
@@ -573,7 +574,7 @@ async def save_weekly_plan(payload: WeeklyPlan, user: dict = Depends(current_use
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.weekly_plan.update_one(
-        {"_key": user["user_id"]}, {"$set": {**doc, "_key": user["user_id"]}}, upsert=True
+        {"_key": user["user_id"]}, {"$set": {**doc, "_key": user["user_id"], "organization_id": _org_id(user)}}, upsert=True
     )
     return payload
 
