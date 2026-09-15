@@ -5313,3 +5313,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Punto 5 — Direzione grafica**: mantenuta invariata (grigio/argento + verde salvia #3E9C93). Nessun ritorno al dorato.
 - **Testato**: iteration_241.json → frontend 100% (5/5: corso lato Capo genera+persiste, cache, magazzino isolato preserva dati org_default con add/delete, header mobile senza overflow, regressione). Backend course + warehouse validati via curl.
 - **Nota isolamento**: per scelta utente (2a) l'isolamento riguarda gli endpoint con sessione Capo/utente loggato; gli endpoint operatore gate-only (`/depts/*`) restano su org_default (rimandati ai PIN-per-azienda quando esisteranno più aziende con operai).
+
+---
+## Changelog — 15 Set 2026 (BLOCCO D · Rifinitura grafica + Avatar eleganti) — COMPLETATO
+- **Gerarchia colori**: teal `#3E9C93` riservato alle sole azioni primarie (Genera strategie, Salva settimana, Chiudi la giornata, Organizza giro, Aggiungi consegna, Aggiungi ricetta, CTA DeskScene). Convertite in ardesia `#8a97a6`/`#64748B`: chip suggerimenti Sitor, icone di sezione, select mansione/giorno, pulsanti "aggiungi riga", chip filtri categoria attivi, card furgone e badge tappe, pannelli food-cost/risultato, hint ricettario, input assegnatario. Fix post-QA: `piano-generate` da oro `#c9a24a` a teal; `piano-save` da link smeraldo a pulsante teal.
+- **Spaziature**: PianoUnico root `space-y-6 sm:space-y-8`, sezioni `p-4 sm:p-5`, Chiusura/Consegne `space-y-6`, HoloPanel `px-6 pb-6`, ZoneDivider `my-10 sm:my-16`, card log produzione `p-5 space-y-3`.
+- **Titoli uniformi**: nuova classe CSS `.holo-section-title` (JetBrains Mono 11px uppercase tracking .2em) applicata alle sezioni del Piano; i titoli pannello restano unificati via HoloKit.
+- **Feedback pressione** (index.css, globale): `scale: .965` + `brightness(1.08)` su `:active` per i pulsanti senza classe `active:scale` (usa la proprietà standalone `scale`: non rompe i bottoni con transform Tailwind); anello `focus-visible` teal; rispetto di `prefers-reduced-motion`.
+- **Avatar/scena eleganti**: rigenerata `/public/desk_scene.jpg` partendo dall'originale (stessa composizione e somiglianza MikiLab+Sitor, resa cinematografica più raffinata, ologramma pulito senza testo leggibile); in DeskScene glow di Sitor scaldato a oro e CTA in gradiente teal. In `AvatarWorld3D.jsx`: tone mapping ACESFilmic (exposure 1.12), HemisphereLight + DirectionalLight di rim, materiali `MeshPhysicalMaterial` con clearcoat sui metalli.
+- **Cache**: sw.js CACHE_NAME → `mikilab-v59` (nuova immagine + asset).
+- **Testato**: iteration_245.json → tutto PASS (desk scene, titoli, chip, chiusura, consegne add/delete, ricettario, HoloPanel, mobile 390px zero overflow, zero pageerror). 2 rilievi colore corretti e riverificati a schermo (GENERATE/SAVE = rgb(62,156,147)).
+- Con questo blocco si chiude la lista dei 6 punti concordati (Cuffie, Consegne, Chiusura, Memoria Sitor, Grafica, Avatar).

@@ -493,7 +493,7 @@ export default function PianoUnico({ activity: activityProp }) {
           data-testid="piano-generate"
           onClick={generate}
           disabled={!canGenerate}
-          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-[#c9a24a] text-[#0b0f19] disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-[#3E9C93] hover:bg-[#347f78] text-white disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
         >
           {loadingOpt ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
           {loadingOpt
@@ -572,7 +572,7 @@ export default function PianoUnico({ activity: activityProp }) {
               </span>
               {chosenLabel && <span className="text-[12px] font-black text-white">— {chosenLabel}</span>}
               <div className="ml-auto flex gap-2 no-print">
-                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-emerald-400 hover:text-emerald-300 disabled:opacity-50">
+                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3E9C93] hover:bg-[#347f78] text-white text-[12px] font-bold px-3 py-1.5 disabled:opacity-50 active:scale-95 transition-all">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} {tri("Salva settimana", "Woche speichern", "Save week", "Guardar semana", "Enregistrer la semaine", "ذخیره هفته")}
                 </button>
                 <button data-testid="piano-speak" onClick={speak} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a6b1bc] hover:text-white">
