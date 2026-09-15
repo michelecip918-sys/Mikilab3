@@ -4152,14 +4152,19 @@ async def _worker_pool(org: Optional[str] = None):
         if not nm:
             continue
         sc = int(d.get("efficiency_score", 85))
+        day = (d.get("day") or "").strip().lower()
         if nm not in best or sc > best[nm]["score"]:
-            best[nm] = {"name": nm, "position": d.get("position") or "", "score": sc, "aura": _aura_for(sc)}
+            keep_days = best.get(nm, {}).get("days", set())
+            best[nm] = {"name": nm, "position": d.get("position") or "", "score": sc, "aura": _aura_for(sc), "days": keep_days}
+        if day:
+            best[nm]["days"].add(day)
     states = await _worker_states_map(org)
     for w in best.values():
         st = states.get(w["name"].lower(), {})
         w["status"] = st.get("status", "free")
         w["current_task"] = st.get("task_id")
         w["locked_by_capo"] = bool(st.get("locked_by_capo"))
+        w["days"] = sorted(w.get("days", set()))
     pool = sorted(best.values(), key=lambda x: x["score"], reverse=True)
     return pool
 
@@ -4175,6 +4180,12 @@ async def _set_worker_state(org: str, name: str, **fields):
     if not name:
         return
     fields["updated_at"] = now_iso()
+    # AVVISO RITARDO: quando l'operatore diventa OCCUPATO segna l'inizio del compito (se non
+    # già impostato dal chiamante) così la board può calcolare lo sforamento sull'ETA.
+    if fields.get("status") == "busy" and "started_at" not in fields:
+        fields["started_at"] = now_iso()
+    if fields.get("status") == "free":
+        fields["started_at"] = None
     await db.worker_states.update_one(
         {"organization_id": org, "name": name},
         {"$set": {"organization_id": org, "name": name, **fields}},
@@ -4480,6 +4491,33 @@ async def worker_board(org: str = Depends(effective_org)):
     # Mappa dei task attivi per titolo/ETA
     tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
     task_by_id = {t.get("id"): t for t in tasks}
+    # TURNI: giorno corrente (abbreviazione IT) per capire chi è di turno ORA vs dopo.
+    _DOW = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"]
+    today_ab = _DOW[datetime.now(timezone.utc).weekday()]
+    _TODAY_TOKENS = {"oggi", "ogg", "today", "tod", "heute", "heu", "hoy", "aujourd'hui", "auj", "امروز", "اليوم", today_ab}
+
+    def _on_shift(days):
+        # Nessun dato turno → presente. Un token "oggi" o il giorno corrente → in turno.
+        if not days:
+            return True
+        for d in days:
+            dl = (d or "").lower()
+            if dl in _TODAY_TOKENS or dl[:3] == today_ab:
+                return True
+        return False
+
+    def _lateness(st, eta):
+        # Ritardo: minuti trascorsi dall'inizio del compito oltre l'ETA stimato.
+        started = st.get("started_at")
+        if not started or not eta:
+            return False, 0
+        try:
+            t0 = datetime.fromisoformat(str(started).replace("Z", "+00:00"))
+            elapsed = (datetime.now(timezone.utc) - t0).total_seconds() / 60.0
+            return (elapsed > float(eta)), max(0, int(round(elapsed - float(eta))))
+        except Exception:
+            return False, 0
+
     board = []
     seen = set()
     for w in pool:
@@ -4496,27 +4534,38 @@ async def worker_board(org: str = Depends(effective_org)):
                 eta = step.get("eta_min", eta)
         elif st.get("task"):
             task_title = st.get("task")
+        days = w.get("days") or []
+        on_shift = _on_shift(days)
+        late, over = _lateness(st, eta) if status == "busy" else (False, 0)
         board.append({
             "name": w["name"], "position": w.get("position") or "",
             "aura": w.get("aura"), "status": status,
             "locked_by_capo": bool(st.get("locked_by_capo")),
             "task": task_title, "dept": st.get("dept"),
             "eta_min": eta, "updated_at": st.get("updated_at"),
+            "days": days, "on_shift_today": on_shift,
+            "late": late, "over_min": over,
         })
         seen.add(w["name"].lower())
     # Operatori con stato ma non nel pool del turno (es. spostati dal Capo a mano)
     for k, st in states.items():
         if k in seen:
             continue
+        eta = st.get("eta_min")
+        late, over = _lateness(st, eta) if st.get("status") == "busy" else (False, 0)
         board.append({
             "name": st.get("name"), "position": st.get("dept") or "",
             "aura": None, "status": st.get("status", "free"),
             "locked_by_capo": bool(st.get("locked_by_capo")),
             "task": st.get("task"), "dept": st.get("dept"),
-            "eta_min": st.get("eta_min"), "updated_at": st.get("updated_at"),
+            "eta_min": eta, "updated_at": st.get("updated_at"),
+            "days": [], "on_shift_today": True, "late": late, "over_min": over,
         })
     busy = sum(1 for b in board if b["status"] == "busy")
-    return {"board": board, "totals": {"total": len(board), "busy": busy, "free": len(board) - busy}}
+    on_now = sum(1 for b in board if b["on_shift_today"])
+    late_n = sum(1 for b in board if b["late"])
+    return {"board": board, "totals": {"total": len(board), "busy": busy, "free": len(board) - busy,
+                                       "on_shift": on_now, "later": len(board) - on_now, "late": late_n}}
 
 
 class AssignNextReq(BaseModel):
@@ -4551,6 +4600,57 @@ async def worker_assign_next(body: AssignNextReq, org: str = Depends(effective_o
     return {"assigned": True, "task_title": chosen_task.get("title"),
             "instruction": chosen_step.get("instruction"), "eta_min": chosen_step.get("eta_min"),
             "message": f"{op} → {chosen_step.get('instruction','')[:60]}"}
+
+
+@api_router.get("/worker/pending-steps")
+async def worker_pending_steps(org: str = Depends(effective_org)):
+    """ASSEGNA MIRATA: elenco dei passi pendenti dei task attivi, così la Direzione può
+    scegliere ESATTAMENTE quale compito dare a un operatore (non solo il prossimo)."""
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", 1).to_list(300)
+    out = []
+    for t in tasks:
+        for s in sorted(t.get("steps") or [], key=lambda x: int(x.get("order") or 0)):
+            if s.get("done"):
+                continue
+            out.append({
+                "task_id": t.get("id"), "task_title": t.get("title"),
+                "order": s.get("order"), "instruction": s.get("instruction"),
+                "sub_role": s.get("sub_role"), "assignee": s.get("assignee"),
+                "eta_min": s.get("eta_min"),
+            })
+    return {"steps": out}
+
+
+class AssignStepReq(BaseModel):
+    operator: str = Field(..., max_length=60)
+    task_id: str
+    step_order: int
+
+
+@api_router.post("/worker/assign-step")
+async def worker_assign_step(body: AssignStepReq, org: str = Depends(effective_org)):
+    """Assegna un passo SPECIFICO (scelto dalla Direzione) a un operatore."""
+    op = (body.operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    task = await db.team_tasks.find_one({"id": body.task_id}, {"_id": 0})
+    if not task:
+        raise HTTPException(status_code=404, detail="Task non trovato")
+    steps = task.get("steps") or []
+    target = next((s for s in steps if int(s.get("order") or 0) == int(body.step_order)), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Passo non trovato")
+    if target.get("done"):
+        return {"assigned": False, "message": "Il passo è già completato"}
+    target["assignee"] = op
+    target["assignee_position"] = None
+    steps = _recompute_task_eta(steps)
+    await db.team_tasks.update_one({"id": task["id"]}, {"$set": {"steps": steps}})
+    await _set_worker_state(org, op, status="busy", task_id=task["id"],
+                            step_order=target.get("order"), eta_min=target.get("eta_min"))
+    return {"assigned": True, "task_title": task.get("title"),
+            "instruction": target.get("instruction"), "eta_min": target.get("eta_min"),
+            "message": f"{op} → {target.get('instruction','')[:60]}"}
 
 
 class CapoMoveReq(BaseModel):

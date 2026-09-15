@@ -8,12 +8,12 @@ const LanguageContext = createContext(null);
 const SUPPORTED = ["it", "de", "en", "es", "fr", "fa", "ar", "tr"];
 
 function initialLang() {
-  // 1) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione
-  const seg = (window.location.pathname.split("/")[1] || "").toLowerCase();
-  if (SUPPORTED.includes(seg)) return seg;
-  // 2) scelta salvata
+  // 1) scelta salvata dall'utente: ha SEMPRE la priorità (resta stabile dopo il login e i reload)
   const saved = localStorage.getItem("mikilab_lang");
   if (SUPPORTED.includes(saved)) return saved;
+  // 2) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione al primo accesso
+  const seg = (window.location.pathname.split("/")[1] || "").toLowerCase();
+  if (SUPPORTED.includes(seg)) return seg;
   // 3) lingua del browser
   const nav = (navigator.language || "it").slice(0, 2).toLowerCase();
   if (SUPPORTED.includes(nav)) return nav;

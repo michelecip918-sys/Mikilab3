@@ -1,18 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
-import { Users, Clock3, Lock, CircleDot, Plus } from "lucide-react";
+import { Users, Clock3, Lock, CircleDot, Plus, AlertTriangle, CalendarClock, X, ListChecks } from "lucide-react";
 import { toast } from "sonner";
 import { delegationApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-// Plancia live dello stato operatori: libero/occupato, compito corrente e tempo stimato.
-// Filtro per reparto + assegnazione one-tap del prossimo compito. Aggiorna ogni 15s.
+// Plancia live: stato libero/occupato, compito + ETA, turno (ora/dopo), avviso ritardo,
+// filtro reparto e assegnazione (prossimo compito o compito specifico). Aggiorna ogni 15s.
 export default function OperatorStatusBoard() {
   const { lang } = useLang();
   const tri = mkTri(lang);
   const [data, setData] = useState(null);
   const [dept, setDept] = useState("all");
   const [assigning, setAssigning] = useState("");
+  const [picker, setPicker] = useState(null); // { operator }
+  const [pending, setPending] = useState([]);
+  const [loadingSteps, setLoadingSteps] = useState(false);
 
   const load = () => delegationApi.workerBoard().then((d) => setData(d)).catch(() => {});
 
@@ -25,6 +28,7 @@ export default function OperatorStatusBoard() {
   }, []);
 
   const board = useMemo(() => (data && data.board) || [], [data]);
+  const totals = (data && data.totals) || { total: 0, busy: 0, free: 0, on_shift: 0, later: 0, late: 0 };
   const depts = useMemo(() => {
     const set = new Set();
     board.forEach((o) => { const p = (o.position || o.dept || "").trim(); if (p) set.add(p); });
@@ -32,11 +36,6 @@ export default function OperatorStatusBoard() {
   }, [board]);
 
   const filtered = dept === "all" ? board : board.filter((o) => (o.position || o.dept || "") === dept);
-  const totals = {
-    total: filtered.length,
-    busy: filtered.filter((o) => o.status === "busy").length,
-    free: filtered.filter((o) => o.status !== "busy").length,
-  };
 
   const assignNext = async (name) => {
     setAssigning(name);
@@ -51,6 +50,29 @@ export default function OperatorStatusBoard() {
     setAssigning("");
   };
 
+  const openPicker = async (name) => {
+    setPicker({ operator: name });
+    setLoadingSteps(true);
+    try {
+      const r = await delegationApi.pendingSteps();
+      setPending((r && r.steps) || []);
+    } catch { setPending([]); }
+    setLoadingSteps(false);
+  };
+
+  const assignSpecific = async (task_id, step_order) => {
+    const op = picker.operator;
+    try {
+      const r = await delegationApi.assignStep(op, task_id, step_order);
+      if (r.assigned) toast.success(r.message || tri("Compito assegnato", "Zugewiesen", "Assigned", "Asignado", "Assigné", "محول شد"));
+      else toast.info(r.message || tri("Non assegnabile", "Nicht möglich", "Not assignable", "No asignable", "Non assignable", "قابل انتساب نیست"));
+    } catch {
+      toast.error(tri("Assegnazione non riuscita", "Fehlgeschlagen", "Assignment failed", "Fallo", "Échec", "خطا"));
+    }
+    setPicker(null);
+    await load();
+  };
+
   return (
     <div data-testid="operator-status-board" className="rounded-2xl border border-[#8a97a6]/25 bg-[#060A10]/70 p-4 sm:p-5">
       <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -58,9 +80,10 @@ export default function OperatorStatusBoard() {
         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#8a97a6]">
           {tri("Plancia operatori · live", "Bediener-Tafel · live", "Operator board · live", "Panel de operadores · en vivo", "Tableau opérateurs · live", "تابلوی اپراتورها · زنده")}
         </span>
-        <span className="ml-auto inline-flex items-center gap-2 text-[11px]">
+        <span className="ml-auto inline-flex items-center gap-2 text-[11px] flex-wrap justify-end">
           <span className="inline-flex items-center gap-1 text-[#3E9C93]"><CircleDot className="w-3 h-3" />{totals.free} {tri("liberi", "frei", "free", "libres", "libres", "آزاد")}</span>
           <span className="inline-flex items-center gap-1 text-[#c9a24a]"><CircleDot className="w-3 h-3" />{totals.busy} {tri("occupati", "belegt", "busy", "ocupados", "occupés", "مشغول")}</span>
+          {totals.late > 0 && <span data-testid="board-late-count" className="inline-flex items-center gap-1 text-[#e5484d] font-bold"><AlertTriangle className="w-3 h-3" />{totals.late} {tri("in ritardo", "verspätet", "late", "con retraso", "en retard", "با تأخیر")}</span>}
         </span>
       </div>
 
@@ -87,9 +110,11 @@ export default function OperatorStatusBoard() {
         <div className="space-y-2">
           {filtered.map((o, i) => {
             const busy = o.status === "busy";
+            const off = !o.on_shift_today;
             return (
-              <div key={o.name + i} data-testid={`board-row-${i}`} className="flex items-center gap-3 rounded-xl bg-[#0b0f19]/60 border border-[#1e293b] px-3 py-2.5">
-                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${busy ? "bg-[#c9a24a]" : "bg-[#3E9C93]"}`} title={busy ? "occupato" : "libero"} />
+              <div key={o.name + i} data-testid={`board-row-${i}`}
+                className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${o.late ? "bg-[#e5484d]/10 border-[#e5484d]/40" : "bg-[#0b0f19]/60 border-[#1e293b]"} ${off ? "opacity-60" : ""}`}>
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${o.late ? "bg-[#e5484d]" : busy ? "bg-[#c9a24a]" : "bg-[#3E9C93]"}`} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-[13px] font-bold text-white truncate">{o.name}</span>
@@ -99,26 +124,75 @@ export default function OperatorStatusBoard() {
                         <Lock className="w-2.5 h-2.5" /> {tri("Direzione", "Leitung", "Direction", "Dirección", "Direction", "مدیریت")}
                       </span>
                     )}
+                    {off && (
+                      <span data-testid={`board-shift-later-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-black uppercase tracking-wide text-[#8a97a6] bg-[#8a97a6]/12 border border-[#8a97a6]/30 rounded px-1.5 py-0.5">
+                        <CalendarClock className="w-2.5 h-2.5" /> {tri("Più tardi", "Später", "Later", "Más tarde", "Plus tard", "بعداً")}{o.days && o.days.length ? ` · ${o.days.join(" ")}` : ""}
+                      </span>
+                    )}
+                    {o.late && (
+                      <span data-testid={`board-late-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-black uppercase tracking-wide text-[#e5484d] bg-[#e5484d]/12 border border-[#e5484d]/40 rounded px-1.5 py-0.5">
+                        <AlertTriangle className="w-2.5 h-2.5" /> +{o.over_min}′ {tri("oltre stima", "über Plan", "over ETA", "sobre ETA", "hors délai", "فراتر از برآورد")}
+                      </span>
+                    )}
                   </div>
                   <p className="text-[11px] text-[#94A3B8] truncate">
                     {busy
                       ? (o.task || tri("Al lavoro", "In Arbeit", "Working", "Trabajando", "Au travail", "در حال کار"))
-                      : tri("Libero · in attesa di compito", "Frei · wartet auf Aufgabe", "Free · awaiting task", "Libre · esperando tarea", "Libre · en attente", "آزاد · منتظر وظیفه")}
+                      : off
+                        ? tri("Non in turno oggi", "Heute nicht im Dienst", "Not on shift today", "Sin turno hoy", "Pas de service aujourd'hui", "امروز شیفت ندارد")
+                        : tri("Libero · in attesa di compito", "Frei · wartet auf Aufgabe", "Free · awaiting task", "Libre · esperando tarea", "Libre · en attente", "آزاد · منتظر وظیفه")}
                   </p>
                 </div>
                 {busy && o.eta_min ? (
-                  <span data-testid={`board-eta-${i}`} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#c9a24a] bg-[#c9a24a]/10 rounded-full px-2.5 py-1">
+                  <span data-testid={`board-eta-${i}`} className={`shrink-0 inline-flex items-center gap-1 text-[11px] font-bold rounded-full px-2.5 py-1 ${o.late ? "text-[#e5484d] bg-[#e5484d]/10" : "text-[#c9a24a] bg-[#c9a24a]/10"}`}>
                     <Clock3 className="w-3 h-3" /> ~{o.eta_min}′
                   </span>
-                ) : (!busy && !o.locked_by_capo ? (
-                  <button data-testid={`board-assign-${i}`} onClick={() => assignNext(o.name)} disabled={assigning === o.name}
-                    className="shrink-0 inline-flex items-center gap-1 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 hover:bg-[#3E9C93]/22 border border-[#3E9C93]/30 rounded-full px-2.5 py-1 disabled:opacity-50 active:scale-95 transition-all">
-                    <Plus className="w-3 h-3" /> {assigning === o.name ? "…" : tri("Assegna", "Zuweisen", "Assign", "Asignar", "Assigner", "انتساب")}
-                  </button>
+                ) : (!busy && !o.locked_by_capo && !off ? (
+                  <div className="shrink-0 flex items-center gap-1">
+                    <button data-testid={`board-assign-${i}`} onClick={() => assignNext(o.name)} disabled={assigning === o.name}
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 hover:bg-[#3E9C93]/22 border border-[#3E9C93]/30 rounded-full px-2.5 py-1 disabled:opacity-50 active:scale-95 transition-all">
+                      <Plus className="w-3 h-3" /> {assigning === o.name ? "…" : tri("Prossimo", "Nächste", "Next", "Siguiente", "Suivant", "بعدی")}
+                    </button>
+                    <button data-testid={`board-assign-pick-${i}`} onClick={() => openPicker(o.name)} title={tri("Scegli compito", "Aufgabe wählen", "Pick task", "Elegir tarea", "Choisir tâche", "انتخاب وظیفه")}
+                      className="inline-flex items-center text-[11px] font-bold text-[#8a97a6] bg-[#8a97a6]/10 hover:bg-[#8a97a6]/22 border border-[#8a97a6]/30 rounded-full px-2 py-1 active:scale-95 transition-all">
+                      <ListChecks className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 ) : null)}
               </div>
             );
           })}
+        </div>
+      )}
+
+      {picker && (
+        <div data-testid="assign-picker" data-tour-suppress="true" className="fixed inset-0 z-[85] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPicker(null)}>
+          <div className="w-full max-w-md max-h-[80vh] overflow-y-auto rounded-2xl bg-[#0b0f19] border border-[#8a97a6]/30 p-4" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center gap-2 mb-3">
+              <ListChecks className="w-4 h-4 text-[#3E9C93]" />
+              <span className="text-sm font-black text-white">{tri("Scegli il compito per", "Aufgabe wählen für", "Pick task for", "Elegir tarea para", "Choisir la tâche pour", "انتخاب وظیفه برای")} {picker.operator}</span>
+              <button data-testid="assign-picker-close" onClick={() => setPicker(null)} className="ml-auto w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>
+            </div>
+            {loadingSteps ? (
+              <p className="text-[12px] text-[#64748B] text-center py-6">…</p>
+            ) : pending.length === 0 ? (
+              <p data-testid="assign-picker-empty" className="text-[12px] text-[#64748B] text-center py-6">{tri("Nessun compito pendente.", "Keine offene Aufgabe.", "No pending task.", "Sin tareas pendientes.", "Aucune tâche en attente.", "وظیفه‌ای در انتظار نیست.")}</p>
+            ) : (
+              <div className="space-y-2">
+                {pending.map((s, k) => (
+                  <button key={s.task_id + s.order} data-testid={`assign-picker-step-${k}`} onClick={() => assignSpecific(s.task_id, s.order)}
+                    className="w-full text-left rounded-xl bg-[#060A10]/70 border border-[#1e293b] hover:border-[#3E9C93]/50 px-3 py-2.5 transition-all active:scale-[0.99]">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono text-[#3E9C93] uppercase tracking-wide truncate">{s.task_title}</span>
+                      {s.sub_role && <span className="text-[9px] text-[#64748B]">· {s.sub_role}</span>}
+                      {s.assignee && <span className="ml-auto text-[9px] text-[#c9a24a]">{tri("ora", "jetzt", "now", "ahora", "actu.", "اکنون")}: {s.assignee}</span>}
+                    </div>
+                    <p className="text-[12px] text-[#cbd5e1] mt-0.5">{s.instruction}</p>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

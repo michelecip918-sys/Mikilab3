@@ -599,6 +599,8 @@ export const delegationApi = {
   workerStates: () => cachedGet("worker_states", () => api.get(`/worker/states`).then((r) => r.data), { states: [] }),
   workerBoard: () => cachedGet("worker_board", () => api.get(`/worker/board`).then((r) => r.data), { board: [], totals: { total: 0, busy: 0, free: 0 } }),
   assignNext: (operator) => api.post(`/worker/assign-next`, { operator }).then((r) => r.data),
+  pendingSteps: () => api.get(`/worker/pending-steps`).then((r) => r.data),
+  assignStep: (operator, task_id, step_order) => api.post(`/worker/assign-step`, { operator, task_id, step_order }).then((r) => r.data),
   capoMove: (operator, dept = "", role = "", task = "") => api.post(`/worker/capo-move`, { operator, dept, role, task }).then((r) => r.data),
 };
 
