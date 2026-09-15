@@ -5379,3 +5379,13 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Board payload ora include task_id/step_order (parità con endpoint operatore).
 - Test end-to-end iteration_250: 4/4 PASS (backend 100%, frontend 100%); selettore Assegna Mirata verificato a schermo (12 compiti). Nessuna regressione.
 - File: `backend/server.py` (_worker_pool days, board turni/ritardo/task_id, /worker/pending-steps, /worker/assign-step, _set_worker_state started_at), `frontend/src/components/console/OperatorStatusBoard.jsx` (riscritto), `frontend/src/i18n/LanguageContext.jsx` (fix priorità lingua), `frontend/src/lib/api.js` (pendingSteps, assignStep).
+
+---
+## Changelog — 15 Set 2026 (Riassegna Ritardi · Turni con Orario · Storico Ritardi · Notifica Direzione) — COMPLETATO
+- **Riassegna Ritardi**: `POST /api/worker/reassign` libera l'operatore (in ritardo) e passa il compito al prossimo libero, ricalcolando le ETA. Pulsante rosso 'Riassegna' sulle righe in ritardo della plancia.
+- **Turni con Orario**: helper `_today_shift_start` legge il primo lotto del giorno dal piano settimanale; la board espone `shift_start` e la plancia mostra badge 'DALLE HH:MM' sugli operatori di turno oggi.
+- **Storico Ritardi**: `GET /api/worker/delays/history` aggrega i `delay_events` degli ultimi 7 giorni per operatore (classifica colli di bottiglia). Toggle 'Storico ritardi · 7 giorni' nella plancia.
+- **Notifica Direzione**: `GET /api/worker/late-alerts` registra ogni nuovo sforamento in `delay_events`, inserisce un allarme in `deck_alarm_history` e invia PUSH agli admin. Componente globale `LateNotifier` (montato in App.js per admin) sonda ogni 25s e mostra un toast per i nuovi ritardi — senza bisogno di guardare la plancia.
+- `_set_worker_state` registra `started_at` all'inizio del compito (base del calcolo ritardo).
+- Test end-to-end iteration_251: 4/4 PASS (backend 100%, frontend 100%). Verificato a schermo: badge DALLE 05:30, riga rossa Sara +25′ con Riassegna→Antonio, storico Michele/Sara, late-alerts 200.
+- File: `backend/server.py` (_today_shift_start, board shift_start, /worker/reassign, /worker/late-alerts, /worker/delays/history, _set_worker_state started_at), `frontend/src/components/console/OperatorStatusBoard.jsx`, `frontend/src/components/LateNotifier.jsx` (nuovo), `frontend/src/App.js` (mount), `frontend/src/lib/api.js` (reassign, lateAlerts, delaysHistory).
