@@ -126,6 +126,10 @@ export const productionApi = {
   logList: (date = "") => api.get(`/production/log`, { params: { date } }).then((r) => r.data),
 };
 
+export const labAskApi = {
+  ask: (message, lang = "it") => api.post(`/lab/ask`, { message, lang, session_id: "headphones" }).then((r) => r.data),
+};
+
 export const deliveriesApi = {
   list: () => api.get(`/deliveries`).then((r) => r.data),
   create: (payload) => api.post(`/deliveries`, payload).then((r) => r.data),

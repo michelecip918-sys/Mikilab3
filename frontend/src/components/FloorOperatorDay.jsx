@@ -6,6 +6,7 @@ import { deusApi, floorApi, deptApi, productionApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
 import RecipeList from "@/components/RecipeList";
+import HeadphonesMode from "@/components/HeadphonesMode";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
@@ -316,6 +317,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
   const [apprentice, setApprentice] = useState(false);
   const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
   const [showRecipes, setShowRecipes] = useState(false);
+  const [showHeadphones, setShowHeadphones] = useState(false);
   const greetedRef = useRef(false);
   const machinesAnnouncedRef = useRef("");
 
@@ -430,8 +432,17 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       <SosButton role={role} operator={role} />
       <SitorPhotoAnalyzer tri={tri} lang={lang} />
 
+      {/* Cuffie hands-free: ascolto continuo "Sitor…" mentre le mani sono occupate */}
+      <button data-testid="floor-headphones-btn" onClick={() => setShowHeadphones(true)}
+        className="w-full flex items-center justify-center gap-2.5 bg-[#3E9C93] hover:bg-[#347f78] text-white font-black px-4 py-4 rounded-2xl shadow-lg shadow-[#3E9C93]/20 active:scale-98 transition-all">
+        <Headphones className="w-5 h-5" /> {tri("Cuffie · Mani libere", "Kopfhörer · Freihändig", "Headphones · Hands-free", "Auriculares · Manos libres", "Casque · Mains libres", "هدفون · بدون دست")}
+      </button>
+
       {/* Registra produzione: prodotto/avanzato → compila la chiusura del Capo */}
       <FloorProductionLog tri={tri} />
+
+      {showHeadphones && <HeadphonesMode lang={lang} tri={tri} onClose={() => setShowHeadphones(false)} />}
+
 
       {/* Ricettario & Corsi passo-passo di Sitor — anche per la produzione */}
       <div className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 overflow-hidden">

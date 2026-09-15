@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Truck, Plus, Trash2, MapPin, Clock3, AlertTriangle, Wand2, Loader2, Package } from "lucide-react";
 import { toast } from "sonner";
 import { deliveriesApi } from "@/lib/api";
+import { playTTS } from "@/lib/tts";
 
 const num = (v) => { const n = parseFloat(String(v).replace(",", ".")); return isNaN(n) ? 0 : n; };
 
@@ -31,8 +32,13 @@ export default function ConsegneFurgoni() {
   const del = async (id) => { try { await deliveriesApi.remove(id); await load(); setPlan(null); } catch { /* */ } };
   const organize = async () => {
     setOrganizing(true);
-    try { const d = await deliveriesApi.organize(); setPlan(d); }
-    catch { toast.error("Organizzazione non riuscita"); }
+    try {
+      const d = await deliveriesApi.organize();
+      setPlan(d);
+      // Sitor legge a voce gli avvisi: il Capo sente gli ordini in ritardo prima di caricare.
+      const w = d.warnings || [];
+      if (w.length) playTTS("Attenzione. " + w.slice(0, 4).join(". "));
+    } catch { toast.error("Organizzazione non riuscita"); }
     finally { setOrganizing(false); }
   };
 
