@@ -5389,3 +5389,13 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - `_set_worker_state` registra `started_at` all'inizio del compito (base del calcolo ritardo).
 - Test end-to-end iteration_251: 4/4 PASS (backend 100%, frontend 100%). Verificato a schermo: badge DALLE 05:30, riga rossa Sara +25′ con Riassegna→Antonio, storico Michele/Sara, late-alerts 200.
 - File: `backend/server.py` (_today_shift_start, board shift_start, /worker/reassign, /worker/late-alerts, /worker/delays/history, _set_worker_state started_at), `frontend/src/components/console/OperatorStatusBoard.jsx`, `frontend/src/components/LateNotifier.jsx` (nuovo), `frontend/src/App.js` (mount), `frontend/src/lib/api.js` (reassign, lateAlerts, delaysHistory).
+
+
+---
+## Changelog — 15 Set 2026 (RCA "sito non pubblicato" — RISOLTO, nessun deploy mancante)
+- Utente: "il sito è ancora come prima, il lavoro non è stato pubblicato".
+- Verifica byte-level su https://mikilab.de: bundle live main.ccda747f.js CONTIENE le feature più recenti (Plancia, Sitor, Riassegna, late-alerts, assign-next, Storico ritardi). Title/meta SEO aggiornati. Screenshot live: nuova UI "MikiLab Pro — The Baking Multiverse" con avatar Sitor e portali Direction/Production.
+- CONCLUSIONE: la produzione ERA GIÀ pubblicata e aggiornata (il deploy accodato è andato a buon fine). La versione vecchia vista dall'utente = cache locale del dispositivo (vecchio service worker/PWA installata). Server serve index.html e sw.js con no-cache/no-store; index.html ha già auto-update (controllerchange → reload, updateViaCache:"none", sw.js con skipWaiting+clients.claim). I device che arrivano da versioni molto vecchie richiedono UNA chiusura completa/ricarica manuale, poi l'auto-update funziona per sempre.
+- Istruzioni date all'utente: smartphone → chiudere del tutto l'app/PWA e riaprirla (eventualmente cancellare cache del sito); PC → Ctrl+Shift+R.
+- Nessuna modifica codice necessaria. Nessun redeploy necessario.
+- OSSERVAZIONE per il task MOBILE (P1, prossimo): la landing a 390px sembra non ri-fluire (stessa composizione del desktop) → verificare responsività reale nella prossima sessione (SalaSitor, OperatorStatusBoard, PianoUnico, RecipeList, modali VoiceDelegation/assegna, scene 3D DeskScene/AvatarWorld3D).
