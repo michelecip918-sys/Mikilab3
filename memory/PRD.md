@@ -5399,3 +5399,11 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Istruzioni date all'utente: smartphone → chiudere del tutto l'app/PWA e riaprirla (eventualmente cancellare cache del sito); PC → Ctrl+Shift+R.
 - Nessuna modifica codice necessaria. Nessun redeploy necessario.
 - OSSERVAZIONE per il task MOBILE (P1, prossimo): la landing a 390px sembra non ri-fluire (stessa composizione del desktop) → verificare responsività reale nella prossima sessione (SalaSitor, OperatorStatusBoard, PianoUnico, RecipeList, modali VoiceDelegation/assegna, scene 3D DeskScene/AvatarWorld3D).
+
+---
+## Changelog — 15 Set 2026 (Ottimizzazione Mobile 390px) — COMPLETATO
+- Testata **Sala Sitor** (SalaSitor.jsx): avatar+titolo+3 pulsanti (Delega Vocale/Report Turno/Nuova conversazione) da riga flex non-wrappabile → ora flex-wrap con gruppo pulsanti (w-full sm:w-auto) che va a capo su mobile. Niente piu overflow orizzontale a 390px.
+- Riga **Calendario del giorno** (PianoUnico.jsx, DayPlan): da riga con troppi elementi a larghezza fissa → flex-wrap con blocco prodotto basis-50% e gruppo controlli finali (qty/durata/corso/elimina) con ml-auto che va a capo sotto il prodotto su schermi stretti.
+- Verificato che AvatarWorld3D (sfondo 3D landing) gia gestisce resize via ResizeObserver + pixelRatio cap 1.8 e sta a z-0 sotto i controlli z-10 (non copre pulsanti). DeskScene altezza fissa 300px OK su mobile.
+- RecipeList gia responsive (grid-cols-2 sm:grid-cols-3, filtri con scroll orizzontale interno). OperatorStatusBoard e modale assign-picker gia mobile-ok; VoiceDelegation overlay scrollabile.
+- Test frontend mobile iteration_252: 100%, scrollWidth==clientWidth(390) su tutte le viste (public gate, console Direzione, Sala Sitor, Plancia, Piano Unico, modale Delega Vocale, Ricette). Desktop 1920 senza regressioni. Nessun action item.
