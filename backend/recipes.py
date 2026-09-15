@@ -391,6 +391,8 @@ async def update_recipe(recipe_id: str, payload: RecipeUpdate, user: dict = Depe
     if existing.get("collection_name") == "mikilab":
         if user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
+        if (existing.get("organization_id") or ORG_DEFAULT) != _org_id(user):
+            raise HTTPException(status_code=404, detail="Ricetta non trovata")
     elif existing.get("owner_id") != user["user_id"]:
         raise HTTPException(status_code=403, detail="Non autorizzato")
     # Full-state save from the recipe dialog: apply all provided fields,
@@ -502,6 +504,8 @@ async def delete_recipe(recipe_id: str, user: dict = Depends(current_user)):
     if existing.get("collection_name") == "mikilab":
         if user.get("role") != "admin":
             raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
+        if (existing.get("organization_id") or ORG_DEFAULT) != _org_id(user):
+            raise HTTPException(status_code=404, detail="Ricetta non trovata")
     elif existing.get("owner_id") != user["user_id"]:
         raise HTTPException(status_code=403, detail="Non autorizzato")
     await db.recipes.delete_one({"id": recipe_id})

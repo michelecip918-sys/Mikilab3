@@ -732,7 +732,7 @@ ORG_ACTIVATION_CODE = os.environ.get("ORG_ACTIVATION_CODE", "")
 ORG_SCOPED_COLLECTIONS = [
     "recipes", "weekly_plan", "dept_assignments", "inventory_items",
     "day_closures", "dept_machines", "dept_objectives", "favorites",
-    "pizzeria_sessions", "pastry_deliveries", "lab_warehouse",
+    "pizzeria_sessions", "pastry_deliveries", "lab_warehouse", "operator_pins",
 ]
 
 

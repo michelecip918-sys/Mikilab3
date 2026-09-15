@@ -516,7 +516,7 @@ def _pin_expiry_status(d: dict):
 
 @api_router.get("/operator-pins")
 async def operator_pin_list(admin: dict = Depends(require_admin)):
-    docs = await db.operator_pins.find({}, {"_id": 0, "hash": 0}).sort("name", 1).to_list(200)
+    docs = await db.operator_pins.find({"organization_id": _org_id(admin)}, {"_id": 0, "hash": 0}).sort("name", 1).to_list(200)
     out = []
     for d in docs:
         d.setdefault("level", "novizio")
@@ -541,20 +541,22 @@ async def operator_pin_set(body: OperatorPinSet, admin: dict = Depends(require_a
     if not nm or not p:
         raise HTTPException(status_code=400, detail="Nome e PIN (4 cifre) richiesti")
     ttl = int(body.ttl_hours or 0)
-    doc = {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso(), "organization_id": _org_id(admin)}
+    org = _org_id(admin)
+    key = {"name_key": nm.lower(), "organization_id": org}
+    doc = {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso(), "organization_id": org}
     if ttl in (8, 24):
         doc["expires_at"] = (datetime.now(timezone.utc) + timedelta(hours=ttl)).isoformat()
         doc["ttl_hours"] = ttl
     else:
         # PIN permanente: azzera eventuale scadenza precedente.
-        await db.operator_pins.update_one({"name_key": nm.lower()}, {"$unset": {"expires_at": "", "ttl_hours": "", "revoked_at": ""}})
-    await db.operator_pins.update_one({"name_key": nm.lower()}, {"$set": doc}, upsert=True)
+        await db.operator_pins.update_one(key, {"$unset": {"expires_at": "", "ttl_hours": "", "revoked_at": ""}})
+    await db.operator_pins.update_one(key, {"$set": doc}, upsert=True)
     return {"ok": True, "expires_at": doc.get("expires_at")}
 
 
 @api_router.delete("/operator-pins/{name}")
 async def operator_pin_del(name: str, admin: dict = Depends(require_admin)):
-    await db.operator_pins.delete_one({"name_key": (name or "").strip().lower()})
+    await db.operator_pins.delete_one({"name_key": (name or "").strip().lower(), "organization_id": _org_id(admin)})
     return {"ok": True}
 
 
@@ -567,7 +569,7 @@ async def operator_pin_level(name: str, body: OperatorLevelSet, admin: dict = De
     lvl = (body.level or "novizio").strip().lower()
     if lvl not in _OP_LEVELS:
         lvl = "novizio"
-    await db.operator_pins.update_one({"name_key": (name or "").strip().lower()}, {"$set": {"level": lvl, "updated_at": now_iso()}})
+    await db.operator_pins.update_one({"name_key": (name or "").strip().lower(), "organization_id": _org_id(admin)}, {"$set": {"level": lvl, "updated_at": now_iso()}})
     return {"ok": True, "level": lvl}
 
 
@@ -582,12 +584,13 @@ async def operator_pin_renew(name: str, body: OperatorPinRenew, admin: dict = De
     if ttl not in (8, 24):
         ttl = 8
     key = (name or "").strip().lower()
-    d = await db.operator_pins.find_one({"name_key": key}, {"_id": 0})
+    org = _org_id(admin)
+    d = await db.operator_pins.find_one({"name_key": key, "organization_id": org}, {"_id": 0})
     if not d:
         raise HTTPException(status_code=404, detail="PIN non trovato")
     new_exp = (datetime.now(timezone.utc) + timedelta(hours=ttl)).isoformat()
     await db.operator_pins.update_one(
-        {"name_key": key},
+        {"name_key": key, "organization_id": org},
         {"$set": {"active": True, "expires_at": new_exp, "ttl_hours": ttl, "updated_at": now_iso()}, "$unset": {"revoked_at": ""}},
     )
     return {"ok": True, "expires_at": new_exp, "ttl_hours": ttl}
