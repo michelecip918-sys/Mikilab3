@@ -5360,3 +5360,12 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Test end-to-end iteration_248: 3/3 flussi PASS, backend 200 su board/history/capo-move/parse, nessuna regressione.
 - File: `backend/server.py` (/worker/board, /ai/savings/history), `frontend/src/components/console/OperatorStatusBoard.jsx` (nuovo), `frontend/src/components/CreditSavingsBadge.jsx` (storico), `frontend/src/components/VoiceDelegation.jsx` (mic→move), `frontend/src/components/console/SalaSitor.jsx` (mount plancia), `frontend/src/lib/api.js` (workerBoard, savingsHistory).
 - Note pre-esistenti (non parte di questi task): il tour Sitor può sovrapporsi ai modali su schermi piccoli; la lingua a volte torna EN dopo il login (da iteration_247).
+
+---
+## Changelog — 15 Set 2026 (Filtro Plancia · Assegna one-tap · Storico espandibile · Tour vs Modali) — COMPLETATO
+- **Filtro reparto Plancia**: chip Tutti + per reparto in `OperatorStatusBoard.jsx`; filtra le righe e ricalcola i totali liberi/occupati.
+- **Assegna one-tap**: nuovo `POST /api/worker/assign-next` (assegna all'operatore il prossimo step pendente, imposta busy+ETA, ricalcola cascata). Pulsante 'Assegna' su ogni operatore libero (non bloccato dal Capo) con toast di esito.
+- **Storico Risparmio espandibile**: nel `CreditSavingsBadge` toggle `savings-history-toggle` che apre il dettaglio mensile (mese/percentuale/chiamate ottimizzate). Visibile con ≥2 mesi di dati (con 1 mese resta nascosto, atteso).
+- **Tour vs Modali**: `LabTour` e `SitorTour` si mettono in pausa quando è aperto un modale marcato `data-tour-suppress` (MutationObserver); VoiceDelegation marcato. Risolve la sovrapposizione del tour "Ciao, sono Sitor" sui modali.
+- Test end-to-end iteration_249: 4/4 PASS, backend 100%, nessuna regressione. Tour sparisce all'apertura del modale e ricompare alla chiusura.
+- File: `backend/server.py` (/worker/assign-next), `frontend/src/components/console/OperatorStatusBoard.jsx` (filtro+assegna), `frontend/src/components/CreditSavingsBadge.jsx` (storico espandibile), `frontend/src/components/LabTour.jsx` + `console/SitorTour.jsx` (suppress), `frontend/src/components/VoiceDelegation.jsx` (data-tour-suppress), `frontend/src/lib/api.js` (assignNext).
