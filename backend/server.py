@@ -4176,6 +4176,26 @@ async def _worker_states_map(org: Optional[str] = None) -> dict:
     return {(d.get("name") or "").lower(): d for d in docs}
 
 
+async def _today_shift_start(org: Optional[str], today_ab: str) -> Optional[str]:
+    """Orario di inizio turno di OGGI = primo lotto pianificato del giorno nel piano settimanale."""
+    try:
+        wp = None
+        if org:
+            wp = await db.weekly_plan.find_one({"organization_id": org}, {"_id": 0})
+        if not wp:
+            wp = await db.weekly_plan.find_one({}, {"_id": 0})
+        days = (wp or {}).get("days") or {}
+        day = days.get(today_ab) or {}
+        starts = []
+        for b in (day.get("batches") or []):
+            s = (b.get("start") or "").strip()
+            if re.match(r"^([01]?\d|2[0-3]):[0-5]\d$", s):
+                starts.append(s)
+        return min(starts) if starts else None
+    except Exception:
+        return None
+
+
 async def _set_worker_state(org: str, name: str, **fields):
     if not name:
         return
@@ -4495,6 +4515,7 @@ async def worker_board(org: str = Depends(effective_org)):
     _DOW = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"]
     today_ab = _DOW[datetime.now(timezone.utc).weekday()]
     _TODAY_TOKENS = {"oggi", "ogg", "today", "tod", "heute", "heu", "hoy", "aujourd'hui", "auj", "امروز", "اليوم", today_ab}
+    shift_start = await _today_shift_start(org, today_ab)
 
     def _on_shift(days):
         # Nessun dato turno → presente. Un token "oggi" o il giorno corrente → in turno.
@@ -4546,6 +4567,7 @@ async def worker_board(org: str = Depends(effective_org)):
             "days": days, "on_shift_today": on_shift,
             "late": late, "over_min": over,
             "task_id": tid, "step_order": st.get("step_order"),
+            "shift_start": shift_start if on_shift else None,
         })
         seen.add(w["name"].lower())
     # Operatori con stato ma non nel pool del turno (es. spostati dal Capo a mano)
@@ -4653,6 +4675,112 @@ async def worker_assign_step(body: AssignStepReq, org: str = Depends(effective_o
     return {"assigned": True, "task_title": task.get("title"),
             "instruction": target.get("instruction"), "eta_min": target.get("eta_min"),
             "message": f"{op} → {target.get('instruction','')[:60]}"}
+
+
+class ReassignReq(BaseModel):
+    operator: str = Field(..., max_length=60)
+
+
+@api_router.post("/worker/reassign")
+async def worker_reassign_late(body: ReassignReq, org: str = Depends(effective_org)):
+    """RIASSEGNA RITARDI: il Capo sposta ISTANTANEAMENTE il compito di un operatore (tipicamente
+    in ritardo) al prossimo collega libero. Libera l'operatore e ricalcola le ETA a cascata."""
+    op = (body.operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    st = (await _worker_states_map(org)).get(op.lower(), {})
+    tid, order = st.get("task_id"), st.get("step_order")
+    if not tid:
+        raise HTTPException(status_code=404, detail="L'operatore non ha un compito attivo")
+    task = await db.team_tasks.find_one({"id": tid}, {"_id": 0})
+    if not task:
+        raise HTTPException(status_code=404, detail="Task non trovato")
+    steps = task.get("steps") or []
+    target = next((s for s in steps if int(s.get("order") or 0) == int(order or -1)), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Passo non trovato")
+    # libera l'operatore in ritardo e passa il compito al prossimo libero (escludendolo)
+    await _set_worker_state(org, op, status="free", task_id=None, step_order=None)
+    await _reassign_step(org, task, target, exclude=[op])
+    steps = _recompute_task_eta(steps)
+    await db.team_tasks.update_one({"id": task["id"]}, {"$set": {"steps": steps}})
+    new_asg = target.get("assignee")
+    return {"reassigned": True, "from": op, "to": new_asg,
+            "instruction": target.get("instruction"),
+            "message": f"{op} → {new_asg or '—'}"}
+
+
+def _parse_dt(s):
+    try:
+        return datetime.fromisoformat(str(s).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+@api_router.get("/worker/late-alerts")
+async def worker_late_alerts(org: str = Depends(effective_org)):
+    """NOTIFICA DIREZIONE: operatori che hanno superato la stima ORA. Registra ogni nuovo
+    sforamento nello storico ritardi e invia una notifica push alla Direzione (una volta)."""
+    board = (await worker_board(org=org))["board"]
+    now = datetime.now(timezone.utc)
+    day = now.strftime("%Y-%m-%d")
+    alerts = []
+    for b in board:
+        if not b.get("late") or b.get("status") != "busy":
+            continue
+        aid = f"{b['name']}|{b.get('task_id')}|{day}"
+        alerts.append({"id": aid, "operator": b["name"], "position": b.get("position"),
+                       "task": b.get("task"), "over_min": b.get("over_min"), "eta_min": b.get("eta_min")})
+        existing = await db.delay_events.find_one({"alert_id": aid})
+        if not existing:
+            # Nuovo ritardo → storico + notifica alla Direzione (push + storico allarmi deck)
+            await db.delay_events.insert_one({
+                "alert_id": aid, "organization_id": org, "operator": b["name"],
+                "position": b.get("position") or "", "task": b.get("task") or "",
+                "task_id": b.get("task_id"), "over_min": int(b.get("over_min") or 0),
+                "eta_min": int(b.get("eta_min") or 0), "day": day, "ts": now.isoformat(),
+            })
+            try:
+                await db.deck_alarm_history.insert_one({
+                    "ts": now.isoformat(), "day": day, "hm": now.strftime("%H:%M"),
+                    "kind": "delay", "stations": [b.get("position") or b["name"]],
+                    "departments": [], "text": f"{b['name']} in ritardo (+{b.get('over_min')}′) su «{(b.get('task') or '')[:40]}»",
+                    "heartbeat": None, "score": None,
+                })
+                admins = await db.users.find(
+                    {"$or": [{"role": "admin"}, {"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}]},
+                    {"_id": 0, "user_id": 1}).to_list(50)
+                ids = [a["user_id"] for a in admins]
+                if ids:
+                    _, priv = await _get_vapid()
+                    subs = await db.push_subs.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(100)
+                    payload = {"title": "MikiLab · Ritardo in produzione",
+                               "body": f"{b['name']} è oltre la stima di {b.get('over_min')}′ su «{(b.get('task') or '')[:40]}».",
+                               "tag": "worker-late"}
+                    for s in subs:
+                        await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+            except Exception:
+                logger.exception("late-alert notify error")
+        else:
+            await db.delay_events.update_one({"alert_id": aid}, {"$max": {"over_min": int(b.get("over_min") or 0)}})
+    return {"alerts": alerts}
+
+
+@api_router.get("/worker/delays/history")
+async def worker_delays_history(days: int = 7, org: str = Depends(effective_org)):
+    """STORICO RITARDI: ritardi degli ultimi N giorni aggregati per operatore (colli di bottiglia)."""
+    days = max(1, min(int(days or 7), 60))
+    since = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+    docs = await db.delay_events.find({"organization_id": org, "day": {"$gte": since}}, {"_id": 0}).to_list(2000)
+    agg = {}
+    for d in docs:
+        nm = d.get("operator") or "?"
+        a = agg.setdefault(nm, {"operator": nm, "position": d.get("position") or "", "count": 0, "total_over": 0, "max_over": 0})
+        a["count"] += 1
+        a["total_over"] += int(d.get("over_min") or 0)
+        a["max_over"] = max(a["max_over"], int(d.get("over_min") or 0))
+    ranking = sorted(agg.values(), key=lambda x: (x["count"], x["total_over"]), reverse=True)
+    return {"days": days, "since": since, "total_events": len(docs), "ranking": ranking}
 
 
 class CapoMoveReq(BaseModel):

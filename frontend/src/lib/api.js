@@ -601,6 +601,9 @@ export const delegationApi = {
   assignNext: (operator) => api.post(`/worker/assign-next`, { operator }).then((r) => r.data),
   pendingSteps: () => api.get(`/worker/pending-steps`).then((r) => r.data),
   assignStep: (operator, task_id, step_order) => api.post(`/worker/assign-step`, { operator, task_id, step_order }).then((r) => r.data),
+  reassign: (operator) => api.post(`/worker/reassign`, { operator }).then((r) => r.data),
+  lateAlerts: () => api.get(`/worker/late-alerts`).then((r) => r.data).catch(() => ({ alerts: [] })),
+  delaysHistory: (days = 7) => cachedGet(`worker_delays_${days}`, () => api.get(`/worker/delays/history`, { params: { days } }).then((r) => r.data), { ranking: [], total_events: 0 }),
   capoMove: (operator, dept = "", role = "", task = "") => api.post(`/worker/capo-move`, { operator, dept, role, task }).then((r) => r.data),
 };
 

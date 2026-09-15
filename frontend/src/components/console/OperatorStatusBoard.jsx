@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Users, Clock3, Lock, CircleDot, Plus, AlertTriangle, CalendarClock, X, ListChecks } from "lucide-react";
+import { Users, Clock3, Lock, CircleDot, Plus, AlertTriangle, CalendarClock, X, ListChecks, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import { delegationApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -16,6 +16,8 @@ export default function OperatorStatusBoard() {
   const [picker, setPicker] = useState(null); // { operator }
   const [pending, setPending] = useState([]);
   const [loadingSteps, setLoadingSteps] = useState(false);
+  const [histOpen, setHistOpen] = useState(false);
+  const [hist, setHist] = useState(null);
 
   const load = () => delegationApi.workerBoard().then((d) => setData(d)).catch(() => {});
 
@@ -71,6 +73,26 @@ export default function OperatorStatusBoard() {
     }
     setPicker(null);
     await load();
+  };
+
+  const reassign = async (name) => {
+    setAssigning(name);
+    try {
+      const r = await delegationApi.reassign(name);
+      toast.success(tri(`Compito passato a ${r.to || "prossimo libero"}`, `Aufgabe an ${r.to} übergeben`, `Task handed to ${r.to || "next free"}`, `Tarea pasada a ${r.to}`, `Tâche transmise à ${r.to}`, `وظیفه به ${r.to} داده شد`));
+      await load();
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || tri("Riassegnazione non riuscita", "Fehlgeschlagen", "Reassign failed", "Fallo", "Échec", "خطا"));
+    }
+    setAssigning("");
+  };
+
+  const toggleHist = async () => {
+    const nv = !histOpen;
+    setHistOpen(nv);
+    if (nv && !hist) {
+      try { setHist(await delegationApi.delaysHistory(7)); } catch { setHist({ ranking: [], total_events: 0 }); }
+    }
   };
 
   return (
@@ -129,6 +151,11 @@ export default function OperatorStatusBoard() {
                         <CalendarClock className="w-2.5 h-2.5" /> {tri("Più tardi", "Später", "Later", "Más tarde", "Plus tard", "بعداً")}{o.days && o.days.length ? ` · ${o.days.join(" ")}` : ""}
                       </span>
                     )}
+                    {!off && o.shift_start && (
+                      <span data-testid={`board-shift-start-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/25 rounded px-1.5 py-0.5">
+                        <Clock3 className="w-2.5 h-2.5" /> {tri("dalle", "ab", "from", "desde", "dès", "از")} {o.shift_start}
+                      </span>
+                    )}
                     {o.late && (
                       <span data-testid={`board-late-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-black uppercase tracking-wide text-[#e5484d] bg-[#e5484d]/12 border border-[#e5484d]/40 rounded px-1.5 py-0.5">
                         <AlertTriangle className="w-2.5 h-2.5" /> +{o.over_min}′ {tri("oltre stima", "über Plan", "over ETA", "sobre ETA", "hors délai", "فراتر از برآورد")}
@@ -144,9 +171,17 @@ export default function OperatorStatusBoard() {
                   </p>
                 </div>
                 {busy && o.eta_min ? (
-                  <span data-testid={`board-eta-${i}`} className={`shrink-0 inline-flex items-center gap-1 text-[11px] font-bold rounded-full px-2.5 py-1 ${o.late ? "text-[#e5484d] bg-[#e5484d]/10" : "text-[#c9a24a] bg-[#c9a24a]/10"}`}>
-                    <Clock3 className="w-3 h-3" /> ~{o.eta_min}′
-                  </span>
+                  <div className="shrink-0 flex items-center gap-1.5">
+                    <span data-testid={`board-eta-${i}`} className={`inline-flex items-center gap-1 text-[11px] font-bold rounded-full px-2.5 py-1 ${o.late ? "text-[#e5484d] bg-[#e5484d]/10" : "text-[#c9a24a] bg-[#c9a24a]/10"}`}>
+                      <Clock3 className="w-3 h-3" /> ~{o.eta_min}′
+                    </span>
+                    {o.late && !o.locked_by_capo && (
+                      <button data-testid={`board-reassign-${i}`} onClick={() => reassign(o.name)} disabled={assigning === o.name}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-[#e5484d] bg-[#e5484d]/10 hover:bg-[#e5484d]/22 border border-[#e5484d]/40 rounded-full px-2.5 py-1 disabled:opacity-50 active:scale-95 transition-all">
+                        <RefreshCw className="w-3 h-3" /> {assigning === o.name ? "…" : tri("Riassegna", "Neu zuweisen", "Reassign", "Reasignar", "Réassigner", "واگذاری مجدد")}
+                      </button>
+                    )}
+                  </div>
                 ) : (!busy && !o.locked_by_capo && !off ? (
                   <div className="shrink-0 flex items-center gap-1">
                     <button data-testid={`board-assign-${i}`} onClick={() => assignNext(o.name)} disabled={assigning === o.name}
@@ -164,6 +199,33 @@ export default function OperatorStatusBoard() {
           })}
         </div>
       )}
+
+      <div className="mt-3 pt-3 border-t border-[#8a97a6]/15">
+        <button data-testid="delays-history-toggle" onClick={toggleHist} className="w-full flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[#64748B] hover:text-[#8a97a6]">
+          <AlertTriangle className="w-3 h-3 text-[#e5484d]" />
+          {tri("Storico ritardi · 7 giorni", "Verspätungen · 7 Tage", "Delay history · 7 days", "Historial retrasos · 7 días", "Historique retards · 7 jours", "تاریخچه تأخیر · ۷ روز")}
+          <span className="ml-auto text-[#3E9C93]">{histOpen ? tri("nascondi", "verbergen", "hide", "ocultar", "cacher", "پنهان") : tri("mostra", "zeigen", "show", "mostrar", "afficher", "نمایش")}</span>
+        </button>
+        {histOpen && (
+          <div data-testid="delays-history" className="mt-2.5">
+            {!hist || (hist.ranking || []).length === 0 ? (
+              <p className="text-[11px] text-[#64748B] text-center py-3">{tri("Nessun ritardo negli ultimi 7 giorni.", "Keine Verspätungen.", "No delays in the last 7 days.", "Sin retrasos.", "Aucun retard.", "بدون تأخیر.")}</p>
+            ) : (
+              <div className="space-y-1.5">
+                {(hist.ranking || []).slice(0, 6).map((r, k) => (
+                  <div key={r.operator + k} data-testid={`delays-row-${k}`} className="flex items-center gap-2 text-[11px] rounded-lg bg-[#0b0f19]/60 border border-[#1e293b] px-2.5 py-1.5">
+                    <span className={`w-5 h-5 rounded-full text-[10px] font-black flex items-center justify-center shrink-0 ${k === 0 ? "bg-[#e5484d] text-white" : "bg-[#8a97a6]/20 text-[#cbd5e1]"}`}>{k + 1}</span>
+                    <span className="text-[#cbd5e1] font-bold truncate">{r.operator}</span>
+                    {r.position && <span className="text-[9px] text-[#64748B]">· {r.position}</span>}
+                    <span className="ml-auto text-[#e5484d] font-bold">{r.count}× {tri("ritardi", "Versp.", "delays", "retrasos", "retards", "تأخیر")}</span>
+                    <span className="text-[#94A3B8]">+{r.total_over}′</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       {picker && (
         <div data-testid="assign-picker" data-tour-suppress="true" className="fixed inset-0 z-[85] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPicker(null)}>

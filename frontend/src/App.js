@@ -53,6 +53,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { playDeckAlarm } from "@/lib/uiSounds";
 import { playTTS } from "@/lib/tts";
 import { DeckAlarmBar } from "@/components/DeckAlarmBar";
+import LateNotifier from "@/components/LateNotifier";
 import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen, Sun, Moon } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
@@ -477,6 +478,7 @@ export default function App() {
               </div>
 
               <DeckAlarmBar tri={tri} refreshKey={deckMood} />
+              {user && user.role === "admin" && <LateNotifier />}
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
