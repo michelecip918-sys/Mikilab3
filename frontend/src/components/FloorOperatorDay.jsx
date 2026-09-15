@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
-import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound, BookOpen } from "lucide-react";
+import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound, BookOpen, Headphones } from "lucide-react";
 import { toast } from "sonner";
 import { deusApi, floorApi, deptApi, productionApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";

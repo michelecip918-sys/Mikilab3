@@ -5256,9 +5256,15 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Verifica reale (curl)**: chiusura lun (200 baguette, 30 avanzate; 150 pane) → food-cost 23.6%, margine €470; suggerimento Baguette 200→170, Pane 150; 1 correzione salvata in memoria; memoria diretta salvata; storico OK; autoplan continua a generare con la memoria attiva.
 - Meteo: campo inserito a mano dal Capo (scelta utente). Non toccato nulla di funzionante.
 
-### PROSSIMI BLOCCHI (concordati con l'utente, in ordine)
-- **Blocco C**: Hands-free cuffie (bottone "Cuffie" in produzione, ascolto continuo "Sitor…", risposta vocale). Verifica manuale su telefono.
-- **Blocco D**: Rifinitura grafica + avatar 3D Sitor/Capo.
+### PROSSIMO BLOCCO (concordato)
+- **Blocco D**: Rifinitura grafica (gerarchia colori #3E9C93 solo azioni primarie, più spazio tra sezioni, titoli/sottotitoli uniformi, feedback pressione bottoni) + avatar 3D Sitor/Capo più eleganti (stessa somiglianza) in DeskScene/AvatarWorld3D.
+
+---
+## Changelog — 15 Set 2026 (BLOCCO C · Cuffie hands-free + avvisi vocali)
+- **Cuffie hands-free (Blocco C)**: nuovo `HeadphonesMode.jsx` (overlay ascolto continuo Web Speech API, wake word "Sitor", stato Ascolto/Penso/Parlo). Pulsante `floor-headphones-btn` ben visibile in produzione (FloorOperatorDay). Le domande vanno a `/api/lab/ask` (rinominato brand → "Sitor", risponde in ≤2 frasi) e la risposta è letta con la voce unica di Sitor (playTTS). Intento locale "segna N pezzi [di prodotto]" → registra produzione senza toccare lo schermo. NB: il riconoscimento vocale continuo NON è testabile headless → provalo sul telefono; overlay apri/chiudi verificato PASS dal QA.
+- **Avvisi consegne vocali**: `deliveries/organize` legge a voce gli avvisi (ordini in ritardo / prodotti non nel piano) via playTTS, così il Capo li sente prima di caricare.
+- **FIX critico** (trovato+risolto dal QA): mancava l'import dell'icona `Headphones` in FloorOperatorDay → crashava il floor. Ora importata, floor OK.
+- **QA iteration_244**: Consegne PASS end-to-end, Chiusura PASS (food-cost 26.7%, suggerimento Baguette→38), Cuffie PASS (apertura/chiusura overlay), logger produzione PASS. Suggerimenti nel Piano e Memoria in Ricetta: non verificati in UI dal QA per un limite del test-harness (HoloPanel toggle), MA nessun bug nel codice e dati confermati via curl (plan-suggestions ritorna lun/mar). Regressione OK.
 
 ---
 ## Changelog — 15 Set 2026 (BLOCCO B · Consegne + 3 collegamenti)
