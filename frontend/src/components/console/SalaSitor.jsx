@@ -12,6 +12,8 @@ import MikeSuggestions from "@/components/console/MikeSuggestions";
 import MikeAlerts from "@/components/MikeAlerts";
 import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
 import SitorShiftDraft from "@/components/console/SitorShiftDraft";
+import VoiceDelegation from "@/components/VoiceDelegation";
+import CreditSavingsBadge from "@/components/CreditSavingsBadge";
 
 // SALA SITOR — l'UNICO luogo d'incontro tra il Capo e Sitor (Dio dell'Arte Bianca).
 // Qui il Capo scrive, detta, allega foto/email, dà ordini e riceve tutto: risposte,
@@ -32,6 +34,7 @@ export default function SalaSitor() {
   const [queue, setQueue] = useState([]);
   const [counts, setCounts] = useState({ total: 0, pending: 0, by_sector: {} });
   const [bond, setBond] = useState(null);
+  const [delegateOpen, setDelegateOpen] = useState(false);
   const recogRef = useRef(null);
   const listRef = useRef(null);
 
@@ -179,6 +182,10 @@ export default function SalaSitor() {
             <p className="text-[11px] text-[#94A3B8]">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
             {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#a6b1bc] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
           </div>
+          <button data-testid="sitor-delegate-btn" onClick={() => setDelegateOpen(true)} title={tri("Delega vocale o comando diretto («Sposta Sara ai forni»)", "Sprachdelegation", "Voice delegation", "Delegación por voz", "Délégation vocale", "واگذاری صوتی")}
+            className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3E9C93]/12 border border-[#3E9C93]/40 text-[#3E9C93] text-xs font-bold hover:bg-[#3E9C93]/22 active:scale-95">
+            <Mic className="w-3.5 h-3.5" /> {tri("Delega Vocale", "Sprachdelegation", "Voice Delegation", "Delegación", "Délégation", "واگذاری")}
+          </button>
           <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
             className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/30 text-[#8a97a6] text-xs font-bold hover:bg-[#8a97a6]/20 active:scale-95 disabled:opacity-50">
             {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
@@ -188,6 +195,9 @@ export default function SalaSitor() {
             <Trash2 className="w-3.5 h-3.5" /> {tri("Nuova conversazione", "Neues Gespräch", "New chat", "Nueva conversación", "Nouvelle conversation", "گفتگوی جدید")}
           </button>
         </div>
+
+        {/* Badge risparmio crediti — sempre visibile per la Direzione */}
+        <CreditSavingsBadge />
 
         {/* Conversazione */}
         <div ref={listRef} data-testid="sitor-chat" className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3 space-y-2 min-h-[120px] max-h-72 overflow-y-auto">
@@ -308,6 +318,7 @@ export default function SalaSitor() {
           <MikeAlerts />
         </div>
       </div>
+      {delegateOpen && <VoiceDelegation onClose={() => setDelegateOpen(false)} />}
     </div>
   );
 }
