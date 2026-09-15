@@ -14,6 +14,7 @@ import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
 import SitorShiftDraft from "@/components/console/SitorShiftDraft";
 import VoiceDelegation from "@/components/VoiceDelegation";
 import CreditSavingsBadge from "@/components/CreditSavingsBadge";
+import OperatorStatusBoard from "@/components/console/OperatorStatusBoard";
 
 // SALA SITOR — l'UNICO luogo d'incontro tra il Capo e Sitor (Dio dell'Arte Bianca).
 // Qui il Capo scrive, detta, allega foto/email, dà ordini e riceve tutto: risposte,
@@ -198,6 +199,9 @@ export default function SalaSitor() {
 
         {/* Badge risparmio crediti — sempre visibile per la Direzione */}
         <CreditSavingsBadge />
+
+        {/* Plancia live dello stato operatori */}
+        <OperatorStatusBoard />
 
         {/* Conversazione */}
         <div ref={listRef} data-testid="sitor-chat" className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3 space-y-2 min-h-[120px] max-h-72 overflow-y-auto">

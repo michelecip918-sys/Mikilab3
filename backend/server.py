@@ -4470,6 +4470,55 @@ async def worker_states_list(org: str = Depends(effective_org)):
     return {"states": list(states.values())}
 
 
+@api_router.get("/worker/board")
+async def worker_board(org: str = Depends(effective_org)):
+    """PLANCIA STATO OPERATORI: elenco di TUTTI gli operatori del turno con stato
+    libero/occupato, compito corrente e tempo stimato (ETA). Unisce il pool del piano turni
+    allo stato persistente + il titolo del task attivo."""
+    pool = await _worker_pool(org)
+    states = await _worker_states_map(org)
+    # Mappa dei task attivi per titolo/ETA
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    task_by_id = {t.get("id"): t for t in tasks}
+    board = []
+    seen = set()
+    for w in pool:
+        st = states.get(w["name"].lower(), {})
+        status = st.get("status", "free")
+        task_title, eta = None, st.get("eta_min")
+        tid = st.get("task_id")
+        if tid and tid in task_by_id:
+            t = task_by_id[tid]
+            task_title = t.get("title")
+            step = next((s for s in (t.get("steps") or []) if int(s.get("order") or 0) == int(st.get("step_order") or -1)), None)
+            if step:
+                task_title = step.get("instruction") or task_title
+                eta = step.get("eta_min", eta)
+        elif st.get("task"):
+            task_title = st.get("task")
+        board.append({
+            "name": w["name"], "position": w.get("position") or "",
+            "aura": w.get("aura"), "status": status,
+            "locked_by_capo": bool(st.get("locked_by_capo")),
+            "task": task_title, "dept": st.get("dept"),
+            "eta_min": eta, "updated_at": st.get("updated_at"),
+        })
+        seen.add(w["name"].lower())
+    # Operatori con stato ma non nel pool del turno (es. spostati dal Capo a mano)
+    for k, st in states.items():
+        if k in seen:
+            continue
+        board.append({
+            "name": st.get("name"), "position": st.get("dept") or "",
+            "aura": None, "status": st.get("status", "free"),
+            "locked_by_capo": bool(st.get("locked_by_capo")),
+            "task": st.get("task"), "dept": st.get("dept"),
+            "eta_min": st.get("eta_min"), "updated_at": st.get("updated_at"),
+        })
+    busy = sum(1 for b in board if b["status"] == "busy")
+    return {"board": board, "totals": {"total": len(board), "busy": busy, "free": len(board) - busy}}
+
+
 class CapoMoveReq(BaseModel):
     operator: str = Field(..., max_length=60)
     dept: Optional[str] = ""
@@ -5276,6 +5325,23 @@ async def ai_savings():
         "saved_units": saved_units, "saved_pct": saved_pct,
         "optimized_calls": fast + cache,
     }
+
+
+@api_router.get("/ai/savings/history")
+async def ai_savings_history(months: int = 6):
+    """Storico mensile del risparmio crediti (ultimi N mesi) per la Direzione."""
+    months = max(1, min(int(months or 6), 24))
+    docs = await db.ai_usage.find({}, {"_id": 0}).sort("month", -1).to_list(months)
+    UNIT_BRAIN, UNIT_FAST = 1.0, 0.08
+    out = []
+    for d in sorted(docs, key=lambda x: x.get("month", "")):
+        fast = int(d.get("fast_calls", 0)); brain = int(d.get("brain_calls", 0)); cache = int(d.get("cache_hits", 0))
+        saved = round(fast * (UNIT_BRAIN - UNIT_FAST) + cache * UNIT_FAST, 2)
+        total_if_brain = (fast + cache + brain) * UNIT_BRAIN
+        pct = round((saved / total_if_brain) * 100) if total_if_brain else 0
+        out.append({"month": d.get("month"), "saved_units": saved, "saved_pct": pct,
+                    "optimized_calls": fast + cache})
+    return {"history": out}
 
 
 # ---------------------------------------------------------------------------

@@ -26,6 +26,7 @@ export default function VoiceDelegation({ onClose }) {
   const [done, setDone] = useState(null);
   const [moved, setMoved] = useState(null);
   const recRef = useRef(null);
+  const moveHandlerRef = useRef(null);
 
   const toggleMic = useCallback(() => {
     if (listening) { try { recRef.current?.stop(); } catch { /* */ } setListening(false); return; }
@@ -38,7 +39,13 @@ export default function VoiceDelegation({ onClose }) {
       for (let i = 0; i < e.results.length; i++) { const r = e.results[i]; if (r.isFinal) finalTx += r[0].transcript; else interim += r[0].transcript; }
       setTranscript((finalTx + " " + interim).trim());
     };
-    rec.onend = () => { setListening(false); };
+    rec.onend = () => {
+      setListening(false);
+      // COMANDO VOCE REALE: se il Capo ha dettato uno spostamento, eseguilo subito a mani
+      // libere (senza dover premere Analizza). Gli altri ordini restano da confermare.
+      const said = (finalTx || "").trim();
+      if (said && moveHandlerRef.current) { moveHandlerRef.current(said); }
+    };
     rec.onerror = () => { setListening(false); };
     recRef.current = rec;
     try { rec.start(); setListening(true); } catch { /* gesto utente */ }
@@ -64,6 +71,9 @@ export default function VoiceDelegation({ onClose }) {
     }
     return true;
   }, [lang, tri]);
+
+  // Il microfono usa sempre l'ultima versione di tryCapoMove (comando vocale reale).
+  useEffect(() => { moveHandlerRef.current = tryCapoMove; }, [tryCapoMove]);
 
   const analyze = useCallback(async () => {
     const t = transcript.trim();
@@ -142,7 +152,7 @@ export default function VoiceDelegation({ onClose }) {
                 {listening && <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-[#D95200]/50 animate-ping" />}
                 <span className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 ${listening ? "bg-[#D95200] border-[#D95200] text-[#030712]" : "bg-[#0b0f19] border-[#2A3B49] text-[#D95200]"}`}><Mic className="w-8 h-8" /></span>
               </button>
-              <p className="mt-2 text-[11px] text-[#7E8A93]">{listening ? tri("Sto ascoltando…", "Ich höre zu…", "Listening…", "Escuchando…", "J'écoute…", "در حال شنیدن…") : tri("Tocca e parla (o scrivi sotto)", "Tippen & sprechen", "Tap & speak (or type)", "Toca y habla", "Touche et parle", "بزن و صحبت کن")}</p>
+              <p className="mt-2 text-[11px] text-[#7E8A93]">{listening ? tri("Sto ascoltando…", "Ich höre zu…", "Listening…", "Escuchando…", "J'écoute…", "در حال شنیدن…") : tri("Tocca e parla: «Sposta Sara ai forni» parte subito", "Tippen & sprechen: «Verschiebe Sara zu den Öfen»", "Tap & speak: «Move Sara to the ovens» runs instantly", "Toca y habla: «Mueve a Sara a los hornos»", "Touche et parle : «Déplace Sara vers les fours»", "بزن و بگو: «سارا را به فرها منتقل کن»")}</p>
             </div>
             <textarea
               data-testid="delegation-transcript" value={transcript} onChange={(e) => setTranscript(e.target.value)} rows={2}

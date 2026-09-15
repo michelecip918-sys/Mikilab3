@@ -133,6 +133,7 @@ export const labAskApi = {
 // Badge risparmio crediti (Direzione): modello economico + cache.
 export const aiApi = {
   savings: () => cachedGet("ai_savings", () => api.get(`/ai/savings`).then((r) => r.data), { fast_calls: 0, brain_calls: 0, cache_hits: 0, saved_units: 0, saved_pct: 0, optimized_calls: 0 }),
+  savingsHistory: (months = 6) => cachedGet(`ai_savings_history_${months}`, () => api.get(`/ai/savings/history`, { params: { months } }).then((r) => r.data), { history: [] }),
 };
 
 export const deliveriesApi = {
@@ -596,6 +597,7 @@ export const delegationApi = {
     throw e;
   }),
   workerStates: () => cachedGet("worker_states", () => api.get(`/worker/states`).then((r) => r.data), { states: [] }),
+  workerBoard: () => cachedGet("worker_board", () => api.get(`/worker/board`).then((r) => r.data), { board: [], totals: { total: 0, busy: 0, free: 0 } }),
   capoMove: (operator, dept = "", role = "", task = "") => api.post(`/worker/capo-move`, { operator, dept, role, task }).then((r) => r.data),
 };
 
