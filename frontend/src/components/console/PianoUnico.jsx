@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2, Save, Users } from "lucide-react";
+import { Plus, Trash2, Wand2, CalendarClock, Clock3, GanttChartSquare, Volume2, Printer, Check, Loader2, Save, Users, GraduationCap, X } from "lucide-react";
 import { recipesApi, mikeApi, weeklyApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
@@ -41,7 +41,7 @@ const Section = ({ icon: Ic, title, accent, testid, children }) => (
 );
 
 // Dettaglio di UN giorno: turni della squadra, calendario modificabile, orari a ritroso e timeline.
-function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch, onTeamDel }) {
+function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch, onTeamDel, onCourse }) {
   const batches = data.batches || [];
   const team = data.team || [];
   const teamNames = team.map((t) => t.name).filter(Boolean);
@@ -151,6 +151,9 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                   className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
                 />
                 <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
+                <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#3E9C93] hover:bg-[#3E9C93]/10">
+                  <GraduationCap className="w-3.5 h-3.5" />
+                </button>
                 <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -249,6 +252,22 @@ export default function PianoUnico({ activity: activityProp }) {
   const [saving, setSaving] = useState(false);
   const [savedInfo, setSavedInfo] = useState(null);
   const [chosenLabel, setChosenLabel] = useState("");
+  const [courseModal, setCourseModal] = useState(null); // {name, loading, course, err}
+  const openBatchCourse = async (productName) => {
+    const nm = (productName || "").trim();
+    if (!nm) return;
+    const match = recipes.find((r) => (r.name || "").trim().toLowerCase() === nm.toLowerCase())
+      || recipes.find((r) => (r.name || "").trim().toLowerCase().includes(nm.toLowerCase()));
+    if (!match) { toast.error(tri("Ricetta non trovata nel ricettario.", "Rezept nicht gefunden.", "Recipe not found.", "Receta no encontrada.", "Recette introuvable.", "دستور یافت نشد.")); return; }
+    setCourseModal({ name: match.name, loading: true, course: null, err: "" });
+    try {
+      const d = await recipesApi.course(match.id, lang);
+      if (d && d.course && (d.course.phases || []).length) setCourseModal({ name: match.name, loading: false, course: d.course, err: "" });
+      else setCourseModal({ name: match.name, loading: false, course: null, err: tri("Corso non disponibile, riprova.", "Kurs nicht verfügbar.", "Course unavailable.", "Curso no disponible.", "Cours indisponible.", "دوره در دسترس نیست.") });
+    } catch {
+      setCourseModal({ name: match.name, loading: false, course: null, err: tri("Corso non disponibile, riprova.", "Kurs nicht verfügbar.", "Course unavailable.", "Curso no disponible.", "Cours indisponible.", "دوره در دسترس نیست.") });
+    }
+  };
 
   // Ripristino del piano settimanale salvato (sopravvive al refresh)
   useEffect(() => {
@@ -551,8 +570,53 @@ export default function PianoUnico({ activity: activityProp }) {
             </div>
 
             <div className="print-area">
-              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [], team: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} onTeamAdd={addTeam} onTeamPatch={patchTeam} onTeamDel={delTeam} />
+              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [], team: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} onTeamAdd={addTeam} onTeamPatch={patchTeam} onTeamDel={delTeam} onCourse={openBatchCourse} />
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {courseModal && (
+          <motion.div data-testid="piano-course-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={() => setCourseModal(null)}>
+            <motion.div initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }} onClick={(e) => e.stopPropagation()}
+              className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-[#3E9C93]/30 bg-[#0b0f19] p-5 space-y-3">
+              <div className="flex items-center gap-2 sticky top-0 bg-[#0b0f19] pb-2">
+                <GraduationCap className="w-5 h-5 text-[#3E9C93]" />
+                <span className="flex-1 min-w-0 text-sm font-black text-white truncate">{courseModal.name}</span>
+                <button data-testid="piano-course-close" onClick={() => setCourseModal(null)} className="p-1.5 rounded-lg text-[#94A3B8] hover:bg-white/10"><X className="w-4 h-4" /></button>
+              </div>
+              {courseModal.loading && (
+                <div data-testid="piano-course-loading" className="flex items-center gap-2 text-sm text-[#94A3B8] py-6">
+                  <Loader2 className="w-4 h-4 animate-spin text-[#3E9C93]" />
+                  {tri("Sitor sta preparando il corso… (solo la prima volta)", "Sitor bereitet den Kurs vor…", "Sitor is preparing the course… (first time only)", "Sitor prepara el curso…", "Sitor prépare le cours…", "سیتور در حال آماده‌سازی دوره…")}
+                </div>
+              )}
+              {courseModal.err && !courseModal.loading && <p className="text-sm text-[#b06e78] py-4">{courseModal.err}</p>}
+              {courseModal.course && !courseModal.loading && (
+                <div className="space-y-3">
+                  {courseModal.course.intro && <p className="text-sm text-[#AEB8BF] leading-relaxed italic">{courseModal.course.intro}</p>}
+                  <ol className="space-y-3">
+                    {(courseModal.course.phases || []).map((p, i) => (
+                      <li key={i} data-testid={`piano-course-phase-${i}`} className="flex gap-3">
+                        <span className="shrink-0 w-6 h-6 rounded-full bg-[#3E9C93] text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
+                        <div className="min-w-0">
+                          <p className="text-sm font-bold text-[#e4eff8]">{p.name}</p>
+                          <p className="text-sm text-[#AEB8BF] leading-relaxed mt-0.5">{p.detail}</p>
+                        </div>
+                      </li>
+                    ))}
+                  </ol>
+                  {(courseModal.course.tips || []).length > 0 && (
+                    <div className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3">
+                      <p className="text-[11px] font-black uppercase tracking-wide text-[#8a97a6] mb-1.5">{tri("Consigli del maestro", "Tipps vom Meister", "Master's tips", "Consejos del maestro", "Conseils du maître", "توصیه‌های استاد")}</p>
+                      <ul className="space-y-1">{courseModal.course.tips.map((tp, i) => (<li key={i} className="text-sm text-[#AEB8BF] leading-relaxed flex gap-2"><span className="text-[#3E9C93]">•</span><span>{tp}</span></li>))}</ul>
+                    </div>
+                  )}
+                </div>
+              )}
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -10,7 +10,7 @@ import ScaleDialog from "@/components/ScaleDialog";
 import PrintHeader from "@/components/PrintHeader";
 import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
-import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
+import { playTTS, stopTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import RecipeTimeline from "@/components/RecipeTimeline";
 import { TattooSignature } from "@/components/TattooSignature";
@@ -32,6 +32,17 @@ import {
 export default function RecipeList({ collectionName, heroImage, heroTitle, heroSubtitle, emptyText, readOnly = false, heroPosition, extraHeader, deptScoped = false, hideHero = false }) {
   const [scale, setScale] = useState({});
   const [recipes, setRecipes] = useState([]);
+  const [importing, setImporting] = useState(false);
+  const doImportCatalog = async () => {
+    setImporting(true);
+    try {
+      const r = await recipesApi.importCatalog();
+      toast.success(triM(`Catalogo importato: ${r.imported} ricette`, `Katalog importiert: ${r.imported} Rezepte`, `Catalog imported: ${r.imported} recipes`, `Catálogo importado: ${r.imported} recetas`));
+      await load();
+    } catch {
+      toast.error(triM("Importazione non riuscita, riprova.", "Import fehlgeschlagen.", "Import failed, try again.", "Importación fallida."));
+    } finally { setImporting(false); }
+  };
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -287,6 +298,13 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </button>
               )}
             </>
+          )}
+          {collectionName === "mikilab" && user && (
+            <button data-testid="import-catalog-btn" onClick={doImportCatalog} disabled={importing}
+              className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+              {importing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wheat className="w-5 h-5" />}
+              {importing ? triM("Importazione…", "Import…", "Importing…", "Importando…") : triM("Importa il catalogo di Michele", "Michele-Katalog importieren", "Import Michele's catalog", "Importar el catálogo de Michele")}
+            </button>
           )}
         </div>
       ) : (() => {
@@ -665,10 +683,12 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const [course, setCourse] = useState(null);
   const [courseLoading, setCourseLoading] = useState(false);
   const [courseErr, setCourseErr] = useState("");
-  useEffect(() => { setCourse(null); setShowCourse(false); setCourseErr(""); /* eslint-disable-next-line */ }, [r.id, lang]);
+  const [courseSpeaking, setCourseSpeaking] = useState(false);
+  useEffect(() => { setCourse(null); setShowCourse(false); setCourseErr(""); setCourseSpeaking(false); stopTTS(); /* eslint-disable-next-line */ }, [r.id, lang]);
   const openCourse = async () => {
     const next = !showCourse;
     setShowCourse(next);
+    if (!next) { stopTTS(); setCourseSpeaking(false); }
     if (next && !course && !courseLoading) {
       setCourseLoading(true); setCourseErr("");
       try {
@@ -679,6 +699,23 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         setCourseErr(tri("Corso non disponibile, riprova tra poco.", "Kurs nicht verfügbar, gleich erneut versuchen.", "Course unavailable, try again shortly."));
       } finally { setCourseLoading(false); }
     }
+  };
+  const speakCourse = () => {
+    if (courseSpeaking) { stopTTS(); setCourseSpeaking(false); return; }
+    if (!course) return;
+    const segs = [];
+    const lbl = tri("Fase", "Phase", "Step", "Fase", "Étape", "مرحله");
+    if (course.intro) segs.push(course.intro);
+    (course.phases || []).forEach((p, i) => segs.push(`${lbl} ${i + 1}. ${p.name}. ${p.detail}`));
+    if ((course.tips || []).length) segs.push(tri("Consigli del maestro.", "Tipps vom Meister.", "Master's tips.", "Consejos del maestro.", "Conseils du maître.", "توصیه‌های استاد.") + " " + course.tips.join(". "));
+    setCourseSpeaking(true);
+    let idx = 0;
+    const next = () => {
+      if (idx >= segs.length) { setCourseSpeaking(false); return; }
+      const seg = segs[idx]; idx += 1;
+      playTTS(seg, { lang, onEnded: next });
+    };
+    next();
   };
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const flourG = Number(r.flour_grams) || 0;
@@ -847,7 +884,13 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           <div data-testid={`recipe-course-panel-${r.id}`} className="rounded-2xl border border-[#3E9C93]/30 bg-[#3E9C93]/5 p-4 space-y-3">
             <div className="flex items-center gap-2">
               <GraduationCap className="w-4 h-4 text-[#3E9C93]" />
-              <span className="text-xs font-black uppercase tracking-wide text-[#3E9C93]">{tri("Corso passo-passo con Sitor", "Schritt-für-Schritt-Kurs mit Sitor", "Step-by-step course with Sitor", "Curso paso a paso con Sitor")}</span>
+              <span className="text-xs font-black uppercase tracking-wide text-[#3E9C93] flex-1">{tri("Corso passo-passo con Sitor", "Schritt-für-Schritt-Kurs mit Sitor", "Step-by-step course with Sitor", "Curso paso a paso con Sitor")}</span>
+              {course && !courseLoading && (
+                <button data-testid={`course-speak-${r.id}`} onClick={speakCourse}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition-colors ${courseSpeaking ? "bg-[#3E9C93] text-white" : "bg-[#3E9C93]/15 text-[#3E9C93] hover:bg-[#3E9C93]/25"}`}>
+                  <Volume2 className="w-3.5 h-3.5" /> {courseSpeaking ? tri("Ferma", "Stopp", "Stop", "Parar", "Stop", "توقف") : tri("Ascolta", "Anhören", "Listen", "Escuchar", "Écouter", "گوش")}
+                </button>
+              )}
             </div>
             {courseLoading && (
               <div data-testid="recipe-course-loading" className="flex items-center gap-2 text-sm text-[#7E8A93] py-4">

@@ -41,7 +41,7 @@ async def auth_register(payload: RegisterReq, request: Request, response: Respon
     try:
         await db.users.insert_one({
             "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
-            "picture": "", "role": await _role_for_new_user(), "auth_provider": "email",
+            "picture": "", "role": ("admin" if _new_org_id != ORG_DEFAULT else await _role_for_new_user()), "auth_provider": "email",
             "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
             "email_verified": not verify_enabled, "organization_id": _new_org_id,
         })
@@ -234,7 +234,7 @@ async def production_pin_set(body: ProductionPinSet, admin: dict = Depends(requi
         raise HTTPException(status_code=400, detail="Il PIN deve avere 4 cifre")
     await db.app_meta.update_one(
         {"_key": "production_pin"},
-        {"$set": {"_key": "production_pin", "hash": _hash_pw(p), "updated_at": now_iso()}},
+        {"$set": {"_key": "production_pin", "hash": _hash_pw(p), "updated_at": now_iso(), "organization_id": _org_id(admin)}},
         upsert=True,
     )
     return {"ok": True, "updated_at": now_iso()}
@@ -324,6 +324,7 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
     # Livello OPERAIO: PIN personale operatore (per-persona, con livello) apre SOLO la Produzione.
     op_name = None
     op_level = None
+    token_org = ORG_DEFAULT
     if not ok and p:
         async for d in db.operator_pins.find({"active": True}, {"_id": 0}):
             if _check_pw(p, d.get("hash", "")):
@@ -331,6 +332,7 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
                 level = "operator"
                 op_name = d.get("name")
                 op_level = d.get("level") or "novizio"
+                token_org = d.get("organization_id") or ORG_DEFAULT
                 break
     # PIN SEZIONE OPERAI scelto dal Capo (condiviso): apre la Produzione in modo generico.
     if not ok and p:
@@ -339,14 +341,15 @@ async def admin_gate_verify(body: AdminGateVerify, request: Request, response: R
             ok = True
             level = "operator"
             op_level = "novizio"
+            token_org = pdoc.get("organization_id") or ORG_DEFAULT
     await _log_access(level or "master", _client_ip(request), bool(ok), op_name)
     if ok:
-        # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato.
+        # Scadenza cancello configurabile dal Capo (giorni). Rilascia il cookie firmato (legato all'azienda).
         cfg = await db.app_meta.find_one({"_key": "gate_config"}, {"_id": 0})
         ttl_days = int((cfg or {}).get("ttl_days") or (GATE_TTL // 86400))
         ttl_days = max(1, min(ttl_days, 365))
         ttl = ttl_days * 86400
-        response.set_cookie(GATE_COOKIE, issue_gate_token(ttl), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
+        response.set_cookie(GATE_COOKIE, issue_gate_token(ttl, token_org), httponly=True, secure=True, samesite="lax", path="/", max_age=ttl)
     return {"ok": bool(ok), "level": level, "name": op_name, "operator_level": op_level}
 
 
@@ -538,7 +541,7 @@ async def operator_pin_set(body: OperatorPinSet, admin: dict = Depends(require_a
     if not nm or not p:
         raise HTTPException(status_code=400, detail="Nome e PIN (4 cifre) richiesti")
     ttl = int(body.ttl_hours or 0)
-    doc = {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso()}
+    doc = {"name_key": nm.lower(), "name": nm, "hash": _hash_pw(p), "level": lvl, "active": True, "updated_at": now_iso(), "organization_id": _org_id(admin)}
     if ttl in (8, 24):
         doc["expires_at"] = (datetime.now(timezone.utc) + timedelta(hours=ttl)).isoformat()
         doc["ttl_hours"] = ttl

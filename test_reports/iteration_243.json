@@ -1,0 +1,41 @@
+{
+  "summary": "Frontend E2E validation of MikiLab Pro iter 243 focused on 4 new features. FEATURE 4 (Corso shortcut da Piano) — PASS: entered as Direzione (gate 198505 -> onboarding-opt-panificio + confirm -> capo-gate-login -> admin@mikilab.de/Mikilab2026!), opened panel-piano-unico, iterated over piano-day-tab-* until finding a day with lots (piano-day-tab-lun had 1 batch). Clicked piano-batch-course-lun-0, piano-course-modal opened, piano-course-loading was visible briefly then 8 piano-course-phase-* elements rendered (Baguette a Lievito Madre course, cached). piano-course-close correctly dismissed the modal. FEATURE 2 (Corso a voce) — PASS: opened panel-ricette, searched 'Anima Integrale', clicked recipe-row-<id>, then course-recipe-<id>. recipe-course-panel appeared with course-speak-<id> initially reading 'Listen'/'Ascolta'. First click -> label toggled to 'Stop'/'Ferma'. Second click -> label reverted to 'Listen'/'Ascolta'. No console errors. FEATURE 1 (Importa il catalogo di Michele su nuova azienda) — BLOCKED (frontend gate bug, backend endpoint works): registered a new capo via auth-switch -> auth-name/email/password/confirm + auth-activation-code=198505 -> auth-submit. Registration succeeded (session created, top-right shows 'Test Capo'), but the new user is returned by /api/auth/me with role='user' instead of 'admin', so App.js line 482-498 keeps showing the 'CAPO ACCESS RESERVED' gate and NEVER renders master-console / panel-ricette. Result: import-catalog-btn is unreachable through the UI even though the /api/recipes/import-catalog endpoint itself is validated. REGRESSION — PASS: no blocking console errors (only benign 401 gate_required calls that happen before the gate cookie is set); piano weekly, day tabs and Capo Ricettario stay navigable through the full session.",
+  "backend_issues": {
+    "critical": [
+      {
+        "endpoint": "POST /api/auth/register (with activation_code)",
+        "issue": "New user created via activation-code path is stored with role='user' instead of role='admin'. Root cause: auth.py line 44 always calls _role_for_new_user() which only promotes the very first user in the whole DB. Owners of a NEW organization (activation-code branch) never become admin of their own org, so the Capo/Master UI is unreachable. Fix: promote to admin when the activation-code branch fired, e.g. \"role\": \"admin\" if _new_org_id != ORG_DEFAULT else await _role_for_new_user().",
+        "priority": "CRITICAL"
+      }
+    ],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [
+      {
+        "flow": "Registrazione nuova azienda -> Ricettario -> import-catalog-btn",
+        "issue": "Because new company owner has role='user' (see backend bug above), App.js gates the master-console behind the 'Sign in as Capo' screen even though the user is already authenticated (name visible in header). As a consequence data-testid='import-catalog-btn' is never rendered for the person who is supposed to use it, and Feature 1 cannot be completed via the UI.",
+        "affected_selectors": ["capo-gate-login", "master-console", "panel-ricette", "import-catalog-btn", "personal-empty-archive"]
+      }
+    ],
+    "design_issues": []
+  },
+  "test_report_links": [],
+  "action_items": [
+    "Fix backend/auth.py auth_register: when the activation-code branch is taken (new organization), set role='admin' for the newly-created user so they can access their own Capo console. Suggested one-liner: 'role': 'admin' if _new_org_id != ORG_DEFAULT else await _role_for_new_user()."
+  ],
+  "critical_code_review_comments": [
+    "auth.py register (line 42-47): role assignment ignores the activation-code branch. Only the very first user in the whole DB is promoted to admin; every activation-code Capo is stuck as role='user'. This is a multi-tenant regression that fully blocks Feature 1 through the UI.",
+    "App.js line 482: master console visibility keyed only on user.role === 'admin'. Consider also unlocking when the user is the OWNER of their organization (e.g. user.is_owner or user.organization_id !== 'org_default' AND session matches). Currently a legitimate new Capo sees 'CAPO ACCESS RESERVED' even after a successful login.",
+    "RecipeList.jsx line 303: import-catalog-btn is inside the 'personal-empty-archive' block, which is only rendered inside the mikilab collection tab AND when list is empty. Since the new-capo can't reach the Ricettario at all (see above), the import feature is effectively dead-code from the UI perspective until the role bug is fixed."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "n/a (delegated to main agent per request)", "frontend": "Feature 4 PASS, Feature 2 PASS, Feature 1 BLOCKED by backend role bug (backend /api/recipes/import-catalog already validated via curl per request). Regression PASS."},
+  "test_credentials": "Gate Master 198505; Admin admin@mikilab.de / Mikilab2026!; Codice attivazione nuova azienda 198505 (regoistrazione UI ora funzionalmente rotta a causa del bug ruolo)",
+  "seed_data_creation": "Registered temporary test capo test+<timestamp>@mail.it (Test Capo, password Test1234!, activation 198505) — created several such accounts during retries; may want to purge db.users where email LIKE 'test+17894%'.",
+  "retest_needed": true,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Direzione entry path (verified in this iter): PublicGate -> [data-testid=public-enter-capo] -> keypad admin-key-1,9,8,5,0,5 -> onboarding-opt-panificio + onboarding-confirm (only on fresh session) -> [data-testid=capo-gate-login] -> auth-email admin@mikilab.de / auth-password Mikilab2026! / auth-submit. Note: 'Sign in as Capo' button has data-testid='capo-gate-login' (NOT 'public-enter-capo' as previously assumed). AuthScreen tab bar (auth-tab-login/auth-tab-register) is only rendered when inviteToken is present; the plain flow uses [data-testid='auth-switch'] to toggle between login and register modes. Register form fields: auth-name, auth-email, auth-password, auth-confirm (required — was missed on first try), auth-activation-code. Once the role bug is fixed, Feature 1 verification is: after auth-submit -> reach panel-ricette (default lands there? NO — check: Ricettario tab must be clicked) -> import-catalog-btn visible inside personal-empty-archive -> click -> wait ~15-30s for import -> ~149 recipe-row-* appear.",
+  "rca of the issue": "backend/auth.py auth_register never promotes activation-code users to admin; frontend App.js only shows master console (and therefore Ricettario + import-catalog-btn) when user.role === 'admin'. Combined effect: new Capo registered with the valid activation code is authenticated but cannot access any Capo functionality, defeating Feature 1 end-to-end even though the underlying /api/recipes/import-catalog endpoint is correct. Reproduction: fresh session -> gate 198505 -> capo-gate-login -> auth-switch to register -> fill name/email/password/confirm + activation 198505 -> submit -> /api/auth/me returns role='user'. Mitigation (1-line): auth.py line 44, replace 'role': await _role_for_new_user() with 'role': 'admin' if _new_org_id != ORG_DEFAULT else await _role_for_new_user()."
+}

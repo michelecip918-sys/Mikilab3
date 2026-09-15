@@ -113,10 +113,10 @@ GATE_TTL = int(os.environ.get("GATE_TTL_SECONDS", str(30 * 86400)))
 _GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/")
 
 
-def issue_gate_token(ttl_seconds: int = None) -> str:
+def issue_gate_token(ttl_seconds: int = None, org: str = "org_default") -> str:
     ttl = int(ttl_seconds or GATE_TTL)
     now = datetime.now(timezone.utc)
-    return _jwt.encode({"purpose": "gate", "iat": now, "exp": now + timedelta(seconds=ttl), "iss": "mikilab-gate"}, GATE_SECRET, algorithm="HS256")
+    return _jwt.encode({"purpose": "gate", "org": org or "org_default", "iat": now, "exp": now + timedelta(seconds=ttl), "iss": "mikilab-gate"}, GATE_SECRET, algorithm="HS256")
 
 
 def _gate_valid(token: str) -> bool:
@@ -125,6 +125,19 @@ def _gate_valid(token: str) -> bool:
         return claims.get("purpose") == "gate"
     except Exception:
         return False
+
+
+def gate_org(request) -> str:
+    """Azienda legata al cookie del cancello (PIN operatore/produzione). Default: org_default."""
+    try:
+        tok = request.cookies.get(GATE_COOKIE)
+        if tok:
+            claims = _jwt.decode(tok, GATE_SECRET, algorithms=["HS256"], options={"require": ["exp", "purpose"]})
+            if claims.get("purpose") == "gate":
+                return claims.get("org") or "org_default"
+    except Exception:
+        pass
+    return "org_default"
 
 
 class GateMiddleware(BaseHTTPMiddleware):
@@ -726,6 +739,14 @@ ORG_SCOPED_COLLECTIONS = [
 def _org_id(user: Optional[dict]) -> str:
     """organization_id dell'utente richiedente (default: org_default)."""
     return (user or {}).get("organization_id") or ORG_DEFAULT
+
+
+async def effective_org(request: Request, user: Optional[dict] = Depends(optional_user)) -> str:
+    """Azienda effettiva della richiesta: dalla sessione se loggato (Capo), altrimenti
+    dal cookie del cancello (PIN operatore/produzione legato all'azienda)."""
+    if user:
+        return _org_id(user)
+    return gate_org(request)
 
 
 async def _migrate_organizations():
@@ -1619,6 +1640,36 @@ async def pizzeria_session_delete(sid: str, admin: dict = Depends(require_admin)
     return {"ok": True}
 
 
+@api_router.post("/recipes/import-catalog")
+async def import_starter_catalog(admin: dict = Depends(current_user)):
+    """Catalogo di partenza: importa nel ricettario dell'azienda le ricette Master di Michele
+    (org_default). Non duplica quelle già presenti (per nome). Non tocca org_default.
+    Accessibile a qualsiasi utente loggato: agisce SOLO sulla propria azienda."""
+    org = _org_id(admin)
+    if org == ORG_DEFAULT:
+        return {"ok": True, "imported": 0, "already_owner": True}
+    have = set()
+    async for d in db.recipes.find({"collection_name": "mikilab", "organization_id": org}, {"_id": 0, "name": 1}):
+        if d.get("name"):
+            have.add(d["name"].strip().lower())
+    src = await db.recipes.find({"collection_name": "mikilab", "organization_id": ORG_DEFAULT, "hidden": {"$ne": True}}, {"_id": 0}).to_list(3000)
+    n = 0
+    for r in src:
+        if (r.get("name") or "").strip().lower() in have:
+            continue
+        r = dict(r)
+        r.pop("id", None)
+        r["id"] = str(uuid.uuid4())
+        r["organization_id"] = org
+        r["collection_name"] = "mikilab"
+        r["hidden"] = False
+        r["created_at"] = now_iso()
+        r["updated_at"] = now_iso()
+        await db.recipes.insert_one(r)
+        n += 1
+    return {"ok": True, "imported": n}
+
+
 # ============================================================================
 # CORSO RICETTE (Sitor) — spiegazione estesa passo-passo, generata UNA sola
 # volta per ricetta+lingua e salvata in modo permanente in `recipe_courses`.
@@ -1883,9 +1934,8 @@ def _dept_machines_merged(dept: str, doc: dict | None) -> list:
 
 
 @api_router.get("/depts/machines/overview")
-async def dept_machines_overview(user: Optional[dict] = Depends(optional_user)):
+async def dept_machines_overview(org: str = Depends(effective_org)):
     """Vista d'insieme per il Capo: stato macchine di TUTTI i reparti (isolato per azienda)."""
-    org = _org_id(user)
     result = []
     for k, v in DEPARTMENTS.items():
         doc = await db.dept_machines.find_one({"dept": k, "organization_id": org}, {"_id": 0})
@@ -1901,20 +1951,19 @@ async def dept_machines_overview(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.get("/depts/{dept}/machines")
-async def dept_machines_get(dept: str, user: Optional[dict] = Depends(optional_user)):
+async def dept_machines_get(dept: str, org: str = Depends(effective_org)):
     if dept not in DEPARTMENTS:
         raise HTTPException(404, "Reparto non trovato")
-    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": _org_id(user)}, {"_id": 0})
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     return {"dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
             "machines": _dept_machines_merged(dept, doc),
             "updated_at": (doc or {}).get("updated_at"), "operator": (doc or {}).get("operator", "")}
 
 
 @api_router.post("/depts/{dept}/machines")
-async def dept_machines_set(dept: str, body: DeptMachinesReq, user: Optional[dict] = Depends(optional_user)):
+async def dept_machines_set(dept: str, body: DeptMachinesReq, org: str = Depends(effective_org)):
     if dept not in DEPARTMENTS:
         raise HTTPException(404, "Reparto non trovato")
-    org = _org_id(user)
     valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]}
     clean = []
     for m in body.machines:
@@ -1937,9 +1986,9 @@ class DeptAssignReq(BaseModel):
     note: str = ""
 
 @api_router.get("/depts/assignment")
-async def depts_assignment(user: Optional[dict] = Depends(optional_user)):
+async def depts_assignment(org: str = Depends(effective_org)):
     today = now_iso()[:10]
-    docs = await db.dept_assignments.find({"date": today, "organization_id": _org_id(user)}, {"_id": 0}).sort("at", -1).to_list(50)
+    docs = await db.dept_assignments.find({"date": today, "organization_id": org}, {"_id": 0}).sort("at", -1).to_list(50)
     return {"date": today, "assignments": docs}
 
 @api_router.post("/depts/assign")
@@ -2033,11 +2082,10 @@ async def depts_objective_set(body: ObjectiveReq, admin: dict = Depends(require_
     return {"ok": True, "objective": doc}
 
 @api_router.post("/depts/progress")
-async def depts_progress(body: ProgressReq, user: Optional[dict] = Depends(optional_user)):
+async def depts_progress(body: ProgressReq, org: str = Depends(effective_org)):
     if body.dept not in DEPARTMENTS:
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
-    org = _org_id(user)
     entry = {"pin": (body.pin or "??")[-4:], "operator": (body.operator or "").strip() or "Operaio",
              "qty": int(body.qty or 0), "note": (body.note or "").strip(), "at": now_iso()}
     await db.dept_objectives.update_one(
@@ -2050,9 +2098,9 @@ async def depts_progress(body: ProgressReq, user: Optional[dict] = Depends(optio
     return {"ok": True, "objective": doc}
 
 @api_router.get("/depts/board")
-async def depts_board(user: Optional[dict] = Depends(optional_user)):
+async def depts_board(org: str = Depends(effective_org)):
     today = now_iso()[:10]
-    docs = await db.dept_objectives.find({"date": today, "organization_id": _org_id(user)}, {"_id": 0}).to_list(50)
+    docs = await db.dept_objectives.find({"date": today, "organization_id": org}, {"_id": 0}).to_list(50)
     return {"date": today, "objectives": docs}
 
 

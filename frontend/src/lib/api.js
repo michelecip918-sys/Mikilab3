@@ -97,6 +97,7 @@ export const recipesApi = {
   generate: (data) => api.post(`/recipes/generate`, data).then((r) => r.data),
   complete: (recipe_name, recipe_id, image_url) => api.post(`/recipe/complete`, { recipe_name, recipe_id, image_url }).then((r) => r.data),
   course: (id, lang = "it") => api.get(`/recipes/${id}/course`, { params: { lang } }).then((r) => r.data),
+  importCatalog: () => api.post(`/recipes/import-catalog`).then((r) => r.data),
 };
 
 export const ovenApi = {
