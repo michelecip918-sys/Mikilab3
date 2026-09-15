@@ -15,6 +15,7 @@ export default function SitorTour({ variant = "capo" }) {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [muted, setMuted] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const mutedRef = useRef(false);
   const isFloor = variant === "floor";
   const doneKey = isFloor ? FLOOR_DONE_KEY : DONE_KEY;
@@ -86,7 +87,16 @@ export default function SitorTour({ variant = "capo" }) {
     return () => window.removeEventListener(evt, h);
   }, [start, isFloor]);
 
-  if (!open) return null;
+  // Non sovrapporsi ai modali aperti (marcati con data-tour-suppress).
+  useEffect(() => {
+    const check = () => setModalOpen(!!document.querySelector("[data-tour-suppress]"));
+    check();
+    const mo = new MutationObserver(check);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }, []);
+
+  if (!open || modalOpen) return null;
   const s = STEPS[step];
   const last = step === STEPS.length - 1;
 

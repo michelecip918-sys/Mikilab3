@@ -4519,6 +4519,40 @@ async def worker_board(org: str = Depends(effective_org)):
     return {"board": board, "totals": {"total": len(board), "busy": busy, "free": len(board) - busy}}
 
 
+class AssignNextReq(BaseModel):
+    operator: str = Field(..., max_length=60)
+
+
+@api_router.post("/worker/assign-next")
+async def worker_assign_next(body: AssignNextReq, org: str = Depends(effective_org)):
+    """Assegna all'operatore il PROSSIMO passo pendente tra i task attivi (uno-tap dalla
+    plancia). Cerca prima un passo senza assegnatario, poi il primo non completato."""
+    op = (body.operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", 1).to_list(300)
+    chosen_task, chosen_step = None, None
+    for t in tasks:
+        steps = sorted(t.get("steps") or [], key=lambda x: int(x.get("order") or 0))
+        cand = next((s for s in steps if not s.get("done") and not (s.get("assignee") or "").strip()), None)
+        if not cand:
+            cand = next((s for s in steps if not s.get("done")), None)
+        if cand:
+            chosen_task, chosen_step = t, cand
+            break
+    if not chosen_task:
+        return {"assigned": False, "message": "Nessun compito pendente da assegnare"}
+    chosen_step["assignee"] = op
+    chosen_step["assignee_position"] = None
+    steps = _recompute_task_eta(chosen_task.get("steps") or [])
+    await db.team_tasks.update_one({"id": chosen_task["id"]}, {"$set": {"steps": steps}})
+    await _set_worker_state(org, op, status="busy", task_id=chosen_task["id"],
+                            step_order=chosen_step.get("order"), eta_min=chosen_step.get("eta_min"))
+    return {"assigned": True, "task_title": chosen_task.get("title"),
+            "instruction": chosen_step.get("instruction"), "eta_min": chosen_step.get("eta_min"),
+            "message": f"{op} → {chosen_step.get('instruction','')[:60]}"}
+
+
 class CapoMoveReq(BaseModel):
     operator: str = Field(..., max_length=60)
     dept: Optional[str] = ""

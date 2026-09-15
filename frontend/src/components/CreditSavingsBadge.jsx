@@ -13,6 +13,7 @@ export default function CreditSavingsBadge() {
   const tri = mkTri(lang);
   const [d, setD] = useState(null);
   const [hist, setHist] = useState([]);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     let alive = true;
@@ -54,9 +55,10 @@ export default function CreditSavingsBadge() {
 
       {hist.length > 1 && (
         <div data-testid="savings-history" className="mt-3 pt-3 border-t border-[#3E9C93]/15">
-          <p className="text-[10px] font-mono uppercase tracking-[0.18em] text-[#64748B] mb-2">
+          <button data-testid="savings-history-toggle" onClick={() => setOpen((v) => !v)} className="w-full flex items-center gap-1.5 mb-2 text-[10px] font-mono uppercase tracking-[0.18em] text-[#64748B] hover:text-[#8a97a6]">
             {tri("Storico mensile", "Monatsverlauf", "Monthly history", "Historial mensual", "Historique mensuel", "تاریخچه ماهانه")}
-          </p>
+            <span className="ml-auto text-[#3E9C93]">{open ? tri("nascondi", "verbergen", "hide", "ocultar", "cacher", "پنهان") : tri("dettagli", "Details", "details", "detalles", "détails", "جزئیات")}</span>
+          </button>
           <div className="flex items-end gap-2 h-16">
             {hist.map((h, i) => {
               const mm = (h.month || "").slice(5, 7);
@@ -72,6 +74,20 @@ export default function CreditSavingsBadge() {
               );
             })}
           </div>
+          {open && (
+            <div data-testid="savings-history-detail" className="mt-3 space-y-1.5">
+              {[...hist].reverse().map((h, i) => {
+                const mm = (h.month || "").slice(5, 7);
+                return (
+                  <div key={h.month || i} className="flex items-center gap-2 text-[11px] rounded-lg bg-[#0b0f19]/60 border border-[#1e293b] px-2.5 py-1.5">
+                    <span className="text-[#cbd5e1] font-bold w-14">{MONTHS[mm] || mm} {(h.month || "").slice(0, 4)}</span>
+                    <span className="text-[#3E9C93] font-black">-{h.saved_pct || 0}%</span>
+                    <span className="ml-auto text-[#94A3B8]">{h.optimized_calls || 0} {tri("ottimizz.", "opt.", "optimized", "optim.", "optim.", "بهینه")}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 

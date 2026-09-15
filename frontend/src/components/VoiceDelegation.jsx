@@ -116,7 +116,7 @@ export default function VoiceDelegation({ onClose }) {
   const K = proposal ? (KIND[proposal.kind] || KIND.generico) : null;
 
   return (
-    <div data-testid="voice-delegation" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
+    <div data-testid="voice-delegation" data-tour-suppress="true" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
         <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
           <h2 className="text-lg font-black text-white flex items-center gap-2"><Mic className="w-5 h-5 text-[#D95200]" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation (Eclipse)", "Voice Delegation (Eclipse)", "Delegación por Voz (Eclipse)", "Délégation Vocale (Eclipse)", "واگذاری صوتی (اکلیپس)")}</h2>

@@ -56,6 +56,17 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
 
   const finish = () => { clearHighlights(); if (storageKey) localStorage.setItem(storageKey, "1"); setStep(-1); onClose && onClose(); };
 
+  // Non sovrapporsi ai modali: se è aperto un modale (marcato con data-tour-suppress),
+  // il tour si mette in pausa e ricompare quando il modale si chiude.
+  const [modalOpen, setModalOpen] = useState(false);
+  useEffect(() => {
+    const check = () => setModalOpen(!!document.querySelector("[data-tour-suppress]"));
+    check();
+    const mo = new MutationObserver(check);
+    mo.observe(document.body, { childList: true, subtree: true });
+    return () => mo.disconnect();
+  }, []);
+
   // Non bloccare gli strumenti: se l'utente tocca fuori dalla card (es. uno strumento),
   // chiudi il tour lasciando passare il tap all'elemento sottostante.
   useEffect(() => {
@@ -69,7 +80,7 @@ export default function LabTour({ steps = [], storageKey, force = 0, onClose, la
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step]);
 
-  if (step < 0 || !steps.length) return null;
+  if (step < 0 || !steps.length || modalOpen) return null;
   const s = steps[step];
   const last = step === steps.length - 1;
 
