@@ -4545,6 +4545,7 @@ async def worker_board(org: str = Depends(effective_org)):
             "eta_min": eta, "updated_at": st.get("updated_at"),
             "days": days, "on_shift_today": on_shift,
             "late": late, "over_min": over,
+            "task_id": tid, "step_order": st.get("step_order"),
         })
         seen.add(w["name"].lower())
     # Operatori con stato ma non nel pool del turno (es. spostati dal Capo a mano)
@@ -4560,6 +4561,7 @@ async def worker_board(org: str = Depends(effective_org)):
             "task": st.get("task"), "dept": st.get("dept"),
             "eta_min": eta, "updated_at": st.get("updated_at"),
             "days": [], "on_shift_today": True, "late": late, "over_min": over,
+            "task_id": st.get("task_id"), "step_order": st.get("step_order"),
         })
     busy = sum(1 for b in board if b["status"] == "busy")
     on_now = sum(1 for b in board if b["on_shift_today"])

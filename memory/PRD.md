@@ -5369,3 +5369,13 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Tour vs Modali**: `LabTour` e `SitorTour` si mettono in pausa quando è aperto un modale marcato `data-tour-suppress` (MutationObserver); VoiceDelegation marcato. Risolve la sovrapposizione del tour "Ciao, sono Sitor" sui modali.
 - Test end-to-end iteration_249: 4/4 PASS, backend 100%, nessuna regressione. Tour sparisce all'apertura del modale e ricompare alla chiusura.
 - File: `backend/server.py` (/worker/assign-next), `frontend/src/components/console/OperatorStatusBoard.jsx` (filtro+assegna), `frontend/src/components/CreditSavingsBadge.jsx` (storico espandibile), `frontend/src/components/LabTour.jsx` + `console/SitorTour.jsx` (suppress), `frontend/src/components/VoiceDelegation.jsx` (data-tour-suppress), `frontend/src/lib/api.js` (assignNext).
+
+---
+## Changelog — 15 Set 2026 (Assegna Mirata · Turni Plancia · Avviso Ritardo · Lingua Coerente) — COMPLETATO
+- **Assegna Mirata**: nuovi `GET /api/worker/pending-steps` e `POST /api/worker/assign-step`; nella plancia ogni operatore libero/di-turno ha, oltre a 'Prossimo', un pulsante lista (board-assign-pick) che apre un selettore (assign-picker) con TUTTI i compiti pendenti da scegliere.
+- **Turni sulla Plancia**: `_worker_pool` raccoglie i giorni turno; `/worker/board` calcola on_shift_today (token 'oggi'/giorno corrente) e i totali on_shift/later. Operatori non di turno oggi: attenuati, badge 'PIÙ TARDI · <giorni>', 'Non in turno oggi', senza pulsanti assegna.
+- **Avviso Ritardo**: `_set_worker_state` registra started_at all'inizio del compito; la board calcola late/over_min (minuti oltre l'ETA). Riga rossa + badge 'OLTRE STIMA +N′' + contatore 'N in ritardo' in testa.
+- **Lingua Coerente**: `initialLang` in LanguageContext.jsx ora dà priorità alla scelta salvata (saved > URL > browser): la lingua resta stabile dopo il login e i reload. Verificato IT e EN senza leakage.
+- Board payload ora include task_id/step_order (parità con endpoint operatore).
+- Test end-to-end iteration_250: 4/4 PASS (backend 100%, frontend 100%); selettore Assegna Mirata verificato a schermo (12 compiti). Nessuna regressione.
+- File: `backend/server.py` (_worker_pool days, board turni/ritardo/task_id, /worker/pending-steps, /worker/assign-step, _set_worker_state started_at), `frontend/src/components/console/OperatorStatusBoard.jsx` (riscritto), `frontend/src/i18n/LanguageContext.jsx` (fix priorità lingua), `frontend/src/lib/api.js` (pendingSteps, assignStep).
