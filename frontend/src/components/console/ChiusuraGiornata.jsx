@@ -29,7 +29,16 @@ export default function ChiusuraGiornata() {
           const nm = (b.product || "").trim(); if (!nm) return;
           agg[nm] = (agg[nm] || 0) + num(b.qty);
         });
-        setLines(Object.entries(agg).map(([recipe_name, planned]) => ({ recipe_name, planned, produced: planned, leftover: 0, unit_cost: "", unit_price: "" })));
+        // Unisci i log registrati dagli operai in produzione (auto-compilazione).
+        let logs = [];
+        try { const lg = await productionApi.logList(); logs = lg.logs || []; } catch { /* */ }
+        const logMap = {};
+        logs.forEach((l) => { logMap[l.recipe_name.trim().toLowerCase()] = l; });
+        const names = new Set([...Object.keys(agg), ...logs.map((l) => l.recipe_name)]);
+        setLines([...names].filter(Boolean).map((recipe_name) => {
+          const lg = logMap[recipe_name.trim().toLowerCase()];
+          return { recipe_name, planned: agg[recipe_name] || 0, produced: lg ? lg.produced : (agg[recipe_name] || 0), leftover: lg ? lg.leftover : 0, unit_cost: "", unit_price: "" };
+        }));
       } catch { setLines([]); }
       try { const s = await productionApi.planSuggestions(day); setSuggestions(s.suggestions || []); } catch { /* */ }
     })();

@@ -61,6 +61,7 @@ import PlantRadar from "@/components/PlantRadar";
 import SecurityGuardian from "@/components/SecurityGuardian";
 import PianoUnico from "@/components/console/PianoUnico";
 import ChiusuraGiornata from "@/components/console/ChiusuraGiornata";
+import ConsegneFurgoni from "@/components/console/ConsegneFurgoni";
 import CapoMachinesOverview from "@/components/console/CapoMachinesOverview";
 import { activityProfile } from "@/lib/activityProfile";
 import { HoloPanel } from "@/components/console/HoloKit";
@@ -549,6 +550,9 @@ export default function App() {
                     </HoloPanel>
                     <HoloPanel testid="panel-chiusura" accent="#3E9C93" beacon="#3E9C93" icon="✅" title={tri("Chiusura Giornata · Sitor", "Tagesabschluss · Sitor", "Day Close · Sitor", "Cierre del Día · Sitor", "Clôture du Jour · Sitor", "بستن روز · سیتور")} sub={tri("Registra prodotto e avanzato: Sitor calcola il food-cost reale, corregge il piano della settimana dopo e impara il tuo metodo.", "Erfasse Produziertes und Reste: Sitor berechnet Food-cost, korrigiert den Plan und lernt deine Methode.", "Record produced and leftover: Sitor computes the real food-cost, adjusts next week's plan and learns your method.", "Registra producido y sobrante: Sitor calcula el food-cost, ajusta el plan y aprende tu método.", "Enregistre le produit et le reste : Sitor calcule le food-cost, ajuste le plan et apprend ta méthode.", "تولید و باقی‌مانده را ثبت کن: سیتور هزینه واقعی را حساب می‌کند.")}>
                       <ChiusuraGiornata />
+                    </HoloPanel>
+                    <HoloPanel testid="panel-consegne" accent="#3E9C93" beacon="#3E9C93" icon="🚚" title={tri("Consegne & Furgoni · Sitor", "Lieferungen & Transporter · Sitor", "Deliveries & Vans · Sitor", "Entregas & Furgonetas · Sitor", "Livraisons & Camionnettes · Sitor", "تحویل و ون · سیتور")} sub={tri("Sitor organizza il carico di ogni furgone, l'ordine delle tappe e avvisa se un ordine non sarà pronto in tempo.", "Sitor organisiert Beladung, Stopps und warnt bei nicht rechtzeitigen Bestellungen.", "Sitor organizes each van's load, the stop order and warns if an order won't be ready in time.", "Sitor organiza la carga, el orden de paradas y avisa de pedidos que no estarán listos.", "Sitor organise le chargement, l'ordre des arrêts et prévient des commandes en retard.", "سیتور بارگیری، ترتیب توقف‌ها و هشدار سفارش‌های دیر را سازمان می‌دهد.")}>
+                      <ConsegneFurgoni />
                     </HoloPanel>
                     <HoloPanel testid="panel-machines-overview" accent="#3E9C93" beacon="#3E9C93" icon="🖥️" title={tri("Stato Macchine · Tutti i Reparti", "Maschinenstatus · Alle Abteilungen", "Machine Status · All Departments", "Estado de Máquinas · Todas las Áreas", "État Machines · Tous les Rayons", "وضعیت ماشین‌ها · همه بخش‌ها")} sub={tri("Vedi in tempo reale quali macchine sono collegate/attive in ogni reparto, senza entrare come operaio. Puoi anche ispezionare un reparto in sola supervisione.", "Sieh in Echtzeit, welche Maschinen in jeder Abteilung aktiv sind.", "See in real time which machines are connected/active in each department, without entering as an operator. You can also inspect a department in read-only supervision.", "Ve en tiempo real qué máquinas están activas en cada área.", "Vois en temps réel quelles machines sont actives dans chaque rayon.", "به‌صورت زنده ببین کدام ماشین‌ها در هر بخش فعال‌اند.")}>
                       <CapoMachinesOverview />

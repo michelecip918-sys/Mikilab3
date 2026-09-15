@@ -684,6 +684,13 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const [courseLoading, setCourseLoading] = useState(false);
   const [courseErr, setCourseErr] = useState("");
   const [courseSpeaking, setCourseSpeaking] = useState(false);
+  const [recMemory, setRecMemory] = useState([]);
+  useEffect(() => {
+    if (!r.id) return;
+    import("@/lib/api").then(({ productionApi }) => {
+      productionApi.memoryList(r.name || "").then((d) => setRecMemory(d.memories || [])).catch(() => setRecMemory([]));
+    });
+  }, [r.id, r.name]);
   useEffect(() => { setCourse(null); setShowCourse(false); setCourseErr(""); setCourseSpeaking(false); stopTTS(); /* eslint-disable-next-line */ }, [r.id, lang]);
   const openCourse = async () => {
     const next = !showCourse;
@@ -882,6 +889,14 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
 
         {showCourse && (
           <div data-testid={`recipe-course-panel-${r.id}`} className="rounded-2xl border border-[#3E9C93]/30 bg-[#3E9C93]/5 p-4 space-y-3">
+            {recMemory.length > 0 && (
+              <div data-testid={`recipe-memory-${r.id}`} className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3">
+                <p className="text-[11px] font-black uppercase tracking-wide text-[#a4afbb] mb-1.5">{tri("Le tue correzioni su questa ricetta (memoria di Sitor)", "Deine Korrekturen (Sitors Gedächtnis)", "Your corrections on this recipe (Sitor's memory)", "Tus correcciones (memoria de Sitor)", "Tes corrections (mémoire de Sitor)", "اصلاحات شما (حافظه سیتور)")}</p>
+                <ul className="space-y-1">
+                  {recMemory.slice(0, 6).map((m, i) => (<li key={i} className="text-[12px] text-[#94A3B8] flex gap-2"><span className="text-[#3E9C93]">•</span><span>{m.change} {m.context?.season ? `(${m.context.season}${m.context.flour_lot ? ", farina " + m.context.flour_lot : ""})` : ""}</span></li>))}
+                </ul>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <GraduationCap className="w-4 h-4 text-[#3E9C93]" />
               <span className="text-xs font-black uppercase tracking-wide text-[#3E9C93] flex-1">{tri("Corso passo-passo con Sitor", "Schritt-für-Schritt-Kurs mit Sitor", "Step-by-step course with Sitor", "Curso paso a paso con Sitor")}</span>

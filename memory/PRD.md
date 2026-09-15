@@ -5257,9 +5257,16 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Meteo: campo inserito a mano dal Capo (scelta utente). Non toccato nulla di funzionante.
 
 ### PROSSIMI BLOCCHI (concordati con l'utente, in ordine)
-- **Blocco B**: Consegne & furgoni gestiti da Sitor (carico per furgone, ordine tappe, avviso ordini non pronti). Nessuna burocrazia.
 - **Blocco C**: Hands-free cuffie (bottone "Cuffie" in produzione, ascolto continuo "Sitor…", risposta vocale). Verifica manuale su telefono.
-- **Blocco D**: Rifinitura grafica (gerarchia colori #3E9C93, spaziatura, titoli uniformi, feedback bottoni) + avatar 3D Sitor/Capo più eleganti (stessa somiglianza).
+- **Blocco D**: Rifinitura grafica + avatar 3D Sitor/Capo.
+
+---
+## Changelog — 15 Set 2026 (BLOCCO B · Consegne + 3 collegamenti)
+- **Consegne & Furgoni (Blocco B)**: `deliveries` (org-scoped) + `POST/GET/DELETE /api/deliveries` e `POST /api/deliveries/organize` (deterministico, no LLM/burocrazia): Sitor raggruppa il carico per furgone, ordina le tappe per orario di consegna e AVVISA se un prodotto non è nel piano di oggi o sarà pronto oltre l'orario di consegna (confronto start+durata vs deadline). Nuovo pannello Capo `ConsegneFurgoni.jsx`. Verificato via curl (2 tappe ordinate per deadline, carico aggregato, avvisi corretti).
+- **Chiusura da produzione**: `production_logs` + `POST /api/production/log` (operai, effective_org) e `GET /api/production/log` (Capo). Logger rapido in `FloorOperatorDay` (`floor-prod-log`): l'operaio registra prodotto/avanzato dal reparto. `ChiusuraGiornata` ora PRE-COMPILA le righe unendo piano + log degli operai → la chiusura del Capo si riempie da sola. Verificato via curl.
+- **Suggerimenti nel Piano**: `PianoUnico` carica `/api/production/plan-suggestions` e mostra in ogni scheda-giorno una striscia `piano-suggestions-<day>` con chip "prodotto → qtà" applicabili in un tap (`piano-sugg-apply-*`) che imposta/crea il lotto.
+- **Memoria in Ricetta**: nel pannello Corso di ogni ricetta (RecipeDetail) compare la sezione `recipe-memory-<id>` con le correzioni storiche del Capo per QUELLA ricetta (da `/api/sitor/memory?recipe_name=`), così Sitor mostra il metodo prima ancora di essere interrogato.
+- Verifica: backend curl end-to-end; frontend compila (0 errori). Puliti i dati di test (consegne/log).
 
 ---
 ## Changelog — 15 Set 2026 (4 miglioramenti: catalogo iniziale, corso a voce, PIN→azienda, corso dal piano)

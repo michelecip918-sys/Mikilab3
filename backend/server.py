@@ -9025,6 +9025,134 @@ async def production_day_close_history(admin: dict = Depends(require_admin)):
     return {"closures": docs}
 
 
+# --- Chiusura da produzione: gli operai registrano prodotto/avanzato dal reparto ---
+class ProductionLogReq(BaseModel):
+    date: Optional[str] = None
+    day_key: str = ""
+    recipe_name: str = ""
+    produced: float = 0
+    leftover: float = 0
+    operator: str = ""
+
+
+@api_router.post("/production/log")
+async def production_log_add(body: ProductionLogReq, org: str = Depends(effective_org)):
+    if not (body.recipe_name or "").strip():
+        raise HTTPException(status_code=400, detail="Prodotto mancante")
+    today = body.date or now_iso()[:10]
+    await db.production_logs.update_one(
+        {"organization_id": org, "date": today, "recipe_name": body.recipe_name.strip()},
+        {"$set": {"organization_id": org, "date": today, "day_key": body.day_key or "",
+                  "recipe_name": body.recipe_name.strip(), "produced": float(body.produced or 0),
+                  "leftover": float(body.leftover or 0), "operator": (body.operator or "")[:60],
+                  "updated_at": now_iso()}},
+        upsert=True)
+    return {"ok": True}
+
+
+@api_router.get("/production/log")
+async def production_log_list(date: str = "", admin: dict = Depends(require_admin)):
+    today = date or now_iso()[:10]
+    docs = await db.production_logs.find({"organization_id": _org_id(admin), "date": today}, {"_id": 0}).to_list(200)
+    return {"date": today, "logs": docs}
+
+
+# ===========================================================================
+# CONSEGNE & FURGONI (Blocco B) — Sitor organizza carico, ordine tappe e avvisi.
+# Nessuna burocrazia (no HACCP, no tracciabilità lotti). Solo organizzazione.
+# ===========================================================================
+class DeliveryItem(BaseModel):
+    product: str = ""
+    qty: float = 0
+
+class DeliveryReq(BaseModel):
+    client: str = ""
+    address: str = ""
+    deadline: str = ""        # HH:MM entro cui consegnare
+    van: str = ""             # furgone (facoltativo)
+    items: List[DeliveryItem] = []
+    note: str = ""
+
+
+def _hhmm_to_min(s: str):
+    try:
+        h, m = str(s).split(":"); return int(h) * 60 + int(m)
+    except Exception:
+        return None
+
+
+@api_router.get("/deliveries")
+async def deliveries_list(admin: dict = Depends(require_admin)):
+    today = now_iso()[:10]
+    docs = await db.deliveries.find({"organization_id": _org_id(admin), "date": today}, {"_id": 0}).to_list(200)
+    return {"date": today, "deliveries": docs}
+
+
+@api_router.post("/deliveries")
+async def delivery_create(body: DeliveryReq, admin: dict = Depends(require_admin)):
+    doc = {"id": str(uuid.uuid4()), "organization_id": _org_id(admin), "date": now_iso()[:10],
+           "client": (body.client or "")[:120], "address": (body.address or "")[:200],
+           "deadline": (body.deadline or "")[:5], "van": (body.van or "")[:40],
+           "items": [{"product": (i.product or "")[:120], "qty": float(i.qty or 0)} for i in body.items if (i.product or "").strip()],
+           "note": (body.note or "")[:400], "at": now_iso()}
+    await db.deliveries.insert_one(dict(doc))
+    doc.pop("_id", None)
+    return {"ok": True, "delivery": doc}
+
+
+@api_router.delete("/deliveries/{did}")
+async def delivery_delete(did: str, admin: dict = Depends(require_admin)):
+    await db.deliveries.delete_one({"id": did, "organization_id": _org_id(admin)})
+    return {"ok": True}
+
+
+@api_router.post("/deliveries/organize")
+async def deliveries_organize(admin: dict = Depends(require_admin)):
+    """Sitor organizza il giro: carico per furgone, ordine tappe per orario,
+    e avvisa se un ordine non sarà pronto in tempo (confronto col piano di oggi)."""
+    org = _org_id(admin)
+    today = now_iso()[:10]
+    day_key = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"][datetime.now(timezone.utc).weekday()]
+    dels = await db.deliveries.find({"organization_id": org, "date": today}, {"_id": 0}).to_list(200)
+    # Orari di pronto dei prodotti dal piano di oggi (start + durata).
+    ready = {}
+    wp = await db.weekly_plan.find_one({"organization_id": org}, {"_id": 0}) or {}
+    for b in (((wp.get("days") or {}).get(day_key) or {}).get("batches") or []):
+        nm = (b.get("product") or "").strip().lower()
+        st = _hhmm_to_min(b.get("start"))
+        if nm and st is not None:
+            end = st + int(b.get("duration_min") or 60)
+            ready[nm] = max(ready.get(nm, 0), end)
+    vans = {}
+    warnings = []
+    for d in dels:
+        van = d.get("van") or "Furgone 1"
+        vans.setdefault(van, [])
+        vans[van].append(d)
+        dl = _hhmm_to_min(d.get("deadline"))
+        for it in d.get("items", []):
+            nm = (it.get("product") or "").strip().lower()
+            r = ready.get(nm)
+            if r is None:
+                warnings.append(f"{d.get('client')}: '{it.get('product')}' non è nel piano di oggi — verifica che venga prodotto.")
+            elif dl is not None and r > dl:
+                rh = f"{r//60:02d}:{r%60:02d}"
+                warnings.append(f"{d.get('client')}: '{it.get('product')}' pronto {rh}, oltre la consegna delle {d.get('deadline')}.")
+    result = []
+    for van, ds in vans.items():
+        ds.sort(key=lambda x: (_hhmm_to_min(x.get("deadline")) if _hhmm_to_min(x.get("deadline")) is not None else 9999))
+        load = {}
+        for d in ds:
+            for it in d.get("items", []):
+                load[it["product"]] = load.get(it["product"], 0) + float(it.get("qty") or 0)
+        result.append({
+            "van": van,
+            "stops": [{"client": d.get("client"), "address": d.get("address"), "deadline": d.get("deadline"), "items": d.get("items")} for d in ds],
+            "load": [{"product": k, "qty": v} for k, v in sorted(load.items())],
+        })
+    return {"ok": True, "vans": result, "warnings": warnings, "date": today}
+
+
 @api_router.get("/production/plan-suggestions")
 async def production_plan_suggestions(day_key: str = "", admin: dict = Depends(require_admin)):
     q = {"organization_id": _org_id(admin)}

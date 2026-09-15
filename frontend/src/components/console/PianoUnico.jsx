@@ -41,7 +41,7 @@ const Section = ({ icon: Ic, title, accent, testid, children }) => (
 );
 
 // Dettaglio di UN giorno: turni della squadra, calendario modificabile, orari a ritroso e timeline.
-function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch, onTeamDel, onCourse }) {
+function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch, onTeamDel, onCourse, suggestions = [], onApplySuggestion }) {
   const batches = data.batches || [];
   const team = data.team || [];
   const teamNames = team.map((t) => t.name).filter(Boolean);
@@ -70,6 +70,19 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
 
   return (
     <div className="space-y-4">
+      {suggestions.length > 0 && (
+        <div data-testid={`piano-suggestions-${day}`} className="rounded-xl border border-[#f0c000]/30 bg-[#f0c000]/5 p-3">
+          <p className="text-[11px] font-black uppercase tracking-wide text-[#c9a24a] mb-1.5">{tri("Sitor suggerisce (da chiusura precedente)", "Sitor schlägt vor", "Sitor suggests (from last close)", "Sitor sugiere", "Sitor suggère", "پیشنهاد سیتور")}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {suggestions.map((s, i) => (
+              <button key={i} data-testid={`piano-sugg-apply-${day}-${i}`} onClick={() => onApplySuggestion(day, s.recipe_name, s.suggested_qty)}
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#3E9C93]/15 hover:bg-[#3E9C93]/30 text-[#7fd3c9] text-[12px] font-bold px-3 py-1.5 transition-colors">
+                {s.recipe_name} → {s.suggested_qty} <Check className="w-3.5 h-3.5" />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       {/* Turni del giorno — chi lavora e con quale mansione */}
       <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="#3E9C93" testid="piano-team">
         {team.length === 0 ? (
@@ -253,6 +266,27 @@ export default function PianoUnico({ activity: activityProp }) {
   const [savedInfo, setSavedInfo] = useState(null);
   const [chosenLabel, setChosenLabel] = useState("");
   const [courseModal, setCourseModal] = useState(null); // {name, loading, course, err}
+  const [suggMap, setSuggMap] = useState({}); // day_key -> [{recipe_name, suggested_qty}]
+  useEffect(() => {
+    import("@/lib/api").then(({ productionApi }) => {
+      productionApi.planSuggestions().then((r) => {
+        const m = {};
+        (r.suggestions || []).forEach((s) => { (m[s.day_key] = m[s.day_key] || []).push(s); });
+        setSuggMap(m);
+      }).catch(() => {});
+    });
+  }, []);
+  const applySuggestion = (day, recipeName, qty) => {
+    setWeek((w) => {
+      const d = w[day] || { batches: [], warnings: [], team: [] };
+      const batches = [...(d.batches || [])];
+      const idx = batches.findIndex((b) => (b.product || "").trim().toLowerCase() === recipeName.trim().toLowerCase());
+      if (idx >= 0) batches[idx] = { ...batches[idx], qty: String(qty) };
+      else batches.push({ product: recipeName, qty: String(qty), start: "06:00", duration_min: 60, line: "", assignee: "", rationale: "da chiusura" });
+      return { ...w, [day]: { ...d, batches } };
+    });
+    toast.success(`${recipeName} → ${qty}`);
+  };
   const openBatchCourse = async (productName) => {
     const nm = (productName || "").trim();
     if (!nm) return;
@@ -570,7 +604,7 @@ export default function PianoUnico({ activity: activityProp }) {
             </div>
 
             <div className="print-area">
-              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [], team: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} onTeamAdd={addTeam} onTeamPatch={patchTeam} onTeamDel={delTeam} onCourse={openBatchCourse} />
+              <DayPlan day={activeDay} data={week[activeDay] || { batches: [], warnings: [], team: [] }} tri={tri} onPatch={patchBatch} onDel={delBatch} onAdd={addBatch} onTeamAdd={addTeam} onTeamPatch={patchTeam} onTeamDel={delTeam} onCourse={openBatchCourse} suggestions={suggMap[activeDay] || []} onApplySuggestion={applySuggestion} />
             </div>
           </motion.div>
         )}

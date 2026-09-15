@@ -122,6 +122,15 @@ export const productionApi = {
   planSuggestions: (day_key = "") => api.get(`/production/plan-suggestions`, { params: { day_key } }).then((r) => r.data),
   memoryList: (recipe_name = "") => api.get(`/sitor/memory`, { params: { recipe_name } }).then((r) => r.data),
   memoryAdd: (payload) => api.post(`/sitor/memory`, payload).then((r) => r.data),
+  log: (payload) => api.post(`/production/log`, payload).then((r) => r.data),
+  logList: (date = "") => api.get(`/production/log`, { params: { date } }).then((r) => r.data),
+};
+
+export const deliveriesApi = {
+  list: () => api.get(`/deliveries`).then((r) => r.data),
+  create: (payload) => api.post(`/deliveries`, payload).then((r) => r.data),
+  remove: (id) => api.delete(`/deliveries/${id}`).then((r) => r.data),
+  organize: () => api.post(`/deliveries/organize`).then((r) => r.data),
 };
 
 export const weeklyApi = {
