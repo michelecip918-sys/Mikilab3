@@ -32,8 +32,8 @@ const fromMin = (min) => {
 };
 
 const Section = ({ icon: Ic, title, accent, testid, children }) => (
-  <div data-testid={testid} className="rounded-xl border bg-[#060A10]/70 p-4" style={{ borderColor: `${accent}33` }}>
-    <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] mb-3" style={{ color: accent }}>
+  <div data-testid={testid} className="rounded-xl border bg-[#060A10]/70 p-4 sm:p-5" style={{ borderColor: `${accent}33` }}>
+    <div className="holo-section-title" style={{ color: accent }}>
       <Ic className="w-4 h-4" /> {title}
     </div>
     {children}
@@ -69,14 +69,14 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {suggestions.length > 0 && (
-        <div data-testid={`piano-suggestions-${day}`} className="rounded-xl border border-[#f0c000]/30 bg-[#f0c000]/5 p-3">
+        <div data-testid={`piano-suggestions-${day}`} className="rounded-xl border border-[#f0c000]/30 bg-[#f0c000]/5 p-3.5">
           <p className="text-[11px] font-black uppercase tracking-wide text-[#c9a24a] mb-1.5">{tri("Sitor suggerisce (da chiusura precedente)", "Sitor schlägt vor", "Sitor suggests (from last close)", "Sitor sugiere", "Sitor suggère", "پیشنهاد سیتور")}</p>
           <div className="flex flex-wrap gap-1.5">
             {suggestions.map((s, i) => (
               <button key={i} data-testid={`piano-sugg-apply-${day}-${i}`} onClick={() => onApplySuggestion(day, s.recipe_name, s.suggested_qty)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#3E9C93]/15 hover:bg-[#3E9C93]/30 text-[#7fd3c9] text-[12px] font-bold px-3 py-1.5 transition-colors">
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#8a97a6]/15 hover:bg-[#8a97a6]/30 text-[#cbd5e1] text-[12px] font-bold px-3 py-1.5 transition-colors">
                 {s.recipe_name} → {s.suggested_qty} <Check className="w-3.5 h-3.5" />
               </button>
             ))}
@@ -84,14 +84,14 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
         </div>
       )}
       {/* Turni del giorno — chi lavora e con quale mansione */}
-      <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="#3E9C93" testid="piano-team">
+      <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="#8a97a6" testid="piano-team">
         {team.length === 0 ? (
           <p className="text-[12px] text-[#64748B] mb-2">{tri("Nessuno assegnato a questo giorno.", "Niemand zugewiesen.", "No one assigned to this day.", "Nadie asignado.", "Personne assigné.", "کسی تخصیص نیافته.")}</p>
         ) : (
           <div className="space-y-1.5 mb-2">
             {team.map((m, i) => (
               <div key={i} data-testid={`piano-team-row-${day}-${i}`} className="flex items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
-                <Users className="w-3.5 h-3.5 text-[#3E9C93] shrink-0" />
+                <Users className="w-3.5 h-3.5 text-[#8a97a6] shrink-0" />
                 <input
                   data-testid={`piano-team-name-${day}-${i}`}
                   value={m.name || ""}
@@ -103,7 +103,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                   data-testid={`piano-team-role-${day}-${i}`}
                   value={m.role || ""}
                   onChange={(e) => onTeamPatch(day, i, { role: e.target.value })}
-                  className="shrink-0 rounded-md bg-[#060A10] border border-[#3E9C93]/30 px-2 py-1 text-[11px] text-[#7fd3c9]"
+                  className="shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[11px] text-[#cbd5e1]"
                 >
                   <option value="">{tri("Mansione…", "Aufgabe…", "Role…", "Tarea…", "Rôle…", "نقش…")}</option>
                   {ROLE_OPTS.map((r) => (<option key={r} value={r}>{r}</option>))}
@@ -115,7 +115,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
             ))}
           </div>
         )}
-        <button data-testid={`piano-team-add-${day}`} onClick={() => onTeamAdd(day)} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#3E9C93] hover:text-[#7fd3c9]">
+        <button data-testid={`piano-team-add-${day}`} onClick={() => onTeamAdd(day)} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white">
           <Plus className="w-4 h-4" /> {tri("Aggiungi persona al turno", "Person zur Schicht", "Add person to shift", "Añadir persona", "Ajouter une personne", "افزودن نفر")}
         </button>
       </Section>
@@ -152,7 +152,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                       value={b.assignee || ""}
                       onChange={(e) => onPatch(day, i, { assignee: e.target.value })}
                       placeholder={tri("assegna a…", "zuweisen…", "assign to…", "asignar a…", "assigner à…", "به…")}
-                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#7fd3c9] placeholder:text-[#475569] border-b border-dashed border-[#3E9C93]/30 focus:outline-none focus:border-[#3E9C93]"
+                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#cbd5e1] placeholder:text-[#475569] border-b border-dashed border-[#8a97a6]/30 focus:outline-none focus:border-[#3E9C93]"
                     />
                   </div>
                 </div>
@@ -164,7 +164,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                   className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
                 />
                 <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
-                <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#3E9C93] hover:bg-[#3E9C93]/10">
+                <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#3E9C93] hover:bg-[#3E9C93]/10">
                   <GraduationCap className="w-3.5 h-3.5" />
                 </button>
                 <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
@@ -426,7 +426,7 @@ export default function PianoUnico({ activity: activityProp }) {
   };
 
   return (
-    <div data-testid="piano-unico" className="space-y-5">
+    <div data-testid="piano-unico" className="space-y-6 sm:space-y-8">
       {/* Banner attività: il piano cambia in base a panificio/pizzeria/pasticceria */}
       <div data-testid="piano-activity-banner" className="flex items-start gap-3 rounded-xl border p-3.5" style={{ borderColor: `${prof.accent}44`, background: `${prof.accent}12` }}>
         <span className="text-2xl shrink-0 leading-none">{prof.icon}</span>

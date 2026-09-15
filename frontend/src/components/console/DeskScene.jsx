@@ -63,7 +63,7 @@ export default function DeskScene() {
         onError={(e) => { e.currentTarget.style.display = "none"; }} />
 
       <motion.span aria-hidden data-testid="desk-sitor-glow" className="absolute rounded-full pointer-events-none"
-        style={{ right: "22%", top: "30%", width: 150, height: 150, background: "radial-gradient(circle, rgba(138,151,166,0.55), transparent 70%)" }}
+        style={{ right: "22%", top: "30%", width: 150, height: 150, background: "radial-gradient(circle, rgba(240,190,90,0.5), transparent 70%)" }}
         animate={{ scale: speaking ? [1, 1.35, 1] : [1, 1.08, 1], opacity: speaking ? [0.7, 1, 0.7] : [0.35, 0.5, 0.35] }}
         transition={{ duration: speaking ? 0.8 : 3.5, repeat: Infinity, ease: "easeInOut" }} />
 
@@ -101,7 +101,7 @@ export default function DeskScene() {
           "من و سیتور پشت یک میز: تو تصمیم می‌گیری، او اجرا می‌کند.")}</p>
         <button data-testid="desk-present-plan" onClick={presentPlan}
           className="inline-flex items-center gap-2 px-4 py-2 rounded-full font-cyber font-black text-xs text-[#04070d] active:scale-95 transition-all"
-          style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 18px rgba(138,151,166,0.4)" }}>
+          style={{ background: "linear-gradient(90deg,#3E9C93,#5cbdb2)", boxShadow: "0 0 18px rgba(62,156,147,0.45)" }}>
           <Sparkles className="w-4 h-4" /> {calOpen ? tri("Sitor ripeti il piano", "Plan wiederholen", "Repeat the plan", "Repetir el plan", "Répéter le plan", "برنامه را تکرار کن") : tri("Sitor, presenta il piano", "Sitor, zeig den Plan", "Sitor, present the plan", "Sitor, presenta el plan", "Sitor, présente le plan", "سیتور، برنامه را نشان بده")}
           {speaking ? <Volume2 className="w-4 h-4 animate-pulse" /> : null}
         </button>

@@ -244,7 +244,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             {heroTitle}
             {collectionName === "mikilab" && <span className="text-xl leading-none">🇮🇹🇩🇪</span>}
           </h1>
-          <div className="h-1 w-12 rounded-full bg-[#3E9C93] mt-1.5 mb-0.5" />
+          <div className="h-1 w-12 rounded-full bg-[#8a97a6] mt-1.5 mb-0.5" />
           {heroSubtitle ? <p className="text-white/85 text-sm mt-1">{heroSubtitle}</p> : null}
         </div>
       </div>
@@ -263,15 +263,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         <button
           data-testid="add-recipe-btn"
           onClick={() => { setEditing(null); setDialogOpen(true); }}
-          className="w-full bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
+          className="w-full bg-[#3E9C93] hover:bg-[#347f78] text-white font-semibold px-5 py-3.5 rounded-2xl shadow-md active:scale-98 transition-all flex items-center justify-center gap-2 mb-5"
         >
           <Plus className="w-5 h-5" /> {t("add_recipe")}
         </button>
       )}
 
       {collectionName === "personal" && !readOnly && (
-        <div data-testid="personal-lab-hint" className="-mt-2 mb-5 flex items-start gap-2 rounded-2xl border border-[#3E9C93]/30 bg-[#3E9C93]/8 px-3.5 py-2.5">
-          <ChefHat className="w-4 h-4 text-[#3E9C93] shrink-0 mt-0.5" />
+        <div data-testid="personal-lab-hint" className="-mt-2 mb-5 flex items-start gap-2 rounded-2xl border border-[#8a97a6]/30 bg-[#8a97a6]/8 px-3.5 py-2.5">
+          <ChefHat className="w-4 h-4 text-[#8a97a6] shrink-0 mt-0.5" />
           <p className="text-[12.5px] leading-snug text-[#2B303B] dark:text-[#cfe0ec]">
             {triM(
               "Queste sono le tue ricette da panettiere: le ritrovi nel Laboratorio → Piano di Lavoro (gruppo «Le mie ricette») per generare il piano di produzione, gli orari e le infornate.",
@@ -285,15 +285,15 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       {loading ? (
         <p className="text-center text-[#7E8A93] py-8">{t("loading")}</p>
       ) : recipes.length === 0 ? (
-        <div data-testid="personal-empty-archive" className="text-center py-12 px-6 border-2 border-dashed border-[#3E9C93]/40 rounded-3xl bg-[#3E9C93]/5">
-          <Wheat className="w-10 h-10 text-[#3E9C93] mx-auto mb-3" />
+        <div data-testid="personal-empty-archive" className="text-center py-12 px-6 border-2 border-dashed border-[#8a97a6]/40 rounded-3xl bg-[#8a97a6]/5">
+          <Wheat className="w-10 h-10 text-[#8a97a6] mx-auto mb-3" />
           <p className="text-[#3F4A54] dark:text-[#cfe0ec] font-semibold">{collectionName === "personal" ? triM("Il tuo archivio è vuoto", "Dein Archiv ist leer", "Your archive is empty", "Tu archivo está vacío") : emptyText}</p>
           {collectionName === "personal" && (
             <>
               <p className="text-[12.5px] text-[#7E8A93] mt-1.5 max-w-xs mx-auto leading-snug">{triM("Questo archivio è 100% riservato a te: nessuna ricetta di esempio, solo le tue.", "Dieses Archiv gehört zu 100% dir: keine Beispielrezepte, nur deine.", "This archive is 100% yours: no example recipes, only yours.", "Este archivo es 100% tuyo: sin recetas de ejemplo.")}</p>
               {canEdit && (
                 <button data-testid="empty-add-recipe-btn" onClick={() => { setEditing(null); setDialogOpen(true); }}
-                  className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+                  className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#347f78] text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
                   <Plus className="w-5 h-5" /> {triM("Aggiungi nuova ricetta privata", "Neues privates Rezept", "Add new private recipe", "Añadir receta privada")}
                 </button>
               )}
@@ -301,7 +301,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           )}
           {collectionName === "mikilab" && user && (
             <button data-testid="import-catalog-btn" onClick={doImportCatalog} disabled={importing}
-              className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
+              className="mt-4 inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#347f78] disabled:opacity-60 text-white font-semibold px-5 py-3 rounded-2xl shadow-md active:scale-98 transition-all">
               {importing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Wheat className="w-5 h-5" />}
               {importing ? triM("Importazione…", "Import…", "Importing…", "Importando…") : triM("Importa il catalogo di Michele", "Michele-Katalog importieren", "Import Michele's catalog", "Importar el catálogo de Michele")}
             </button>
@@ -438,8 +438,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                   <button key={b} data-testid={`base-filter-${b}`} onClick={() => setBaseFilter(b)}
                     className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${
                       baseFilter === b
-                        ? "bg-[#3E9C93] text-white border-[#3E9C93] shadow-sm"
-                        : "bg-white dark:bg-[#1B2A38] text-[#3E9C93] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#3E9C93]/60"}`}>
+                        ? "bg-[#64748B] text-white border-[#64748B] shadow-sm"
+                        : "bg-white dark:bg-[#1B2A38] text-[#8a97a6] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#8a97a6]/60"}`}>
                     {baseLabel(b, lang)}
                   </button>
                 ))}
@@ -484,7 +484,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {triM("Preferite", "Favoriten", "Favourites")}{(() => { const n = [...favs].filter((id) => !String(id).startsWith("custodite:")).length; return n > 0 ? ` (${n})` : ""; })()}
               </button>
               <button data-testid="cat-filter-all" onClick={() => setCatFilter("all")}
-                className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#3E9C93] text-white border-[#3E9C93] shadow-sm" : "bg-white dark:bg-[#1B2A38] text-[#3E9C93] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#3E9C93]/60"}`}>
+                className={`shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97 ${catFilter === "all" ? "bg-[#64748B] text-white border-[#64748B] shadow-sm" : "bg-white dark:bg-[#1B2A38] text-[#8a97a6] border-[#2A3B49] dark:border-[#2A3B49] hover:border-[#8a97a6]/60"}`}>
                 {triM("Tutte", "Alle", "All")}
               </button>
               {CATS.map((c) => {
@@ -509,7 +509,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </span>
               {(catFilter !== "all" || baseFilter !== "all" || favFilter || (query || "").trim() !== "") && (
                 <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setFavFilter(false); setQuery(""); }}
-                  className="inline-flex items-center gap-1 text-xs font-bold text-[#3E9C93] active:scale-95 transition-transform">
+                  className="inline-flex items-center gap-1 text-xs font-bold text-[#8a97a6] hover:text-white active:scale-95 transition-all">
                   <X className="w-3.5 h-3.5" /> {triM("Azzera filtri", "Filter zurücksetzen", "Clear filters")}
                 </button>
               )}
@@ -651,7 +651,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <AlertDialogAction
               data-testid="delete-confirm-btn"
               onClick={handleDelete}
-              className="bg-[#3E9C93] hover:bg-[#64748B]"
+              className="bg-[#3E9C93] hover:bg-[#347f78]"
             >
               {t("delete")}
             </AlertDialogAction>

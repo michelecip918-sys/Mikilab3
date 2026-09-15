@@ -8,7 +8,7 @@ import { PanelIcon } from "./panelIcons";
 
 export function ZoneDivider({ title, code, accent = "#8a97a6", testid }) {
   return (
-    <div data-testid={testid} className="relative my-8 sm:my-12 flex items-center justify-center">
+    <div data-testid={testid} className="relative my-10 sm:my-16 flex items-center justify-center">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t" style={{ borderColor: `${accent}33`, boxShadow: `0 0 8px ${accent}44` }} />
       </div>
@@ -65,7 +65,7 @@ export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaul
         {(open || !collapsible) && (
           <motion.div key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }} className="overflow-hidden">
-            <div className="px-4 sm:px-5 pb-5 pt-1 border-t border-[#8a97a6]/10">{children}</div>
+            <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#8a97a6]/10">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>

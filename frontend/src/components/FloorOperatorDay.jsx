@@ -294,8 +294,8 @@ function FloorProductionLog({ tri }) {
   };
   const fld = "bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-2 text-[13px] text-white focus:outline-none focus:border-[#3E9C93]";
   return (
-    <div data-testid="floor-prod-log" className="rounded-2xl border border-[#3E9C93]/25 bg-[#0b0f19]/60 p-4 space-y-2">
-      <div className="flex items-center gap-2"><ListChecks className="w-4 h-4 text-[#3E9C93]" /><span className="text-sm font-black text-white">{tri("Registra produzione", "Produktion erfassen", "Log production", "Registrar producción", "Enregistrer la production", "ثبت تولید")}</span></div>
+    <div data-testid="floor-prod-log" className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 p-5 space-y-3">
+      <div className="flex items-center gap-2"><ListChecks className="w-4 h-4 text-[#8a97a6]" /><span className="text-sm font-black text-white">{tri("Registra produzione", "Produktion erfassen", "Log production", "Registrar producción", "Enregistrer la production", "ثبت تولید")}</span></div>
       <input data-testid="floor-log-product" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")} className={`${fld} w-full`} />
       <div className="grid grid-cols-2 gap-2">
         <input data-testid="floor-log-produced" value={produced} onChange={(e) => setProduced(e.target.value)} placeholder={tri("Prodotti", "Produziert", "Produced", "Producidos", "Produits", "تولیدشده")} className={fld} inputMode="numeric" />

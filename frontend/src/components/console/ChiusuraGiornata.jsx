@@ -84,11 +84,11 @@ export default function ChiusuraGiornata() {
   const fld = "bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-1 text-[13px] text-white focus:outline-none focus:border-[#3E9C93] w-full";
 
   return (
-    <div data-testid="chiusura-giornata" className="space-y-5">
+    <div data-testid="chiusura-giornata" className="space-y-6">
       <div className="flex items-center gap-2 flex-wrap">
-        <ClipboardCheck className="w-4 h-4 text-[#3E9C93]" />
+        <ClipboardCheck className="w-4 h-4 text-[#8a97a6]" />
         <span className="text-sm font-black text-white">Chiusura giornata</span>
-        <select data-testid="chiusura-day" value={day} onChange={(e) => setDay(e.target.value)} className="ml-auto bg-[#060A10] border border-[#3E9C93]/30 rounded-md px-2 py-1 text-[12px] text-[#7fd3c9]">
+        <select data-testid="chiusura-day" value={day} onChange={(e) => setDay(e.target.value)} className="ml-auto bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-1 text-[12px] text-[#cbd5e1]">
           {DAYS.map((d) => <option key={d} value={d}>{DAY_LABEL[d]}</option>)}
         </select>
       </div>
@@ -113,11 +113,11 @@ export default function ChiusuraGiornata() {
       </div>
 
       {/* Food-cost in tempo reale */}
-      <div className="rounded-xl border border-[#3E9C93]/30 bg-[#3E9C93]/5 p-3 flex items-center gap-4 flex-wrap">
-        <TrendingUp className="w-4 h-4 text-[#3E9C93]" />
+      <div className="rounded-xl border border-[#8a97a6]/25 bg-[#8a97a6]/5 p-3 flex items-center gap-4 flex-wrap">
+        <TrendingUp className="w-4 h-4 text-[#8a97a6]" />
         <span className="text-[12px] text-[#94A3B8]">Ricavo <b className="text-white">€{preview.rev}</b></span>
         <span className="text-[12px] text-[#94A3B8]">Costo <b className="text-white">€{preview.cost}</b></span>
-        <span className="text-[12px] text-[#94A3B8]">Margine <b className="text-[#3E9C93]">€{preview.margin}</b></span>
+        <span className="text-[12px] text-[#94A3B8]">Margine <b className="text-white">€{preview.margin}</b></span>
         <span data-testid="chiusura-fc-preview" className="text-[12px] text-[#94A3B8]">Food-cost <b className="text-white">{preview.fc ?? "—"}%</b></span>
       </div>
 
@@ -143,8 +143,8 @@ export default function ChiusuraGiornata() {
       </button>
 
       {result && (
-        <div data-testid="chiusura-result" className="rounded-2xl border border-[#3E9C93]/40 bg-[#0b0f19]/70 p-4 space-y-2">
-          <p className="text-sm font-black text-[#3E9C93]">Giornata registrata · Food-cost {result.food_cost.food_cost_pct ?? "—"}% · Margine €{result.food_cost.day_margin}</p>
+        <div data-testid="chiusura-result" className="rounded-2xl border border-[#8a97a6]/30 bg-[#0b0f19]/70 p-4 space-y-2">
+          <p className="text-sm font-black text-white">Giornata registrata · Food-cost {result.food_cost.food_cost_pct ?? "—"}% · Margine €{result.food_cost.day_margin}</p>
           {(result.suggestions || []).length > 0 && (
             <div className="flex items-start gap-2 text-[12px] text-[#cbd5e1]">
               <Lightbulb className="w-4 h-4 text-[#f0c000] shrink-0 mt-0.5" />
@@ -166,7 +166,7 @@ export default function ChiusuraGiornata() {
           <p className="text-[11px] font-black uppercase tracking-wide text-[#a4afbb] mb-1.5">Memoria del metodo del Capo</p>
           <ul className="space-y-1">
             {memory.slice(0, 8).map((m, i) => (
-              <li key={i} className="text-[12px] text-[#94A3B8] flex gap-2"><span className="text-[#3E9C93]">•</span><span><b className="text-[#cbd5e1]">{m.recipe_name || "generale"}:</b> {m.change} {m.context?.season ? `(${m.context.season}${m.context.flour_lot ? ", farina " + m.context.flour_lot : ""})` : ""}</span></li>
+              <li key={i} className="text-[12px] text-[#94A3B8] flex gap-2"><span className="text-[#8a97a6]">•</span><span><b className="text-[#cbd5e1]">{m.recipe_name || "generale"}:</b> {m.change} {m.context?.season ? `(${m.context.season}${m.context.flour_lot ? ", farina " + m.context.flour_lot : ""})` : ""}</span></li>
             ))}
           </ul>
         </div>

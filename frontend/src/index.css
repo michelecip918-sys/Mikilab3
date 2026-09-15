@@ -509,3 +509,31 @@ a[class*="bg-[#1B2A38]"]:hover {
 @keyframes nexusSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes nexusSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
 @keyframes nexusPulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.8; } }
+
+
+/* ==========================================================================
+   BLOCCO D — Gerarchia visiva, titoli uniformi, feedback tattile
+   Teal #3E9C93 riservato alle azioni primarie; ardesia per il resto.
+   ========================================================================== */
+/* Titolo di sezione uniforme dentro i pannelli della Console */
+.holo-section-title {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .2em; margin-bottom: 1rem;
+}
+/* Feedback di pressione chiaro su ogni pulsante (scala + luce), senza rompere
+   i bottoni posizionati con transform di Tailwind: usa la proprietà `scale`. */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  transition-property: scale, filter, background-color, border-color, box-shadow, opacity, color;
+  transition-duration: .18s; transition-timing-function: ease;
+}
+button:not(:disabled):not([class*="active:scale"]):active,
+[role="button"]:not(:disabled):not([class*="active:scale"]):active { scale: .965; filter: brightness(1.08); }
+/* Anello di focus visibile e coerente col primario */
+:is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid rgba(62,156,147,.65); outline-offset: 2px; border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active, [role="button"]:not(:disabled):active { scale: 1; }
+}

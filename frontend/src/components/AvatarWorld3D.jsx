@@ -25,11 +25,16 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#8a97a6", spea
     const renderer = new THREE.WebGPURenderer({ antialias: true, alpha: true, forceWebGL: !(typeof navigator !== "undefined" && navigator.gpu) });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
     renderer.setSize(W(), H());
+    // Resa cinematografica: tone mapping ACES per luci morbide e metalliche eleganti.
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.12;
 
     const acc = new THREE.Color(accent);
-    scene.add(new THREE.AmbientLight(0x8899aa, 0.5));
-    const key = new THREE.PointLight(acc, 1.1, 40); key.position.set(3, 6, 6); scene.add(key);
-    const rim = new THREE.PointLight(0xFF6B00, 0.7, 40); rim.position.set(-6, 3, -3); scene.add(rim);
+    // Illuminazione raffinata: emisfera morbida + luce chiave + rim freddo + caldo forno.
+    scene.add(new THREE.HemisphereLight(0xb9c7d6, 0x1a120c, 0.55));
+    const key = new THREE.PointLight(acc, 1.0, 40); key.position.set(3, 6, 6); scene.add(key);
+    const rim = new THREE.PointLight(0xFF6B00, 0.55, 40); rim.position.set(-6, 3, -3); scene.add(rim);
+    const edge = new THREE.DirectionalLight(0xdfeaf5, 0.85); edge.position.set(-4, 7, -5); scene.add(edge);
 
     // Griglia olografica a pavimento
     const grid = new THREE.GridHelper(30, 30, acc, 0x123);
@@ -44,7 +49,8 @@ export default function AvatarWorld3D({ theme = "miki", accent = "#8a97a6", spea
       assembling.push({ mesh, delay, dur, fromY });
       return mesh;
     };
-    const mat = (color, opts = {}) => new THREE.MeshStandardMaterial({ color, metalness: opts.m ?? 0.5, roughness: opts.r ?? 0.45, emissive: opts.e ?? 0x000000, emissiveIntensity: opts.ei ?? 0, transparent: opts.t ?? false, opacity: opts.o ?? 1 });
+    // Materiali fisici con clearcoat: metalli spazzolati e superfici piu curate.
+    const mat = (color, opts = {}) => new THREE.MeshPhysicalMaterial({ color, metalness: opts.m ?? 0.5, roughness: opts.r ?? 0.45, emissive: opts.e ?? 0x000000, emissiveIntensity: opts.ei ?? 0, transparent: opts.t ?? false, opacity: opts.o ?? 1, clearcoat: (opts.m ?? 0.5) > 0.7 ? 0.45 : 0.1, clearcoatRoughness: 0.5 });
     const holoMat = (color, o = 0.32) => new THREE.MeshBasicMaterial({ color, transparent: true, opacity: o, side: THREE.DoubleSide });
 
     // Texture radiale per bagliori volumetrici (bloom "finto" additivo) — resa nitida su WebGPU.

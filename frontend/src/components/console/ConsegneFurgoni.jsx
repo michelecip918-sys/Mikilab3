@@ -45,7 +45,7 @@ export default function ConsegneFurgoni() {
   const fld = "bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-1.5 text-[13px] text-white focus:outline-none focus:border-[#3E9C93]";
 
   return (
-    <div data-testid="consegne-furgoni" className="space-y-5">
+    <div data-testid="consegne-furgoni" className="space-y-6">
       {/* Nuova consegna */}
       <div className="rounded-xl border border-[#8a97a6]/20 bg-[#0b0f19]/60 p-3 space-y-2">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -61,7 +61,7 @@ export default function ConsegneFurgoni() {
         </div>
         {form.items.length > 0 && (
           <div className="flex flex-wrap gap-1.5">
-            {form.items.map((it, i) => (<span key={i} className="text-[11px] bg-[#3E9C93]/15 text-[#7fd3c9] rounded-full px-2 py-0.5">{it.qty} {it.product}</span>))}
+            {form.items.map((it, i) => (<span key={i} className="text-[11px] bg-[#8a97a6]/15 text-[#cbd5e1] rounded-full px-2 py-0.5">{it.qty} {it.product}</span>))}
           </div>
         )}
         <button data-testid="consegna-save" onClick={save} className="inline-flex items-center gap-2 bg-[#3E9C93] hover:bg-[#347f78] text-white font-bold px-4 py-2 rounded-xl text-sm active:scale-98 transition-all"><Plus className="w-4 h-4" /> Aggiungi consegna</button>
@@ -96,16 +96,16 @@ export default function ConsegneFurgoni() {
             </div>
           )}
           {(plan.vans || []).map((v, i) => (
-            <div key={i} data-testid={`consegne-van-${i}`} className="rounded-2xl border border-[#3E9C93]/30 bg-[#0b0f19]/70 p-4 space-y-2">
-              <div className="flex items-center gap-2"><Truck className="w-4 h-4 text-[#3E9C93]" /><span className="text-sm font-black text-white">{v.van}</span></div>
+            <div key={i} data-testid={`consegne-van-${i}`} className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/70 p-4 space-y-2">
+              <div className="flex items-center gap-2"><Truck className="w-4 h-4 text-[#8a97a6]" /><span className="text-sm font-black text-white">{v.van}</span></div>
               <div className="flex items-start gap-2 text-[12px] text-[#cbd5e1]"><Package className="w-3.5 h-3.5 text-[#a4afbb] shrink-0 mt-0.5" /><span><b>Carico:</b> {v.load.map((x) => `${x.qty} ${x.product}`).join(" · ")}</span></div>
               <ol className="space-y-1">
                 {v.stops.map((s, k) => (
                   <li key={k} className="flex items-center gap-2 text-[12px] text-[#94A3B8]">
-                    <span className="w-5 h-5 rounded-full bg-[#3E9C93] text-white text-[10px] font-black flex items-center justify-center shrink-0">{k + 1}</span>
+                    <span className="w-5 h-5 rounded-full bg-[#64748B] text-white text-[10px] font-black flex items-center justify-center shrink-0">{k + 1}</span>
                     <MapPin className="w-3.5 h-3.5 shrink-0" />
                     <span className="flex-1"><b className="text-[#cbd5e1]">{s.client}</b> {s.address}</span>
-                    {s.deadline && <span className="inline-flex items-center gap-1 text-[#7fd3c9]"><Clock3 className="w-3 h-3" />{s.deadline}</span>}
+                    {s.deadline && <span className="inline-flex items-center gap-1 text-[#94A3B8]"><Clock3 className="w-3 h-3" />{s.deadline}</span>}
                   </li>
                 ))}
               </ol>
