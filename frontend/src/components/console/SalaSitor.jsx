@@ -169,7 +169,7 @@ export default function SalaSitor() {
       <div className="relative z-10 p-5 sm:p-6 space-y-4">
 
         {/* Testata: il luogo d'incontro */}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-14 h-14 shrink-0">
             <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(166,177,188,0.55), rgba(138,151,166,0.3) 60%, transparent 72%)" }} />
             <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#a6b1bc]/70">
@@ -183,18 +183,21 @@ export default function SalaSitor() {
             <p className="text-[11px] text-[#94A3B8]">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
             {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#a6b1bc] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
           </div>
-          <button data-testid="sitor-delegate-btn" onClick={() => setDelegateOpen(true)} title={tri("Delega vocale o comando diretto («Sposta Sara ai forni»)", "Sprachdelegation", "Voice delegation", "Delegación por voz", "Délégation vocale", "واگذاری صوتی")}
-            className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3E9C93]/12 border border-[#3E9C93]/40 text-[#3E9C93] text-xs font-bold hover:bg-[#3E9C93]/22 active:scale-95">
-            <Mic className="w-3.5 h-3.5" /> {tri("Delega Vocale", "Sprachdelegation", "Voice Delegation", "Delegación", "Délégation", "واگذاری")}
-          </button>
-          <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
-            className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/30 text-[#8a97a6] text-xs font-bold hover:bg-[#8a97a6]/20 active:scale-95 disabled:opacity-50">
-            {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
-          </button>
-          <button data-testid="sitor-reset-memory-btn" onClick={resetMemory} title={tri("Azzera la memoria di Sitor e riparti da zero", "Speicher löschen", "Clear Sitor memory", "Borrar memoria", "Effacer la mémoire", "پاک کردن حافظه")}
-            className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#64748B]/10 border border-[#64748B]/30 text-[#94A3B8] text-xs font-bold hover:bg-[#64748B]/20 active:scale-95">
-            <Trash2 className="w-3.5 h-3.5" /> {tri("Nuova conversazione", "Neues Gespräch", "New chat", "Nueva conversación", "Nouvelle conversation", "گفتگوی جدید")}
-          </button>
+          {/* Azioni: vanno a capo su mobile, restano in linea su schermi ampi */}
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+            <button data-testid="sitor-delegate-btn" onClick={() => setDelegateOpen(true)} title={tri("Delega vocale o comando diretto («Sposta Sara ai forni»)", "Sprachdelegation", "Voice delegation", "Delegación por voz", "Délégation vocale", "واگذاری صوتی")}
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3E9C93]/12 border border-[#3E9C93]/40 text-[#3E9C93] text-xs font-bold hover:bg-[#3E9C93]/22 active:scale-95">
+              <Mic className="w-3.5 h-3.5" /> {tri("Delega Vocale", "Sprachdelegation", "Voice Delegation", "Delegación", "Délégation", "واگذاری")}
+            </button>
+            <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/30 text-[#8a97a6] text-xs font-bold hover:bg-[#8a97a6]/20 active:scale-95 disabled:opacity-50">
+              {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
+            </button>
+            <button data-testid="sitor-reset-memory-btn" onClick={resetMemory} title={tri("Azzera la memoria di Sitor e riparti da zero", "Speicher löschen", "Clear Sitor memory", "Borrar memoria", "Effacer la mémoire", "پاک کردن حافظه")}
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#64748B]/10 border border-[#64748B]/30 text-[#94A3B8] text-xs font-bold hover:bg-[#64748B]/20 active:scale-95">
+              <Trash2 className="w-3.5 h-3.5" /> {tri("Nuova conversazione", "Neues Gespräch", "New chat", "Nueva conversación", "Nouvelle conversation", "گفتگوی جدید")}
+            </button>
+          </div>
         </div>
 
         {/* Badge risparmio crediti — sempre visibile per la Direzione */}

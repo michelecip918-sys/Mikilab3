@@ -127,7 +127,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
         ) : (
           <div className="space-y-1.5">
             {batches.map((b, i) => (
-              <div key={i} data-testid={`piano-cal-row-${day}-${i}`} className="flex items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
+              <div key={i} data-testid={`piano-cal-row-${day}-${i}`} className="flex flex-wrap items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
                 <input
                   data-testid={`piano-batch-start-${day}-${i}`}
                   value={b.start || ""}
@@ -136,7 +136,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                   className="w-16 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-1.5 py-1 font-cyber text-sm font-black text-white text-center tabular-nums"
                 />
                 <span className="w-1.5 h-8 rounded-full shrink-0" style={{ background: LINE_COLOR[b.line] || "#8a97a6" }} />
-                <div className="min-w-0 flex-1">
+                <div className="min-w-0 flex-1 basis-[50%]">
                   <input
                     data-testid={`piano-batch-product-${day}-${i}`}
                     value={b.product || ""}
@@ -156,20 +156,23 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                     />
                   </div>
                 </div>
-                <input
-                  data-testid={`piano-batch-qty-${day}-${i}`}
-                  value={b.qty || ""}
-                  onChange={(e) => onPatch(day, i, { qty: e.target.value })}
-                  placeholder={tri("qtà", "Menge", "qty", "cant.", "qté", "مقدار")}
-                  className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
-                />
-                <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
-                <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#3E9C93] hover:bg-[#3E9C93]/10">
-                  <GraduationCap className="w-3.5 h-3.5" />
-                </button>
-                <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                {/* Controlli finali: restano in linea su desktop, vanno a capo su mobile */}
+                <div className="flex items-center gap-1.5 ml-auto shrink-0">
+                  <input
+                    data-testid={`piano-batch-qty-${day}-${i}`}
+                    value={b.qty || ""}
+                    onChange={(e) => onPatch(day, i, { qty: e.target.value })}
+                    placeholder={tri("qtà", "Menge", "qty", "cant.", "qté", "مقدار")}
+                    className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
+                  />
+                  <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
+                  <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#3E9C93] hover:bg-[#3E9C93]/10">
+                    <GraduationCap className="w-3.5 h-3.5" />
+                  </button>
+                  <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
