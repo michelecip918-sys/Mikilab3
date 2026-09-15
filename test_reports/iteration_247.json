@@ -1,0 +1,25 @@
+{
+  "summary": "Retest of 3 improvements after moving UI elements into Sala Sitor. All three flows PASSED end-to-end. Auth flow required: PIN 198505 (admin-gate) → onboarding (panificio + confirm) → capo-gate-login → email/password sign-in (admin@mikilab.de/Mikilab2026!) → Sitor tab → sala-sitor. Once inside Sala Sitor: (1) credit-savings-badge is always visible with savings-pct='-64%', savings-fast=' 4 on cheap model', savings-cache=' 2 cache reuse' — GET /api/ai/savings returned 200. (2) sitor-delegate-btn opens the voice-delegation modal; typing 'Sposta Sara ai forni' + Analizza triggered POST /api/worker/capo-move (200) and rendered capo-move-done '✓ Sara moved to forni · absolute priority' WITHOUT delegation-proposal. (3) Typing 'Sanifica i carrelli e prepara le baguette' + Analizza triggered POST /api/delegation/parse (200) and rendered delegation-proposal with Task 'Sanifica carrelli e prepara baguette', priority alta, 5/5 assignees and detailed steps.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [
+      {"screen": "Post-login onboarding + tour overlay", "issues": ["Sitor onboarding tour popup ('Hi, I'm Sitor') opens automatically after login and can obstruct clicks in the Voice Delegation modal (bottom of viewport). Not blocking during our test but might interfere with real users on smaller screens. Consider disabling auto-open when a modal is opening or lowering its z-index below modals."]}
+    ]
+  },
+  "test_report_links": [],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "The 401 interceptor in /app/frontend/src/lib/api.js removes 'mikilab_admin_unlocked' on any 'gate_required' 401 — this makes it impossible to pre-set localStorage from a test harness without also having a valid signed cookie. Consider guarding that removal so only real session expiry (not first anonymous load) can clear the flag.",
+    "Login flow: language switches to EN on fresh session even when localStorage 'mikilab_lang=it' was previously set (page reset language after PIN). Not blocking but inconsistent."
+  ],
+  "updated_files": [],
+  "success_rate": {"backend": "100% (3/3 endpoints returned 200)", "frontend": "100% (3/3 flows verified)"},
+  "test_credentials": "PIN 198505 · admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "None",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Auth path: (1) Click 'Direzione/Direction' button on landing → PIN keypad appears → click admin-key-{1,9,8,5,0,5}. (2) Onboarding modal shows: click onboarding-opt-panificio then onboarding-confirm. (3) Homepage renders with 'CAPO ACCESS RESERVED' box → click data-testid=capo-gate-login → email/password modal → fill and Sign in. (4) The header now has a secondary nav; click button:has-text('Sitor') to switch to Sitor tab. (5) sala-sitor is visible with credit-savings-badge and sitor-delegate-btn. (6) VoiceDelegation modal (voice-delegation) opens on sitor-delegate-btn click. delegation-transcript textarea + delegation-analyze button work correctly. Move phrase '(Sposta|Muovi) X (ai|al|in|su) Y' triggers /api/worker/capo-move; anything else goes to /api/delegation/parse.",
+  "rca of the issue": "No issue — all three flows behaved as specified."
+}
