@@ -5407,3 +5407,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Verificato che AvatarWorld3D (sfondo 3D landing) gia gestisce resize via ResizeObserver + pixelRatio cap 1.8 e sta a z-0 sotto i controlli z-10 (non copre pulsanti). DeskScene altezza fissa 300px OK su mobile.
 - RecipeList gia responsive (grid-cols-2 sm:grid-cols-3, filtri con scroll orizzontale interno). OperatorStatusBoard e modale assign-picker gia mobile-ok; VoiceDelegation overlay scrollabile.
 - Test frontend mobile iteration_252: 100%, scrollWidth==clientWidth(390) su tutte le viste (public gate, console Direzione, Sala Sitor, Plancia, Piano Unico, modale Delega Vocale, Ricette). Desktop 1920 senza regressioni. Nessun action item.
+
+---
+## Changelog — 15 Set 2026 (Piano Settimanale: giorni SEMPRE visibili) — COMPLETATO
+- Bug segnalato da utente mobile: aprendo il Piano Settimanale non si vedevano i giorni della settimana (comparivano solo dopo aver generato le strategie AI).
+- Fix PianoUnico.jsx: stato week inizializzato con EMPTY_WEEK() (7 giorni vuoti) invece di null -> le schede Lun-Dom e il dettaglio giorno sono SEMPRE visibili all apertura; titolo blocco 3 condizionale (neutro quando non c e piano); pulsante Ascolta solo con opzioni generate; guardia saveAll: con 0 lotti toast informativo, niente salvataggio di settimana vuota.
+- Test iteration_253: frontend 100% a 390px e 1920px. Nessun overflow; guardia salvataggio verificata; giorni visibili subito.
