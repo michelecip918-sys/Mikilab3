@@ -96,7 +96,7 @@ export const recipesApi = {
   translate: (id, lang) => api.post(`/recipes/${id}/translate`, {}, { params: { lang } }).then((r) => r.data),
   generate: (data) => api.post(`/recipes/generate`, data).then((r) => r.data),
   complete: (recipe_name, recipe_id, image_url) => api.post(`/recipe/complete`, { recipe_name, recipe_id, image_url }).then((r) => r.data),
-  course: (id, lang = "it") => api.get(`/recipes/${id}/course`, { params: { lang } }).then((r) => r.data),
+  course: (id, lang = "it") => cachedGet(`recipe_course_${id}_${lang}`, () => api.get(`/recipes/${id}/course`, { params: { lang } }).then((r) => r.data)),
   importCatalog: () => api.post(`/recipes/import-catalog`).then((r) => r.data),
 };
 
@@ -118,12 +118,12 @@ export const planApi = {
 
 export const productionApi = {
   dayClose: (payload) => api.post(`/production/day-close`, payload).then((r) => r.data),
-  closeHistory: () => api.get(`/production/day-close/history`).then((r) => r.data),
-  planSuggestions: (day_key = "") => api.get(`/production/plan-suggestions`, { params: { day_key } }).then((r) => r.data),
-  memoryList: (recipe_name = "") => api.get(`/sitor/memory`, { params: { recipe_name } }).then((r) => r.data),
+  closeHistory: () => cachedGet("prod_close_history", () => api.get(`/production/day-close/history`).then((r) => r.data), { closures: [] }),
+  planSuggestions: (day_key = "") => cachedGet(`prod_plan_sugg_${day_key || "all"}`, () => api.get(`/production/plan-suggestions`, { params: { day_key } }).then((r) => r.data), { suggestions: [] }),
+  memoryList: (recipe_name = "") => cachedGet(`sitor_memory_${recipe_name || "all"}`, () => api.get(`/sitor/memory`, { params: { recipe_name } }).then((r) => r.data), { items: [] }),
   memoryAdd: (payload) => api.post(`/sitor/memory`, payload).then((r) => r.data),
   log: (payload) => api.post(`/production/log`, payload).then((r) => r.data),
-  logList: (date = "") => api.get(`/production/log`, { params: { date } }).then((r) => r.data),
+  logList: (date = "") => cachedGet(`prod_log_${date || "today"}`, () => api.get(`/production/log`, { params: { date } }).then((r) => r.data), { logs: [] }),
 };
 
 export const labAskApi = {
@@ -131,7 +131,7 @@ export const labAskApi = {
 };
 
 export const deliveriesApi = {
-  list: () => api.get(`/deliveries`).then((r) => r.data),
+  list: () => cachedGet("deliveries_list", () => api.get(`/deliveries`).then((r) => r.data), { deliveries: [] }),
   create: (payload) => api.post(`/deliveries`, payload).then((r) => r.data),
   remove: (id) => api.delete(`/deliveries/${id}`).then((r) => r.data),
   organize: () => api.post(`/deliveries/organize`).then((r) => r.data),
@@ -571,8 +571,8 @@ export const accessApi = {
 export const delegationApi = {
   parse: (transcript, lang) => api.post(`/delegation/parse`, { transcript, lang }).then((r) => r.data),
   confirm: (proposal) => api.post(`/delegation/confirm`, { proposal }).then((r) => r.data),
-  tasks: () => api.get(`/delegation/tasks`).then((r) => r.data),
-  tasksByRole: (role) => api.get(`/delegation/tasks`, { params: { role } }).then((r) => r.data),
+  tasks: () => cachedGet("delegation_tasks", () => api.get(`/delegation/tasks`).then((r) => r.data), { tasks: [] }),
+  tasksByRole: (role) => cachedGet(`delegation_tasks_${role || "all"}`, () => api.get(`/delegation/tasks`, { params: { role } }).then((r) => r.data), { tasks: [] }),
   stepDone: (task_id, order, operator = "") => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }).then((r) => r.data).catch((e) => {
     if (isNetworkError(e)) { sqEnqueue("delegation_step", { task_id, order, operator }); return { queued: true, all_done: false }; }
     throw e;
@@ -581,6 +581,17 @@ export const delegationApi = {
   handoff: (lang) => api.get(`/shift/handoff`, { params: { lang } }).then((r) => r.data),
   handoffHistory: () => api.get(`/shift/handoff/history`).then((r) => r.data.items || []).catch(() => []),
   cleanlinessCheck: (task_id, image_base64) => api.post(`/delegation/tasks/${task_id}/cleanliness-check`, { image_base64 }).then((r) => r.data),
+  // Stato vivo persistente per operatore + comandi dalle cuffie (accept/complete/reject).
+  taskAction: (operator, action, task_id = null, step_order = null) => api.post(`/worker/task-action`, { operator, action, task_id, step_order }).then((r) => r.data).catch((e) => {
+    if (isNetworkError(e)) { sqEnqueue("worker_action", { operator, action, task_id, step_order }); return { queued: true }; }
+    throw e;
+  }),
+  nextTask: (operator) => api.get(`/worker/next-task`, { params: { operator } }).then((r) => r.data).catch((e) => {
+    if (isNetworkError(e)) return { has_task: false, offline: true };
+    throw e;
+  }),
+  workerStates: () => cachedGet("worker_states", () => api.get(`/worker/states`).then((r) => r.data), { states: [] }),
+  capoMove: (operator, dept = "", role = "", task = "") => api.post(`/worker/capo-move`, { operator, dept, role, task }).then((r) => r.data),
 };
 
 // Traduzione vocale in tempo reale (canali headset Bluetooth, Letz_Passive).
@@ -713,24 +724,24 @@ export const capoApi = {
 
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
-  catalog: () => api.get(`/depts`).then((r) => r.data),
-  assignment: () => api.get(`/depts/assignment`).then((r) => r.data),
+  catalog: () => cachedGet("depts_catalog", () => api.get(`/depts`).then((r) => r.data), { depts: [] }),
+  assignment: () => cachedGet("depts_assignment", () => api.get(`/depts/assignment`).then((r) => r.data), { assignments: [] }),
   assign: (payload) => api.post(`/depts/assign`, payload).then((r) => r.data),
   assignMulti: (payload) => api.post(`/depts/assign-multi`, payload).then((r) => r.data),
   unassign: (id) => api.delete(`/depts/assign/${id}`).then((r) => r.data),
   setObjective: (payload) => api.post(`/depts/objective`, payload).then((r) => r.data),
   progress: (payload) => api.post(`/depts/progress`, payload).then((r) => r.data),
-  board: () => api.get(`/depts/board`).then((r) => r.data),
+  board: () => cachedGet("depts_board", () => api.get(`/depts/board`).then((r) => r.data), { board: [] }),
   history: (days = 14) => api.get(`/depts/history`, { params: { days } }).then((r) => r.data),
-  presence: () => api.get(`/depts/presence`).then((r) => r.data),
+  presence: () => cachedGet("depts_presence", () => api.get(`/depts/presence`).then((r) => r.data), { present: [] }),
   shiftReport: () => api.get(`/depts/shift-report`).then((r) => r.data),
   templatesList: () => api.get(`/depts/templates`).then((r) => r.data),
   templateCreate: (payload) => api.post(`/depts/templates`, payload).then((r) => r.data),
   templateDelete: (tid) => api.delete(`/depts/templates/${tid}`).then((r) => r.data),
   templateApply: (tid) => api.post(`/depts/templates/${tid}/apply`).then((r) => r.data),
-  machinesGet: (dept) => api.get(`/depts/${dept}/machines`).then((r) => r.data),
+  machinesGet: (dept) => cachedGet(`depts_machines_${dept}`, () => api.get(`/depts/${dept}/machines`).then((r) => r.data), { machines: [] }),
   machinesSet: (dept, payload) => api.post(`/depts/${dept}/machines`, payload).then((r) => r.data),
-  machinesOverview: () => api.get(`/depts/machines/overview`).then((r) => r.data),
+  machinesOverview: () => cachedGet("depts_machines_overview", () => api.get(`/depts/machines/overview`).then((r) => r.data), { depts: [] }),
 };
 
 // PIN personali operatore (timbrature tracciabili) — gestiti dal Capo.
@@ -826,6 +837,7 @@ export const phoenixApi = {
 // Handler di replay per la coda offline (bunker mode).
 sqRegister("shift_checkin", (data) => api.post(`/lab/shift/checkin`, data));
 sqRegister("delegation_step", ({ task_id, order, operator }) => api.post(`/delegation/tasks/${task_id}/step`, { order, operator }));
+sqRegister("worker_action", ({ operator, action, task_id, step_order }) => api.post(`/worker/task-action`, { operator, action, task_id, step_order }));
 
 // Dual-Mode STRATEGIC — audit ricetta del Master Baker + matrice sovrana.
 export const recipeAuditApi = {

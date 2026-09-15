@@ -44,8 +44,42 @@ db = client[os.environ['DB_NAME']]
 
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY')
 # Il cervello di Sitor — il Dio dell'Arte Bianca — gira sul modello più potente disponibile.
+# Riservato ai compiti ad alto valore: consigli dalla memoria personale, generazione corsi
+# ricetta, decisioni di coordinamento complesse.
 SITOR_BRAIN = "claude-opus-4-8"
+# Modello ECONOMICO per estrazioni/classificazioni semplici e dialogo vocale ultra-breve
+# (leggere una comanda, interpretare un comando vocale corto, estrarre righe da un'etichetta).
+# Stesso identità e lingua di Sitor, costo molto inferiore.
+SITOR_FAST = "claude-haiku-4-5-20251001"
 TAVILY_API_KEY = os.environ.get('TAVILY_API_KEY')
+
+# ---------------------------------------------------------------------------
+# RISPARMIO CREDITI — memoization applicativa dei prompt ripetuti identici.
+# L'API interna non espone il prompt-caching di Anthropic in modo affidabile:
+# riusiamo quindi in modo sicuro le risposte alle estrazioni/classificazioni con
+# system+input IDENTICI entro una breve finestra (TTL), evitando chiamate ripetute.
+# ---------------------------------------------------------------------------
+_LLM_MEMO: dict = {}
+_LLM_MEMO_TTL = 900.0  # 15 minuti
+
+def _memo_key(system: str, user_text: str, model: str) -> str:
+    import hashlib
+    return hashlib.sha256(f"{model}\x00{system}\x00{user_text}".encode("utf-8")).hexdigest()
+
+def _memo_get(key: str):
+    v = _LLM_MEMO.get(key)
+    if not v:
+        return None
+    exp, val = v
+    if time.time() > exp:
+        _LLM_MEMO.pop(key, None)
+        return None
+    return val
+
+def _memo_set(key: str, val: str):
+    if len(_LLM_MEMO) > 500:
+        _LLM_MEMO.clear()
+    _LLM_MEMO[key] = (time.time() + _LLM_MEMO_TTL, val)
 
 # ---------------------------------------------------------------------------
 # Object Storage (archivio immagini dedicato)
@@ -938,15 +972,26 @@ async def _bakery_snapshot(admin: dict) -> str:
     _SNAPSHOT_CACHE[uid] = (time.time() + 10.0, result)
     return result
 
-async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int = 1400) -> str:
+async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int = 1400,
+                    model: str = SITOR_BRAIN, memo: bool = False) -> str:
     if not EMERGENT_LLM_KEY:
         return ""
+    # RISPARMIO CREDITI: per i compiti semplici (model=SITOR_FAST) riusa la risposta a
+    # prompt identici entro il TTL, senza rifare la chiamata.
+    mkey = None
+    if memo:
+        mkey = _memo_key(sysmsg, user_text, model)
+        cached = _memo_get(mkey)
+        if cached is not None:
+            return cached
     chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=sysmsg
-                   ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=max_tokens)
+                   ).with_model("anthropic", model).with_params(max_tokens=max_tokens)
     out = ""
     async for ev in chat.stream_message(UserMessage(text=user_text)):
         if isinstance(ev, TextDelta):
             out += ev.content or ""
+    if memo and mkey:
+        _memo_set(mkey, out)
     return out
 
 
@@ -1119,7 +1164,7 @@ async def floor_change_request(body: FloorChangeReq):
         )
         sysmsg += await _bakery_snapshot({"email": "master"})
         raw = await _deus_llm(sysmsg, f"OPERAIO: {op} ({level})\nREPARTO: {body.dept}\nCOMPITO: {body.task}\nPROPOSTA: {proposal}",
-                              session=f"floor-change-{op.lower()}", max_tokens=600)
+                              session=f"floor-change-{op.lower()}", max_tokens=500, model=SITOR_FAST)
         data = _extract_json(raw)
         c = (data.get("classification") or "").strip().lower()
         classification = "minor" if c == "minor" else "major"
@@ -2003,6 +2048,12 @@ async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)
            "by": admin.get("email") or "master", "at": now_iso(), "organization_id": _org_id(admin)}
     await db.dept_assignments.insert_one({**doc})
     doc.pop("_id", None)
+    # PRIORITÀ DEL CAPO: assegnare un operatore a un reparto è un comando della Direzione →
+    # blocca lo stato dell'operatore (nessuna riassegnazione automatica potrà spostarlo).
+    op = (body.operator or "").strip()
+    if op and op.lower() != "sitor":
+        await _set_worker_state(_org_id(admin), op, status="busy", dept=body.dept,
+                                task=(body.task or "").strip(), locked_by_capo=True, capo_at=now_iso())
     return {"ok": True, "assignment": doc}
 
 @api_router.delete("/depts/assign/{aid}")
@@ -4073,8 +4124,10 @@ async def inventory_batch_links(user: Optional[dict] = Depends(optional_user)):
 # in un task di squadra con sotto-step e propone gli operatori (competenza + Aura).
 # Richiede CONFERMA del Capo prima di comparire (silenzioso) sul floor.
 # ---------------------------------------------------------------------------
-async def _worker_pool():
-    """Operatori disponibili dal piano turni, dedup per nome, con posizione e aura."""
+async def _worker_pool(org: Optional[str] = None):
+    """Operatori disponibili dal piano turni, dedup per nome, con posizione, aura e STATO
+    PERSISTENTE (libero/occupato) letto da `worker_states` (per azienda). Lo stato vive nel
+    tempo: un operatore resta occupato finché non completa/rifiuta, con passaggio al prossimo libero."""
     docs = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(300)
     best = {}
     for d in docs:
@@ -4084,25 +4137,59 @@ async def _worker_pool():
         sc = int(d.get("efficiency_score", 85))
         if nm not in best or sc > best[nm]["score"]:
             best[nm] = {"name": nm, "position": d.get("position") or "", "score": sc, "aura": _aura_for(sc)}
+    states = await _worker_states_map(org)
+    for w in best.values():
+        st = states.get(w["name"].lower(), {})
+        w["status"] = st.get("status", "free")
+        w["current_task"] = st.get("task_id")
+        w["locked_by_capo"] = bool(st.get("locked_by_capo"))
     pool = sorted(best.values(), key=lambda x: x["score"], reverse=True)
     return pool
 
 
+async def _worker_states_map(org: Optional[str] = None) -> dict:
+    """Mappa {nome_lower: stato} degli operatori per l'azienda (persistente nel tempo)."""
+    q = {} if org is None else {"organization_id": org}
+    docs = await db.worker_states.find(q, {"_id": 0}).to_list(500)
+    return {(d.get("name") or "").lower(): d for d in docs}
+
+
+async def _set_worker_state(org: str, name: str, **fields):
+    if not name:
+        return
+    fields["updated_at"] = now_iso()
+    await db.worker_states.update_one(
+        {"organization_id": org, "name": name},
+        {"$set": {"organization_id": org, "name": name, **fields}},
+        upsert=True,
+    )
+
+
 def _match_worker(sub_role, pool, used):
     sr = (sub_role or "").lower().strip()
-    # 1) match per posizione/competenza tra chi non è ancora impegnato
+    def _available(w):
+        # Non riassegnare MAI chi è già impegnato nel giro corrente, chi è OCCUPATO nel tempo,
+        # o chi è bloccato da un comando del Capo (priorità assoluta del Capo).
+        return (w["name"] not in used
+                and w.get("status", "free") != "busy"
+                and not w.get("locked_by_capo"))
+    # 1) match per posizione/competenza tra chi è LIBERO
     for w in pool:
-        if w["name"] in used:
+        if not _available(w):
             continue
         pos = (w["position"] or "").lower()
         if sr and pos and (sr in pos or pos in sr):
             return w
-    # 2) primo libero con aura più alta
+    # 2) primo LIBERO con aura più alta
     for w in pool:
-        if w["name"] not in used:
+        if _available(w):
             return w
-    # 3) round-robin se tutti già impegnati
-    return pool[0] if pool else None
+    # 3) tra i liberi (ignorando la competenza) o, in ultima istanza, chi non è nel giro —
+    #    MA mai un operatore bloccato dal Capo (priorità assoluta): Sitor non lo tocca.
+    for w in pool:
+        if w["name"] not in used and not w.get("locked_by_capo"):
+            return w
+    return None
 
 
 class DelegationParseReq(BaseModel):
@@ -4132,7 +4219,7 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
                 '{"title":"titolo breve","kind":"sanificazione|regola|crisis_override|generico","priority":"alta|media|bassa",'
                 '"pacing":"rallenta|accelera|priorita|normale|","pacing_target":"","steps":[{"order":1,"instruction":"cosa fare","sub_role":"competenza"}]}'
             )
-        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=900)
+        ).with_model("anthropic", SITOR_FAST).with_params(max_tokens=700)
         full = ""
         async for ev in chat.stream_message(UserMessage(text=f"Ordine del Capo: «{txt}». Operatori presenti oggi: {staff['present']}/{staff['total']}.")):
             if isinstance(ev, TextDelta):
@@ -4147,19 +4234,23 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
     if not parsed:
         raise HTTPException(status_code=422, detail="Comando non compreso")
 
-    pool = await _worker_pool()
+    org = _org_id(user)
+    pool = await _worker_pool(org)
     used, steps = [], []
+    _ETA_STEP_MIN = 15  # stima base per sotto-step; il cumulo dà l'ETA a cascata
     for s in (parsed.get("steps") or [])[:12]:
         w = _match_worker(s.get("sub_role"), pool, used)
         if w:
             used.append(w["name"])
+        order_n = int(s.get("order") or (len(steps) + 1))
         steps.append({
-            "order": int(s.get("order") or (len(steps) + 1)),
+            "order": order_n,
             "instruction": str(s.get("instruction") or ""),
             "sub_role": str(s.get("sub_role") or ""),
             "assignee": (w or {}).get("name"),
             "assignee_position": (w or {}).get("position"),
             "assignee_aura": (w or {}).get("aura"),
+            "eta_min": len(steps + [0]) * _ETA_STEP_MIN,  # cumulativo sequenziale
             "done": False,
         })
     proposal = {
@@ -4183,8 +4274,10 @@ class DelegationConfirmReq(BaseModel):
 @api_router.post("/delegation/confirm")
 async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(require_admin)):
     p = body.proposal or {}
+    org = _org_id(user)
     task = {
         "id": str(uuid.uuid4()),
+        "organization_id": org,
         "title": str(p.get("title") or "Task")[:80],
         "kind": p.get("kind") or "generico",
         "priority": p.get("priority") or "media",
@@ -4197,6 +4290,14 @@ async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(re
         "created_at": now_iso(),
     }
     await db.team_tasks.insert_one(dict(task))
+    # La conferma della delega rende gli operatori OCCUPATI (busy) così Sitor non li
+    # doppio-prenota, ma NON li blocca: quando completano tornano liberi. Il lock del Capo
+    # (priorità assoluta) è riservato ai comandi espliciti «sposta operatore» (capo-move / reparto).
+    for st in task["steps"]:
+        asg = (st.get("assignee") or "").strip()
+        if asg:
+            await _set_worker_state(org, asg, status="busy", task_id=task["id"],
+                                    step_order=st.get("order"), eta_min=st.get("eta_min"))
     # Crisis override → registra la direttiva di ritmo nello stato turno (letto dal piano).
     if task["kind"] == "crisis_override" and task["pacing"]:
         await db.lab_shift_state.update_one(
@@ -4206,6 +4307,166 @@ async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(re
         )
     return {"status": "success", "task": task,
             "mikemix_insight": f"Task «{task['title']}» confermato e inviato al floor in silenzio."}
+
+
+# ---------------------------------------------------------------------------
+# STATO VIVO PERSISTENTE PER OPERATORE (libero/occupato) + passaggio al prossimo
+# libero e ricalcolo a cascata dei tempi. Comandato dalle CUFFIE hands-free.
+# ---------------------------------------------------------------------------
+_ETA_STEP_MIN = 15
+
+def _recompute_task_eta(steps: list) -> list:
+    """Ricalcola i tempi stimati a cascata sui passi ANCORA da fare (i completati = 0)."""
+    pending = 0
+    for s in sorted(steps, key=lambda x: int(x.get("order") or 0)):
+        if s.get("done"):
+            s["eta_min"] = 0
+        else:
+            pending += 1
+            s["eta_min"] = pending * _ETA_STEP_MIN
+    return steps
+
+
+async def _reassign_step(org: str, task: dict, step: dict, exclude: list):
+    """Passa un passo al PROSSIMO operatore LIBERO (competenza + aura), saltando chi è
+    occupato o bloccato dal Capo. Aggiorna lo stato persistente del nuovo assegnatario."""
+    pool = await _worker_pool(org)
+    used = [((s.get("assignee") or "").strip()) for s in (task.get("steps") or []) if s.get("assignee") and not s.get("done")]
+    used += [e for e in exclude if e]
+    w = _match_worker(step.get("sub_role"), pool, used)
+    step["assignee"] = (w or {}).get("name")
+    step["assignee_position"] = (w or {}).get("position")
+    step["assignee_aura"] = (w or {}).get("aura")
+    if w:
+        await _set_worker_state(org, w["name"], status="busy", task_id=task["id"],
+                                step_order=step.get("order"), eta_min=step.get("eta_min"))
+    return step
+
+
+class WorkerActionReq(BaseModel):
+    operator: str = Field(..., max_length=60)
+    action: str = "accept"          # accept | complete | reject
+    task_id: Optional[str] = None
+    step_order: Optional[int] = None
+
+
+@api_router.post("/worker/task-action")
+async def worker_task_action(body: WorkerActionReq, request: Request,
+                             org: str = Depends(effective_org)):
+    """Le CUFFIE comandano lo stato vivo dell'operatore:
+    - accept   → l'operatore prende il passo: diventa OCCUPATO;
+    - complete → il passo è fatto: l'operatore torna LIBERO, il passo successivo passa al
+                 prossimo libero e i tempi stimati si ricalcolano a cascata;
+    - reject ("prossimo compito") → il passo torna in cerca del prossimo libero e l'operatore
+                 chiede il compito successivo, sempre rispettando la priorità del Capo."""
+    op = (body.operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    action = (body.action or "accept").lower()
+
+    task = None
+    if body.task_id:
+        task = await db.team_tasks.find_one({"id": body.task_id}, {"_id": 0})
+    if not task and body.step_order is None:
+        # trova il task attivo dell'operatore
+        task = await db.team_tasks.find_one(
+            {"status": "active", "steps.assignee": {"$regex": f"^{re.escape(op)}$", "$options": "i"}}, {"_id": 0})
+    if not task:
+        raise HTTPException(status_code=404, detail="Nessun task per l'operatore")
+
+    steps = task.get("steps") or []
+    target = None
+    for s in steps:
+        if body.step_order is not None and int(s.get("order") or 0) == int(body.step_order):
+            target = s; break
+        if body.step_order is None and (s.get("assignee") or "").lower() == op.lower() and not s.get("done"):
+            target = s; break
+    if not target:
+        raise HTTPException(status_code=404, detail="Passo non trovato")
+
+    if action == "accept":
+        await _set_worker_state(org, op, status="busy", task_id=task["id"], step_order=target.get("order"))
+        msg = f"{op} ha preso in carico: {target.get('instruction','')[:60]}"
+    elif action == "complete":
+        target["done"] = True
+        target["done_by"] = op[:40]
+        target["done_at"] = now_iso()
+        # operatore torna libero (e si sblocca dal Capo su questo passo)
+        await _set_worker_state(org, op, status="free", task_id=None, step_order=None, locked_by_capo=False)
+        # passa il prossimo passo non fatto al prossimo libero
+        nxt = next((s for s in sorted(steps, key=lambda x: int(x.get("order") or 0)) if not s.get("done") and not s.get("assignee")), None)
+        if nxt is None:
+            nxt = next((s for s in sorted(steps, key=lambda x: int(x.get("order") or 0)) if not s.get("done")), None)
+        if nxt is not None:
+            await _reassign_step(org, task, nxt, exclude=[op])
+        msg = f"Passo completato da {op}. Prossimo assegnato: {(nxt or {}).get('assignee') or '—'}"
+    elif action == "reject":
+        # l'operatore rifiuta: libero, il passo va al prossimo libero (diverso da lui)
+        await _set_worker_state(org, op, status="free", task_id=None, step_order=None)
+        await _reassign_step(org, task, target, exclude=[op])
+        msg = f"Passo riassegnato a {target.get('assignee') or '—'} (prossimo libero)"
+    else:
+        raise HTTPException(status_code=400, detail="Azione non valida")
+
+    steps = _recompute_task_eta(steps)
+    all_done = all(s.get("done") for s in steps) if steps else False
+    upd = {"steps": steps}
+    if all_done:
+        upd["status"] = "done"; upd["closed_at"] = now_iso()
+    await db.team_tasks.update_one({"id": task["id"]}, {"$set": upd})
+    return {"status": "success", "message": msg, "all_done": all_done, "steps": steps}
+
+
+@api_router.get("/worker/next-task")
+async def worker_next_task(operator: str = "", org: str = Depends(effective_org)):
+    """«Prossimo compito» per l'operatore: il primo passo attivo assegnato a lui (o assegnabile)."""
+    op = (operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    q = {"status": "active", "$or": [{"organization_id": org}, {"organization_id": {"$exists": False}}]}
+    tasks = await db.team_tasks.find(q, {"_id": 0}).sort("created_at", 1).to_list(200)
+    for t in tasks:
+        for s in sorted(t.get("steps") or [], key=lambda x: int(x.get("order") or 0)):
+            if s.get("done"):
+                continue
+            if (s.get("assignee") or "").lower() == op.lower():
+                return {"has_task": True, "task_id": t["id"], "title": t.get("title"),
+                        "step": s, "eta_min": s.get("eta_min")}
+    return {"has_task": False}
+
+
+@api_router.get("/worker/states")
+async def worker_states_list(org: str = Depends(effective_org)):
+    """Stato vivo (libero/occupato + lock Capo) di tutti gli operatori dell'azienda."""
+    states = await _worker_states_map(org)
+    return {"states": list(states.values())}
+
+
+class CapoMoveReq(BaseModel):
+    operator: str = Field(..., max_length=60)
+    dept: Optional[str] = ""
+    role: Optional[str] = ""
+    task: Optional[str] = ""
+
+
+@api_router.post("/worker/capo-move")
+async def worker_capo_move(body: CapoMoveReq, user: dict = Depends(require_admin)):
+    """PRIORITÀ ASSOLUTA DEL CAPO: un comando del Capo (voce/chat) per spostare un operatore
+    di reparto/ruolo/compito vince SEMPRE su qualsiasi decisione automatica di Sitor in corso.
+    L'operatore viene bloccato (locked_by_capo) così nessuna riassegnazione automatica lo muove."""
+    org = _org_id(user)
+    op = (body.operator or "").strip()
+    if not op:
+        raise HTTPException(status_code=400, detail="Operatore mancante")
+    await _set_worker_state(org, op, status="busy",
+                            dept=(body.dept or "")[:80], role=(body.role or "")[:80],
+                            task=(body.task or "")[:160], task_id=None, step_order=None,
+                            locked_by_capo=True, capo_at=now_iso(), capo_by=user.get("email"))
+    return {"status": "success",
+            "mikemix_insight": f"Comando della Direzione applicato: {op} spostato con priorità assoluta.",
+            "operator": op, "dept": body.dept, "role": body.role, "task": body.task}
+
+
 
 
 @api_router.get("/delegation/tasks")
@@ -4939,7 +5200,12 @@ async def lab_ask(payload: ChatRequest):
     chat = LlmChat(
         api_key=EMERGENT_LLM_KEY, session_id=f"labask-{uuid.uuid4().hex[:8]}",
         system_message=sys,
-    ).with_model("anthropic", SITOR_BRAIN)
+    ).with_model("anthropic", SITOR_FAST).with_params(max_tokens=220)
+    # RISPARMIO CREDITI: domande identiche (stesso testo+lingua) riusano la risposta.
+    mkey = _memo_key(sys, payload.message or "", SITOR_FAST)
+    cached = _memo_get(mkey)
+    if cached is not None:
+        return {"answer": cached, "cached": True}
     text = ""
     try:
         async for ev in chat.stream_message(UserMessage(text=payload.message)):
@@ -4950,7 +5216,9 @@ async def lab_ask(payload: ChatRequest):
     except Exception:
         logger.exception("lab_ask error")
         raise HTTPException(status_code=500, detail="Lab AI error")
-    return {"answer": text.strip()}
+    ans = text.strip()
+    _memo_set(mkey, ans)
+    return {"answer": ans}
 
 
 # ---------------------------------------------------------------------------

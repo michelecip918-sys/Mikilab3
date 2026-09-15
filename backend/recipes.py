@@ -793,7 +793,7 @@ async def _extract_order(command: str, lang: str) -> dict:
         sysmsg = ("Extract a bakery production order from the user's message. Respond ONLY with compact JSON: "
                   '{"product": string, "quantity": integer, "deadline": "HH:MM" (24h), "day_offset": 0 for today or 1 for tomorrow}. '
                   "If a field is missing use null. No text, only JSON.")
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=200)
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_FAST).with_params(max_tokens=160)
         out = ""
         async for ev in chat.stream_message(UserMessage(text=command)):
             if isinstance(ev, TextDelta):

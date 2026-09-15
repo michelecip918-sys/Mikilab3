@@ -5324,3 +5324,22 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Cache**: sw.js CACHE_NAME → `mikilab-v59` (nuova immagine + asset).
 - **Testato**: iteration_245.json → tutto PASS (desk scene, titoli, chip, chiusura, consegne add/delete, ricettario, HoloPanel, mobile 390px zero overflow, zero pageerror). 2 rilievi colore corretti e riverificati a schermo (GENERATE/SAVE = rgb(62,156,147)).
 - Con questo blocco si chiude la lista dei 6 punti concordati (Cuffie, Consegne, Chiusura, Memoria Sitor, Grafica, Avatar).
+---
+## Changelog — 15 Set 2026 (Risparmio crediti · Offline · Coordinamento · Priorità Capo · Voce) — COMPLETATO
+### 1. Risparmio crediti (modello giusto per compito)
+- Nuovo `SITOR_FAST = "claude-haiku-4-5-20251001"` per estrazioni/classificazioni semplici e dialogo vocale breve; `SITOR_BRAIN` (opus-4-8) resta per memoria personale, corsi ricetta, coordinamento complesso.
+- Instradati su FAST + max_tokens ridotti: `/lab/ask` (cuffie, 220 tok), `delegation_parse` (700), `_extract_order` (recipes.py, 160), `floor/sitor/change-request` (500).
+- Memoization applicativa (`_LLM_MEMO`, TTL 15 min, chiave sha256 su system+input+model): risposte a prompt IDENTICI riusate senza richiamare l'IA. Attiva su `/lab/ask`. Verificato: 2ª domanda identica → `cached:true`, ~144ms vs 1574ms.
+### 2. Resilienza offline (esteso idbCache)
+- Fallback offline aggiunto (`cachedGet`) a: corso ricetta, storico chiusure, suggerimenti piano, memoria Sitor, log produzione, consegne, task delegati (tasks/tasksByRole), stato operatori, reparti (catalog/assignment/board/presence/machinesGet/machinesOverview). Le richieste NUOVE che fanno "pensare" Sitor restano online.
+### 3. Coordinamento — stato vivo persistente per operatore
+- Nuova collezione `worker_states` (org-scoped): status free/busy, task_id, step_order, eta_min, locked_by_capo.
+- `_worker_pool(org)` e `_match_worker` rispettano lo stato persistente (saltano gli occupati) e il lock Capo.
+- Cuffie: `POST /api/worker/task-action` (accept|complete|reject) → complete libera l'operatore, passa il passo al prossimo libero e ricalcola le ETA a cascata; reject riassegna al prossimo libero. `GET /api/worker/next-task` = "prossimo compito". `GET /api/worker/states`.
+- Verificato: confirm→busy; complete Luca→libero+ETA ricalcolate (0,15,30,45); reject→riassegnato al prossimo libero.
+### 4. Priorità assoluta del Capo
+- `POST /api/worker/capo-move` e `depts_assign` impostano `locked_by_capo=True`: nessuna riassegnazione automatica di Sitor può spostare quell'operatore (il fallback di `_match_worker` non seleziona MAI un operatore Capo-locked; ritorna None se non c'è nessun libero). La conferma delega rende solo "busy" (non locked). Verificato: dopo capo-move Sara, un nuovo parse la esclude sempre.
+### 5. Voce cuffie — mai femminile
+- Verificato end-to-end: `/api/tts/speak` mappa ogni persona (incl. `nexus` delle cuffie) su voce maschile ElevenLabs / OpenAI onyx (tts-1, la variante economica); se nessuna voce maschile è disponibile lato dispositivo, `pickVoice` ritorna null → silenzio, mai una voce femminile. Test: `/tts/speak` voce=nexus → 200 audio/mpeg (onyx).
+### File toccati
+- `backend/server.py` (SITOR_FAST + memo, _deus_llm model param, lab_ask, delegation_parse/confirm, worker endpoints, _worker_pool/_match_worker, depts_assign), `backend/recipes.py` (_extract_order FAST), `frontend/src/lib/api.js` (offline cache + worker API + sync handler).
