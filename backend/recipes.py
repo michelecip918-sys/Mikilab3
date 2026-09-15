@@ -335,9 +335,10 @@ async def create_recipe(payload: RecipeCreate, user: dict = Depends(current_user
         raise HTTPException(status_code=403, detail="Solo l'admin può modificare le ricette Mikilab")
     recipe = Recipe(**payload.model_dump())
     doc = recipe.model_dump()
+    # Isolamento per azienda: OGNI ricetta (mikilab o personale) appartiene all'azienda del creatore.
+    doc["organization_id"] = _org_id(user)
     if payload.collection_name != "mikilab":
         doc["owner_id"] = user["user_id"]
-        doc["organization_id"] = _org_id(user)
     _targets = ["de", "en", "es", "fr", "fa"]
     _results = await asyncio.gather(*[_translate_recipe_lang(doc, _t) for _t in _targets], return_exceptions=True)
     for _res in _results:

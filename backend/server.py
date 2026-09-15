@@ -482,6 +482,7 @@ async def seed_mikilab_if_empty(force: bool = False):
             continue
         doc["updated_at"] = now_iso()
         doc["hidden"] = False
+        doc["organization_id"] = ORG_DEFAULT
         await db.recipes.update_one(
             {"collection_name": "mikilab", "name": doc["name"]},
             {"$set": doc, "$setOnInsert": {"id": seed_id, "created_at": seed_created}},
@@ -890,7 +891,7 @@ async def _bakery_snapshot(admin: dict) -> str:
     except Exception: pass
     # Team e turni di oggi + operatori attivi
     try:
-        asg = await db.dept_assignments.find({"date": today}, {"_id": 0}).to_list(100)
+        asg = await db.dept_assignments.find({"date": today, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
         ops = await db.operator_pins.find({"active": True}, {"_id": 0, "name": 1}).to_list(200)
         lines = []
         if asg:
@@ -1326,7 +1327,7 @@ async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
 # del turno (pezzi sfornati, scarti, ore effettive timbrate, problemi) e compila
 # la BOZZA del report: il Capo la legge e l'approva con un tocco.
 # ============================================================================
-async def _shift_snapshot(today: str) -> dict:
+async def _shift_snapshot(today: str, org: str = ORG_DEFAULT) -> dict:
     """Fotografa i dati reali del turno registrati durante la giornata."""
     reports = await db.floor_shift_reports.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("at", 1).to_list(100)
     entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
@@ -1337,7 +1338,7 @@ async def _shift_snapshot(today: str) -> dict:
     for w, evs in by_worker.items():
         s = _arbzg_summary(evs)
         hours.append({"worker": w, "work_min": s["work_min"], "break_min": s["break_min"], "flags": s["flags"]})
-    objs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    objs = await db.dept_objectives.find({"date": today, "organization_id": org}, {"_id": 0}).to_list(50)
     changes = await db.floor_change_requests.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).to_list(50)
     return {
         "date": today,
@@ -1375,10 +1376,10 @@ def _draft_fallback_text(snap: dict) -> str:
     return "\n".join(lines)
 
 
-async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual", force: bool = False) -> dict:
+async def _sitor_shift_draft(lang: str = "it", trigger: str = "manual", force: bool = False, org: str = ORG_DEFAULT) -> dict:
     """Genera (o rigenera) la bozza del report di oggi. Con force=True genera anche senza dati (chiusura programmata / manuale)."""
     today = now_iso()[:10]
-    snap = await _shift_snapshot(today)
+    snap = await _shift_snapshot(today, org=org)
     if not force and not snap["operator_reports"] and not snap["hours"] and not snap["objectives"]:
         return {}
     langname = _DEUS_LANGS.get(str(lang or "it").split("-")[0][:2], "italiano")
@@ -1437,7 +1438,7 @@ class ShiftDraftGenReq(BaseModel):
 
 @api_router.post("/capo/sitor/shift-draft/generate")
 async def capo_shift_draft_generate(body: ShiftDraftGenReq, admin: dict = Depends(require_admin)):
-    doc = await _sitor_shift_draft(lang=body.lang, trigger="manual", force=True)
+    doc = await _sitor_shift_draft(lang=body.lang, trigger="manual", force=True, org=_org_id(admin))
     if not doc:
         return {"ok": False, "draft": None}
     return {"ok": True, "draft": doc}
@@ -2058,7 +2059,7 @@ async def depts_board(user: Optional[dict] = Depends(optional_user)):
 @api_router.get("/depts/history")
 async def depts_history(days: int = 14, admin: dict = Depends(require_admin)):
     """Storico turni: composizione squadra per giorno e reparto."""
-    docs = await db.dept_assignments.find({}, {"_id": 0}).sort("at", -1).to_list(3000)
+    docs = await db.dept_assignments.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("at", -1).to_list(3000)
     by_date = {}
     for a in docs:
         d = a.get("date") or (a.get("at") or "")[:10]
@@ -2095,8 +2096,9 @@ async def depts_presence(admin: dict = Depends(require_admin)):
 async def depts_shift_report(admin: dict = Depends(require_admin)):
     """Report fine turno: assegnazioni + presenze + pezzi prodotti per reparto."""
     today = now_iso()[:10]
-    asg = await db.dept_assignments.find({"date": today}, {"_id": 0}).to_list(2000)
-    objs = await db.dept_objectives.find({"date": today}, {"_id": 0}).to_list(50)
+    _org = _org_id(admin)
+    asg = await db.dept_assignments.find({"date": today, "organization_id": _org}, {"_id": 0}).to_list(2000)
+    objs = await db.dept_objectives.find({"date": today, "organization_id": _org}, {"_id": 0}).to_list(50)
     entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
     last = {}
     for e in entries:
@@ -2699,7 +2701,7 @@ async def _send_verification(email: str, origin_url: str, lang: str):
 async def get_recipes(collection_name: str = "mikilab", include_mine: bool = False, user: Optional[dict] = Depends(optional_user)):
     if collection_name == "mikilab":
         await seed_mikilab_if_empty()
-        docs = await db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
+        docs = await db.recipes.find({"collection_name": "mikilab", "organization_id": _org_id(user), "hidden": {"$ne": True}}, {"_id": 0}).sort("name", 1).to_list(1000)
         # Il ricettario del proprietario: includi anche le ricette PERSONALI dell'owner/admin
         # (le "mie ricette"), così abbonati / VIP / owner possono usarle come parte del ricettario.
         owner_users = await db.users.find(
