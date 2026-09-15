@@ -5245,6 +5245,23 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - P3: Dispatch vocale in tempo reale in produzione; dettatura vocale ordine rapido.
 
 ---
+## Changelog — 15 Set 2026 (BLOCCO A · Chiusura giornata + Memoria Sitor — punti 3 e 4)
+- **Punto 3 · Chiusura giornata reale** (`day_production_closures`, org-scoped, NON tocca il vecchio `/day-close` per-utente): `POST /api/production/day-close` registra per prodotto pianificato/prodotto/avanzato + costo/prezzo unitari →
+  - **food-cost automatico** del giorno (ricavo, costo materie, margine €, food-cost %) — collegato, non più calcolo a mano;
+  - **correzione automatica del piano** settimana dopo: per ogni prodotto calcola la domanda reale (prodotto − avanzato) e la salva in `plan_suggestions` (org+day+ricetta), esposta da `GET /api/production/plan-suggestions`;
+  - alimenta la **memoria di Sitor** dalle correzioni della chiusura.
+  - `GET /api/production/day-close/history`.
+- **Punto 4 · Memoria personale di Sitor** (`sitor_memory`, org-scoped): `POST/GET /api/sitor/memory` — ogni correzione (acqua/lievito/tempi) salvata col contesto (stagione auto, temp/umidità a mano, lotto farina). `_sitor_memory_ctx(org)` iniettato in `_plan_context` → Sitor usa lo storico reale di QUESTO panificio quando genera il piano (suggerisce lui per primo).
+- **Frontend**: nuovo pannello Capo `ChiusuraGiornata.jsx` (montato in console dopo il Piano): righe prefillate dal piano del giorno, food-cost in tempo reale, sezione correzioni → memoria, suggerimenti storici e "Memoria del metodo del Capo".
+- **Verifica reale (curl)**: chiusura lun (200 baguette, 30 avanzate; 150 pane) → food-cost 23.6%, margine €470; suggerimento Baguette 200→170, Pane 150; 1 correzione salvata in memoria; memoria diretta salvata; storico OK; autoplan continua a generare con la memoria attiva.
+- Meteo: campo inserito a mano dal Capo (scelta utente). Non toccato nulla di funzionante.
+
+### PROSSIMI BLOCCHI (concordati con l'utente, in ordine)
+- **Blocco B**: Consegne & furgoni gestiti da Sitor (carico per furgone, ordine tappe, avviso ordini non pronti). Nessuna burocrazia.
+- **Blocco C**: Hands-free cuffie (bottone "Cuffie" in produzione, ascolto continuo "Sitor…", risposta vocale). Verifica manuale su telefono.
+- **Blocco D**: Rifinitura grafica (gerarchia colori #3E9C93, spaziatura, titoli uniformi, feedback bottoni) + avatar 3D Sitor/Capo più eleganti (stessa somiglianza).
+
+---
 ## Changelog — 15 Set 2026 (4 miglioramenti: catalogo iniziale, corso a voce, PIN→azienda, corso dal piano)
 - **1 · Catalogo di partenza nuova azienda**: nuovo endpoint `POST /api/recipes/import-catalog` (utente loggato, importa nella PROPRIA azienda le ricette Master di org_default senza duplicare, non tocca org_default). Frontend: pulsante `import-catalog-btn` nello stato vuoto del ricettario mikilab. Verificato: nuova azienda importa 149 ricette, org_default intatto.
 - **2 · Corso ricette a voce (Sitor)**: pulsante `course-speak-<id>` nel pannello corso (RecipeList/RecipeDetail) → `speakCourse` legge intro + fasi + consigli in sequenza con `playTTS` (voce unica Sitor), toggle Ascolta/Ferma. PASS test.

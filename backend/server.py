@@ -8924,6 +8924,174 @@ async def food_cost(body: FoodCostReq, admin: dict = Depends(require_admin)):
             "margin": margin, "food_cost_pct": food_cost_pct, "breakdown": breakdown}
 
 
+# ===========================================================================
+# CHIUSURA GIORNATA DI PRODUZIONE (Blocco A) — collega food-cost, correzione del
+# piano della settimana dopo e memoria personale di Sitor. Nessuna burocrazia.
+# ===========================================================================
+class DayCloseLine(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: str = ""
+    planned: float = 0        # pezzi pianificati
+    produced: float = 0       # pezzi effettivamente prodotti
+    leftover: float = 0       # pezzi avanzati/invenduti
+    unit_cost: Optional[float] = None    # costo materia prima per pezzo (€)
+    unit_price: Optional[float] = None   # prezzo di vendita per pezzo (€)
+
+class DayCorrection(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: str = ""
+    change: str = ""          # es. "più acqua 3%", "meno lievito", "puntata +30 min"
+    temp_c: Optional[str] = None
+    humidity_pct: Optional[str] = None
+    season: Optional[str] = None
+    flour_lot: Optional[str] = None
+
+class ProdDayCloseReq(BaseModel):
+    date: Optional[str] = None
+    day_key: str = ""         # lun..dom
+    lines: List[DayCloseLine] = []
+    corrections: List[DayCorrection] = []
+    note: str = ""
+    lang: str = "it"
+
+
+@api_router.post("/production/day-close")
+async def production_day_close(body: ProdDayCloseReq, admin: dict = Depends(require_admin)):
+    org = _org_id(admin)
+    today = body.date or now_iso()[:10]
+    revenue = 0.0
+    cost = 0.0
+    produced_tot = 0.0
+    leftover_tot = 0.0
+    lines_out = []
+    suggestions = []
+    for ln in body.lines:
+        planned = float(ln.planned or 0)
+        produced = float(ln.produced or 0)
+        leftover = float(ln.leftover or 0)
+        demand = max(0.0, produced - leftover)          # domanda reale = prodotto - invenduto
+        uc = float(ln.unit_cost or 0)
+        up = float(ln.unit_price or 0)
+        revenue += produced * up
+        cost += produced * uc
+        produced_tot += produced
+        leftover_tot += leftover
+        # Correzione automatica del piano: la settimana dopo punta alla domanda reale.
+        suggested = int(round(demand)) if demand > 0 else int(round(produced))
+        lines_out.append({"recipe_id": ln.recipe_id, "recipe_name": ln.recipe_name,
+                          "planned": planned, "produced": produced, "leftover": leftover,
+                          "demand": round(demand, 1), "suggested_next": suggested})
+        if ln.recipe_name:
+            await db.plan_suggestions.update_one(
+                {"organization_id": org, "day_key": body.day_key, "recipe_name": ln.recipe_name},
+                {"$set": {"organization_id": org, "day_key": body.day_key, "recipe_name": ln.recipe_name,
+                          "suggested_qty": suggested, "planned_was": planned, "produced": produced,
+                          "leftover": leftover, "from_date": today, "updated_at": now_iso()}},
+                upsert=True)
+            suggestions.append({"recipe_name": ln.recipe_name, "day_key": body.day_key, "suggested_qty": suggested})
+    day_margin = round(revenue - cost, 2)
+    food_cost_pct = round((cost / revenue) * 100, 1) if revenue > 0 else None
+    # Alimenta la memoria personale di Sitor con ogni correzione registrata.
+    mem_saved = 0
+    for cr in body.corrections:
+        if not (cr.change or "").strip():
+            continue
+        await db.sitor_memory.insert_one({
+            "id": str(uuid.uuid4()), "organization_id": org,
+            "recipe_id": cr.recipe_id, "recipe_name": cr.recipe_name,
+            "change": cr.change.strip()[:400], "source": "chiusura",
+            "context": {"temp_c": cr.temp_c or "", "humidity_pct": cr.humidity_pct or "",
+                        "season": cr.season or _season_now(), "flour_lot": cr.flour_lot or ""},
+            "date": today, "at": now_iso()})
+        mem_saved += 1
+    closure = {
+        "id": str(uuid.uuid4()), "organization_id": org, "date": today, "day_key": body.day_key,
+        "lines": lines_out, "note": (body.note or "")[:1000],
+        "revenue": round(revenue, 2), "material_cost": round(cost, 2),
+        "day_margin": day_margin, "food_cost_pct": food_cost_pct,
+        "produced_total": round(produced_tot, 1), "leftover_total": round(leftover_tot, 1),
+        "corrections_saved": mem_saved, "closed_at": now_iso(), "closed_by": admin.get("email") or "Direzione",
+    }
+    await db.day_production_closures.insert_one(dict(closure))
+    closure.pop("_id", None)
+    return {"ok": True, "closure": closure, "suggestions": suggestions,
+            "food_cost": {"revenue": round(revenue, 2), "material_cost": round(cost, 2),
+                          "day_margin": day_margin, "food_cost_pct": food_cost_pct}}
+
+
+@api_router.get("/production/day-close/history")
+async def production_day_close_history(admin: dict = Depends(require_admin)):
+    docs = await db.day_production_closures.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("closed_at", -1).to_list(120)
+    return {"closures": docs}
+
+
+@api_router.get("/production/plan-suggestions")
+async def production_plan_suggestions(day_key: str = "", admin: dict = Depends(require_admin)):
+    q = {"organization_id": _org_id(admin)}
+    if day_key:
+        q["day_key"] = day_key
+    docs = await db.plan_suggestions.find(q, {"_id": 0}).sort("updated_at", -1).to_list(300)
+    return {"suggestions": docs}
+
+
+# ---- Memoria personale di Sitor (Blocco A · punto 4) ----
+class SitorMemoryReq(BaseModel):
+    recipe_id: Optional[str] = None
+    recipe_name: str = ""
+    change: str = ""
+    temp_c: Optional[str] = None
+    humidity_pct: Optional[str] = None
+    season: Optional[str] = None
+    flour_lot: Optional[str] = None
+
+
+@api_router.post("/sitor/memory")
+async def sitor_memory_add(body: SitorMemoryReq, admin: dict = Depends(require_admin)):
+    if not (body.change or "").strip():
+        raise HTTPException(status_code=400, detail="Correzione vuota")
+    doc = {"id": str(uuid.uuid4()), "organization_id": _org_id(admin),
+           "recipe_id": body.recipe_id, "recipe_name": body.recipe_name,
+           "change": body.change.strip()[:400], "source": "produzione",
+           "context": {"temp_c": body.temp_c or "", "humidity_pct": body.humidity_pct or "",
+                       "season": body.season or _season_now(), "flour_lot": body.flour_lot or ""},
+           "date": now_iso()[:10], "at": now_iso()}
+    await db.sitor_memory.insert_one(dict(doc))
+    doc.pop("_id", None)
+    return {"ok": True, "memory": doc}
+
+
+@api_router.get("/sitor/memory")
+async def sitor_memory_list(recipe_name: str = "", admin: dict = Depends(require_admin)):
+    q = {"organization_id": _org_id(admin)}
+    if recipe_name:
+        q["recipe_name"] = recipe_name
+    docs = await db.sitor_memory.find(q, {"_id": 0}).sort("at", -1).to_list(200)
+    return {"memories": docs}
+
+
+def _season_now() -> str:
+    m = datetime.now(timezone.utc).month
+    return {12: "inverno", 1: "inverno", 2: "inverno", 3: "primavera", 4: "primavera", 5: "primavera",
+            6: "estate", 7: "estate", 8: "estate", 9: "autunno", 10: "autunno", 11: "autunno"}.get(m, "")
+
+
+async def _sitor_memory_ctx(org: str, limit: int = 12) -> str:
+    """Riassunto delle correzioni storiche del Capo per far suggerire Sitor per primo."""
+    try:
+        mems = await db.sitor_memory.find({"organization_id": org}, {"_id": 0}).sort("at", -1).to_list(limit)
+    except Exception:
+        return ""
+    if not mems:
+        return ""
+    items = []
+    for m in mems:
+        ctx = m.get("context") or {}
+        tag = ", ".join(x for x in [ctx.get("season"), (f"{ctx.get('temp_c')}°C" if ctx.get("temp_c") else ""), (f"farina {ctx.get('flour_lot')}" if ctx.get("flour_lot") else "")] if x)
+        items.append(f"{m.get('recipe_name') or 'generale'}: {m.get('change')}" + (f" ({tag})" if tag else ""))
+    return " MEMORIA DEL METODO DI QUESTO CAPO (correzioni storiche reali, usale per suggerire tu per primo invece di consigli generici): " + " | ".join(items) + "."
+
+
+
 # ---------------------------------------------------------------------------
 # CONTROLLO AMBIENTALE PREDITTIVO — corregge lievitazione e idratazione
 # ---------------------------------------------------------------------------
@@ -9231,8 +9399,8 @@ def _parse_llm_json(out: str) -> dict:
     return {}
 
 
-async def _plan_context(body) -> str:
-    """Contesto operativo condiviso per i piani di Sitor (caposquadra, personale, scorte, macchine, freezer)."""
+async def _plan_context(body, org: str = ORG_DEFAULT) -> str:
+    """Contesto operativo condiviso per i piani di Sitor (caposquadra, personale, scorte, macchine, freezer, memoria del Capo)."""
     ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
     leaders = ld.get("leaders") or {}
     low = []
@@ -9260,6 +9428,7 @@ async def _plan_context(body) -> str:
     except Exception:
         pass
     ctx += _autoplan_freezer_ctx(body.freezer_stock)
+    ctx += await _sitor_memory_ctx(org)
     return ctx
 
 
@@ -9292,7 +9461,7 @@ async def mike_autoplan_week_options(body: AutoPlanReq, admin: dict = Depends(re
                 "Usa i label esatti delle 3 strategie. Esattamente 3 opzioni. Nessun testo fuori dal JSON."
             )
             sysmsg += await _bakery_snapshot(admin)
-            ctx = await _plan_context(body)
+            ctx = await _plan_context(body, _org_id(admin))
             chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"autoplanweek-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=4000)
             out = ""
             async for ev in chat.stream_message(UserMessage(text=f"CONTESTO: {ctx}\nGenera 3 strategie di piano settimanale.")):
@@ -9346,7 +9515,7 @@ async def mike_autoplan_week_detail(body: AutoPlanWeekDetailReq, admin: dict = D
             "Massimo 5 lotti. Nessun testo fuori dal JSON."
         )
         base_sys += await _bakery_snapshot(admin)
-        ctx = await _plan_context(body)
+        ctx = await _plan_context(body, _org_id(admin))
         results = await asyncio.gather(
             *[_week_day_detail(k, days_in.get(k) or [], ctx, base_sys) for k in todo],
             return_exceptions=True,

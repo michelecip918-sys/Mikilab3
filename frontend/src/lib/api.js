@@ -116,6 +116,14 @@ export const planApi = {
   order: (body) => api.post(`/lab/plan-order`, body).then((r) => r.data),
 };
 
+export const productionApi = {
+  dayClose: (payload) => api.post(`/production/day-close`, payload).then((r) => r.data),
+  closeHistory: () => api.get(`/production/day-close/history`).then((r) => r.data),
+  planSuggestions: (day_key = "") => api.get(`/production/plan-suggestions`, { params: { day_key } }).then((r) => r.data),
+  memoryList: (recipe_name = "") => api.get(`/sitor/memory`, { params: { recipe_name } }).then((r) => r.data),
+  memoryAdd: (payload) => api.post(`/sitor/memory`, payload).then((r) => r.data),
+};
+
 export const weeklyApi = {
   get: async () => {
     try { const r = await api.get(`/weekly-plan`); idbSet("weekly_plan", r.data); return r.data; }
