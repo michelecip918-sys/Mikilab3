@@ -15,6 +15,7 @@ import SpatialVisionAR from "@/components/SpatialVisionAR";
 import ClimateTimeMachine from "@/components/ClimateTimeMachine";
 import ProductionInventory from "@/components/ProductionInventory";
 import VoiceDelegation from "@/components/VoiceDelegation";
+import CreditSavingsBadge from "@/components/CreditSavingsBadge";
 import ProoferSync from "@/components/ProoferSync";
 import BatchPhoenix from "@/components/BatchPhoenix";
 
@@ -416,6 +417,7 @@ export default function MikeMixSense({ section, mode, isCapo, operator, floorRol
                 <button data-testid="mikemix-delegate-btn" onClick={() => setDelegateOpen(true)} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#D95200]/50 text-[#D95200] bg-[#D9520012] active:scale-95 transition-transform">
                   <Mic className="w-4 h-4" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation", "Voice Delegation", "Delegación por Voz", "Délégation Vocale", "واگذاری صوتی")}
                 </button>
+                <CreditSavingsBadge />
                 <button data-testid="mikemix-handoff-btn" onClick={doHandoff} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-black text-sm border border-[#5EEAD4]/50 text-[#5EEAD4] bg-[#5EEAD40d] active:scale-95 transition-transform">
                   <Volume2 className="w-4 h-4" /> {tri("Handoff Audio Turno", "Audio-Schichtübergabe", "Shift Audio Handoff", "Relevo de Turno Audio", "Relais Audio de Poste", "تحویل صوتی شیفت")}
                 </button>

@@ -793,11 +793,21 @@ async def _extract_order(command: str, lang: str) -> dict:
         sysmsg = ("Extract a bakery production order from the user's message. Respond ONLY with compact JSON: "
                   '{"product": string, "quantity": integer, "deadline": "HH:MM" (24h), "day_offset": 0 for today or 1 for tomorrow}. '
                   "If a field is missing use null. No text, only JSON.")
+        # CACHE ESTRAZIONI: stesso comando → stessa estrazione, senza richiamare l'IA.
+        _mk = _memo_key(sysmsg, command, SITOR_FAST)
+        _c = _memo_get(_mk)
+        if _c is not None:
+            await _track_saving("cache")
+            import re as _re0, json as _json0
+            _m0 = _re0.search(r"\{.*\}", _c, _re0.S)
+            return _json0.loads(_m0.group(0)) if _m0 else {}
+        await _track_saving("fast")
         chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"order-{uuid.uuid4().hex[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_FAST).with_params(max_tokens=160)
         out = ""
         async for ev in chat.stream_message(UserMessage(text=command)):
             if isinstance(ev, TextDelta):
                 out += ev.content or ""
+        _memo_set(_mk, out)
         import re as _re, json as _json
         m = _re.search(r"\{.*\}", out, _re.S)
         return _json.loads(m.group(0)) if m else {}

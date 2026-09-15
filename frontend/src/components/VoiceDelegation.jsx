@@ -24,6 +24,7 @@ export default function VoiceDelegation({ onClose }) {
   const [proposal, setProposal] = useState(null);
   const [pool, setPool] = useState([]);
   const [done, setDone] = useState(null);
+  const [moved, setMoved] = useState(null);
   const recRef = useRef(null);
 
   const toggleMic = useCallback(() => {
@@ -45,11 +46,32 @@ export default function VoiceDelegation({ onClose }) {
 
   useEffect(() => () => { try { recRef.current?.stop(); } catch { /* */ } }, []);
 
+  // COMANDO CAPO A VOCE (priorità assoluta): «Sposta Sara ai forni» → sposta subito
+  // l'operatore, bypassando l'analisi IA. Vince su qualsiasi decisione automatica di Sitor.
+  const MOVE_RE = /\b(?:sposta|metti|porta|manda|move|put|send|mueve|deplace|déplace|verschiebe)\s+([A-Za-zÀ-ÿ]{2,})\s+(?:a|ai|al|alla|allo|all'|in|nel|nella|verso|su|to|al?\s+reparto|zu|a\s+la|à|vers)\s+(.+)/i;
+  const tryCapoMove = useCallback(async (text) => {
+    const mm = (text || "").trim().match(MOVE_RE);
+    if (!mm) return false;
+    const operator = mm[1].trim();
+    const dest = mm[2].trim().replace(/[.。]+$/, "");
+    try {
+      const r = await delegationApi.capoMove(operator, dest, dest, "");
+      setMoved({ operator, dest });
+      try { playTTS(tri(`Fatto. ${operator} spostato a ${dest} con priorità assoluta.`, `Erledigt. ${operator} mit absoluter Priorität nach ${dest} verschoben.`, `Done. ${operator} moved to ${dest} with absolute priority.`, `Hecho. ${operator} movido a ${dest} con prioridad absoluta.`, `Terminé. ${operator} déplacé vers ${dest} en priorité absolue.`, `انجام شد. ${operator} با اولویت مطلق به ${dest} منتقل شد.`), lang); } catch { /* */ }
+      toast.success(r?.mikemix_insight || tri("Comando della Direzione applicato", "Befehl angewendet", "Command applied", "Comando aplicado", "Commande appliquée", "دستور اعمال شد"));
+    } catch (e) {
+      toast.error(e?.response?.data?.detail || tri("Comando non applicato", "Nicht angewendet", "Not applied", "No aplicado", "Non appliqué", "اعمال نشد"));
+    }
+    return true;
+  }, [lang, tri]);
+
   const analyze = useCallback(async () => {
     const t = transcript.trim();
     if (!t) return;
     try { recRef.current?.stop(); } catch { /* */ }
-    setListening(false); setParsing(true); setProposal(null); setDone(null);
+    setListening(false); setParsing(true); setProposal(null); setDone(null); setMoved(null);
+    // Priorità: se è un comando diretto di spostamento del Capo, eseguilo subito.
+    if (await tryCapoMove(t)) { setParsing(false); return; }
     try {
       const r = await delegationApi.parse(t, lang);
       setProposal(r.proposal); setPool(r.pool || []);
@@ -57,7 +79,7 @@ export default function VoiceDelegation({ onClose }) {
       toast.error(e?.response?.data?.detail || tri("Comando non compreso", "Nicht verstanden", "Not understood", "No entendido", "Non compris", "درک نشد"));
     }
     setParsing(false);
-  }, [transcript, lang, tri]);
+  }, [transcript, lang, tri, tryCapoMove]);
 
   const setAssignee = (order, name) => {
     setProposal((p) => {
@@ -105,7 +127,14 @@ export default function VoiceDelegation({ onClose }) {
           </motion.div>
         ) : (
           <>
-            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Sitor lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio.", "Diktiere einen Befehl: Sitor macht daraus eine Team-Aufgabe. Du bestätigst vor dem Senden.", "Dictate an order: Sitor turns it into a team task and proposes operators. You confirm before dispatch.", "Dicta una orden: Sitor la convierte en tarea de equipo. Confirmas antes de enviar.", "Dicte un ordre : Sitor en fait une tâche d'équipe. Tu confirmes avant l'envoi.", "دستوری بگو: Sitor آن را به وظیفه تیمی تبدیل می‌کند. قبل از ارسال تأیید می‌کنی.")}</p>
+            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Sitor lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio. Oppure dai un comando diretto: «Sposta Sara ai forni» (priorità assoluta).", "Diktiere einen Befehl: Sitor macht daraus eine Team-Aufgabe. Oder direkt: «Verschiebe Sara zu den Öfen».", "Dictate an order: Sitor turns it into a team task. Or a direct command: «Move Sara to the ovens» (absolute priority).", "Dicta una orden o un comando directo: «Mueve a Sara a los hornos» (prioridad absoluta).", "Dicte un ordre ou une commande directe : «Déplace Sara vers les fours» (priorité absolue).", "دستوری بگو یا فرمان مستقیم: «سارا را به فرها منتقل کن».")}</p>
+
+            {moved && (
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="capo-move-done" className="mb-4 rounded-2xl border border-[#3E9C93]/40 bg-[#3E9C93]/10 p-3 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-[#3E9C93] shrink-0" />
+                <p className="text-[13px] text-white font-semibold">{tri(`${moved.operator} spostato a ${moved.dest} · priorità assoluta della Direzione`, `${moved.operator} nach ${moved.dest} verschoben · absolute Priorität`, `${moved.operator} moved to ${moved.dest} · absolute priority`, `${moved.operator} movido a ${moved.dest} · prioridad absoluta`, `${moved.operator} déplacé vers ${moved.dest} · priorité absolue`, `${moved.operator} به ${moved.dest} منتقل شد · اولویت مطلق`)}</p>
+              </motion.div>
+            )}
 
             {/* MIC + testo */}
             <div className="flex flex-col items-center mb-4">

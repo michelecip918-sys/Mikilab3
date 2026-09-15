@@ -130,6 +130,11 @@ export const labAskApi = {
   ask: (message, lang = "it") => api.post(`/lab/ask`, { message, lang, session_id: "headphones" }).then((r) => r.data),
 };
 
+// Badge risparmio crediti (Direzione): modello economico + cache.
+export const aiApi = {
+  savings: () => cachedGet("ai_savings", () => api.get(`/ai/savings`).then((r) => r.data), { fast_calls: 0, brain_calls: 0, cache_hits: 0, saved_units: 0, saved_pct: 0, optimized_calls: 0 }),
+};
+
 export const deliveriesApi = {
   list: () => cachedGet("deliveries_list", () => api.get(`/deliveries`).then((r) => r.data), { deliveries: [] }),
   create: (payload) => api.post(`/deliveries`, payload).then((r) => r.data),

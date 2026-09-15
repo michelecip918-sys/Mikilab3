@@ -81,6 +81,21 @@ def _memo_set(key: str, val: str):
         _LLM_MEMO.clear()
     _LLM_MEMO[key] = (time.time() + _LLM_MEMO_TTL, val)
 
+
+# Contatori di RISPARMIO CREDITI (badge Direzione): quante chiamate sono andate sul modello
+# economico e quante risposte sono state riusate dalla cache, per mese. Fire-and-forget.
+async def _track_saving(kind: str):
+    """kind: 'fast' | 'brain' | 'cache'. Aggiorna i contatori mensili di risparmio."""
+    try:
+        month = now_iso()[:7]
+        field = {"fast": "fast_calls", "brain": "brain_calls", "cache": "cache_hits"}.get(kind)
+        if not field:
+            return
+        await db.ai_usage.update_one(
+            {"month": month}, {"$inc": {field: 1}, "$set": {"updated_at": now_iso()}}, upsert=True)
+    except Exception:
+        pass
+
 # ---------------------------------------------------------------------------
 # Object Storage (archivio immagini dedicato)
 # ---------------------------------------------------------------------------
@@ -983,7 +998,9 @@ async def _deus_llm(sysmsg: str, user_text: str, session: str, max_tokens: int =
         mkey = _memo_key(sysmsg, user_text, model)
         cached = _memo_get(mkey)
         if cached is not None:
+            await _track_saving("cache")
             return cached
+    await _track_saving("fast" if model == SITOR_FAST else "brain")
     chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=session, system_message=sysmsg
                    ).with_model("anthropic", model).with_params(max_tokens=max_tokens)
     out = ""
@@ -4205,29 +4222,40 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=503, detail="NLP non disponibile")
     staff = await _staffing()
+    _deleg_sys = f"deleg-parse-v1|{body.lang}"
+    _deleg_input = f"{txt}|{staff['present']}/{staff['total']}"
+    _dmk = _memo_key(_deleg_sys, _deleg_input, SITOR_FAST)
+    _dcached = _memo_get(_dmk)
     try:
-        chat = LlmChat(
-            api_key=EMERGENT_LLM_KEY, session_id=f"deleg-{uuid.uuid4().hex[:8]}",
-            system_message=(
-                "Sei Sitor, direttore di produzione. Il Capo detta un ordine a voce per il laboratorio (panificio industriale). "
-                "Traducilo in un TASK DI SQUADRA operativo. Tipi possibili: 'sanificazione' (pulizia attrezzature/carrelli), "
-                "'regola' (regola di supervisione), 'crisis_override' (comando di ritmo: rallenta/accelera/priorita'), 'generico'. "
-                "Se e' un crisis_override, indica in 'pacing' uno tra: 'rallenta','accelera','priorita','normale' e in 'pacing_target' l'eventuale prodotto/reparto. "
-                "Scomponi in sotto-step SEQUENZIALI concreti; per ognuno indica 'sub_role' (competenza/posizione ideale, es. Impastatore, Forni, Pulizie, Confezionamento). "
-                "NON citare MAI HACCP, moduli, documenti, burocrazia, registri o ufficio: solo azioni pratiche di produzione/pulizia. "
-                f"Rispondi SOLO con JSON valido nella lingua con codice '{body.lang}': "
-                '{"title":"titolo breve","kind":"sanificazione|regola|crisis_override|generico","priority":"alta|media|bassa",'
-                '"pacing":"rallenta|accelera|priorita|normale|","pacing_target":"","steps":[{"order":1,"instruction":"cosa fare","sub_role":"competenza"}]}'
-            )
-        ).with_model("anthropic", SITOR_FAST).with_params(max_tokens=700)
-        full = ""
-        async for ev in chat.stream_message(UserMessage(text=f"Ordine del Capo: «{txt}». Operatori presenti oggi: {staff['present']}/{staff['total']}.")):
-            if isinstance(ev, TextDelta):
-                full += ev.content
-            elif isinstance(ev, StreamDone):
-                break
-        m = re.search(r"\{.*\}", full, re.S)
-        parsed = json.loads(m.group(0)) if m else None
+        if _dcached is not None:
+            await _track_saving("cache")
+            parsed = json.loads(_dcached) if _dcached else None
+        else:
+            await _track_saving("fast")
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY, session_id=f"deleg-{uuid.uuid4().hex[:8]}",
+                system_message=(
+                    "Sei Sitor, direttore di produzione. Il Capo detta un ordine a voce per il laboratorio (panificio industriale). "
+                    "Traducilo in un TASK DI SQUADRA operativo. Tipi possibili: 'sanificazione' (pulizia attrezzature/carrelli), "
+                    "'regola' (regola di supervisione), 'crisis_override' (comando di ritmo: rallenta/accelera/priorita'), 'generico'. "
+                    "Se e' un crisis_override, indica in 'pacing' uno tra: 'rallenta','accelera','priorita','normale' e in 'pacing_target' l'eventuale prodotto/reparto. "
+                    "Scomponi in sotto-step SEQUENZIALI concreti; per ognuno indica 'sub_role' (competenza/posizione ideale, es. Impastatore, Forni, Pulizie, Confezionamento). "
+                    "NON citare MAI HACCP, moduli, documenti, burocrazia, registri o ufficio: solo azioni pratiche di produzione/pulizia. "
+                    f"Rispondi SOLO con JSON valido nella lingua con codice '{body.lang}': "
+                    '{"title":"titolo breve","kind":"sanificazione|regola|crisis_override|generico","priority":"alta|media|bassa",'
+                    '"pacing":"rallenta|accelera|priorita|normale|","pacing_target":"","steps":[{"order":1,"instruction":"cosa fare","sub_role":"competenza"}]}'
+                )
+            ).with_model("anthropic", SITOR_FAST).with_params(max_tokens=1200)
+            full = ""
+            async for ev in chat.stream_message(UserMessage(text=f"Ordine del Capo: «{txt}». Operatori presenti oggi: {staff['present']}/{staff['total']}.")):
+                if isinstance(ev, TextDelta):
+                    full += ev.content
+                elif isinstance(ev, StreamDone):
+                    break
+            m = re.search(r"\{.*\}", full, re.S)
+            parsed = json.loads(m.group(0)) if m else None
+            if parsed:
+                _memo_set(_dmk, json.dumps(parsed))
     except Exception as e:
         logging.warning(f"delegation_parse failed: {e}")
         raise HTTPException(status_code=503, detail="NLP non disponibile")
@@ -5205,7 +5233,9 @@ async def lab_ask(payload: ChatRequest):
     mkey = _memo_key(sys, payload.message or "", SITOR_FAST)
     cached = _memo_get(mkey)
     if cached is not None:
+        await _track_saving("cache")
         return {"answer": cached, "cached": True}
+    await _track_saving("fast")
     text = ""
     try:
         async for ev in chat.stream_message(UserMessage(text=payload.message)):
@@ -5219,6 +5249,33 @@ async def lab_ask(payload: ChatRequest):
     ans = text.strip()
     _memo_set(mkey, ans)
     return {"answer": ans}
+
+
+@api_router.get("/ai/savings")
+async def ai_savings():
+    """Badge Direzione: stima del risparmio crediti dato dal modello economico + cache.
+    fast_calls = chiamate sul modello economico (Haiku) invece del cervello (Opus);
+    cache_hits = risposte riusate senza richiamare l'IA; brain_calls = chiamate al cervello."""
+    month = now_iso()[:7]
+    doc = await db.ai_usage.find_one({"month": month}, {"_id": 0}) or {}
+    fast = int(doc.get("fast_calls", 0))
+    brain = int(doc.get("brain_calls", 0))
+    cache = int(doc.get("cache_hits", 0))
+    # Stima: una chiamata al cervello (Opus) costa ~1 unità; sul modello economico ~0.08;
+    # una risposta dalla cache ~0. Il risparmio è ciò che NON abbiamo speso rispetto a fare
+    # tutto sul cervello.
+    UNIT_BRAIN, UNIT_FAST = 1.0, 0.08
+    saved_fast = fast * (UNIT_BRAIN - UNIT_FAST)
+    saved_cache = cache * UNIT_FAST + cache * 0  # la cache evita anche il costo economico
+    saved_units = round(saved_fast + cache * UNIT_FAST, 2)
+    total_if_brain = (fast + cache + brain) * UNIT_BRAIN
+    saved_pct = round((saved_units / total_if_brain) * 100) if total_if_brain else 0
+    return {
+        "month": month,
+        "fast_calls": fast, "brain_calls": brain, "cache_hits": cache,
+        "saved_units": saved_units, "saved_pct": saved_pct,
+        "optimized_calls": fast + cache,
+    }
 
 
 # ---------------------------------------------------------------------------
