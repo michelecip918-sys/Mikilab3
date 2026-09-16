@@ -139,7 +139,7 @@ export default function PublicGate({ onUnlock }) {
   }, [showPin]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const AVATARS = [
-    { img: "avatar_miki.jpg", c: "#64748B", n: "MikiLab" },
+    { img: "avatar_miki.jpg", c: "#D97736", n: "MikiLab" },
     { img: "avatar_nexus.jpg", c: "#a6b1bc", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
   ];
 

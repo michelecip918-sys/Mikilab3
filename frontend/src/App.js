@@ -99,6 +99,7 @@ import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import DeskScene from "@/components/console/DeskScene";
 import SalaSitor from "@/components/console/SalaSitor";
+import TeamCoordination from "@/components/console/TeamCoordination";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import SitorAtelier from "@/components/console/SitorAtelier";
 import ImageForge from "@/components/console/ImageForge";
@@ -482,7 +483,7 @@ export default function App() {
 
               {/* ================= ZONA 1 · MASTER ================= */}
               <section ref={zoneRefs.master} data-zone="master" className="holo-zone pt-6">
-                <ZoneHero3D testid="hero-master" theme="miki" onEnter={() => jumpTo("master")} avatar="avatar_miki.jpg" accent="#64748B" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} />
+                <ZoneHero3D testid="hero-master" theme="miki" onEnter={() => jumpTo("master")} avatar="avatar_miki.jpg" accent="#D97736" tag="Z-01 · Master" name="MikiLab" role={tri("Fondatore · Direttore di Produzione", "Gründer · Produktionsleiter", "Founder · Head of Production", "Fundador · Director de Producción", "Fondateur · Directeur de Production", "بنیان‌گذار · مدیر تولید")} />
                 {!(user && user.role === "admin") ? (
                   <div data-testid="capo-gate" className="holo-panel p-6 sm:p-8 text-center">
                     <span className="holo-corner holo-corner-tl" style={{ color: "#64748B" }} />
@@ -587,6 +588,9 @@ export default function App() {
                     <SecBlock id="team" icon="👥" accent="#9aa6b2"
                       title={tri("Turni e Ruoli del Team", "Schichten & Rollen", "Team Shifts & Roles", "Turnos y Roles del Equipo", "Services & Rôles", "شیفت‌ها و نقش‌های تیم")}
                       sub={tri("Chi lavora, dove e quando. Assegna i reparti, salva le squadre-tipo e registra i volti.", "Wer arbeitet, wo und wann.", "Who works, where and when. Assign departments, save team templates and enroll faces.", "Quién trabaja, dónde y cuándo.", "Qui travaille, où et quand.", "چه کسی، کجا و کی کار می‌کند.")}>
+                    <HoloPanel testid="panel-team-coordination" accent="#D97736" beacon="#7E9A82" icon="🎧" defaultOpen title={tri("Coordinamento Automatico", "Automatische Koordination", "Automatic Coordination", "Coordinación Automática", "Coordination Automatique", "هماهنگی خودکار")} sub={tri("Abilita gli operatori su più reparti; quando parte un evento di produzione il sistema chiama da solo un operatore libero via cuffie (sì/no) e passa al prossimo se rifiuta. Con te presente propone, in tua assenza decide e tiene il registro.", "Mehr-Bereichs-Freigaben; das System ruft selbst einen freien Mitarbeiter per Headset (ja/nein) und geht weiter bei Ablehnung.", "Enable operators across departments; on a production event the system calls a free operator via headset (yes/no) and moves on if declined.", "Habilita operarios en varias áreas; el sistema llama solo por auriculares (sí/no).", "Active les opérateurs sur plusieurs ateliers ; le système appelle seul via casque (oui/non).", "اپراتورها را چند بخشی فعال کن؛ سیستم خودش با هدست تماس می‌گیرد.")}>
+                      <TeamCoordination />
+                    </HoloPanel>
                     <HoloPanel testid="panel-dept-assign" accent="#8a97a6" beacon="#a4afbb" icon="🏭" defaultOpen title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
                       <DeptAssign />
                     </HoloPanel>

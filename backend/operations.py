@@ -64,21 +64,32 @@ async def add_dept_feature(dept_id: str, body: FeatureReq, user: dict = Depends(
 
 # ---- Logistica Consegne (Lieferung) ----
 @api_router.get("/deliveries")
-async def list_deliveries(user: dict = Depends(current_user)):
-    docs = await db.deliveries.find({}, {"_id": 0}).sort("created_at", -1).to_list(200)
+async def list_deliveries(org: str = Depends(effective_org)):
+    docs = await db.deliveries.find({"$or": [{"organization_id": org}, {"organization_id": {"$exists": False}}]}, {"_id": 0}).sort("created_at", -1).to_list(200)
     return {"deliveries": docs}
+
+
+class DeliveryItem(BaseModel):
+    name: str = Field(..., max_length=80)
+    qty: str = Field("", max_length=30)
 
 
 class DeliveryReq(BaseModel):
     client: str = Field(..., max_length=120)
     time: Optional[str] = Field("", max_length=20)
     driver: Optional[str] = Field("", max_length=80)
+    address: Optional[str] = Field("", max_length=200)
+    items: List[DeliveryItem] = []
+    ready: Optional[bool] = False
 
 
 @api_router.post("/deliveries")
 async def create_delivery(body: DeliveryReq, user: dict = Depends(current_user)):
-    doc = {"id": str(uuid.uuid4()), "client": body.client.strip(), "time": (body.time or "").strip(), "driver": (body.driver or "").strip() or "Fattorino Standard", "status": "in consegna", "created_at": now_iso()}
-    await db.deliveries.insert_one(doc)
+    doc = {"id": str(uuid.uuid4()), "organization_id": _org_id(user), "client": body.client.strip(),
+           "time": (body.time or "").strip(), "driver": (body.driver or "").strip() or "Fattorino Standard",
+           "address": (body.address or "").strip(), "items": [i.dict() for i in (body.items or [])],
+           "ready": bool(body.ready), "status": "in consegna", "created_at": now_iso()}
+    await db.deliveries.insert_one(dict(doc))
     doc.pop("_id", None)
     return {"ok": True, "delivery": doc}
 
@@ -92,13 +103,13 @@ async def update_delivery(delivery_id: str, body: DeliveryStatusReq, user: dict 
     st = (body.status or "").strip().lower()
     if st not in ("in consegna", "consegnato"):
         raise HTTPException(status_code=400, detail="Stato non valido")
-    await db.deliveries.update_one({"id": delivery_id}, {"$set": {"status": st}})
+    await db.deliveries.update_one({"id": delivery_id, "organization_id": _org_id(user)}, {"$set": {"status": st}})
     return {"ok": True, "status": st}
 
 
 @api_router.delete("/deliveries/{delivery_id}")
 async def delete_delivery(delivery_id: str, user: dict = Depends(current_user)):
-    await db.deliveries.delete_one({"id": delivery_id})
+    await db.deliveries.delete_one({"id": delivery_id, "organization_id": _org_id(user)})
     return {"ok": True}
 
 

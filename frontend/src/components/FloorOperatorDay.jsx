@@ -7,6 +7,7 @@ import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
 import RecipeList from "@/components/RecipeList";
 import HeadphonesMode from "@/components/HeadphonesMode";
+import DriverRun from "@/components/console/DriverRun";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
@@ -441,7 +442,12 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       {/* Registra produzione: prodotto/avanzato → compila la chiusura del Capo */}
       <FloorProductionLog tri={tri} />
 
-      {showHeadphones && <HeadphonesMode lang={lang} tri={tri} onClose={() => setShowHeadphones(false)} />}
+      {/* Giro consegne di oggi (per chi guida i furgoni) */}
+      <div className="rounded-2xl border border-[#D97736]/30 bg-[#242427] px-4 py-3">
+        <DriverRun />
+      </div>
+
+      {showHeadphones && <HeadphonesMode lang={lang} tri={tri} operator={role} onClose={() => setShowHeadphones(false)} />}
 
 
       {/* Ricettario & Corsi passo-passo di Sitor — anche per la produzione */}

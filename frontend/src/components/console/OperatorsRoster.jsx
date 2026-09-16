@@ -8,7 +8,7 @@ const API = process.env.REACT_APP_BACKEND_URL;
 
 // Identità CORE con avatar reale.
 const CORE = [
-  { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#64748B" },
+  { id: "michele", name: "MikiLab", role: "Fondatore · Direttore di Produzione", img: "avatar_miki.jpg", accent: "#D97736" },
   { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "avatar_nexus.jpg", accent: "#8a97a6" },
   { id: "nexus", name: "Sitor", role: "Dio dell'Arte Bianca · Assistente di Produzione", img: "avatar_nexus.jpg", accent: "#a6b1bc" },
 ];

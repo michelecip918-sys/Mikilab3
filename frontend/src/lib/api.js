@@ -607,6 +607,27 @@ export const delegationApi = {
   capoMove: (operator, dept = "", role = "", task = "") => api.post(`/worker/capo-move`, { operator, dept, role, task }).then((r) => r.data),
 };
 
+// COORDINAMENTO AUTOMATICO DEL TEAM — copertura reparti in tempo reale.
+export const coordinationApi = {
+  settings: () => api.get(`/coordination/settings`).then((r) => r.data),
+  saveSettings: (payload) => api.put(`/coordination/settings`, payload).then((r) => r.data),
+  heartbeat: () => api.post(`/coordination/capo/heartbeat`).then((r) => r.data).catch(() => null),
+  skills: () => api.get(`/operators/skills`).then((r) => r.data),
+  saveSkills: (name, departments, is_driver) => api.put(`/operators/skills`, { name, departments, is_driver }).then((r) => r.data),
+  trigger: (payload) => api.post(`/coordination/trigger`, payload).then((r) => r.data),
+  active: () => api.get(`/coordination/active`).then((r) => r.data).catch(() => ({ calls: [], capo_present_effective: false })),
+  log: () => api.get(`/coordination/log`).then((r) => r.data).catch(() => ({ decisions: [] })),
+  taskTimes: () => api.get(`/coordination/task-times`).then((r) => r.data).catch(() => ({ tasks: [], avg_min: null, measured: 0 })),
+  pendingCall: (operator) => api.get(`/coordination/calls/pending`, { params: { operator } }).then((r) => r.data).catch(() => ({ has_call: false })),
+  respond: (call_id, answer, operator) => api.post(`/coordination/calls/${call_id}/respond`, { answer, operator }).then((r) => r.data),
+  confirmProposal: (call_id) => api.post(`/coordination/proposals/${call_id}/confirm`).then((r) => r.data),
+  changeProposal: (call_id, operator) => api.post(`/coordination/proposals/${call_id}/change`, { operator }).then((r) => r.data),
+  // Vista autista — giro consegne di oggi.
+  deliveryRun: () => api.get(`/delivery/run`).then((r) => r.data).catch(() => ({ stops: [], not_ready_count: 0, total: 0 })),
+  deliveryStop: (id, delivered) => api.patch(`/delivery/stop/${id}/status`, { delivered }).then((r) => r.data),
+  deliveryOrganize: () => api.post(`/deliveries/organize`).then((r) => r.data),
+};
+
 // Traduzione vocale in tempo reale (canali headset Bluetooth, Letz_Passive).
 export const voiceApi = {
   translate: (text, target) => api.post(`/voice/translate`, { text, target }).then((r) => r.data),
