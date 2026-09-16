@@ -12,56 +12,6 @@ globals().update({k: v for k, v in vars(_core).items() if not k.startswith("__")
 BASE_DEPT_IDS = {"panetteria", "pizzeria", "pasticceria"}
 
 
-@api_router.get("/lab/departments")
-async def get_lab_departments():
-    custom = await db.lab_departments.find({}, {"_id": 0}).sort("created_at", 1).to_list(100)
-    extras_docs = await db.lab_dept_features.find({}, {"_id": 0}).to_list(200)
-    extras = {d["dept_id"]: d.get("features", []) for d in extras_docs}
-    return {"custom": custom, "extras": extras}
-
-
-class DeptReq(BaseModel):
-    id: str = Field(..., max_length=40)
-    title: str = Field(..., max_length=80)
-    desc: Optional[str] = Field("", max_length=200)
-
-
-@api_router.post("/lab/departments")
-async def create_lab_department(body: DeptReq, user: dict = Depends(require_admin)):
-    slug = re.sub(r"[^a-z0-9_]+", "_", (body.id or "").strip().lower()).strip("_")[:40]
-    if not slug or slug in BASE_DEPT_IDS:
-        raise HTTPException(status_code=400, detail="ID reparto non valido o riservato")
-    if await db.lab_departments.find_one({"id": slug}):
-        raise HTTPException(status_code=409, detail="Reparto già esistente")
-    doc = {"id": slug, "title": body.title.strip(), "desc": (body.desc or "").strip() or "Reparto flessibile aperto a qualsiasi lavorazione extra.", "features": ["Postazione Universale", "Gestione Scorte"], "custom": True, "created_at": now_iso()}
-    await db.lab_departments.insert_one(doc)
-    doc.pop("_id", None)
-    return {"ok": True, "department": doc}
-
-
-@api_router.delete("/lab/departments/{dept_id}")
-async def delete_lab_department(dept_id: str, user: dict = Depends(require_admin)):
-    if dept_id in BASE_DEPT_IDS:
-        raise HTTPException(status_code=400, detail="Reparto base non eliminabile")
-    await db.lab_departments.delete_one({"id": dept_id})
-    await db.lab_dept_features.delete_one({"dept_id": dept_id})
-    return {"ok": True}
-
-
-class FeatureReq(BaseModel):
-    feature: str = Field(..., max_length=80)
-
-
-@api_router.post("/lab/departments/{dept_id}/feature")
-async def add_dept_feature(dept_id: str, body: FeatureReq, user: dict = Depends(require_admin)):
-    feat = (body.feature or "").strip()
-    if not feat:
-        raise HTTPException(status_code=400, detail="Testo mancante")
-    await db.lab_dept_features.update_one({"dept_id": dept_id}, {"$push": {"features": feat}, "$setOnInsert": {"dept_id": dept_id}}, upsert=True)
-    doc = await db.lab_dept_features.find_one({"dept_id": dept_id}, {"_id": 0})
-    return {"ok": True, "features": (doc or {}).get("features", [])}
-
-
 # ---- Logistica Consegne (Lieferung) ----
 @api_router.get("/deliveries")
 async def list_deliveries(org: str = Depends(effective_org)):

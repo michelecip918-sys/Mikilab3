@@ -43,6 +43,7 @@ async def _coord_settings(org: str) -> dict:
         "machine_threshold_pieces": int(doc.get("machine_threshold_pieces", DEFAULT_MACHINE_PIECES)),
         "response_timeout_sec": int(doc.get("response_timeout_sec", DEFAULT_TIMEOUT_SEC)),
         "uncovered_alert_sec": int(doc.get("uncovered_alert_sec", DEFAULT_UNCOVERED_SEC)),
+        "voice_daily_limit": int(doc.get("voice_daily_limit", 0)),  # 0 = illimitato
         "capo_last_seen": doc.get("capo_last_seen"),
     }
 
@@ -73,6 +74,7 @@ class CoordSettingsReq(BaseModel):
     machine_threshold_pieces: Optional[int] = Field(None, ge=0, le=1000000)
     response_timeout_sec: Optional[int] = Field(None, ge=5, le=300)
     uncovered_alert_sec: Optional[int] = Field(None, ge=15, le=3600)
+    voice_daily_limit: Optional[int] = Field(None, ge=0, le=1000)
 
 
 @api_router.put("/coordination/settings")
@@ -91,6 +93,8 @@ async def set_coord_settings(body: CoordSettingsReq, user: dict = Depends(requir
         upd["response_timeout_sec"] = int(body.response_timeout_sec)
     if body.uncovered_alert_sec is not None:
         upd["uncovered_alert_sec"] = int(body.uncovered_alert_sec)
+    if body.voice_daily_limit is not None:
+        upd["voice_daily_limit"] = int(body.voice_daily_limit)
     await db.coordination_settings.update_one({"organization_id": org}, {"$set": upd}, upsert=True)
     s = await _coord_settings(org)
     s["capo_present_effective"] = _capo_present(s)
@@ -105,6 +109,28 @@ async def capo_heartbeat(user: dict = Depends(require_admin)):
         {"organization_id": org}, {"$set": {"organization_id": org, "capo_last_seen": now_iso()}}, upsert=True)
     s = await _coord_settings(org)
     return {"ok": True, "capo_present_effective": _capo_present(s)}
+
+
+# --- Limite giornaliero di richieste vocali per operatore (configurabile dal Capo) ---
+@api_router.post("/coordination/voice-quota")
+async def voice_quota(body: dict, org: str = Depends(effective_org)):
+    """Conteggia UNA richiesta vocale dell'operatore e dice se è ancora entro il limite.
+    Superato il limite giornaliero, Sitor risponde solo a eventi critici (allowed=False)."""
+    operator = (body.get("operator") or "").strip()
+    critical = bool(body.get("critical"))
+    s = await _coord_settings(org)
+    limit = int(s.get("voice_daily_limit") or 0)
+    day = now_iso()[:10]
+    key = {"organization_id": org, "operator": operator.lower(), "day": day}
+    doc = await db.voice_usage.find_one(key) or {"count": 0}
+    used = int(doc.get("count") or 0)
+    if critical or limit <= 0:  # eventi critici o nessun limite → sempre concesso
+        await db.voice_usage.update_one(key, {"$set": {**key, "updated_at": now_iso()}, "$inc": {"count": 1}}, upsert=True)
+        return {"allowed": True, "used": used + 1, "limit": limit, "reason": "critical" if critical else "unlimited"}
+    if used >= limit:
+        return {"allowed": False, "used": used, "limit": limit, "reason": "limit_reached"}
+    await db.voice_usage.update_one(key, {"$set": {**key, "updated_at": now_iso()}, "$inc": {"count": 1}}, upsert=True)
+    return {"allowed": True, "used": used + 1, "limit": limit, "reason": "ok"}
 
 
 # ============================ ABILITAZIONI MULTI-REPARTO ============================
@@ -556,3 +582,45 @@ async def delivery_stop_status(stop_id: str, body: dict, org: str = Depends(effe
     await db.deliveries.update_one({"id": stop_id, "organization_id": org},
                                    {"$set": {"delivered": delivered, "delivered_at": now_iso() if delivered else None}})
     return {"ok": True, "delivered": delivered}
+
+
+# ============================ SITOR APPRENDISTA (Punto 4) ============================
+# Solo due informazioni PRATICHE per ricetta, scritte UNA VOLTA dal Capo (Sitor non le inventa):
+#   1) quanti pezzi entrano in una teglia/formato
+#   2) come formare/piegare i pezzi
+# Niente tempi di cottura/lievitazione qui. Isolato per organization_id.
+
+class ApprenticeReq(BaseModel):
+    pieces_per_tray: Optional[str] = Field("", max_length=40)
+    tray_format: Optional[str] = Field("", max_length=80)
+    shaping_note: Optional[str] = Field("", max_length=600)
+
+
+@api_router.get("/apprentice/recipe/{recipe_id}")
+async def apprentice_get(recipe_id: str, org: str = Depends(effective_org)):
+    """Le due info pratiche per l'apprendista. Non tocca MAI ingredienti/dosi della ricetta."""
+    doc = await db.recipe_apprentice.find_one({"recipe_id": recipe_id, "organization_id": org}, {"_id": 0}) or {}
+    has = bool(doc.get("pieces_per_tray") or doc.get("shaping_note"))
+    spoken = ""
+    if has:
+        parts = []
+        if doc.get("pieces_per_tray"):
+            parts.append(f"In una {doc.get('tray_format') or 'teglia'} entrano {doc['pieces_per_tray']} pezzi.")
+        if doc.get("shaping_note"):
+            parts.append(f"Per formare: {doc['shaping_note']}")
+        spoken = " ".join(parts)
+    return {"recipe_id": recipe_id, "has_info": has,
+            "pieces_per_tray": doc.get("pieces_per_tray", ""), "tray_format": doc.get("tray_format", ""),
+            "shaping_note": doc.get("shaping_note", ""), "spoken": spoken}
+
+
+@api_router.put("/apprentice/recipe/{recipe_id}")
+async def apprentice_set(recipe_id: str, body: ApprenticeReq, user: dict = Depends(require_admin)):
+    """Il Capo scrive le info una volta per ricetta."""
+    org = _org_id(user)
+    upd = {"organization_id": org, "recipe_id": recipe_id,
+           "pieces_per_tray": (body.pieces_per_tray or "").strip(),
+           "tray_format": (body.tray_format or "").strip(),
+           "shaping_note": (body.shaping_note or "").strip(), "updated_at": now_iso()}
+    await db.recipe_apprentice.update_one({"recipe_id": recipe_id, "organization_id": org}, {"$set": upd}, upsert=True)
+    return {"ok": True}

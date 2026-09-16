@@ -15,6 +15,7 @@ import HandsFreeMode from "@/components/HandsFreeMode";
 import RecipeTimeline from "@/components/RecipeTimeline";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
+import ApprenticeCard from "@/components/ApprenticeCard";
 import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
@@ -858,6 +859,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#3E9C93] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
           {r.flour_type ? <p className="text-sm text-[#7E8A93] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
+          <div className="mt-3 no-print"><ApprenticeCard recipeId={r.id} canEdit={canEdit} /></div>
         </div>
 
         <div className="flex gap-1.5 no-print flex-wrap">

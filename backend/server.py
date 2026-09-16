@@ -784,6 +784,18 @@ ORG_SCOPED_COLLECTIONS = [
     "pizzeria_sessions", "pastry_deliveries", "lab_warehouse", "operator_pins",
     "worker_states", "operator_skills", "coordination_settings",
     "coordination_calls", "coordination_log", "team_notifications", "delivery_runs",
+    # --- Chiusura progetto: isolamento completo aziende (Punto 5) ---
+    "lab_sites", "lab_devices", "mike_machines", "team_tasks", "lab_shift_plan",
+    "lab_staffing", "lab_absences", "capo_queue", "floor_change_requests",
+    "floor_shift_reports", "floor_plan", "lab_shift_state", "lab_checkin",
+    "lab_rest_mode", "lab_seq_block", "lab_sensors_live", "lab_sensors",
+    "lab_pulse_history", "lab_fault_log", "lab_consumption_log", "batch_links",
+    "dough_batches", "dough_sessions", "shifts", "stores", "purchase_orders",
+    "crates", "sos_events", "b2b_orders", "delay_events", "deck_alarm_history",
+    "compliance_timelog", "compliance_training_ack", "oven_qc_log",
+    "mikiscore_history", "plan_suggestions", "sitor_memory",
+    "day_production_closures", "production_logs", "deliveries",
+    "dept_shift_templates", "recipe_apprentice", "voice_usage",
 ]
 
 

@@ -620,12 +620,19 @@ export const coordinationApi = {
   taskTimes: () => api.get(`/coordination/task-times`).then((r) => r.data).catch(() => ({ tasks: [], avg_min: null, measured: 0 })),
   pendingCall: (operator) => api.get(`/coordination/calls/pending`, { params: { operator } }).then((r) => r.data).catch(() => ({ has_call: false })),
   respond: (call_id, answer, operator) => api.post(`/coordination/calls/${call_id}/respond`, { answer, operator }).then((r) => r.data),
+  voiceQuota: (operator, critical = false) => api.post(`/coordination/voice-quota`, { operator, critical }).then((r) => r.data).catch(() => ({ allowed: true })),
   confirmProposal: (call_id) => api.post(`/coordination/proposals/${call_id}/confirm`).then((r) => r.data),
   changeProposal: (call_id, operator) => api.post(`/coordination/proposals/${call_id}/change`, { operator }).then((r) => r.data),
   // Vista autista — giro consegne di oggi.
   deliveryRun: () => api.get(`/delivery/run`).then((r) => r.data).catch(() => ({ stops: [], not_ready_count: 0, total: 0 })),
   deliveryStop: (id, delivered) => api.patch(`/delivery/stop/${id}/status`, { delivered }).then((r) => r.data),
   deliveryOrganize: () => api.post(`/deliveries/organize`).then((r) => r.data),
+};
+
+// SITOR APPRENDISTA — due info pratiche per ricetta (pezzi per teglia + come formare).
+export const apprenticeApi = {
+  get: (recipeId) => api.get(`/apprentice/recipe/${recipeId}`).then((r) => r.data).catch(() => ({ has_info: false })),
+  set: (recipeId, payload) => api.put(`/apprentice/recipe/${recipeId}`, payload).then((r) => r.data),
 };
 
 // Traduzione vocale in tempo reale (canali headset Bluetooth, Letz_Passive).

@@ -60,6 +60,16 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
         return;
       }
       setStatus("thinking");
+      // Limite giornaliero richieste vocali (configurato dal Capo): oltre il limite Sitor tace (solo eventi critici).
+      if (operator) {
+        const q = await coordinationApi.voiceQuota(operator, false);
+        if (q && q.allowed === false) {
+          const lim = tri("Hai raggiunto il limite di richieste per oggi. Sitor risponderà solo per gli allarmi importanti.", "Tageslimit erreicht. Sitor antwortet nur noch bei wichtigen Alarmen.", "You reached today's request limit. Sitor will only answer critical alerts.", "Has alcanzado el límite de hoy. Sitor solo responderá a alertas importantes.", "Tu as atteint la limite du jour. Sitor ne répondra qu'aux alertes importantes.", "به سقف امروز رسیدی. سیتور فقط به هشدارهای مهم پاسخ می‌دهد.");
+          setReply(lim); setStatus("speaking");
+          playTTS(lim, { lang, onEnded: () => { setStatus("listening"); busyRef.current = false; } });
+          return;
+        }
+      }
       const d = await labAskApi.ask(clean, lang);
       const ans = d.answer || "";
       setReply(ans); setStatus("speaking");
@@ -67,7 +77,7 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
     } catch {
       setStatus("listening"); busyRef.current = false;
     }
-  }, [lang, tri]);
+  }, [lang, tri, operator]);
 
   const onPhrase = useCallback((t) => {
     // Se c'è una chiamata di coordinamento in attesa: sì/no risponde SENZA wake-word.

@@ -119,7 +119,19 @@ export default function TeamCoordination() {
         </div>
       </div>
 
-      {/* Proposte / chiamate / scoperti */}
+      {/* Limite giornaliero richieste vocali per operatore */}
+      <div className="rounded-2xl bg-[#242427] border border-[#3A3A3E] p-4">
+        <div className="flex items-center gap-2 mb-1">
+          <Radio className="w-4 h-4 text-[#7E9A82]" />
+          <h4 className="text-sm font-black text-white uppercase tracking-wide">{tri("Limite richieste vocali", "Sprach-Limit", "Voice request limit", "Límite de voz", "Limite vocale", "سقف درخواست صوتی")}</h4>
+        </div>
+        <p className="text-[11px] text-[#94A3B8] mb-3">{tri("Massimo richieste vocali a Sitor per operatore al giorno. Superato il limite, Sitor risponde solo agli allarmi importanti. 0 = illimitato.", "Max. Sprachanfragen pro Mitarbeiter/Tag. 0 = unbegrenzt.", "Max voice requests per operator per day. Over the limit Sitor only answers critical alerts. 0 = unlimited.", "Máximo de peticiones por operario/día. 0 = ilimitado.", "Nombre max de requêtes par opérateur/jour. 0 = illimité.", "حداکثر درخواست روزانه هر اپراتور. ۰ = نامحدود.")}</p>
+        <label className="text-[11px] text-[#CBD5E1] flex items-center gap-1.5">{tri("richieste/giorno", "Anfragen/Tag", "requests/day", "peticiones/día", "requêtes/jour", "درخواست/روز")}
+          <input data-testid="voice-daily-limit" type="number" min="0" defaultValue={s.voice_daily_limit || 0}
+            onBlur={(e) => patchSettings({ voice_daily_limit: parseInt(e.target.value) || 0 })}
+            className="w-20 rounded-md bg-[#18181A] border border-[#3A3A3E] px-2 py-1 text-white text-sm" />
+        </label>
+      </div>
       {(proposals.length > 0 || pending.length > 0 || uncovered.length > 0) && (
         <div className="rounded-xl bg-[#242427] border border-[#3A3A3E] p-4 space-y-2">
           <div className="flex items-center gap-2 mb-1"><Radio className="w-4 h-4" style={{ color: COPPER }} /><h4 className="text-sm font-black text-white uppercase tracking-wide">{tri("In corso", "Laufend", "In progress", "En curso", "En cours", "در جریان")}</h4></div>
