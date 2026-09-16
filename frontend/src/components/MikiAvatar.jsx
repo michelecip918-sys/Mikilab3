@@ -2,7 +2,7 @@
 export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
   <div data-testid="miki-avatar" className={`flex items-center gap-2.5 ${className}`}>
     <img
-      src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`}
+      src={`${process.env.PUBLIC_URL}/avatar_miki.jpg`}
       alt="Michele — MikiLab"
       style={{ width: size, height: size }}
       className="rounded-full object-cover ring-2 ring-[#3E9C93]/60 shadow-sm shrink-0"
@@ -20,7 +20,7 @@ export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
 // Variante per gli hero colorati: avatar tondo in alto a destra, bordo bianco.
 export const HeroAvatar = ({ className = "" }) => (
   <img
-    src={`${process.env.PUBLIC_URL}/michele-real-lab.jpg`}
+    src={`${process.env.PUBLIC_URL}/avatar_miki.jpg`}
     alt="Michele — MikiLab"
     data-testid="section-avatar"
     className={`absolute top-4 right-4 w-14 h-14 rounded-full object-cover ring-2 ring-white/70 shadow-lg ${className}`}

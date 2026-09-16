@@ -5508,3 +5508,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ---
 ## Changelog — 16 Set 2026 (Nome Azienda in Testata)
 - Nuovo `OrgBadge.jsx`: pill compatto con icona Building2 + nome dell'azienda ATTIVA, visibile nell'header solo per il Capo autenticato (admin) e solo su desktop (sm+). Accento Rame (#D97736). Si aggiorna su evento `mikilab-org-changed` (emesso da OrgSwitcher dopo crea/rinomina/switch) e al reload post-switch. Posizionato in App.js header dopo il pulsante Turno. Compilazione OK.
+
+---
+## Changelog — 16 Set 2026 (Silos isolati + dept_shift_templates eliminato + verifica 3 feature)
+### 1) Isolamento silos (warehouse.py)
+- Aggiunto "silos" a ORG_SCOPED_COLLECTIONS (backfill org_default automatico). `_seed_silos(org)` ora per-azienda; GET /mike/silos, PUT /mike/silos/{id}, POST /mike/silos/microorder filtrano per organization_id (lettura/scrittura/micro-ordine). Verificato: nuova azienda riceve il proprio seed (silo-00=420) e NON vede le modifiche dell'altra (111). Dati test ripristinati.
+### 2) dept_shift_templates ELIMINATO
+- Rimossi i 4 endpoint /depts/templates* (GET/POST/DELETE/apply), i modelli ShiftTemplateItem/ShiftTemplateReq, la voce in ORG_SCOPED_COLLECTIONS, e droppata la collezione da Mongo. GET /depts/templates ora 404.
+### 3) Stato reale 3 feature (verificato via curl, non solo dichiarato)
+- Autisti/consegne: REALE. /delivery/run (tappe di oggi ordinate per orario + flag not_ready) e /delivery/stop/{id}/status org-scoped; oggi 4 tappe, 1 non pronta. Vista DriverRun nel giorno operatore. NOTA: la vista è mostrata a TUTTI gli operatori floor (non limitata alla skill is_driver).
+- Coordinamento automatico squadra: REALE. coordination.py (trigger, calls, settings, skills, timeout, quota voce), pannello TeamCoordination in console Capo, integrazione HeadphonesMode. /coordination/active → 8 chiamate, settings 200.
+- Avatar MikiLab: COMPLETATO. Il nuovo avatar_miki.jpg era nello shell (App/PublicGate/ShiftBriefing/OperatoreSelect) ma il componente riusabile MikiAvatar.jsx e RicetteCustodite.jsx usavano la vecchia michele-real-lab.jpg → unificato ovunque su avatar_miki.jpg (serve 200 image/jpeg).

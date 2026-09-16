@@ -16,19 +16,21 @@ _SILO_SEED = [
 ]
 
 
-async def _seed_silos():
-    if await db.silos.count_documents({}) == 0:
+async def _seed_silos(org: str = ORG_DEFAULT):
+    if await db.silos.count_documents({"organization_id": org}) == 0:
         for s in _SILO_SEED:
-            await db.silos.insert_one(dict(s))
+            d = dict(s)
+            d["organization_id"] = org
+            await db.silos.insert_one(d)
 
 
 @api_router.get("/mike/silos")
 async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     """Monitor silos: autonomia oraria dal calo peso, micro-ordini automatici sotto soglia,
     e compensazione dell'umidità della farina (correzione % acqua in ricetta)."""
-    await _seed_silos()
+    await _seed_silos(_org_id(admin))
     it = (lang or "it").startswith("it")
-    docs = await db.silos.find({}, {"_id": 0}).to_list(100)
+    docs = await db.silos.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
     out = []
     reorder = 0
     for s in docs:
@@ -62,21 +64,21 @@ class SiloUpdateReq(BaseModel):
 async def mike_silo_update(sid: str, body: SiloUpdateReq, admin: dict = Depends(require_admin)):
     upd = {k: float(v) for k, v in body.model_dump(exclude_none=True).items()}
     if upd:
-        await db.silos.update_one({"id": sid}, {"$set": upd})
+        await db.silos.update_one({"id": sid, "organization_id": _org_id(admin)}, {"$set": upd})
     return {"ok": True}
 
 
 @api_router.post("/mike/silos/microorder")
 async def mike_silo_microorder(admin: dict = Depends(require_admin)):
     """Genera micro-ordini per tutti i silos sotto soglia e li rabbocca (simulazione fornitore)."""
-    await _seed_silos()
-    docs = await db.silos.find({}, {"_id": 0}).to_list(100)
+    await _seed_silos(_org_id(admin))
+    docs = await db.silos.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
     created = []
     for s in docs:
         if float(s.get("current_kg") or 0) <= float(s.get("min_kg") or 0):
             qty = round(float(s.get("capacity_kg") or 0) * 0.8 - float(s.get("current_kg") or 0), 0)
             created.append({"silo": s["name"], "qty_kg": qty})
-            await db.silos.update_one({"id": s["id"]}, {"$set": {"current_kg": round(float(s.get("capacity_kg") or 0) * 0.8, 0), "last_order_at": now_iso()}})
+            await db.silos.update_one({"id": s["id"], "organization_id": _org_id(admin)}, {"$set": {"current_kg": round(float(s.get("capacity_kg") or 0) * 0.8, 0), "last_order_at": now_iso()}})
     # Invio email al fornitore (Resend). Destinatario: SILO_SUPPLIER_EMAIL o l'email del Capo.
     emailed = False
     sup_doc = (await db.app_meta.find_one({"_key": "silo_supplier"}, {"_id": 0})) or {}

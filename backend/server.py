@@ -795,7 +795,7 @@ ORG_SCOPED_COLLECTIONS = [
     "compliance_timelog", "compliance_training_ack", "oven_qc_log",
     "mikiscore_history", "plan_suggestions", "sitor_memory",
     "day_production_closures", "production_logs", "deliveries",
-    "dept_shift_templates", "recipe_apprentice", "voice_usage", "lab_wake",
+    "recipe_apprentice", "voice_usage", "lab_wake", "silos",
 ]
 
 
@@ -2257,64 +2257,6 @@ async def depts_shift_report(admin: dict = Depends(require_admin)):
     tot_present = sum(1 for v in out for op in v["assigned"] if op["present"])
     tot_prod = sum((v["produced"]["done"] if v["produced"] else 0) for v in out)
     return {"date": today, "depts": out, "totals": {"assigned": tot_assigned, "present": tot_present, "produced": tot_prod}}
-
-
-class ShiftTemplateItem(BaseModel):
-    dept: str = ""
-    operator: str = ""
-    task: str = ""
-
-
-class ShiftTemplateReq(BaseModel):
-    name: str = ""
-    items: List[ShiftTemplateItem] = []
-
-
-@api_router.get("/depts/templates")
-async def depts_templates_list(admin: dict = Depends(require_admin)):
-    docs = await db.dept_shift_templates.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(100)
-    return {"templates": docs}
-
-
-@api_router.post("/depts/templates")
-async def depts_templates_create(body: ShiftTemplateReq, admin: dict = Depends(require_admin)):
-    import uuid as _uuid
-    name = (body.name or "").strip() or "Turno"
-    items = [{"dept": i.dept, "operator": (i.operator or "").strip(), "task": (i.task or "").strip()}
-             for i in body.items if (i.operator or "").strip() and i.dept in DEPARTMENTS]
-    doc = {"id": _uuid.uuid4().hex[:10], "organization_id": _org_id(admin), "name": name, "items": items, "created_at": now_iso()}
-    await db.dept_shift_templates.insert_one({**doc})
-    doc.pop("_id", None)
-    return {"ok": True, "template": doc}
-
-
-@api_router.delete("/depts/templates/{tid}")
-async def depts_templates_delete(tid: str, admin: dict = Depends(require_admin)):
-    await db.dept_shift_templates.delete_one({"id": tid, "organization_id": _org_id(admin)})
-    return {"ok": True}
-
-
-@api_router.post("/depts/templates/{tid}/apply")
-async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
-    import uuid as _uuid
-    tpl = await db.dept_shift_templates.find_one({"id": tid, "organization_id": _org_id(admin)}, {"_id": 0})
-    if not tpl:
-        raise HTTPException(status_code=404, detail="Template non trovato")
-    today = now_iso()[:10]
-    created = []
-    for it in tpl.get("items", []):
-        op = (it.get("operator") or "").strip()
-        dept = it.get("dept", "")
-        if not op or dept not in DEPARTMENTS:
-            continue
-        doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
-               "task": (it.get("task") or "").strip(), "operator": op, "note": "",
-               "by": admin.get("email") or "master", "at": now_iso()}
-        await db.dept_assignments.insert_one({**doc})
-        doc.pop("_id", None)
-        created.append(doc)
-    return {"ok": True, "assignments": created}
-
 
 
 @api_router.post("/mike/deus/capture")

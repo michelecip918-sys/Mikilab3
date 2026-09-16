@@ -734,7 +734,7 @@ export default function RicetteCustodite({ initialId = null }) {
 
           {/* Dal mio laboratorio — foto reale di Michele al lavoro */}
           <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49] relative">
-            <img src={`${process.env.PUBLIC_URL || ""}/michele-real-lab.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
+            <img src={`${process.env.PUBLIC_URL || ""}/avatar_miki.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
             <div className="absolute bottom-3 left-4 right-4 text-white">
               <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff8c3a]">{L({ it: "Dal mio laboratorio", de: "Aus meiner Backstube", en: "From my bakery", es: "Desde mi laboratorio", fr: "De mon laboratoire", fa: "از کارگاه من" })}</p>
