@@ -5560,3 +5560,7 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - og-image: rigenerata con il Sitor definitivo (dio greco/romano dell'Arte Bianca) a sinistra + claim reale a destra; pill aggiornata a "SITOR · DIO DELL'ARTE BIANCA · AI". Salvata in public/og-image.jpg (1200x630). Verificata a schermo.
 - Scheda Sitor (SitorCard.jsx): sottotitolo → "Dio dell'Arte Bianca · Intelligenza Artificiale"; descrizione riscritta in 6 lingue ("lo spirito del pane fatto intelligenza artificiale...") coerente con la divinità. La lista "cosa fa" resta invariata. Usa già sitor_official.jpg.
 - Deploy: inviato redeploy produzione (job_id aa6b806a) con tutte le modifiche recenti.
+
+---
+## Changelog — 16 Set 2026 (Icone PWA col nuovo Sitor)
+- Rigenerate le icone PWA dal nuovo Sitor (dio greco dell'Arte Bianca, crop centrale corona+volto+pagnotta): icon-192.png, icon-512.png (maskable), apple-touch-icon.png (180), favicon-32.png, favicon.ico (multi-size). manifest.json invariato (stessi nomi file). Tutte servite 200. NOTA: il deploy in coda è partito PRIMA di questa modifica — le icone richiedono un nuovo redeploy per andare live.
