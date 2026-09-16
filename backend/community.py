@@ -851,6 +851,7 @@ async def operator_absence(body: AbsenceReq, user: dict = Depends(current_user))
     try:
         await db.lab_absences.insert_one({
             "user_id": user.get("user_id"), "name": actor_name, "kind": body.kind,
+            "organization_id": _org_id(user),
             "date": datetime.now(timezone.utc).date().isoformat(), "at": now_iso(),
         })
     except Exception:

@@ -355,6 +355,7 @@ async def shifts_create(body: ShiftReq, user: dict = Depends(require_pro)):
     doc = {"id": str(uuid.uuid4()), "owner_id": user["user_id"], "created_at": now_iso(),
            "hours": _shift_hours(body.start, body.end), **body.dict()}
     doc["employee"] = body.employee.strip()
+    doc["organization_id"] = _org_id(user)
     await db.shifts.insert_one(doc)
     return _shift_public(doc)
 

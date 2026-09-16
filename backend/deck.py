@@ -18,8 +18,8 @@ _DECK_DEPT_KEYWORDS = {
 
 
 @api_router.get("/deck/status")
-async def deck_status(user: Optional[dict] = Depends(optional_user)):
-    return await deck_status_compute()
+async def deck_status(org: str = Depends(effective_org)):
+    return await deck_status_compute(org)
 
 
 
@@ -30,13 +30,13 @@ class CheckinReq(BaseModel):
 
 
 @api_router.get("/lab/shift/checkin")
-async def get_checkin(user: Optional[dict] = Depends(optional_user)):
-    doc = await db.lab_checkin.find_one({"_key": "active"}, {"_id": 0, "_key": 0}) or {}
+async def get_checkin(org: str = Depends(effective_org)):
+    doc = await db.lab_checkin.find_one({"_key": "active", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     return doc
 
 
 @api_router.post("/lab/shift/checkin")
-async def post_checkin(body: CheckinReq, request: Request, user: Optional[dict] = Depends(optional_user)):
+async def post_checkin(body: CheckinReq, request: Request, org: str = Depends(effective_org)):
     # Anti-spam: il Floor è pubblico (PIN), quindi limitiamo per IP i check-in.
     if not await _rate_limit("shift_checkin", _client_ip(request), 8, 300):
         raise HTTPException(status_code=429, detail="Troppi avvii turno. Riprova tra poco.")
@@ -45,7 +45,7 @@ async def post_checkin(body: CheckinReq, request: Request, user: Optional[dict] 
     role = (body.role or "").strip()
     doc = {"active": True, "by": who, "role": role, "station": (body.station or "").strip(),
            "at": now_iso()}
-    await db.lab_checkin.update_one({"_key": "active"}, {"$set": {**doc, "_key": "active"}}, upsert=True)
+    await db.lab_checkin.update_one({"_key": "active", "organization_id": org}, {"$set": {**doc, "_key": "active", "organization_id": org}}, upsert=True)
     snippet = f"{who}" + (f" · {role}" if role else "") + " ha avviato il turno."
     owners = await db.users.find(
         {"$or": [{"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}, {"role": "admin"}]},
@@ -58,7 +58,8 @@ async def post_checkin(body: CheckinReq, request: Request, user: Optional[dict] 
 
 @api_router.delete("/lab/shift/checkin")
 async def clear_checkin(user: dict = Depends(require_admin)):
-    await db.lab_checkin.delete_one({"_key": "active"})
+    _org_cc = _org_id(user)
+    await db.lab_checkin.delete_one({"_key": "active", "organization_id": _org_cc})
     return {"ok": True}
 
 
@@ -69,16 +70,17 @@ class RestModeReq(BaseModel):
 
 
 @api_router.get("/lab/rest-mode")
-async def get_rest_mode(user: Optional[dict] = Depends(optional_user)):
-    doc = await db.lab_rest_mode.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+async def get_rest_mode(org: str = Depends(effective_org)):
+    doc = await db.lab_rest_mode.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0})
     return doc or {"active": False, "allow_critical": True, "until": None}
 
 
 @api_router.put("/lab/rest-mode")
 async def put_rest_mode(body: RestModeReq, user: dict = Depends(require_admin)):
+    _org = _org_id(user)
     doc = {"active": bool(body.active), "allow_critical": bool(body.allow_critical),
            "until": body.until, "by": user.get("user_id"), "updated_at": now_iso()}
-    await db.lab_rest_mode.update_one({"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True)
+    await db.lab_rest_mode.update_one({"_key": "default", "organization_id": _org}, {"$set": {**doc, "_key": "default", "organization_id": _org}}, upsert=True)
     return doc
 
 
@@ -102,8 +104,8 @@ def _compute_wake(cfg: dict) -> dict:
 
 
 @api_router.get("/lab/wake")
-async def get_wake(user: Optional[dict] = Depends(optional_user)):
-    cfg = await db.lab_wake.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+async def get_wake(org: str = Depends(effective_org)):
+    cfg = await db.lab_wake.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     enabled = cfg.get("enabled", True)
     out = _compute_wake(cfg)
     out["enabled"] = bool(enabled)
@@ -112,9 +114,10 @@ async def get_wake(user: Optional[dict] = Depends(optional_user)):
 
 @api_router.put("/lab/wake")
 async def put_wake(body: WakeReq, user: dict = Depends(require_admin)):
+    _org = _org_id(user)
     doc = {"enabled": bool(body.enabled), "first_start": body.first_start,
            "prep_minutes": int(body.prep_minutes), "updated_at": now_iso()}
-    await db.lab_wake.update_one({"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True)
+    await db.lab_wake.update_one({"_key": "default", "organization_id": _org}, {"$set": {**doc, "_key": "default", "organization_id": _org}}, upsert=True)
     out = _compute_wake(doc)
     out["enabled"] = doc["enabled"]
     return out
@@ -131,14 +134,14 @@ class SeqReq(BaseModel):
     force: bool = False
 
 
-async def _load_batches():
-    doc = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0}) or {}
+async def _load_batches(org: str = ORG_DEFAULT):
+    doc = await db.lab_shift_state.find_one({"_key": "default", "organization_id": org}, {"_id": 0}) or {}
     return doc.get("batches") or []
 
 
-async def _save_batches(batches):
+async def _save_batches(batches, org: str = ORG_DEFAULT):
     await db.lab_shift_state.update_one(
-        {"_key": "default"}, {"$set": {"batches": batches, "updated_at": now_iso(), "_key": "default"}}, upsert=True)
+        {"_key": "default", "organization_id": org}, {"$set": {"batches": batches, "updated_at": now_iso(), "_key": "default", "organization_id": org}}, upsert=True)
 
 
 def _next_expected(batches):
@@ -150,8 +153,8 @@ def _next_expected(batches):
 
 
 @api_router.post("/lab/sequence/start")
-async def sequence_start(body: SeqReq, user: Optional[dict] = Depends(optional_user)):
-    batches = await _load_batches()
+async def sequence_start(body: SeqReq, org: str = Depends(effective_org)):
+    batches = await _load_batches(org)
     target = next((b for b in batches if str(b.get("id")) == body.batch_id), None)
     if not target:
         raise HTTPException(status_code=404, detail="Lotto non trovato")
@@ -161,25 +164,25 @@ async def sequence_start(body: SeqReq, user: Optional[dict] = Depends(optional_u
         block = {"expected": {"id": nxt.get("id"), "name": nxt.get("recipe_name") or nxt.get("recipe_id")},
                  "attempted": {"id": target.get("id"), "name": target.get("recipe_name") or target.get("recipe_id")},
                  "at": now_iso()}
-        await db.lab_seq_block.update_one({"_key": "last"}, {"$set": {**block, "_key": "last"}}, upsert=True)
+        await db.lab_seq_block.update_one({"_key": "last", "organization_id": org}, {"$set": {**block, "_key": "last", "organization_id": org}}, upsert=True)
         return {"allowed": False, "reason": "out_of_sequence", **block}
     for b in batches:
         if str(b.get("id")) == body.batch_id:
             b["status"] = "in_corso"; b["started_at"] = now_iso()
-    await _save_batches(batches)
-    await db.lab_seq_block.delete_one({"_key": "last"})  # sequenza ristabilita
+    await _save_batches(batches, org)
+    await db.lab_seq_block.delete_one({"_key": "last", "organization_id": org})  # sequenza ristabilita
     return {"allowed": True, "forced": bool(body.force)}
 
 
 @api_router.post("/lab/sequence/complete")
-async def sequence_complete(body: SeqReq, user: Optional[dict] = Depends(optional_user)):
-    batches = await _load_batches()
+async def sequence_complete(body: SeqReq, org: str = Depends(effective_org)):
+    batches = await _load_batches(org)
     if not any(str(b.get("id")) == body.batch_id for b in batches):
         raise HTTPException(status_code=404, detail="Lotto non trovato")
     for b in batches:
         if str(b.get("id")) == body.batch_id:
             b["status"] = "fatto"; b["done_at"] = now_iso()
-    await _save_batches(batches)
+    await _save_batches(batches, org)
     return {"ok": True}
 
 
@@ -187,11 +190,11 @@ async def sequence_complete(body: SeqReq, user: Optional[dict] = Depends(optiona
 # STAFFING / RICALCOLO VOLUMI — un'assenza riduce il personale disponibile,
 # quindi Sitor consiglia automaticamente volumi/task ridotti per la giornata.
 # ---------------------------------------------------------------------------
-async def _staffing():
-    cfg = await db.lab_staffing.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+async def _staffing(org: str = ORG_DEFAULT):
+    cfg = await db.lab_staffing.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     total = int(cfg.get("total", 5) or 5)
     today = datetime.now(timezone.utc).date().isoformat()
-    absent = await db.lab_absences.count_documents({"date": today})
+    absent = await db.lab_absences.count_documents({"date": today, "organization_id": org})
     present = max(0, total - absent)
     factor = round(present / total, 2) if total > 0 else 1.0
     return {"total": total, "absent_today": absent, "present": present,
@@ -199,8 +202,8 @@ async def _staffing():
 
 
 @api_router.get("/lab/staffing")
-async def get_staffing(user: Optional[dict] = Depends(optional_user)):
-    return await _staffing()
+async def get_staffing(org: str = Depends(effective_org)):
+    return await _staffing(org)
 
 
 class StaffingReq(BaseModel):
@@ -209,9 +212,10 @@ class StaffingReq(BaseModel):
 
 @api_router.put("/lab/staffing")
 async def put_staffing(body: StaffingReq, user: dict = Depends(require_admin)):
-    await db.lab_staffing.update_one({"_key": "default"},
-        {"$set": {"_key": "default", "total": int(body.total), "updated_at": now_iso()}}, upsert=True)
-    return await _staffing()
+    _org = _org_id(user)
+    await db.lab_staffing.update_one({"_key": "default", "organization_id": _org},
+        {"$set": {"_key": "default", "organization_id": _org, "total": int(body.total), "updated_at": now_iso()}}, upsert=True)
+    return await _staffing(_org)
 
 
 
@@ -230,8 +234,8 @@ class SensorReq(BaseModel):
 
 
 @api_router.get("/lab/sensors/live")
-async def get_sensors_live(user: Optional[dict] = Depends(optional_user)):
-    doc = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+async def get_sensors_live(org: str = Depends(effective_org)):
+    doc = await db.lab_sensors_live.find_one({"_key": "live", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     # Scarta letture più vecchie di 5 minuti
     fresh = {}
     now = datetime.now(timezone.utc)
@@ -247,7 +251,7 @@ async def get_sensors_live(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.post("/lab/sensors/live")
-async def post_sensors_live(body: SensorReq, user: Optional[dict] = Depends(optional_user)):
+async def post_sensors_live(body: SensorReq, org: str = Depends(effective_org)):
     upd = {}
     ts = now_iso()
     if body.oven_temp is not None:
@@ -255,20 +259,20 @@ async def post_sensors_live(body: SensorReq, user: Optional[dict] = Depends(opti
     if body.ph is not None:
         upd["ph"] = {"value": round(float(body.ph), 2), "at": ts}
     if upd:
-        await db.lab_sensors_live.update_one({"_key": "live"}, {"$set": {**upd, "_key": "live"}}, upsert=True)
-    return await get_sensors_live(user)
+        await db.lab_sensors_live.update_one({"_key": "live", "organization_id": org}, {"$set": {**upd, "_key": "live", "organization_id": org}}, upsert=True)
+    return await get_sensors_live(org)
 
 
 @api_router.get("/lab/staffing/history")
-async def staffing_history(days: int = 7, user: Optional[dict] = Depends(optional_user)):
+async def staffing_history(days: int = 7, org: str = Depends(effective_org)):
     days = max(1, min(31, days))
-    cfg = await db.lab_staffing.find_one({"_key": "default"}, {"_id": 0}) or {}
+    cfg = await db.lab_staffing.find_one({"_key": "default", "organization_id": org}, {"_id": 0}) or {}
     total = int(cfg.get("total", 5) or 5)
     out = []
     today = datetime.now(timezone.utc).date()
     for i in range(days - 1, -1, -1):
         d = (today - timedelta(days=i)).isoformat()
-        absent = await db.lab_absences.count_documents({"date": d})
+        absent = await db.lab_absences.count_documents({"date": d, "organization_id": org})
         present = max(0, total - absent)
         out.append({"date": d, "absent": absent, "present": present,
                     "factor": round(present / total, 2) if total else 1.0})
@@ -278,9 +282,10 @@ async def staffing_history(days: int = 7, user: Optional[dict] = Depends(optiona
 @api_router.post("/lab/staffing/apply-volumes")
 async def apply_volumes(user: dict = Depends(require_admin)):
     # Applica DAVVERO il fattore organico ai pezzi dei lotti del piano di oggi.
-    staff = await _staffing()
+    _org = _org_id(user)
+    staff = await _staffing(_org)
     factor = staff["factor"]
-    batches = await _load_batches()
+    batches = await _load_batches(_org)
     changed = 0
     for b in batches:
         base = b.get("pieces_base", b.get("pieces"))
@@ -288,7 +293,7 @@ async def apply_volumes(user: dict = Depends(require_admin)):
             b["pieces_base"] = base
             b["pieces"] = int(round(base * factor))
             changed += 1
-    await _save_batches(batches)
+    await _save_batches(batches, _org)
     return {"ok": True, "factor": factor, "reduce_pct": staff["reduce_pct"], "adjusted": changed}
 
 
@@ -1204,10 +1209,10 @@ async def get_morning_briefing(org: str = Depends(effective_org)):
         night.append("Nessuna anomalia critica durante la notte." if not crit else "Rilevate criticità notturne da controllare.")
     else:
         night.append("Nessuna rilevazione notturna registrata.")
-    sens = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+    sens = await db.lab_sensors_live.find_one({"_key": "live", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     if sens.get("oven_temp"):
         night.append(f"Ultima temperatura forno: {sens['oven_temp']['value']}°C.")
-    staff = await _staffing()
+    staff = await _staffing(org)
     reco = ("Tutti i parametri sono perfetti. Nessun intervento richiesto sui lotti di oggi."
             if staff["reduce_pct"] == 0 else
             f"Organico ridotto: consiglio di tagliare i volumi del {staff['reduce_pct']}% oggi.")

@@ -43,6 +43,8 @@ import MohamedInbox from "@/components/MohamedInbox";
 import LivingRecipe from "@/components/LivingRecipe";
 import AdvancedLab from "@/components/AdvancedLab";
 import PublicGate from "@/components/PublicGate";
+import FloorInviteLanding from "@/components/FloorInviteLanding";
+import { OrgSwitcher } from "@/components/OrgSwitcher";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
 import { api, recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
@@ -145,6 +147,7 @@ export default function App() {
   const [authMode, setAuthMode] = useState("login");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [resetToken, setResetToken] = useState(() => new URLSearchParams(window.location.search).get("reset"));
+  const [floorInviteToken] = useState(() => new URLSearchParams(window.location.search).get("floor_invite"));
   const [operator, setOperatorState] = useState(() => { try { return JSON.parse(localStorage.getItem("mikilab_operator") || "null"); } catch { return null; } });
   const [showOperator, setShowOperator] = useState(false);
   const [floorRole, setFloorRole] = useState(() => { try { return localStorage.getItem("mikilab_role") || ""; } catch { return ""; } });
@@ -317,6 +320,12 @@ export default function App() {
   const setOperator = (op) => { try { localStorage.setItem("mikilab_operator", JSON.stringify(op)); } catch { /* */ } setOperatorState(op); setShowOperator(false); };
   const openAuth = () => { setAuthMode("login"); setAuthOpen(true); };
 
+  if (floorInviteToken && !adminOk && !resetToken) return <><SplashScreen /><FloorInviteLanding token={floorInviteToken} onEnter={(p) => {
+    try { localStorage.setItem("mikilab_mode", "floor"); localStorage.setItem("mikilab_op_level", p.level || "novizio"); if (p.name) localStorage.setItem("mikilab_role", p.name); } catch { /* */ }
+    setMode("floor"); setOpLevel(p.level || "novizio"); setFloorRole(p.name || ""); setFloorUnlocked(true); setAdminOk(true);
+    try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: p.name || "" } })); } catch { /* */ }
+    try { const u = new URL(window.location.href); u.searchParams.delete("floor_invite"); window.history.replaceState({}, "", u.toString()); } catch { /* */ }
+  }} /></>;
   if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={(payload) => {
     const p = payload || {};
     if (p.mode === "floor") {
@@ -414,7 +423,7 @@ export default function App() {
                   <span className="hidden sm:inline">{user ? (user.name || (user.email ? user.email.split("@")[0].slice(0, 10) : "Capo")) : tri("Accedi", "Anmelden", "Sign in", "Acceder", "Connexion", "ورود")}</span>
                 </button>
                 {user && showAccountMenu && (
-                  <div data-testid="account-menu" className="absolute right-0 top-11 w-56 holo-panel p-3 z-[80]">
+                  <div data-testid="account-menu" className="absolute right-0 top-11 w-72 holo-panel p-3 z-[80] max-h-[80vh] overflow-auto">
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#8a97a6] mb-1"><ShieldCheck className="w-3.5 h-3.5" /> {tri("CAPO · MASTER ADMIN", "CHEF · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "CAPO · MASTER ADMIN", "کاپو · مدیر ارشد")}</div>
                     <p className="text-[11px] text-white font-semibold truncate">{user.name || "Capo"}</p>
                     {user.email && <p className="text-[10px] text-[#94A3B8] truncate mb-2">{user.email}</p>}
@@ -423,6 +432,7 @@ export default function App() {
                       className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#bb8489] font-bold text-xs hover:border-[#bb8489]/50 active:scale-95 transition-all">
                       <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
                     </button>
+                    {user.role === "admin" && <OrgSwitcher />}
                   </div>
                 )}
                   </>

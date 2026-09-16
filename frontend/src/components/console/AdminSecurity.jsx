@@ -3,6 +3,7 @@ import { operatorPinsApi, accessLogApi, gateConfigApi, productionPinApi } from "
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Trash2, UserPlus, ShieldCheck, ShieldAlert, Clock, KeyRound, AlarmClock } from "lucide-react";
+import FloorInvitePanel from "@/components/console/FloorInvitePanel";
 
 // Zona Capo: gestione PIN personali operatore + Registro Accessi (tentativi PIN).
 export default function AdminSecurity() {
@@ -72,6 +73,8 @@ export default function AdminSecurity() {
 
   return (
     <div className="space-y-6" data-testid="admin-security">
+      {/* Inviti operaio via LINK — l'operaio sceglie nome + PIN e entra in Produzione */}
+      <FloorInvitePanel />
       {/* PIN Sezione Operai — scelto dal Capo: apre la Produzione (zona Capo invisibile) */}
       <div data-testid="op-gate-pin-config" className="rounded-xl border border-[#8a97a6]/30 bg-[#8a97a6]/6 p-3">
         <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#9aa6b2] mb-1"><KeyRound className="w-3.5 h-3.5" /> {tri("PIN Sezione Operai", "PIN Produktionsbereich", "Operator Section PIN", "PIN Sección Operarios", "PIN Section Opérateurs", "پین بخش اپراتور")}</p>

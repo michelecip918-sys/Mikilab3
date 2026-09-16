@@ -795,7 +795,7 @@ ORG_SCOPED_COLLECTIONS = [
     "compliance_timelog", "compliance_training_ack", "oven_qc_log",
     "mikiscore_history", "plan_suggestions", "sitor_memory",
     "day_production_closures", "production_logs", "deliveries",
-    "dept_shift_templates", "recipe_apprentice", "voice_usage",
+    "dept_shift_templates", "recipe_apprentice", "voice_usage", "lab_wake",
 ]
 
 
@@ -2893,12 +2893,12 @@ def _tr6(it, de, en, es, fr, fa):
     return {"it": it, "de": de, "en": en, "es": es, "fr": fr, "fa": fa}
 
 
-async def _compute_pulse():
+async def _compute_pulse(org: str = ORG_DEFAULT):
     now = datetime.now(timezone.utc)
-    shift = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
-    floor = await db.floor_plan.find_one({"_key": "active"}, {"_id": 0, "_key": 0})
-    checkin = await db.lab_checkin.find_one({"_key": "active"}, {"_id": 0, "_key": 0}) or {}
-    rest = await db.lab_rest_mode.find_one({"_key": "default"}, {"_id": 0, "_key": 0}) or {}
+    shift = await db.lab_shift_state.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
+    floor = await db.floor_plan.find_one({"_key": "active", "organization_id": org}, {"_id": 0, "_key": 0})
+    checkin = await db.lab_checkin.find_one({"_key": "active", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
+    rest = await db.lab_rest_mode.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
 
     alerts = []
     load = 0
@@ -2981,7 +2981,7 @@ async def _compute_pulse():
         })
 
     # --- Personale ridotto (assenze di oggi) → INFO + volumi consigliati ridotti ---
-    staff = await _staffing()
+    staff = await _staffing(org)
     if staff["factor"] < 1.0:
         pct = staff["reduce_pct"]
         alerts.append({
@@ -3001,7 +3001,7 @@ async def _compute_pulse():
         })
 
     # --- Blocco fuori sequenza (registrato dal Sequence Guard di Sitor) → WARN al Capo ---
-    seqb = await db.lab_seq_block.find_one({"_key": "last"}, {"_id": 0, "_key": 0})
+    seqb = await db.lab_seq_block.find_one({"_key": "last", "organization_id": org}, {"_id": 0, "_key": 0})
     if seqb and seqb.get("at"):
         try:
             recent = (now - datetime.fromisoformat(seqb["at"])).total_seconds() < 300
@@ -3027,7 +3027,7 @@ async def _compute_pulse():
             })
 
     # --- Sensori live oltre soglia (forno troppo caldo / lievito troppo acido) → CRITICO ---
-    sens = await db.lab_sensors_live.find_one({"_key": "live"}, {"_id": 0, "_key": 0}) or {}
+    sens = await db.lab_sensors_live.find_one({"_key": "live", "organization_id": org}, {"_id": 0, "_key": 0}) or {}
     ot = (sens.get("oven_temp") or {})
     if ot.get("value") is not None and ot["value"] > OVEN_TEMP_MAX:
         alerts.append({
@@ -3093,7 +3093,7 @@ async def _compute_pulse():
 
 @api_router.get("/lab/pulse")
 async def get_lab_pulse(org: str = Depends(effective_org)):
-    p = await _compute_pulse()
+    p = await _compute_pulse(org)
     # Storia del battito: registra uno snapshot leggero al massimo 1 volta al minuto.
     try:
         last = await db.lab_pulse_history.find_one({"organization_id": org}, {"_id": 0, "at": 1}, sort=[("at", -1)])
@@ -4152,7 +4152,7 @@ async def delegation_parse(body: DelegationParseReq, user: dict = Depends(requir
         raise HTTPException(status_code=400, detail="Nessun comando")
     if not EMERGENT_LLM_KEY:
         raise HTTPException(status_code=503, detail="NLP non disponibile")
-    staff = await _staffing()
+    staff = await _staffing(_org_id(user))
     _deleg_sys = f"deleg-parse-v1|{body.lang}"
     _deleg_input = f"{txt}|{staff['present']}/{staff['total']}"
     _dmk = _memo_key(_deleg_sys, _deleg_input, SITOR_FAST)
@@ -4260,8 +4260,8 @@ async def delegation_confirm(body: DelegationConfirmReq, user: dict = Depends(re
     # Crisis override → registra la direttiva di ritmo nello stato turno (letto dal piano).
     if task["kind"] == "crisis_override" and task["pacing"]:
         await db.lab_shift_state.update_one(
-            {"_key": "default"},
-            {"$set": {"pacing_directive": {"pacing": task["pacing"], "target": task["pacing_target"], "at": now_iso()}}},
+            {"_key": "default", "organization_id": org},
+            {"$set": {"pacing_directive": {"pacing": task["pacing"], "target": task["pacing_target"], "at": now_iso()}, "organization_id": org}},
             upsert=True,
         )
     return {"status": "success", "task": task,
@@ -4822,9 +4822,9 @@ async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, org: s
 @api_router.get("/shift/handoff")
 async def shift_handoff(lang: str = "it", org: str = Depends(effective_org)):
     """Riassunto vocale per il cambio turno: stato settori, personale, task, ritmo."""
-    staff = await _staffing()
+    staff = await _staffing(org)
     tasks = await db.team_tasks.count_documents({"status": "active", "organization_id": org})
-    shift = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0}) or {}
+    shift = await db.lab_shift_state.find_one({"_key": "default", "organization_id": org}, {"_id": 0}) or {}
     pacing = (shift.get("pacing_directive") or {}).get("pacing")
     down = len(shift.get("machines_down") or [])
     P = {
@@ -6042,14 +6042,14 @@ async def _deck_alarm_loop():
         await asyncio.sleep(30)
 
 
-async def deck_status_compute():
+async def deck_status_compute(org: str = ORG_DEFAULT):
     """Versione riutilizzabile di /deck/status (senza dipendenze HTTP), per i loop interni."""
     now = datetime.now(timezone.utc)
     today = now.strftime("%Y-%m-%d")
     hm = now.strftime("%H:%M")
-    pulse = await _compute_pulse()
+    pulse = await _compute_pulse(org)
     depts = {k: {"active": 0, "people": [], "level": "ok"} for k in _DECK_DEPT_KEYWORDS}
-    async for s in db.shifts.find({"day": today}, {"_id": 0}):
+    async for s in db.shifts.find({"day": today, "organization_id": org}, {"_id": 0}):
         if (s.get("start") or "") <= hm <= (s.get("end") or ""):
             txt = f"{s.get('station') or ''} {s.get('role') or ''}".lower()
             for d, kws in _DECK_DEPT_KEYWORDS.items():
@@ -11154,8 +11154,13 @@ for _k in list(vars(_mod_coordination)):  # noqa: E402
     if _k != '_core' and not _k.startswith('__') and _k not in globals():
         globals()[_k] = getattr(_mod_coordination, _k)
 
+import orgs as _mod_orgs  # noqa: E402  registra le rotte multi-azienda + inviti operaio via link
+for _k in list(vars(_mod_orgs)):  # noqa: E402
+    if _k != '_core' and not _k.startswith('__') and _k not in globals():
+        globals()[_k] = getattr(_mod_orgs, _k)
+
 # --- Sync finale cross-modulo: ogni modulo vede TUTTI i simboli del core (indipendente dall'ordine di import) ---
-for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination):  # noqa: E402
+for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs):  # noqa: E402
     for _k, _v in list(globals().items()):
         if not _k.startswith('__') and _k not in _m.__dict__:
             _m.__dict__[_k] = _v

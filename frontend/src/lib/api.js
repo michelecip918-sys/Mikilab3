@@ -884,3 +884,20 @@ sqRegister("worker_action", ({ operator, action, task_id, step_order }) => api.p
 export const recipeAuditApi = {
   audit: (payload) => api.post(`/lab/recipe-audit`, payload).then((r) => r.data),
 };
+
+// Multi-azienda: elenco/creazione/switch/rinomina delle aziende del Capo.
+export const orgsApi = {
+  list: () => api.get(`/orgs`).then((r) => r.data),
+  create: (name) => api.post(`/orgs`, { name }).then((r) => r.data),
+  switch: (org_id) => api.post(`/orgs/switch`, { org_id }).then((r) => r.data),
+  rename: (org_id, name) => api.patch(`/orgs/${org_id}`, { name }).then((r) => r.data),
+};
+
+// Inviti operaio via link (Capo genera; operaio riscatta con nome + PIN).
+export const floorInvitesApi = {
+  create: (payload) => api.post(`/floor-invites`, payload).then((r) => r.data),
+  list: () => api.get(`/floor-invites`).then((r) => r.data),
+  revoke: (token) => api.post(`/floor-invites/${token}/revoke`).then((r) => r.data),
+  info: (token) => api.get(`/public/floor-invite/${token}`).then((r) => r.data),
+  redeem: (token, name, pin) => api.post(`/public/floor-invite/${token}/redeem`, { name, pin }).then((r) => r.data),
+};

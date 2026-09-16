@@ -721,13 +721,14 @@ class FloorPlanPush(BaseModel):
 
 
 @api_router.get("/lab/floor-plan")
-async def get_floor_plan():
-    doc = await db.floor_plan.find_one({"_key": "active"}, {"_id": 0, "_key": 0})
+async def get_floor_plan(org: str = Depends(effective_org)):
+    doc = await db.floor_plan.find_one({"_key": "active", "organization_id": org}, {"_id": 0, "_key": 0})
     return doc  # null se il Capo non ha ancora inviato nulla
 
 
 @api_router.put("/lab/floor-plan")
 async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(require_admin)):
+    _org = _org_id(user)
     doc = {
         "plan": payload.plan,
         "title": (payload.title or "").strip(),
@@ -735,13 +736,13 @@ async def put_floor_plan(payload: FloorPlanPush, user: dict = Depends(require_ad
         "pushed_by": user.get("name") or (user.get("email") or "Capo").split("@")[0],
         "pushed_at": now_iso(),
     }
-    await db.floor_plan.update_one({"_key": "active"}, {"$set": {**doc, "_key": "active"}}, upsert=True)
+    await db.floor_plan.update_one({"_key": "active", "organization_id": _org}, {"$set": {**doc, "_key": "active", "organization_id": _org}}, upsert=True)
     return doc
 
 
 @api_router.delete("/lab/floor-plan")
 async def delete_floor_plan(user: dict = Depends(require_admin)):
-    await db.floor_plan.delete_one({"_key": "active"})
+    await db.floor_plan.delete_one({"_key": "active", "organization_id": _org_id(user)})
     return {"success": True}
 
 
