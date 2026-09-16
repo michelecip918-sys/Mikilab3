@@ -5535,3 +5535,11 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - og-image.jpg NON modificata: è l'emblema pulito del brand (oro/ambra su antracite), nessun vecchio naming/grafica da rimuovere.
 ### Ordine/raggruppamento categorie ricettario (contenuto ricette INVARIATO)
 - RicetteCustodite.jsx: riordinati i filtri in flusso logico da laboratorio → Basilicata, Puglia (Italia), Germania (quotidiano), Grandi Lievitati (festivi), Pani Speciali & Colorati (innovazione). Rinominata categoria "Pani Colorati" → "Pani Speciali & Colorati" (solo etichetta). Vista "Tutte" ora ordinata per CAT_ORDER. Nessun oggetto ricetta toccato (26 ricette intatte: 5+5+5+5+6).
+
+---
+## Changelog — 16 Set 2026 (Nuova og-image social + Scheda Sitor)
+### Nuova og-image
+- Generata immagine social (Gemini) con il nuovo Sitor (mani luminose sull'impasto) e composta a 1200x630 con overlay testo pulito via PIL: "MIKILAB PRO", claim "Il gestionale per Panificio, Pizzeria e Pasticceria", sottotitolo (Ricettario digitale · Produzione con l'IA · Squadra coordinata · Magazzino · Food cost) e pill "SITOR · MAESTRO FORNAIO AI". Salvata in public/og-image.jpg (referenziata da index.html og:image/twitter:image/JSON-LD). Verificata a schermo.
+### Scheda Sitor (tap sull'avatar)
+- Nuovo componente SitorCard.jsx: modale che si apre toccando l'avatar di Sitor nella vista operatore (FloorOperatorDay). Mostra l'immagine ufficiale, "Sitor · Maestro Fornaio · IA", una breve descrizione di chi è, e 5 cose che fa (assegna il compito e guida a voce; risponde alle domande; analizza le foto con Occhi di Sitor; coordina la squadra; insegna le ricette). Testi in 6 lingue (it/de/en/es/fr/fa). data-testid: sitor-card-open, sitor-card-modal, sitor-card-close, sitor-duty-{i}.
+- Cablaggio: avatar reso <button> (sitor-card-open) → stato showSitorCard → <SitorCard>. Compilazione OK. NOTA: verifica headless del modale non completata perché la vista operatore è dietro il flusso multi-step del cancello (banner cookie + Produzione + keypad 4 cifre) non automatizzabile in questa sessione; implementazione confermata via ispezione codice e compilazione, e la nuova immagine Sitor è verificata a schermo su vetrina/hero.

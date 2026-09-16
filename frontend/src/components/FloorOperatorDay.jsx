@@ -10,6 +10,7 @@ import HeadphonesMode from "@/components/HeadphonesMode";
 import DriverRun from "@/components/console/DriverRun";
 import SosButton from "@/components/SosButton";
 import SitorMaestro from "@/components/SitorMaestro";
+import SitorCard from "@/components/SitorCard";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
 import SharedWidgets from "@/components/SharedWidgets";
 import FaceCheckIn from "@/components/FaceCheckIn";
@@ -319,6 +320,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
   const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
   const [showRecipes, setShowRecipes] = useState(false);
   const [showHeadphones, setShowHeadphones] = useState(false);
+  const [showSitorCard, setShowSitorCard] = useState(false);
   const [isDriver, setIsDriver] = useState(false); // true solo se il Capo ha abilitato QUESTO operaio come autista
   const greetedRef = useRef(false);
   const machinesAnnouncedRef = useRef("");
@@ -413,7 +415,11 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       )}
       {/* Sitor parla direttamente con l'operaio */}
       <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-[#0b0f19]"}`}>
-        <div className="w-14 h-14 rounded-xl overflow-hidden border-2 border-amber-500/60 shrink-0"><LivingAvatar3D src={`${PUB}/avatar_nexus.jpg`} accent="#a6b1bc" nexus className="w-full h-full" /></div>
+        <button type="button" data-testid="sitor-card-open" onClick={() => setShowSitorCard(true)}
+          className="w-14 h-14 rounded-xl overflow-hidden border-2 border-amber-500/60 shrink-0 active:scale-95 transition-transform"
+          aria-label={tri("Apri la scheda di Sitor", "Sitor-Karte öffnen", "Open Sitor's card", "Abrir ficha de Sitor", "Ouvrir la fiche de Sitor", "کارت سیتور را باز کن")}>
+          <LivingAvatar3D src={`${PUB}/avatar_nexus.jpg`} accent="#a6b1bc" nexus className="w-full h-full" />
+        </button>
         <div className="min-w-0">
           <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">Sitor
             {apprentice && <span data-testid="floor-appr-badge" className="inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/50"><GraduationCap className="w-3 h-3" /> {tri("Modalità apprendista", "Lehrlingsmodus", "Apprentice mode", "Modo aprendiz", "Mode apprenti", "حالت کارآموز")}</span>}
@@ -493,6 +499,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Fine turno */}
       <EndOfShiftForm tri={tri} role={role} />
+      {showSitorCard && <SitorCard tri={tri} onClose={() => setShowSitorCard(false)} />}
     </div>
   );
 }
