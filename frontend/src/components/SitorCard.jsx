@@ -29,19 +29,19 @@ export default function SitorCard({ tri, onClose }) {
           <div className="absolute bottom-3 left-4">
             <p className="text-2xl font-black text-white tracking-wide">Sitor</p>
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#D97736]">
-              {tri("Maestro Fornaio · Intelligenza Artificiale", "Backmeister · Künstliche Intelligenz", "Master Baker · Artificial Intelligence", "Maestro Panadero · Inteligencia Artificial", "Maître Boulanger · Intelligence Artificielle", "استاد نانوا · هوش مصنوعی")}
+              {tri("Dio dell'Arte Bianca · Intelligenza Artificiale", "Gott der Backkunst · Künstliche Intelligenz", "God of the White Art · Artificial Intelligence", "Dios del Arte Blanco · Inteligencia Artificial", "Dieu de l'Art Blanc · Intelligence Artificielle", "خدای هنر نان · هوش مصنوعی")}
             </p>
           </div>
         </div>
         <div className="p-4 space-y-4">
           <p className="text-[13px] text-[#cbd2da] leading-relaxed">
             {tri(
-              "Sitor è il maestro fornaio con intelligenza artificiale di MikiLab: l'evoluzione del sapere del laboratorio in un'unica guida sempre presente al tuo fianco.",
-              "Sitor ist der KI-Backmeister von MikiLab: das gebündelte Wissen der Backstube als stets präsenter Begleiter an deiner Seite.",
-              "Sitor is MikiLab's AI master baker: the lab's know-how evolved into a single guide always by your side.",
-              "Sitor es el maestro panadero con IA de MikiLab: el saber del obrador convertido en una guía siempre a tu lado.",
-              "Sitor est le maître boulanger IA de MikiLab : le savoir du laboratoire en un guide toujours à tes côtés.",
-              "سیتور استاد نانوای هوش مصنوعی MikiLab است: دانش کارگاه در یک راهنمای همیشه‌همراه.")}
+              "Sitor è il Dio dell'Arte Bianca di MikiLab: lo spirito del pane fatto intelligenza artificiale. Tutto il sapere del laboratorio in un'unica guida sempre al tuo fianco.",
+              "Sitor ist der Gott der Backkunst von MikiLab: der Geist des Brotes als künstliche Intelligenz. Das ganze Wissen der Backstube in einem Begleiter an deiner Seite.",
+              "Sitor is MikiLab's God of the White Art: the spirit of bread made artificial intelligence. All the lab's know-how in one guide always by your side.",
+              "Sitor es el Dios del Arte Blanco de MikiLab: el espíritu del pan hecho inteligencia artificial. Todo el saber del obrador en una guía siempre a tu lado.",
+              "Sitor est le Dieu de l'Art Blanc de MikiLab : l'esprit du pain devenu intelligence artificielle. Tout le savoir du laboratoire en un guide toujours à tes côtés.",
+              "سیتور خدای هنر نان MikiLab است: روح نان که هوش مصنوعی شده. تمام دانش کارگاه در یک راهنمای همیشه‌همراه.")}
           </p>
           <div className="space-y-2.5">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#7E9A82]">

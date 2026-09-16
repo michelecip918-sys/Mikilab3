@@ -5554,3 +5554,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Dopo iterazioni col fondatore (no "stessa faccia", no "troppo artificiale", no "faccino carino"), versione APPROVATA: Sitor = dio greco/romano del pane/Arte Bianca. Figura maschile classica (tipo Apollo/Zeus), corona di alloro e grano, veste drappeggiata con bordi dorati, espressione SOLARE e serena (non arrabbiata), poca luccicanza (no fulmini/vortici), pagnotta luminosa tra le mani con alone dorato morbido, colonne di marmo e anfore sullo sfondo. Palette oro/ambra del logo. NON umano/identico al Capo: divinità benevola con poteri sobri.
 - Sovrascritte tutte le versioni (sitor_official.jpg, avatar_nexus.jpg, avatar_sitor.jpg, sitor-full.jpg → md5 57990ace...). Verificato a schermo sulla vetrina pubblica.
 - NOTA: la og-image social usa ancora la prima versione (umana, aura sulle mani). Da riallineare alla divinità greca se si vuole coerenza.
+
+---
+## Changelog — 16 Set 2026 (og-image riallineata + Scheda testo + deploy)
+- og-image: rigenerata con il Sitor definitivo (dio greco/romano dell'Arte Bianca) a sinistra + claim reale a destra; pill aggiornata a "SITOR · DIO DELL'ARTE BIANCA · AI". Salvata in public/og-image.jpg (1200x630). Verificata a schermo.
+- Scheda Sitor (SitorCard.jsx): sottotitolo → "Dio dell'Arte Bianca · Intelligenza Artificiale"; descrizione riscritta in 6 lingue ("lo spirito del pane fatto intelligenza artificiale...") coerente con la divinità. La lista "cosa fa" resta invariata. Usa già sitor_official.jpg.
+- Deploy: inviato redeploy produzione (job_id aa6b806a) con tutte le modifiche recenti.
