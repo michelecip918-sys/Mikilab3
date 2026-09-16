@@ -41,6 +41,7 @@ export const OrgSwitcher = ({ onSwitched }) => {
       await orgsApi.create(nm);
       setNewName(""); setCreating(false);
       toast.success(tri("Azienda creata", "Firma erstellt", "Company created", "Empresa creada", "Entreprise créée", "شرکت ایجاد شد"));
+      try { window.dispatchEvent(new CustomEvent("mikilab-org-changed")); } catch { /* */ }
       load();
     } catch (e) {
       toast.error(tri("Creazione non riuscita", "Erstellen fehlgeschlagen", "Create failed", "Creación fallida", "Échec de création", "ایجاد ناموفق"));
@@ -54,6 +55,7 @@ export const OrgSwitcher = ({ onSwitched }) => {
     try {
       await orgsApi.rename(org_id, nm);
       setEditId(null);
+      try { window.dispatchEvent(new CustomEvent("mikilab-org-changed")); } catch { /* */ }
       load();
     } catch (e) {
       toast.error(tri("Rinomina non riuscita", "Umbenennen fehlgeschlagen", "Rename failed", "Renombrar fallido", "Échec du renommage", "تغییر نام ناموفق"));

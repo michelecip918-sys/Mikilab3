@@ -5504,3 +5504,7 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### Inviti Operaio via Link (Part C)
 - Collezione `floor_invites` {token, organization_id, expires_at, max_uses, uses, active}. Capo: POST/GET /api/floor-invites, POST /api/floor-invites/{token}/revoke. Pubblici (whitelist /api/public/): GET /api/public/floor-invite/{token} (info azienda), POST .../redeem {name, pin} → crea operator_pins nell'azienda giusta, rilascia cookie gate a livello operator, entra in Produzione. Anti-bruteforce (rate_limit 12/300s), collision-check PIN per azienda (409), PIN 4 cifre bcrypt. Frontend: FloorInviteLanding.jsx (route ?floor_invite=<token>, form nome+PIN) + FloorInvitePanel.jsx (in AdminSecurity: genera/copia/revoca link).
 - TEST iter258: backend 30/30 PASS; frontend landing invito OK (Enter/click). Switch azienda ripristinato a org_default nei test. LOW noto: click Playwright su motion button — risolto con <form onSubmit> + type=submit.
+
+---
+## Changelog — 16 Set 2026 (Nome Azienda in Testata)
+- Nuovo `OrgBadge.jsx`: pill compatto con icona Building2 + nome dell'azienda ATTIVA, visibile nell'header solo per il Capo autenticato (admin) e solo su desktop (sm+). Accento Rame (#D97736). Si aggiorna su evento `mikilab-org-changed` (emesso da OrgSwitcher dopo crea/rinomina/switch) e al reload post-switch. Posizionato in App.js header dopo il pulsante Turno. Compilazione OK.

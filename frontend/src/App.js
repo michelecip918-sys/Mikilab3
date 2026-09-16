@@ -45,6 +45,7 @@ import AdvancedLab from "@/components/AdvancedLab";
 import PublicGate from "@/components/PublicGate";
 import FloorInviteLanding from "@/components/FloorInviteLanding";
 import { OrgSwitcher } from "@/components/OrgSwitcher";
+import { OrgBadge } from "@/components/OrgBadge";
 import LangSelector from "@/components/LangSelector";
 import { resetSessionBoards } from "@/lib/sessionState";
 import { api, recipesApi, warehouseApi, planApi, weeklyApi, floorPlanApi } from "@/lib/api";
@@ -372,6 +373,7 @@ export default function App() {
                     ◐ <span className="hidden sm:inline">{tri("Turno", "Schicht", "Shift", "Turno", "Turn", "شیفت")}</span>
                   </button>
                 )}
+                {user && user.role === "admin" && <OrgBadge />}
                 <button data-testid="theme-toggle" onClick={toggleTheme} title={tri("Tema Chiaro/Scuro", "Hell/Dunkel", "Light/Dark", "Claro/Oscuro", "Clair/Sombre", "روشن/تیره")}
                   className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[#9aa6b2]/10 border border-[#9aa6b2]/35 text-[#9aa6b2] active:scale-95 transition-all">
                   {themeLight ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
