@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Camera, Loader2, X, ScanLine, ClipboardCheck, Check, Volume2, ListChecks, GraduationCap, UserRound, BookOpen, Headphones } from "lucide-react";
 import { toast } from "sonner";
-import { deusApi, floorApi, deptApi, productionApi } from "@/lib/api";
+import { deusApi, floorApi, deptApi, productionApi, coordinationApi } from "@/lib/api";
 import { playTTS } from "@/lib/tts";
 import TeamTasks from "@/components/TeamTasks";
 import RecipeList from "@/components/RecipeList";
@@ -319,6 +319,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
   const [mine, setMine] = useState(null); // assegnazione di QUESTO operaio (per i widget condivisi del reparto)
   const [showRecipes, setShowRecipes] = useState(false);
   const [showHeadphones, setShowHeadphones] = useState(false);
+  const [isDriver, setIsDriver] = useState(false); // true solo se il Capo ha abilitato QUESTO operaio come autista
   const greetedRef = useRef(false);
   const machinesAnnouncedRef = useRef("");
 
@@ -327,6 +328,18 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
     window.addEventListener("mikilab-role-changed", syncRole);
     return () => window.removeEventListener("mikilab-role-changed", syncRole);
   }, [syncRole]);
+
+  // Abilita la vista "Giro consegne" solo agli operatori con abilita' autista (is_driver).
+  useEffect(() => {
+    if (!role) { setIsDriver(false); return; }
+    let alive = true;
+    coordinationApi.skills().then((d) => {
+      if (!alive) return;
+      const me = (d.operators || []).find((o) => (o.name || "").toLowerCase() === role.toLowerCase());
+      setIsDriver(!!(me && me.is_driver));
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [role]);
 
   // Rileva se il Capo ha attivato la MODALITÀ APPRENDISTA per questo operaio → Sitor cambia comportamento.
   useEffect(() => {
@@ -442,10 +455,12 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
       {/* Registra produzione: prodotto/avanzato → compila la chiusura del Capo */}
       <FloorProductionLog tri={tri} />
 
-      {/* Giro consegne di oggi (per chi guida i furgoni) */}
-      <div className="rounded-2xl border border-[#D97736]/30 bg-[#242427] px-4 py-3">
-        <DriverRun />
-      </div>
+      {/* Giro consegne di oggi — solo per gli operatori abilitati come autisti */}
+      {isDriver && (
+        <div className="rounded-2xl border border-[#D97736]/30 bg-[#242427] px-4 py-3">
+          <DriverRun />
+        </div>
+      )}
 
       {showHeadphones && <HeadphonesMode lang={lang} tri={tri} operator={role} onClose={() => setShowHeadphones(false)} />}
 

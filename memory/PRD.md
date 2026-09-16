@@ -5519,3 +5519,8 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Autisti/consegne: REALE. /delivery/run (tappe di oggi ordinate per orario + flag not_ready) e /delivery/stop/{id}/status org-scoped; oggi 4 tappe, 1 non pronta. Vista DriverRun nel giorno operatore. NOTA: la vista è mostrata a TUTTI gli operatori floor (non limitata alla skill is_driver).
 - Coordinamento automatico squadra: REALE. coordination.py (trigger, calls, settings, skills, timeout, quota voce), pannello TeamCoordination in console Capo, integrazione HeadphonesMode. /coordination/active → 8 chiamate, settings 200.
 - Avatar MikiLab: COMPLETATO. Il nuovo avatar_miki.jpg era nello shell (App/PublicGate/ShiftBriefing/OperatoreSelect) ma il componente riusabile MikiAvatar.jsx e RicetteCustodite.jsx usavano la vecchia michele-real-lab.jpg → unificato ovunque su avatar_miki.jpg (serve 200 image/jpeg).
+
+---
+## Changelog — 16 Set 2026 (Giro consegne solo per autisti)
+- FloorOperatorDay.jsx: la vista DriverRun ora è mostrata SOLO agli operatori con abilita' autista (is_driver). Aggiunto stato isDriver + effect che legge coordinationApi.skills() (GET /api/operators/skills, accessibile al floor via effective_org) e confronta il nome operatore (case-insensitive). Blocco giro reso condizionale {isDriver && ...}. Il Capo abilita/disabilita l'autista dal pannello Coordinamento (saveSkills).
+- Verificato backend: floor (solo gate) legge skills 200; Sara is_driver=True (autista reale), Michele/Ahmed/Antonio False. Dati test (Luca, MarcoNonDriver) rimossi. Compilazione OK.
