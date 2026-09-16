@@ -9614,7 +9614,7 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
         if dept in DEPARTMENTS:
             try:
                 qv, qu = _qty_from_batch(qty)
-                await coordination_trigger(  # noqa: F821  (iniettato a runtime da coordination.py)
+                await _do_coordination_trigger(  # noqa: F821  (funzione core da coordination.py)
                     TriggerReq(dept=dept, task_desc=(product or "Lotto")[:200], qty=qv,  # noqa: F821
                                qty_unit=qu, task_id=task["id"], source="piano"),
                     org,

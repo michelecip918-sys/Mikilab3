@@ -315,10 +315,11 @@ class TriggerReq(BaseModel):
     source: Optional[str] = "evento"  # es. piano/silos/macchina
 
 
-@api_router.post("/coordination/trigger")
-async def coordination_trigger(body: TriggerReq, org: str = Depends(effective_org)):
-    """Evento di produzione che richiede personale. Sceglie da solo macchina o operatore.
-    Capo PRESENTE → proposta da confermare. Capo ASSENTE → decide e chiama subito il primo libero."""
+async def _do_coordination_trigger(body: TriggerReq, org: str):
+    """Logica CORE del coordinamento: evento di produzione che richiede personale.
+    Sceglie da solo macchina o operatore e registra la chiamata. Condivisa tra
+    l'endpoint /coordination/trigger e il dispatch del piano (autoplan_dispatch).
+    Capo PRESENTE → proposta da confermare. Capo ASSENTE → chiama subito il primo libero."""
     settings = await _coord_settings(org)
     dept = body.dept
     now = now_iso()
@@ -369,6 +370,12 @@ async def coordination_trigger(body: TriggerReq, org: str = Depends(effective_or
     await _start_pending(call, settings)
     await _persist_call(call)
     return {"resolved": "pending", "call": _public_call(call)}
+
+
+@api_router.post("/coordination/trigger")
+async def coordination_trigger(body: TriggerReq, org: str = Depends(effective_org)):
+    """Endpoint HTTP: evento di produzione che richiede personale. Delega alla logica core."""
+    return await _do_coordination_trigger(body, org)
 
 
 def _public_call(call: dict) -> dict:

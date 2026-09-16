@@ -5601,3 +5601,11 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Suite pytest /app/backend/tests/test_autoplan_dispatch_coord.py. Verificato: dispatch panificio→call in /coordination/active (dept/source/piano corretti); mapping reparti pizza/pasticceria/laugen/panificio; lotto senza reparto ignorato senza errori; soglia macchina (>=25kg→macchina, <25kg→operatore); operatore abilitato→call 'pending' con operatore proposto. Non-regressione OK. UI pannello non testabile headless (gate) ma dati backend verificati.
 ### DEPLOY: NON RIUSCITO via tool in questa sessione
 - Il tool send_to_deployer non ha risposto (invocazioni a vuoto). deployment_agent=pass (il "blocker" supervisor è falso positivo, i servizi girano). AZIONE UTENTE: premere il pulsante Deploy della piattaforma per portare live icone-Sitor, logo, traduzioni complete, coordinamento collegato e seconda posa.
+
+---
+## Changelog — 16 Set 2026 (Refactor trigger + test UI pannello)
+### Refactor Coordinamento (robustezza)
+- Estratta la logica del trigger in funzione core `_do_coordination_trigger(body, org)` in coordination.py; l'endpoint POST /coordination/trigger è ora un wrapper sottile che la delega; autoplan_dispatch (server.py) chiama direttamente la core (niente più chiamata all'endpoint con Depends). Verificato: wrapper e dispatch entrambi funzionanti (dispatch → call creata). Elimina il coupling fragile segnalato in review.
+### Test UI pannello Coordinamento (VERIFICATO a video)
+- Login Capo (gate+admin) + abilitato operatore al panificio + dispatch lotto panificio 6kg → il pannello "Coordinamento Automatico" (TeamCoordination, defaultOpen) mostra la sezione "In corso" con la call del lotto ("Pane test UI pannello", confermato nel DOM) + abilitazioni operatori. Screenshot acquisito. Rimosso anche l'overlay del tour Sitor per la cattura.
+- Pulizia: rimossi i residui di test (coordination_calls/log TEST_*, test timeout, lotto UI) e la skill di prova → pannello ora pulito (0 call residue). Dati reali intatti.
