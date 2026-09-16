@@ -5609,3 +5609,15 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### Test UI pannello Coordinamento (VERIFICATO a video)
 - Login Capo (gate+admin) + abilitato operatore al panificio + dispatch lotto panificio 6kg → il pannello "Coordinamento Automatico" (TeamCoordination, defaultOpen) mostra la sezione "In corso" con la call del lotto ("Pane test UI pannello", confermato nel DOM) + abilitazioni operatori. Screenshot acquisito. Rimosso anche l'overlay del tour Sitor per la cattura.
 - Pulizia: rimossi i residui di test (coordination_calls/log TEST_*, test timeout, lotto UI) e la skill di prova → pannello ora pulito (0 call residue). Dati reali intatti.
+
+---
+## Changelog — 16 Set 2026 (Controllo completo dall'inizio alla fine — iteration_260)
+### Esito: TUTTO SANO. Backend 43/44 (l'unico "fail" era un falso positivo).
+- Servizi: backend/frontend/mongodb RUNNING; nessun errore nei log; import OK; frontend compila.
+- Sweep no-500 su 28 endpoint chiave: TUTTI 200.
+- Asset: 13/13 immagini servite 200. Le 4 immagini avatar Sitor (avatar_nexus/avatar_sitor/sitor-full/sitor_official) identiche (1 md5). sitor-oven.jpg diversa di proposito (seconda posa voluta, NON un bug).
+- SEO index.html: title pulita, assenti "Mike Mix"/"Miki-Nexus"/"Multiverso Olografico".
+- Traduzioni: sulle 1371 stringhe IT realmente usate da tri(), copertura fr/fa/ar/tr = 100% ciascuna. (Le chiavi extra nel file sono legacy non referenziate: la misura 32.6% ar/tr del testing agent era sul totale file, non sulle stringhe usate — falso allarme.)
+- Frontend smoke 390px: home carica, logo Sitor + avatar visibili, nessun overflow orizzontale, nessun errore console critico.
+- Isolamento multi-tenant, stato live per azienda, multi-azienda, inviti operaio, coordinamento da dispatch: coperti e verdi in iter257/258/259.
+- Nessun bug reale trovato. Ricette non toccate.
