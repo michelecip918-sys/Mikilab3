@@ -15,9 +15,9 @@ body { -webkit-user-select: none; -ms-user-select: none; user-select: none; -web
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; -ms-user-select: text; user-select: text; }
 img { -webkit-user-drag: none; user-drag: none; }
 
-/* Cyber-Industrial Kit (mod. 53): font Space-Tech ad alto contrasto per gli elementi cyber */
-.font-cyber { font-family: 'Orbitron', 'Rajdhani', 'JetBrains Mono', monospace; letter-spacing: .04em; }
-.font-tech { font-family: 'Rajdhani', 'Manrope', sans-serif; letter-spacing: .02em; }
+/* Carattere distintivo per i titoli (editoriale, artigianale) + pulito per i dati */
+.font-cyber { font-family: 'Playfair Display', 'Cormorant Garamond', serif; letter-spacing: .02em; }
+.font-tech { font-family: 'Manrope', 'Rajdhani', sans-serif; letter-spacing: .02em; }
 
 /* Dynamic Focus Animation (mod. 55): glow teal lampeggiante sul parametro critico */
 @keyframes focusGlowTeal {
@@ -145,25 +145,25 @@ html[lang="fa"] textarea {
         --radius: 0.85rem;
     }
     .dark {
-        --background: 210 16% 12%;
-        --foreground: 150 12% 92%;
-        --card: 210 14% 16%;
-        --card-foreground: 150 12% 92%;
-        --popover: 210 14% 16%;
-        --popover-foreground: 150 12% 92%;
-        --primary: 163 22% 52%;
+        --background: 240 3% 11%;
+        --foreground: 240 5% 96%;
+        --card: 240 3% 15%;
+        --card-foreground: 240 5% 96%;
+        --popover: 240 3% 15%;
+        --popover-foreground: 240 5% 96%;
+        --primary: 24 65% 53%;
         --primary-foreground: 0 0% 100%;
-        --secondary: 210 12% 20%;
-        --secondary-foreground: 150 12% 92%;
-        --muted: 210 12% 20%;
-        --muted-foreground: 210 10% 62%;
-        --accent: 203 26% 60%;
-        --accent-foreground: 210 16% 12%;
-        --destructive: 6 52% 50%;
+        --secondary: 240 3% 18%;
+        --secondary-foreground: 240 5% 96%;
+        --muted: 240 3% 18%;
+        --muted-foreground: 240 5% 60%;
+        --accent: 128 12% 55%;
+        --accent-foreground: 240 3% 11%;
+        --destructive: 0 60% 55%;
         --destructive-foreground: 0 0% 98%;
-        --border: 210 12% 24%;
-        --input: 210 12% 24%;
-        --ring: 163 22% 52%;
+        --border: 240 4% 24%;
+        --input: 240 4% 24%;
+        --ring: 24 65% 53%;
     }
 }
 
@@ -251,7 +251,7 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 .chalkboard {
-  background: radial-gradient(120% 120% at 30% 20%, #1B2A38 0%, #14212C 60%, #14212C 100%);
+  background: radial-gradient(120% 120% at 30% 20%, #1B2A38 0%, #242427 60%, #242427 100%);
   border: 7px solid #2A3B49; border-radius: 14px;
   box-shadow: inset 0 0 18px rgba(0,0,0,.5), 0 8px 16px rgba(44,30,16,.35);
 }
@@ -263,16 +263,16 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 /* Sfondo caldo "panificio" per tutte le pagine */
 .app-warm-bg {
   background:
-    radial-gradient(95% 55% at 50% 0%, #0D1520 0%, transparent 55%),
-    radial-gradient(120% 80% at 50% 100%, #14212C 0%, transparent 60%),
-    linear-gradient(180deg, #0D1520 0%, #14212C 100%);
+    radial-gradient(95% 55% at 50% 0%, #1C1C1E 0%, transparent 55%),
+    radial-gradient(120% 80% at 50% 100%, #242427 0%, transparent 60%),
+    linear-gradient(180deg, #1C1C1E 0%, #242427 100%);
   background-attachment: fixed;
 }
 .dark .app-warm-bg {
   background:
     radial-gradient(85% 42% at 50% -4%, rgba(62,156,147,.18) 0%, transparent 58%),
     radial-gradient(120% 70% at 50% 105%, rgba(94,140,168,.10) 0%, transparent 60%),
-    linear-gradient(180deg, #0D1520 0%, #0D1520 45%, #14212C 100%);
+    linear-gradient(180deg, #1C1C1E 0%, #1C1C1E 45%, #242427 100%);
   background-attachment: fixed;
 }
 
@@ -297,7 +297,7 @@ html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
 /* ===== REGOLA UX: cosa si legge (bianco/grigio) vs cosa si clicca (arancio/giallo) ===== */
 /* Base: sfondo nero, testo chiaro */
-body { background:#0D1520; color:#E2E8F0; }
+body { background:#1C1C1E; color:#E2E8F0; }
 /* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
 h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\], h4.text-\[\#3E9C93\], p.text-\[\#3E9C93\],
 h1.text-\[\#64748B\], h2.text-\[\#64748B\], h3.text-\[\#64748B\], p.text-\[\#64748B\],
@@ -349,8 +349,8 @@ nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important
    PANIFICIO VIRTUALE — Palette generale "warm artisan" (no neon/rosa/viola)
    ========================================================================== */
 :root {
-  --bg-primary: #0D1520; /* Marrone legno scuro forno */
-  --bg-secondary: #14212C;
+  --bg-primary: #1C1C1E; /* Marrone legno scuro forno */
+  --bg-secondary: #242427;
   --accent-warm: #64748B; /* Tono grano / pane caldo */
   --accent-border: #2A3B49;
   --text-main: #F7F9FC;
@@ -417,70 +417,44 @@ a[class*="bg-[#1B2A38]"]:hover {
 }
 
 /* ==========================================================================
-   MIKILAB PRO — PLANCIA OLOGRAFICA (Zero-Menu vertical console) v40
-   Unica interfaccia continua dark-mode industriale. Mike Mix fuso nativamente.
+   MIKILAB PRO — CONSOLE ARTIGIANALE PREMIUM (antracite caldo, no sci-fi)
+   Unica interfaccia continua dark-mode calda. Accenti: rame (Capo), salvia (Sitor).
    ========================================================================== */
-.holo-root { background:#060A10 !important; color:#E6F6FA !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+.holo-root { background:#1C1C1E !important; color:#F2F2F5 !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
 .holo-canvas {
   position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
   background:
-    radial-gradient(95% 65% at 50% -10%, rgba(138,151,166,0.10), transparent 62%),
-    radial-gradient(60% 45% at 10% 28%, rgba(164,175,187,0.045), transparent 60%),
-    radial-gradient(80% 60% at 92% 82%, rgba(0,255,102,0.04), transparent 60%),
-    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,0.55) 100%),
-    linear-gradient(180deg,#060910 0%, #060A10 100%);
+    radial-gradient(95% 65% at 50% -10%, rgba(217,119,54,0.05), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(126,154,130,0.04), transparent 60%),
+    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,0.42) 100%),
+    linear-gradient(180deg,#1C1C1E 0%, #18181A 100%);
 }
-.holo-canvas::before { /* micro holo-grid con deriva lenta */
-  content:""; position:absolute; inset:-40px;
-  background-image:
-    linear-gradient(rgba(138,151,166,0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(138,151,166,0.045) 1px, transparent 1px);
-  background-size:34px 34px, 34px 34px;
-  -webkit-mask-image: radial-gradient(120% 92% at 50% 0%, #000, transparent 74%);
-  mask-image: radial-gradient(120% 92% at 50% 0%, #000, transparent 74%);
-  animation: gridDrift 60s linear infinite;
-  will-change: transform;
+/* Niente griglia olografica né scanline: superficie calda e pulita */
+.holo-canvas::before { content:none; }
+.holo-canvas::after { /* grana di farina appena percettibile, calda */
+  content:""; position:absolute; inset:0; opacity:.05;
+  background: radial-gradient(rgba(255,246,226,0.5) 1px, transparent 1px);
+  background-size: 4px 4px;
 }
-.holo-canvas::after { /* scanlines + grana industriale */
-  content:""; position:absolute; inset:0; opacity:.45;
-  background:
-    repeating-linear-gradient(0deg, rgba(138,151,166,0.03) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.28) 4px),
-    radial-gradient(rgba(255,255,255,0.018) 1px, transparent 1px);
-  background-size: auto, 3px 3px;
-}
-@keyframes gridDrift { from { transform: translate3d(0,0,0); } to { transform: translate3d(34px,34px,0); } }
 
 .holo-panel {
-  position:relative; border-radius:18px; isolation:isolate;
-  background: linear-gradient(158deg, rgba(14,19,29,0.86), rgba(7,10,16,0.86));
-  border:1px solid rgba(138,151,166,0.16);
-  box-shadow: 0 12px 44px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.05), inset 0 0 30px rgba(138,151,166,0.028);
-  backdrop-filter: blur(20px) saturate(1.15); -webkit-backdrop-filter: blur(20px) saturate(1.15);
-  transition: border-color .35s ease, box-shadow .35s ease, transform .35s cubic-bezier(.2,.7,.2,1);
-  will-change: transform;
+  position:relative; border-radius:16px; isolation:isolate;
+  background: #242427;
+  border:1px solid #3A3A3E;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .2s cubic-bezier(.2,.7,.2,1);
 }
-.holo-panel::before { /* hairline luminoso superiore */
-  content:""; position:absolute; top:0; left:14%; right:14%; height:1px; z-index:2; pointer-events:none;
-  background:linear-gradient(90deg, transparent, rgba(138,151,166,0.55), transparent);
-}
-.holo-panel::after { /* velatura scanline interna, molto tenue */
-  content:""; position:absolute; inset:0; z-index:0; pointer-events:none; opacity:.35; border-radius:inherit;
-  background: repeating-linear-gradient(0deg, rgba(138,151,166,0.018) 0px, transparent 2px, transparent 5px);
-  -webkit-mask-image: linear-gradient(180deg,#000,transparent 60%); mask-image: linear-gradient(180deg,#000,transparent 60%);
-}
+.holo-panel::before { content:none; } /* rimosso hairline luminoso sci-fi */
+.holo-panel::after { content:none; }  /* rimossa velatura scanline */
 .holo-panel > * { position:relative; z-index:1; }
-.holo-panel:hover { border-color: rgba(138,151,166,0.45); box-shadow: 0 18px 54px rgba(0,0,0,0.6), 0 0 30px rgba(138,151,166,0.16), inset 0 0 34px rgba(138,151,166,0.05); transform: translate3d(0,-2px,0); }
-.holo-corner { position:absolute; width:14px; height:14px; pointer-events:none; z-index:3; filter: drop-shadow(0 0 4px rgba(138,151,166,0.55)); }
-.holo-corner-tl { top:0; left:0; border-top:2px solid; border-left:2px solid; border-top-left-radius:16px; }
-.holo-corner-tr { top:0; right:0; border-top:2px solid; border-right:2px solid; border-top-right-radius:16px; }
-.holo-corner-bl { bottom:0; left:0; border-bottom:2px solid; border-left:2px solid; border-bottom-left-radius:16px; }
-.holo-corner-br { bottom:0; right:0; border-bottom:2px solid; border-right:2px solid; border-bottom-right-radius:16px; }
-.holo-scan-top { position:absolute; inset-inline:0; top:0; height:1px; background:linear-gradient(90deg,transparent,rgba(138,151,166,0.9),transparent); }
+.holo-panel:hover { border-color:#4A4A50; box-shadow: 0 16px 40px rgba(0,0,0,0.5); transform: translate3d(0,-1px,0); }
+.holo-corner { display:none; }        /* rimossi angoli luminosi sci-fi */
+.holo-scan-top { display:none; }      /* rimossa scanline superiore */
 
 /* Scrollbar premium + selezione ciano (tocco cinematografico) */
 .holo-root ::-webkit-scrollbar { width:10px; height:10px; }
-.holo-root ::-webkit-scrollbar-track { background:#060A10; }
-.holo-root ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(138,151,166,0.35), rgba(138,151,166,0.12)); border-radius:8px; border:2px solid #060A10; }
+.holo-root ::-webkit-scrollbar-track { background:#18181A; }
+.holo-root ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(138,151,166,0.35), rgba(138,151,166,0.12)); border-radius:8px; border:2px solid #18181A; }
 .holo-root ::-webkit-scrollbar-thumb:hover { background:rgba(138,151,166,0.5); }
 .holo-root ::selection { background:rgba(138,151,166,0.28); color:#EAFDFF; }
 @keyframes holoSweep { 0%{transform:translateY(0); opacity:0;} 10%{opacity:.8;} 100%{transform:translateY(240px); opacity:0;} }

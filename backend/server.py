@@ -4065,7 +4065,7 @@ async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(r
                    "unit": "kg", "min_kg": 0, "updated_at": now_iso()}
             await db.lab_warehouse.insert_one(dict(doc))
             added.append({"name": name, "added_kg": qty, "quantity_kg": qty})
-    stock = await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+    stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("name", 1).to_list(500)
     return {"status": "success", "added": added, "detected_count": len(added), "stock": stock,
             "mikemix_insight": f"{len(added)} materie prime lette e caricate nel magazzino di produzione."}
 
@@ -4095,7 +4095,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
     for ing in (rec.get("extra_ingredients") or []):
         _need(str(ing.get("name") or "extra"), flour * (float(ing.get("percent") or 0) / 100), "ingrediente")
 
-    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
+    stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).to_list(500)
 
     def _find(name, kind):
         nl = (name or "").lower().strip()
@@ -4125,7 +4125,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
             "batches": factor, "line_sectors": ["dosaggio", "autolisi"], "consumed": consumed,
             "shortfalls": shortfalls, "at": now_iso()}
     await db.batch_links.insert_one(dict(link))
-    new_stock = await db.lab_warehouse.find({}, {"_id": 0}).sort("name", 1).to_list(500)
+    new_stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("name", 1).to_list(500)
     return {"status": "success", "recipe_name": rec.get("name"), "batches": factor,
             "consumed": consumed, "shortfalls": shortfalls, "untracked": untracked,
             "line_sectors": ["Dosaggio", "Autolisi"], "stock": new_stock,
@@ -5096,8 +5096,8 @@ async def get_consumption(user: Optional[dict] = Depends(optional_user)):
 async def warehouse_stats(user: Optional[dict] = Depends(optional_user)):
     # Autonomia reale: consumo medio giornaliero per materia (ultimi 14 giorni) + giorni residui.
     WINDOW = 14
-    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
-    logs = await db.lab_consumption_log.find({}, {"_id": 0}).to_list(3000)
+    stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).to_list(500)
+    logs = await db.lab_consumption_log.find({"organization_id": _org_id(user)}, {"_id": 0}).to_list(3000)
     cutoff = datetime.now(timezone.utc) - timedelta(days=WINDOW)
     by_name: dict = {}
     for lg in logs:
@@ -10003,7 +10003,7 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     leaders = ld.get("leaders") or {}
     low = []
     try:
-        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+        for s in await db.lab_warehouse.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(500):
             mn = float(s.get("min_kg") or 0); q = float(s.get("quantity_kg") or 0)
             if mn > 0 and q <= mn:
                 low.append(f"{s.get('name')} ({q:g}/{mn:g}kg)")
@@ -10080,7 +10080,7 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
     leaders = ld.get("leaders") or {}
     low = []
     try:
-        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+        for s in await db.lab_warehouse.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(500):
             mn = float(s.get("min_kg") or 0); q = float(s.get("quantity_kg") or 0)
             if mn > 0 and q <= mn:
                 low.append(f"{s.get('name')} ({q:g}/{mn:g}kg)")
@@ -10189,7 +10189,7 @@ async def _plan_context(body, org: str = ORG_DEFAULT) -> str:
     leaders = ld.get("leaders") or {}
     low = []
     try:
-        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+        for s in await db.lab_warehouse.find({"organization_id": org}, {"_id": 0}).to_list(500):
             mn = float(s.get("min_kg") or 0)
             q = float(s.get("quantity_kg") or 0)
             if mn > 0 and q <= mn:

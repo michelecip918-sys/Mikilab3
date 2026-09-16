@@ -1,140 +1,184 @@
 {
-  "project_name": "MikiLab Pro - B2B Enterprise Operating System for Bakeries & Pastry Shops",
-  "theme_mode": "light",
-  "archetype": "ARCHETYPE 4: SWISS & HIGH-CONTRAST / ENTERPRISE SAAS ELEGANCE",
+  "project_name": "MikiLab Pro - Restyle Artigianale Premium",
+  "app_type": "hybrid_fullstack - B2B Enterprise OS per panificio/pizzeria/pasticceria",
+  "theme_mode": "dark_warm_anthracite",
+  "archetype": "ARCHETYPE 5: LUXURY & WARM ARTISAN ELEGANCE",
   "design_philosophy": {
-    "core_directive": "Transition from dark neon industrial/holographic theme to a crisp, refined, light enterprise look. Elimination of dark gradients, glowing borders, saturated rainbow badges, and emoji headers in favor of clear typography, subtle slate borders, monochrome Lucide icons, and calm warm-accented light surfaces.",
-    "emotional_tone": "Professional, calm, trustworthy, precise, and executive. Built for bakery/pastry floor operations and owner decision-making.",
+    "core_directive": "Sostituzione totale dello stile 'multiverso olografico' e sci-fi con uno stile 'Artigianale Premium' basato su toni caldi materici, superfici in antracite caldo, dettagli rame/ambra per la Direzione (Capo) e verde salvia per l'AI Sitor. Eliminazione di tutte le scanline, griglie in deriva, bagliori ciano neon ed elementi olografici in favore di bordi sottili in ottone/rame spazzolato, tipografia editoriale distintiva e fotografie reali di laboratorio.",
+    "emotional_tone": "Autautorevole, artigianale, caldo, pulito, professionale e tangibile. Evoca la maestria del laboratorio da forno combinata con la precisione gestionale enterprise.",
     "anti_patterns_banned": [
-      "No dark backgrounds (#0A0F1D, #050505, #111827) on main panels or containers",
-      "No loud neon orange (#FF6B00), electric cyan (#00F2FE), or magenta glows",
-      "No heavy drop shadows or glowing border animations (box-shadow neon ring)",
-      "No emoji characters as panel icons or structural badges in section headers",
-      "No transparent dropdown/modal backgrounds without blur or solid slate background"
+      "No nero puro (#000000) e no blu/ciano sci-fi (#00F2FE, #06B6D4, #3E9C93 neon)",
+      "No classi e selettori olografici (.holo-panel, .holo-canvas, .holo-root, .holo-corner, .splash-ring, scanline, gridDrift)",
+      "No bagliori pulsanti ciano/neon o efffetti hairline luminosi da astronavi",
+      "No emoji nei titoli o nelle intestazioni di sezione (utilizzare icone vettoriali pulite in rame o neutre)",
+      "No miscelazione di rame/ambra con il verde salvia: il rame appartiene esclusivamente al Capo/Direzione, il salvia esclusivamente a Sitor",
+      "No sfondi trasparenti non sfocati per i menu a discesa, modali o header sticky"
     ]
   },
-  "color_system": {
-    "page_background": "#F8FAFC",
-    "surface_card": "#FFFFFF",
-    "surface_elevated": "#F1F5F9",
-    "surface_subtle": "#F8FAFC",
-    "border_default": "#E2E8F0",
-    "border_subtle": "#F1F5F9",
-    "border_focus": "#2563EB",
-    "text_primary": "#0F172A",
-    "text_secondary": "#475569",
-    "text_muted": "#64748B",
-    "text_accent": "#1E3A8A",
-    "primary_accent": "#0F172A",
-    "brand_blue": "#2563EB",
-    "warm_accent_bakery": "#C2410C",
+  "colors": {
+    "backgrounds": {
+      "main_bg": "#1C1C1E",
+      "surface_card": "#242427",
+      "surface_elevated": "#2C2C30",
+      "surface_subtle": "#18181A",
+      "surface_glass": "rgba(36, 36, 39, 0.85)"
+    },
+    "borders": {
+      "default": "#3A3A3E",
+      "subtle": "#2E2E32",
+      "focus": "#D97736"
+    },
+    "text": {
+      "primary": "#F2F2F5",
+      "secondary": "#C5C5CA",
+      "muted": "#8E8E93",
+      "contrast_dark": "#121214"
+    },
+    "capo_direzione_accent_copper": {
+      "primary_copper": "#D97736",
+      "amber_warm": "#E08244",
+      "copper_hover": "#C86A2B",
+      "copper_active": "#B85C1E",
+      "copper_surface_subtle": "rgba(217, 119, 54, 0.12)",
+      "copper_border": "rgba(217, 119, 54, 0.35)",
+      "scope": "Riservato ESCLUSIVAMENTE alla sezione Capo / Console Direzione, plancia di comando, bottoni d'azione del Capo, filtri attivi del Capo e KPI dirigenziali"
+    },
+    "sitor_ai_accent_sage": {
+      "primary_sage": "#7E9A82",
+      "sage_light": "#96B19E",
+      "sage_dark": "#58725D",
+      "sage_surface_subtle": "rgba(126, 154, 130, 0.12)",
+      "sage_border": "rgba(126, 154, 130, 0.35)",
+      "scope": "Riservato ESCLUSIVAMENTE a Sitor (avatar, Sala Sitor chat AI, messaggi di Sitor, pillole e widget legati a Sitor)"
+    },
+    "operatore_produzione_neutrals": {
+      "primary_stone": "#A1A1AA",
+      "stone_surface": "#28282B",
+      "stone_border": "#3F3F46"
+    },
     "semantic": {
-      "success_bg": "#F0FDF4",
-      "success_border": "#BBF7D0",
-      "success_text": "#15803D",
-      "success_badge": "#DCFCE7",
-      "warning_bg": "#FEF3C7",
-      "warning_border": "#FDE68A",
-      "warning_text": "#B45309",
-      "warning_badge": "#FEF9C3",
-      "danger_bg": "#FEF2F2",
-      "danger_border": "#FECACA",
-      "danger_text": "#B91C1C",
-      "danger_badge": "#FEE2E2",
-      "info_bg": "#EFF6FF",
-      "info_border": "#BFDBFE",
-      "info_text": "#1D4ED8",
-      "info_badge": "#DBEAFE"
+      "success_bg": "rgba(46, 125, 50, 0.15)",
+      "success_border": "#388E3C",
+      "success_text": "#81C784",
+      "warning_bg": "rgba(230, 81, 0, 0.15)",
+      "warning_border": "#F57C00",
+      "warning_text": "#FFB74D",
+      "danger_bg": "rgba(198, 40, 40, 0.15)",
+      "danger_border": "#D32F2F",
+      "danger_text": "#E57373",
+      "info_bg": "rgba(25, 118, 210, 0.15)",
+      "info_border": "#1976D2",
+      "info_text": "#64B5F6"
     }
   },
   "typography": {
-    "font_family_headings": "Plus Jakarta Sans, sans-serif",
-    "font_family_body": "Inter, sans-serif",
+    "font_family_headings": "Playfair Display, Cormorant Garamond, serif",
+    "font_family_body": "Manrope, Inter, sans-serif",
     "font_family_mono": "JetBrains Mono, monospace",
-    "scale": {
-      "h1": "text-3xl sm:text-4xl font-bold tracking-tight text-slate-900",
-      "h2": "text-2xl sm:text-3xl font-semibold tracking-tight text-slate-900",
-      "h3": "text-xl sm:text-2xl font-semibold text-slate-900",
-      "h4": "text-lg font-medium text-slate-900",
-      "body_lg": "text-base text-slate-700 leading-relaxed",
-      "body": "text-sm text-slate-600 leading-normal",
-      "caption": "text-xs font-medium text-slate-500 uppercase tracking-wider"
+    "hierarchy": {
+      "h1": "text-3xl sm:text-4xl lg:text-5xl font-bold font-display tracking-tight text-[#F2F2F5]",
+      "h2": "text-2xl sm:text-3xl font-bold font-display tracking-tight text-[#F2F2F5]",
+      "h3": "text-xl sm:text-2xl font-semibold font-display text-[#F2F2F5]",
+      "h4": "text-lg font-semibold font-sans text-[#F2F2F5]",
+      "body_lg": "text-base font-sans text-[#C5C5CA] leading-relaxed",
+      "body_md": "text-sm font-sans text-[#C5C5CA] leading-normal",
+      "caption": "text-xs font-mono uppercase tracking-widest text-[#8E8E93]"
     }
   },
-  "component_guidelines": {
+  "sci_fi_removal_and_replacements": {
+    "classes_to_remove": [
+      ".holo-panel",
+      ".holo-canvas",
+      ".holo-root",
+      ".holo-corner",
+      ".holo-corner-tl",
+      ".holo-corner-tr",
+      ".holo-corner-bl",
+      ".holo-corner-br",
+      ".holo-scan-top",
+      ".splash-ring",
+      ".splash-glitch",
+      ".module-focus",
+      ".nexus-ring",
+      "gridDrift",
+      "scanlines"
+    ],
+    "replacements": {
+      "holo_panel": "Sostituire con 'artisan-card': bg-[#242427] border border-[#3A3A3E] rounded-2xl shadow-lg p-5 sm:p-6 transition-all duration-200",
+      "holo_canvas": "Sostituire con sfondo fisso Antracite Caldo bg-[#1C1C1E] con sottilissima texture grano di farina opacità 3%",
+      "glow_ciano": "Sostituire con aloni o ombre rame/ambra (#D97736) nella sezione Capo e verde salvia (#7E9A82) in Sala Sitor",
+      "hairline_scifi": "Sostituire con un bordo sottile superiore 'artisan-border-top' in rame sfumato per il Capo e salvia sfumato per Sitor"
+    }
+  },
+  "component_hierarchy": {
     "cards_and_panels": {
-      "background": "bg-white",
-      "border": "border border-slate-200/80",
-      "radius": "rounded-xl",
-      "shadow": "shadow-sm hover:shadow-md transition-shadow duration-200",
-      "padding": "p-5 md:p-6"
+      "base": "bg-[#242427] border border-[#3A3A3E] rounded-2xl p-5 sm:p-6 shadow-md transition-all",
+      "elevated": "bg-[#2C2C30] border border-[#444449] rounded-2xl p-5 sm:p-6 shadow-xl",
+      "capo_panel": "bg-[#242427] border border-[rgba(217,119,54,0.3)] rounded-2xl p-5 sm:p-6 relative overflow-hidden",
+      "sitor_panel": "bg-[#242427] border border-[rgba(126,154,130,0.3)] rounded-2xl p-5 sm:p-6 relative overflow-hidden"
     },
     "buttons": {
-      "primary": "bg-slate-900 hover:bg-slate-800 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-primary'",
-      "secondary": "bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-secondary'",
-      "accent": "bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg shadow-sm transition-colors data-testid='button-accent'",
-      "ghost": "hover:bg-slate-100 text-slate-600 hover:text-slate-900 px-3 py-1.5 rounded-lg transition-colors data-testid='button-ghost'"
+      "capo_primary": "bg-[#D97736] hover:bg-[#C86A2B] text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-colors active:scale-95 data-testid='button-capo-primary'",
+      "capo_secondary": "bg-[#2C2C30] hover:bg-[#3A3A3E] text-[#F2F2F5] border border-[rgba(217,119,54,0.4)] font-medium px-4 py-2 rounded-xl transition-colors data-testid='button-capo-secondary'",
+      "sitor_primary": "bg-[#7E9A82] hover:bg-[#6B8870] text-white font-semibold px-5 py-2.5 rounded-xl shadow-md transition-colors active:scale-95 data-testid='button-sitor-primary'",
+      "neutral_ghost": "hover:bg-[#2C2C30] text-[#C5C5CA] hover:text-white px-3 py-1.5 rounded-xl transition-colors data-testid='button-ghost'"
     },
-    "tabs_and_pills": {
-      "container": "bg-slate-100 p-1 rounded-lg border border-slate-200/60 inline-flex gap-1",
-      "active_tab": "bg-white text-slate-900 font-medium shadow-sm rounded-md px-3 py-1.5 text-sm transition-all",
-      "inactive_tab": "text-slate-600 hover:text-slate-900 px-3 py-1.5 text-sm font-medium transition-colors"
+    "badges": {
+      "capo_badge": "bg-[rgba(217,119,54,0.15)] text-[#E08244] border border-[rgba(217,119,54,0.3)] px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider",
+      "sitor_badge": "bg-[rgba(126,154,130,0.15)] text-[#96B19E] border border-[rgba(126,154,130,0.3)] px-3 py-1 rounded-full text-xs font-mono uppercase tracking-wider",
+      "neutral_badge": "bg-[#2C2C30] text-[#C5C5CA] border border-[#3A3A3E] px-3 py-1 rounded-full text-xs font-mono"
     },
     "inputs_and_selects": {
-      "base": "bg-white border border-slate-200 text-slate-900 placeholder:text-slate-400 rounded-lg px-3.5 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 transition-all",
-      "dropdown_menu": "bg-white border border-slate-200 shadow-lg rounded-xl p-1 z-50 min-w-[160px]"
+      "base": "bg-[#18181A] border border-[#3A3A3E] text-[#F2F2F5] placeholder:text-[#8E8E93] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#D97736] transition-colors",
+      "sitor_chat_input": "bg-[#18181A] border border-[rgba(126,154,130,0.4)] text-[#F2F2F5] placeholder:text-[#8E8E93] rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-[#7E9A82] transition-colors"
     },
-    "header_nav": {
-      "background": "bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40",
-      "text": "text-slate-900 font-semibold"
-    },
-    "command_deck_hero": {
-      "background": "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white rounded-2xl p-6 sm:p-8 shadow-md border border-slate-800 relative overflow-hidden",
-      "accent_pill": "bg-white/10 text-slate-200 border border-white/15 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium"
+    "modals": {
+      "overlay": "bg-black/75 backdrop-blur-md fixed inset-0 z-50 flex items-center justify-center p-4",
+      "container": "bg-[#242427] border border-[#3A3A3E] rounded-2xl shadow-2xl max-w-2xl w-full p-6 relative overflow-hidden"
     }
   },
-  "legacy_color_mapping": {
-    "#0A0F1D": "#F8FAFC (Page background)",
-    "#131B2E": "#FFFFFF (Card background)",
-    "#1E293B (dark elevated)": "#F1F5F9 (Light elevated background)",
-    "#FF6B00 (Loud Orange)": "#C2410C (Restrained Bakery Terracotta) or #2563EB (Enterprise Blue)",
-    "#FFB800 / #EAB308 (Loud Amber)": "#D97706 (Muted Slate Amber for warnings)",
-    "#00F2FE / #06B6D4 (Electric Teal)": "#2563EB (Enterprise Blue) or #0284C7 (Clean Slate Cyan)",
-    "#00E676 / #22C55E (Neon Green)": "#16A34A (Clean Muted Success Green)",
-    "#FF2A6D / #EF4444 (Neon Red/Pink)": "#DC2626 (Clean Muted Error Red)"
+  "grids": {
+    "bento_mode_a": "grid grid-cols-1 md:grid-cols-8 lg:grid-cols-12 gap-6 p-4 sm:p-6",
+    "dashboard_mode_b": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 sm:p-6"
   },
-  "css_variables": {
-    "--bg-page": "#F8FAFC",
-    "--bg-card": "#FFFFFF",
-    "--bg-elevated": "#F1F5F9",
-    "--border-color": "#E2E8F0",
-    "--text-primary": "#0F172A",
-    "--text-secondary": "#475569",
-    "--text-muted": "#64748B",
-    "--accent-primary": "#0F172A",
-    "--accent-blue": "#2563EB",
-    "--accent-terracotta": "#C2410C"
+  "media": {
+    "avatar_capo_michele": "/michele-avatar-real.jpg",
+    "avatar_sitor_ai": "/avatar_sitor.jpg",
+    "avatar_mohamed": "/avatar_mohamed.jpg",
+    "avatar_miki": "/avatar_miki.jpg",
+    "hero_laboratory": "/michele-real-lab.jpg",
+    "hero_bakery": "/hero-bakery.jpg"
   },
-  "image_urls": {
-    "command_deck_hero": [
-      {
-        "url": "https://images.unsplash.com/photo-1772758632564-3c70e5260844?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTJ8MHwxfHNlYXJjaHxffGFydGlzYW4lMjBiYWtlciUyMHByb2Zlc3Npb25hbCUyMGJha2VyeSUyMGtpdGNoZW58ZW58MHx8fHwxNzg5MTEzNTAxfDA&ixlib=rb-4.1.0&q=85",
-        "description": "Artisan baker in professional production environment",
-        "category": "hero_background"
-      },
-      {
-        "url": "https://images.pexels.com/photos/8633662/pexels-photo-8633662.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
-        "description": "Freshly baked artisan sourdough loaves on rustic shelf",
-        "category": "bakery_products"
-      }
-    ]
+  "image_urls": [
+    {
+      "url": "/michele-avatar-real.jpg",
+      "description": "Foto reale del Capo Maestro Panificatore Michele",
+      "category": "avatar_capo"
+    },
+    {
+      "url": "/avatar_sitor.jpg",
+      "description": "Avatar di Sitor AI Strategico",
+      "category": "avatar_sitor"
+    },
+    {
+      "url": "/michele-real-lab.jpg",
+      "description": "Scena di laboratorio reale di panificazione artigianale",
+      "category": "laboratorio_hero"
+    }
+  ],
+  "accessibility": {
+    "contrast_ratio": "Tutti i testi soddisfano i requisiti WCAG AA con contrasto > 4.5:1 sullo sfondo Antracite Caldo (#1C1C1E e #242427)",
+    "focus_states": "Anello di focus visibile e ben definito in rame (#D97736) o salvia (#7E9A82)",
+    "data_testid_rule": "Tutti gli elementi interattivi (pulsanti, input, tab, card cliccabili, modali) DEVONO includere l'attributo data-testid per i test automatizzati"
   },
   "instructions_to_main_agent": [
-    "Apply light mode CSS variables to index.css and App.css as default :root styles.",
-    "Replace dark Tailwind classes (bg-slate-900, bg-gray-900, bg-[#0A0F1D], text-white on main containers) with light theme equivalents (bg-slate-50, bg-white, text-slate-900, border-slate-200).",
-    "Replace emoji icons in section headers with monochrome Lucide icons (e.g. lucide-react LayoutDashboard, Utensils, Users, Wrench, ShieldCheck, ShoppingBag).",
-    "Ensure all buttons, cards, selects, tabs, and input fields include data-testid attributes for automated testing.",
-    "Remove glowing border effects (glow-orange, glow-teal, box-shadow animations) and replace with clean 1px solid slate-200 borders.",
-    "Keep semantic colors reserved strictly for status badges (success/warning/danger/info) using the light background tint variants."
+    "1. Sostituire nel file index.css e nei componenti tutte le definizioni dello stile sci-fi (.holo-panel, scanlines, gridDrift, glow ciano, .splash-ring) con le variabili e classi dello stile Artigianale Premium.",
+    "2. Impostare come sfondo principale dello script/css il colore Antracite Caldo #1C1C1E e per le card #242427.",
+    "3. Applicare il colore Rame/Ambra (#D97736) RIGOROSAMENTE SOLTANTO alla sezione del Capo / Direzione (Console Direzione, Piano Unico, Plancia Stato, bottoni di comando del Capo).",
+    "4. Applicare il Verde Salvia (#7E9A82) RIGOROSAMENTE SOLTANTO agli elementi legati a Sitor AI (Sala Sitor, chat AI, avatar Sitor, widget Sitor).",
+    "5. Mantenere l'italiano professionale per tutti i testi dell'interfaccia (Direzione, produzione, laboratorio, impasto, cottura, ricettario, magazzino) ed eliminare qualsiasi emoji dall'interfaccia utente.",
+    "6. Utilizzare le foto reali dell'avatar esistenti (/michele-avatar-real.jpg, /avatar_sitor.jpg) evitando modelli o elementi 3D sci-fi generici decorativi.",
+    "7. Assicurarsi che TUTTE le interazioni, pulsanti, tab, link, filtri e campi di testo posseggano l'attributo data-testid in formato kebab-case.",
+    "8. Applicare il restyle in modo coerente su TUTTO il sito: PublicGate, Console Direzione, Sala Sitor, Piano Unico, RecipeList, OperatorStatusBoard, VoiceDelegation, vista Produzione/Operatore e modali."
   ]
 }

@@ -601,7 +601,7 @@ async def dough_sessions_ai_advice(body: DayAfterReq, user: dict = Depends(curre
 
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
-# MAGAZZINO (giacenze materie prime) + CHIUSURA GIORNATA / Registro HACCP
+# MAGAZZINO (giacenze materie prime) + CHIUSURA GIORNATA
 # ---------------------------------------------------------------------------
 class InventoryItem(BaseModel):
     id: Optional[str] = None

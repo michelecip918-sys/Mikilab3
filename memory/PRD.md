@@ -5420,3 +5420,10 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - PublicGate: rimosso TTS di benvenuto automatico allingresso.
 - DeskScene/ZoneHero3D: rimossa reazione a deviceorientation (scene statiche) + CTA giroscopio.
 - PENDENTI (non completati, da fase dedicata): PART 1 restyle grafico totale (antracite/rame/salvia, rimozione holo/scanline/gridDrift); punto 4 riduzione parlantina Sitor; punto 5 purge HACCP nelle traduzioni (chiavi usate come lookup, rischio rottura); alcune letture interne lab_warehouse per snapshot AI (autoplan/warehouse_stats) ancora non org-scoped.
+
+---
+## Changelog — 16 Set 2026 (Restyle Artigianale + Sitor Sobrio + HACCP cleanup + Audit Magazzino)
+- RESTYLE (PART1): design_guidelines.json creato. index.css: base antracite caldo #1C1C1E/#242427, titoli in Playfair Display, shadcn dark vars -> antracite/rame. Rimossi effetti sci-fi: holo-panel hairline+scanline+corner+blur, holo-canvas gridDrift+scanlines, splash/scanline. Verificato visivamente (body #1C1C1E, serif, no glow). Rame/salvia scoping per-sezione = follow-up.
+- SITOR SOBRIO (punto4): recap proattivo SalaSitor ora SENZA voce automatica (solo testo); MikeSuggestions parla SOLO se suggerimento critico/urgente.
+- HACCP CLEANUP (punto5): rimossi 18 residui orfani HACCP/Allergeni da triTranslations.json (0 referenze nei componenti = sicuro), esempio MikeInfo -> Controllo Qualita, commento backend operations.py. 0 HACCP residui.
+- AUDIT MAGAZZINO (punto8/4): isolate per organization_id TUTTE le letture lab_warehouse interne (consume, scan_drop, bind_batch, warehouse_stats, autoplan, autoplan_options, _plan_context). 0 letture non isolate. Backend OK.

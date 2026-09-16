@@ -32,7 +32,10 @@ export default function MikeSuggestions() {
       setAutopilot(!!d.autopilot);
       setAutoActions(d.autopilot_actions || []);
       const key = (d.suggestions || []).map((s) => s.id).join(",");
-      if (key && spokenRef.current !== key) { spokenRef.current = key; try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
+      // Voce automatica SOLO per eventi critici/urgenti: i suggerimenti di routine restano
+      // silenziosi (compaiono come card azionabili), senza parlantina di riempimento.
+      const critical = (d.suggestions || []).some((s) => s.critical || s.urgent || s.priority === "high");
+      if (key && critical && spokenRef.current !== key) { spokenRef.current = key; try { playTTS(d.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }
       if (!key) spokenRef.current = "";
     } catch { /* */ }
   }, [lang]);

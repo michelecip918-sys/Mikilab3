@@ -46,13 +46,14 @@ export default function SalaSitor() {
     deusApi.productionQueue().then((d) => { setQueue(d.tasks || []); setCounts(d.counts || { total: 0, pending: 0, by_sector: {} }); }).catch(() => {});
   }, []);
   useEffect(() => { loadQueue(); deusApi.bond(lang).then(setBond).catch(() => {}); }, [loadQueue, lang]);
-  // Recap proattivo: all'apertura Sitor cita da solo le richieste di piano delle ore precedenti.
+  // Recap proattivo: all'apertura Sitor mostra in chat (SENZA voce automatica) le richieste
+  // di piano delle ore precedenti. La voce parte solo per eventi critici, non di routine.
   const recapDoneRef = useRef(false);
   useEffect(() => {
     if (recapDoneRef.current) return;
     recapDoneRef.current = true;
     deusApi.recap(lang).then((d) => {
-      if (d && d.has_recap && d.spoken) { push("sitor", d.spoken); speak(d.spoken); }
+      if (d && d.has_recap && d.spoken) { push("sitor", d.spoken); }
     }).catch(() => {});
   }, [lang]); // eslint-disable-line react-hooks/exhaustive-deps
   const resetMemory = () => {

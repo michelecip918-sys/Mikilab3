@@ -79,7 +79,7 @@ export default function MikeInfo({ context = "" }) {
                 <button data-testid="mike-info-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
               </div>
 
-              <p className="text-[11px] text-[#64748B]">{tri("Es.: «Assegna la linea baguette ad Antonio» · «Crea sezione Controllo Allergeni»", "Z.B.: «Weise die Baguette-Linie Antonio zu»", "E.g.: \u00abAssign the baguette line to Antonio\u00bb", "Ej.: \u00abAsigna la línea baguette a Antonio\u00bb", "Ex. : \u00abAssigne la ligne baguette à Antonio\u00bb", "مثلاً: «خط باگت را به آنتونیو بده»")}</p>
+              <p className="text-[11px] text-[#64748B]">{tri("Es.: «Assegna la linea baguette ad Antonio» · «Crea sezione Controllo Qualità»", "Z.B.: «Weise die Baguette-Linie Antonio zu»", "E.g.: \u00abAssign the baguette line to Antonio\u00bb", "Ej.: \u00abAsigna la línea baguette a Antonio\u00bb", "Ex. : \u00abAssigne la ligne baguette à Antonio\u00bb", "مثلاً: «خط باگت را به آنتونیو بده»")}</p>
 
               <div className="flex items-center gap-2">
                 <button data-testid="mike-info-mic" onClick={listen} disabled={!supported || busy}
