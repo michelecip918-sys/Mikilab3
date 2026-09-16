@@ -5438,3 +5438,20 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - SALVIA ovunque per Sitor: SitorTour, SitorAtelier, MikeSuggestions convertiti a #7E9A82 (da ardesia #a6b1bc e dal salvia off-palette #6e9e85). Verificato: tour Sitor con Next salvia.
 - RAME pieno per Capo: PianoUnico e OperatorStatusBoard bottoni azione da teal #3E9C93 a rame #D97736 (hover #C86A2B). 0 teal residuo nei 5 file.
 - Compila pulito. Screenshot console: antracite caldo + salvia Sitor + recap solo testuale.
+
+---
+## Changelog — 16 Set 2026 (4 nuove funzionalita: Coordinamento, Cuffie, Autisti, Avatar)
+### Punto 1 — Coordinamento automatico team (backend coordination.py NUOVO + pannello Capo TeamCoordination.jsx)
+- Abilitazioni MULTI-REPARTO (operator_skills), stato libero/occupato (worker_states), trigger automatico che sceglie operatore libero+abilitato.
+- Chiamata cuffie con si/no e passaggio automatico al prossimo; timeout 30s (configurabile).
+- Macchina vs operatore su soglia (default 25 kg / 30 pz, modificabile dal Capo).
+- Doppia modalita: Capo presente (proposta da confermare/cambiare) / Capo assente (decide da solo + registro).
+- Avviso Capo su task scoperto; misura tempi per task (/coordination/task-times).
+- Endpoints /api/coordination/* e /api/operators/skills. Isolati per organization_id.
+### Punto 2 — Cuffie hands-free (HeadphonesMode.jsx)
+- Polling /coordination/calls/pending per operatore; chiamata annunciata a voce; risposta si/no vocale (senza wake-word) o con pulsanti headphones-call-yes/no. Wake-word Sitor per domande resta.
+### Punto 3 — Autisti/consegne (coordination.py + DriverRun.jsx montato in FloorOperatorDay)
+- GET /delivery/run: tappe di oggi ordinate per orario, indirizzo, articoli, avviso non pronto (dal piano). PATCH /delivery/stop/{id}/status delivered. Sfrutta /deliveries + /deliveries/organize del core.
+### Punto 4 — Avatar Capo
+- Rigenerato da /michele-avatar-real.jpg (stessi tratti/tatuaggio) in stile artigianale antracite/rame -> avatar_miki.jpg (backup avatar_miki_original_backup.jpg). Accenti MikiLab portati a rame #D97736.
+### TEST (iteration_255): backend 5/5 PASS incluso scenario Capo assente 2 operatori (primo rifiuta -> secondo accetta -> busy); macchina su soglia; proposta+conferma; task scoperto per timeout; vista autista. Frontend pannelli montati, PUT skills 200, mobile 390px senza overflow.
