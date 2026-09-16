@@ -5564,3 +5564,16 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ---
 ## Changelog — 16 Set 2026 (Icone PWA col nuovo Sitor)
 - Rigenerate le icone PWA dal nuovo Sitor (dio greco dell'Arte Bianca, crop centrale corona+volto+pagnotta): icon-192.png, icon-512.png (maskable), apple-touch-icon.png (180), favicon-32.png, favicon.ico (multi-size). manifest.json invariato (stessi nomi file). Tutte servite 200. NOTA: il deploy in coda è partito PRIMA di questa modifica — le icone richiedono un nuovo redeploy per andare live.
+
+---
+## Changelog — 16 Set 2026 (Correzione concept Sitor + ripristino icone + controllo finale)
+### Icone app ripristinate all'emblema logo
+- favicon-32.png, icon-192.png, icon-512.png, apple-touch-icon.png (180), favicon.ico (multi-size) RIGENERATE da logo.png (emblema dorato dea del grano). Non mostrano più Sitor. logo.png NON toccato. manifest.json invariato. Verificato a schermo (icona scheda = logo).
+### Personaggio Sitor rifatto (concept corretto)
+- Vietato lo stile divinità greco-romana (toga/alloro/colonne/anfore). Nuovo Sitor = il Capo (Michele) venuto dal FUTURO dopo evoluzione sovrumana: volto/corporatura da michele-real-lab.jpg (riferimento), divisa/grembiule moderno con dettagli tech sottili (linee rame luminose), aura dorata sulle MANI mentre lavora l'impasto + occhi lievemente luminescenti, sfondo laboratorio moderno/futuristico (acciaio, forni). Applicato a avatar_nexus.jpg, avatar_sitor.jpg, sitor-full.jpg, sitor_official.jpg (md5 321a8580...). Verificato a schermo sulla vetrina.
+### Controllo finale sito (frontend+backend)
+- Immagini: NESSUNA rotta. I 12 file segnalati inizialmente erano falsi positivi (in public/cats/, public/deck/, o URL remoti/attributi download).
+- Backend: servizi RUNNING; import server OK; nessun errore nei log; endpoint chiave 200 (recipes, orgs, silos, delivery/run, coordination/active, lab/pulse, deck/status). Tutti gli asset serviti 200.
+- INCONGRUENZA trovata e CORRETTA: og-image.jpg mostrava ancora il Sitor "dio greco" (stile vietato) → rigenerata con il nuovo Sitor futuro + claim + pill "SITOR · MAESTRO FORNAIO · AI".
+- Fuori scope (testo UI esistente, non toccato): etichetta "GOD OF THE WHITE ART" e "THE BAKING MULTIVERSE" sulla vetrina restano (titolo/nickname storico di Sitor).
+- NOTA deploy: il redeploy precedente conteneva le versioni SBAGLIATE (icone Sitor + Sitor dio greco). Serve un NUOVO redeploy per portare live icone-logo + Sitor futuro + nuova og-image.
