@@ -1,0 +1,25 @@
+{
+  "summary": "Iter257 — Regressione backend post-isolamento multi-tenant. 30/30 test PASS in /app/backend/tests/test_iter257_multitenant_isolation.py. Coperto: (a) no-500 sweep su 12 endpoint modificati (mike/machines, mike/sos, mike/sos/history, mike/b2b/orders, depts/templates, production/shift-plan, floor/sitor/change-requests, compliance/timelog, enterprise/sites+overview+global-leaderboard+omni-intelligence) tutti 200. (b) Flusso SOS completo: POST /api/mike/sos (solo gate) → GET /api/mike/sos admin lo vede → POST /api/mike/sos/{id}/ack → GET /api/mike/sos/history lo mostra risolto (con response_seconds/shift). (c) Machines: create arrival 'Impastatrice Test Isolazione' → in lista → DELETE ok. (d) Shift templates: POST /api/depts/templates name T1 con items panificio/Marco/impasto → GET lista → DELETE. (e) Shift plan: POST /api/production/shift-assignment monday/Forno_A/worker → presente in shift-plan → DELETE. (f) B2B orders: create client+product+qty+delivery_day → visibile in GET → DELETE. Nota: lo schema effettivo di /api/mike/b2b/orders vuole 'product'+'qty' al livello root (non 'items[]'). (g) Timeclock: POST /api/compliance/timeclock {worker,action:in} con solo gate → GET /api/compliance/timelog admin mostra l'entry con integrity_ok=true. (h) Isolamento cross-tenant CRITICO: registrata nuova org via /api/auth/register con activation_code 198505, admin default crea marker machine → nuova org NON lo vede su /mike/machines, /mike/b2b/orders, /mike/sos/history, /production/shift-plan, /floor/sitor/change-requests (0 leak). Contatori nuova org < default per /mike/machines. (i) Floor endpoints con solo gate cookie (no session): /mike/briefing/floor?role=fornaio, /mike/deus/production-queue, /delegation/tasks, /worker/board, /batches/active, /lab/pulse tutti 200. (j) Enterprise grid: /enterprise/sites, /overview, /global-leaderboard, /omni-intelligence tutti 200 e coerenti (dict/list).",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_iter257_multitenant_isolation.py",
+    "/app/test_reports/pytest/iter257.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "SOS history endpoint non ritorna il campo 'id' per gli eventi risolti (solo operator/machine/created_at/ack_at). Non blocca la funzionalità (admin vede l'evento risolto), ma rende impossibile qualsiasi operazione successiva puntuale (undo, dettaglio). Considerare l'aggiunta di 'id'.",
+    "L'endpoint POST /api/mike/b2b/orders accetta lo schema piatto {client,product,qty,delivery_day} anziché il pattern REST tipico {client, items:[{product,qty}]}. Documentare esplicitamente o accettare entrambi per idempotenza integrazione.",
+    "L'endpoint POST /api/mike/sos accetta e utilizza il campo 'operator' (non 'worker' come suggerito dal review request). Se il FE floor usa 'worker' → evento creato con operator='Operatore' (default). Verificare l'allineamento FE/BE."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iter257_multitenant_isolation.py"
+  ],
+  "success_rate": {"backend": "100% (30/30)", "frontend": "N/A (skip per richiesta)"},
+  "test_credentials": "gate PIN 198505 · admin@mikilab.de / Mikilab2026! · activation_code 198505 per nuove org",
+  "seed_data_creation": "Nuova organizzazione test 'TEST_Org_*' con email 'TEST_iter257_*@example.com' creata via /api/auth/register (persiste in DB, riutilizzabile). Marker machines/b2b/shift/template/sos residui a nome 'TEST_*' o 'MARKER_iter257_*' — la maggior parte viene eliminata dai test stessi, alcuni SOS restano in history (immutabile).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Isolamento multi-tenant confermato OK su tutti gli endpoint aziendali critici. Nessun 500 rilevato. Il file di test è riutilizzabile come regression suite (usa -o addopts= per bypassare xdist di pytest.ini che manca del plugin). Per test rapidi sui soli flussi CRUD saltando isolamento: -k 'flow or sos or timeclock'.",
+  "rca of the issue": "N/A — tutti i 30 test passano. Le uniche 2 inizialmente fallite erano bug di test-script (schema payload SOS/B2B) prontamente corretti, non bug backend."
+}
