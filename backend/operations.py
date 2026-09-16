@@ -623,22 +623,24 @@ def _inv_public(d: dict) -> dict:
 
 @api_router.get("/inventory")
 async def inventory_get(user: dict = Depends(current_user)):
-    docs = await db.inventory_items.find({"owner_id": user["user_id"]}, {"_id": 0}).sort("name", 1).to_list(500)
+    org = _org_id(user)
+    docs = await db.inventory_items.find({"owner_id": user["user_id"], "organization_id": org}, {"_id": 0}).sort("name", 1).to_list(500)
     return {"items": [_inv_public(d) for d in docs]}
 
 
 @api_router.put("/inventory")
 async def inventory_save(body: InventorySave, user: dict = Depends(current_user)):
     uid = user["user_id"]
-    await db.inventory_items.delete_many({"owner_id": uid})
+    org = _org_id(user)
+    await db.inventory_items.delete_many({"owner_id": uid, "organization_id": org})
     docs = []
     for it in body.items:
-        docs.append({"id": it.id or str(uuid.uuid4()), "owner_id": uid, "name": it.name.strip(),
+        docs.append({"id": it.id or str(uuid.uuid4()), "owner_id": uid, "organization_id": org, "name": it.name.strip(),
                      "category": it.category, "qty": float(it.qty or 0), "unit": it.unit,
                      "lot": (it.lot or "").strip(), "threshold": it.threshold, "updated_at": now_iso()})
     if docs:
         await db.inventory_items.insert_many(docs)
-    await _notify_low_stock(uid, user.get("email"))
+    await _notify_low_stock(uid, user.get("email"), org=org)
     return {"items": [_inv_public(d) for d in docs]}
 
 
@@ -662,9 +664,12 @@ def _low_stock_email_html(items: list, lang: str) -> str:
             f"<p style='color:#888;font-size:12px'>MikiLab · Magazzino materie prime</p></div>")
 
 
-async def _notify_low_stock(uid: str, email: Optional[str], lang: str = "it"):
+async def _notify_low_stock(uid: str, email: Optional[str], lang: str = "it", org: str = None):
     """Invia UNA email quando una materia prima scende sotto soglia (finché non viene rifornita)."""
-    items = await db.inventory_items.find({"owner_id": uid, "threshold": {"$ne": None}}).to_list(500)
+    q = {"owner_id": uid, "threshold": {"$ne": None}}
+    if org:
+        q["organization_id"] = org
+    items = await db.inventory_items.find(q).to_list(500)
     low = [it for it in items if it.get("threshold") is not None and float(it.get("qty") or 0) <= float(it["threshold"])]
     low_keys = {_norm(it.get("name")) for it in low}
     meta = await db.inventory_meta.find_one({"owner_id": uid}) or {}
@@ -703,11 +708,12 @@ def _norm(s: str) -> str:
 @api_router.post("/day-close")
 async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
     uid = user["user_id"]
+    org = _org_id(user)
     now = now_iso()
     # 1) Scarico magazzino (match per nome, fuzzy come il freezer)
     deducted = []
     if body.consume:
-        inv = await db.inventory_items.find({"owner_id": uid}).to_list(500)
+        inv = await db.inventory_items.find({"owner_id": uid, "organization_id": org}).to_list(500)
         for c in body.consume:
             cn = _norm(c.get("name"))
             want = float(c.get("qty") or 0)
@@ -720,32 +726,32 @@ async def day_close(body: DayCloseReq, user: dict = Depends(current_user)):
                     take = min(avail, want)
                     if take > 0:
                         newq = round(avail - take, 3)
-                        await db.inventory_items.update_one({"id": it["id"], "owner_id": uid},
+                        await db.inventory_items.update_one({"id": it["id"], "owner_id": uid, "organization_id": org},
                             {"$set": {"qty": newq, "updated_at": now}})
                         it["qty"] = newq
                         deducted.append({"name": it["name"], "qty": take, "unit": it.get("unit", "kg"), "remaining": newq})
                     break
     # 2) Archivia chiusura
-    rec = {"id": str(uuid.uuid4()), "owner_id": uid, "date": now[:10], "closed_at": now,
+    rec = {"id": str(uuid.uuid4()), "owner_id": uid, "organization_id": org, "date": now[:10], "closed_at": now,
            "produced": body.produced, "consume": body.consume, "deducted": deducted, "temps": body.temps,
            "cleaning": body.cleaning, "anomalies": body.anomalies, "operator": body.operator,
            "note": body.note, "production_lot": body.production_lot, "signature": body.signature or ""}
     await db.day_closures.insert_one(rec)
     rec.pop("_id", None)
     # Avviso scorte basse via email (se qualche materia è scesa sotto soglia con lo scarico)
-    await _notify_low_stock(uid, user.get("email"), body.lang)
+    await _notify_low_stock(uid, user.get("email"), body.lang, org=org)
     return {"ok": True, "closure": {k: rec[k] for k in rec if k != "owner_id"}, "deducted": deducted}
 
 
 @api_router.get("/day-close/last")
 async def day_close_last(user: dict = Depends(current_user)):
-    d = await db.day_closures.find_one({"owner_id": user["user_id"]}, {"_id": 0, "owner_id": 0}, sort=[("closed_at", -1)])
+    d = await db.day_closures.find_one({"owner_id": user["user_id"], "organization_id": _org_id(user)}, {"_id": 0, "owner_id": 0}, sort=[("closed_at", -1)])
     return d or {}
 
 
 @api_router.get("/day-close/list")
 async def day_close_list(user: dict = Depends(current_user)):
-    docs = await db.day_closures.find({"owner_id": user["user_id"]}, {"_id": 0, "owner_id": 0}).sort("closed_at", -1).to_list(500)
+    docs = await db.day_closures.find({"owner_id": user["user_id"], "organization_id": _org_id(user)}, {"_id": 0, "owner_id": 0}).sort("closed_at", -1).to_list(500)
     return {"closures": docs}
 
 
@@ -845,7 +851,7 @@ def _build_closure_pdf(c: dict, lang: str = "it") -> bytes:
 
 @api_router.get("/day-close/{closure_id}/pdf")
 async def day_close_pdf(closure_id: str, lang: str = "it", user: dict = Depends(current_user)):
-    c = await db.day_closures.find_one({"id": closure_id, "owner_id": user["user_id"]}, {"_id": 0})
+    c = await db.day_closures.find_one({"id": closure_id, "owner_id": user["user_id"], "organization_id": _org_id(user)}, {"_id": 0})
     if not c:
         raise HTTPException(404, "Chiusura non trovata")
     pdf = await asyncio.to_thread(_build_closure_pdf, c, lang)

@@ -466,6 +466,8 @@ async def promote_recipe(recipe_id: str, user: dict = Depends(current_user)):
     existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not existing:
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if (existing.get("organization_id") or ORG_DEFAULT) != _org_id(user):
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
     if existing.get("collection_name") == "mikilab":
         return {"ok": True, "already": True}
     await db.recipes.update_one(
@@ -479,6 +481,8 @@ async def promote_recipe(recipe_id: str, user: dict = Depends(current_user)):
 async def translate_recipe(recipe_id: str, lang: str = "en", user: dict = Depends(current_user)):
     existing = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not existing:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
+    if (existing.get("organization_id") or ORG_DEFAULT) != _org_id(user):
         raise HTTPException(status_code=404, detail="Ricetta non trovata")
     if existing.get("collection_name") == "mikilab":
         # Le ricette MikiLab restano modificabili/traducibili solo dall'admin (Michele).
@@ -570,7 +574,10 @@ async def save_production_plan(payload: ProductionPlan, user: dict = Depends(req
 # ---------------------------------------------------------------------------
 @api_router.get("/weekly-plan")
 async def get_weekly_plan(user: dict = Depends(current_user)):
-    doc = await db.weekly_plan.find_one({"_key": user["user_id"]}, {"_id": 0, "_key": 0})
+    doc = await db.weekly_plan.find_one({"_key": user["user_id"], "organization_id": _org_id(user)}, {"_id": 0, "_key": 0})
+    if doc is None:
+        # retrocompat: piani salvati prima dell'aggiunta del campo (stesso _key utente)
+        doc = await db.weekly_plan.find_one({"_key": user["user_id"], "organization_id": {"$exists": False}}, {"_id": 0, "_key": 0})
     return doc  # may be null if never saved
 
 
@@ -597,13 +604,14 @@ class FavSync(BaseModel):
 
 @api_router.get("/favorites")
 async def get_favorites(user: dict = Depends(current_user)):
-    docs = await db.favorites.find({"user_id": user["user_id"]}, {"_id": 0, "recipe_id": 1}).to_list(3000)
+    docs = await db.favorites.find({"user_id": user["user_id"], "organization_id": _org_id(user)}, {"_id": 0, "recipe_id": 1}).to_list(3000)
     return [d["recipe_id"] for d in docs]
 
 
 @api_router.post("/favorites/toggle")
 async def toggle_favorite(payload: FavToggle, user: dict = Depends(current_user)):
-    q = {"user_id": user["user_id"], "recipe_id": payload.recipe_id}
+    org = _org_id(user)
+    q = {"user_id": user["user_id"], "recipe_id": payload.recipe_id, "organization_id": org}
     existing = await db.favorites.find_one(q)
     if existing:
         await db.favorites.delete_one(q)
@@ -614,19 +622,20 @@ async def toggle_favorite(payload: FavToggle, user: dict = Depends(current_user)
 
 @api_router.post("/favorites/sync")
 async def sync_favorites(payload: FavSync, user: dict = Depends(current_user)):
+    org = _org_id(user)
     for rid in payload.ids:
         await db.favorites.update_one(
-            {"user_id": user["user_id"], "recipe_id": rid},
-            {"$setOnInsert": {"user_id": user["user_id"], "recipe_id": rid, "created_at": now_iso()}},
+            {"user_id": user["user_id"], "recipe_id": rid, "organization_id": org},
+            {"$setOnInsert": {"user_id": user["user_id"], "recipe_id": rid, "organization_id": org, "created_at": now_iso()}},
             upsert=True,
         )
-    docs = await db.favorites.find({"user_id": user["user_id"]}, {"_id": 0, "recipe_id": 1}).to_list(3000)
+    docs = await db.favorites.find({"user_id": user["user_id"], "organization_id": org}, {"_id": 0, "recipe_id": 1}).to_list(3000)
     return [d["recipe_id"] for d in docs]
 
 
 @api_router.get("/favorites/counts")
-async def favorites_counts():
-    rows = await db.favorites.aggregate([{"$group": {"_id": "$recipe_id", "count": {"$sum": 1}}}]).to_list(5000)
+async def favorites_counts(org: str = Depends(effective_org)):
+    rows = await db.favorites.aggregate([{"$match": {"organization_id": org}}, {"$group": {"_id": "$recipe_id", "count": {"$sum": 1}}}]).to_list(5000)
     return {r["_id"]: r["count"] for r in rows if r["_id"]}
 
 

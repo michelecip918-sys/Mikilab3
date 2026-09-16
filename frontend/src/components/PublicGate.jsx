@@ -54,27 +54,6 @@ export default function PublicGate({ onUnlock }) {
     return () => { stop = true; clearInterval(t); };
   }, []);
 
-  // Voce di benvenuto all'ingresso su mikilab.de (una volta per sessione): invita a scegliere
-  // tra Direzione (piano di produzione) e Produzione (reparto).
-  useEffect(() => {
-    if (showPin || guest) return;
-    let done = true;
-    try { done = sessionStorage.getItem("mikilab_welcome_spoken") === "1"; } catch { /* */ }
-    if (done || isTTSMuted()) return;
-    const t = setTimeout(() => {
-      try { sessionStorage.setItem("mikilab_welcome_spoken", "1"); } catch { /* */ }
-      const msg = tri(
-        "Benvenuto in MikiLab. Puoi scegliere Direzione per il piano di produzione, oppure Produzione per il tuo reparto.",
-        "Willkommen bei MikiLab. Wähle Direktion für den Produktionsplan oder Produktion für deine Abteilung.",
-        "Welcome to MikiLab. You can choose Direction for the production plan, or Production for your department.",
-        "Bienvenido a MikiLab. Elige Dirección para el plan de producción, o Producción para tu área.",
-        "Bienvenue chez MikiLab. Choisis Direction pour le plan de production, ou Production pour ton rayon.",
-        "به MikiLab خوش آمدی. می‌توانی مدیریت را برای برنامه تولید یا تولید را برای بخش خودت انتخاب کنی.");
-      try { playTTS(msg, { lang, voice: "mikemix" }); } catch { /* */ }
-    }, 1200);
-    return () => clearTimeout(t);
-  }, [showPin, guest]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const enterAs = (role) => {
     setGateRole(role);
     if (role === "operator") {

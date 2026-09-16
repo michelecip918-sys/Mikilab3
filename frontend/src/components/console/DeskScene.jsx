@@ -28,12 +28,6 @@ export default function DeskScene() {
   }, []);
 
   useEffect(() => {
-    const onO = (e) => { if (e.gamma == null && e.beta == null) return; setTilt({ x: Math.max(-1, Math.min(1, (e.gamma || 0) / 35)), y: Math.max(-1, Math.min(1, ((e.beta || 0) - 45) / 35)) }); };
-    window.addEventListener("deviceorientation", onO);
-    return () => window.removeEventListener("deviceorientation", onO);
-  }, []);
-
-  useEffect(() => {
     const on = () => setSpeaking(true); const off = () => setSpeaking(false);
     window.addEventListener("mikilab-tts-start", on); window.addEventListener("mikilab-tts-end", off);
     return () => { window.removeEventListener("mikilab-tts-start", on); window.removeEventListener("mikilab-tts-end", off); };

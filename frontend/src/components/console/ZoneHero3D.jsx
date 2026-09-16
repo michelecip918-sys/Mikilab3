@@ -23,19 +23,6 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6"
     setTilt({ x: Math.max(-1, Math.min(1, dx)), y: Math.max(-1, Math.min(1, dy)) });
   }, []);
 
-  // Giroscopio (mobile): l'avatar segue l'inclinazione del telefono
-  useEffect(() => {
-    const onOrient = (e) => {
-      if (e.gamma == null && e.beta == null) return;
-      const gx = Math.max(-1, Math.min(1, (e.gamma || 0) / 35)); // sinistra/destra
-      const gy = Math.max(-1, Math.min(1, ((e.beta || 0) - 45) / 35)); // avanti/indietro
-      setTilt({ x: gx, y: gy });
-      if (!gyroReady) setGyroReady(true);
-    };
-    window.addEventListener("deviceorientation", onOrient);
-    return () => window.removeEventListener("deviceorientation", onOrient);
-  }, [gyroReady]);
-
   // Reazione vocale di Sitor
   useEffect(() => {
     if (!listenSpeaking) return;
@@ -97,15 +84,6 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6"
         <h3 className="font-cyber text-xl sm:text-2xl font-black text-white uppercase tracking-wide" style={{ textShadow: `0 0 16px ${accent}66` }}>{name}</h3>
         {role && <p className="text-xs sm:text-sm text-[#CBD5E1]">{role}</p>}
       </div>
-
-      {/* CTA giroscopio (solo se non ancora attivo e su dispositivo che lo richiede) */}
-      {!gyroReady && typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function" && (
-        <button data-testid={`${testid}-gyro`} onClick={askGyro}
-          className="absolute top-3 right-3 z-[4] px-3 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider border backdrop-blur-md active:scale-95"
-          style={{ borderColor: `${accent}66`, color: accent, background: "#0b0f19cc" }}>
-          Muovi con il telefono
-        </button>
-      )}
     </div>
   );
 }
