@@ -172,25 +172,25 @@ function SitorPhotoAnalyzer({ tri, lang }) {
   };
 
   return (
-    <div data-testid="floor-analyzer" className="rounded-2xl border border-[#9aabb8]/40 bg-[#0b0f19] p-4">
-      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#9aabb8] mb-3"><ScanLine className="w-4 h-4" /> {tri("Scatta foto · Sitor analizza", "Foto · Sitor prüft", "Take a photo · Sitor analyzes", "Foto · Sitor analiza", "Photo · Sitor analyse", "عکس · سیتور تحلیل می‌کند")}</p>
+    <div data-testid="floor-analyzer" className="rounded-2xl border border-[#7E9A82]/40 bg-[#18181A] p-4">
+      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#7E9A82] mb-3"><Camera className="w-4 h-4" /> {tri("Sitor, guarda qui", "Sitor, schau her", "Sitor, look here", "Sitor, mira aquí", "Sitor, regarde ici", "سیتور، اینجا را ببین")}</p>
       <input ref={fileRef} data-testid="floor-analyzer-input" type="file" accept="image/*" capture="environment" onChange={onFile} className="hidden" />
       {preview ? (
-        <div className="relative w-full rounded-xl overflow-hidden border border-[#9aabb8]/30 bg-black mb-3">
+        <div className="relative w-full rounded-xl overflow-hidden border border-[#7E9A82]/30 bg-black mb-3">
           <img src={preview} alt="anteprima" className="w-full h-auto max-h-64 object-contain" />
           <button data-testid="floor-analyzer-clear" onClick={() => { setPreview(""); setResult(""); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#030712]/80 border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-4 h-4" /></button>
         </div>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
-        <button data-testid="floor-analyzer-take" onClick={() => fileRef.current && fileRef.current.click()} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#9aabb8]/10 border border-[#9aabb8]/40 text-[#9aabb8] font-bold text-sm active:scale-95">
+        <button data-testid="floor-analyzer-take" onClick={() => fileRef.current && fileRef.current.click()} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#7E9A82]/12 border border-[#7E9A82]/40 text-[#7E9A82] font-bold text-sm active:scale-95">
           <Camera className="w-4 h-4" /> {preview ? tri("Cambia foto", "Foto ändern", "Change photo", "Cambiar foto", "Changer", "تغییر عکس") : tri("Scatta foto", "Foto machen", "Take photo", "Tomar foto", "Photo", "عکس بگیر")}
         </button>
-        <button data-testid="floor-analyzer-run" onClick={analyze} disabled={!preview || analyzing} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#0891b2] to-[#9aabb8] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-95">
-          {analyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Analizza", "Analysieren", "Analyze", "Analizar", "Analyser", "تحلیل")}
+        <button data-testid="floor-analyzer-run" onClick={analyze} disabled={!preview || analyzing} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#7E9A82] text-white font-black text-sm disabled:opacity-40 active:scale-95">
+          {analyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Chiedi a Sitor", "Sitor fragen", "Ask Sitor", "Preguntar a Sitor", "Demander à Sitor", "از سیتور بپرس")}
         </button>
       </div>
       {result && (
-        <div data-testid="floor-analyzer-result" className="mt-3 rounded-xl border border-[#9aabb8]/25 bg-[#030712] p-3 max-h-64 overflow-y-auto">
+        <div data-testid="floor-analyzer-result" className="mt-3 rounded-xl border border-[#7E9A82]/25 bg-[#030712] p-3 max-h-64 overflow-y-auto">
           <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-[#cbd5e1]">{result}</p>
         </div>
       )}

@@ -353,8 +353,8 @@ def _aura_for(score: int) -> dict:
 
 
 @api_router.get("/production/shift-plan")
-async def get_shift_plan(user: Optional[dict] = Depends(optional_user)):
-    docs = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(200)
+async def get_shift_plan(org: str = Depends(effective_org)):
+    docs = await db.lab_shift_plan.find({"organization_id": org}, {"_id": 0}).to_list(200)
     for d in docs:
         d["aura"] = _aura_for(int(d.get("efficiency_score", 85)))
     return {"weekly_plan": docs}
@@ -522,7 +522,7 @@ async def leader_tasks(leader: str, user: Optional[dict] = Depends(optional_user
 
 @api_router.post("/production/shift-assignment")
 async def update_shift_plan(a: ShiftAssignment, user: dict = Depends(require_admin)):
-    doc = {"id": str(uuid.uuid4()), "day": a.day, "position": a.position, "worker_name": a.worker_name,
+    doc = {"id": str(uuid.uuid4()), "organization_id": _org_id(user), "day": a.day, "position": a.position, "worker_name": a.worker_name,
            "avatar_style": a.avatar_style or "default", "efficiency_score": int(a.efficiency_score or 85),
            "streak_days": int(a.streak_days or 1), "at": now_iso()}
     await db.lab_shift_plan.insert_one({**doc})
@@ -534,13 +534,13 @@ async def update_shift_plan(a: ShiftAssignment, user: dict = Depends(require_adm
 @api_router.patch("/production/shift-assignment/{item_id}")
 async def patch_shift_score(item_id: str, efficiency_score: int, user: dict = Depends(require_admin)):
     score = max(0, min(100, int(efficiency_score)))
-    await db.lab_shift_plan.update_one({"id": item_id}, {"$set": {"efficiency_score": score}})
+    await db.lab_shift_plan.update_one({"id": item_id, "organization_id": _org_id(user)}, {"$set": {"efficiency_score": score}})
     return {"ok": True, "aura": _aura_for(score)}
 
 
 @api_router.delete("/production/shift-assignment/{item_id}")
 async def delete_shift(item_id: str, user: dict = Depends(require_admin)):
-    await db.lab_shift_plan.delete_one({"id": item_id})
+    await db.lab_shift_plan.delete_one({"id": item_id, "organization_id": _org_id(user)})
     return {"ok": True}
 
 
@@ -788,7 +788,7 @@ async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin))
     except Exception:
         pass
     try:
-        for s in await db.lab_warehouse.find({}, {"_id": 0}).to_list(500):
+        for s in await db.lab_warehouse.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(500):
             mn = float(s.get("min_kg") or 0)
             q = float(s.get("quantity_kg") or 0)
             if mn > 0 and q <= mn:
@@ -1024,7 +1024,7 @@ class TimeclockReq(BaseModel):
 
 
 @api_router.post("/compliance/timeclock")
-async def compliance_timeclock(body: TimeclockReq, request: Request):
+async def compliance_timeclock(body: TimeclockReq, request: Request, org: str = Depends(effective_org)):
     """ArbZG: timbratura elettronica TAMPER-PROOF (catena di hash) inizio/fine/pausa.
     Se fornito un PIN personale operatore, la timbratura è attribuita e verificata al singolo."""
     action = (body.action or "").strip().lower()
@@ -1045,12 +1045,12 @@ async def compliance_timeclock(body: TimeclockReq, request: Request):
         worker = resolved
         verified = True
     worker = worker or "operatore"
-    last = await db.compliance_timelog.find_one({}, {"_id": 0}, sort=[("seq", -1)])
+    last = await db.compliance_timelog.find_one({"organization_id": org}, {"_id": 0}, sort=[("seq", -1)])
     seq = (last["seq"] + 1) if last else 1
     prev_hash = last["hash"] if last else "genesis"
     payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso(), "verified": verified}
     h = _chain_hash(prev_hash, payload)
-    entry = {"id": str(uuid.uuid4()), **payload, "prev_hash": prev_hash, "hash": h}
+    entry = {"id": str(uuid.uuid4()), "organization_id": org, **payload, "prev_hash": prev_hash, "hash": h}
     await db.compliance_timelog.insert_one(dict(entry))
     return {"ok": True, "seq": seq, "hash": h, "action": action, "worker": worker, "verified": verified}
 
@@ -1097,7 +1097,7 @@ def _arbzg_summary(entries):
 
 @api_router.get("/compliance/timelog")
 async def compliance_timelog(worker: Optional[str] = None, day: Optional[str] = None, admin: dict = Depends(require_admin)):
-    q = {}
+    q = {"organization_id": _org_id(admin)}
     if worker:
         q["worker"] = worker
     if day:
@@ -1105,7 +1105,7 @@ async def compliance_timelog(worker: Optional[str] = None, day: Optional[str] = 
     entries = await db.compliance_timelog.find(q, {"_id": 0}).sort("seq", 1).to_list(1000)
     # verifica integrità catena (tamper-evident)
     integrity_ok = True
-    all_entries = await db.compliance_timelog.find({}, {"_id": 0}).sort("seq", 1).to_list(5000)
+    all_entries = await db.compliance_timelog.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("seq", 1).to_list(5000)
     prev = "genesis"
     for e in all_entries:
         payload = {"seq": e["seq"], "worker": e["worker"], "action": e["action"], "at": e["at"]}
@@ -1132,7 +1132,7 @@ _SAFETY_DOCS = [
 
 @api_router.get("/compliance/safety")
 async def compliance_safety(admin: dict = Depends(require_admin)):
-    acks = await db.compliance_training_ack.find({}, {"_id": 0}).sort("at", -1).to_list(500)
+    acks = await db.compliance_training_ack.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("at", -1).to_list(500)
     return {"hazards": [d for d in _SAFETY_DOCS if d["type"] == "hazard"],
             "trainings": [d for d in _SAFETY_DOCS if d["type"] == "training"], "acks": acks}
 
@@ -1144,7 +1144,7 @@ class SafetyAckReq(BaseModel):
 
 @api_router.post("/compliance/safety/ack")
 async def compliance_safety_ack(body: SafetyAckReq, admin: dict = Depends(require_admin)):
-    rec = {"id": str(uuid.uuid4()), "worker": (body.worker or "").strip(), "doc_id": body.doc_id, "at": now_iso()}
+    rec = {"id": str(uuid.uuid4()), "organization_id": _org_id(admin), "worker": (body.worker or "").strip(), "doc_id": body.doc_id, "at": now_iso()}
     await db.compliance_training_ack.insert_one(dict(rec))
     return {"ok": True, "ack": rec}
 
@@ -1167,8 +1167,8 @@ async def compliance_privacy(lang: str = "it"):
 
 
 @api_router.get("/production/worker-aura/{worker_name}")
-async def get_worker_power_level(worker_name: str, user: Optional[dict] = Depends(optional_user)):
-    w = await db.lab_shift_plan.find_one({"worker_name": {"$regex": f"^{re.escape(worker_name)}$", "$options": "i"}}, {"_id": 0})
+async def get_worker_power_level(worker_name: str, org: str = Depends(effective_org)):
+    w = await db.lab_shift_plan.find_one({"worker_name": {"$regex": f"^{re.escape(worker_name)}$", "$options": "i"}, "organization_id": org}, {"_id": 0})
     if not w:
         raise HTTPException(status_code=404, detail="Lavoratore non trovato nel turno attivo.")
     return {"worker": w["worker_name"], "position": w.get("position"), "avatar": w.get("avatar_style"),
@@ -1176,8 +1176,8 @@ async def get_worker_power_level(worker_name: str, user: Optional[dict] = Depend
 
 
 @api_router.get("/production/leaderboard")
-async def get_team_leaderboard(user: Optional[dict] = Depends(optional_user)):
-    workers = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(200)
+async def get_team_leaderboard(org: str = Depends(effective_org)):
+    workers = await db.lab_shift_plan.find({"organization_id": org}, {"_id": 0}).to_list(200)
     workers.sort(key=lambda x: x.get("efficiency_score", 0), reverse=True)
     lb = []
     for rank, w in enumerate(workers, start=1):
@@ -1189,13 +1189,13 @@ async def get_team_leaderboard(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.get("/ai/morning-briefing")
-async def get_morning_briefing(user: Optional[dict] = Depends(optional_user)):
+async def get_morning_briefing(org: str = Depends(effective_org)):
     """Sitor analizza la notte e prepara il resoconto per il Capo all'apertura."""
-    workers = await db.lab_shift_plan.find({}, {"_id": 0, "efficiency_score": 1}).to_list(200)
+    workers = await db.lab_shift_plan.find({"organization_id": org}, {"_id": 0, "efficiency_score": 1}).to_list(200)
     avg = round(sum(w.get("efficiency_score", 0) for w in workers) / len(workers), 1) if workers else 0.0
     # Riepilogo notturno DERIVATO dai dati reali (battito storico + sensori + pulse)
     since = (datetime.now(timezone.utc) - timedelta(hours=10)).isoformat()
-    pts = await db.lab_pulse_history.find({"at": {"$gte": since}}, {"_id": 0}).to_list(300)
+    pts = await db.lab_pulse_history.find({"at": {"$gte": since}, "organization_id": org}, {"_id": 0}).to_list(300)
     night = []
     if pts:
         hbs = [p.get("heartbeat", 52) for p in pts]

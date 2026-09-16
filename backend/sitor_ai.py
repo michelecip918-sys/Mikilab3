@@ -38,7 +38,7 @@ async def deus_master_plan(body: DeusPlanReq, admin: dict = Depends(require_admi
     user_text = f"ORDINI:\n{orders}\n\nVINCOLI/RISORSE:\n{constraints}"
     # I MACCHINARI scelti/aggiunti dal Capo entrano nei calcoli del piano di Sitor.
     try:
-        machs = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "role": 1, "capacity": 1, "status": 1}).to_list(100)
+        machs = await db.mike_machines.find({"organization_id": _org_id(admin)}, {"_id": 0, "name": 1, "category": 1, "role": 1, "capacity": 1, "status": 1}).to_list(100)
         if body.machines:
             for nm in body.machines:
                 if nm and not any((m.get("name") or "").lower() == str(nm).lower() for m in machs):
@@ -244,7 +244,7 @@ async def capo_atelier_list(admin: dict = Depends(require_admin)):
 import re as _re_atelier
 
 
-async def _reports_daily_series(field: str, days: int = 7):
+async def _reports_daily_series(field: str, days: int = 7, org: str = ORG_DEFAULT):
     """Somma i numeri trovati nel campo (pieces/waste) dei rapporti di fine turno, per ognuno degli ultimi giorni."""
     from datetime import timedelta
     today = datetime.now(timezone.utc).date()
@@ -255,7 +255,7 @@ async def _reports_daily_series(field: str, days: int = 7):
         key = d.isoformat()
         buckets[key] = 0.0
         labels.append((key, ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"][d.weekday()]))
-    reports = await db.floor_shift_reports.find({}, {"_id": 0, "at": 1, field: 1}).sort("at", -1).to_list(500)
+    reports = await db.floor_shift_reports.find({"organization_id": org}, {"_id": 0, "at": 1, field: 1}).sort("at", -1).to_list(500)
     for r in reports:
         day = str(r.get("at", ""))[:10]
         if day in buckets:
@@ -275,7 +275,7 @@ async def capo_atelier_share(wid: str, body: AtelierShareReq, admin: dict = Depe
 
 
 @api_router.get("/floor/shared-widgets")
-async def floor_shared_widgets(dept: str = ""):
+async def floor_shared_widgets(dept: str = "", org: str = Depends(effective_org)):
     """Widget che il Capo ha scelto di condividere col reparto (sola lettura sul tablet operai)."""
     q = {"share_dept": {"$nin": ["", None]}}
     docs = await db.capo_atelier.find(q, {"_id": 0, "capo": 0}).to_list(60)
@@ -285,7 +285,7 @@ async def floor_shared_widgets(dept: str = ""):
         sd = (w.get("share_dept") or "").strip().lower()
         if not d or sd == d or sd == "tutti" or sd == "all":
             if w.get("type") == "chart" and (w.get("config") or {}).get("source") in ("waste", "pieces"):
-                w["config"]["series"] = await _reports_daily_series((w["config"]["source"]))
+                w["config"]["series"] = await _reports_daily_series((w["config"]["source"]), org=org)
             out.append(w)
     return {"widgets": out}
 
@@ -307,16 +307,16 @@ async def capo_atelier_delete(wid: str, admin: dict = Depends(require_admin)):
 
 # ======================================================================
 @api_router.get("/mike/deus/production-queue")
-async def deus_production_queue():
-    docs = await db.capo_queue.find({}, {"_id": 0}).sort("at", -1).to_list(120)
-    return {"tasks": docs, "counts": await _queue_counts()}
+async def deus_production_queue(org: str = Depends(effective_org)):
+    docs = await db.capo_queue.find({"organization_id": org}, {"_id": 0}).sort("at", -1).to_list(120)
+    return {"tasks": docs, "counts": await _queue_counts(org)}
 
 @api_router.post("/mike/deus/queue/{tid}/done")
 async def deus_queue_done(tid: str, admin: dict = Depends(require_admin)):
-    await db.capo_queue.update_one({"id": tid}, {"$set": {"status": "done", "done_at": now_iso()}})
-    return {"ok": True, "counts": await _queue_counts()}
+    await db.capo_queue.update_one({"id": tid, "organization_id": _org_id(admin)}, {"$set": {"status": "done", "done_at": now_iso()}})
+    return {"ok": True, "counts": await _queue_counts(_org_id(admin))}
 
 @api_router.post("/mike/deus/queue/clear")
 async def deus_queue_clear(admin: dict = Depends(require_admin)):
-    await db.capo_queue.delete_many({})
-    return {"ok": True, "counts": await _queue_counts()}
+    await db.capo_queue.delete_many({"organization_id": _org_id(admin)})
+    return {"ok": True, "counts": await _queue_counts(_org_id(admin))}

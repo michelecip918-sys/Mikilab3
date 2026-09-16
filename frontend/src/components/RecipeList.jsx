@@ -859,7 +859,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-[#3E9C93] mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
           {r.flour_type ? <p className="text-sm text-[#7E8A93] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
-          <div className="mt-3 no-print"><ApprenticeCard recipeId={r.id} canEdit={canEdit} /></div>
+          <div className="mt-3 no-print"><ApprenticeCard recipeId={r.id} canEdit={canEdit} autoSpeak={!canEdit} /></div>
         </div>
 
         <div className="flex gap-1.5 no-print flex-wrap">

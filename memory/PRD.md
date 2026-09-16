@@ -5479,3 +5479,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### P4 Sitor Apprendista: /apprentice/recipe/{id} GET/PUT (recipe_apprentice, org-scoped) — pezzi per teglia + come formare, scritti dal Capo, letti/parlati da Sitor. Card ApprenticeCard nel dettaglio ricetta. NON tocca ingredienti/dosi (verificato).
 ### P5 Isolamento: TUTTE le collezioni elencate aggiunte a ORG_SCOPED_COLLECTIONS -> migrazione automatica (verificato 0 doc senza org). Isolamento a livello di QUERY completo per: recipes, weekly_plan, inventory_items, favorites, day_closures, lab_warehouse, operator_pins, worker_states, deliveries, coordination_*. Le altre ~30 collezioni sono migrate (backfill) ma le query read/write vanno ancora filtrate per org (PENDENTE incrementale).
 ### TEST iter256: backend 9/9 PASS, frontend 100%. Ricette invariate.
+
+---
+## Changelog — 16 Set 2026 (Apprendista all'avvio + Occhi di Sitor + isolamento parziale)
+- Apprendista all'avvio: ApprenticeCard con autoSpeak={!canEdit} nel dettaglio ricetta -> all'apertura da parte di un operatore/apprendista Sitor legge automaticamente pezzi-per-teglia e come formare.
+- Occhi di Sitor: il pannello foto (floor-analyzer) rietichettato "Sitor, guarda qui" + colori salvia; scatta foto e la invia via HTTP/WiFi a /floor/analyze-photo (Sitor analizza). Funzionalita gia esistente, ora chiara e coerente.
+- Isolamento query: completato per floor_shift_reports (save per gate-org, lista Capo filtrata per org). PENDENTE per le altre collezioni (team_tasks, lab_sites, mike_machines, lab_shift_plan, stores, purchase_orders, b2b_orders, sos_events, ecc.): molte hanno endpoint pubblici/owner-keyed senza org in scope, vanno fatte una a una con test a due aziende. La migrazione (backfill org_default) protegge i dati esistenti: nessun leak attivo finche esiste una sola azienda.

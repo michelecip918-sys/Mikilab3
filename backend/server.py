@@ -968,7 +968,7 @@ async def _bakery_snapshot(admin: dict) -> str:
     except Exception: pass
     # Ordini extra/B2B recenti
     try:
-        ords = await db.b2b_orders.find({"status": {"$ne": "done"}}, {"_id": 0}).sort("created_at", -1).to_list(8)
+        ords = await db.b2b_orders.find({"status": {"$ne": "done"}, "organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(8)
         if ords:
             olines = ", ".join(f"{o.get('product') or o.get('name') or 'ordine'}×{o.get('qty') or o.get('quantity') or ''}" for o in ords[:8])
             parts.append(f"ORDINI EXTRA/B2B recenti: {olines}")
@@ -1172,7 +1172,7 @@ class FloorChangeReq(BaseModel):
 
 
 @api_router.post("/floor/sitor/change-request")
-async def floor_change_request(body: FloorChangeReq):
+async def floor_change_request(body: FloorChangeReq, org: str = Depends(effective_org)):
     """L'operaio propone un cambio di piano/tattica. Sitor classifica: i piccoli aggiustamenti li applica da solo e
     avvisa il Capo; le modifiche grandi restano IN ATTESA dell'OK del Capo."""
     proposal = (body.proposal or "").strip()
@@ -1208,11 +1208,12 @@ async def floor_change_request(body: FloorChangeReq):
         "task": (body.task or "")[:160], "proposal": proposal[:800], "classification": classification,
         "capo_summary": capo_summary[:400], "suggested_action": suggested[:400],
         "status": status, "at": now_iso(), "decided_at": None, "decision_note": "",
+        "organization_id": org,
     }
     await db.floor_change_requests.insert_one(dict(doc))
-    olds = await db.floor_change_requests.find({}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(1000)
+    olds = await db.floor_change_requests.find({"organization_id": org}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(1000)
     for o in olds[200:]:
-        await db.floor_change_requests.delete_one({"id": o["id"]})
+        await db.floor_change_requests.delete_one({"id": o["id"], "organization_id": org})
     return {"ok": True, "id": doc["id"], "classification": classification, "status": status,
             "ack": ack or ("Ricevuto. Applico subito e avviso la Direzione." if classification == "minor" else "Ricevuto. Serve l'OK della Direzione: glielo chiedo io."),
             "suggested_action": suggested}
@@ -1220,14 +1221,15 @@ async def floor_change_request(body: FloorChangeReq):
 
 @api_router.get("/floor/sitor/change-requests")
 async def floor_change_requests(admin: dict = Depends(require_admin)):
-    docs = await db.floor_change_requests.find({}, {"_id": 0}).sort("at", -1).to_list(120)
-    pending = await db.floor_change_requests.count_documents({"status": "pending"})
+    org = _org_id(admin)
+    docs = await db.floor_change_requests.find({"organization_id": org}, {"_id": 0}).sort("at", -1).to_list(120)
+    pending = await db.floor_change_requests.count_documents({"status": "pending", "organization_id": org})
     return {"requests": docs, "pending": pending}
 
 
 @api_router.get("/floor/sitor/change-requests/count")
 async def floor_change_requests_count(admin: dict = Depends(require_admin)):
-    return {"pending": await db.floor_change_requests.count_documents({"status": "pending"})}
+    return {"pending": await db.floor_change_requests.count_documents({"status": "pending", "organization_id": _org_id(admin)})}
 
 
 class FloorChangeDecision(BaseModel):
@@ -1239,11 +1241,11 @@ class FloorChangeDecision(BaseModel):
 async def floor_change_decide(rid: str, body: FloorChangeDecision, admin: dict = Depends(require_admin)):
     status = "approved" if (body.decision or "").strip().lower() == "approve" else "rejected"
     await db.floor_change_requests.update_one(
-        {"id": rid},
+        {"id": rid, "organization_id": _org_id(admin)},
         {"$set": {"status": status, "decided_at": now_iso(), "decision_note": (body.note or "")[:300],
                   "decided_by": (admin.get("email") or "master")}})
     return {"ok": True, "status": status,
-            "pending": await db.floor_change_requests.count_documents({"status": "pending"})}
+            "pending": await db.floor_change_requests.count_documents({"status": "pending", "organization_id": _org_id(admin)})}
 
 
 # ============================================================================
@@ -1270,16 +1272,16 @@ class MachineArrivalReq(BaseModel):
     notes: str = ""
     lang: str = "it"
 
-async def _machines_counts():
-    total = await db.mike_machines.count_documents({})
-    new_n = await db.mike_machines.count_documents({"status": "new"})
-    active_n = await db.mike_machines.count_documents({"status": "active"})
+async def _machines_counts(org: str = ORG_DEFAULT):
+    total = await db.mike_machines.count_documents({"organization_id": org})
+    new_n = await db.mike_machines.count_documents({"status": "new", "organization_id": org})
+    active_n = await db.mike_machines.count_documents({"status": "active", "organization_id": org})
     return {"total": total, "new_arrivals": new_n, "active": active_n}
 
 @api_router.get("/mike/machines")
-async def mike_machines_list():
-    docs = await db.mike_machines.find({}, {"_id": 0}).sort("arrived_at", -1).to_list(200)
-    return {"machines": docs, "counts": await _machines_counts()}
+async def mike_machines_list(org: str = Depends(effective_org)):
+    docs = await db.mike_machines.find({"organization_id": org}, {"_id": 0}).sort("arrived_at", -1).to_list(200)
+    return {"machines": docs, "counts": await _machines_counts(org)}
 
 @api_router.post("/mike/machines/arrival")
 async def mike_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(require_admin)):
@@ -1320,21 +1322,21 @@ async def mike_machine_arrival(body: MachineArrivalReq, admin: dict = Depends(re
         "category": data.get("category") or "Altro", "role": data.get("role") or "",
         "safety": data.get("safety") or [], "maintenance": data.get("maintenance") or [],
         "integration": data.get("integration") or "", "welcome": data.get("welcome") or "",
-        "status": "new", "arrived_at": now_iso(),
+        "status": "new", "arrived_at": now_iso(), "organization_id": _org_id(admin),
     }
     await db.mike_machines.insert_one({**machine})
     machine.pop("_id", None)
-    return {"ok": True, "machine": machine, "counts": await _machines_counts()}
+    return {"ok": True, "machine": machine, "counts": await _machines_counts(_org_id(admin))}
 
 @api_router.post("/mike/machines/{mid}/commission")
 async def mike_machine_commission(mid: str, admin: dict = Depends(require_admin)):
-    await db.mike_machines.update_one({"id": mid}, {"$set": {"status": "active", "commissioned_at": now_iso()}})
-    return {"ok": True, "counts": await _machines_counts()}
+    await db.mike_machines.update_one({"id": mid, "organization_id": _org_id(admin)}, {"$set": {"status": "active", "commissioned_at": now_iso()}})
+    return {"ok": True, "counts": await _machines_counts(_org_id(admin))}
 
 @api_router.delete("/mike/machines/{mid}")
 async def mike_machine_delete(mid: str, admin: dict = Depends(require_admin)):
-    await db.mike_machines.delete_one({"id": mid})
-    return {"ok": True, "counts": await _machines_counts()}
+    await db.mike_machines.delete_one({"id": mid, "organization_id": _org_id(admin)})
+    return {"ok": True, "counts": await _machines_counts(_org_id(admin))}
 
 # --- PLANCIA DEL CAPO: cattura multimodale -> generazione -> coda di produzione ---
 # Più il Capo compila (voce/foto/email/testo), più Sitor genera, più la produzione ha da fare.
@@ -1347,12 +1349,12 @@ class CaptureReq(BaseModel):
 
 _SECTORS = ["ricette", "piano", "ordini", "macchine", "team", "magazzino", "note"]
 
-async def _queue_counts():
-    total = await db.capo_queue.count_documents({})
-    pending = await db.capo_queue.count_documents({"status": "pending"})
+async def _queue_counts(org: str = ORG_DEFAULT):
+    total = await db.capo_queue.count_documents({"organization_id": org})
+    pending = await db.capo_queue.count_documents({"status": "pending", "organization_id": org})
     by = {}
     for s in _SECTORS:
-        by[s] = await db.capo_queue.count_documents({"sector": s})
+        by[s] = await db.capo_queue.count_documents({"sector": s, "organization_id": org})
     return {"total": total, "pending": pending, "by_sector": by}
 
 # ============================================================================
@@ -1389,10 +1391,12 @@ class FloorShiftReport(BaseModel):
 
 
 @api_router.post("/floor/shift-report")
-async def floor_shift_report_save(payload: FloorShiftReport):
+async def floor_shift_report_save(payload: FloorShiftReport, request: Request):
     """L'operaio compila l'essenziale a fine turno; il Capo lo legge nella console."""
+    org = gate_org(request)
     doc = {
         "id": str(uuid.uuid4()),
+        "organization_id": org,
         "operator": (payload.operator or "")[:80],
         "role": (payload.role or "")[:80],
         "dept": (payload.dept or "")[:80],
@@ -1404,7 +1408,7 @@ async def floor_shift_report_save(payload: FloorShiftReport):
         "at": now_iso(),
     }
     await db.floor_shift_reports.insert_one(dict(doc))
-    olds = await db.floor_shift_reports.find({}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(2000)
+    olds = await db.floor_shift_reports.find({"organization_id": org}, {"_id": 0, "id": 1, "at": 1}).sort("at", -1).to_list(2000)
     for o in olds[200:]:
         await db.floor_shift_reports.delete_one({"id": o["id"]})
     try:
@@ -1416,7 +1420,8 @@ async def floor_shift_report_save(payload: FloorShiftReport):
 
 @api_router.get("/floor/shift-reports")
 async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
-    return {"reports": await db.floor_shift_reports.find({}, {"_id": 0}).sort("at", -1).to_list(50)}
+    org = _org_id(admin)
+    return {"reports": await db.floor_shift_reports.find({"organization_id": org}, {"_id": 0}).sort("at", -1).to_list(50)}
 
 
 # ============================================================================
@@ -1426,8 +1431,8 @@ async def floor_shift_reports_list(admin: dict = Depends(require_admin)):
 # ============================================================================
 async def _shift_snapshot(today: str, org: str = ORG_DEFAULT) -> dict:
     """Fotografa i dati reali del turno registrati durante la giornata."""
-    reports = await db.floor_shift_reports.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("at", 1).to_list(100)
-    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    reports = await db.floor_shift_reports.find({"at": {"$regex": f"^{re.escape(today)}"}, "organization_id": org}, {"_id": 0}).sort("at", 1).to_list(100)
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}, "organization_id": org}, {"_id": 0}).sort("seq", 1).to_list(3000)
     by_worker = {}
     for e in entries:
         by_worker.setdefault(e.get("worker") or "operatore", []).append(e)
@@ -1436,7 +1441,7 @@ async def _shift_snapshot(today: str, org: str = ORG_DEFAULT) -> dict:
         s = _arbzg_summary(evs)
         hours.append({"worker": w, "work_min": s["work_min"], "break_min": s["break_min"], "flags": s["flags"]})
     objs = await db.dept_objectives.find({"date": today, "organization_id": org}, {"_id": 0}).to_list(50)
-    changes = await db.floor_change_requests.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).to_list(50)
+    changes = await db.floor_change_requests.find({"at": {"$regex": f"^{re.escape(today)}"}, "organization_id": org}, {"_id": 0}).to_list(50)
     return {
         "date": today,
         "operator_reports": reports,
@@ -2267,7 +2272,7 @@ class ShiftTemplateReq(BaseModel):
 
 @api_router.get("/depts/templates")
 async def depts_templates_list(admin: dict = Depends(require_admin)):
-    docs = await db.dept_shift_templates.find({}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    docs = await db.dept_shift_templates.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(100)
     return {"templates": docs}
 
 
@@ -2277,7 +2282,7 @@ async def depts_templates_create(body: ShiftTemplateReq, admin: dict = Depends(r
     name = (body.name or "").strip() or "Turno"
     items = [{"dept": i.dept, "operator": (i.operator or "").strip(), "task": (i.task or "").strip()}
              for i in body.items if (i.operator or "").strip() and i.dept in DEPARTMENTS]
-    doc = {"id": _uuid.uuid4().hex[:10], "name": name, "items": items, "created_at": now_iso()}
+    doc = {"id": _uuid.uuid4().hex[:10], "organization_id": _org_id(admin), "name": name, "items": items, "created_at": now_iso()}
     await db.dept_shift_templates.insert_one({**doc})
     doc.pop("_id", None)
     return {"ok": True, "template": doc}
@@ -2285,14 +2290,14 @@ async def depts_templates_create(body: ShiftTemplateReq, admin: dict = Depends(r
 
 @api_router.delete("/depts/templates/{tid}")
 async def depts_templates_delete(tid: str, admin: dict = Depends(require_admin)):
-    await db.dept_shift_templates.delete_one({"id": tid})
+    await db.dept_shift_templates.delete_one({"id": tid, "organization_id": _org_id(admin)})
     return {"ok": True}
 
 
 @api_router.post("/depts/templates/{tid}/apply")
 async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
     import uuid as _uuid
-    tpl = await db.dept_shift_templates.find_one({"id": tid}, {"_id": 0})
+    tpl = await db.dept_shift_templates.find_one({"id": tid, "organization_id": _org_id(admin)}, {"_id": 0})
     if not tpl:
         raise HTTPException(status_code=404, detail="Template non trovato")
     today = now_iso()[:10]
@@ -2369,7 +2374,8 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
         tasks = [{"title": (data.get("summary") or content)[:80], "detail": "", "dept": "generale"}]
     stored = []
     for tk in tasks[:8]:
-        doc = {"id": _uuid.uuid4().hex[:12], "title": (tk.get("title") or "").strip()[:120],
+        doc = {"id": _uuid.uuid4().hex[:12], "organization_id": _org_id(admin),
+               "title": (tk.get("title") or "").strip()[:120],
                "detail": (tk.get("detail") or "").strip()[:300], "dept": tk.get("dept") or "generale",
                "sector": sector, "mode": mode, "image_url": body.image_url or None,
                "status": "pending", "at": now_iso()}
@@ -2378,7 +2384,7 @@ async def deus_capture(body: CaptureReq, admin: dict = Depends(require_admin)):
     new_xp, _ = await _bond_add(email, 20)
     return {"ok": True, "sector": sector, "summary": data.get("summary") or "",
             "generated": data.get("generated") or [], "reply": data.get("reply") or "",
-            "tasks": stored, "counts": await _queue_counts(), "bond": _bond_info(new_xp, body.lang)}
+            "tasks": stored, "counts": await _queue_counts(_org_id(admin)), "bond": _bond_info(new_xp, body.lang)}
 
 
 
@@ -3086,21 +3092,21 @@ async def _compute_pulse():
 
 
 @api_router.get("/lab/pulse")
-async def get_lab_pulse(user: Optional[dict] = Depends(optional_user)):
+async def get_lab_pulse(org: str = Depends(effective_org)):
     p = await _compute_pulse()
     # Storia del battito: registra uno snapshot leggero al massimo 1 volta al minuto.
     try:
-        last = await db.lab_pulse_history.find_one({}, {"_id": 0, "at": 1}, sort=[("at", -1)])
+        last = await db.lab_pulse_history.find_one({"organization_id": org}, {"_id": 0, "at": 1}, sort=[("at", -1)])
         now_ts = datetime.now(timezone.utc)
         if not last or (now_ts - datetime.fromisoformat(last["at"])).total_seconds() >= 60:
             await db.lab_pulse_history.insert_one({
                 "at": now_ts.isoformat(), "heartbeat": p["heartbeat"], "mood": p["mood"],
-                "score": p["score"], "load": p["load"],
+                "score": p["score"], "load": p["load"], "organization_id": org,
             })
             # Mantieni solo gli ultimi ~300 punti.
-            cnt = await db.lab_pulse_history.count_documents({})
+            cnt = await db.lab_pulse_history.count_documents({"organization_id": org})
             if cnt > 300:
-                old = await db.lab_pulse_history.find({}, {"_id": 1}).sort("at", 1).limit(cnt - 300).to_list(cnt - 300)
+                old = await db.lab_pulse_history.find({"organization_id": org}, {"_id": 1}).sort("at", 1).limit(cnt - 300).to_list(cnt - 300)
                 if old:
                     await db.lab_pulse_history.delete_many({"_id": {"$in": [o["_id"] for o in old]}})
     except Exception:
@@ -3109,18 +3115,18 @@ async def get_lab_pulse(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.get("/lab/pulse/history")
-async def get_pulse_history(minutes: int = 240, user: Optional[dict] = Depends(optional_user)):
+async def get_pulse_history(minutes: int = 240, org: str = Depends(effective_org)):
     minutes = max(10, min(1440, minutes))
     since = (datetime.now(timezone.utc) - timedelta(minutes=minutes)).isoformat()
-    docs = await db.lab_pulse_history.find({"at": {"$gte": since}}, {"_id": 0}).sort("at", 1).to_list(300)
+    docs = await db.lab_pulse_history.find({"at": {"$gte": since}, "organization_id": org}, {"_id": 0}).sort("at", 1).to_list(300)
     return {"points": docs}
 
 # ===========================================================================
 # ENTERPRISE GRID — rete multi-sede (1–100 panifici) orchestrata da Sitor.
 # Leaderboard globale, briefing di rete, consulenza flotta, layout spaziale 2D.
 # ===========================================================================
-async def _seed_sites():
-    if await db.lab_sites.count_documents({}) > 0:
+async def _seed_sites(org: str = ORG_DEFAULT):
+    if await db.lab_sites.count_documents({"organization_id": org}) > 0:
         return
     demo = [
         {"site_id": "bakery_01_stuttgart", "name": "MikiLab Hub Stoccarda", "status": "normal",
@@ -3134,6 +3140,8 @@ async def _seed_sites():
          "spatial_layout": {"room_dimensions_m": {"width": 10.0, "length": 14.0},
              "equipment": [{"id": "oven_02", "name": "Forno a Piani", "x": 8.0, "y": 2.5, "status": "warning"}]}},
     ]
+    for _d in demo:
+        _d["organization_id"] = org
     await db.lab_sites.insert_many(demo)
 
 
@@ -3144,9 +3152,9 @@ def _site_metrics(site):
 
 
 @api_router.get("/enterprise/overview")
-async def enterprise_overview(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_overview(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     allw = [w for s in sites for w in (s.get("workers") or [])]
     avg = round(sum(w.get("score", 0) for w in allw) / len(allw), 1) if allw else 0.0
     crit = sum(1 for s in sites if s.get("status") != "normal")
@@ -3155,9 +3163,9 @@ async def enterprise_overview(user: Optional[dict] = Depends(optional_user)):
 
 
 @api_router.get("/enterprise/sites")
-async def enterprise_sites(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_sites(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     return {"sites": [_site_metrics(s) for s in sites]}
 
 
@@ -3171,7 +3179,7 @@ class SiteCreate(BaseModel):
 @api_router.post("/enterprise/sites")
 async def enterprise_add_site(body: SiteCreate, user: dict = Depends(require_admin)):
     sid = f"site_{str(uuid.uuid4())[:8]}"
-    doc = {"site_id": sid, "name": body.name, "status": body.status or "normal", "workers": [],
+    doc = {"site_id": sid, "organization_id": _org_id(user), "name": body.name, "status": body.status or "normal", "workers": [],
            "spatial_layout": {"room_dimensions_m": {"width": float(body.width or 10), "length": float(body.length or 12)}, "equipment": []}}
     await db.lab_sites.insert_one({**doc})
     return _site_metrics(doc)
@@ -3179,7 +3187,7 @@ async def enterprise_add_site(body: SiteCreate, user: dict = Depends(require_adm
 
 @api_router.delete("/enterprise/sites/{site_id}")
 async def enterprise_del_site(site_id: str, user: dict = Depends(require_admin)):
-    await db.lab_sites.delete_one({"site_id": site_id})
+    await db.lab_sites.delete_one({"site_id": site_id, "organization_id": _org_id(user)})
     return {"ok": True}
 
 
@@ -3193,19 +3201,19 @@ class SiteShiftReq(BaseModel):
 
 @api_router.post("/enterprise/site-shift")
 async def enterprise_site_shift(body: SiteShiftReq, user: dict = Depends(require_admin)):
-    site = await db.lab_sites.find_one({"site_id": body.site_id})
+    site = await db.lab_sites.find_one({"site_id": body.site_id, "organization_id": _org_id(user)})
     if not site:
         raise HTTPException(status_code=404, detail="Panificio non trovato nella griglia globale.")
     worker = {"name": body.worker_name, "position": body.position, "avatar": body.avatar_style or "default",
               "score": int(body.score or 85), "streak": 1}
-    await db.lab_sites.update_one({"site_id": body.site_id}, {"$push": {"workers": worker}})
+    await db.lab_sites.update_one({"site_id": body.site_id, "organization_id": _org_id(user)}, {"$push": {"workers": worker}})
     return {"status": "success", "message": f"Assegnato {body.worker_name} ({body.position}) presso {site['name']}."}
 
 
 @api_router.get("/enterprise/global-leaderboard")
-async def enterprise_global_leaderboard(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_global_leaderboard(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     allw = []
     for s in sites:
         for w in (s.get("workers") or []):
@@ -3220,9 +3228,9 @@ async def enterprise_global_leaderboard(user: Optional[dict] = Depends(optional_
 
 
 @api_router.get("/enterprise/global-morning-briefing")
-async def enterprise_global_briefing(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_global_briefing(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     allw = [w for s in sites for w in (s.get("workers") or [])]
     avg = round(sum(w.get("score", 0) for w in allw) / len(allw), 1) if allw else 0.0
     exc = [{"site_id": s["site_id"], "name": s["name"], "status": s["status"]} for s in sites if s.get("status") != "normal"]
@@ -3234,9 +3242,9 @@ async def enterprise_global_briefing(user: Optional[dict] = Depends(optional_use
 
 
 @api_router.get("/enterprise/strategic-fleet-advice")
-async def enterprise_fleet_advice(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_fleet_advice(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     insights = []
     for s in sites:
         for w in (s.get("workers") or []):
@@ -3250,9 +3258,9 @@ async def enterprise_fleet_advice(user: Optional[dict] = Depends(optional_user))
 
 
 @api_router.get("/enterprise/weekly-challenge")
-async def enterprise_weekly_challenge(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_weekly_challenge(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     ranking = []
     for s in sites:
         ws = s.get("workers") or []
@@ -3395,9 +3403,9 @@ async def production_line_status(dough_temp: float = 24.0, hydration: float = 65
 # le migliori e le più in difficoltà, calcola i gap e genera strategie.
 # ---------------------------------------------------------------------------
 @api_router.get("/enterprise/omni-intelligence")
-async def enterprise_omni(user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    sites = await db.lab_sites.find({}, {"_id": 0}).to_list(200)
+async def enterprise_omni(org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    sites = await db.lab_sites.find({"organization_id": org}, {"_id": 0}).to_list(200)
     scored = []
     for s in sites:
         ws = s.get("workers") or []
@@ -3805,16 +3813,16 @@ class SensorReading(BaseModel):
 
 
 @api_router.get("/lab/sensors")
-async def get_sensors(user: Optional[dict] = Depends(optional_user)):
-    return await db.lab_sensors.find({}, {"_id": 0, "_key": 0}).sort("at", -1).to_list(200)
+async def get_sensors(org: str = Depends(effective_org)):
+    return await db.lab_sensors.find({"organization_id": org}, {"_id": 0, "_key": 0}).sort("at", -1).to_list(200)
 
 
 @api_router.post("/lab/sensors")
-async def post_sensor(payload: SensorReading, user: Optional[dict] = Depends(optional_user)):
+async def post_sensor(payload: SensorReading, org: str = Depends(effective_org)):
     payload.at = now_iso()
     doc = payload.model_dump()
     key = f"{payload.device_id}:{payload.type}"
-    await db.lab_sensors.update_one({"_key": key}, {"$set": {**doc, "_key": key}}, upsert=True)
+    await db.lab_sensors.update_one({"_key": key, "organization_id": org}, {"$set": {**doc, "_key": key, "organization_id": org}}, upsert=True)
     return doc
 
 
@@ -4009,10 +4017,10 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
         for x in stock:
             if x["id"] == s["id"]:
                 x["quantity_kg"] = newq
-        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "name": s["name"], "kg": it["kg"], "kind": it["kind"], "at": now_iso()})
+        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "organization_id": _org_id(user), "name": s["name"], "kg": it["kg"], "kind": it["kind"], "at": now_iso()})
         consumed.append({"name": s["name"], "kg": it["kg"], "quantity_kg": newq})
 
-    link = {"id": str(uuid.uuid4()), "recipe_id": body.recipe_id, "recipe_name": rec.get("name"),
+    link = {"id": str(uuid.uuid4()), "organization_id": _org_id(user), "recipe_id": body.recipe_id, "recipe_name": rec.get("name"),
             "batches": factor, "line_sectors": ["dosaggio", "autolisi"], "consumed": consumed,
             "shortfalls": shortfalls, "at": now_iso()}
     await db.batch_links.insert_one(dict(link))
@@ -4025,7 +4033,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
 
 @api_router.get("/inventory/batch-links")
 async def inventory_batch_links(user: Optional[dict] = Depends(optional_user)):
-    return await db.batch_links.find({}, {"_id": 0}).sort("at", -1).to_list(50)
+    return await db.batch_links.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("at", -1).to_list(50)
 
 
 # ---------------------------------------------------------------------------
@@ -4037,7 +4045,7 @@ async def _worker_pool(org: Optional[str] = None):
     """Operatori disponibili dal piano turni, dedup per nome, con posizione, aura e STATO
     PERSISTENTE (libero/occupato) letto da `worker_states` (per azienda). Lo stato vive nel
     tempo: un operatore resta occupato finché non completa/rifiuta, con passaggio al prossimo libero."""
-    docs = await db.lab_shift_plan.find({}, {"_id": 0}).to_list(300)
+    docs = await db.lab_shift_plan.find({"organization_id": org or ORG_DEFAULT}, {"_id": 0}).to_list(300)
     best = {}
     for d in docs:
         nm = (d.get("worker_name") or "").strip()
@@ -4317,11 +4325,11 @@ async def worker_task_action(body: WorkerActionReq, request: Request,
 
     task = None
     if body.task_id:
-        task = await db.team_tasks.find_one({"id": body.task_id}, {"_id": 0})
+        task = await db.team_tasks.find_one({"id": body.task_id, "organization_id": org}, {"_id": 0})
     if not task and body.step_order is None:
         # trova il task attivo dell'operatore
         task = await db.team_tasks.find_one(
-            {"status": "active", "steps.assignee": {"$regex": f"^{re.escape(op)}$", "$options": "i"}}, {"_id": 0})
+            {"status": "active", "organization_id": org, "steps.assignee": {"$regex": f"^{re.escape(op)}$", "$options": "i"}}, {"_id": 0})
     if not task:
         raise HTTPException(status_code=404, detail="Nessun task per l'operatore")
 
@@ -4364,7 +4372,7 @@ async def worker_task_action(body: WorkerActionReq, request: Request,
     upd = {"steps": steps}
     if all_done:
         upd["status"] = "done"; upd["closed_at"] = now_iso()
-    await db.team_tasks.update_one({"id": task["id"]}, {"$set": upd})
+    await db.team_tasks.update_one({"id": task["id"], "organization_id": org}, {"$set": upd})
     return {"status": "success", "message": msg, "all_done": all_done, "steps": steps}
 
 
@@ -4495,7 +4503,7 @@ async def worker_assign_next(body: AssignNextReq, org: str = Depends(effective_o
     op = (body.operator or "").strip()
     if not op:
         raise HTTPException(status_code=400, detail="Operatore mancante")
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", 1).to_list(300)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": org}, {"_id": 0}).sort("created_at", 1).to_list(300)
     chosen_task, chosen_step = None, None
     for t in tasks:
         steps = sorted(t.get("steps") or [], key=lambda x: int(x.get("order") or 0))
@@ -4522,7 +4530,7 @@ async def worker_assign_next(body: AssignNextReq, org: str = Depends(effective_o
 async def worker_pending_steps(org: str = Depends(effective_org)):
     """ASSEGNA MIRATA: elenco dei passi pendenti dei task attivi, così la Direzione può
     scegliere ESATTAMENTE quale compito dare a un operatore (non solo il prossimo)."""
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", 1).to_list(300)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": org}, {"_id": 0}).sort("created_at", 1).to_list(300)
     out = []
     for t in tasks:
         for s in sorted(t.get("steps") or [], key=lambda x: int(x.get("order") or 0)):
@@ -4549,7 +4557,7 @@ async def worker_assign_step(body: AssignStepReq, org: str = Depends(effective_o
     op = (body.operator or "").strip()
     if not op:
         raise HTTPException(status_code=400, detail="Operatore mancante")
-    task = await db.team_tasks.find_one({"id": body.task_id}, {"_id": 0})
+    task = await db.team_tasks.find_one({"id": body.task_id, "organization_id": org}, {"_id": 0})
     if not task:
         raise HTTPException(status_code=404, detail="Task non trovato")
     steps = task.get("steps") or []
@@ -4561,7 +4569,7 @@ async def worker_assign_step(body: AssignStepReq, org: str = Depends(effective_o
     target["assignee"] = op
     target["assignee_position"] = None
     steps = _recompute_task_eta(steps)
-    await db.team_tasks.update_one({"id": task["id"]}, {"$set": {"steps": steps}})
+    await db.team_tasks.update_one({"id": task["id"], "organization_id": org}, {"$set": {"steps": steps}})
     await _set_worker_state(org, op, status="busy", task_id=task["id"],
                             step_order=target.get("order"), eta_min=target.get("eta_min"))
     return {"assigned": True, "task_title": task.get("title"),
@@ -4584,7 +4592,7 @@ async def worker_reassign_late(body: ReassignReq, org: str = Depends(effective_o
     tid, order = st.get("task_id"), st.get("step_order")
     if not tid:
         raise HTTPException(status_code=404, detail="L'operatore non ha un compito attivo")
-    task = await db.team_tasks.find_one({"id": tid}, {"_id": 0})
+    task = await db.team_tasks.find_one({"id": tid, "organization_id": org}, {"_id": 0})
     if not task:
         raise HTTPException(status_code=404, detail="Task non trovato")
     steps = task.get("steps") or []
@@ -4595,7 +4603,7 @@ async def worker_reassign_late(body: ReassignReq, org: str = Depends(effective_o
     await _set_worker_state(org, op, status="free", task_id=None, step_order=None)
     await _reassign_step(org, task, target, exclude=[op])
     steps = _recompute_task_eta(steps)
-    await db.team_tasks.update_one({"id": task["id"]}, {"$set": {"steps": steps}})
+    await db.team_tasks.update_one({"id": task["id"], "organization_id": org}, {"$set": {"steps": steps}})
     new_asg = target.get("assignee")
     return {"reassigned": True, "from": op, "to": new_asg,
             "instruction": target.get("instruction"),
@@ -4703,11 +4711,11 @@ async def worker_capo_move(body: CapoMoveReq, user: dict = Depends(require_admin
 
 
 @api_router.get("/delegation/tasks")
-async def delegation_tasks(role: str = "", user: Optional[dict] = Depends(optional_user)):
+async def delegation_tasks(role: str = "", org: str = Depends(effective_org)):
     """Task attivi. Se arriva `role` (postazione dell'operatore) filtra SOLO i task della
     sua linea/postazione + i task broadcast (senza destinatario), così la plancia mostra
     all'istante i compiti giusti quando l'operatore cambia postazione."""
-    items = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    items = await db.team_tasks.find({"status": "active", "organization_id": org}, {"_id": 0}).sort("created_at", -1).to_list(200)
     if role:
         line = _role_to_line(role)
         rl = role.lower()
@@ -4738,8 +4746,8 @@ class StepDoneReq(BaseModel):
 
 
 @api_router.post("/delegation/tasks/{task_id}/step")
-async def delegation_step_done(task_id: str, body: StepDoneReq, user: Optional[dict] = Depends(optional_user)):
-    t = await db.team_tasks.find_one({"id": task_id})
+async def delegation_step_done(task_id: str, body: StepDoneReq, org: str = Depends(effective_org)):
+    t = await db.team_tasks.find_one({"id": task_id, "organization_id": org})
     if not t:
         raise HTTPException(status_code=404, detail="Task non trovato")
     steps = t.get("steps") or []
@@ -4754,13 +4762,13 @@ async def delegation_step_done(task_id: str, body: StepDoneReq, user: Optional[d
     if all_done:
         upd["status"] = "done"
         upd["closed_at"] = now_iso()
-    await db.team_tasks.update_one({"id": task_id}, {"$set": upd})
+    await db.team_tasks.update_one({"id": task_id, "organization_id": org}, {"$set": upd})
     return {"status": "success", "all_done": all_done, "steps": steps}
 
 
 @api_router.post("/delegation/tasks/{task_id}/close")
-async def delegation_close(task_id: str, user: dict = Depends(require_admin)):
-    await db.team_tasks.update_one({"id": task_id}, {"$set": {"status": "closed", "closed_at": now_iso()}})
+async def delegation_close(task_id: str, admin: dict = Depends(require_admin)):
+    await db.team_tasks.update_one({"id": task_id, "organization_id": _org_id(admin)}, {"$set": {"status": "closed", "closed_at": now_iso()}})
     return {"status": "success"}
 
 
@@ -4770,9 +4778,9 @@ class CleanCheckReq(BaseModel):
 
 
 @api_router.post("/delegation/tasks/{task_id}/cleanliness-check")
-async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, user: Optional[dict] = Depends(optional_user)):
+async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, org: str = Depends(effective_org)):
     """Checkpoint AR: valida con la fotocamera lo standard di pulizia prima di chiudere il task."""
-    t = await db.team_tasks.find_one({"id": task_id})
+    t = await db.team_tasks.find_one({"id": task_id, "organization_id": org})
     if not t:
         raise HTTPException(status_code=404, detail="Task non trovato")
     img = (body.image_base64 or "").split(",")[-1]
@@ -4804,18 +4812,18 @@ async def delegation_cleanliness_check(task_id: str, body: CleanCheckReq, user: 
         raise HTTPException(status_code=503, detail="Vision non disponibile")
     clean = bool(res.get("clean"))
     if clean:
-        await db.team_tasks.update_one({"id": task_id}, {"$set": {"status": "closed", "closed_at": now_iso(), "cleanliness": res}})
+        await db.team_tasks.update_one({"id": task_id, "organization_id": org}, {"$set": {"status": "closed", "closed_at": now_iso(), "cleanliness": res}})
     else:
-        await db.team_tasks.update_one({"id": task_id}, {"$set": {"cleanliness": res}})
+        await db.team_tasks.update_one({"id": task_id, "organization_id": org}, {"$set": {"cleanliness": res}})
     return {"status": "success", "clean": clean, "score": res.get("score"), "note": res.get("note"), "closed": clean}
 
 
 
 @api_router.get("/shift/handoff")
-async def shift_handoff(lang: str = "it", user: Optional[dict] = Depends(optional_user)):
+async def shift_handoff(lang: str = "it", org: str = Depends(effective_org)):
     """Riassunto vocale per il cambio turno: stato settori, personale, task, ritmo."""
     staff = await _staffing()
-    tasks = await db.team_tasks.count_documents({"status": "active"})
+    tasks = await db.team_tasks.count_documents({"status": "active", "organization_id": org})
     shift = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0}) or {}
     pacing = (shift.get("pacing_directive") or {}).get("pacing")
     down = len(shift.get("machines_down") or [])
@@ -4955,7 +4963,7 @@ def _age_min(iso: str) -> int:
 
 @api_router.post("/batches/start")
 async def dough_start(body: DoughStartReq, user: Optional[dict] = Depends(optional_user)):
-    doc = {"id": str(uuid.uuid4()), "dough_type": body.dough_type[:80], "kg": round(float(body.kg or 0), 2),
+    doc = {"id": str(uuid.uuid4()), "organization_id": _org_id(user), "dough_type": body.dough_type[:80], "kg": round(float(body.kg or 0), 2),
            "line": body.line or "", "status": "active", "started_at": now_iso()}
     await db.dough_batches.insert_one(dict(doc))
     return {"status": "success", "batch": doc}
@@ -4963,7 +4971,7 @@ async def dough_start(body: DoughStartReq, user: Optional[dict] = Depends(option
 
 @api_router.get("/batches/active")
 async def dough_active(user: Optional[dict] = Depends(optional_user)):
-    items = await db.dough_batches.find({"status": "active"}, {"_id": 0}).sort("started_at", 1).to_list(100)
+    items = await db.dough_batches.find({"status": "active", "organization_id": _org_id(user)}, {"_id": 0}).sort("started_at", 1).to_list(100)
     for it in items:
         it["age_min"] = _age_min(it.get("started_at"))
         it["stalled"] = it["age_min"] >= _DOUGH_STALL_MIN
@@ -4973,14 +4981,14 @@ async def dough_active(user: Optional[dict] = Depends(optional_user)):
 
 @api_router.post("/batches/{batch_id}/close")
 async def dough_close(batch_id: str, user: Optional[dict] = Depends(optional_user)):
-    await db.dough_batches.update_one({"id": batch_id}, {"$set": {"status": "closed", "closed_at": now_iso()}})
+    await db.dough_batches.update_one({"id": batch_id, "organization_id": _org_id(user)}, {"$set": {"status": "closed", "closed_at": now_iso()}})
     return {"status": "success"}
 
 
 
 @api_router.get("/lab/warehouse/consumption")
 async def get_consumption(user: Optional[dict] = Depends(optional_user)):
-    return await db.lab_consumption_log.find({}, {"_id": 0}).sort("at", -1).to_list(100)
+    return await db.lab_consumption_log.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("at", -1).to_list(100)
 
 
 @api_router.get("/lab/warehouse/stats")
@@ -6006,6 +6014,7 @@ async def _deck_alarm_loop():
                 crit_depts = [d for d, v in (deck.get("depts") or {}).items() if v.get("level") == "critical"]
                 try:
                     await db.deck_alarm_history.insert_one({
+                        "organization_id": ORG_DEFAULT,
                         "ts": now.isoformat(), "day": now.strftime("%Y-%m-%d"),
                         "hm": now.strftime("%H:%M"), "stations": stations,
                         "departments": crit_depts, "heartbeat": deck.get("heartbeat"),
@@ -6132,7 +6141,7 @@ _DEPT_LABELS_IT = {"panificio": "Panificio", "pizzeria": "Pizzeria", "pasticceri
 async def deck_alarms_history(day: Optional[str] = None, admin: dict = Depends(require_pro)):
     """Storico episodi critici (default: oggi). Per la timeline del deck."""
     d = day or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    items = await db.deck_alarm_history.find({"day": d}, {"_id": 0}).sort("ts", -1).to_list(200)
+    items = await db.deck_alarm_history.find({"day": d, "organization_id": _org_id(admin)}, {"_id": 0}).sort("ts", -1).to_list(200)
     return {"day": d, "count": len(items), "items": items}
 
 
@@ -6140,7 +6149,7 @@ async def deck_alarms_history(day: Optional[str] = None, admin: dict = Depends(r
 async def deck_alarms_export(day: Optional[str] = None, admin: dict = Depends(require_pro)):
     """Export testuale dello storico allarmi del turno (per il report di fine turno)."""
     d = day or datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    items = await db.deck_alarm_history.find({"day": d}, {"_id": 0}).sort("ts", 1).to_list(500)
+    items = await db.deck_alarm_history.find({"day": d, "organization_id": _org_id(admin)}, {"_id": 0}).sort("ts", 1).to_list(500)
     lines = [f"MIKILAB · STORICO ALLARMI CRITICI — {d}", "=" * 42, ""]
     if not items:
         lines.append("Nessun allarme critico registrato. Turno regolare.")
@@ -9297,13 +9306,13 @@ async def mike_autoplan(body: AutoPlanReq, admin: dict = Depends(require_admin))
     except Exception:
         pass
     today = (body.date or now_iso()[:10])
-    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
     workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
     ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
            f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
     try:
-        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _allm = await db.mike_machines.find({"organization_id": _org_id(admin)}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
         _sel = [str(x).lower() for x in (body.machines or [])]
         _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
         if _use:
@@ -9374,13 +9383,13 @@ async def mike_autoplan_options(body: AutoPlanReq, admin: dict = Depends(require
     except Exception:
         pass
     today = (body.date or now_iso()[:10])
-    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
     workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
     ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
            f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini del Capo: {body.orders_text or 'nessun ordine extra'}.")
     try:
-        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _allm = await db.mike_machines.find({"organization_id": _org_id(admin)}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
         _sel = [str(x).lower() for x in (body.machines or [])]
         _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
         if _use:
@@ -9484,13 +9493,13 @@ async def _plan_context(body, org: str = ORG_DEFAULT) -> str:
     except Exception:
         pass
     today = (body.date or now_iso()[:10])
-    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": org}, {"_id": 0}).to_list(3000)
     workers_today = sorted({l.get("worker") for l in logs if l.get("worker")})
     ctx = (f"Data: {today}. Caposquadra per linea: {leaders or 'nessuno'}. "
            f"Operatori disponibili oggi: {workers_today or 'non timbrati'}. "
            f"Scorte in esaurimento: {low or 'nessuna'}. Ordini della Direzione: {body.orders_text or 'nessun ordine extra'}.")
     try:
-        _allm = await db.mike_machines.find({}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
+        _allm = await db.mike_machines.find({"organization_id": org}, {"_id": 0, "name": 1, "category": 1, "capacity": 1}).to_list(100)
         _sel = [str(x).lower() for x in (body.machines or [])]
         _use = [m for m in _allm if (not _sel or (m.get("name") or "").lower() in _sel)]
         if _use:
@@ -9702,7 +9711,7 @@ async def mike_briefing(lang: str = "it", admin: dict = Depends(require_admin)):
     ld = (await db.app_meta.find_one({"_key": "line_leaders"}, {"_id": 0})) or {}
     leaders = ld.get("leaders") or {}
     today = now_iso()[:10]
-    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+    logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
     workers = sorted({l.get("worker") for l in logs if l.get("worker")})
     low = [a for a in alerts if a.get("kind") == "stock"]
     stress = min(1.0, len(alerts) / 3.0)
@@ -9763,7 +9772,7 @@ class SosReq(BaseModel):
 
 
 @api_router.post("/mike/sos")
-async def mike_sos_raise(body: SosReq):
+async def mike_sos_raise(body: SosReq, org: str = Depends(effective_org)):
     """SOS operatore (conferma tattile lato UI). Registra l'allarme; il Capo lo vede
     in plancia con bagliore e Sitor lo annuncia a voce. Nessun invio esterno."""
     ev = {
@@ -9776,6 +9785,7 @@ async def mike_sos_raise(body: SosReq):
         "status": "active",
         "created_at": now_iso(),
         "ack_at": None,
+        "organization_id": org,
     }
     await db.sos_events.insert_one(dict(ev))
     ev.pop("_id", None)
@@ -9787,7 +9797,7 @@ async def mike_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
     """Solo Capo: SOS attivi + frase vocale per l'annuncio TTS di Sitor."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
-    docs = await db.sos_events.find({"status": "active"}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    docs = await db.sos_events.find({"status": "active", "organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(50)
     spoken = ""
     if docs:
         top = docs[0]
@@ -9802,7 +9812,7 @@ async def mike_sos_list(lang: str = "it", admin: dict = Depends(require_admin)):
 @api_router.post("/mike/sos/{sid}/ack")
 async def mike_sos_ack(sid: str, admin: dict = Depends(require_admin)):
     """Il Capo prende in carico / chiude l'SOS; registra il tempo di risposta."""
-    ev = await db.sos_events.find_one({"id": sid}, {"_id": 0})
+    ev = await db.sos_events.find_one({"id": sid, "organization_id": _org_id(admin)}, {"_id": 0})
     now = now_iso()
     resp_s = None
     if ev and ev.get("created_at"):
@@ -9810,7 +9820,7 @@ async def mike_sos_ack(sid: str, admin: dict = Depends(require_admin)):
             resp_s = int((datetime.fromisoformat(now) - datetime.fromisoformat(ev["created_at"])).total_seconds())
         except Exception:
             resp_s = None
-    await db.sos_events.update_one({"id": sid}, {"$set": {"status": "resolved", "ack_at": now, "ack_by": admin.get("email"), "response_seconds": resp_s}})
+    await db.sos_events.update_one({"id": sid, "organization_id": _org_id(admin)}, {"$set": {"status": "resolved", "ack_at": now, "ack_by": admin.get("email"), "response_seconds": resp_s}})
     return {"ok": True, "response_seconds": resp_s}
 
 
@@ -9831,7 +9841,7 @@ def _shift_of(iso_ts: str) -> str:
 @api_router.get("/mike/sos/history")
 async def mike_sos_history(lang: str = "it", admin: dict = Depends(require_admin)):
     """Storico SOS risolti + classifica di REATTIVITÀ per turno (tempo medio di risposta)."""
-    docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).sort("ack_at", -1).to_list(200)
+    docs = await db.sos_events.find({"status": "resolved", "organization_id": _org_id(admin)}, {"_id": 0}).sort("ack_at", -1).to_list(200)
     board = {}
     for d in docs:
         sh = _shift_of(d.get("created_at") or "")
@@ -9859,7 +9869,7 @@ async def mike_telemetry(lang: str = "it", admin: dict = Depends(require_admin))
     prox = await mike_proactive(lang, admin)
     alerts = prox.get("alerts", [])
     global_stress = min(1.0, len(alerts) / 3.0)
-    sos = await db.sos_events.find({"status": "active"}, {"_id": 0}).to_list(50)
+    sos = await db.sos_events.find({"status": "active", "organization_id": _org_id(admin)}, {"_id": 0}).to_list(50)
     sos_by_line = {}
     sos_by_machine = set()
     for s in sos:
@@ -9904,14 +9914,14 @@ async def mike_telemetry(lang: str = "it", admin: dict = Depends(require_admin))
 
 
 @api_router.get("/mike/briefing/floor")
-async def mike_briefing_floor(role: str = "", lang: str = "it"):
+async def mike_briefing_floor(role: str = "", lang: str = "it", org: str = Depends(effective_org)):
     """Briefing PER RUOLO: ogni operatore riceve SOLO i lotti e gli allarmi della sua
     linea (in cuffia, voce breve). Nessun dato delle altre linee. Non richiede admin."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
     line = _role_to_line(role)
     rl = (role or "").lower()
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).sort("start", 1).to_list(500)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": org}, {"_id": 0}).sort("start", 1).to_list(500)
     mine = []
     for tk in tasks:
         tl = (tk.get("line") or "").lower()
@@ -9923,10 +9933,10 @@ async def mike_briefing_floor(role: str = "", lang: str = "it"):
     tele = None
     try:
         # telemetria richiede admin: qui ricaviamo lo stato della linea in modo leggero
-        low = await db.lab_warehouse.count_documents({"$expr": {"$and": [{"$gt": ["$min_kg", 0]}, {"$lte": ["$quantity_kg", "$min_kg"]}]}})
+        low = await db.lab_warehouse.count_documents({"organization_id": org, "$expr": {"$and": [{"$gt": ["$min_kg", 0]}, {"$lte": ["$quantity_kg", "$min_kg"]}]}})
     except Exception:
         low = 0
-    sos_line = await db.sos_events.count_documents({"status": "active", "line": line})
+    sos_line = await db.sos_events.count_documents({"status": "active", "line": line, "organization_id": org})
     n = len(mine)
     first = mine[0] if mine else None
     label_line = {"pane": R("Pane", "Bread"), "baguette": R("Baguette", "Baguette"),
@@ -10074,7 +10084,7 @@ class B2BOrderReq(BaseModel):
 async def mike_b2b_list(admin: dict = Depends(require_admin)):
     """Ordini B2B esterni + aggregazione automatica in kg di impasto per prodotto
     (alimenta lo Smart Planner/impastatrici senza sostituire le casse esistenti)."""
-    docs = await db.b2b_orders.find({"status": {"$ne": "done"}}, {"_id": 0}).sort("created_at", -1).to_list(300)
+    docs = await db.b2b_orders.find({"status": {"$ne": "done"}, "organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(300)
     agg = {}
     for o in docs:
         kg = (o.get("pieces", 0) * o.get("grams_each", 0)) / 1000.0
@@ -10101,6 +10111,7 @@ async def mike_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
         "channel": body.channel or "web",
         "status": "open",
         "created_at": now_iso(),
+        "organization_id": _org_id(admin),
     }
     await db.b2b_orders.insert_one(dict(o))
     o.pop("_id", None)
@@ -10109,7 +10120,7 @@ async def mike_b2b_add(body: B2BOrderReq, admin: dict = Depends(require_admin)):
 
 @api_router.delete("/mike/b2b/orders/{oid}")
 async def mike_b2b_del(oid: str, admin: dict = Depends(require_admin)):
-    await db.b2b_orders.delete_one({"id": oid})
+    await db.b2b_orders.delete_one({"id": oid, "organization_id": _org_id(admin)})
     return {"ok": True}
 
 
@@ -10379,7 +10390,7 @@ async def mike_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
     """Eventi del turno (lotti di produzione, infornate previste, SOS) ordinati per orario,
     per una timeline scorrevole unica."""
     events = []
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": _org_id(admin)}, {"_id": 0}).to_list(300)
     for tk in tasks:
         st = tk.get("start")
         if st:
@@ -10391,7 +10402,7 @@ async def mike_timeline(lang: str = "it", admin: dict = Depends(require_admin)):
                 events.append({"time": f"{total // 60:02d}:{total % 60:02d}", "type": "infornata", "label": tk.get("title", ""), "line": tk.get("line", "")})
             except Exception:
                 pass
-    sos = await db.sos_events.find({}, {"_id": 0}).sort("created_at", -1).to_list(50)
+    sos = await db.sos_events.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("created_at", -1).to_list(50)
     for s in sos:
         ca = s.get("created_at") or ""
         events.append({"time": ca[11:16], "type": "sos", "label": f"{s.get('operator','')} · {s.get('machine') or s.get('line') or ''}",
@@ -10437,7 +10448,7 @@ async def mike_sos_challenge(lang: str = "it", admin: dict = Depends(require_adm
     it = (lang or "it").startswith("it")
     now = datetime.now(timezone.utc)
     week_start = now - timedelta(days=now.weekday(), hours=now.hour, minutes=now.minute, seconds=now.second)
-    docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).to_list(500)
+    docs = await db.sos_events.find({"status": "resolved", "organization_id": _org_id(admin)}, {"_id": 0}).to_list(500)
     board = {}
     for d in docs:
         try:
@@ -10540,7 +10551,7 @@ async def mike_shift_report(lang: str = "it", admin: dict = Depends(require_admi
     con frase vocale di Sitor per il Capo."""
     it = (lang or "it").startswith("it")
     R = lambda i, e: (i if it else e)  # noqa: E731
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": _org_id(admin)}, {"_id": 0}).to_list(300)
     lotti = len(tasks)
     done_steps = tot_steps = 0
     for t in tasks:
@@ -10549,7 +10560,7 @@ async def mike_shift_report(lang: str = "it", admin: dict = Depends(require_admi
         done_steps += sum(1 for s in steps if s.get("done"))
     punctuality = round(done_steps / tot_steps * 100) if tot_steps else 100
     today = now_iso()[:10]
-    sos_docs = await db.sos_events.find({"status": "resolved"}, {"_id": 0}).to_list(500)
+    sos_docs = await db.sos_events.find({"status": "resolved", "organization_id": _org_id(admin)}, {"_id": 0}).to_list(500)
     todays = [d for d in sos_docs if (d.get("created_at") or "")[:10] == today]
     resp = [d["response_seconds"] for d in todays if d.get("response_seconds") is not None]
     avg_resp = round(sum(resp) / len(resp)) if resp else 0
@@ -10569,7 +10580,7 @@ async def mike_shift_report(lang: str = "it", admin: dict = Depends(require_admi
         + (f"{low} silos to restock." if low else "Stock in order.")
         + " A shift worthy of your enlightened leadership.",
     )
-    await db.mikiscore_history.update_one({"date": today}, {"$set": {"date": today, "score": mikiscore, "grade": grade, "at": now_iso()}}, upsert=True)
+    await db.mikiscore_history.update_one({"date": today, "organization_id": _org_id(admin)}, {"$set": {"date": today, "organization_id": _org_id(admin), "score": mikiscore, "grade": grade, "at": now_iso()}}, upsert=True)
     return {"mikiscore": mikiscore, "grade": grade,
             "breakdown": {"reactivity": reactivity, "waste": waste, "punctuality": punctuality},
             "lotti": lotti, "sos_today": len(todays), "avg_response_s": avg_resp, "silos_low": low,
@@ -10579,7 +10590,7 @@ async def mike_shift_report(lang: str = "it", admin: dict = Depends(require_admi
 @api_router.get("/mike/mikiscore/history")
 async def mike_mikiscore_history(admin: dict = Depends(require_admin)):
     """Storico giornaliero del MikiScore (ultimi 7 giorni) per il mini-grafico settimanale."""
-    docs = await db.mikiscore_history.find({}, {"_id": 0}).sort("date", -1).to_list(7)
+    docs = await db.mikiscore_history.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("date", -1).to_list(7)
     docs.reverse()
     return {"history": docs}
 
