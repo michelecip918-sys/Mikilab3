@@ -9554,11 +9554,46 @@ class AutoPlanDispatchReq(BaseModel):
     batches: List[dict] = []
 
 
+def _dept_from_batch(line: str, product: str):
+    """Deduce il reparto (chiave DEPARTMENTS) da linea/attività del lotto. None se non deducibile."""
+    t = f"{line or ''} {product or ''}".lower()
+    if not t.strip():
+        return None
+    if "pizza" in t:
+        return "pizzeria"
+    if any(k in t for k in ("laugen", "brezel", "bretzel", "pretzel")):
+        return "laugen"
+    if any(k in t for k in ("pasticc", "dolc", "torta", "crostata", "cornetto", "brioche", "crema",
+                            "bignè", "bigne", "macaron", "frolla", "sfogli", "pralin", "cioccolat")):
+        return "pasticceria"
+    if any(k in t for k in ("pane", "pani", "baguette", "arion", "forno", "impast", "filon", "ciabatta",
+                            "focacc", "michett", "integrale", "rustic", "grano", "segale", "lievitat", "panin", "pagnott")):
+        return "panificio"
+    if any(k in t for k in ("banco", "confezion", "etichett", "prezz", "vetrina", "affett")):
+        return "banco"
+    return None
+
+
+def _qty_from_batch(qty):
+    """(valore_float|None, unità 'kg'|'pz') dalla stringa quantità del lotto."""
+    m = re.search(r"(\d+(?:[.,]\d+)?)\s*(kg|g|pz|pezzi|pieces|pc)?", str(qty or ""), re.I)
+    if not m:
+        return None, "kg"
+    val = float(m.group(1).replace(",", "."))
+    unit = (m.group(2) or "kg").lower()
+    unit = "pz" if unit in ("pz", "pezzi", "pieces", "pc") else "kg"
+    return val, unit
+
+
 @api_router.post("/mike/autoplan/dispatch")
 async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(require_admin)):
     """Piano → Produzione: crea un task per ogni lotto e lo invia in silenzio al floor.
+    Per ogni lotto deduce il reparto e attiva il Coordinamento Automatico (coordination_trigger),
+    così il pannello propone un operatore libero e abilitato invece di un'assegnazione generica.
     Scala ANCHE in automatico le giacenze freezer usate (match per nome, anche parziale)."""
+    org = _org_id(admin)
     created = 0
+    coord_triggered = 0
     for b in (body.batches or []):
         product = str(b.get("product") or "Lotto")[:80]
         line = b.get("line") or ""
@@ -9574,6 +9609,19 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
         }
         await db.team_tasks.insert_one(dict(task))
         created += 1
+        # Coordinamento automatico: se deduco il reparto, attivo la proposta/chiamata reale.
+        dept = _dept_from_batch(line, product)
+        if dept in DEPARTMENTS:
+            try:
+                qv, qu = _qty_from_batch(qty)
+                await coordination_trigger(  # noqa: F821  (iniettato a runtime da coordination.py)
+                    TriggerReq(dept=dept, task_desc=(product or "Lotto")[:200], qty=qv,  # noqa: F821
+                               qty_unit=qu, task_id=task["id"], source="piano"),
+                    org,
+                )
+                coord_triggered += 1
+            except Exception as e:
+                logger.warning("dispatch coordination_trigger fail (%s)", str(e)[:120])
 
     # Auto-scala giacenze freezer usate dal piano (Sitor consuma prima il congelato).
     freezer_scaled = []
@@ -9639,7 +9687,7 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
     except Exception as e:
         logger.warning("dispatch freezer auto-scale fail (%s)", str(e)[:120])
 
-    return {"ok": True, "created": created, "freezer_scaled": freezer_scaled}
+    return {"ok": True, "created": created, "coordination_triggered": coord_triggered, "freezer_scaled": freezer_scaled}
 
 
 @api_router.get("/mike/briefing")
