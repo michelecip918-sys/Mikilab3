@@ -5524,3 +5524,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ## Changelog — 16 Set 2026 (Giro consegne solo per autisti)
 - FloorOperatorDay.jsx: la vista DriverRun ora è mostrata SOLO agli operatori con abilita' autista (is_driver). Aggiunto stato isDriver + effect che legge coordinationApi.skills() (GET /api/operators/skills, accessibile al floor via effective_org) e confronta il nome operatore (case-insensitive). Blocco giro reso condizionale {isDriver && ...}. Il Capo abilita/disabilita l'autista dal pannello Coordinamento (saveSkills).
 - Verificato backend: floor (solo gate) legge skills 200; Sara is_driver=True (autista reale), Michele/Ahmed/Antonio False. Dati test (Luca, MarcoNonDriver) rimossi. Compilazione OK.
+
+---
+## Changelog — 16 Set 2026 (Immagine ufficiale Sitor + SEO + ordine ricettario)
+### Immagine ufficiale unica di Sitor
+- Generata UNA immagine ufficiale (Gemini): fornaio del futuro con i tratti riconoscibili del Capo (testa rasata, barba corta, orecchino, giacca scura) ma chiaramente evoluto/sovrumano — AURA dorata luminosa attorno alle mani che lavorano l'impasto + occhi lievemente luminescenti + dettagli tech sottili sulla divisa, palette oro/rame del logo. Distingue nettamente da avatar_miki.jpg (Capo reale, braccia conserte, nessun bagliore).
+- Salvata come public/sitor_official.jpg e sovrascritte TUTTE le versioni precedenti (avatar_nexus.jpg, avatar_sitor.jpg, sitor-full.jpg → md5 identico). Nessuna modifica ai componenti (i riferimenti esistenti puntano ora all'unica immagine).
+### SEO index.html
+- Rimossi ovunque "Mike Mix", "Miki-Nexus", "Multiverso Olografico"/"olografico"/"multiverso 3D" da title, description, keywords, Open Graph, Twitter Card e JSON-LD. Sostituiti con descrizione reale: gestionale per panificio/pizzeria/pasticceria (ricettario digitale, corsi passo-passo, piani produzione IA, coordinamento squadra, magazzino, consegne, food cost) e ruolo di Sitor (maestro fornaio AI che guida il laboratorio).
+- og-image.jpg NON modificata: è l'emblema pulito del brand (oro/ambra su antracite), nessun vecchio naming/grafica da rimuovere.
+### Ordine/raggruppamento categorie ricettario (contenuto ricette INVARIATO)
+- RicetteCustodite.jsx: riordinati i filtri in flusso logico da laboratorio → Basilicata, Puglia (Italia), Germania (quotidiano), Grandi Lievitati (festivi), Pani Speciali & Colorati (innovazione). Rinominata categoria "Pani Colorati" → "Pani Speciali & Colorati" (solo etichetta). Vista "Tutte" ora ordinata per CAT_ORDER. Nessun oggetto ricetta toccato (26 ricette intatte: 5+5+5+5+6).

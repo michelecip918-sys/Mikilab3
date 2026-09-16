@@ -78,14 +78,19 @@ const ING = {
 const g = (n, pct) => ({ n, pct });
 
 // ── Categorie / filtri ───────────────────────────────────────
+// Ordine logico da laboratorio: prima i pani quotidiani per area (Italia poi Germania),
+// poi le specialità (grandi lievitati festivi e pani speciali/colorati d'innovazione).
 const CATS = [
   { id: "all", label: { it: "Tutte", de: "Alle", en: "All", es: "Todas", fr: "Toutes" } },
   { id: "basilicata", label: { it: "Basilicata", de: "Basilikata", en: "Basilicata", es: "Basilicata", fr: "Basilicate" } },
   { id: "puglia", label: { it: "Puglia", de: "Apulien", en: "Apulia", es: "Apulia", fr: "Pouilles" } },
-  { id: "lievitati", label: { it: "Grandi Lievitati", de: "Große Hefeteige", en: "Great Leavened", es: "Grandes Levados", fr: "Grands Levés" } },
-  { id: "colorati", label: { it: "Pani Colorati", de: "Bunte Brote", en: "Coloured Breads", es: "Panes de Colores", fr: "Pains Colorés" } },
   { id: "germania", label: { it: "Germania", de: "Deutschland", en: "Germany", es: "Alemania", fr: "Allemagne" } },
+  { id: "lievitati", label: { it: "Grandi Lievitati", de: "Große Hefeteige", en: "Great Leavened", es: "Grandes Levados", fr: "Grands Levés" } },
+  { id: "colorati", label: { it: "Pani Speciali & Colorati", de: "Spezial- & Bunte Brote", en: "Special & Coloured", es: "Especiales y de Colores", fr: "Spéciaux & Colorés" } },
 ];
+
+// Ordine dei gruppi usato nella vista "Tutte" (non modifica il contenuto delle ricette).
+const CAT_ORDER = ["basilicata", "puglia", "germania", "lievitati", "colorati"];
 
 const PLACE = {
   basilicata: { it: "Basilicata", de: "Basilikata", en: "Basilicata", es: "Basilicata", fr: "Basilicate" },
@@ -638,7 +643,10 @@ export default function RicetteCustodite({ initialId = null }) {
   }, []);
 
   const recipe = RECIPES.find((r) => r.id === openId);
-  const list = useMemo(() => (cat === "all" ? RECIPES : RECIPES.filter((r) => r.region === cat)), [cat]);
+  const list = useMemo(() => {
+    if (cat !== "all") return RECIPES.filter((r) => r.region === cat);
+    return [...RECIPES].sort((a, b) => CAT_ORDER.indexOf(a.region) - CAT_ORDER.indexOf(b.region));
+  }, [cat]);
 
   const rows = useMemo(() => {
     if (!recipe) return [];
