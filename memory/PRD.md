@@ -5577,3 +5577,16 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - INCONGRUENZA trovata e CORRETTA: og-image.jpg mostrava ancora il Sitor "dio greco" (stile vietato) → rigenerata con il nuovo Sitor futuro + claim + pill "SITOR · MAESTRO FORNAIO · AI".
 - Fuori scope (testo UI esistente, non toccato): etichetta "GOD OF THE WHITE ART" e "THE BAKING MULTIVERSE" sulla vetrina restano (titolo/nickname storico di Sitor).
 - NOTA deploy: il redeploy precedente conteneva le versioni SBAGLIATE (icone Sitor + Sitor dio greco). Serve un NUOVO redeploy per portare live icone-logo + Sitor futuro + nuova og-image.
+
+---
+## Changelog — 16 Set 2026 (Seconda posa Sitor + 2 correzioni + logo emblema)
+### Seconda posa Sitor
+- Generata seconda posa (Sitor al forno, stessa persona/futuro): public/sitor-oven.jpg. NON collegata ad alcuna pagina (asset disponibile), come da vincolo "non toccare nient'altro".
+### Correzione 1 — Traduzioni (VERIFICATA)
+- Rigenerata frontend/src/i18n/triTranslations.json con script /app/scripts/gen_tri.py (estrae stringhe IT da tri()) + /app/scripts/translate_tri_full.py (Claude haiku, batch). Risultato reale: 1371 stringhe IT distinte; copertura ora fr/fa/ar/tr = 1371/1371 (100%) ciascuna. Chiavi totali file: 4201. Preservati i valori fr/fa esistenti.
+### Correzione 2 — Coordinamento automatico (VERIFICATA con test reale)
+- Collegato POST /mike/autoplan/dispatch (server.py) al motore: nuovi helper _dept_from_batch (deduce reparto da linea/prodotto: pizza→pizzeria, pasticc/dolci→pasticceria, laugen/brezel→laugen, pane/forno/impasto→panificio, banco→banco) e _qty_from_batch. Per ogni lotto con reparto deducibile chiama coordination_trigger (noqa F821, simboli da coordination.py); se non deducibile, comportamento invariato. Risposta ora include coordination_triggered.
+- TEST REALE: dispatch di 4 lotti → created 4, coordination_triggered 3 (pane40kg+cornetti120pz → MACCHINA oltre soglia; pizza20kg → operatore; lotto generico senza reparto → ignorato). Dispatch lotto panificio 6kg → chiamata/proposta reale in /coordination/active assegnata a operatore libero+abilitato (status pending, op assegnato). Dati test ripuliti.
+### Logo emblema rigenerato
+- frontend/public/logo-emblem.png rifatto per coerenza col nuovo Sitor: volto maschile di Sitor (testa rasata, barba corta, stesso volto di avatar_nexus.jpg), giacca antracite con profili rame, anello rame+spighe, mani luminose sull'impasto, palette antracite+rame/ambra (non oro), formato quadrato con angoli arrotondati (trasparenza). Sostituito stesso percorso (usato in header, PublicGate, SplashScreen, AdminGate, OperatoreSelect, GuidaMikiLab, FloorInviteLanding, KioskMode). Verificato in header (38x38). Prima versione non somigliava (aveva capelli) → rigenerata enfatizzando testa rasata e somiglianza esatta.
+- NOTA coerenza: le icone PWA (icon-192/512, favicon) restano l'emblema dea dorata (da logo.png), mentre il logo sito è ora Sitor. Da decidere se allineare anche logo.png/icone PWA al nuovo emblema Sitor.
