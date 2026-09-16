@@ -18,7 +18,7 @@ export default function FloorInviteLanding({ token, onEnter }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
 
-  useEffect(() => { floorInvitesApi.info(token).then(setInfo).catch(() => setInfo({ ok: false, valid: false })); }, [token]);
+  useEffect(() => { let alive = true; floorInvitesApi.info(token).then((d) => { if (alive) setInfo(d); }).catch(() => { if (alive) setInfo({ ok: false, valid: false }); }); return () => { alive = false; }; }, [token]);
 
   const submit = async () => {
     setErr("");
@@ -72,20 +72,19 @@ export default function FloorInviteLanding({ token, onEnter }) {
         </div>
 
         {valid && (
-          <div className="space-y-3">
+          <form data-testid="floor-invite-form" onSubmit={(e) => { e.preventDefault(); submit(); }} className="space-y-3">
             <input data-testid="floor-invite-name" value={name} onChange={(e) => setName(e.target.value)}
               placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Votre nom", "نام شما")}
               className="w-full rounded-xl bg-[#0A0A0C] border border-[#8a97a6]/30 text-white text-sm px-3.5 py-3 outline-none focus:border-[#D97736]" />
             <input data-testid="floor-invite-pin" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))}
               inputMode="numeric" type="password" placeholder={tri("PIN a 4 cifre", "4-stellige PIN", "4-digit PIN", "PIN de 4 dígitos", "PIN à 4 chiffres", "پین ۴ رقمی")}
-              className="w-full rounded-xl bg-[#0A0A0C] border border-[#8a97a6]/30 text-white text-center text-2xl tracking-[0.5em] px-3.5 py-3 outline-none focus:border-[#D97736]"
-              onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+              className="w-full rounded-xl bg-[#0A0A0C] border border-[#8a97a6]/30 text-white text-center text-2xl tracking-[0.5em] px-3.5 py-3 outline-none focus:border-[#D97736]" />
             {err && <p data-testid="floor-invite-error" className="text-[12px] text-[#bb8489] font-semibold text-center">{err}</p>}
-            <button data-testid="floor-invite-enter" onClick={submit} disabled={busy}
+            <button data-testid="floor-invite-enter" type="submit" disabled={busy}
               className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#D97736] text-[#0A0A0C] font-black text-sm active:scale-95 transition-all disabled:opacity-60">
               {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <>{tri("Entra", "Eintreten", "Enter", "Entrar", "Entrer", "ورود")} <ArrowRight className="w-4 h-4" /></>}
             </button>
-          </div>
+          </form>
         )}
       </motion.div>
     </div>
