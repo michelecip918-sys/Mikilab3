@@ -5427,3 +5427,8 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - SITOR SOBRIO (punto4): recap proattivo SalaSitor ora SENZA voce automatica (solo testo); MikeSuggestions parla SOLO se suggerimento critico/urgente.
 - HACCP CLEANUP (punto5): rimossi 18 residui orfani HACCP/Allergeni da triTranslations.json (0 referenze nei componenti = sicuro), esempio MikeInfo -> Controllo Qualita, commento backend operations.py. 0 HACCP residui.
 - AUDIT MAGAZZINO (punto8/4): isolate per organization_id TUTTE le letture lab_warehouse interne (consume, scan_drop, bind_batch, warehouse_stats, autoplan, autoplan_options, _plan_context). 0 letture non isolate. Backend OK.
+
+---
+## Changelog — 16 Set 2026 (Rame/Salvia per sezione + foto reali)
+- Sala Sitor convertita a VERDE SALVIA (#7E9A82) come identita Sitor (accenti, bordi, chip, input, invio); avatar Sitor ora FOTO REALE /avatar_sitor.jpg (rimosso LivingAvatar3D + anelli nexus sci-fi); bolla messaggi del Capo in RAME #D97736. Console gia in antracite caldo con foto reale Michele. Verificato con screenshot.
+- REPUBBLICA: richiesta (strumento deploy instabile in questa sessione).

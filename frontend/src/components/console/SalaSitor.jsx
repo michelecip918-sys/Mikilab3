@@ -7,7 +7,6 @@ import { playTTS } from "@/lib/tts";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { NexusAvatar } from "@/components/NexusAvatar";
-import LivingAvatar3D from "@/components/LivingAvatar3D";
 import MikeSuggestions from "@/components/console/MikeSuggestions";
 import MikeAlerts from "@/components/MikeAlerts";
 import FloorChangeApprovals from "@/components/console/FloorChangeApprovals";
@@ -165,29 +164,29 @@ export default function SalaSitor() {
   ];
 
   return (
-    <div data-testid="sala-sitor" className="relative rounded-3xl overflow-hidden border border-[#a6b1bc]/35 bg-[#060A10] shadow-[0_0_44px_rgba(166,177,188,0.10)]">
-      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(166,177,188,0.12), transparent 60%)" }} />
+    <div data-testid="sala-sitor" className="relative rounded-3xl overflow-hidden border border-[#7E9A82]/35 bg-[#18181A] shadow-[0_0_40px_rgba(126,154,130,0.10)]">
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(126,154,130,0.12), transparent 60%)" }} />
       <div className="relative z-10 p-5 sm:p-6 space-y-4">
 
         {/* Testata: il luogo d'incontro */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-14 h-14 shrink-0">
-            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(166,177,188,0.55), rgba(138,151,166,0.3) 60%, transparent 72%)" }} />
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#a6b1bc]/70">
-              <LivingAvatar3D src="/avatar_nexus.jpg" accent="#a6b1bc" nexus className="w-full h-full" />
+            <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(126,154,130,0.55), rgba(126,154,130,0.28) 60%, transparent 72%)" }} />
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#7E9A82]/70">
+              <img src="/avatar_sitor.jpg" alt="Sitor" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#a6b1bc]" /> {tri("Sala Sitor", "Sitor-Saal", "Sitor Hall", "Sala Sitor", "Salle Sitor", "تالار سیتور")}
+              <Sparkles className="w-5 h-5 text-[#7E9A82]" /> {tri("Sala Sitor", "Sitor-Saal", "Sitor Hall", "Sala Sitor", "Salle Sitor", "تالار سیتور")}
             </h2>
             <p className="text-[11px] text-[#94A3B8]">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
-            {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#a6b1bc] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
+            {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#7E9A82] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
           </div>
           {/* Azioni: vanno a capo su mobile, restano in linea su schermi ampi */}
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <button data-testid="sitor-delegate-btn" onClick={() => setDelegateOpen(true)} title={tri("Delega vocale o comando diretto («Sposta Sara ai forni»)", "Sprachdelegation", "Voice delegation", "Delegación por voz", "Délégation vocale", "واگذاری صوتی")}
-              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#3E9C93]/12 border border-[#3E9C93]/40 text-[#3E9C93] text-xs font-bold hover:bg-[#3E9C93]/22 active:scale-95">
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#7E9A82]/12 border border-[#7E9A82]/40 text-[#7E9A82] text-xs font-bold hover:bg-[#7E9A82]/22 active:scale-95">
               <Mic className="w-3.5 h-3.5" /> {tri("Delega Vocale", "Sprachdelegation", "Voice Delegation", "Delegación", "Délégation", "واگذاری")}
             </button>
             <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
@@ -218,24 +217,24 @@ export default function SalaSitor() {
             {msgs.map((m) => (
               <motion.div key={m.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} data-testid={`sitor-msg-${m.who}`}
                 className={`flex ${m.who === "capo" ? "justify-end" : "justify-start"} items-end gap-1.5`}>
-                {m.who === "sitor" && <NexusAvatar size={24} className="shrink-0 rounded-full border border-[#a6b1bc]/50" />}
-                <div className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-snug ${m.who === "capo" ? "bg-[#8a97a6] text-[#060A10] font-semibold" : "bg-[#0C1019] text-[#E8EEF5] border border-[#a6b1bc]/25"}`}>
+                {m.who === "sitor" && <NexusAvatar size={24} className="shrink-0 rounded-full border border-[#7E9A82]/50" />}
+                <div className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-snug ${m.who === "capo" ? "bg-[#D97736] text-white font-semibold" : "bg-[#242427] text-[#F2F2F5] border border-[#7E9A82]/25"}`}>
                   {m.text}
                   {m.who === "sitor" && (
-                    <button data-testid="sitor-replay" onClick={() => speak(m.text)} className="ml-2 inline-flex align-middle text-[#a6b1bc] active:scale-90"><Volume2 className="w-3.5 h-3.5" /></button>
+                    <button data-testid="sitor-replay" onClick={() => speak(m.text)} className="ml-2 inline-flex align-middle text-[#7E9A82] active:scale-90"><Volume2 className="w-3.5 h-3.5" /></button>
                   )}
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
-          {busy && <p data-testid="sitor-thinking" className="text-[11px] text-[#a6b1bc] flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Sitor elabora…", "Sitor denkt…", "Sitor is thinking…", "Sitor procesa…", "Sitor réfléchit…", "سیتور فکر می‌کند…")}</p>}
+          {busy && <p data-testid="sitor-thinking" className="text-[11px] text-[#7E9A82] flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Sitor elabora…", "Sitor denkt…", "Sitor is thinking…", "Sitor procesa…", "Sitor réfléchit…", "سیتور فکر می‌کند…")}</p>}
         </div>
 
         {/* Chip rapidi */}
         <div className="flex flex-wrap gap-1.5">
           {QUICK.map((q, i) => (
             <button key={i} data-testid={`sitor-quick-${i}`} onClick={() => { setIntent("domanda"); send(q); }} disabled={busy}
-              className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] active:scale-95 disabled:opacity-50">
+              className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-[#7E9A82]/10 border border-[#7E9A82]/35 text-[#7E9A82] active:scale-95 disabled:opacity-50">
               {q}
             </button>
           ))}
@@ -246,7 +245,7 @@ export default function SalaSitor() {
           <div className="grid grid-cols-4 gap-1.5 mb-2">
             {MODES.map(({ key, Icon, label }) => (
               <button key={key} data-testid={`sitor-mode-${key}`} onClick={() => { setMode(key); if (key === "voice") setTimeout(startVoice, 60); else stopVoice(); }}
-                className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border text-[11px] font-bold transition-all active:scale-95 ${mode === key ? "bg-[#a6b1bc]/15 border-[#a6b1bc]/60 text-[#a6b1bc]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8] hover:border-[#a6b1bc]/40"}`}>
+                className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border text-[11px] font-bold transition-all active:scale-95 ${mode === key ? "bg-[#7E9A82]/15 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8] hover:border-[#7E9A82]/40"}`}>
                 <Icon className="w-4 h-4" /> {label}
               </button>
             ))}
@@ -257,14 +256,14 @@ export default function SalaSitor() {
               <Factory className="w-3.5 h-3.5" /> {tri("Ordine → Produzione", "Auftrag → Produktion", "Order → Production", "Orden → Producción", "Ordre → Production", "سفارش → تولید")}
             </button>
             <button data-testid="sitor-intent-domanda" onClick={() => setIntent("domanda")}
-              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "domanda" ? "bg-[#a6b1bc]/15 border-[#a6b1bc]/60 text-[#a6b1bc]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "domanda" ? "bg-[#7E9A82]/15 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
               <MessageSquareText className="w-3.5 h-3.5" /> {tri("Domanda → Risposta", "Frage → Antwort", "Question → Answer", "Pregunta → Respuesta", "Question → Réponse", "سؤال → پاسخ")}
             </button>
           </div>
           {mode === "photo" && (
             <div className="mb-2 flex items-center gap-2 flex-wrap">
-              {imageUrl && <img src={imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#a6b1bc]/40" />}
-              <label data-testid="sitor-photo-input" className={`cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#a6b1bc]/10 border border-[#a6b1bc]/40 text-[#a6b1bc] text-sm font-bold ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              {imageUrl && <img src={imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#7E9A82]/40" />}
+              <label data-testid="sitor-photo-input" className={`cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#7E9A82]/10 border border-[#7E9A82]/40 text-[#7E9A82] text-sm font-bold ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />} {tri("Scatta / Allega", "Aufnehmen / Anhängen", "Take / Attach", "Hacer / Adjuntar", "Prendre / Joindre", "گرفتن / پیوست")}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
@@ -275,17 +274,17 @@ export default function SalaSitor() {
               placeholder={intent === "domanda"
                 ? tri("Chiedi qualsiasi cosa a Sitor…", "Frag Sitor alles…", "Ask Sitor anything…", "Pregunta lo que sea…", "Demande tout à Sitor…", "از سیتور بپرس…")
                 : tri("Scrivi o detta qualsiasi cosa: ricetta, ordine, piano, nota…", "Schreibe oder diktiere alles…", "Write or dictate anything: recipe, order, plan, note…", "Escribe o dicta lo que sea…", "Écris ou dicte tout…", "بنویس یا بگو…")}
-              className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#a6b1bc]/60 outline-none text-sm text-white p-3 pr-12 resize-none" />
+              className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#7E9A82]/60 outline-none text-sm text-white p-3 pr-12 resize-none" />
             {mode === "voice" && (
               <button data-testid="sitor-mic" onClick={() => (listening ? stopVoice() : startVoice())}
-                className={`absolute right-2 top-2 w-9 h-9 rounded-lg flex items-center justify-center border ${listening ? "bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse" : "bg-[#a6b1bc]/10 border-[#a6b1bc]/40 text-[#a6b1bc]"}`}>
+                className={`absolute right-2 top-2 w-9 h-9 rounded-lg flex items-center justify-center border ${listening ? "bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse" : "bg-[#7E9A82]/10 border-[#7E9A82]/40 text-[#7E9A82]"}`}>
                 {listening ? <StopCircle className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
             )}
           </div>
           <button data-testid="sitor-send" onClick={() => send()} disabled={busy || !text.trim()}
             className="mt-2.5 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-            style={{ background: "linear-gradient(90deg,#a6b1bc,#8a97a6)", boxShadow: "0 0 20px rgba(166,177,188,0.3)" }}>
+            style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)", boxShadow: "0 0 20px rgba(166,177,188,0.3)" }}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {busy ? tri("Sitor genera…", "Sitor generiert…", "Sitor generating…", "Sitor genera…", "Sitor génère…", "سیتور تولید می‌کند…") : tri("Manda a Sitor", "An Sitor senden", "Send to Sitor", "Enviar a Sitor", "Envoyer à Sitor", "به سیتور بفرست")}
           </button>
@@ -294,7 +293,7 @@ export default function SalaSitor() {
         {/* Coda di produzione generata qui */}
         <div className="pt-3 border-t border-[#1e293b]">
           <div className="flex items-center justify-between mb-2">
-            <span data-testid="sitor-queue-count" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#a6b1bc]"><Factory className="w-4 h-4" /> {tri("Produzione generata", "Erzeugte Produktion", "Generated production", "Producción generada", "Production générée", "تولید تولیدشده")}: <span className="text-white">{counts.pending}</span> {tri("da fare", "offen", "to do", "por hacer", "à faire", "برای انجام")}</span>
+            <span data-testid="sitor-queue-count" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#7E9A82]"><Factory className="w-4 h-4" /> {tri("Produzione generata", "Erzeugte Produktion", "Generated production", "Producción generada", "Production générée", "تولید تولیدشده")}: <span className="text-white">{counts.pending}</span> {tri("da fare", "offen", "to do", "por hacer", "à faire", "برای انجام")}</span>
             {queue.length > 0 && <button data-testid="sitor-queue-clear" onClick={clearAll} className="text-[11px] text-[#64748B] hover:text-rose-400 inline-flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Svuota", "Leeren", "Clear", "Vaciar", "Vider", "پاک")}</button>}
           </div>
           <div data-testid="sitor-queue" className="space-y-1.5 max-h-56 overflow-y-auto">
