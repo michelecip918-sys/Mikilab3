@@ -5590,3 +5590,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### Logo emblema rigenerato
 - frontend/public/logo-emblem.png rifatto per coerenza col nuovo Sitor: volto maschile di Sitor (testa rasata, barba corta, stesso volto di avatar_nexus.jpg), giacca antracite con profili rame, anello rame+spighe, mani luminose sull'impasto, palette antracite+rame/ambra (non oro), formato quadrato con angoli arrotondati (trasparenza). Sostituito stesso percorso (usato in header, PublicGate, SplashScreen, AdminGate, OperatoreSelect, GuidaMikiLab, FloorInviteLanding, KioskMode). Verificato in header (38x38). Prima versione non somigliava (aveva capelli) → rigenerata enfatizzando testa rasata e somiglianza esatta.
 - NOTA coerenza: le icone PWA (icon-192/512, favicon) restano l'emblema dea dorata (da logo.png), mentre il logo sito è ora Sitor. Da decidere se allineare anche logo.png/icone PWA al nuovo emblema Sitor.
+
+---
+## Changelog — 16 Set 2026 (Icone PWA = Sitor + seconda posa usata + test E2E coordinamento)
+### Icone PWA allineate al nuovo Sitor
+- logo.png e icone PWA (favicon-32, icon-192, icon-512, apple-touch-icon 180, favicon.ico multi-size) rigenerate dal NUOVO emblema Sitor (volto maschile, antracite+rame). Ora icona app e logo sito coincidono (coerenza totale). Tutte servite 200.
+### Seconda posa usata
+- sitor-oven.jpg (Sitor al forno) inserita come banner nella card "Bilance & PLC Forni" (panel-hardware) in App.js, con data-testid="sitor-oven-img". Compilazione OK.
+### Test E2E coordinamento (iteration_259) — 10/10 PASS
+- Suite pytest /app/backend/tests/test_autoplan_dispatch_coord.py. Verificato: dispatch panificio→call in /coordination/active (dept/source/piano corretti); mapping reparti pizza/pasticceria/laugen/panificio; lotto senza reparto ignorato senza errori; soglia macchina (>=25kg→macchina, <25kg→operatore); operatore abilitato→call 'pending' con operatore proposto. Non-regressione OK. UI pannello non testabile headless (gate) ma dati backend verificati.
+### DEPLOY: NON RIUSCITO via tool in questa sessione
+- Il tool send_to_deployer non ha risposto (invocazioni a vuoto). deployment_agent=pass (il "blocker" supervisor è falso positivo, i servizi girano). AZIONE UTENTE: premere il pulsante Deploy della piattaforma per portare live icone-Sitor, logo, traduzioni complete, coordinamento collegato e seconda posa.
