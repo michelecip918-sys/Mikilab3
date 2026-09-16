@@ -5413,3 +5413,10 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Bug segnalato da utente mobile: aprendo il Piano Settimanale non si vedevano i giorni della settimana (comparivano solo dopo aver generato le strategie AI).
 - Fix PianoUnico.jsx: stato week inizializzato con EMPTY_WEEK() (7 giorni vuoti) invece di null -> le schede Lun-Dom e il dettaglio giorno sono SEMPRE visibili all apertura; titolo blocco 3 condizionale (neutro quando non c e piano); pulsante Ascolta solo con opzioni generate; guardia saveAll: con 0 lotti toast informativo, niente salvataggio di settimana vuota.
 - Test iteration_253: frontend 100% a 390px e 1920px. Nessun overflow; guardia salvataggio verificata; giorni visibili subito.
+
+---
+## Changelog — 16 Set 2026 (Isolamento dati multi-tenant + fix rapidi)
+- ISOLAMENTO org verificato con DUE aziende reali (test iteration_254: 7/7 PASS): inventory_items, favorites (+ /favorites/counts org-scoped), day_closures (list/last/pdf 404 cross-org), recipes personali (create/list/PUT/DELETE/translate/promote), weekly_plan (read org+retrocompat). lab_warehouse: consume + snapshot scorte ora org-scoped.
+- PublicGate: rimosso TTS di benvenuto automatico allingresso.
+- DeskScene/ZoneHero3D: rimossa reazione a deviceorientation (scene statiche) + CTA giroscopio.
+- PENDENTI (non completati, da fase dedicata): PART 1 restyle grafico totale (antracite/rame/salvia, rimozione holo/scanline/gridDrift); punto 4 riduzione parlantina Sitor; punto 5 purge HACCP nelle traduzioni (chiavi usate come lookup, rischio rottura); alcune letture interne lab_warehouse per snapshot AI (autoplan/warehouse_stats) ancora non org-scoped.

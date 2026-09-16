@@ -974,7 +974,7 @@ async def _bakery_snapshot(admin: dict) -> str:
     # Scorte sotto soglia (magazzino) + giacenze freezer basse
     try:
         low = []
-        for s in await db.lab_warehouse.find({"min_kg": {"$gt": 0}}, {"_id": 0, "name": 1, "quantity_kg": 1, "min_kg": 1}).to_list(500):
+        for s in await db.lab_warehouse.find({"min_kg": {"$gt": 0}, "organization_id": _org_id(admin)}, {"_id": 0, "name": 1, "quantity_kg": 1, "min_kg": 1}).to_list(500):
             if float(s.get("quantity_kg") or 0) < float(s.get("min_kg") or 0):
                 low.append(f"{s.get('name')} ({s.get('quantity_kg')}/{s.get('min_kg')}kg)")
         if low:
@@ -3976,8 +3976,9 @@ async def del_warehouse(item_id: str, user: dict = Depends(require_admin)):
 @api_router.post("/lab/warehouse/consume")
 async def consume_warehouse(payload: ConsumePayload, user: dict = Depends(require_admin)):
     # Scala le giacenze in base alle materie usate da un'impastata confermata.
+    org = _org_id(user)
     updated, shortfalls = [], []
-    stock = await db.lab_warehouse.find({}, {"_id": 0}).to_list(500)
+    stock = await db.lab_warehouse.find({"organization_id": org}, {"_id": 0}).to_list(500)
     def find(name, kind):
         nl = (name or "").lower().strip()
         cand = [s for s in stock if nl and (nl in (s.get("name", "").lower()) or s.get("name", "").lower() in nl)]
@@ -3995,10 +3996,10 @@ async def consume_warehouse(payload: ConsumePayload, user: dict = Depends(requir
         if newq < 0:
             shortfalls.append({"name": s["name"], "missing": round(-newq, 3)})
             newq = 0
-        await db.lab_warehouse.update_one({"id": s["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+        await db.lab_warehouse.update_one({"id": s["id"], "organization_id": org}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
         s["quantity_kg"] = newq
         updated.append({"name": s["name"], "quantity_kg": newq})
-        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "name": s["name"], "kg": float(it.kg), "kind": it.kind, "at": now_iso()})
+        await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "organization_id": org, "name": s["name"], "kg": float(it.kg), "kind": it.kind, "at": now_iso()})
     return {"updated": updated, "shortfalls": shortfalls}
 
 
