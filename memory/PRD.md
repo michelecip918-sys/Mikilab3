@@ -5543,3 +5543,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### Scheda Sitor (tap sull'avatar)
 - Nuovo componente SitorCard.jsx: modale che si apre toccando l'avatar di Sitor nella vista operatore (FloorOperatorDay). Mostra l'immagine ufficiale, "Sitor · Maestro Fornaio · IA", una breve descrizione di chi è, e 5 cose che fa (assegna il compito e guida a voce; risponde alle domande; analizza le foto con Occhi di Sitor; coordina la squadra; insegna le ricette). Testi in 6 lingue (it/de/en/es/fr/fa). data-testid: sitor-card-open, sitor-card-modal, sitor-card-close, sitor-duty-{i}.
 - Cablaggio: avatar reso <button> (sitor-card-open) → stato showSitorCard → <SitorCard>. Compilazione OK. NOTA: verifica headless del modale non completata perché la vista operatore è dietro il flusso multi-step del cancello (banner cookie + Produzione + keypad 4 cifre) non automatizzabile in questa sessione; implementazione confermata via ispezione codice e compilazione, e la nuova immagine Sitor è verificata a schermo su vetrina/hero.
+
+---
+## Changelog — 16 Set 2026 (Sitor v3 — "più artificiale")
+- Rigenerato Sitor su richiesta: assomiglia al fondatore (Michele) ma come impossessato dal Dio dell'Arte Bianca, e spinto verso un aspetto PIÙ ARTIFICIALE/sintetico — occhi intensamente luminosi, venature circuitali dorate sotto/sulla pelle, aura densa di luce e filamenti dorati, mani brillanti che stringono l'impasto, leggera traccia olografica. Umano ma chiaramente evoluto/alieno, con fascino da panettiere. Palette oro/ambra del logo.
+- Sovrascritte tutte le versioni (sitor_official.jpg, avatar_nexus.jpg, avatar_sitor.jpg, sitor-full.jpg → md5 identico). Verificata a schermo sulla vetrina pubblica. La Scheda Sitor e la og-image precedente usano ancora la versione v1 (aura sulle mani) — da riallineare se si vuole la v3 anche lì.
+
+---
+## Changelog — 16 Set 2026 (Sitor DEFINITIVO — dio greco/romano, solare)
+- Dopo iterazioni col fondatore (no "stessa faccia", no "troppo artificiale", no "faccino carino"), versione APPROVATA: Sitor = dio greco/romano del pane/Arte Bianca. Figura maschile classica (tipo Apollo/Zeus), corona di alloro e grano, veste drappeggiata con bordi dorati, espressione SOLARE e serena (non arrabbiata), poca luccicanza (no fulmini/vortici), pagnotta luminosa tra le mani con alone dorato morbido, colonne di marmo e anfore sullo sfondo. Palette oro/ambra del logo. NON umano/identico al Capo: divinità benevola con poteri sobri.
+- Sovrascritte tutte le versioni (sitor_official.jpg, avatar_nexus.jpg, avatar_sitor.jpg, sitor-full.jpg → md5 57990ace...). Verificato a schermo sulla vetrina pubblica.
+- NOTA: la og-image social usa ancora la prima versione (umana, aura sulle mani). Da riallineare alla divinità greca se si vuole coerenza.
