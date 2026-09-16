@@ -104,9 +104,9 @@ export default function SitorTour({ variant = "capo" }) {
 
   return (
     <div data-testid="sitor-tour" className="fixed inset-x-0 bottom-0 z-[65] pointer-events-none">
-      <div className="pointer-events-auto max-w-md mx-auto m-3 rounded-2xl border border-[#a6b1bc]/45 bg-[#0b0f19]/95 backdrop-blur-xl p-4 shadow-[0_0_30px_rgba(166,177,188,0.25)]">
+      <div className="pointer-events-auto max-w-md mx-auto m-3 rounded-2xl border border-[#7E9A82]/45 bg-[#0b0f19]/95 backdrop-blur-xl p-4 shadow-[0_0_30px_rgba(166,177,188,0.25)]">
         <div className="flex items-start gap-3">
-          <span className="shrink-0 w-9 h-9 rounded-xl inline-flex items-center justify-center bg-[#a6b1bc]/15 border border-[#a6b1bc]/40"><Sparkles className="w-5 h-5 text-[#a6b1bc]" /></span>
+          <span className="shrink-0 w-9 h-9 rounded-xl inline-flex items-center justify-center bg-[#7E9A82]/15 border border-[#7E9A82]/40"><Sparkles className="w-5 h-5 text-[#7E9A82]" /></span>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
               <h3 className="font-cyber font-black text-white text-sm uppercase tracking-wide">{s.title}</h3>
@@ -121,7 +121,7 @@ export default function SitorTour({ variant = "capo" }) {
 
         <div className="flex items-center justify-center gap-1.5 mt-3">
           {STEPS.map((_, i) => (
-            <span key={i} data-testid={`sitor-tour-dot-${i}`} className="rounded-full transition-all" style={{ width: i === step ? 18 : 6, height: 6, background: i === step ? "#a6b1bc" : "#334155" }} />
+            <span key={i} data-testid={`sitor-tour-dot-${i}`} className="rounded-full transition-all" style={{ width: i === step ? 18 : 6, height: 6, background: i === step ? "#7E9A82" : "#334155" }} />
           ))}
         </div>
 
@@ -132,9 +132,9 @@ export default function SitorTour({ variant = "capo" }) {
               <button data-testid="sitor-tour-prev" onClick={() => goTo(step - 1)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#334155] text-[#9aa6b2] text-xs font-bold active:scale-95"><ChevronLeft className="w-3.5 h-3.5" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "قبلی")}</button>
             )}
             {last ? (
-              <button data-testid="sitor-tour-finish" onClick={finish} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#a6b1bc,#8a97a6)" }}>{tri("Ho capito", "Verstanden", "Understood", "Entendido", "Compris", "متوجه شدم")}</button>
+              <button data-testid="sitor-tour-finish" onClick={finish} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)" }}>{tri("Ho capito", "Verstanden", "Understood", "Entendido", "Compris", "متوجه شدم")}</button>
             ) : (
-              <button data-testid="sitor-tour-next" onClick={() => goTo(step + 1)} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#a6b1bc,#8a97a6)" }}>{tri("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-3.5 h-3.5" /></button>
+              <button data-testid="sitor-tour-next" onClick={() => goTo(step + 1)} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)" }}>{tri("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-3.5 h-3.5" /></button>
             )}
           </div>
         </div>

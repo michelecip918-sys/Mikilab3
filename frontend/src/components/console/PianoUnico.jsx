@@ -155,7 +155,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                       value={b.assignee || ""}
                       onChange={(e) => onPatch(day, i, { assignee: e.target.value })}
                       placeholder={tri("assegna a…", "zuweisen…", "assign to…", "asignar a…", "assigner à…", "به…")}
-                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#cbd5e1] placeholder:text-[#475569] border-b border-dashed border-[#8a97a6]/30 focus:outline-none focus:border-[#3E9C93]"
+                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#cbd5e1] placeholder:text-[#475569] border-b border-dashed border-[#8a97a6]/30 focus:outline-none focus:border-[#D97736]"
                     />
                   </div>
                 </div>
@@ -169,7 +169,7 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                     className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
                   />
                   <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
-                  <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#3E9C93] hover:bg-[#3E9C93]/10">
+                  <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#D97736] hover:bg-[#D97736]/10">
                     <GraduationCap className="w-3.5 h-3.5" />
                   </button>
                   <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
@@ -504,7 +504,7 @@ export default function PianoUnico({ activity: activityProp }) {
           data-testid="piano-generate"
           onClick={generate}
           disabled={!canGenerate}
-          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-[#3E9C93] hover:bg-[#347f78] text-white disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-[#D97736] hover:bg-[#C86A2B] text-white disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
         >
           {loadingOpt ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
           {loadingOpt
@@ -585,7 +585,7 @@ export default function PianoUnico({ activity: activityProp }) {
               </span>
               {chosenLabel && <span className="text-[12px] font-black text-white">— {chosenLabel}</span>}
               <div className="ml-auto flex gap-2 no-print">
-                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#3E9C93] hover:bg-[#347f78] text-white text-[12px] font-bold px-3 py-1.5 disabled:opacity-50 active:scale-95 transition-all">
+                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#D97736] hover:bg-[#C86A2B] text-white text-[12px] font-bold px-3 py-1.5 disabled:opacity-50 active:scale-95 transition-all">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} {tri("Salva settimana", "Woche speichern", "Save week", "Guardar semana", "Enregistrer la semaine", "ذخیره هفته")}
                 </button>
                 {options.length > 0 && (
@@ -630,15 +630,15 @@ export default function PianoUnico({ activity: activityProp }) {
           <motion.div data-testid="piano-course-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={() => setCourseModal(null)}>
             <motion.div initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }} onClick={(e) => e.stopPropagation()}
-              className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-[#3E9C93]/30 bg-[#0b0f19] p-5 space-y-3">
+              className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-[#D97736]/30 bg-[#0b0f19] p-5 space-y-3">
               <div className="flex items-center gap-2 sticky top-0 bg-[#0b0f19] pb-2">
-                <GraduationCap className="w-5 h-5 text-[#3E9C93]" />
+                <GraduationCap className="w-5 h-5 text-[#D97736]" />
                 <span className="flex-1 min-w-0 text-sm font-black text-white truncate">{courseModal.name}</span>
                 <button data-testid="piano-course-close" onClick={() => setCourseModal(null)} className="p-1.5 rounded-lg text-[#94A3B8] hover:bg-white/10"><X className="w-4 h-4" /></button>
               </div>
               {courseModal.loading && (
                 <div data-testid="piano-course-loading" className="flex items-center gap-2 text-sm text-[#94A3B8] py-6">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#3E9C93]" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#D97736]" />
                   {tri("Sitor sta preparando il corso… (solo la prima volta)", "Sitor bereitet den Kurs vor…", "Sitor is preparing the course… (first time only)", "Sitor prepara el curso…", "Sitor prépare le cours…", "سیتور در حال آماده‌سازی دوره…")}
                 </div>
               )}
@@ -649,7 +649,7 @@ export default function PianoUnico({ activity: activityProp }) {
                   <ol className="space-y-3">
                     {(courseModal.course.phases || []).map((p, i) => (
                       <li key={i} data-testid={`piano-course-phase-${i}`} className="flex gap-3">
-                        <span className="shrink-0 w-6 h-6 rounded-full bg-[#3E9C93] text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
+                        <span className="shrink-0 w-6 h-6 rounded-full bg-[#D97736] text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
                         <div className="min-w-0">
                           <p className="text-sm font-bold text-[#e4eff8]">{p.name}</p>
                           <p className="text-sm text-[#AEB8BF] leading-relaxed mt-0.5">{p.detail}</p>
@@ -660,7 +660,7 @@ export default function PianoUnico({ activity: activityProp }) {
                   {(courseModal.course.tips || []).length > 0 && (
                     <div className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3">
                       <p className="text-[11px] font-black uppercase tracking-wide text-[#8a97a6] mb-1.5">{tri("Consigli del maestro", "Tipps vom Meister", "Master's tips", "Consejos del maestro", "Conseils du maître", "توصیه‌های استاد")}</p>
-                      <ul className="space-y-1">{courseModal.course.tips.map((tp, i) => (<li key={i} className="text-sm text-[#AEB8BF] leading-relaxed flex gap-2"><span className="text-[#3E9C93]">•</span><span>{tp}</span></li>))}</ul>
+                      <ul className="space-y-1">{courseModal.course.tips.map((tp, i) => (<li key={i} className="text-sm text-[#AEB8BF] leading-relaxed flex gap-2"><span className="text-[#D97736]">•</span><span>{tp}</span></li>))}</ul>
                     </div>
                   )}
                 </div>

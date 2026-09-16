@@ -5432,3 +5432,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ## Changelog — 16 Set 2026 (Rame/Salvia per sezione + foto reali)
 - Sala Sitor convertita a VERDE SALVIA (#7E9A82) come identita Sitor (accenti, bordi, chip, input, invio); avatar Sitor ora FOTO REALE /avatar_sitor.jpg (rimosso LivingAvatar3D + anelli nexus sci-fi); bolla messaggi del Capo in RAME #D97736. Console gia in antracite caldo con foto reale Michele. Verificato con screenshot.
 - REPUBBLICA: richiesta (strumento deploy instabile in questa sessione).
+
+---
+## Changelog — 16 Set 2026 (Rame/Salvia estesi + coerenza)
+- SALVIA ovunque per Sitor: SitorTour, SitorAtelier, MikeSuggestions convertiti a #7E9A82 (da ardesia #a6b1bc e dal salvia off-palette #6e9e85). Verificato: tour Sitor con Next salvia.
+- RAME pieno per Capo: PianoUnico e OperatorStatusBoard bottoni azione da teal #3E9C93 a rame #D97736 (hover #C86A2B). 0 teal residuo nei 5 file.
+- Compila pulito. Screenshot console: antracite caldo + salvia Sitor + recap solo testuale.

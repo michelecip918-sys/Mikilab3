@@ -73,12 +73,12 @@ export default function MikeSuggestions() {
   return (
     <div data-testid="mike-suggestions" className="rounded-2xl border border-[#8a97a6]/40 bg-gradient-to-br from-[#8a97a6]/8 to-transparent p-3">
       <p className="text-[11px] font-black uppercase tracking-widest text-[#8a97a6] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Sitor · Suggerimenti", "Sitor · Vorschläge", "Sitor · Suggestions", "Sitor · Sugerencias", "Sitor · Suggestions", "بوکومیکس · پیشنهادها")}
-        <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#6e9e85]/20 border-[#6e9e85]/60 text-[#6e9e85]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
+        <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#7E9A82]/20 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
           <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
         </button>
       </p>
       {autoActions.map((a, i) => (
-        <p key={i} data-testid={`autopilot-action-${i}`} className="mb-2 text-[12px] text-[#6e9e85] font-semibold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {a}</p>
+        <p key={i} data-testid={`autopilot-action-${i}`} className="mb-2 text-[12px] text-[#7E9A82] font-semibold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {a}</p>
       ))}
       {sug.length === 0 ? (
         <p data-testid="suggestions-clear" className="flex items-center gap-2 text-sm text-emerald-300/90"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> {tri("Tutto sotto controllo. Impianto fluido.", "Alles im Griff.", "All under control. Plant nominal.", "Todo bajo control.", "Tout sous contrôle.", "همه‌چیز تحت کنترل.")}</p>

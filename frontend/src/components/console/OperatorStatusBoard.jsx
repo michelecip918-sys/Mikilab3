@@ -103,7 +103,7 @@ export default function OperatorStatusBoard() {
           {tri("Plancia operatori · live", "Bediener-Tafel · live", "Operator board · live", "Panel de operadores · en vivo", "Tableau opérateurs · live", "تابلوی اپراتورها · زنده")}
         </span>
         <span className="ml-auto inline-flex items-center gap-2 text-[11px] flex-wrap justify-end">
-          <span className="inline-flex items-center gap-1 text-[#3E9C93]"><CircleDot className="w-3 h-3" />{totals.free} {tri("liberi", "frei", "free", "libres", "libres", "آزاد")}</span>
+          <span className="inline-flex items-center gap-1 text-[#D97736]"><CircleDot className="w-3 h-3" />{totals.free} {tri("liberi", "frei", "free", "libres", "libres", "آزاد")}</span>
           <span className="inline-flex items-center gap-1 text-[#c9a24a]"><CircleDot className="w-3 h-3" />{totals.busy} {tri("occupati", "belegt", "busy", "ocupados", "occupés", "مشغول")}</span>
           {totals.late > 0 && <span data-testid="board-late-count" className="inline-flex items-center gap-1 text-[#e5484d] font-bold"><AlertTriangle className="w-3 h-3" />{totals.late} {tri("in ritardo", "verspätet", "late", "con retraso", "en retard", "با تأخیر")}</span>}
         </span>
@@ -136,7 +136,7 @@ export default function OperatorStatusBoard() {
             return (
               <div key={o.name + i} data-testid={`board-row-${i}`}
                 className={`flex items-center gap-3 rounded-xl border px-3 py-2.5 ${o.late ? "bg-[#e5484d]/10 border-[#e5484d]/40" : "bg-[#0b0f19]/60 border-[#1e293b]"} ${off ? "opacity-60" : ""}`}>
-                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${o.late ? "bg-[#e5484d]" : busy ? "bg-[#c9a24a]" : "bg-[#3E9C93]"}`} />
+                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${o.late ? "bg-[#e5484d]" : busy ? "bg-[#c9a24a]" : "bg-[#D97736]"}`} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-[13px] font-bold text-white truncate">{o.name}</span>
@@ -152,7 +152,7 @@ export default function OperatorStatusBoard() {
                       </span>
                     )}
                     {!off && o.shift_start && (
-                      <span data-testid={`board-shift-start-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide text-[#3E9C93] bg-[#3E9C93]/10 border border-[#3E9C93]/25 rounded px-1.5 py-0.5">
+                      <span data-testid={`board-shift-start-${i}`} className="inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-wide text-[#D97736] bg-[#D97736]/10 border border-[#D97736]/25 rounded px-1.5 py-0.5">
                         <Clock3 className="w-2.5 h-2.5" /> {tri("dalle", "ab", "from", "desde", "dès", "از")} {o.shift_start}
                       </span>
                     )}
@@ -185,7 +185,7 @@ export default function OperatorStatusBoard() {
                 ) : (!busy && !o.locked_by_capo && !off ? (
                   <div className="shrink-0 flex items-center gap-1">
                     <button data-testid={`board-assign-${i}`} onClick={() => assignNext(o.name)} disabled={assigning === o.name}
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-[#3E9C93] bg-[#3E9C93]/10 hover:bg-[#3E9C93]/22 border border-[#3E9C93]/30 rounded-full px-2.5 py-1 disabled:opacity-50 active:scale-95 transition-all">
+                      className="inline-flex items-center gap-1 text-[11px] font-bold text-[#D97736] bg-[#D97736]/10 hover:bg-[#D97736]/22 border border-[#D97736]/30 rounded-full px-2.5 py-1 disabled:opacity-50 active:scale-95 transition-all">
                       <Plus className="w-3 h-3" /> {assigning === o.name ? "…" : tri("Prossimo", "Nächste", "Next", "Siguiente", "Suivant", "بعدی")}
                     </button>
                     <button data-testid={`board-assign-pick-${i}`} onClick={() => openPicker(o.name)} title={tri("Scegli compito", "Aufgabe wählen", "Pick task", "Elegir tarea", "Choisir tâche", "انتخاب وظیفه")}
@@ -204,7 +204,7 @@ export default function OperatorStatusBoard() {
         <button data-testid="delays-history-toggle" onClick={toggleHist} className="w-full flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-[0.18em] text-[#64748B] hover:text-[#8a97a6]">
           <AlertTriangle className="w-3 h-3 text-[#e5484d]" />
           {tri("Storico ritardi · 7 giorni", "Verspätungen · 7 Tage", "Delay history · 7 days", "Historial retrasos · 7 días", "Historique retards · 7 jours", "تاریخچه تأخیر · ۷ روز")}
-          <span className="ml-auto text-[#3E9C93]">{histOpen ? tri("nascondi", "verbergen", "hide", "ocultar", "cacher", "پنهان") : tri("mostra", "zeigen", "show", "mostrar", "afficher", "نمایش")}</span>
+          <span className="ml-auto text-[#D97736]">{histOpen ? tri("nascondi", "verbergen", "hide", "ocultar", "cacher", "پنهان") : tri("mostra", "zeigen", "show", "mostrar", "afficher", "نمایش")}</span>
         </button>
         {histOpen && (
           <div data-testid="delays-history" className="mt-2.5">
@@ -231,7 +231,7 @@ export default function OperatorStatusBoard() {
         <div data-testid="assign-picker" data-tour-suppress="true" className="fixed inset-0 z-[85] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setPicker(null)}>
           <div className="w-full max-w-md max-h-[80vh] overflow-y-auto rounded-2xl bg-[#0b0f19] border border-[#8a97a6]/30 p-4" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2 mb-3">
-              <ListChecks className="w-4 h-4 text-[#3E9C93]" />
+              <ListChecks className="w-4 h-4 text-[#D97736]" />
               <span className="text-sm font-black text-white">{tri("Scegli il compito per", "Aufgabe wählen für", "Pick task for", "Elegir tarea para", "Choisir la tâche pour", "انتخاب وظیفه برای")} {picker.operator}</span>
               <button data-testid="assign-picker-close" onClick={() => setPicker(null)} className="ml-auto w-8 h-8 rounded-full flex items-center justify-center text-[#7E8A93] hover:text-white"><X className="w-4 h-4" /></button>
             </div>
@@ -243,9 +243,9 @@ export default function OperatorStatusBoard() {
               <div className="space-y-2">
                 {pending.map((s, k) => (
                   <button key={s.task_id + s.order} data-testid={`assign-picker-step-${k}`} onClick={() => assignSpecific(s.task_id, s.order)}
-                    className="w-full text-left rounded-xl bg-[#060A10]/70 border border-[#1e293b] hover:border-[#3E9C93]/50 px-3 py-2.5 transition-all active:scale-[0.99]">
+                    className="w-full text-left rounded-xl bg-[#060A10]/70 border border-[#1e293b] hover:border-[#D97736]/50 px-3 py-2.5 transition-all active:scale-[0.99]">
                     <div className="flex items-center gap-2">
-                      <span className="text-[10px] font-mono text-[#3E9C93] uppercase tracking-wide truncate">{s.task_title}</span>
+                      <span className="text-[10px] font-mono text-[#D97736] uppercase tracking-wide truncate">{s.task_title}</span>
                       {s.sub_role && <span className="text-[9px] text-[#64748B]">· {s.sub_role}</span>}
                       {s.assignee && <span className="ml-auto text-[9px] text-[#c9a24a]">{tri("ora", "jetzt", "now", "ahora", "actu.", "اکنون")}: {s.assignee}</span>}
                     </div>
