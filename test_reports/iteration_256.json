@@ -1,0 +1,22 @@
+{
+  "summary": "Iter256 — Verifica indipendente delle tre novita (Punto 2/4/5) + regressione. BACKEND pytest 9/9 PASS in /app/backend/tests/test_iter256_apprentice_voice.py: (a) PUT /api/apprentice/recipe/{id} salva pieces_per_tray/tray_format/shaping_note e GET restituisce has_info=true con 'spoken' contenente '12' e '60x40'; ricetta letta prima/dopo → ingredients IDENTICI (vincolo rispettato). (b) GET su recipe_id inesistente → has_info=false. (c) Voice quota: settings voice_daily_limit=2 → prima e seconda POST /coordination/voice-quota allowed=true, terza allowed=false reason='limit_reached'; con critical=true bypass allowed=true; con voice_daily_limit=0 → sempre allowed=true (3 tentativi). (d) Cleanup: /api/lab/departments → 404 (rimosso), /api/depts/templates → 200 (vivo). (e) Isolamento/regressione: /api/recipes, /api/worker/board, /api/delivery/run, /api/coordination/settings tutti 200. FRONTEND (1920px): flusso Direction→PIN 198505→AuthScreen→login Capo funziona; nella Recipe list, click su recipe-row-{id} apre il modal dettaglio ricetta → card 'SITOR APPRENTICE' (apprentice-card-<id>) presente, pulsante apprentice-edit-<id> apre l'editor, i campi apprentice-pieces/format/shaping ricevono input, apprentice-save persiste e le info restano visibili ('Per tray: 9 · teglia UI test / Shaping: iter256 form'). Ingredienti del modal (Pure diastatic malt 3%, Sweet lupin 1%, Acerola 0.3%, Golden flaxseed 2%, Psyllium 0.5%) INVARIATI. Console: pannello Team → 'team-coordination' montato con input 'voice-daily-limit' (default 0) editabile. Mobile 390px: pagina landing carica senza errori JS rilevanti (solo warning WebGL/THREE non bloccanti), scrollWidth=390 → nessun overflow orizzontale.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": [
+    "/app/backend/tests/test_iter256_apprentice_voice.py",
+    "/app/test_reports/pytest/iter256.xml"
+  ],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "coordination.py voice-quota non ha rate-limit su chiavi vuote: se il body arriva senza campo 'operator', la chiave usata è ('', day) e tutti gli operatori senza nome condividono lo stesso contatore. Consigliato validare operator con Pydantic (min_length=1) e restituire 400.",
+    "coordination.py apprentice_get restituisce campi vuoti per ricette senza info, ma non verifica che il recipe_id esista nella collezione recipes: qualunque stringa arbitraria ritorna 200. Accettabile (idempotente), ma potrebbe mascherare bug di FE che passa id sbagliati."
+  ],
+  "updated_files": ["/app/backend/tests/test_iter256_apprentice_voice.py"],
+  "success_rate": {"backend": "100% (9/9)", "frontend": "100% (flow apprentice + voice-daily-limit + mobile no-crash verificati)"},
+  "test_credentials": "gate PIN 198505 · Capo admin@mikilab.de / Mikilab2026!",
+  "seed_data_creation": "recipe_apprentice per recipe_id 'a052ba40-408a-495d-885a-6d7be260f3e9' impostato con pieces=9/format='teglia UI test'/shaping='iter256 form' (dato di test residuo, sovrascrivibile dal Capo). voice_usage per operator 'TEST_op_*' del giorno corrente (auto-scaduto a mezzanotte).",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Per aprire il dettaglio ricetta nel modal, usare click su [data-testid^='recipe-row-']. La ApprenticeCard è renderizzata nel modal RecipeDetail (RecipeList.jsx:862). Team Coordination è raggiungibile direttamente scrollando sotto Boss Console (id 'team-coordination'). Il flusso login richiede: Direction→admin-key-*→(onboarding opzionale)→capo-gate-login→auth-submit.",
+  "rca of the issue": "N/A — tutte le nuove feature (Punto 2 limite vocale, Punto 4 apprendista, Punto 5 isolamento + cleanup /lab/departments) funzionano come atteso. Vincolo ingredienti rispettato sia lato BE che FE."
+}
