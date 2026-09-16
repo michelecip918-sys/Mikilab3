@@ -5455,3 +5455,10 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ### Punto 4 — Avatar Capo
 - Rigenerato da /michele-avatar-real.jpg (stessi tratti/tatuaggio) in stile artigianale antracite/rame -> avatar_miki.jpg (backup avatar_miki_original_backup.jpg). Accenti MikiLab portati a rame #D97736.
 ### TEST (iteration_255): backend 5/5 PASS incluso scenario Capo assente 2 operatori (primo rifiuta -> secondo accetta -> busy); macchina su soglia; proposta+conferma; task scoperto per timeout; vista autista. Frontend pannelli montati, PUT skills 200, mobile 390px senza overflow.
+
+---
+## Changelog — 16 Set 2026 (Pulizia codice orfano, verificata)
+- FRONTEND: eliminati 12 componenti mai importati (0 refs, no lazy): CapoCombos, CapoProductRow, PlanArchive, SaporeDelGiorno, RecipeOptions, NexusConsole, LabTour, ModuleParams, HighFive, console/CapoGroup, console/AutoPlan, console/OperatorsRoster.
+- BACKEND: rimossi 49 endpoint orfani via script (backup .bak_orphan, AST validato). server.py 34 rotte + variabili MIKI_SYSTEM/MIKEMIX_SYSTEM/MIKI_LANG/MIKEMIX_LANG (persona che impersonava il Capo, citava Bake Mix e Registro HACCP). operations.py 7 (/crates*, /oven/alarms/read). community.py 6 (/operator/crew, /operator/assign, /oven/alarms, /oven/alarm, /lab/holiday GET+POST). deck.py 2 (/ai/my-features, /master/govern/stream).
+- TENUTI (verificati vivi o necessari): /webhook/stripe + _grant_from_email (webhook Stripe e grant VIP), /master/govern (usato da MikeInfo), /pocket/master-command e /pocket/vision/scan-floor (in enterpriseApi).
+- Verifica post-pulizia: backend avvia pulito; endpoint eliminati -> 404; /coordination/settings, /worker/board, /delivery/run, /master/govern -> 200. Frontend compila.

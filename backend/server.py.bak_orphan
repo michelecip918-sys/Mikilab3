@@ -2608,6 +2608,55 @@ class ObserveReq(BaseModel):
     lang: str = "it"
 
 
+@api_router.post("/mike/observe")
+async def mike_observe(payload: ObserveReq):
+    action = (payload.action or "").strip()
+    if not action:
+        raise HTTPException(status_code=400, detail="Descrivi la scelta o la procedura")
+    lang = (payload.lang or "it").lower()
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    result = {"status": "ok", "advice": "", "alert_capo": False, "learned": action}
+    if EMERGENT_LLM_KEY:
+        try:
+            chat = LlmChat(
+                api_key=EMERGENT_LLM_KEY, session_id=f"observe-{uuid.uuid4().hex[:8]}",
+                system_message=(
+                    "Sei Sitor, IA operativa di panificazione. Osservi le scelte dell'operatore, IMPARI le tecniche "
+                    "artigianali valide e segnali SOLO le anomalie reali (rischio qualità/sicurezza/tempi). Tono rispettoso, "
+                    f"mai saccente. Rispondi in {lang_name} e SOLO con JSON valido."),
+            ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=500)
+            prompt = (
+                'Valuta la scelta dell\'operatore e restituisci JSON: '
+                '{"status":"ok|anomalia","advice":"1-2 frasi di consiglio","alert_capo":true|false}. '
+                'alert_capo=true SOLO se anomalia seria da segnalare al Capo.\n'
+                f"Ricetta: {payload.recipe_name or 'n/d'}\nScelta operatore: {action}"
+            )
+            full = ""
+            async for ev in chat.stream_message(UserMessage(text=prompt)):
+                if isinstance(ev, TextDelta):
+                    full += ev.content
+                elif isinstance(ev, StreamDone):
+                    break
+            m = re.search(r"\{.*\}", full, re.S)
+            if m:
+                j = json.loads(m.group(0))
+                result["status"] = "anomalia" if str(j.get("status", "")).lower().startswith("anom") else "ok"
+                result["advice"] = j.get("advice", "")
+                result["alert_capo"] = bool(j.get("alert_capo"))
+        except Exception as e:
+            logging.warning(f"mike_observe failed: {e}")
+    if result["status"] == "anomalia" or result["alert_capo"]:
+        alert = {
+            "id": uuid.uuid4().hex, "recipe_name": payload.recipe_name, "action": action,
+            "operator": payload.operator or "operatore", "advice": result["advice"],
+            "created_at": now_iso(), "read": False,
+        }
+        try:
+            await db.mike_alerts.insert_one(dict(alert))
+        except Exception:
+            pass
+        result["alert_capo"] = True
+    return result
 
 
 @api_router.get("/mike/alerts")
@@ -2631,6 +2680,40 @@ class LegacyAdaptReq(BaseModel):
     lang: str = "it"
 
 
+@api_router.post("/mike/legacy-adapt")
+async def mike_legacy_adapt(payload: LegacyAdaptReq):
+    """Sitor ricalcola tempi/velocità/temperature per compensare forni a legna e macchinari storici."""
+    eq = (payload.equipment or "").strip()
+    if not eq:
+        raise HTTPException(status_code=400, detail="Indica l'attrezzatura")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="Sitor non configurato")
+    lang = (payload.lang or "it").lower()
+    lang_name = {"it": "italiano", "de": "tedesco", "en": "inglese", "es": "spagnolo", "fr": "francese", "fa": "persiano"}.get(lang, "italiano")
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"legacy-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Sei Sitor. Supporti botteghe familiari con forni a legna e macchinari datati, trattando il forno "
+                "come un termodinamico invisibile: ricalcoli tempi, velocità e temperature per compensare i limiti "
+                f"strutturali senza perdere qualità. Rispondi in {lang_name} e SOLO con JSON valido."),
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1500)
+        prompt = (
+            'Restituisci SOLO JSON valido e CONCISO (massimo 4 adjustments e 2 warnings): '
+            '{"summary":"1-2 frasi","adjustments":[{"param":"es. Temperatura forno","value":"es. 230°C -> 210°C con 5 min in più","why":"motivo breve"}],"warnings":["avvertenza"]}\n'
+            f"Attrezzatura: {eq}\nRicetta: {payload.recipe_name or 'generica'}\nNote: {payload.detail or '-'}"
+        )
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        m = re.search(r"\{.*\}", full, re.S)
+        return json.loads(m.group(0)) if m else {"summary": "", "adjustments": [], "warnings": []}
+    except Exception as e:
+        logging.warning(f"legacy_adapt failed: {e}")
+        raise HTTPException(status_code=424, detail="Errore adattamento")
 
 
 
@@ -3681,6 +3764,17 @@ async def master_pocket_command(payload: MasterPocketCommand, user: dict = Depen
             "mikemix_response": f"Comando «{payload.command_text}» eseguito dal nucleo Sitor."}
 
 
+@api_router.get("/pocket/dashboard/{site_id}")
+async def get_pocket_dashboard(site_id: str, user: Optional[dict] = Depends(optional_user)):
+    await _seed_sites()
+    ov = await enterprise_overview(user)
+    site = await db.lab_sites.find_one({"site_id": site_id}, {"_id": 0}) or await db.lab_sites.find_one({}, {"_id": 0})
+    sm = _site_metrics(site) if site else {}
+    return {"status": "success", "mobile_view": "panificio_tascabile_ui",
+            "global_network_badge": {"total_sites": ov["total_active_sites"], "global_aura": _aura_for(int(ov["global_efficiency_avg"]))["aura_effect"],
+                                     "global_efficiency": f"{ov['global_efficiency_avg']}%", "active_alerts": ov["critical_alerts_count"]},
+            "current_site_view": sm,
+            "mike_executive_summary": "Tutti i sistemi operano a gravità zero. Nessun intervento burocratico richiesto."}
 
 
 class SpatialScanReq(BaseModel):
@@ -3703,6 +3797,18 @@ class PocketRecipeReq(BaseModel):
     ingredients: List[Dict[str, Any]] = []
 
 
+@api_router.post("/pocket/recipes/create")
+async def pocket_create_recipe(body: PocketRecipeReq, user: dict = Depends(require_admin)):
+    existing = await db.recipes.find_one({"id": body.recipe_id})
+    if existing:
+        await db.recipes.update_one({"id": body.recipe_id}, {"$set": {"name": body.name, "ingredients": body.ingredients}})
+        msg = f"Ricetta «{body.name}» aggiornata e propagata alla rete."
+    else:
+        await db.recipes.insert_one({"id": body.recipe_id, "name": body.name, "ingredients": body.ingredients,
+                                     "collection_name": "mikilab", "created_at": now_iso()})
+        msg = f"Nuova ricetta «{body.name}» creata e sincronizzata."
+    cnt = await db.recipes.count_documents({"collection_name": "mikilab"})
+    return {"status": "success", "message": msg, "active_recipes_count": cnt}
 
 
 class SiteWeeklyReq(BaseModel):
@@ -3710,6 +3816,13 @@ class SiteWeeklyReq(BaseModel):
     schedule_data: Dict[str, Any] = {}
 
 
+@api_router.post("/pocket/site/weekly-plan")
+async def pocket_site_weekly(body: SiteWeeklyReq, user: dict = Depends(require_admin)):
+    site = await db.lab_sites.find_one({"site_id": body.site_id})
+    if not site:
+        raise HTTPException(status_code=404, detail="Sede non trovata.")
+    await db.lab_sites.update_one({"site_id": body.site_id}, {"$set": {"weekly_schedule": body.schedule_data}})
+    return {"status": "success", "message": f"Piano settimanale aggiornato per {site['name']}."}
 
 
 @api_router.get("/scale/{device_id}/load-recipe/{recipe_id}")
@@ -3776,8 +3889,18 @@ class FaultLogEntry(BaseModel):
     at: Optional[str] = None
 
 
+@api_router.get("/lab/fault-log")
+async def get_fault_log(user: Optional[dict] = Depends(optional_user)):
+    return await db.lab_fault_log.find({}, {"_id": 0}).sort("at", -1).to_list(200)
 
 
+@api_router.post("/lab/fault-log")
+async def add_fault_log(payload: FaultLogEntry, user: Optional[dict] = Depends(optional_user)):
+    doc = payload.model_dump()
+    doc["id"] = str(uuid.uuid4())
+    doc["at"] = now_iso()
+    await db.lab_fault_log.insert_one(dict(doc))
+    return doc
 
 
 # Sensori/sonde REALI (Web Bluetooth lato client) — letture condivise.
@@ -5047,6 +5170,36 @@ class LabelScan(BaseModel):
     lang: Optional[str] = "it"
 
 
+@api_router.post("/lab/warehouse/scan-label")
+async def scan_label(payload: LabelScan, user: Optional[dict] = Depends(optional_user)):
+    # Scansione REALE etichetta farina/ingrediente via LLM vision → prefill del carico.
+    if not EMERGENT_LLM_KEY:
+        return {"ok": False}
+    try:
+        chat = LlmChat(
+            api_key=EMERGENT_LLM_KEY, session_id=f"label-{uuid.uuid4().hex[:8]}",
+            system_message=(
+                "Analizza la foto dell'etichetta o del sacco di una farina o di un ingrediente da panificazione. "
+                "Estrai i dati e rispondi SOLO con JSON valido, senza altro testo: "
+                '{"name":"tipo farina o ingrediente","force_w":"forza W se presente es. W300, altrimenti stringa vuota",'
+                '"quantity_kg": numero_in_kg_se_visibile_altrimenti_0, "kind":"farina oppure ingrediente"}.'
+            )
+        ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=400)
+        img = (payload.image_base64 or "").split(",")[-1]
+        full = ""
+        async for ev in chat.stream_message(UserMessage(text="Estrai i dati dall'etichetta.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        import json as _json
+        import re as _re
+        m = _re.search(r"\{.*\}", full, _re.S)
+        data = _json.loads(m.group(0)) if m else {}
+        return {"ok": True, "data": data}
+    except Exception as e:
+        logging.warning(f"scan_label failed: {e}")
+        return {"ok": False}
 
 
 class OrderScan(BaseModel):
@@ -5098,6 +5251,28 @@ class VisionCoach(BaseModel):
     lang: str = "it"
 
 
+@api_router.post("/lab/vision-coach")
+async def vision_coach(payload: VisionCoach):
+    """Tutor AI Visivo: analizza una foto di formatura/incisione e dà una correzione breve (voce del capo)."""
+    img = (payload.image_base64 or "").split(",")[-1]
+    if not img:
+        raise HTTPException(status_code=400, detail="Nessuna immagine")
+    focus = "la FORMATURA del pane/impasto" if (payload.type or "").startswith("form") else "l'INCISIONE con la lama (il taglio)"
+    sysmsg = (f"Sei il Super-Capo fornaio, esperto e diretto. Osserva la foto e valuta {focus}. "
+              f"Rispondi in massimo 2 frasi: dì se è corretta oppure l'errore preciso, e UN consiglio pratico immediato per migliorarla. "
+              f"Rispondi nella lingua con codice '{payload.lang}'. Niente premesse.")
+    try:
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"coach-{uuid.uuid4()}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN)
+        out = ""
+        async for ev in chat.stream_message(UserMessage(text="Analizza il gesto del fornaio nella foto.", file_contents=[ImageContent(image_base64=img)])):
+            if isinstance(ev, TextDelta):
+                out += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+        return {"ok": True, "feedback": out.strip() or "Analisi non disponibile."}
+    except Exception as e:
+        logging.warning(f"vision_coach failed: {e}")
+        raise HTTPException(status_code=503, detail="Tutor AI non disponibile")
 
 
 # ---------------------------------------------------------------------------
@@ -5335,8 +5510,23 @@ async def maestro_stream(session_id: str, message: str, lang: str = "it", machin
     yield f"data: {json.dumps({'done': True})}\n\n"
 
 
+@api_router.post("/maestro/chat")
+async def maestro_chat(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        maestro_stream(payload.session_id, payload.message, payload.lang, payload.machines),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
+@api_router.get("/maestro/history/{session_id}")
+async def maestro_history(session_id: str):
+    docs = await db.chat_messages.find(
+        {"session_id": session_id}, {"_id": 0}
+    ).sort("created_at", 1).to_list(500)
+    return docs
 
 
 @api_router.post("/lab/ask")
@@ -5424,8 +5614,53 @@ async def ai_savings_history(months: int = 6):
 # ---------------------------------------------------------------------------
 # MikiLab — assistente di "Il Tuo Laboratorio" (Claude Sonnet 4.6, streaming)
 # ---------------------------------------------------------------------------
+MIKEMIX_SYSTEM = (
+    "Sei 'MikiLab' (puoi presentarti come MikiLab), l'assistente PERSONALE di Michele, il creatore di MikiLab, e mastro panettiere della sezione 'Il Tuo Laboratorio'. Presentati sempre come l'assistente di Michele/MikiLab. "
+    "COMPITI PRINCIPALI: 1) Accogli l'utente e guidalo nell'uso della sezione 'Il Tuo Laboratorio', che e' organizzata in 2 PASSI: "
+    "PASSO 1 = 'Piano di Produzione con IA' (il cuore della sezione), PASSO 2 = 'Laboratorio & Strumenti'. "
+    "2) Spiega con chiarezza le COSE FONDAMENTALI per GENERARE il Piano di Produzione con l'IA: "
+    "a) scegliere le RICETTE e le relative QUANTITA' (sono i campi OBBLIGATORI), "
+    "b) scegliere da quale IMPASTO PARTIRE con il tasto 'Parti da qui' (l'IA ordina la sequenza a partire da quello), "
+    "c) premere 'Genera': l'IA crea il piano di lavoro con tempi, sequenza impasti e avvisi. "
+    "3) Spiega le OPZIONI EXTRA che si possono collegare al piano tramite l'IA per un risultato piu' completo: "
+    "Giacenze Freezer & Celle Frigo (l'IA usa prima le scorte e scala i pezzi usati), Piano Giornaliero/Settimanale, "
+    "Lista Spesa & Ordini fornitori, Food Cost, Punti Vendita, Turni & Ruoli, Orari d'Inizio e Digital Twin (previsione dell'ora del PICCO del volume dell'impasto). "
+    "4) Se richiesto, spiega anche gli strumenti operativi del PASSO 2: Bilancia Smart e Pesata Guidata, Diario Impasti, "
+    "Termostato & sensori, Registro HACCP, Tracciabilita Lotti, Anti-Spreco, Shelf-Life. "
+    "Spiega sempre in modo semplice e pratico, da vero collega panettiere. "
+    "REGOLE FONDAMENTALI: AMBITO ESCLUSIVO - rispondi SOLO a domande legate alla sezione 'Il Tuo Laboratorio', alla "
+    "gestione del forno e all'uso dei relativi strumenti dell'app. FUORI AMBITO - se l'utente fa domande NON pertinenti "
+    "al laboratorio o al forno (es. meteo, programmazione, ricette generiche non legate all'organizzazione del forno), "
+    "rispondi garbatamente ESATTAMENTE: \"Sono MikiLab, il tuo assistente per 'Il Tuo Laboratorio'. Posso aiutarti "
+    "esclusivamente nell'organizzazione del tuo forno e nell'uso degli strumenti di questa sezione!\". "
+    "TONO DI VOCE: professionale, pratico, chiaro, accogliente e da vero collega panettiere. "
+    "FORMATO RISPOSTE: usa SEMPRE elenchi puntati o passaggi numerati (1, 2, 3...) per rendere le spiegazioni "
+    "'passo per passo' facili e veloci da leggere durante il lavoro. Non essere prolisso."
+)
+MIKEMIX_LANG = {
+    "it": " Rispondi SEMPRE in italiano.",
+    "de": " Antworte IMMER auf Deutsch. Wenn du eine Standardantwort geben musst, uebersetze sie sinngemaess.",
+    "en": " Always answer in English. Translate the fixed out-of-scope reply accordingly.",
+}
 
 # --- Miki (Il Capo): assistente conversazionale del sito, parla in PRIMA PERSONA ---
+MIKI_SYSTEM = (
+    "Sei MIKI, il Capo e fondatore di MikiLab: panettiere magro, capelli rasati stile militare, con un tatuaggio sul braccio sinistro. "
+    "Parla SEMPRE in PRIMA PERSONA come Miki, con tono diretto, caloroso e concreto, da vero collega di laboratorio. "
+    "SCOPO: accogli chiunque visiti MikiLab e spiega in modo semplice come il software aiuta i panettieri: ricette testate, Smart Planner, "
+    "produzione Zero-Night, Thermal Guard IoT, Parco Macchine con timer, Team OS e comandi vocali hands-free. Rispondi a qualsiasi domanda "
+    "sul laboratorio, sull'organizzazione del forno e su come usare le sezioni del sito (Home, Modalità Chef, Ricette, Scienza & Guide, Community). "
+    "LA SQUADRA: se la domanda riguarda OPERAZIONI pratiche di laboratorio (pulizia, carrelli, infornata, impasti) puoi dire che 'Sitor, il mio "
+    "braccio destro' segue quelle operazioni. Se riguarda TECNOLOGIA, IA, sensori o comandi vocali, puoi dire che 'Bake Mix, il nostro assistente robot' "
+    "aiuta su quello. Resta comunque tu a rispondere. "
+    "NON parlare di HACCP, allergeni o etichettatura. "
+    "FORMATO: risposte brevi e pratiche, usa elenchi puntati quando servono passaggi. Non essere prolisso."
+)
+MIKI_LANG = {
+    "it": " Rispondi SEMPRE in italiano.",
+    "de": " Antworte IMMER auf Deutsch.",
+    "en": " Always answer in English.",
+}
 
 
 async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, message: str, lang: str = "it"):
@@ -5459,10 +5694,32 @@ async def _lab_assistant_stream(system: str, lang_map: dict, session_id: str, me
     yield f"data: {json.dumps({'done': True})}\n\n"
 
 
+@api_router.post("/mikemix/chat")
+async def mikemix_chat(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        _lab_assistant_stream(MIKEMIX_SYSTEM, MIKEMIX_LANG, payload.session_id, payload.message, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
+@api_router.get("/mikemix/history/{session_id}")
+async def mikemix_history(session_id: str):
+    docs = await db.chat_messages.find({"session_id": session_id}, {"_id": 0}).sort("created_at", 1).to_list(500)
+    return docs
 
 
+@api_router.post("/miki/chat")
+async def miki_chat(payload: ChatRequest):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        _lab_assistant_stream(MIKI_SYSTEM, MIKI_LANG, payload.session_id, payload.message, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -6614,6 +6871,18 @@ async def capo_plan_stream(payload: CapoPlanRequest):
     yield f"data: {json.dumps({'done': True, 'truncated': truncated})}\n\n"
 
 
+@api_router.post("/capo/plan")
+async def capo_plan(payload: CapoPlanRequest, user: Optional[dict] = Depends(optional_user)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    # La modalità "pro" (Capo Laboratorio) è riservata agli abbonati; "home" resta gratuita.
+    if payload.mode == "pro" and not await user_is_pro(user):
+        raise HTTPException(status_code=403, detail="Abbonamento PRO richiesto")
+    return StreamingResponse(
+        capo_plan_stream(payload),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -6725,6 +6994,15 @@ async def vision_stream(mode: str, image_b64: str, lang: str = "it"):
     yield f"data: {json.dumps({'done': True})}\n\n"
 
 
+@api_router.post("/maestro/vision")
+async def maestro_vision(payload: VisionRequest, user: dict = Depends(require_diagnosi)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    return StreamingResponse(
+        vision_stream(payload.mode, payload.image_base64, payload.lang),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
 
 
 class DiagnosiSave(BaseModel):
@@ -6733,10 +7011,33 @@ class DiagnosiSave(BaseModel):
     thumb: Optional[str] = None
 
 
+@api_router.post("/diagnosi/save")
+async def diagnosi_save(payload: DiagnosiSave, user: dict = Depends(current_user)):
+    doc = {
+        "id": str(uuid.uuid4()),
+        "user_id": user["user_id"],
+        "mode": payload.mode,
+        "result": (payload.result or "")[:6000],
+        "thumb": payload.thumb,
+        "created_at": now_iso(),
+    }
+    await db.diagnoses.insert_one(dict(doc))
+    # Conserva solo le ultime 10 diagnosi per utente.
+    olds = await db.diagnoses.find({"user_id": user["user_id"]}, {"_id": 0, "id": 1, "created_at": 1}).sort("created_at", -1).to_list(1000)
+    for o in olds[10:]:
+        await db.diagnoses.delete_one({"id": o["id"]})
+    return {"ok": True, "id": doc["id"]}
 
 
+@api_router.get("/diagnosi/recent")
+async def diagnosi_recent(user: dict = Depends(current_user)):
+    return await db.diagnoses.find({"user_id": user["user_id"]}, {"_id": 0}).sort("created_at", -1).to_list(10)
 
 
+@api_router.delete("/diagnosi/{diag_id}")
+async def diagnosi_delete(diag_id: str, user: dict = Depends(current_user)):
+    await db.diagnoses.delete_one({"id": diag_id, "user_id": user["user_id"]})
+    return {"ok": True}
 
 
 class SoundDiagnosiReq(BaseModel):
@@ -6744,6 +7045,39 @@ class SoundDiagnosiReq(BaseModel):
     lang: str = "it"
 
 
+@api_router.post("/diagnosi/sound")
+async def diagnosi_sound(payload: SoundDiagnosiReq, user: dict = Depends(require_diagnosi)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    f = payload.features or {}
+    prompt = (
+        "Sei un mastro fornaio esperto. Un fornaio ha registrato il SUONO dell'impastatrice mentre lavora l'impasto. "
+        "Non hai l'audio, solo queste misure acustiche estratte dal microfono: "
+        f"volume medio={f.get('loudness')}, variabilita del volume={f.get('variability')}, "
+        f"regolarita del ritmo (0=irregolare, 1=molto ritmico)={f.get('regularity')}, durata s={f.get('duration')}. "
+        "Regola d'interpretazione: un ritmo REGOLARE (regolarita alta) con schiaffo netto indica impasto BEN INCORDATO/quasi pronto; "
+        "un suono IRREGOLARE, con carico pesante e poca ritmicita (regolarita bassa, alta variabilita) indica impasto ANCORA DURO/non incordato. "
+        "Rispondi BREVE (max 6 righe) con: 1) Stato stimato (Ancora duro / In incordatura / Pronto), "
+        "2) Cosa fare adesso (es. continua N minuti, aggiungi acqua a filo, cambia velocita), 3) Tra quanto ricontrollare. "
+        "Precisa che e una stima 'a orecchio', non un sensore di laboratorio."
+    )
+    prompt += LANG_DIRECTIVE.get(payload.lang, LANG_DIRECTIVE["it"])
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"sound-{uuid.uuid4()}",
+        system_message="Sei 'Il Maestro del Pane', esperto di panificazione artigianale.",
+    ).with_model("anthropic", SITOR_BRAIN)
+    full = ""
+    try:
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                full += ev.content
+            elif isinstance(ev, StreamDone):
+                break
+    except Exception:
+        logger.exception("sound diagnosi error")
+        raise HTTPException(status_code=500, detail="Errore analisi")
+    return {"result": full.strip()}
 
 
 _ELEVEN_KEY = os.environ.get("ELEVENLABS_API_KEY") or os.environ.get("ELEVEN_API_KEY")
@@ -7036,6 +7370,41 @@ SCAN_PROMPT = (
 )
 
 
+@api_router.post("/maestro/scan-recipe")
+async def scan_recipe(payload: ScanRecipeRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    img = payload.image_base64
+    if "," in img and img.strip().startswith("data:"):
+        img = img.split(",", 1)[1]
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"scan-{uuid.uuid4()}",
+        system_message="Estrai ricette da foto e restituisci solo JSON valido.",
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2000)
+    user_msg = UserMessage(text=SCAN_PROMPT, file_contents=[ImageContent(image_base64=img)])
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-recipe error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi della foto")
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        raw = raw[raw.find("{"):]
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non riconosciuta nella foto")
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere la ricetta dalla foto")
+    return data
 
 
 class WebRecipeRequest(BaseModel):
@@ -7153,6 +7522,80 @@ async def _tavily_search(query: str):
         return []
 
 
+@api_router.post("/maestro/web-recipe")
+async def web_recipe(payload: WebRecipeRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    q = (payload.query or "").strip()
+    if len(q) < 2:
+        raise HTTPException(status_code=422, detail="Scrivi il nome di una ricetta da cercare")
+    method = payload.method if payload.method in WEB_RECIPE_METHODS else "mikilab"
+    lang_line = WEB_RECIPE_LANG.get(payload.lang, WEB_RECIPE_LANG["it"])
+    prompt = (WEB_RECIPE_PROMPT
+              .replace("{method_line}", WEB_RECIPE_METHODS[method])
+              .replace("{schema}", SCAN_FIELDS_SCHEMA)
+              .replace("{lang_line}", lang_line))
+    # LINK → leggo la pagina reale. PAROLE CHIAVE → ricerca web reale via Tavily.
+    page_text = ""
+    source = None
+    from urllib.parse import urlparse
+    if q.lower().startswith(("http://", "https://")):
+        page_text, page_title = await _fetch_url_text(q)
+        if not page_text:
+            raise HTTPException(status_code=422, detail="Non riesco a leggere la pagina: controlla il link o riprova")
+        dom = (urlparse(q).netloc or "").replace("www.", "")
+        source = {"domain": dom, "title": page_title, "url": q}
+    elif TAVILY_API_KEY:
+        results = await _tavily_search(q)
+        parts = []
+        for it in results[:3]:
+            c = it.get("raw_content") or it.get("content") or ""
+            if c:
+                parts.append(f"FONTE: {it.get('title')}\nURL: {it.get('url')}\n{c[:4000]}")
+        page_text = "\n\n".join(parts)[:9000]
+        if results:
+            top = results[0]
+            dom = (urlparse(top.get("url") or "").netloc or "").replace("www.", "")
+            source = {"domain": dom, "title": top.get("title") or "", "url": top.get("url") or ""}
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"webrec-{uuid.uuid4()}",
+        system_message="Ricostruisci ricette di panificazione adattate al metodo richiesto e restituisci solo JSON valido.",
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=3000)
+    if page_text:
+        user_msg = UserMessage(text=f"{prompt}\n\nDalla PAGINA WEB seguente ESTRAI la ricetta reale (ingredienti e procedimento) e riadattala al metodo indicato.\n\nCONTENUTO PAGINA:\n{page_text}")
+    else:
+        user_msg = UserMessage(text=f"{prompt}\n\nRICETTA RICHIESTA: {q}")
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("web-recipe error")
+        raise HTTPException(status_code=500, detail="Errore nella ricerca della ricetta")
+    raw = text.strip()
+    if raw.startswith("```"):
+        raw = raw.strip("`")
+        raw = raw[raw.find("{"):]
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non trovata")
+    try:
+        data = json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile ricostruire la ricetta")
+    # Solo per il Metodo Mikilab: garantisci la presenza del Miglioratore Naturale Pro al 2%.
+    if method == "mikilab":
+        exs = data.get("extra_ingredients") or []
+        if not any(isinstance(x, dict) and "miglioratore" in (x.get("name") or "").lower() for x in exs):
+            exs.append({"name": "Miglioratore Naturale Pro", "percent": 2, "grams": None})
+            data["extra_ingredients"] = exs
+    if source:
+        data["source"] = source
+    return data
 
 
 
@@ -7221,6 +7664,60 @@ def _pdf_page_thumbs(pdf_bytes: bytes, page_numbers: list):
     return thumbs
 
 
+@api_router.post("/maestro/scan-recipe-pdf")
+async def scan_recipe_pdf(payload: ScanPdfRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    import base64 as _b64, io as _io
+    raw_b64 = payload.pdf_base64
+    if "," in raw_b64 and raw_b64.strip().startswith("data:"):
+        raw_b64 = raw_b64.split(",", 1)[1]
+    try:
+        pdf_bytes = _b64.b64decode(raw_b64)
+        from pypdf import PdfReader
+        reader = PdfReader(_io.BytesIO(pdf_bytes))
+        pages = [(p.extract_text() or "") for p in reader.pages[:40]]
+        pdf_text = "\n".join([f"=== PAGINA {i + 1} ===\n{t}" for i, t in enumerate(pages)]).strip()
+    except Exception:
+        logger.exception("pdf parse error")
+        raise HTTPException(status_code=422, detail="PDF non leggibile")
+    if len(pdf_text) < 20:
+        raise HTTPException(status_code=422, detail="Il PDF non contiene testo estraibile (forse è solo un'immagine: usa il caricamento immagine)")
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"scanpdf-{uuid.uuid4()}",
+        system_message="Estrai ricette da testo e restituisci solo JSON valido.",
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=8000)
+    prompt = SCAN_PDF_MULTI_PROMPT + "\n\nTESTO DAL PDF:\n" + pdf_text[:18000]
+    text = ""
+    try:
+        async for event in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-recipe-pdf error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi del PDF")
+    rawt = text.strip().strip("`")
+    if rawt.lower().startswith("json"):
+        rawt = rawt[4:].strip()
+    s, e = rawt.find("{"), rawt.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Ricetta non riconosciuta nel PDF")
+    try:
+        parsed = json.loads(rawt[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere la ricetta dal PDF")
+    recipes = parsed.get("recipes") if isinstance(parsed, dict) else None
+    if not isinstance(recipes, list):
+        # Fallback: singola ricetta come oggetto piatto
+        recipes = [parsed] if isinstance(parsed, dict) else []
+    recipes = [r for r in recipes if isinstance(r, dict) and (r.get("name") or "").strip()]
+    if not recipes:
+        raise HTTPException(status_code=422, detail="Nessuna ricetta riconosciuta nel PDF")
+    page_thumbs = _pdf_page_thumbs(pdf_bytes, [r.get("page") for r in recipes])
+    return {"recipes": recipes, "page_thumbs": page_thumbs}
 
 
 class ScanFlourRequest(BaseModel):
@@ -7244,6 +7741,40 @@ SCAN_FLOUR_PROMPT = (
 )
 
 
+@api_router.post("/maestro/scan-flour")
+async def scan_flour(payload: ScanFlourRequest, user: dict = Depends(require_pro)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=500, detail="LLM key non configurata")
+    img = payload.image_base64
+    if "," in img and img.strip().startswith("data:"):
+        img = img.split(",", 1)[1]
+    lang_line = {"de": "Rispondi in tedesco.", "en": "Answer in English.", "es": "Responde en español."}.get(payload.lang, "Rispondi in italiano.")
+    chat = LlmChat(
+        api_key=EMERGENT_LLM_KEY,
+        session_id=f"flour-{uuid.uuid4()}",
+        system_message="Leggi le etichette delle farine e restituisci solo JSON valido.",
+    ).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=1200)
+    user_msg = UserMessage(text=SCAN_FLOUR_PROMPT + "\n" + lang_line, file_contents=[ImageContent(image_base64=img)])
+    text = ""
+    try:
+        async for event in chat.stream_message(user_msg):
+            if isinstance(event, TextDelta):
+                text += event.content
+            elif isinstance(event, StreamDone):
+                break
+    except Exception:
+        logger.exception("scan-flour error")
+        raise HTTPException(status_code=500, detail="Errore nell'analisi della foto")
+    raw = text.strip().strip("`")
+    if raw.lower().startswith("json"):
+        raw = raw[4:].strip()
+    s, e = raw.find("{"), raw.rfind("}")
+    if s == -1 or e == -1:
+        raise HTTPException(status_code=422, detail="Etichetta farina non riconosciuta nella foto")
+    try:
+        return json.loads(raw[s:e + 1])
+    except Exception:
+        raise HTTPException(status_code=422, detail="Impossibile leggere i dati della farina")
 
 
 # --- Dispensa Farine: salva le farine scansionate (W, proteine) per riusarle nelle ricette ---
@@ -7560,6 +8091,32 @@ class CheckoutReq(BaseModel):
     coupon: Optional[str] = None
 
 
+@api_router.post("/subscription/checkout")
+async def create_checkout(body: CheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
+    email = user["email"]
+    p = INTERNAL_PRICES.get((body.tier, body.plan)) or INTERNAL_PRICES[("lab", "monthly")]
+    # Cliente per email (riuso se esiste)
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
+    session = _stripe.checkout.Session.create(
+        mode="subscription",
+        managed_payments={"enabled": False},
+        customer=customer.id,
+        line_items=[{"price_data": {"currency": "eur", "unit_amount": p["amount"],
+                                    "recurring": {"interval": p["interval"]},
+                                    "product_data": {"name": p["name"]}}, "quantity": 1}],
+        allow_promotion_codes=True,
+        success_url=body.origin_url.rstrip("/") + "/?sub=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=body.origin_url.rstrip("/") + "/?sub=cancel",
+        metadata={"email": email, "plan": body.plan, "tier": body.tier},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "plan": body.plan, "amount": p["amount"], "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
 
 
 class BundleCheckoutReq(BaseModel):
@@ -7568,6 +8125,32 @@ class BundleCheckoutReq(BaseModel):
     lang: str = "it"
 
 
+@api_router.post("/recipes/bundle-checkout")
+async def bundle_checkout(body: BundleCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
+    b = BUNDLE_DEFS.get(body.bundle)
+    if not b:
+        raise HTTPException(400, "Pacchetto non valido")
+    lang = body.lang if body.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
+    email = user["email"]
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer=customer.id,
+        managed_payments={"enabled": False},
+        line_items=[{"price_data": {"currency": "eur", "unit_amount": b["amount"],
+                                    "product_data": {"name": _bundle_name(b, lang)}}, "quantity": 1}],
+        success_url=body.origin_url.rstrip("/") + "/?bundle=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=body.origin_url.rstrip("/") + "/?bundle=cancel",
+        metadata={"email": email, "bundle": body.bundle, "kind": "bundle", "lang": lang},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "bundle": body.bundle, "amount": b["amount"], "currency": "eur", "lang": lang,
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
 
 def _r_field(d: dict, base: str, lang: str) -> str:
     if lang == "de":
@@ -7830,6 +8413,16 @@ async def _bundle_fulfill(session_obj, lang: str = "it"):
         logging.getLogger(__name__).error(f"bundle email/pdf failed: {e}")
 
 
+@api_router.get("/recipes/bundle/checkout/status/{session_id}")
+async def bundle_checkout_status(session_id: str, lang: str = "it", user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    if paid:
+        await _bundle_fulfill(s, lang=lang)
+    return {"payment_status": s.get("payment_status"), "paid": paid}
 
 
 
@@ -7936,6 +8529,32 @@ class TrialCardReq(BaseModel):
     origin_url: str
 
 
+@api_router.post("/trial/checkout")
+async def trial_checkout(body: TrialCardReq, user: dict = Depends(current_user)):
+    _require_payments()
+    """Prova 7 giorni: raccoglie la carta con Stripe (mode=setup) SENZA addebitare nulla."""
+    email = user["email"].strip().lower()
+    ent = await db.entitlements.find_one({"email": email})
+    if ent and ent.get("trial_used"):
+        raise HTTPException(400, "Prova già utilizzata")
+    existing = _stripe.Customer.list(email=email, limit=1).data
+    customer = existing[0] if existing else _stripe.Customer.create(email=email)
+    origin = body.origin_url.rstrip("/")
+    session = _stripe.checkout.Session.create(
+        mode="setup",
+        customer=customer.id,
+        managed_payments={"enabled": False},
+        payment_method_types=["card"],
+        success_url=origin + "/?trial=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?trial=cancel",
+        metadata={"email": email, "kind": "trial_setup"},
+    )
+    await db.payment_transactions.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": "trial_setup", "amount": 0, "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
 
 
 async def _activate_card_trial(email: str, session) -> dict:
@@ -7964,6 +8583,21 @@ async def _activate_card_trial(email: str, session) -> dict:
     return {"pro": True, "source": "trial_card", "expires_at": exp}
 
 
+@api_router.get("/trial/checkout/status/{session_id}")
+async def trial_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    email = user["email"].strip().lower()
+    try:
+        session = _stripe.checkout.Session.retrieve(session_id, expand=["setup_intent"])
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    if (session.get("metadata") or {}).get("email") != email:
+        raise HTTPException(403, "Non autorizzato")
+    if session.get("status") == "complete":
+        await db.payment_transactions.update_one({"session_id": session_id},
+            {"$set": {"payment_status": "paid", "paid_at": now_iso()}})
+        res = await _activate_card_trial(email, session)
+        return {"activated": True, **res}
+    return {"activated": False}
 
 
 @api_router.post("/webhook/stripe")
@@ -8062,6 +8696,35 @@ async def academy_my(user: dict = Depends(current_user)):
     return {"courses": courses, "bookings": bookings}
 
 
+@api_router.post("/academy/checkout")
+async def academy_checkout(body: AcademyCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
+    email = user["email"].strip().lower()
+    origin = body.origin_url.rstrip("/")
+    if body.kind == "course":
+        c = _COURSE_BY_ID.get(body.course_id or "")
+        if not c:
+            raise HTTPException(400, "Corso non trovato")
+        title, cents, item_id = c["title"], c["price_cents"], c["id"]
+    elif body.kind == "consult":
+        title, cents, item_id = CONSULT["title"], CONSULT["price_cents"], CONSULT["id"]
+    else:
+        raise HTTPException(400, "Tipo non valido")
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer_email=email,
+        managed_payments={"enabled": False},
+        line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
+        success_url=origin + "/?academy=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?academy=cancel",
+        metadata={"email": email, "academy_kind": body.kind, "academy_item": item_id},
+    )
+    await db.academy_orders.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": body.kind, "item_id": item_id, "amount": cents, "currency": "eur",
+        "booking": body.booking or None, "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
 
 
 async def _academy_fulfill(session_obj):
@@ -8078,6 +8741,20 @@ async def _academy_fulfill(session_obj):
     return {**order, "payment_status": "paid"}
 
 
+@api_router.get("/academy/checkout/status/{session_id}")
+async def academy_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    order = None
+    if paid:
+        order = await _academy_fulfill(s)
+    else:
+        order = await db.academy_orders.find_one({"session_id": session_id}, {"_id": 0})
+    return {"payment_status": s.get("payment_status"), "paid": paid,
+            "kind": (order or {}).get("kind"), "item_id": (order or {}).get("item_id")}
 
 
 
@@ -8090,6 +8767,40 @@ class RecipeCheckoutReq(BaseModel):
     recipe_id: Optional[str] = None
 
 
+@api_router.post("/recipe/checkout")
+async def recipe_checkout(body: RecipeCheckoutReq, user: dict = Depends(current_user)):
+    _require_payments()
+    email = user["email"].strip().lower()
+    cents = RECIPE_PRICES.get(body.kind)
+    if not cents:
+        raise HTTPException(400, "Tipo non valido")
+    if body.kind == "single":
+        if not body.recipe_id:
+            raise HTTPException(400, "Ricetta mancante")
+        rec = await db.recipes.find_one({"id": body.recipe_id}, {"_id": 0})
+        if not rec:
+            raise HTTPException(404, "Ricetta non trovata")
+        title = f"Ricetta: {rec.get('name', '')}"
+    elif body.kind == "panettoni":
+        title = "Tutti i Panettoni MikiLab"
+    else:
+        title = "Tutte le ricette MikiLab"
+    origin = body.origin_url.rstrip("/")
+    session = _stripe.checkout.Session.create(
+        mode="payment",
+        customer_email=email,
+        managed_payments={"enabled": False},
+        line_items=[{"price_data": {"currency": "eur", "product_data": {"name": title}, "unit_amount": cents}, "quantity": 1}],
+        success_url=origin + "/?recipe=success&session_id={CHECKOUT_SESSION_ID}",
+        cancel_url=origin + "/?recipe=cancel",
+        metadata={"email": email, "recipe_kind": body.kind, "recipe_id": body.recipe_id or ""},
+    )
+    await db.recipe_orders.insert_one({
+        "id": str(uuid.uuid4()), "session_id": session.id, "email": email,
+        "kind": body.kind, "recipe_id": body.recipe_id, "amount": cents, "currency": "eur",
+        "payment_status": "initiated", "created_at": now_iso(),
+    })
+    return {"url": session.url, "session_id": session.id}
 
 
 async def _recipe_fulfill(session_obj):
@@ -8116,6 +8827,16 @@ async def _recipe_fulfill(session_obj):
     return {**(order or {}), "payment_status": "paid"}
 
 
+@api_router.get("/recipe/checkout/status/{session_id}")
+async def recipe_checkout_status(session_id: str, user: dict = Depends(current_user)):
+    try:
+        s = _stripe.checkout.Session.retrieve(session_id)
+    except Exception:
+        raise HTTPException(404, "Sessione non trovata")
+    paid = s.get("payment_status") == "paid"
+    if paid:
+        await _recipe_fulfill(s)
+    return {"payment_status": s.get("payment_status"), "paid": paid}
 
 
 # ---------------------------------------------------------------------------
@@ -8404,6 +9125,12 @@ async def seed_shop_if_empty():
             {"$set": {"_key": "shop_settings", "enabled": False}}, upsert=True)  # default: Coming Soon
 
 
+@api_router.get("/shop/products")
+async def shop_products():
+    await seed_shop_if_empty()
+    settings = await db.app_meta.find_one({"_key": "shop_settings"}, {"_id": 0})
+    prods = await db.shop_products.find({"active": True}, {"_id": 0}).to_list(200)
+    return {"enabled": bool((settings or {}).get("enabled")), "products": prods}
 
 
 class WaitlistReq(BaseModel):

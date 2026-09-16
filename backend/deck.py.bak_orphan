@@ -323,6 +323,10 @@ async def ai_universal_command(payload: UniversalCommand, user: dict = Depends(r
     return {"status": "success", "action_type": "ack", "message": f"Comando eseguito: '{payload.command_text}'."}
 
 
+@api_router.get("/ai/my-features")
+async def ai_my_features(user: dict = Depends(current_user)):
+    docs = await db.lab_user_features.find({"user_id": user["user_id"]}, {"_id": 0, "user_id": 0}).to_list(50)
+    return {"features": docs}
 
 
 # ---------------------------------------------------------------------------
@@ -770,6 +774,23 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     return {"intent": intent, "executed": executed, "reply": reply, "state": state, "parsed": parsed, "mood": mood}
 
 
+@api_router.post("/master/govern/stream")
+async def master_govern_stream(body: MasterGovernReq, admin: dict = Depends(require_admin)):
+    """Come /master/govern ma in STREAMING SSE: la risposta di Sitor arriva parola-per-parola (bassa latenza percepita)."""
+    result = await master_govern(body, admin)
+    reply = result.get("reply") or ""
+
+    async def gen():
+        # meta iniziale (intent/mood/executed) così l'orb reagisce subito
+        yield f"data: {json.dumps({'meta': {k: result.get(k) for k in ('intent', 'executed', 'mood', 'state')}})}\n\n"
+        buf = ""
+        for i, w in enumerate(reply.split(" ")):
+            buf = w if i == 0 else buf + " " + w
+            yield f"data: {json.dumps({'delta': (w if i == 0 else ' ' + w), 'text': buf})}\n\n"
+            await asyncio.sleep(0.035)
+        yield f"data: {json.dumps({'done': True, 'reply': reply, **{k: result.get(k) for k in ('intent', 'executed', 'mood', 'state')}})}\n\n"
+
+    return StreamingResponse(gen(), media_type="text/event-stream", headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
 @api_router.get("/mike/proactive")
