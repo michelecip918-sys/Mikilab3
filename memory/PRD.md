@@ -5675,3 +5675,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Testato con browser automation: vecchio sblocco memorizzato NON apre più l'app; keypad → 739284 → accesso master; reload → PIN richiesto di nuovo. PASS.
 - AZIONE RICHIESTA: quando il deploy in corso termina, premere Deploy UNA SECONDA VOLTA per portare in produzione anche il comportamento "PIN a ogni apertura" (commit successivi alla pressione iniziale).
 
+---
+## Changelog — 22 Set 2026, terza parte (causa radice produzione)
+- **CAUSA RADICE**: le variabili d'ambiente di PRODUZIONE su Emergent sono i "Secrets" del pannello Deployment (Custom Keys), SEPARATI dal .env del repo e PRESERVATI tra i redeploy. Il redeploy (bundle main.0b73d9dd.js live) non ha quindi aggiornato ADMIN_GATE_PIN: produzione rimasta a "1985".
+- **SOLUZIONE (manuale, utente)**: Deployments → app mikilab.de → pannello Deployment → Secrets → Edit Custom Keys → ADMIN_GATE_PIN = 739284 → Save → Save & Redeploy / Republish. Verificare poi: 739284=master, 1985/198505=rifiutati.
+- Login admin produzione (admin@mikilab.de e michelecip918@gmail.com con password preview) → 401: credenziali DB produzione diverse, da ripristinare dopo il lancio se serve l'area Master web.
+
