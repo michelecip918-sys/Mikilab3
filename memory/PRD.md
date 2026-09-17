@@ -5626,3 +5626,15 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ## Changelog — 17 Set 2026 (team_tasks: organization_id garantito ovunque)
 - Corrette le operazioni team_tasks rimaste non scopate: insert in POST /mike/autoplan/dispatch (ora con organization_id=_org_id(admin)), lettura in GET /worker/board (+org), update in worker_assign_next (+org), lettura+update in POST /mike/proofing/sync-plan in warehouse.py (+org via _org_id(admin)). delegation/confirm aveva gia' organization_id. Ora OGNI insert/lettura/update di team_tasks e' filtrato per organization_id.
 - TEST REALE a 2 organizzazioni: A crea task via dispatch → A lo vede (delegation/tasks=1), B NON lo vede (worker/board=0, delegation/tasks=0). sync-plan di B non tocca i task di A (task A intatto); sync-plan di A aggiorna solo i suoi (updated=1). Pulizia dati test fatta.
+
+---
+## Changelog — 17 Set 2026 (CI isolamento + runner regressione + deploy)
+### CI Isolamento (nuovo tool)
+- /app/scripts/check_org_isolation.py: legge dinamicamente ORG_SCOPED_COLLECTIONS da server.py (copre AUTOMATICAMENTE ogni collezione futura), scansiona i .py backend e segnala find/find_one/update/delete/count/insert su collezioni aziendali SENZA organization_id. Risolve l'indirezione via variabile (`q = {...}`) e `dict(task)`. Soppressione falsi positivi con `# noqa: org-scope`. Esclude test/script/migrazioni.
+- Esito team_tasks: 0 violazioni (PULITO). Baseline complessiva attuale: 144 segnalazioni su altre collezioni (mix di legittime con indirezione multipla e possibili gap legacy) — da rivedere progressivamente, non bloccante.
+### Runner regressione pre-deploy (nuovo)
+- /app/scripts/pre_deploy_check.sh: esegue il CI isolamento + le suite iter257 (isolamento), iter258 (multi-azienda/inviti), test_autoplan_dispatch_coord (iter259, coordinamento), iter260 (regressione ampia). Da lanciare prima di ogni deploy.
+### Verifica finale team_tasks a 2 aziende (REALE)
+- A crea task via dispatch → visibile solo ad A (delegation/tasks=1); B (nuova azienda) vede 0 su delegation/tasks, worker/board, worker/next-task, production/shift-plan. sync-plan di B non tocca A; A resta integro. Dati test ripuliti.
+### Deploy
+- send_to_deployer: job in coda (job_id aa6b806a).

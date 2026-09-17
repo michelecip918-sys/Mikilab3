@@ -55,11 +55,42 @@ def first_arg(span):
     return span
 
 
+def resolve_indirect(text, target, call_start):
+    """Se il filtro/doc è una variabile o dict(var), cerca a ritroso la sua definizione
+    `<var> = {...}` nella stessa area e verifica se contiene organization_id."""
+    t = target.strip()
+    m = re.fullmatch(r"dict\(\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)", t) or re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)", t)
+    if not m:
+        return False
+    var = m.group(1)
+    # cerca l'ultima assegnazione `var = {` prima della chiamata
+    prefix = text[:call_start]
+    asg = None
+    for mm in re.finditer(r"\b" + re.escape(var) + r"\s*=\s*\{", prefix):
+        asg = mm
+    if not asg:
+        return False
+    # estrai il blocco dict bilanciato
+    i = asg.end() - 1
+    depth = 0
+    n = len(text)
+    while i < n:
+        c = text[i]
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                block = text[asg.end() - 1:i + 1]
+                return "organization_id" in block
+        i += 1
+    return False
+
+
 def scan_file(path, scoped):
     text = open(path, encoding="utf-8").read()
     lines = text.split("\n")
     viol = []
-    # db.<coll>.<op>(
     pat = re.compile(r"db\.([A-Za-z_][A-Za-z0-9_]*)\.([A-Za-z_]+)\s*\(")
     for m in pat.finditer(text):
         coll, op = m.group(1), m.group(2)
@@ -74,8 +105,11 @@ def scan_file(path, scoped):
         line_src = lines[lineno - 1] if lineno - 1 < len(lines) else ""
         if "noqa: org-scope" in line_src:
             continue
-        if "organization_id" not in target:
-            viol.append((lineno, coll, op, line_src.strip()[:90]))
+        if "organization_id" in target:
+            continue
+        if resolve_indirect(text, target, m.start()):
+            continue
+        viol.append((lineno, coll, op, line_src.strip()[:90]))
     return viol
 
 
