@@ -5701,3 +5701,14 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **Pulizia file**: eliminati il residuo corrotto `indow.location.origin;|const base = window.location.origin;|` dalla root e i 4 backup `*.py.bak_orphan` (server/deck/operations/community).
 - **Deploy**: un deploy era già partito (include PIN-a-ogni-apertura + box "Chiudi PIN residuo"). Le rotte Modelli Turni sono successive → serve UN ultimo Deploy quando quello in corso termina.
 
+
+---
+## Changelog — 22 Set 2026, Semplificazione Console Capo (5 interventi)
+Testato: testing_agent iteration_261 → 8/8 backend pytest verdi + tutti i flussi UI validati (retest_needed:false).
+1. **Macchine completamente editabili dal Capo**: le macchine non sono più bloccate al catalogo hardcoded. Backend (server.py): `_dept_machines_merged` ora applica `overrides` (rinomina/nascondi) e `custom` (macchine aggiunte); nuovi endpoint `POST /api/depts/{dept}/machines/add`, `PATCH /api/depts/{dept}/machines/{mid}` (rinomina base via override o custom diretta), `DELETE /api/depts/{dept}/machines/{mid}` (nasconde base / rimuove custom); `dept_machines_set` accetta anche gli id custom. Org-scoped. Frontend: nuovo pannello **`MyMachines.jsx`** ("Le mie macchine", panel-my-machines, defaultOpen) in sezione Strumenti — selettore reparto, aggiungi (nome+tipo), rinomina inline (matita), elimina (cestino). api.js: deptApi.machineAdd/machineRename/machineDelete.
+2. **Toggle "Strumenti avanzati" (OFF default, localStorage mikilab_advanced)**: in cima alla sezione Strumenti (advanced-toggle). Nascoste di default: Bilance & PLC Forni (panel-hardware), Controllo Qualità Ottico/AI Vision (panel-ovenqc), Ricettario Vivente (panel-living-recipe), + label "Pannelli tecnici avanzati" e BatchPhoenix. AGV/DigitalTwin erano import morti (mai renderizzati). Rinominati: "Command Deck"→"Console", "Neural Load Radar" rimosso dal titolo Centro Emergenze.
+3. **Meno testo**: SecBlock e HoloPanel NON renderizzano più il sottotitolo `sub` (2 modifiche globali → tutti i sottotitoli lunghi spariti, restano i titoli). Rimosso `defaultOpen` dai pannelli secondari (ordini, pizzeria, team-coordination, guided-tools); restano aperti solo Ricettario, Piano, Assegnazione Reparti, Le mie macchine.
+4. **Un solo accesso a Sitor**: rimosso il widget fluttuante MikeMixSense per il Capo (resta solo per operatori/ospiti non-loggati). Nella console Capo un unico punto: sezione chat "Chat con Sitor" (SalaSitor) + il FAB "Chiedi a Sitor" (ask-sitor-fab) che è solo un link a quella sezione.
+5. **Doppia introduzione rimossa**: eliminato `<DeskScene />` (e l'import); mantenuto l'hero avatar+ruolo (hero-master).
+- NB: modifiche in PREVIEW → serve Deploy/Republish per mikilab.de.
+- Backlog: silos/celle come stringhe in DEPARTMENTS restano fisse (non richieste esplicitamente come CRUD; il Capo può comunque aggiungere celle/silos come "macchine" con tipo libero).
