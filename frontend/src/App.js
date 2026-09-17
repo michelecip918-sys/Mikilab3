@@ -806,14 +806,14 @@ export default function App() {
                       💬 {tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor", "Pregunta a Sitor", "Demande à Sitor", "از سیتور بپرس")}
                     </button>
                     {sitorOpen && (
-                    <div data-testid="sitor-drawer" className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true">
+                    <div data-testid="sitor-drawer" className="fixed inset-0 z-[60] flex justify-end" role="dialog" aria-modal="true">
                       <button type="button" data-testid="sitor-drawer-backdrop" aria-label={tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")} onClick={() => setSitorOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-default" />
                       <div className="relative w-full max-w-md h-full bg-[#050810] border-l border-[#1e293b] flex flex-col shadow-[0_0_40px_rgba(138,151,166,0.25)]">
                         <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e293b] shrink-0">
                           <span className="font-cyber font-black text-sm text-white uppercase tracking-wider">Sitor</span>
                           <button type="button" data-testid="sitor-drawer-close" onClick={() => setSitorOpen(false)} aria-label={tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}
                             className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-[#334155]/60 text-[#9aa6b2] hover:text-white hover:border-[#8a97a6] transition-colors active:scale-95">
-                            <X className="w-4 h-4" />
+                            <X className="w-4 h-4 pointer-events-none" />
                           </button>
                         </div>
                         <div className="flex-1 overflow-y-auto p-3">
