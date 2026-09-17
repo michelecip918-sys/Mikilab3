@@ -5695,3 +5695,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **#2 Republish**: azione utente (deploy) — porterà live sia il "PIN a ogni apertura" sia il nuovo box "Chiudi PIN residuo".
 - AZIONE UTENTE dopo il prossimo Republish: nel pannello Sicurezza scrivere "1985" nel box "Chiudi PIN residuo" → Elimina, per chiudere il PIN operaio residuo in produzione.
 
+---
+## Changelog — 22 Set 2026, Modelli Turni + pulizia file
+- **Backend "Modelli Turni" (ShiftTemplates)**: aggiunte a server.py (dopo depts_history, riga ~2214) le 4 rotte mancanti — GET/POST `/api/depts/templates`, DELETE `/api/depts/templates/{tid}`, POST `/api/depts/templates/{tid}/apply` (applica il turno-tipo a oggi: crea dept_assignments + aggiorna worker_state, saltando "sitor"). Testato ciclo completo via curl: crea/lista/applica (2 assegnazioni)/elimina — tutto OK. Compilazione py_compile OK.
+- **Pulizia file**: eliminati il residuo corrotto `indow.location.origin;|const base = window.location.origin;|` dalla root e i 4 backup `*.py.bak_orphan` (server/deck/operations/community).
+- **Deploy**: un deploy era già partito (include PIN-a-ogni-apertura + box "Chiudi PIN residuo"). Le rotte Modelli Turni sono successive → serve UN ultimo Deploy quando quello in corso termina.
+

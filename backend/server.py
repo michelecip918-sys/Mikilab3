@@ -2213,6 +2213,68 @@ async def depts_history(days: int = 14, admin: dict = Depends(require_admin)):
     return {"history": out}
 
 
+# --- Modelli di turno (turni-tipo salvati, riapplicabili con un tocco) ---
+class DeptTemplateItem(BaseModel):
+    dept: str = ""
+    operator: str = ""
+    task: str = ""
+
+class DeptTemplateCreateReq(BaseModel):
+    name: str = ""
+    items: List[DeptTemplateItem] = []
+
+@api_router.get("/depts/templates")
+async def depts_templates_list(org: str = Depends(effective_org)):
+    docs = await db.dept_templates.find({"organization_id": org}, {"_id": 0}).sort("created_at", -1).to_list(200)
+    return {"templates": docs}
+
+@api_router.post("/depts/templates")
+async def depts_templates_create(body: DeptTemplateCreateReq, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(status_code=400, detail="Nome turno richiesto")
+    items = [{"dept": it.dept, "operator": (it.operator or "").strip(), "task": (it.task or "").strip()}
+             for it in (body.items or []) if (it.operator or "").strip()]
+    if not items:
+        raise HTTPException(status_code=400, detail="Nessuna assegnazione da salvare")
+    doc = {"id": _uuid.uuid4().hex[:10], "name": nm, "items": items,
+           "by": admin.get("email") or "master", "created_at": now_iso(), "organization_id": _org_id(admin)}
+    await db.dept_templates.insert_one({**doc})
+    doc.pop("_id", None)
+    return {"ok": True, "template": doc}
+
+@api_router.delete("/depts/templates/{tid}")
+async def depts_templates_delete(tid: str, admin: dict = Depends(require_admin)):
+    await db.dept_templates.delete_one({"id": tid, "organization_id": _org_id(admin)})
+    return {"ok": True}
+
+@api_router.post("/depts/templates/{tid}/apply")
+async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    org = _org_id(admin)
+    tpl = await db.dept_templates.find_one({"id": tid, "organization_id": org}, {"_id": 0})
+    if not tpl:
+        raise HTTPException(status_code=404, detail="Turno-tipo non trovato")
+    today = now_iso()[:10]
+    created = []
+    for it in (tpl.get("items") or []):
+        dept = it.get("dept", "")
+        op = (it.get("operator") or "").strip()
+        if not op or dept not in DEPARTMENTS:
+            continue
+        doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": dept,
+               "dept_name": DEPARTMENTS[dept]["name"], "task": (it.get("task") or "").strip(),
+               "operator": op, "note": "", "by": admin.get("email") or "master", "at": now_iso(), "organization_id": org}
+        await db.dept_assignments.insert_one({**doc})
+        doc.pop("_id", None)
+        created.append(doc)
+        if op.lower() != "sitor":
+            await _set_worker_state(org, op, status="busy", dept=dept,
+                                    task=(it.get("task") or "").strip(), locked_by_capo=True, capo_at=now_iso())
+    return {"ok": True, "assignments": created}
+
+
 @api_router.get("/depts/presence")
 async def depts_presence(admin: dict = Depends(require_admin)):
     """Presenza live: operai la cui ultima timbratura di oggi non è 'out'."""
