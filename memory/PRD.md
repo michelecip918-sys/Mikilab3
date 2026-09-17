@@ -5666,3 +5666,12 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Il trigger del deploy in questo ambiente fork non è disponibile come CLI: il Capo deve premere il pulsante **Deploy** nella piattaforma Emergent. Dopo il deploy: verificare su https://mikilab.de/api/admin-gate/verify che il nuovo PIN dia master e che 198505 sia rifiutato.
 - Rimandati a dopo il lancio (richiesta utente): pulizia altri script test storici, promemoria rotazione PIN, registro accessi gate in UI.
 
+---
+## Changelog — 22 Set 2026, seconda parte (PIN a ogni apertura + mistero produzione risolto)
+- **MISTERO PRODUZIONE RISOLTO**: su mikilab.de il PIN master attuale è "1985" a 4 cifre (hash nel DB di produzione, impostato in passato). Per questo l'utente entrava scrivendo 1985. Il PIN 198505 è rifiutato ovunque.
+- **Produzione ancora su vecchio build**: bundle main.bbd08699.js invariato dopo il Deploy premuto dall'utente → il deploy era ancora in corso/non applicato al momento dei controlli. Quando il deploy con i nuovi commit andrà live, lo startup riallinea automaticamente il PIN master del DB produzione a 739284 (salvagente ADMIN_GATE_PIN).
+- **Login admin su produzione con admin@mikilab.de fallisce (401)**: credenziali produzione diverse/assenti — il DB produzione è separato dal preview. Non bloccante per il gate (che non richiede sessione), ma da verificare per l'area Master dopo il lancio.
+- **PIN richiesto a OGNI apertura** (scelta utente): App.js non legge più mikilab_admin_unlocked/mikilab_mode all'avvio (sempre Muro del PIN al reload); AdminGate.jsx non salva più mikilab_admin_unlocked né la cache offline del PIN (OK_KEY rimossa: verifica solo server-side, niente PIN in chiaro su localStorage).
+- Testato con browser automation: vecchio sblocco memorizzato NON apre più l'app; keypad → 739284 → accesso master; reload → PIN richiesto di nuovo. PASS.
+- AZIONE RICHIESTA: quando il deploy in corso termina, premere Deploy UNA SECONDA VOLTA per portare in produzione anche il comportamento "PIN a ogni apertura" (commit successivi alla pressione iniziale).
+

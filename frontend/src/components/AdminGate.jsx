@@ -6,7 +6,6 @@ import { mkTri } from "@/i18n/triMaps";
 import { adminGateApi } from "@/lib/api";
 
 const PUB = process.env.PUBLIC_URL;
-const OK_KEY = "mikilab_admin_gate_ok"; // ultimo PIN valido (cache locale per uso offline)
 
 export default function AdminGate({ onUnlock, onBack, role }) {
   const { lang } = useLang();
@@ -25,13 +24,11 @@ export default function AdminGate({ onUnlock, onBack, role }) {
       res = await adminGateApi.verify(val);        // verifica lato server (segreto, hashato)
       ok = !!(res && res.ok);
       level = (res && res.level) || "master";
-      if (ok) { try { localStorage.setItem(OK_KEY, val); } catch { /* */ } }
     } catch {
-      // Offline: confronto con l'ultimo PIN valido salvato su questo dispositivo.
-      try { ok = val === localStorage.getItem(OK_KEY); } catch { ok = false; }
+      ok = false; // nessuna cache locale del PIN: la verifica è solo server-side
     }
     if (!soft) setBusy(false);
-    if (ok) { if (level === "master") { try { localStorage.setItem("mikilab_admin_unlocked", "1"); } catch { /* */ } } onUnlock(level, res || {}); }
+    if (ok) { onUnlock(level, res || {}); }
     else if (!soft) { setErr(true); setPin(""); }
   };
 

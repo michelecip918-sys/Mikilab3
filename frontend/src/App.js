@@ -140,8 +140,8 @@ export default function App() {
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user, authOpen, setAuthOpen, logout } = useAuth();
 
-  const [adminOk, setAdminOk] = useState(() => { try { return localStorage.getItem("mikilab_admin_unlocked") === "1" || localStorage.getItem("mikilab_mode") === "floor"; } catch { return false; } });
-  const [mode, setMode] = useState(() => { try { return localStorage.getItem("mikilab_mode") === "floor" ? "floor" : "capo"; } catch { return "capo"; } });
+  const [adminOk, setAdminOk] = useState(false); // PIN richiesto a OGNI apertura (nessun "ricorda accesso")
+  const [mode, setMode] = useState("capo");
   const [opLevel, setOpLevel] = useState(() => { try { return localStorage.getItem("mikilab_op_level") || "novizio"; } catch { return "novizio"; } });
   const [showGuide, setShowGuide] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
@@ -330,11 +330,11 @@ export default function App() {
   if (!adminOk && !resetToken) return <><SplashScreen /><PublicGate onUnlock={(payload) => {
     const p = payload || {};
     if (p.mode === "floor") {
-      try { localStorage.setItem("mikilab_mode", "floor"); localStorage.setItem("mikilab_op_level", p.level || "novizio"); if (p.name) localStorage.setItem("mikilab_role", p.name); } catch { /* */ }
+      try { localStorage.setItem("mikilab_op_level", p.level || "novizio"); if (p.name) localStorage.setItem("mikilab_role", p.name); } catch { /* */ }
       setMode("floor"); setOpLevel(p.level || "novizio"); setFloorRole(p.name || ""); setFloorUnlocked(true); setAdminOk(true);
       try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: p.name || "" } })); } catch { /* */ }
     } else {
-      try { localStorage.setItem("mikilab_admin_unlocked", "1"); localStorage.removeItem("mikilab_mode"); } catch { /* */ }
+      try { localStorage.removeItem("mikilab_mode"); localStorage.removeItem("mikilab_admin_unlocked"); } catch { /* */ }
       setMode("capo"); setAdminOk(true);
     }
   }} /></>;
