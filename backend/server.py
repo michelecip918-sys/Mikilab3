@@ -4271,7 +4271,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
         if newq < 0:
             shortfalls.append({"name": s["name"], "missing": round(-newq, 3)})
             newq = 0
-        await db.lab_warehouse.update_one({"id": s["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+        await db.lab_warehouse.update_one({"id": s["id"], "organization_id": _org_id(user)}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
         for x in stock:
             if x["id"] == s["id"]:
                 x["quantity_kg"] = newq

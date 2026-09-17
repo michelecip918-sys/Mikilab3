@@ -5759,3 +5759,9 @@ Verificato: curl (deliveries server.py attiva, PATCH→405, ceste dicitura rimos
 2. **Deliveries duplicate rimosse**: eliminato il blocco /deliveries duplicato in operations.py (righe 15-63: list/create/patch/delete + modelli), non instradato. Resta la versione attiva in server.py (GET/POST/DELETE + /organize, schema con date/van/deadline). Verificato: GET /deliveries ha 'date', PATCH /deliveries/{id} → 405.
 3. **"ceste smart"**: rimossa la dicitura dalla docstring in cima a operations.py (il codice Crate* resta invariato, nessuna nuova funzione).
 - NB: in PREVIEW → deploy verso mikilab.de.
+
+---
+## Changelog — Set 2026, fix multi-tenant /inventory/bind-batch (P0)
+Verificato: sintassi OK + curl end-to-end (gate PIN 739284 → login admin → bind-batch ricetta ×1). Stock "Farina" scalato 45.92→44.9 kg solo su org_default; unica org presente in lab_warehouse, nessuna scrittura cross-tenant.
+1. **Isolamento tenant su update magazzino**: server.py `inventory_bind_batch` — il filtro di `db.lab_warehouse.update_one` ora include `organization_id: _org_id(user)` (prima solo `{"id": s["id"]}`). Le read (`find`) erano già per-org; ora anche la write è blindata.
+- NB: in PREVIEW → serve Deploy/Republish per mikilab.de.
