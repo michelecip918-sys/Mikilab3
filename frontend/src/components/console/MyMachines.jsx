@@ -74,6 +74,14 @@ export default function MyMachines() {
     } catch { toast.error("Error"); } finally { setBusy(false); }
   };
 
+  const loadPreset = async (activity) => {
+    try {
+      const r = await deptApi.machinePreset(dept, activity);
+      setMachines(r.machines || []);
+      toast.success(r.added > 0 ? tri(`Aggiunte ${r.added} macchine tipiche`, `${r.added} Maschinen geladen`, `Added ${r.added} typical machines`, `Añadidas ${r.added}`, `${r.added} machines ajoutées`, `${r.added} دستگاه اضافه شد`) : tri("Sono già presenti", "Bereits vorhanden", "Already present", "Ya presentes", "Déjà présents", "قبلاً موجود است"));
+    } catch { toast.error("Error"); }
+  };
+
   return (
     <div data-testid="my-machines" className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
@@ -82,6 +90,15 @@ export default function MyMachines() {
           {depts.map((d) => <option key={d.key} value={d.key}>{d.name}</option>)}
         </select>
         <span className="text-[11px] text-[#64748b]">{machines.length} {tri("strumenti", "Geräte", "tools", "herramientas", "outils", "ابزار")}</span>
+      </div>
+
+      <div data-testid="machine-presets" className="rounded-lg bg-[#0C1019]/60 border border-[#3E9C93]/25 p-2.5">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-[#64748b] mb-1.5">{tri("Precarica macchine tipiche", "Typische Maschinen laden", "Load typical machines", "Cargar máquinas típicas", "Charger machines types", "بارگذاری دستگاه‌های معمول")}</p>
+        <div className="flex flex-wrap gap-1.5">
+          {[["panificio", tri("Panificio", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")], ["pizzeria", tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا")], ["pasticceria", tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")]].map(([k, label]) => (
+            <button key={k} data-testid={`machine-preset-${k}`} onClick={() => loadPreset(k)} disabled={busy} className="px-3 py-1.5 rounded-full text-[12px] font-bold bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#7fd4c9] active:scale-95 transition-all disabled:opacity-40">{label}</button>
+          ))}
+        </div>
       </div>
 
       <div className="space-y-1.5">

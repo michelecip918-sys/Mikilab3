@@ -792,6 +792,7 @@ export const deptApi = {
   machineRename: (dept, mid, name) => api.patch(`/depts/${dept}/machines/${mid}`, { name }).then((r) => r.data),
   machineDelete: (dept, mid) => api.delete(`/depts/${dept}/machines/${mid}`).then((r) => r.data),
   machineReorder: (dept, order) => api.put(`/depts/${dept}/machines/reorder`, { order }).then((r) => r.data),
+  machinePreset: (dept, activity) => api.post(`/depts/${dept}/machines/preset`, { activity }).then((r) => r.data),
   machinesOverview: () => cachedGet("depts_machines_overview", () => api.get(`/depts/machines/overview`).then((r) => r.data), { depts: [] }),
 };
 

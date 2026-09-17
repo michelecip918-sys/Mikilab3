@@ -5735,3 +5735,11 @@ Verificato: testing_agent iteration_262 → 4/4 backend + UI verde (retest_neede
 2. **Log accetta/rifiuta squadra**: coordination.py — `_accept_call` logga `kind='accepted'`, ramo decline logga `kind='declined'` (entrambi operator+at) in coordination_log. Frontend TeamCoordination.jsx — Registro decisioni ora mostra nome operatore in grassetto + "ha accettato" (verde) / "ha rifiutato" (rosso) / "scoperto" + orario.
 3. **Preset silos per attività**: warehouse.py — `_SILO_PRESETS` (panificio/pizzeria/pasticceria) + `POST /api/mike/silos/preset {activity}` con dedup per nome. Frontend SiloManager.jsx — box `silos-presets` con 3 pulsanti. api.js: deptApi.machineReorder, mikeApi.siloPreset.
 - NB: in PREVIEW → serve Deploy/Republish per mikilab.de. Dati di test del testing agent ripuliti da org_default.
+
+---
+## Changelog — 22 Set 2026, 3 rifiniti (preset macchine, notifica scoperto, filtro registro)
+Verificato: curl (preset macchine added:5 poi 0 dedup) + screenshot UI (box preset con toast "Added N", filtro registro All/Accepted/Declined).
+1. **Preset macchine per attività**: server.py — `_MACHINE_PRESETS` (panificio/pizzeria/pasticceria) + `POST /api/depts/{dept}/machines/preset {activity}` (aggiunge macchine custom al reparto selezionato, dedup per nome). Frontend MyMachines.jsx — box `machine-presets` con 3 pulsanti (`machine-preset-<activity>`). api.js: deptApi.machinePreset.
+2. **Notifica scoperto al Capo**: TeamCoordination.jsx — `loadActive` confronta gli id delle chiamate `uncovered` e mostra un `toast.error` (8s) quando una NUOVA chiamata resta scoperta (tutti hanno rifiutato). Usa un useRef per non ripetere l'avviso.
+3. **Filtro registro decisioni**: TeamCoordination.jsx — pulsanti rapidi Tutti/Accettati/Rifiutati (`log-filter-all|accepted|declined`) che filtrano il Registro decisioni (accepted include assigned_operator; declined include uncovered).
+- NB: in PREVIEW → in deploy verso mikilab.de (richiesto dall'utente). Dati di test ripuliti da org_default.

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Power, Cpu, UserCheck, Radio, ScrollText, CheckCircle2, XCircle, Clock3, AlertTriangle, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { coordinationApi } from "@/lib/api";
@@ -21,11 +21,27 @@ export default function TeamCoordination() {
   const [capoPresent, setCapoPresent] = useState(false);
   const [savingName, setSavingName] = useState("");
   const [roster, setRoster] = useState({ operators: [], free: 0, busy: 0, total: 0 });
+  const [logFilter, setLogFilter] = useState("all"); // all | accepted | declined
+  const seenUncovered = useRef(null);
 
   const loadActive = useCallback(() => {
-    coordinationApi.active().then((d) => { setActive(d.calls || []); setCapoPresent(!!d.capo_present_effective); }).catch(() => {});
+    coordinationApi.active().then((d) => {
+      const calls = d.calls || [];
+      setActive(calls); setCapoPresent(!!d.capo_present_effective);
+      // Notifica al Capo: chiamata rimasta SCOPERTA (tutti hanno rifiutato)
+      const unc = calls.filter((c) => c.status === "uncovered").map((c) => c.id);
+      if (seenUncovered.current === null) { seenUncovered.current = new Set(unc); }
+      else {
+        for (const c of calls.filter((c) => c.status === "uncovered")) {
+          if (!seenUncovered.current.has(c.id)) {
+            seenUncovered.current.add(c.id);
+            toast.error(tri(`Scoperto: "${c.task_desc}" — tutti hanno rifiutato`, `Unbesetzt: "${c.task_desc}"`, `Uncovered: "${c.task_desc}" — all declined`, `Sin cubrir: "${c.task_desc}"`, `Non couvert : "${c.task_desc}"`, `بدون پوشش: "${c.task_desc}"`), { duration: 8000 });
+          }
+        }
+      }
+    }).catch(() => {});
     coordinationApi.roster().then((d) => setRoster(d)).catch(() => {});
-  }, []);
+  }, []); // eslint-disable-line
 
   useEffect(() => {
     coordinationApi.settings().then((s) => { setSettings(s); setCapoPresent(!!s.capo_present_effective); }).catch(() => {});
@@ -228,28 +244,39 @@ export default function TeamCoordination() {
 
       {/* Registro decisioni */}
       <div className="rounded-xl bg-[#242427] border border-[#3A3A3E] p-4">
-        <div className="flex items-center gap-2 mb-3"><ScrollText className="w-4 h-4" style={{ color: COPPER }} /><h4 className="text-sm font-black text-white uppercase tracking-wide">{tri("Registro decisioni", "Entscheidungsprotokoll", "Decisions log", "Registro de decisiones", "Journal des décisions", "ثبت تصمیم‌ها")}</h4></div>
-        {(log || []).length === 0 ? (
-          <p className="text-[12px] text-[#64748B]">{tri("Nessuna decisione ancora.", "Noch keine.", "No decisions yet.", "Sin decisiones.", "Aucune décision.", "هنوز چیزی نیست.")}</p>
-        ) : (
-          <div className="space-y-1.5 max-h-64 overflow-y-auto">
-            {log.slice(0, 40).map((d) => (
-              <div key={d.id} data-testid={`coord-log-${d.id}`} className="flex items-center gap-2 text-[12px]">
-                {(d.kind === "assigned_operator" || d.kind === "accepted") && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" style={{ color: SAGE }} />}
-                {d.kind === "assigned_machine" && <Cpu className="w-3.5 h-3.5 shrink-0" style={{ color: COPPER }} />}
-                {(d.kind === "uncovered" || d.kind === "declined") && <XCircle className="w-3.5 h-3.5 shrink-0 text-[#e08a95]" />}
-                <span className="text-[#CBD5E1] flex-1 min-w-0 truncate">
-                  <b className="text-white">{d.operator || d.machine || ""}</b>
-                  {d.kind === "accepted" && <span className="text-[#6e9e85]"> {tri("ha accettato", "hat angenommen", "accepted", "aceptó", "a accepté", "پذیرفت")}</span>}
-                  {d.kind === "declined" && <span className="text-[#e08a95]"> {tri("ha rifiutato", "hat abgelehnt", "declined", "rechazó", "a refusé", "رد کرد")}</span>}
-                  {d.kind === "uncovered" && <span className="text-[#e08a95]"> {tri("scoperto", "unbesetzt", "uncovered", "sin cubrir", "non couvert", "بدون پوشش")}</span>}
-                  {" · "}<span className="text-[#94A3B8]">{d.task_desc}</span> {d.auto ? <span className="text-[10px] text-[#c9a24a]">· AUTO</span> : null}
-                </span>
-                <span className="text-[10px] text-[#64748B] shrink-0">{(d.at || "").slice(11, 16)}</span>
-              </div>
+        <div className="flex items-center justify-between gap-2 mb-3 flex-wrap">
+          <div className="flex items-center gap-2"><ScrollText className="w-4 h-4" style={{ color: COPPER }} /><h4 className="text-sm font-black text-white uppercase tracking-wide">{tri("Registro decisioni", "Entscheidungsprotokoll", "Decisions log", "Registro de decisiones", "Journal des décisions", "ثبت تصمیم‌ها")}</h4></div>
+          <div className="flex gap-1">
+            {[["all", tri("Tutti", "Alle", "All", "Todos", "Tous", "همه")], ["accepted", tri("Accettati", "Angenommen", "Accepted", "Aceptados", "Acceptés", "پذیرفته")], ["declined", tri("Rifiutati", "Abgelehnt", "Declined", "Rechazados", "Refusés", "ردشده")]].map(([k, label]) => (
+              <button key={k} data-testid={`log-filter-${k}`} onClick={() => setLogFilter(k)}
+                className={`px-2.5 py-1 rounded-full text-[11px] font-bold border transition-all ${logFilter === k ? "bg-[#D97736]/20 border-[#D97736]/50 text-[#e0a878]" : "border-[#3A3A3E] text-[#94A3B8]"}`}>{label}</button>
             ))}
           </div>
-        )}
+        </div>
+        {(() => {
+          const filtered = (log || []).filter((d) => logFilter === "all" ? true : logFilter === "accepted" ? (d.kind === "accepted" || d.kind === "assigned_operator") : (d.kind === "declined" || d.kind === "uncovered"));
+          return filtered.length === 0 ? (
+            <p data-testid="log-empty" className="text-[12px] text-[#64748B]">{tri("Nessuna decisione.", "Keine.", "No decisions.", "Sin decisiones.", "Aucune.", "چیزی نیست.")}</p>
+          ) : (
+            <div className="space-y-1.5 max-h-64 overflow-y-auto">
+              {filtered.slice(0, 40).map((d) => (
+                <div key={d.id} data-testid={`coord-log-${d.id}`} className="flex items-center gap-2 text-[12px]">
+                  {(d.kind === "assigned_operator" || d.kind === "accepted") && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" style={{ color: SAGE }} />}
+                  {d.kind === "assigned_machine" && <Cpu className="w-3.5 h-3.5 shrink-0" style={{ color: COPPER }} />}
+                  {(d.kind === "uncovered" || d.kind === "declined") && <XCircle className="w-3.5 h-3.5 shrink-0 text-[#e08a95]" />}
+                  <span className="text-[#CBD5E1] flex-1 min-w-0 truncate">
+                    <b className="text-white">{d.operator || d.machine || ""}</b>
+                    {d.kind === "accepted" && <span className="text-[#6e9e85]"> {tri("ha accettato", "hat angenommen", "accepted", "aceptó", "a accepté", "پذیرفت")}</span>}
+                    {d.kind === "declined" && <span className="text-[#e08a95]"> {tri("ha rifiutato", "hat abgelehnt", "declined", "rechazó", "a refusé", "رد کرد")}</span>}
+                    {d.kind === "uncovered" && <span className="text-[#e08a95]"> {tri("scoperto", "unbesetzt", "uncovered", "sin cubrir", "non couvert", "بدون پوشش")}</span>}
+                    {" · "}<span className="text-[#94A3B8]">{d.task_desc}</span> {d.auto ? <span className="text-[10px] text-[#c9a24a]">· AUTO</span> : null}
+                  </span>
+                  <span className="text-[10px] text-[#64748B] shrink-0">{(d.at || "").slice(11, 16)}</span>
+                </div>
+              ))}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );

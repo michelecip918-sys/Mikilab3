@@ -2128,6 +2128,43 @@ async def dept_machine_rename(dept: str, mid: str, body: DeptMachineRenameReq, a
     return {"ok": True, "machines": _dept_machines_merged(dept, doc)}
 
 
+class DeptMachinePresetReq(BaseModel):
+    activity: str = "panificio"
+
+
+_MACHINE_PRESETS = {
+    "panificio": [("Forno rotativo", "forno"), ("Forno a piani", "forno"), ("Impastatrice a spirale", "impastatrice"),
+                  ("Cella di lievitazione", "cella"), ("Sfogliatrice", "altro"), ("Bilancia", "bilancia")],
+    "pizzeria": [("Forno pizza", "forno"), ("Impastatrice a forcella", "impastatrice"), ("Frigo pizza", "cella"),
+                 ("Stendipizza", "altro"), ("Bilancia", "bilancia")],
+    "pasticceria": [("Forno statico", "forno"), ("Planetaria", "impastatrice"), ("Abbattitore", "cella"),
+                    ("Temperatrice cioccolato", "altro"), ("Frigo pasticceria", "cella"), ("Bilancia", "bilancia")],
+}
+
+
+@api_router.post("/depts/{dept}/machines/preset")
+async def dept_machine_preset(dept: str, body: DeptMachinePresetReq, admin: dict = Depends(require_admin)):
+    """Precarica le macchine tipiche dell'attività nel reparto (dedup per nome, come i silos)."""
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    import uuid as _uuid
+    org = _org_id(admin)
+    act = (body.activity or "panificio").strip().lower()
+    preset = _MACHINE_PRESETS.get(act, _MACHINE_PRESETS["panificio"])
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    existing = {m["name"].strip().lower() for m in _dept_machines_merged(dept, doc)}
+    added = []
+    for name, typ in preset:
+        if name.strip().lower() in existing:
+            continue
+        item = {"id": "cst-" + _uuid.uuid4().hex[:8], "name": name, "type": typ}
+        await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+            {"$push": {"custom": item}, "$set": {"dept": dept, "organization_id": org, "updated_at": now_iso()}}, upsert=True)
+        added.append(name)
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    return {"ok": True, "added": len(added), "activity": act, "machines": _dept_machines_merged(dept, doc)}
+
+
 class DeptMachineReorderReq(BaseModel):
     order: List[str] = []
 
