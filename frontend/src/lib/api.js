@@ -790,6 +790,7 @@ export const operatorPinsApi = {
   list: () => api.get(`/operator-pins`).then((r) => r.data),
   set: (name, pin, level, ttlHours = 0) => api.put(`/operator-pins`, { name, pin, level, ttl_hours: ttlHours }).then((r) => r.data),
   remove: (name) => api.delete(`/operator-pins/${encodeURIComponent(name)}`).then((r) => r.data),
+  purgeByCode: (code) => api.post(`/operator-pins/purge-by-code`, { code }).then((r) => r.data),
   setLevel: (name, level) => api.patch(`/operator-pins/${encodeURIComponent(name)}/level`, { level }).then((r) => r.data),
   renew: (name, ttlHours = 8) => api.post(`/operator-pins/${encodeURIComponent(name)}/renew`, { ttl_hours: ttlHours }).then((r) => r.data),
   verify: (pin) => api.post(`/operator-pins/verify`, { pin }).then((r) => r.data),

@@ -5687,3 +5687,11 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **RESTANTE 1**: nel DB di produzione esiste un PIN OPERAIO "1985" (operator_pins, novizio) → apre solo la modalità Floor/Produzione. Da eliminare dal pannello Sicurezza (serve il login del Capo sul sito live, NON le credenziali di test).
 - **RESTANTE 2**: il bundle live (main.0b73d9dd.js) NON include ancora il "PIN a ogni apertura" (marker offline cache presente) → serve un ultimo Republish quando comodo; non blocca il login di domani (il gate server-side funziona già col nuovo PIN).
 
+---
+## Changelog — 22 Set 2026, chiusura action-items
+- **#1 Elimina PIN 1985 — CAUSA + FIX**: il keypad master cerca i PIN operaio in TUTTE le aziende (auth.py:326, nessun filtro org), ma il pannello Sicurezza elenca solo quelli dell'azienda del Capo → un PIN residuo senza nome / di un'altra org NON compariva e non era cancellabile dalla UI. Aggiunto endpoint `POST /api/operator-pins/purge-by-code {code}` (require_admin; Owner spazza tutte le org, admin solo la propria) + box UI "Chiudi PIN residuo" in AdminSecurity (`op-purge-box`, `op-purge-input`, `op-purge-btn`, `op-purge-msg`) + `operatorPinsApi.purgeByCode`. Testato su preview: PIN orphan senza nome/altra org → non in lista, gate lo apriva → purge-by-code lo elimina → gate poi lo rifiuta. UI verificata via screenshot (login admin → pannello Sicurezza → box con 1985, bottone abilitato).
+- **#3 Accesso Master Web — GIÀ RISOLTO**: michelecip918@gmail.com è in OWNER_EMAILS e viene auto-promosso admin al login (server.py:748). Entrando via Google sul sito live il Capo è già admin e vede la console/Sicurezza. Il 401 di prima era solo una password indovinata da me, non un problema reale.
+- **#4 Registro Accessi Gate — GIÀ ESISTE**: sezione "Registro accessi" in AdminSecurity (endpoint `/api/access-log`, traccia kind/ok/name/at). Nessun lavoro necessario.
+- **#2 Republish**: azione utente (deploy) — porterà live sia il "PIN a ogni apertura" sia il nuovo box "Chiudi PIN residuo".
+- AZIONE UTENTE dopo il prossimo Republish: nel pannello Sicurezza scrivere "1985" nel box "Chiudi PIN residuo" → Elimina, per chiudere il PIN operaio residuo in produzione.
+

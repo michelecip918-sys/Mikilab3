@@ -557,6 +557,27 @@ async def operator_pin_del(name: str, admin: dict = Depends(require_admin)):
     return {"ok": True}
 
 
+class OperatorPinPurge(BaseModel):
+    code: str
+
+
+@api_router.post("/operator-pins/purge-by-code")
+async def operator_pin_purge_by_code(body: OperatorPinPurge, admin: dict = Depends(require_admin)):
+    """Chiude un PIN operaio RESIDUO cercandolo per codice, anche se privo di nome o
+    appartenente a un'altra azienda (l'Owner spazza tutte le aziende; l'admin solo la propria)."""
+    p = _norm_pin(body.code)
+    if not p:
+        raise HTTPException(status_code=400, detail="Codice PIN non valido")
+    is_owner = (admin.get("email") or "").strip().lower() in OWNER_EMAILS
+    query = {} if is_owner else {"organization_id": _org_id(admin)}
+    removed = []
+    async for d in db.operator_pins.find(query, {"_id": 0}):
+        if _check_pw(p, d.get("hash", "")):
+            await db.operator_pins.delete_one({"name_key": d.get("name_key"), "organization_id": d.get("organization_id")})
+            removed.append(d.get("name") or "—")
+    return {"ok": True, "removed": removed, "count": len(removed)}
+
+
 class OperatorLevelSet(BaseModel):
     level: str = "novizio"
 

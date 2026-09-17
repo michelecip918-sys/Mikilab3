@@ -21,6 +21,8 @@ export default function AdminSecurity() {
   const [opGatePin, setOpGatePin] = useState("");
   const [opGateSet, setOpGateSet] = useState(false);
   const [opGateSaved, setOpGateSaved] = useState(false);
+  const [purgeCode, setPurgeCode] = useState("");
+  const [purgeMsg, setPurgeMsg] = useState("");
 
   const load = () => {
     operatorPinsApi.list().then((d) => setOps(d.operators || [])).catch(() => { /* */ });
@@ -43,6 +45,17 @@ export default function AdminSecurity() {
     setBusy(false);
   };
   const del = async (n) => { try { await operatorPinsApi.remove(n); load(); } catch (e) { /* */ } };
+  const purge = async () => {
+    if (purgeCode.length < 4) return;
+    try {
+      const r = await operatorPinsApi.purgeByCode(purgeCode);
+      setPurgeMsg(r.count > 0
+        ? tri(`Chiusi ${r.count} PIN residui`, `${r.count} Rest-PINs entfernt`, `Removed ${r.count} residual PINs`, `Eliminados ${r.count} PIN`, `${r.count} PIN supprimés`, `${r.count} پین حذف شد`)
+        : tri("Nessun PIN con questo codice", "Kein PIN mit diesem Code", "No PIN with this code", "Ningún PIN con ese código", "Aucun PIN avec ce code", "پینی با این کد نیست"));
+      setPurgeCode(""); load();
+      setTimeout(() => setPurgeMsg(""), 4000);
+    } catch (e) { /* */ }
+  };
   const changeLevel = async (o, lvl) => { try { await operatorPinsApi.setLevel(o.name, lvl); load(); } catch (e) { /* */ } };
   const renew = async (o, ttl) => { try { await operatorPinsApi.renew(o.name, ttl); load(); } catch (e) { /* */ } };
   const isExpiringSoon = (o) => {
@@ -172,6 +185,28 @@ export default function AdminSecurity() {
               <button data-testid={`op-del-${o.name_key || o.name}`} onClick={() => del(o.name)} className="text-[#bb8489]/80 hover:text-[#bb8489] active:scale-90 transition-all"><Trash2 className="w-4 h-4" /></button>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Chiudi PIN residuo per codice — utile per PIN vecchi/senza nome o di altre aziende */}
+      <div data-testid="op-purge-box" className="rounded-xl border border-[#bb8489]/30 bg-[#bb8489]/6 p-3">
+        <p className="flex items-center gap-2 font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#bb8489] mb-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Chiudi PIN residuo", "Rest-PIN schließen", "Close residual PIN", "Cerrar PIN residual", "Fermer PIN résiduel", "بستن پین باقی‌مانده")}</p>
+        <p className="text-[11px] text-[#c9a98a] mb-2">{tri(
+          "Elimina definitivamente un vecchio PIN operaio scrivendone il codice — anche se non compare qui sopra (privo di nome o di un'altra azienda).",
+          "Löscht einen alten Bediener-PIN per Code — auch wenn er oben nicht erscheint.",
+          "Permanently removes an old operator PIN by typing its code — even if it doesn't appear above (no name or another company).",
+          "Elimina un PIN antiguo escribiendo su código, aunque no aparezca arriba.",
+          "Supprime un ancien PIN opérateur via son code, même s'il n'apparaît pas ci-dessus.",
+          "یک پین قدیمی اپراتور را با کدش حذف کن، حتی اگر بالا نباشد.")}</p>
+        <div className="flex flex-wrap items-center gap-2">
+          <input data-testid="op-purge-input" value={purgeCode} onChange={(e) => setPurgeCode(e.target.value.replace(/\D/g, "").slice(0, 8))} inputMode="numeric"
+            placeholder={tri("Codice PIN", "PIN-Code", "PIN code", "Código PIN", "Code PIN", "کد پین")}
+            className="w-32 bg-[#0C1019] border border-[#bb8489]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#bb8489] outline-none" />
+          <button data-testid="op-purge-btn" onClick={purge} disabled={purgeCode.length < 4}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#bb8489]/20 border border-[#bb8489]/50 text-[#bb8489] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all">
+            <Trash2 className="w-4 h-4" /> {tri("Elimina", "Löschen", "Remove", "Eliminar", "Supprimer", "حذف")}
+          </button>
+          {purgeMsg && <span data-testid="op-purge-msg" className="text-[12px] font-bold text-[#c9a98a]">{purgeMsg}</span>}
         </div>
       </div>
 
