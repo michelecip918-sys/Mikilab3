@@ -20,9 +20,11 @@ export default function TeamCoordination() {
   const [log, setLog] = useState([]);
   const [capoPresent, setCapoPresent] = useState(false);
   const [savingName, setSavingName] = useState("");
+  const [roster, setRoster] = useState({ operators: [], free: 0, busy: 0, total: 0 });
 
   const loadActive = useCallback(() => {
     coordinationApi.active().then((d) => { setActive(d.calls || []); setCapoPresent(!!d.capo_present_effective); }).catch(() => {});
+    coordinationApi.roster().then((d) => setRoster(d)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -69,6 +71,38 @@ export default function TeamCoordination() {
 
   return (
     <div data-testid="team-coordination" className="space-y-5">
+
+      {/* Interruttore generale + roster live libero/occupato */}
+      <div className="rounded-xl bg-[#242427] border border-[#3A3A3E] p-4">
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2">
+            <Power className="w-4 h-4" style={{ color: s.enabled ? SAGE : "#64748B" }} />
+            <h4 className="text-sm font-black text-white uppercase tracking-wide">{tri("Coordinamento automatico", "Automatische Koordination", "Automatic coordination", "Coordinación automática", "Coordination automatique", "هماهنگی خودکار")}</h4>
+          </div>
+          <button type="button" role="switch" aria-checked={!!s.enabled} data-testid="coord-enabled-toggle"
+            onClick={() => patchSettings({ enabled: !s.enabled })}
+            className={`relative w-11 h-6 rounded-full shrink-0 transition-colors ${s.enabled ? "bg-[#7E9A82]" : "bg-[#334155]"}`}>
+            <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white transition-transform ${s.enabled ? "translate-x-5" : ""}`} />
+          </button>
+        </div>
+        <p className="text-[11px] text-[#94A3B8] mb-3">{tri("Quando è acceso, all'avvio di un evento di produzione Sitor chiama da solo un operatore libero (via cuffie) e passa al prossimo se rifiuta.", "Wenn an, ruft Sitor bei einem Produktionsereignis selbst einen freien Mitarbeiter.", "When on, on a production event Sitor calls a free operator by itself (headset) and moves on if declined.", "Cuando está activo, Sitor llama solo a un operario libre.", "Quand activé, Sitor appelle seul un opérateur libre.", "وقتی روشن است، سیتور خودش یک اپراتور آزاد را صدا می‌زند.")}</p>
+        <div className="flex items-center gap-3 mb-2 text-[11px]">
+          <span className="inline-flex items-center gap-1.5 text-[#6e9e85] font-bold"><span className="w-2 h-2 rounded-full bg-[#6e9e85]" /> {tri("Liberi", "Frei", "Free", "Libres", "Libres", "آزاد")}: {roster.free}</span>
+          <span className="inline-flex items-center gap-1.5 text-[#e0a878] font-bold"><span className="w-2 h-2 rounded-full bg-[#e0a878]" /> {tri("Occupati", "Beschäftigt", "Busy", "Ocupados", "Occupés", "مشغول")}: {roster.busy}</span>
+          <span className="text-[#64748b]">· {roster.total} {tri("in turno", "im Dienst", "on shift", "en turno", "en service", "در شیفت")}</span>
+        </div>
+        <div data-testid="coord-roster" className="flex flex-wrap gap-1.5">
+          {roster.operators.length === 0 && <span className="text-[11px] text-[#64748b]">{tri("Nessun operatore nel turno di oggi.", "Keine Mitarbeiter heute.", "No operators on today's shift.", "Sin operarios hoy.", "Aucun opérateur aujourd'hui.", "امروز اپراتوری نیست.")}</span>}
+          {roster.operators.map((o) => {
+            const busy = o.status === "busy";
+            return (
+              <span key={o.name} data-testid={`roster-${o.name}`} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold border ${busy ? "bg-[#33261c] text-[#e0a878] border-[#D97736]/40" : "bg-[#1c2b22] text-[#8fc0a2] border-[#6e9e85]/40"}`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${busy ? "bg-[#e0a878]" : "bg-[#6e9e85] animate-pulse"}`} />{o.name}
+              </span>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Presenza Capo + soglia macchina */}
       <div className="grid gap-3 sm:grid-cols-2">

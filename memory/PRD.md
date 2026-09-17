@@ -5712,3 +5712,12 @@ Testato: testing_agent iteration_261 → 8/8 backend pytest verdi + tutti i flus
 5. **Doppia introduzione rimossa**: eliminato `<DeskScene />` (e l'import); mantenuto l'hero avatar+ruolo (hero-master).
 - NB: modifiche in PREVIEW → serve Deploy/Republish per mikilab.de.
 - Backlog: silos/celle come stringhe in DEPARTMENTS restano fisse (non richieste esplicitamente come CRUD; il Capo può comunque aggiungere celle/silos come "macchine" con tipo libero).
+
+---
+## Changelog — 22 Set 2026, 4 correzioni definitive
+Verificato: backend curl (silos CRUD, roster, toggle, suggestions senza agv) + screenshot UI (coord toggle+roster, pannello silos editor, guided-tools rimosso).
+1. **AGV tolto dai suggerimenti**: rimosso il blocco `hb["agv"]["alert_count"]` in `mike_proactive` (server.py) → l'avviso "Un AGV segnala rumore anomalo" non compare più. Verificato: /api/mike/suggestions non contiene più id 'agv'.
+2. **Riquadro morto rimosso**: eliminato il pannello `panel-guided-tools` (componente SitorGuidedTools, casella testo libera senza salva) dalla sezione Strumenti in App.js. Sostituito con il pannello Silos (vedi #3).
+3. **Silos gestibili dal Capo**: backend warehouse.py — `SiloUpdateReq` esteso (name, capacity_kg, min_kg oltre a current_kg/humidity_pct), nuovi `POST /api/mike/silos` (crea) e `DELETE /api/mike/silos/{sid}`. Frontend: `SiloManager.jsx` riscritto come editor completo (aggiungi nome+kg, rinomina inline, elimina, correggi manualmente livello kg e umidità) + nuovo pannello `panel-silos` in Strumenti. api.js: mikeApi.siloCreate/siloUpdate/siloDelete. Org-scoped. Testato CRUD via curl.
+4. **Centro Coordinamento collegato al frontend**: coordination.py — aggiunto flag `enabled` in settings (default True) che ora fa da interruttore generale (trigger no-op se OFF) + nuovo `GET /api/coordination/roster` (pool operatori live free/busy). Frontend: TeamCoordination.jsx ora mostra interruttore master `coord-enabled-toggle` + roster live `coord-roster` (chip verdi=liberi, ambra=occupati). Lato operaio: FloorOperatorDay.jsx ora fa polling di `coordinationApi.pendingCall(role)` ogni 12s e apre da solo la modalità cuffie (HeadphonesMode) quando arriva una chiamata → gli operai ricevono davvero le chiamate con conferma/diniego vocale.
+- NB: modifiche in PREVIEW → serve Save & Redeploy per mikilab.de.

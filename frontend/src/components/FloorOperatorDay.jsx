@@ -357,6 +357,19 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
     return () => { alive = false; clearInterval(id); };
   }, [role]);
 
+  // Auto-rilevamento chiamate del coordinamento: quando arriva una chiamata per questo
+  // operaio, apre da solo la modalità cuffie così può confermare/rifiutare a voce.
+  useEffect(() => {
+    if (!role) return;
+    let alive = true;
+    const poll = () => coordinationApi.pendingCall(role).then((d) => {
+      if (!alive) return;
+      if (d && d.has_call) setShowHeadphones(true);
+    }).catch(() => {});
+    poll(); const id = setInterval(poll, 12000);
+    return () => { alive = false; clearInterval(id); };
+  }, [role]);
+
   // Sitor annuncia a VOCE (cuffie Bluetooth) — l'operaio non usa le mani, ascolta e basta.
   useEffect(() => {
     if (!role || greetedRef.current || supervise) return;

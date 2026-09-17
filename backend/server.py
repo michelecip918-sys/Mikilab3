@@ -10644,11 +10644,6 @@ async def mike_suggestions(lang: str = "it", admin: dict = Depends(require_admin
         sug.append({"id": "proof-brake", "icon": "waves", "severity": "medio", "target": "panel-proofing",
                     "text": R("Nessun forno libero: frena le celle per non far strappare i lieviti.", "No free ovens: brake the proofing cells."),
                     "action": R("Celle adattive", "Proofing")})
-    # AGV in manutenzione
-    if hb["agv"]["alert_count"]:
-        sug.append({"id": "agv", "icon": "truck", "severity": "medio", "target": "panel-agv",
-                    "text": R(f"Un AGV segnala rumore anomalo: manutenzione preventiva.", "An AGV reports abnormal noise: preventive maintenance."),
-                    "action": R("Flotta AGV", "AGV Fleet")})
     # Silos sotto soglia
     silos = await mike_silos(lang, admin)
     autopilot = bool(((await db.app_meta.find_one({"_key": "autopilot"}, {"_id": 0})) or {}).get("enabled"))

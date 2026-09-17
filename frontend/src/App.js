@@ -648,8 +648,8 @@ export default function App() {
                     <HoloPanel testid="panel-my-machines" accent="#3E9C93" beacon="#3E9C93" icon="🏭" defaultOpen title={tri("Le mie macchine", "Meine Maschinen", "My machines", "Mis máquinas", "Mes machines", "دستگاه‌های من")}>
                       <MyMachines />
                     </HoloPanel>
-                    <HoloPanel testid="panel-guided-tools" accent="#3E9C93" beacon="#3E9C93" icon="🧭" title={tri("Sitor ti guida · Domande sì/no", "Sitor führt · Ja/Nein", "Sitor guides · Yes/No", "Sitor te guía · Sí/No", "Sitor te guide · Oui/Non", "سیتور راهنمایی · بله/خیر")}>
-                      <SitorGuidedTools />
+                    <HoloPanel testid="panel-silos" accent="#3E9C93" beacon="#3E9C93" icon="🫙" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias Primas", "Silos & Matières", "سیلوها و مواد اولیه")}>
+                      <SiloManager />
                     </HoloPanel>
                     <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Strumenti su misura · Sitor", "Werkzeuge nach Maß · Sitor", "Custom tools · Sitor", "Herramientas a medida · Sitor", "Outils sur mesure · Sitor", "ابزار سفارشی · سیتور")} sub={tri("Descrivi lo strumento che ti serve e Sitor lo genera per la tua console.", "Beschreibe das benötigte Werkzeug: Sitor erstellt es für deine Konsole.", "Describe the tool you need and Sitor builds it for your console.", "Describe la herramienta que necesitas y Sitor la crea.", "Décris l'outil dont tu as besoin et Sitor le crée.", "ابزار موردنیاز را توصیف کن تا سیتور بسازد.")}>
                       <SitorAtelier />

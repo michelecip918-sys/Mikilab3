@@ -38,6 +38,7 @@ async def _coord_settings(org: str) -> dict:
         doc = {}
     return {
         "organization_id": org,
+        "enabled": bool(doc.get("enabled", True)),  # interruttore generale del coordinamento
         "capo_present_manual": doc.get("capo_present_manual", None),  # None = automatico
         "machine_threshold_kg": float(doc.get("machine_threshold_kg", DEFAULT_MACHINE_KG)),
         "machine_threshold_pieces": int(doc.get("machine_threshold_pieces", DEFAULT_MACHINE_PIECES)),
@@ -68,6 +69,7 @@ async def get_coord_settings(org: str = Depends(effective_org)):
 
 
 class CoordSettingsReq(BaseModel):
+    enabled: Optional[bool] = None              # interruttore generale coordinamento automatico
     capo_present_manual: Optional[bool] = None  # None = torna in automatico
     auto_mode: Optional[bool] = None            # se True → azzera l'interruttore manuale
     machine_threshold_kg: Optional[float] = Field(None, ge=0, le=100000)
@@ -81,6 +83,8 @@ class CoordSettingsReq(BaseModel):
 async def set_coord_settings(body: CoordSettingsReq, user: dict = Depends(require_admin)):
     org = _org_id(user)
     upd = {"organization_id": org, "updated_at": now_iso()}
+    if body.enabled is not None:
+        upd["enabled"] = bool(body.enabled)
     if body.auto_mode is True:
         upd["capo_present_manual"] = None
     elif body.capo_present_manual is not None:
@@ -375,7 +379,18 @@ async def _do_coordination_trigger(body: TriggerReq, org: str):
 @api_router.post("/coordination/trigger")
 async def coordination_trigger(body: TriggerReq, org: str = Depends(effective_org)):
     """Endpoint HTTP: evento di produzione che richiede personale. Delega alla logica core."""
+    settings = await _coord_settings(org)
+    if not settings.get("enabled", True):
+        return {"ok": True, "disabled": True, "calls": []}
     return await _do_coordination_trigger(body, org)
+
+
+@api_router.get("/coordination/roster")
+async def coordination_roster(org: str = Depends(effective_org)):
+    """Roster live: stato libero/occupato di ogni operatore (per la console del Capo)."""
+    pool = await _worker_pool(org)
+    free = sum(1 for w in pool if w.get("status") != "busy")
+    return {"operators": pool, "free": free, "busy": len(pool) - free, "total": len(pool)}
 
 
 def _public_call(call: dict) -> dict:

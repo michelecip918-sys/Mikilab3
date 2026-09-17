@@ -55,16 +55,54 @@ async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
 
 
 class SiloUpdateReq(BaseModel):
+    name: Optional[str] = None
     current_kg: Optional[float] = None
     humidity_pct: Optional[float] = None
     drain_rate_kg_h: Optional[float] = None
+    capacity_kg: Optional[float] = None
+    min_kg: Optional[float] = None
+
+
+class SiloCreateReq(BaseModel):
+    name: str = ""
+    ingredient: str = "farina"
+    capacity_kg: float = 1000
+    current_kg: float = 0
+    min_kg: float = 200
+    humidity_pct: float = 14.0
+    is_flour: bool = True
+
+
+@api_router.post("/mike/silos")
+async def mike_silo_create(body: SiloCreateReq, admin: dict = Depends(require_admin)):
+    """Il Capo aggiunge un silo reale del proprio laboratorio."""
+    import uuid as _uuid
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(400, "Nome silo richiesto")
+    org = _org_id(admin)
+    await _seed_silos(org)
+    doc = {"id": "silo-" + _uuid.uuid4().hex[:8], "name": nm[:80], "ingredient": (body.ingredient or "farina").strip()[:40],
+           "capacity_kg": float(body.capacity_kg or 0), "current_kg": float(body.current_kg or 0),
+           "min_kg": float(body.min_kg or 0), "drain_rate_kg_h": 0.0, "humidity_pct": float(body.humidity_pct or 0),
+           "is_flour": bool(body.is_flour), "organization_id": org, "created_at": now_iso()}
+    await db.silos.insert_one({**doc})
+    return {"ok": True, "id": doc["id"]}
 
 
 @api_router.put("/mike/silos/{sid}")
 async def mike_silo_update(sid: str, body: SiloUpdateReq, admin: dict = Depends(require_admin)):
-    upd = {k: float(v) for k, v in body.model_dump(exclude_none=True).items()}
+    upd = {}
+    for k, v in body.model_dump(exclude_none=True).items():
+        upd[k] = v.strip()[:80] if k == "name" else float(v)
     if upd:
         await db.silos.update_one({"id": sid, "organization_id": _org_id(admin)}, {"$set": upd})
+    return {"ok": True}
+
+
+@api_router.delete("/mike/silos/{sid}")
+async def mike_silo_delete(sid: str, admin: dict = Depends(require_admin)):
+    await db.silos.delete_one({"id": sid, "organization_id": _org_id(admin)})
     return {"ok": True}
 
 
