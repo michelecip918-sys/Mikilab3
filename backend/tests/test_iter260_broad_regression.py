@@ -25,7 +25,7 @@ def _load_backend_url():
 
 
 BASE_URL = _load_backend_url()
-GATE_PIN = "198505"
+GATE_PIN = "739284"
 ADMIN_EMAIL = "admin@mikilab.de"
 ADMIN_PASSWORD = "Mikilab2026!"
 

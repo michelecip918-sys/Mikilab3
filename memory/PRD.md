@@ -5656,5 +5656,13 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - ORG_ACTIVATION_CODE (198505) e Production PIN Floor (198505, hash DB) restano INVARIATI (flussi diversi, non richiesti).
 - Testato via curl: verify nuovo PIN → master + cookie mikilab_gate; login admin + /api/orgs → 200; PIN ospite 202020 → guest OK (nessuna regressione).
 - Credenziali aggiornate in /app/memory/test_credentials.md.
-- NOTA: i vecchi script di test in /app/backend/tests/test_iter*.py usano ancora GATE_PIN="198505" (snapshot storici, fallirebbero se rilanciati — aggiornare la costante se servono).
+- NOTA (22 Set, aggiornata): le 4 suite del pre-deploy (test_iter257/258/260, test_autoplan_dispatch_coord) sono state aggiornate al nuovo GATE_PIN. Gli altri script storici in backend/tests usano ancora "198505" (snapshot, non bloccanti).
+
+---
+## Changelog — 22 Set 2026 (Pre-deploy per nuovo PIN Gate)
+- **pre_deploy_check.sh: EXIT 0** — CI isolamento multi-tenant + 114/114 test verdi (iter257: 30, iter258: 30, autoplan_dispatch_coord: 10, iter260: 44).
+- **deployment_agent: PASS** — nessun blocker (env OK, niente secret hardcoded, seed non distruttivo, supervisor valido).
+- Codice e .env pronti per la produzione: il redeploy su mikilab.de porta con sé ADMIN_GATE_PIN nuovo + rimozione bypass 198505.
+- Il trigger del deploy in questo ambiente fork non è disponibile come CLI: il Capo deve premere il pulsante **Deploy** nella piattaforma Emergent. Dopo il deploy: verificare su https://mikilab.de/api/admin-gate/verify che il nuovo PIN dia master e che 198505 sia rifiutato.
+- Rimandati a dopo il lancio (richiesta utente): pulizia altri script test storici, promemoria rotazione PIN, registro accessi gate in UI.
 

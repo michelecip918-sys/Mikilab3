@@ -17,7 +17,7 @@ BASE = (os.environ.get("REACT_APP_BACKEND_URL")
         or dotenv_values("/app/frontend/.env").get("REACT_APP_BACKEND_URL") or "").rstrip("/")
 assert BASE, "REACT_APP_BACKEND_URL non trovato"
 API = f"{BASE}/api"
-GATE_PIN = "198505"
+GATE_PIN = "739284"
 ADMIN_EMAIL = "admin@mikilab.de"
 ADMIN_PASS = "Mikilab2026!"
 ORG_DEFAULT = "org_default"

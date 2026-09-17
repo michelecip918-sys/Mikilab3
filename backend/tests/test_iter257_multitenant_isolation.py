@@ -28,7 +28,7 @@ assert BASE_URL, "REACT_APP_BACKEND_URL not configured"
 BASE_URL = BASE_URL.rstrip("/")
 API = f"{BASE_URL}/api"
 
-GATE_PIN = "198505"
+GATE_PIN = "739284"
 ADMIN_EMAIL = "admin@mikilab.de"
 ADMIN_PASS = "Mikilab2026!"
 ACTIVATION_CODE = "198505"
