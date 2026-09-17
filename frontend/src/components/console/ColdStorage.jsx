@@ -59,6 +59,7 @@ export default function ColdStorage() {
     try { const f = await freezerApi.get(); setItems(f.items || []); } catch { /* */ }
   }, []);
   useEffect(() => { load(); }, [load]);
+  useEffect(() => { window.addEventListener("mikilab-depts-updated", load); return () => window.removeEventListener("mikilab-depts-updated", load); }, [load]);
   useEffect(() => {
     const tick = () => sensorsApi.readings().then((d) => setReadings(Array.isArray(d) ? d : [])).catch(() => {});
     tick(); const iv = setInterval(tick, 15000); return () => clearInterval(iv);

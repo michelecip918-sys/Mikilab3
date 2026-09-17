@@ -28,6 +28,7 @@ export default function ShiftTeamCall() {
     setAssignments(a.assignments || []); setDepts(c.departments || []);
   }).catch(() => {}), []);
   useEffect(() => { load(); const id = setInterval(load, 20000); return () => clearInterval(id); }, [load]);
+  useEffect(() => { window.addEventListener("mikilab-depts-updated", load); return () => window.removeEventListener("mikilab-depts-updated", load); }, [load]);
   useEffect(() => { deptApi.history(14).then((d) => setHistory(d.history || [])).catch(() => {}); }, [assignments.length]);
   useEffect(() => {
     const p = () => deptApi.presence().then((d) => setPresent((d.present || []).map((x) => x.toLowerCase()))).catch(() => {});

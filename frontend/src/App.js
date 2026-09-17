@@ -57,7 +57,7 @@ import { playDeckAlarm } from "@/lib/uiSounds";
 import { playTTS } from "@/lib/tts";
 import { DeckAlarmBar } from "@/components/DeckAlarmBar";
 import LateNotifier from "@/components/LateNotifier";
-import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen, Sun, Moon } from "lucide-react";
+import { ShieldCheck, LogOut, User, WifiOff, Lock, BookOpen, Sun, Moon, X } from "lucide-react";
 
 import Ricette from "@/sections/Ricette";
 import OrdiniExtra from "@/components/OrdiniExtra";
@@ -68,7 +68,6 @@ import ChiusuraGiornata from "@/components/console/ChiusuraGiornata";
 import ConsegneFurgoni from "@/components/console/ConsegneFurgoni";
 import CapoMachinesOverview from "@/components/console/CapoMachinesOverview";
 import { activityProfile } from "@/lib/activityProfile";
-import { HoloPanel } from "@/components/console/HoloKit";
 import { SubTabs } from "@/components/console/SubTabs";
 import ZoneHero3D from "@/components/console/ZoneHero3D";
 import OnboardingActivity from "@/components/OnboardingActivity";
@@ -134,6 +133,38 @@ function SecBlock({ id, icon, title, sub, accent = "#8a97a6", children }) {
   );
 }
 
+// Schede interne di una macro-sezione della console (niente più stack di pannelli chiusi).
+function SecTabs({ sec, tabs, active, onChange, accent = "#8a97a6" }) {
+  const cur = tabs.some((t) => t.id === active) ? active : tabs[0].id;
+  return (
+    <div data-testid={`tabs-${sec}`} className="flex gap-1.5 overflow-x-auto no-scrollbar pb-1">
+      {tabs.map((t) => (
+        <button key={t.id} type="button" data-testid={`tab-${sec}-${t.id}`} onClick={() => onChange(t.id)}
+          className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border transition-colors active:scale-95 ${cur === t.id ? "text-[#050810]" : "text-[#9aa6b2] border-[#334155]/60 hover:text-white hover:border-[#8a97a6]"}`}
+          style={cur === t.id ? { background: accent, borderColor: accent } : {}}>
+          <span aria-hidden>{t.icon}</span>{t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function TabPanel({ testid, children }) {
+  return <div data-testid={testid} className="holo-panel p-4 sm:p-5 scroll-mt-24">{children}</div>;
+}
+
+const QUICK_CHIP = "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-[#cbd5e1] border border-[#a6b1bc]/30 bg-[#0b0f19]/60 hover:border-[#a6b1bc] hover:text-white transition-colors active:scale-95";
+
+// Pannello (testid storico) → [sezione, scheda]: i deep-link attivano la scheda giusta.
+const PANEL_TAB = {
+  "panel-ricette": ["ricettario", "ricette"], "panel-thermalflow": ["ricettario", "thermal"], "panel-magazzino": ["ricettario", "magazzino"], "panel-elite": ["ricettario", "foodcost"], "panel-living-recipe": ["ricettario", "ricette"],
+  "panel-piano-unico": ["piano", "piano"], "panel-chiusura": ["piano", "chiusura"], "panel-consegne": ["piano", "consegne"], "panel-machines-overview": ["piano", "stato"],
+  "panel-ordini": ["ordini", "extra"], "panel-b2b": ["ordini", "b2b"], "panel-pastry": ["ordini", "pastry"], "panel-pizzeria": ["ordini", "pizzeria"],
+  "panel-team-coordination": ["team", "coordinamento"], "panel-dept-assign": ["team", "assegnazione"], "panel-shift-team": ["team", "riepilogo"], "panel-shift-templates": ["team", "turni"], "panel-team-faces": ["team", "volti"],
+  "panel-departments": ["strumenti", "reparti"], "panel-my-machines": ["strumenti", "macchine"], "panel-silos": ["strumenti", "silos"], "panel-sitor-atelier": ["strumenti", "macchine"], "panel-machine-arrival": ["strumenti", "arrival"], "panel-coldstorage": ["strumenti", "celle"], "panel-hardware": ["strumenti", "macchine"], "panel-ovenqc": ["strumenti", "macchine"],
+  "panel-docs": ["sicurezza", "report"], "panel-security": ["sicurezza", "accessi"], "panel-emergency": ["sicurezza", "emergenze"],
+};
+
 
 export default function App() {
   const { lang } = useLang();
@@ -162,6 +193,10 @@ export default function App() {
   const [showOnboarding, setShowOnboarding] = useState(() => { try { return !localStorage.getItem("mikilab_onboarded"); } catch { return false; } });
   const [themeLight, setThemeLight] = useState(() => { try { return localStorage.getItem("mikilab_theme") === "light"; } catch { return false; } });
   const [showAdvanced, setShowAdvanced] = useState(() => { try { return localStorage.getItem("mikilab_advanced") === "1"; } catch { return false; } });
+  const [sitorOpen, setSitorOpen] = useState(false); // chat Sitor in pannello a comparsa (FAB)
+  const [capoTab, setCapoTab] = useState({ ricettario: "ricette", piano: "piano", ordini: "extra", team: "coordinamento", strumenti: "macchine", sicurezza: "report" });
+  const activateTab = (sec, tab) => setCapoTab((t) => ({ ...t, [sec]: tab }));
+  const effTab = (sec, ids) => (ids.includes(capoTab[sec]) ? capoTab[sec] : ids[0]);
   useEffect(() => {
     try {
       const root = document.documentElement;
@@ -214,11 +249,19 @@ export default function App() {
   // Plancia Capo a 6 sezioni a fisarmonica: ogni pannello appartiene a una sezione.
   // Le sezioni della console sono ora SEMPRE visibili (scroll, niente accordion).
   // Gli eventi "open-panel"/"open-group" non aprono più un gruppo ma portano lo scroll sul pannello/sezione.
-  const GROUP_TO_SEC = { oggi: "sitor", produzione: "piano", squadra: "team", ricette: "ricettario", celle: "strumenti", sicurezza: "sicurezza" };
+  const GROUP_TO_SEC = { oggi: "oggi", produzione: "piano", squadra: "team", ricette: "ricettario", celle: "strumenti", sicurezza: "sicurezza" };
   useEffect(() => {
     const scrollToSel = (sel) => { const el = sel ? document.querySelector(sel) : null; if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); };
-    const onJump = (e) => { if (e.detail) scrollToSel(`[data-testid="${e.detail}"]`); };
-    const onGroup = (e) => { const sec = GROUP_TO_SEC[e.detail] || e.detail; if (sec) scrollToSel(`#capo-sec-${sec}`); };
+    const onJump = (e) => {
+      const dest = e.detail ? PANEL_TAB[e.detail] : null;
+      if (dest) { activateTab(dest[0], dest[1]); setTimeout(() => scrollToSel(`#capo-sec-${dest[0]}`), 60); }
+      else if (e.detail) scrollToSel(`[data-testid="${e.detail}"]`);
+    };
+    const onGroup = (e) => {
+      const sec = GROUP_TO_SEC[e.detail] || e.detail;
+      if (sec === "oggi") scrollToSel('[data-testid="oggi-feed"]');
+      else if (sec) scrollToSel(`#capo-sec-${sec}`);
+    };
     window.addEventListener("mikilab:open-panel", onJump);
     window.addEventListener("mikilab:open-group", onGroup);
     return () => { window.removeEventListener("mikilab:open-panel", onJump); window.removeEventListener("mikilab:open-group", onGroup); };
@@ -517,7 +560,7 @@ export default function App() {
                 ) : (
                   <div className="space-y-4" data-testid="master-console">
                     <PlantHeartbeatProvider>
-                    {/* Navigazione rapida alle sezioni (scroll, non schede) */}
+                    {/* Navigazione rapida alle 6 macro-sezioni (scroll) */}
                     <nav data-testid="capo-secnav" className="sticky top-16 z-30 flex gap-1.5 overflow-x-auto no-scrollbar rounded-2xl border border-[#1e293b] bg-[#050810]/92 backdrop-blur-md px-2 py-2">
                       {[
                         { id: "ricettario", icon: "🥖", label: tri("Ricettario", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها") },
@@ -525,7 +568,6 @@ export default function App() {
                         { id: "ordini", icon: "⚡", label: tri("Ordini", "Aufträge", "Orders", "Pedidos", "Commandes", "سفارش") },
                         { id: "team", icon: "👥", label: tri("Team", "Team", "Team", "Equipo", "Équipe", "تیم") },
                         { id: "strumenti", icon: "🔌", label: tri("Strumenti", "Geräte", "Tools", "Herramientas", "Outils", "ابزار") },
-                        { id: "sitor", icon: "💬", label: "Sitor" },
                         { id: "sicurezza", icon: "🛡️", label: tri("Sicurezza", "Sicherheit", "Security", "Seguridad", "Sécurité", "امنیت") },
                       ].map((s) => (
                         <a key={s.id} href={`#capo-sec-${s.id}`} data-testid={`capo-secnav-${s.id}`}
@@ -535,86 +577,122 @@ export default function App() {
                       ))}
                     </nav>
 
+                    {/* Feed del giorno: sempre in cima alla console */}
+                    <div data-testid="oggi-feed" className="scroll-mt-24"><TodayFeed /></div>
+
                     {/* 1 · RICETTARIO */}
                     <SecBlock id="ricettario" icon="🥖" accent="#64748B"
-                      title={tri("Ricettario", "Rezeptbuch", "Recipe Book", "Recetario", "Recettes", "دستورها")}
-                      sub={tri("Crea e gestisci le ricette, anche da foto. Editor termico, magazzino e food cost in un unico posto.", "Rezepte erstellen & verwalten, auch per Foto.", "Create and manage recipes, even from a photo. Thermal editor, warehouse and food cost in one place.", "Crea y gestiona recetas, también desde foto.", "Crée et gère les recettes, même par photo.", "دستورها را بساز و مدیریت کن، حتی از روی عکس.")}>
-                    <HoloPanel testid="panel-ricette" accent="#64748B" icon="🥖" defaultOpen title={tri("Master Ricettario", "Master-Rezepte", "Master Recipes", "Recetario Maestro", "Recettes Master", "دستور اصلی")} sub={tri("Ricette protette, audit di Sitor e conferma impastata.", "Geschützte Rezepte & Audit.", "Protected recipes & Sitor audit.", "Recetas protegidas y auditoría.", "Recettes protégées & audit.", "دستورهای محافظت‌شده و بازبینی.")}>
+                      title={tri("Ricettario", "Rezeptbuch", "Recipe Book", "Recetario", "Recettes", "دستورها")}>
+                    <SecTabs sec="ricettario" accent="#64748B" active={capoTab.ricettario} onChange={(t) => activateTab("ricettario", t)}
+                      tabs={[
+                        { id: "ricette", icon: "🥖", label: tri("Ricette", "Rezepte", "Recipes", "Recetas", "Recettes", "دستورها") },
+                        { id: "thermal", icon: "🌡️", label: "Thermal Flow" },
+                        { id: "magazzino", icon: "📦", label: tri("Magazzino", "Lager", "Stock", "Almacén", "Stock", "انبار") },
+                        { id: "foodcost", icon: "📊", label: "Food Cost" },
+                      ]} />
+                    {effTab("ricettario", ["ricette", "thermal", "magazzino", "foodcost"]) === "ricette" && (
+                    <TabPanel testid="panel-ricette">
                       <RecipeAuditButton />
                       <Ricette isMasterView={true} />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-thermalflow" accent="#8a97a6" beacon="#9aa6b2" icon="🌡️" title={tri("Ricette · Thermal Master Flow", "Rezepte · Thermal Master Flow", "Recipes · Thermal Master Flow", "Recetas · Thermal Master Flow", "Recettes · Thermal Master Flow", "دستور · جریان حرارتی")} sub={tri("Editor live: RPM, idratazione e rampe termiche si ricalcolano all'istante. Interlock se la farina supera 22°C.", "Live-Editor: RPM, Hydratation und Rampen sofort neu berechnet.", "Live editor: RPM, hydration and thermal ramps recompute instantly. Interlock if flour > 22°C.", "Editor en vivo: RPM, hidratación y rampas al instante.", "Éditeur live : RPM, hydratation et rampes recalculés.", "ویرایشگر زنده: RPM و رمپ حرارتی.")}>
-                      <RecipeThermalFlow />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-magazzino" accent="#64748B" icon="📦" title={tri("Magazzino & Scorte", "Lager & Bestand", "Warehouse & Stock", "Almacén & Stock", "Entrepôt & Stock", "انبار و موجودی")} sub={tri("Giacenze, soglie e autonomia.", "Bestände & Schwellen.", "Stock & thresholds.", "Existencias.", "Stocks & seuils.", "موجودی.")}>
+                      {showAdvanced && <div data-testid="panel-living-recipe" className="mt-4 pt-4 border-t border-[#1e293b]"><LivingRecipe /></div>}
+                    </TabPanel>
+                    )}
+                    {effTab("ricettario", ["ricette", "thermal", "magazzino", "foodcost"]) === "thermal" && (
+                    <TabPanel testid="panel-thermalflow"><RecipeThermalFlow /></TabPanel>
+                    )}
+                    {effTab("ricettario", ["ricette", "thermal", "magazzino", "foodcost"]) === "magazzino" && (
+                    <TabPanel testid="panel-magazzino">
                       <InventoryButton />
                       <MagazzinoManager />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-elite" accent="#64748B" beacon="#9aa6b2" icon="📊" title={tri("Food Cost & Ambiente", "Food Cost & Umgebung", "Food Cost & Environment", "Food Cost & Ambiente", "Coût & Environnement", "بها و محیط")} sub={tri("Costo al grammo, margini e lievitazione predittiva.", "Kosten/Gramm, Margen & prädiktive Gare.", "Cost per gram, margins & predictive proof.", "Coste por gramo y fermentación.", "Coût au gramme & pousse prédictive.", "بها بر گرم و تخمیر پیش‌بین.")}>
-                      <EliteTools />
-                    </HoloPanel>
-                    {showAdvanced && <div data-testid="panel-living-recipe" className="holo-panel p-4"><LivingRecipe /></div>}
+                    </TabPanel>
+                    )}
+                    {effTab("ricettario", ["ricette", "thermal", "magazzino", "foodcost"]) === "foodcost" && (
+                    <TabPanel testid="panel-elite"><EliteTools /></TabPanel>
+                    )}
                     </SecBlock>
 
                     {/* 2 · PIANO SETTIMANALE */}
                     <SecBlock id="piano" icon="🗓️" accent="#9aa6b2"
-                      title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}
-                      sub={tri("Un unico flusso: inserisci ricette e ordini, Sitor propone 2-3 opzioni, tu scegli e calendario, orari a ritroso e timeline si generano da soli.", "Ein Fluss: Rezepte/Aufträge eingeben, Sitor schlägt 2-3 Optionen vor, du wählst — Kalender, Rückwärtszeiten und Timeline entstehen automatisch.", "One flow: enter recipes and orders, Sitor proposes 2-3 options, you pick and the calendar, backward times and timeline generate themselves.", "Un solo flujo: ingresa recetas y pedidos, Sitor propone 2-3 opciones y todo se genera solo.", "Un seul flux : saisis recettes et commandes, Sitor propose 2-3 options et tout se génère seul.", "یک جریان: دستور و سفارش وارد کن، سیتور ۲-۳ گزینه می‌دهد و بقیه خودکار ساخته می‌شود.")}>
-                    <HoloPanel testid="panel-piano-unico" accent="#9aa6b2" beacon="#c9a24a" icon="🗓️" defaultOpen title={tri("Piano di Produzione", "Produktionsplan", "Production Plan", "Plan de Producción", "Plan de Production", "برنامه تولید")} sub={tri("Dalle ricette al piano completo in un solo flusso guidato da Sitor.", "Vom Rezept zum kompletten Plan in einem von Sitor geführten Fluss.", "From recipes to a complete plan in one Sitor-guided flow.", "De recetas a plan completo en un flujo guiado.", "Des recettes au plan complet en un flux guidé.", "از دستور تا برنامه کامل در یک جریان.")}>
-                      <PianoUnico activity={activity} />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-chiusura" accent="#3E9C93" beacon="#3E9C93" icon="✅" title={tri("Chiusura Giornata", "Tagesabschluss", "Day Close", "Cierre del Día", "Clôture du Jour", "بستن روز")} sub={tri("Registra prodotto e avanzato: Sitor calcola il food-cost reale, corregge il piano della settimana dopo e impara il tuo metodo.", "Erfasse Produziertes und Reste: Sitor berechnet Food-cost, korrigiert den Plan und lernt deine Methode.", "Record produced and leftover: Sitor computes the real food-cost, adjusts next week's plan and learns your method.", "Registra producido y sobrante: Sitor calcula el food-cost, ajusta el plan y aprende tu método.", "Enregistre le produit et le reste : Sitor calcule le food-cost, ajuste le plan et apprend ta méthode.", "تولید و باقی‌مانده را ثبت کن: سیتور هزینه واقعی را حساب می‌کند.")}>
-                      <ChiusuraGiornata />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-consegne" accent="#3E9C93" beacon="#3E9C93" icon="🚚" title={tri("Consegne & Furgoni", "Lieferungen & Transporter", "Deliveries & Vans", "Entregas & Furgonetas", "Livraisons & Camionnettes", "تحویل و ون")} sub={tri("Sitor organizza il carico di ogni furgone, l'ordine delle tappe e avvisa se un ordine non sarà pronto in tempo.", "Sitor organisiert Beladung, Stopps und warnt bei nicht rechtzeitigen Bestellungen.", "Sitor organizes each van's load, the stop order and warns if an order won't be ready in time.", "Sitor organiza la carga, el orden de paradas y avisa de pedidos que no estarán listos.", "Sitor organise le chargement, l'ordre des arrêts et prévient des commandes en retard.", "سیتور بارگیری، ترتیب توقف‌ها و هشدار سفارش‌های دیر را سازمان می‌دهد.")}>
-                      <ConsegneFurgoni />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-machines-overview" accent="#3E9C93" beacon="#3E9C93" icon="🖥️" title={tri("Stato Macchine · Tutti i Reparti", "Maschinenstatus · Alle Abteilungen", "Machine Status · All Departments", "Estado de Máquinas · Todas las Áreas", "État Machines · Tous les Rayons", "وضعیت ماشین‌ها · همه بخش‌ها")} sub={tri("Vedi in tempo reale quali macchine sono collegate/attive in ogni reparto, senza entrare come operaio. Puoi anche ispezionare un reparto in sola supervisione.", "Sieh in Echtzeit, welche Maschinen in jeder Abteilung aktiv sind.", "See in real time which machines are connected/active in each department, without entering as an operator. You can also inspect a department in read-only supervision.", "Ve en tiempo real qué máquinas están activas en cada área.", "Vois en temps réel quelles machines sont actives dans chaque rayon.", "به‌صورت زنده ببین کدام ماشین‌ها در هر بخش فعال‌اند.")}>
-                      <CapoMachinesOverview />
-                    </HoloPanel>
+                      title={tri("Piano Settimanale", "Wochenplan", "Weekly Plan", "Plan Semanal", "Plan Hebdomadaire", "برنامه هفتگی")}>
+                    <div data-testid="piano-quick-actions" className="flex flex-wrap gap-1.5">
+                      <button type="button" data-testid="piano-action-generate" onClick={() => activateTab("piano", "piano")} className={QUICK_CHIP}>🗓️ {tri("Genera il piano", "Plan erstellen", "Generate plan", "Generar plan", "Générer le plan", "ساخت برنامه")}</button>
+                      <button type="button" data-testid="piano-action-close" onClick={() => activateTab("piano", "chiusura")} className={QUICK_CHIP}>✅ {tri("Chiudi la giornata", "Tag abschließen", "Close the day", "Cerrar el día", "Clôturer le jour", "بستن روز")}</button>
+                      <button type="button" data-testid="piano-action-deliver" onClick={() => activateTab("piano", "consegne")} className={QUICK_CHIP}>🚚 {tri("Organizza consegne", "Lieferungen planen", "Organize deliveries", "Organizar entregas", "Organiser livraisons", "سازمان تحویل")}</button>
+                    </div>
+                    <SecTabs sec="piano" accent="#9aa6b2" active={capoTab.piano} onChange={(t) => activateTab("piano", t)}
+                      tabs={[
+                        { id: "piano", icon: "🗓️", label: tri("Piano", "Plan", "Plan", "Plan", "Plan", "برنامه") },
+                        { id: "chiusura", icon: "✅", label: tri("Chiusura", "Abschluss", "Close", "Cierre", "Clôture", "بستن") },
+                        { id: "consegne", icon: "🚚", label: tri("Consegne", "Lieferungen", "Deliveries", "Entregas", "Livraisons", "تحویل") },
+                        { id: "stato", icon: "🖥️", label: tri("Stato Macchine", "Maschinen", "Machines", "Máquinas", "Machines", "ماشین‌ها") },
+                      ]} />
+                    {effTab("piano", ["piano", "chiusura", "consegne", "stato"]) === "piano" && (
+                    <TabPanel testid="panel-piano-unico"><PianoUnico activity={activity} /></TabPanel>
+                    )}
+                    {effTab("piano", ["piano", "chiusura", "consegne", "stato"]) === "chiusura" && (
+                    <TabPanel testid="panel-chiusura"><ChiusuraGiornata /></TabPanel>
+                    )}
+                    {effTab("piano", ["piano", "chiusura", "consegne", "stato"]) === "consegne" && (
+                    <TabPanel testid="panel-consegne"><ConsegneFurgoni /></TabPanel>
+                    )}
+                    {effTab("piano", ["piano", "chiusura", "consegne", "stato"]) === "stato" && (
+                    <TabPanel testid="panel-machines-overview"><CapoMachinesOverview /></TabPanel>
+                    )}
                     </SecBlock>
 
                     {/* 3 · ORDINI EXTRA */}
                     <SecBlock id="ordini" icon="⚡" accent="#64748B"
-                      title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")}
-                      sub={tri("Ordini dell'ultimo minuto di oggi, domani e ieri, più gli ordini B2B. Sitor rigenera il piano all'istante.", "Last-Minute- und B2B-Aufträge. Sitor plant sofort neu.", "Last-minute orders for today, tomorrow and yesterday, plus B2B. Sitor regenerates the plan instantly.", "Pedidos de última hora y B2B. Sitor regenera al instante.", "Commandes de dernière minute et B2B. Sitor régénère aussitôt.", "سفارش‌های لحظه آخری و B2B. سیتور فوراً بازسازی می‌کند.")}>
-                    <HoloPanel testid="panel-ordini" accent="#64748B" beacon="#a4afbb" icon="⚡" title={tri("Ordini Extra · Oggi/Domani/Ieri", "Extra · Heute/Morgen/Gestern", "Extra · Today/Tomorrow/Yesterday", "Extra · Hoy/Mañana/Ayer", "Extra · Aujourd'hui/Demain/Hier", "اضافه · امروز/فردا/دیروز")}>
-                      <OrdiniExtra />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-b2b" accent="#64748B" beacon="#8a97a6" icon="🛒" title={tri("Ordini B2B & E-commerce", "B2B-Aufträge & E-Commerce", "B2B Orders & E-commerce", "Pedidos B2B & E-commerce", "Commandes B2B & E-commerce", "سفارش‌های B2B")} sub={tri("Ordini digitali → kg d'impasto per lo Smart Planner, con previsione meteo/festività. Non tocca le casse.", "Digitale Aufträge → kg Teig für den Smart Planner.", "Digital orders → kg dough for the Smart Planner, with weather/holiday forecast. Tills untouched.", "Pedidos digitales → kg de masa.", "Commandes numériques → kg de pâte.", "سفارش دیجیتال → کیلو خمیر.")}>
-                      <B2BOrders />
-                    </HoloPanel>
-                    {activity === "pasticceria" && (
-                    <HoloPanel testid="panel-pastry" accent="#93a2ae" beacon="#93a2ae" icon="🧁" title={tri("Consegne & Eventi · Pasticceria", "Lieferungen & Events · Konditorei", "Deliveries & Events · Pastry", "Entregas & Eventos · Pastelería", "Livraisons & Événements · Pâtisserie", "تحویل و رویداد · شیرینی")} sub={tri("Torte su commessa, matrimoni ed eventi con date e promemoria di Sitor.", "Auftragstorten, Hochzeiten, Events mit Terminen.", "Made-to-order cakes, weddings and events with dates and Sitor reminders.", "Tartas por encargo, bodas y eventos.", "Gâteaux sur commande, mariages et événements.", "کیک سفارشی، عروسی و رویداد.")}>
-                      <PasticceriaConsegne />
-                    </HoloPanel>
+                      title={tri("Ordini Extra", "Extra-Aufträge", "Extra Orders", "Pedidos Extra", "Commandes Extra", "سفارش‌های اضافه")}>
+                    <SecTabs sec="ordini" accent="#64748B" active={capoTab.ordini} onChange={(t) => activateTab("ordini", t)}
+                      tabs={[
+                        { id: "extra", icon: "⚡", label: tri("Oggi/Domani", "Heute/Morgen", "Today/Tomorrow", "Hoy/Mañana", "Auj./Demain", "امروز/فردا") },
+                        { id: "b2b", icon: "🛒", label: "B2B" },
+                        ...(activity === "pasticceria" ? [{ id: "pastry", icon: "🧁", label: tri("Eventi", "Events", "Events", "Eventos", "Événements", "رویداد") }] : []),
+                        ...(activity === "pizzeria" ? [{ id: "pizzeria", icon: "🍕", label: tri("Panetti", "Teiglinge", "Dough balls", "Bollos", "Pâtons", "چانه") }] : []),
+                      ]} />
+                    {effTab("ordini", ["extra", "b2b", "pastry", "pizzeria"]) === "extra" && (
+                    <TabPanel testid="panel-ordini"><OrdiniExtra /></TabPanel>
                     )}
-                    {activity === "pizzeria" && (
-                    <HoloPanel testid="panel-pizzeria" accent="#3E9C93" beacon="#3E9C93" icon="🍕" title={tri("Servizio & Panetti · Pizzeria", "Service & Teiglinge · Pizzeria", "Service & Dough Balls · Pizzeria", "Servicio & Bollos · Pizzería", "Service & Pâtons · Pizzeria", "سرویس و چانه · پیتزا")}>
-                      <PizzeriaServizio />
-                    </HoloPanel>
+                    {effTab("ordini", ["extra", "b2b", "pastry", "pizzeria"]) === "b2b" && (
+                    <TabPanel testid="panel-b2b"><B2BOrders /></TabPanel>
+                    )}
+                    {activity === "pasticceria" && effTab("ordini", ["extra", "b2b", "pastry", "pizzeria"]) === "pastry" && (
+                    <TabPanel testid="panel-pastry"><PasticceriaConsegne /></TabPanel>
+                    )}
+                    {activity === "pizzeria" && effTab("ordini", ["extra", "b2b", "pastry", "pizzeria"]) === "pizzeria" && (
+                    <TabPanel testid="panel-pizzeria"><PizzeriaServizio /></TabPanel>
                     )}
                     </SecBlock>
 
                     {/* 4 · TURNI E RUOLI DEL TEAM */}
                     <SecBlock id="team" icon="👥" accent="#9aa6b2"
-                      title={tri("Turni e Ruoli del Team", "Schichten & Rollen", "Team Shifts & Roles", "Turnos y Roles del Equipo", "Services & Rôles", "شیفت‌ها و نقش‌های تیم")}
-                      sub={tri("Chi lavora, dove e quando. Assegna i reparti, salva le squadre-tipo e registra i volti.", "Wer arbeitet, wo und wann.", "Who works, where and when. Assign departments, save team templates and enroll faces.", "Quién trabaja, dónde y cuándo.", "Qui travaille, où et quand.", "چه کسی، کجا و کی کار می‌کند.")}>
-                    <HoloPanel testid="panel-team-coordination" accent="#D97736" beacon="#7E9A82" icon="🎧" title={tri("Coordinamento Automatico", "Automatische Koordination", "Automatic Coordination", "Coordinación Automática", "Coordination Automatique", "هماهنگی خودکار")}>
-                      <TeamCoordination />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-dept-assign" accent="#8a97a6" beacon="#a4afbb" icon="🏭" defaultOpen title={tri("Assegnazione Reparti · Squadra", "Bereichszuweisung · Team", "Department Assignment · Team", "Asignación de Áreas · Equipo", "Affectation Ateliers · Équipe", "تخصیص بخش · تیم")} sub={tri("Panificio, Pasticceria, Pizzeria, Laugen, Banco — ognuno con macchine, silos e celle dedicate. Assegna PIÙ operai con mansioni distinte nello stesso reparto.", "Backstube, Konditorei, Pizzeria, Laugen, Theke — je eigene Ausstattung. Weise MEHRERE Mitarbeiter mit eigenen Aufgaben zu.", "Bakery, Pastry, Pizza, Laugen, Counter — each with its own machines, silos and cells. Assign MULTIPLE operators with distinct tasks.", "Panadería, Pastelería, Pizza, Laugen, Mostrador — cada una equipada. Asigna VARIOS operarios con tareas distintas.", "Boulangerie, Pâtisserie, Pizza, Laugen, Comptoir — chacun équipé. Assigne PLUSIEURS opérateurs avec des tâches distinctes.", "نانوایی، شیرینی، پیتزا، لاوگن، پیشخوان — هرکدام مجهز. چند اپراتور با وظایف متمایز واگذار کن.")}>
-                      <DeptAssign />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-shift-team" accent="#9aa6b2" beacon="#6e9e85" icon="📣" title={tri("Riepilogo Squadra", "Team-Übersicht", "Team Roll-Call", "Resumen de Equipo", "Appel d'Équipe", "فراخوان تیم")} sub={tri("All'apertura del turno, Sitor annuncia a voce la composizione della squadra reparto per reparto.", "Zum Schichtbeginn sagt Sitor das Team pro Bereich an.", "At shift start, Sitor voices the team composition department by department.", "Al iniciar el turno, Sitor anuncia el equipo por área.", "Au début du service, Sitor annonce l'équipe par atelier.", "در شروع شیفت، Sitor ترکیب تیم را بخش‌به‌بخش اعلام می‌کند.")}>
-                      <ShiftTeamCall />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-shift-templates" accent="#9aa6b2" beacon="#6e9e85" icon="🗓️" title={tri("Turni Ricorrenti · Squadre-tipo", "Wiederkehrende Schichten", "Recurring Shifts · Templates", "Turnos Recurrentes", "Services Récurrentes", "شیفت‌های تکرارشونده")} sub={tri("Salva le squadre-tipo (es. 'Turno mattina') e applicale con un tocco nei giorni giusti.", "Speichere Team-Vorlagen und wende sie mit einem Tipp an.", "Save team templates and apply them with one tap.", "Guarda plantillas de equipo y aplícalas con un toque.", "Enregistre des modèles d'équipe et applique-les d'un toucher.", "الگوهای تیم را ذخیره و با یک لمس اعمال کن.")}>
-                      <ShiftTemplates />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-team-faces" accent="#9aabb8" beacon="#9aabb8" icon="🙂" title={tri("Volti della Squadra", "Team-Gesichter", "Team Faces", "Rostros del Equipo", "Visages de l'Équipe", "چهره‌های تیم")} sub={tri("Registra i volti una volta: entrano col volto su ogni tablet di reparto.", "Einmal registrieren: Gesichts-Login auf allen Tablets.", "Enroll once: face login on every department tablet.", "Registra una vez: acceso por rostro en cada tablet.", "Enregistre une fois : connexion par visage sur chaque tablette.", "یک‌بار ثبت کن: ورود با چهره روی همه تبلت‌ها.")}>
-                      <TeamFaces />
-                    </HoloPanel>
+                      title={tri("Turni e Ruoli del Team", "Schichten & Rollen", "Team Shifts & Roles", "Turnos y Roles del Equipo", "Services & Rôles", "شیفت‌ها و نقش‌های تیم")}>
+                    <div data-testid="team-quick-actions" className="flex flex-wrap gap-1.5">
+                      <button type="button" data-testid="team-action-coordinate" onClick={() => activateTab("team", "coordinamento")} className={QUICK_CHIP}>🎧 {tri("Coordina la squadra", "Team koordinieren", "Coordinate team", "Coordinar equipo", "Coordonner l'équipe", "هماهنگی تیم")}</button>
+                    </div>
+                    <SecTabs sec="team" accent="#9aa6b2" active={capoTab.team} onChange={(t) => activateTab("team", t)}
+                      tabs={[
+                        { id: "coordinamento", icon: "🎧", label: tri("Coordinamento", "Koordination", "Coordination", "Coordinación", "Coordination", "هماهنگی") },
+                        { id: "assegnazione", icon: "🏭", label: tri("Assegnazione", "Zuweisung", "Assignment", "Asignación", "Affectation", "تخصیص") },
+                        { id: "riepilogo", icon: "📣", label: tri("Riepilogo", "Überblick", "Roll-call", "Resumen", "Appel", "فراخوان") },
+                        { id: "turni", icon: "🗓️", label: tri("Turni-tipo", "Vorlagen", "Templates", "Plantillas", "Modèles", "الگو") },
+                        { id: "volti", icon: "🙂", label: tri("Volti", "Gesichter", "Faces", "Rostros", "Visages", "چهره") },
+                      ]} />
+                    {effTab("team", ["coordinamento", "assegnazione", "riepilogo", "turni", "volti"]) === "coordinamento" && (
+                    <TabPanel testid="panel-team-coordination"><TeamCoordination /></TabPanel>
+                    )}
+                    {effTab("team", ["coordinamento", "assegnazione", "riepilogo", "turni", "volti"]) === "assegnazione" && (
+                    <TabPanel testid="panel-dept-assign"><DeptAssign /></TabPanel>
+                    )}
+                    {effTab("team", ["coordinamento", "assegnazione", "riepilogo", "turni", "volti"]) === "riepilogo" && (
+                    <TabPanel testid="panel-shift-team"><ShiftTeamCall /></TabPanel>
+                    )}
+                    {effTab("team", ["coordinamento", "assegnazione", "riepilogo", "turni", "volti"]) === "turni" && (
+                    <TabPanel testid="panel-shift-templates"><ShiftTemplates /></TabPanel>
+                    )}
+                    {effTab("team", ["coordinamento", "assegnazione", "riepilogo", "turni", "volti"]) === "volti" && (
+                    <TabPanel testid="panel-team-faces"><TeamFaces /></TabPanel>
+                    )}
                     </SecBlock>
 
                     {/* 5 · STRUMENTI COLLEGABILI */}
@@ -646,92 +724,107 @@ export default function App() {
                       </ul>
                     </div>
                     ); })()}
-                    <HoloPanel testid="panel-departments" accent="#D97736" beacon="#D97736" icon="🗂️" title={tri("I miei reparti", "Meine Bereiche", "My departments", "Mis departamentos", "Mes rayons", "بخش‌های من")}>
-                      <DeptManager />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-my-machines" accent="#3E9C93" beacon="#3E9C93" icon="🏭" defaultOpen title={tri("Le mie macchine", "Meine Maschinen", "My machines", "Mis máquinas", "Mes machines", "دستگاه‌های من")}>
-                      <MyMachines />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-silos" accent="#3E9C93" beacon="#3E9C93" icon="🫙" title={tri("Silos & Materie Prime", "Silos & Rohstoffe", "Silos & Raw Materials", "Silos & Materias Primas", "Silos & Matières", "سیلوها و مواد اولیه")}>
-                      <SiloManager />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-sitor-atelier" accent="#a6b1bc" beacon="#8a97a6" icon="✨" title={tri("Strumenti su misura", "Werkzeuge nach Maß", "Custom tools", "Herramientas a medida", "Outils sur mesure", "ابزار سفارشی")} sub={tri("Descrivi lo strumento che ti serve e Sitor lo genera per la tua console.", "Beschreibe das benötigte Werkzeug: Sitor erstellt es für deine Konsole.", "Describe the tool you need and Sitor builds it for your console.", "Describe la herramienta que necesitas y Sitor la crea.", "Décris l'outil dont tu as besoin et Sitor le crée.", "ابزار موردنیاز را توصیف کن تا سیتور بسازد.")}>
-                      <SitorAtelier />
-                    </HoloPanel>
-                    {showAdvanced && (<>
-                    <p className="text-[10px] uppercase tracking-[0.22em] text-[#64748B] pt-1">{tri("Pannelli tecnici avanzati", "Technische Profi-Panels", "Advanced technical panels", "Paneles técnicos", "Panneaux techniques", "پنل‌های فنی")}</p>
-                    <BatchPhoenixButton />
-                    <HoloPanel testid="panel-hardware" accent="#64748B" beacon="#9aa6b2" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")}>
-                      <div className="mb-3 rounded-xl overflow-hidden border border-[#D97736]/30 bg-[#0b0f19]">
-                        <img src={`${PUB}/sitor_official.jpg`} alt="Sitor al forno" data-testid="sitor-oven-img" className="w-full h-36 object-cover" loading="lazy" />
+                    <SecTabs sec="strumenti" accent="#64748B" active={capoTab.strumenti} onChange={(t) => activateTab("strumenti", t)}
+                      tabs={[
+                        { id: "macchine", icon: "🏭", label: tri("Macchine", "Maschinen", "Machines", "Máquinas", "Machines", "دستگاه‌ها") },
+                        { id: "reparti", icon: "🗂️", label: tri("Reparti", "Bereiche", "Departments", "Departamentos", "Rayons", "بخش‌ها") },
+                        { id: "silos", icon: "🫙", label: "Silos" },
+                        { id: "arrival", icon: "⚙️", label: tri("Nuovi Macchinari", "Neue Maschinen", "New Machines", "Nuevas Máquinas", "Nouvelles Machines", "ماشین‌های جدید") },
+                        { id: "celle", icon: "❄️", label: tri("Celle & Freezer", "Kühlung", "Cold Chain", "Cadena de Frío", "Chaîne du Froid", "زنجیره سرد") },
+                      ]} />
+                    {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "macchine" && (
+                    <TabPanel testid="panel-my-machines">
+                      <div data-testid="macchine-quick-actions" className="flex flex-wrap gap-1.5 mb-3">
+                        <button type="button" data-testid="strumenti-action-recognize" onClick={() => activateTab("strumenti", "arrival")} className={QUICK_CHIP}>⚙️ {tri("Riconosci macchina", "Maschine erkennen", "Recognize machine", "Reconocer máquina", "Reconnaître machine", "شناسایی دستگاه")}</button>
+                        <button type="button" data-testid="strumenti-action-atelier" onClick={() => { try { document.getElementById("sitor-atelier-embed")?.scrollIntoView({ behavior: "smooth", block: "start" }); } catch { /* */ } }} className={QUICK_CHIP}>✨ {tri("Strumenti su misura", "Werkzeuge nach Maß", "Custom tools", "Herramientas a medida", "Outils sur mesure", "ابزار سفارشی")}</button>
                       </div>
-                      <HardwareBridge />
-                    </HoloPanel>
-                    </>)}
-                    <HoloPanel testid="panel-machine-arrival" accent="#a4afbb" beacon="#8a97a6" icon="⚙️" title={tri("Nuovi Macchinari", "Neue Maschinen", "New Machines", "Nuevas Máquinas", "Nouvelles Machines", "ماشین‌های جدید")}>
-                      <MachineArrival />
-                    </HoloPanel>
-                    <HoloPanel testid="panel-coldstorage" accent="#64748B" beacon="#7DA3C0" icon="❄️" title={tri("Celle & Freezer · Cold Chain", "Kammern & Gefrier · Kühlkette", "Cells & Freezer · Cold Chain", "Cámaras & Congelador · Cadena de Frío", "Cellules & Congélateur · Chaîne du Froid", "سلول‌ها و فریزر · زنجیره سرد")}>
-                      <ColdStorage />
-                    </HoloPanel>
-                    {showAdvanced && (
-                    <HoloPanel testid="panel-ovenqc" accent="#64748B" beacon="#6e9e85" icon="👁️" title={tri("Controllo Qualità Ottico (AI Vision)", "Optische Qualitätskontrolle (AI Vision)", "Optical Quality Control (AI Vision)", "Control de Calidad Óptico (AI)", "Contrôle Qualité Optique (AI)", "کنترل کیفیت بصری")}>
-                      <OvenQC />
-                    </HoloPanel>
+                      <MyMachines />
+                      <div id="sitor-atelier-embed" data-testid="sitor-atelier-embed" className="mt-5 pt-4 border-t border-[#1e293b] scroll-mt-24">
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-[#64748B] mb-2">✨ {tri("Strumenti su misura", "Werkzeuge nach Maß", "Custom tools", "Herramientas a medida", "Outils sur mesure", "ابزار سفارشی")}</p>
+                        <SitorAtelier />
+                      </div>
+                      {showAdvanced && (
+                      <div data-testid="macchine-advanced" className="mt-5 pt-4 border-t border-[#1e293b] space-y-4">
+                        <p className="text-[10px] uppercase tracking-[0.22em] text-[#64748B]">{tri("Pannelli tecnici avanzati", "Technische Profi-Panels", "Advanced technical panels", "Paneles técnicos", "Panneaux techniques", "پنل‌های فنی")}</p>
+                        <BatchPhoenixButton />
+                        <div data-testid="panel-hardware">
+                          <div className="mb-3 rounded-xl overflow-hidden border border-[#D97736]/30 bg-[#0b0f19]">
+                            <img src={`${PUB}/sitor_official.jpg`} alt="Sitor al forno" data-testid="sitor-oven-img" className="w-full h-36 object-cover object-top" loading="lazy" />
+                          </div>
+                          <HardwareBridge />
+                        </div>
+                        <div data-testid="panel-ovenqc"><OvenQC /></div>
+                      </div>
+                      )}
+                    </TabPanel>
+                    )}
+                    {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "reparti" && (
+                    <TabPanel testid="panel-departments"><DeptManager /></TabPanel>
+                    )}
+                    {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "silos" && (
+                    <TabPanel testid="panel-silos"><SiloManager /></TabPanel>
+                    )}
+                    {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "arrival" && (
+                    <TabPanel testid="panel-machine-arrival"><MachineArrival /></TabPanel>
+                    )}
+                    {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "celle" && (
+                    <TabPanel testid="panel-coldstorage"><ColdStorage /></TabPanel>
                     )}
                     </SecBlock>
 
-                    {/* 6 · CHAT DIRETTA CON SITOR */}
-                    <SecBlock id="sitor" icon="💬" accent="#a6b1bc"
-                      title={tri("Sitor", "Sitor", "Sitor", "Sitor", "Sitor", "سیتور")}
-                      sub={tri("Il tuo unico punto per Sitor: scegli un compito qui sotto o parla con lui nella chat.", "Dein einziger Sitor-Punkt: Aufgabe wählen oder chatten.", "Your single Sitor hub: pick a task below or talk to him in chat.", "Tu único punto Sitor: elige una tarea o chatea.", "Ton point Sitor unique : choisis une tâche ou discute.", "تنها نقطه سیتور: یک وظیفه انتخاب کن یا گفتگو کن.")}>
-                    <div data-testid="sitor-task-menu" className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
-                      {[
-                        { icon: "🗓️", to: "piano", label: tri("Genera il piano", "Plan erstellen", "Generate plan", "Generar plan", "Générer le plan", "ساخت برنامه") },
-                        { icon: "✅", to: "piano", label: tri("Chiudi la giornata", "Tag abschließen", "Close the day", "Cerrar el día", "Clôturer le jour", "بستن روز") },
-                        { icon: "🚚", to: "piano", label: tri("Organizza consegne", "Lieferungen planen", "Organize deliveries", "Organizar entregas", "Organiser livraisons", "سازمان تحویل") },
-                        { icon: "🎧", to: "team", label: tri("Coordina la squadra", "Team koordinieren", "Coordinate team", "Coordinar equipo", "Coordonner l'équipe", "هماهنگی تیم") },
-                        { icon: "⚙️", to: "strumenti", label: tri("Riconosci macchina", "Maschine erkennen", "Recognize machine", "Reconocer máquina", "Reconnaître machine", "شناسایی دستگاه") },
-                        { icon: "✨", to: "strumenti", label: tri("Strumenti su misura", "Werkzeuge nach Maß", "Custom tools", "Herramientas a medida", "Outils sur mesure", "ابزار سفارشی") },
-                      ].map((t, i) => (
-                        <a key={i} href={`#capo-sec-${t.to}`} data-testid={`sitor-task-${i}`}
-                          className="flex flex-col items-center justify-center gap-1.5 rounded-xl border border-[#a6b1bc]/25 bg-[#0b0f19]/60 px-2 py-3 text-center hover:border-[#a6b1bc] hover:bg-[#a6b1bc]/8 transition-colors active:scale-95">
-                          <span className="text-xl" aria-hidden>{t.icon}</span>
-                          <span className="text-[11.5px] font-bold text-[#cbd5e1] leading-tight">{t.label}</span>
-                        </a>
-                      ))}
-                    </div>
-                    <TodayFeed />
-                    <SalaSitor />
-                    <div data-testid="oggi-radio" className="flex items-center justify-center rounded-xl border border-[#3E9C93]/25 bg-[#0b0f19]/60 py-2.5">
-                      <RadioFornaio inline />
-                    </div>
-                    </SecBlock>
-
-                    {/* 7 · SICUREZZA, REPORT & EMERGENZE */}
+                    {/* 6 · SICUREZZA, REPORT & EMERGENZE */}
                     <SecBlock id="sicurezza" icon="🛡️" accent="#64748B"
-                      title={tri("Sicurezza, Report & Emergenze", "Sicherheit, Berichte & Notfälle", "Security, Reports & Emergencies", "Seguridad, Informes y Emergencias", "Sécurité, Rapports & Urgences", "امنیت، گزارش و اضطراری")}
-                      sub={tri("Il registro del laboratorio: PIN e accessi, rapporti di fine turno, MikiScore, documenti PDF e centro emergenze.", "PINs, Berichte, Dokumente & Notfälle.", "The lab's ledger: PINs and access, end-of-shift reports, MikiScore, PDF documents and the emergency center.", "PIN, informes, documentos y emergencias.", "PIN, rapports, documents et urgences.", "پین، گزارش‌ها، اسناد و اضطراری.")}>
-                    <HoloPanel testid="panel-docs" accent="#64748B" beacon="#6e9e85" icon="🧾" title={tri("Report & Rapporti", "Berichte & Reports", "Reports & Records", "Informes y Reportes", "Rapports & Comptes rendus", "گزارش‌ها و اسناد")} sub={tri("Rapporti fine turno degli operai, MikiScore di turno e documenti PDF multilingua.", "Schichtberichte, MikiScore und PDF-Dokumente.", "Operator end-of-shift reports, shift MikiScore and multi-language PDF documents.", "Informes de turno, MikiScore y PDF.", "Rapports de service, MikiScore et PDF.", "گزارش‌های شیفت، میکی‌اسکور و اسناد PDF.")}>
+                      title={tri("Sicurezza, Report & Emergenze", "Sicherheit, Berichte & Notfälle", "Security, Reports & Emergencies", "Seguridad, Informes y Emergencias", "Sécurité, Rapports & Urgences", "امنیت، گزارش و اضطراری")}>
+                    <SecTabs sec="sicurezza" accent="#64748B" active={capoTab.sicurezza} onChange={(t) => activateTab("sicurezza", t)}
+                      tabs={[
+                        { id: "report", icon: "🧾", label: "Report" },
+                        { id: "accessi", icon: "🛡️", label: tri("Accessi", "Zugriffe", "Access", "Accesos", "Accès", "دسترسی") },
+                        { id: "emergenze", icon: "🚨", label: tri("Emergenze", "Notfälle", "Emergencies", "Emergencias", "Urgences", "اضطراری") },
+                      ]} />
+                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "report" && (
+                    <TabPanel testid="panel-docs">
                       <FloorShiftReports />
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><ShiftReport /></div>
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><DocsDownload /></div>
-                    </HoloPanel>
-                    <HoloPanel testid="panel-security" accent="#64748B" beacon="#a4afbb" icon="🛡️" title={tri("Sicurezza & Accessi", "Sicherheit & Zugriffe", "Security & Access", "Seguridad y Accesos", "Sécurité & Accès", "امنیت و دسترسی")} sub={tri("PIN produzione, PIN personali operatore e registro accessi in un unico posto.", "Produktions-PIN, Bediener-PINs & Zugriffsprotokoll.", "Production PIN, operator PINs and access log in one place.", "PIN de producción, PIN de operario y registro.", "PIN production, PIN opérateur et journal.", "پین تولید، پین اپراتور و گزارش دسترسی.")}>
+                    </TabPanel>
+                    )}
+                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "accessi" && (
+                    <TabPanel testid="panel-security">
                       <AdminSecurity />
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><PinSetup /></div>
-                    </HoloPanel>
-                    <HoloPanel testid="panel-emergency" accent="#b06e78" beacon="#b06e78" icon="🚨" title={tri("Centro Emergenze", "Notfallzentrale", "Emergency Center", "Centro de Emergencias", "Centre d'Urgence", "مرکز اضطراری")}>
-                      <EmergencyCenter />
-                    </HoloPanel>
+                    </TabPanel>
+                    )}
+                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "emergenze" && (
+                    <TabPanel testid="panel-emergency"><EmergencyCenter /></TabPanel>
+                    )}
                     </SecBlock>
 
-                    {/* Pulsante fisso: chat Sitor sempre a un tocco (solo collegamento, non il vecchio widget) */}
-                    <a href="#capo-sec-sitor" data-testid="ask-sitor-fab" aria-label={tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor", "Pregunta a Sitor", "Demande à Sitor", "از سیتور بپرس")}
+                    {/* Pulsante fisso: apre la chat Sitor in un pannello a comparsa, raggiungibile ovunque */}
+                    <button type="button" onClick={() => setSitorOpen(true)} data-testid="ask-sitor-fab" aria-label={tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor", "Pregunta a Sitor", "Demande à Sitor", "از سیتور بپرس")}
                       className="fixed bottom-24 right-4 z-40 inline-flex items-center gap-2 px-4 py-3 rounded-full font-cyber font-black text-sm text-[#04070d] active:scale-95 transition-transform"
                       style={{ background: "linear-gradient(90deg,#8a97a6,#a6b1bc)", boxShadow: "0 0 26px rgba(138,151,166,0.5)" }}>
                       💬 {tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor", "Pregunta a Sitor", "Demande à Sitor", "از سیتور بپرس")}
-                    </a>
+                    </button>
+                    {sitorOpen && (
+                    <div data-testid="sitor-drawer" className="fixed inset-0 z-50 flex justify-end" role="dialog" aria-modal="true">
+                      <button type="button" data-testid="sitor-drawer-backdrop" aria-label={tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")} onClick={() => setSitorOpen(false)} className="absolute inset-0 bg-black/60 backdrop-blur-sm cursor-default" />
+                      <div className="relative w-full max-w-md h-full bg-[#050810] border-l border-[#1e293b] flex flex-col shadow-[0_0_40px_rgba(138,151,166,0.25)]">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-[#1e293b] shrink-0">
+                          <span className="font-cyber font-black text-sm text-white uppercase tracking-wider">Sitor</span>
+                          <button type="button" data-testid="sitor-drawer-close" onClick={() => setSitorOpen(false)} aria-label={tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}
+                            className="w-8 h-8 inline-flex items-center justify-center rounded-lg border border-[#334155]/60 text-[#9aa6b2] hover:text-white hover:border-[#8a97a6] transition-colors active:scale-95">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                        <div className="flex-1 overflow-y-auto p-3">
+                          <SalaSitor />
+                        </div>
+                        <div data-testid="oggi-radio" className="shrink-0 border-t border-[#1e293b] px-3 py-2">
+                          <RadioFornaio inline />
+                        </div>
+                      </div>
+                    </div>
+                    )}
                     {/* Le sezioni LEGGI/normative UE/DE sono nel footer (Impressum & Datenschutz). */}
                     </PlantHeartbeatProvider>
                   </div>

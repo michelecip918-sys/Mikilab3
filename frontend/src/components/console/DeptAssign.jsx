@@ -29,6 +29,7 @@ export default function DeptAssign() {
     operatorPinsApi.list().then((d) => setOperators((d.operators || []).map((o) => ({ name: o.name })))).catch(() => {});
   }, []);
   useEffect(() => { load(); const id = setInterval(() => deptApi.board().then((d) => setBoard(d.objectives || [])).catch(() => {}), 15000); return () => clearInterval(id); }, [load]);
+  useEffect(() => { window.addEventListener("mikilab-depts-updated", load); return () => window.removeEventListener("mikilab-depts-updated", load); }, [load]);
 
   const toggle = (name) => setSel((s) => { const n = { ...s }; if (n[name] !== undefined) delete n[name]; else n[name] = ""; return n; });
   const setTask = (name, v) => setSel((s) => ({ ...s, [name]: v }));
