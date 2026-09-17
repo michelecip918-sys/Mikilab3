@@ -5727,3 +5727,11 @@ Verificato: backend curl (silos CRUD, roster, toggle, suggestions senza agv) + s
 Verificato: backend curl (reorder persiste, GET ordinato) + screenshot UI (grip drag presente, righe draggable).
 - **Riordino silos via drag & drop**: backend warehouse.py — campo `order` nei silos (seed con indice, create con max+1), GET `/mike/silos` ora ordina per `order` (fallback created_at), nuovo `PUT /api/mike/silos/reorder {order:[ids]}` che salva l'ordine scelto. Frontend SiloManager.jsx — ogni riga silo è `draggable` con icona grip (`silo-drag-<id>`), onDragStart/onDrop riordinano localmente (feedback immediato) e persistono via `mikeApi.siloReorder`. Org-scoped.
 - NB: in PREVIEW → serve Deploy/Republish per mikilab.de.
+
+---
+## Changelog — 22 Set 2026, 3 completamenti (macchine drag, log accept/decline, preset silos)
+Verificato: testing_agent iteration_262 → 4/4 backend + UI verde (retest_needed:false).
+1. **Riordino macchine trascinabile**: server.py — `_dept_machines_merged` ordina per `doc['order']`, nuovo `PUT /api/depts/{dept}/machines/reorder {order:[ids]}`. Frontend MyMachines.jsx — righe draggable + grip `my-machine-drag-<id>`, persistenza via `deptApi.machineReorder`.
+2. **Log accetta/rifiuta squadra**: coordination.py — `_accept_call` logga `kind='accepted'`, ramo decline logga `kind='declined'` (entrambi operator+at) in coordination_log. Frontend TeamCoordination.jsx — Registro decisioni ora mostra nome operatore in grassetto + "ha accettato" (verde) / "ha rifiutato" (rosso) / "scoperto" + orario.
+3. **Preset silos per attività**: warehouse.py — `_SILO_PRESETS` (panificio/pizzeria/pasticceria) + `POST /api/mike/silos/preset {activity}` con dedup per nome. Frontend SiloManager.jsx — box `silos-presets` con 3 pulsanti. api.js: deptApi.machineReorder, mikeApi.siloPreset.
+- NB: in PREVIEW → serve Deploy/Republish per mikilab.de. Dati di test del testing agent ripuliti da org_default.
