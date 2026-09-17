@@ -18,10 +18,24 @@ _SILO_SEED = [
 
 async def _seed_silos(org: str = ORG_DEFAULT):
     if await db.silos.count_documents({"organization_id": org}) == 0:
-        for s in _SILO_SEED:
+        for i, s in enumerate(_SILO_SEED):
             d = dict(s)
             d["organization_id"] = org
+            d["order"] = i
             await db.silos.insert_one(d)
+
+
+class SiloReorderReq(BaseModel):
+    order: List[str] = []
+
+
+@api_router.put("/mike/silos/reorder")
+async def mike_silos_reorder(body: SiloReorderReq, admin: dict = Depends(require_admin)):
+    """Il Capo trascina i silos nell'ordine in cui li usa: l'ordine viene salvato."""
+    org = _org_id(admin)
+    for pos, sid in enumerate(body.order or []):
+        await db.silos.update_one({"id": sid, "organization_id": org}, {"$set": {"order": pos}})
+    return {"ok": True}
 
 
 @api_router.get("/mike/silos")
@@ -31,6 +45,8 @@ async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     await _seed_silos(_org_id(admin))
     it = (lang or "it").startswith("it")
     docs = await db.silos.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
+    # Ordine scelto dal Capo (trascinamento); i vecchi documenti senza "order" restano in fondo ma stabili.
+    docs.sort(key=lambda s: (s.get("order", 9999), s.get("created_at", ""), s.get("id", "")))
     out = []
     reorder = 0
     for s in docs:
@@ -82,10 +98,12 @@ async def mike_silo_create(body: SiloCreateReq, admin: dict = Depends(require_ad
         raise HTTPException(400, "Nome silo richiesto")
     org = _org_id(admin)
     await _seed_silos(org)
+    last = await db.silos.find({"organization_id": org}, {"order": 1, "_id": 0}).sort("order", -1).limit(1).to_list(1)
+    nxt = int((last[0].get("order", 0) if last else 0)) + 1
     doc = {"id": "silo-" + _uuid.uuid4().hex[:8], "name": nm[:80], "ingredient": (body.ingredient or "farina").strip()[:40],
            "capacity_kg": float(body.capacity_kg or 0), "current_kg": float(body.current_kg or 0),
            "min_kg": float(body.min_kg or 0), "drain_rate_kg_h": 0.0, "humidity_pct": float(body.humidity_pct or 0),
-           "is_flour": bool(body.is_flour), "organization_id": org, "created_at": now_iso()}
+           "is_flour": bool(body.is_flour), "organization_id": org, "created_at": now_iso(), "order": nxt}
     await db.silos.insert_one({**doc})
     return {"ok": True, "id": doc["id"]}
 

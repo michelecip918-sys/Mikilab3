@@ -694,6 +694,7 @@ export const mikeApi = {
   siloCreate: (payload) => api.post(`/mike/silos`, payload).then((r) => r.data),
   siloUpdate: (sid, payload) => api.put(`/mike/silos/${sid}`, payload).then((r) => r.data),
   siloDelete: (sid) => api.delete(`/mike/silos/${sid}`).then((r) => r.data),
+  siloReorder: (order) => api.put(`/mike/silos/reorder`, { order }).then((r) => r.data),
   siloMicroorder: () => api.post(`/mike/silos/microorder`).then((r) => r.data),
   siloSupplierGet: () => api.get(`/mike/silo-supplier`).then((r) => r.data),
   siloSupplierSet: (email) => api.put(`/mike/silo-supplier`, { email }).then((r) => r.data),

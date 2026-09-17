@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Container, Droplets, PackagePlus, Mail, Check, Plus, Pencil, Trash2, X } from "lucide-react";
+import { Container, Droplets, PackagePlus, Mail, Check, Plus, Pencil, Trash2, X, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -16,6 +16,16 @@ export default function SiloManager() {
   const [newName, setNewName] = useState("");
   const [newKg, setNewKg] = useState("");
   const [edit, setEdit] = useState(null); // { id, name, current_kg, humidity_pct }
+  const [dragIdx, setDragIdx] = useState(null);
+
+  const reorder = async (from, to) => {
+    if (from === null || from === to) return;
+    const arr = [...data.silos];
+    const [moved] = arr.splice(from, 1);
+    arr.splice(to, 0, moved);
+    setData((d) => ({ ...d, silos: arr })); // feedback immediato
+    try { await mikeApi.siloReorder(arr.map((x) => x.id)); } catch { load(); }
+  };
 
   const load = useCallback(async () => { try { setData(await mikeApi.silos()); } catch { /* */ } }, []);
   useEffect(() => { load(); const iv = setInterval(load, 12000); return () => clearInterval(iv); }, [load]);
@@ -47,11 +57,17 @@ export default function SiloManager() {
         {supplier.trim() !== savedSup && <button data-testid="silo-supplier-save" onClick={saveSupplier} className="shrink-0 text-[#8a97a6]"><Check className="w-4 h-4" /></button>}
       </div>
 
-      {data.silos.map((s) => {
+      {data.silos.map((s, idx) => {
         const col = s.needs_reorder ? "#b06e78" : s.fill_pct < 40 ? "#a4afbb" : "#6e9e85";
         const isEdit = edit && edit.id === s.id;
         return (
-          <div key={s.id} data-testid={`silo-${s.id}`} className="rounded-xl border p-2.5" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
+          <div key={s.id} data-testid={`silo-${s.id}`}
+            draggable={!isEdit}
+            onDragStart={() => setDragIdx(idx)}
+            onDragOver={(e) => { e.preventDefault(); }}
+            onDrop={() => { reorder(dragIdx, idx); setDragIdx(null); }}
+            onDragEnd={() => setDragIdx(null)}
+            className="rounded-xl border p-2.5" style={{ borderColor: `${col}44`, background: `${col}0a`, opacity: dragIdx === idx ? 0.5 : 1 }}>
             {isEdit ? (
               <div className="space-y-2">
                 <input data-testid={`silo-edit-name-${s.id}`} value={edit.name} onChange={(e) => setEdit({ ...edit, name: e.target.value })} className="w-full bg-[#060A10] border border-[#64748B]/40 rounded-md px-2 py-1.5 text-sm text-white outline-none" />
@@ -71,6 +87,7 @@ export default function SiloManager() {
             ) : (
               <>
                 <div className="flex items-center gap-2">
+                  <GripVertical data-testid={`silo-drag-${s.id}`} className="w-3.5 h-3.5 shrink-0 text-[#64748B] cursor-grab active:cursor-grabbing" />
                   <Container className="w-4 h-4 shrink-0" style={{ color: col }} />
                   <span className="text-sm font-black text-white flex-1 min-w-0 truncate">{s.name}</span>
                   <span className="text-[11px] font-bold" style={{ color: col }}>{s.current_kg} / {s.capacity_kg} kg</span>
