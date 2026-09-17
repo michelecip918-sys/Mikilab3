@@ -4351,7 +4351,7 @@ async def worker_board(org: str = Depends(effective_org)):
     pool = await _worker_pool(org)
     states = await _worker_states_map(org)
     # Mappa dei task attivi per titolo/ETA
-    tasks = await db.team_tasks.find({"status": "active"}, {"_id": 0}).to_list(300)
+    tasks = await db.team_tasks.find({"status": "active", "organization_id": org}, {"_id": 0}).to_list(300)
     task_by_id = {t.get("id"): t for t in tasks}
     # TURNI: giorno corrente (abbreviazione IT) per capire chi è di turno ORA vs dopo.
     _DOW = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"]
@@ -4460,7 +4460,7 @@ async def worker_assign_next(body: AssignNextReq, org: str = Depends(effective_o
     chosen_step["assignee"] = op
     chosen_step["assignee_position"] = None
     steps = _recompute_task_eta(chosen_task.get("steps") or [])
-    await db.team_tasks.update_one({"id": chosen_task["id"]}, {"$set": {"steps": steps}})
+    await db.team_tasks.update_one({"id": chosen_task["id"], "organization_id": org}, {"$set": {"steps": steps}})
     await _set_worker_state(org, op, status="busy", task_id=chosen_task["id"],
                             step_order=chosen_step.get("order"), eta_min=chosen_step.get("eta_min"))
     return {"assigned": True, "task_title": chosen_task.get("title"),
@@ -9601,7 +9601,7 @@ async def autoplan_dispatch(body: AutoPlanDispatchReq, admin: dict = Depends(req
         qty = b.get("qty") or ""
         parts = [p for p in [f"Linea {line}" if line else "", f"Ore {start}" if start else "", f"Qtà {qty}" if qty else ""] if p]
         task = {
-            "id": str(uuid.uuid4()), "title": product, "kind": "produzione", "priority": "media",
+            "id": str(uuid.uuid4()), "organization_id": org, "title": product, "kind": "produzione", "priority": "media",
             "line": line, "assignee": (b.get("assignee") or line), "start": start,
             "pacing": "", "pacing_target": "", "transcript": str(b.get("rationale") or ""),
             "steps": [{"order": 1, "text": " · ".join(parts) or product, "done": False}],

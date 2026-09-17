@@ -137,11 +137,11 @@ async def mike_proofing_sync(free_ovens: int = -1, lang: str = "it", admin: dict
     di produzione attivi (scaglionati di 15') e aggiorna il piano del giorno."""
     curve = await mike_proofing(free_ovens, lang, admin)
     base = datetime.now(timezone.utc) + timedelta(minutes=curve["total_minutes"])
-    tasks = await db.team_tasks.find({"status": "active", "kind": "produzione"}, {"_id": 0}).sort("start", 1).to_list(200)
+    tasks = await db.team_tasks.find({"status": "active", "kind": "produzione", "organization_id": _org_id(admin)}, {"_id": 0}).sort("start", 1).to_list(200)
     updated = 0
     for i, tk in enumerate(tasks):
         new_start = (base + timedelta(minutes=15 * i)).strftime("%H:%M")
-        await db.team_tasks.update_one({"id": tk["id"]}, {"$set": {"start": new_start}})
+        await db.team_tasks.update_one({"id": tk["id"], "organization_id": _org_id(admin)}, {"$set": {"start": new_start}})
         updated += 1
     it = (lang or "it").startswith("it")
     return {"ok": True, "updated": updated, "oven_ready_at": curve["oven_ready_at"], "total_minutes": curve["total_minutes"],

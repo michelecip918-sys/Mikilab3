@@ -5621,3 +5621,8 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Frontend smoke 390px: home carica, logo Sitor + avatar visibili, nessun overflow orizzontale, nessun errore console critico.
 - Isolamento multi-tenant, stato live per azienda, multi-azienda, inviti operaio, coordinamento da dispatch: coperti e verdi in iter257/258/259.
 - Nessun bug reale trovato. Ricette non toccate.
+
+---
+## Changelog — 17 Set 2026 (team_tasks: organization_id garantito ovunque)
+- Corrette le operazioni team_tasks rimaste non scopate: insert in POST /mike/autoplan/dispatch (ora con organization_id=_org_id(admin)), lettura in GET /worker/board (+org), update in worker_assign_next (+org), lettura+update in POST /mike/proofing/sync-plan in warehouse.py (+org via _org_id(admin)). delegation/confirm aveva gia' organization_id. Ora OGNI insert/lettura/update di team_tasks e' filtrato per organization_id.
+- TEST REALE a 2 organizzazioni: A crea task via dispatch → A lo vede (delegation/tasks=1), B NON lo vede (worker/board=0, delegation/tasks=0). sync-plan di B non tocca i task di A (task A intatto); sync-plan di A aggiorna solo i suoi (updated=1). Pulizia dati test fatta.
