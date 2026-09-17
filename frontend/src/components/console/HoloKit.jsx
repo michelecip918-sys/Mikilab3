@@ -53,7 +53,6 @@ export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaul
           style={{ background: `${accent}14`, border: `1px solid ${accent}3a` }}><PanelIcon icon={icon} color={accent} /></span>}
         <span className="min-w-0 flex-1">
           <span className="block font-tech font-bold text-sm sm:text-base text-white tracking-wide truncate" style={{ textShadow: `0 0 12px ${accent}22` }}>{title}</span>
-          {sub && <span className="block text-[11px] text-[#94A3B8] truncate">{sub}</span>}
         </span>
         <span className="relative flex w-2.5 h-2.5 shrink-0" title="stato">
           <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: beacon, opacity: 0.55 }} />

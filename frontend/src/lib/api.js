@@ -782,6 +782,9 @@ export const deptApi = {
   templateApply: (tid) => api.post(`/depts/templates/${tid}/apply`).then((r) => r.data),
   machinesGet: (dept) => cachedGet(`depts_machines_${dept}`, () => api.get(`/depts/${dept}/machines`).then((r) => r.data), { machines: [] }),
   machinesSet: (dept, payload) => api.post(`/depts/${dept}/machines`, payload).then((r) => r.data),
+  machineAdd: (dept, payload) => api.post(`/depts/${dept}/machines/add`, payload).then((r) => r.data),
+  machineRename: (dept, mid, name) => api.patch(`/depts/${dept}/machines/${mid}`, { name }).then((r) => r.data),
+  machineDelete: (dept, mid) => api.delete(`/depts/${dept}/machines/${mid}`).then((r) => r.data),
   machinesOverview: () => cachedGet("depts_machines_overview", () => api.get(`/depts/machines/overview`).then((r) => r.data), { depts: [] }),
 };
 

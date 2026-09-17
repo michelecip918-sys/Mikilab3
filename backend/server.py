@@ -2003,14 +2003,25 @@ class DeptMachinesReq(BaseModel):
 
 
 def _dept_machines_merged(dept: str, doc: dict | None) -> list:
-    """Unisce il catalogo macchine del reparto con lo stato salvato."""
-    saved = {m.get("id"): m for m in ((doc or {}).get("machines") or [])}
+    """Unisce il catalogo macchine del reparto con lo stato salvato, gli override
+    del Capo (rinomina/nascondi) e le macchine personalizzate aggiunte dal Capo."""
+    doc = doc or {}
+    saved = {m.get("id"): m for m in (doc.get("machines") or [])}
+    overrides = doc.get("overrides") or {}
     out = []
     for m in DEPARTMENTS[dept]["machines"]:
+        ov = overrides.get(m["id"]) or {}
+        if ov.get("hidden"):
+            continue
         s = saved.get(m["id"], {})
         st = s.get("status") if s.get("status") in _MACHINE_STATES else "spenta"
-        out.append({"id": m["id"], "name": m["name"], "type": m["type"],
-                    "status": st, "value": s.get("value", "") or ""})
+        out.append({"id": m["id"], "name": ov.get("name") or m["name"], "type": m["type"],
+                    "status": st, "value": s.get("value", "") or "", "custom": False})
+    for c in (doc.get("custom") or []):
+        s = saved.get(c.get("id"), {})
+        st = s.get("status") if s.get("status") in _MACHINE_STATES else "spenta"
+        out.append({"id": c.get("id"), "name": c.get("name", ""), "type": c.get("type", "altro"),
+                    "status": st, "value": s.get("value", "") or "", "custom": True})
     return out
 
 
@@ -2045,7 +2056,9 @@ async def dept_machines_get(dept: str, org: str = Depends(effective_org)):
 async def dept_machines_set(dept: str, body: DeptMachinesReq, org: str = Depends(effective_org)):
     if dept not in DEPARTMENTS:
         raise HTTPException(404, "Reparto non trovato")
-    valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]}
+    prev = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    # ID validi = catalogo di base + macchine personalizzate del Capo.
+    valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]} | {c.get("id") for c in ((prev or {}).get("custom") or [])}
     clean = []
     for m in body.machines:
         if m.id not in valid_ids:
@@ -2059,6 +2072,74 @@ async def dept_machines_set(dept: str, body: DeptMachinesReq, org: str = Depends
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
             "machines": _dept_machines_merged(dept, doc), "updated_at": now}
+
+
+# --- Macchine COMPLETAMENTE editabili dal Capo: aggiungi/rinomina/elimina ---
+class DeptMachineAddReq(BaseModel):
+    name: str = ""
+    type: str = "altro"
+
+
+class DeptMachineRenameReq(BaseModel):
+    name: str = ""
+
+
+@api_router.post("/depts/{dept}/machines/add")
+async def dept_machine_add(dept: str, body: DeptMachineAddReq, admin: dict = Depends(require_admin)):
+    """Il Capo aggiunge una macchina/strumento personalizzato (forno, cella, silo, bilancia…)."""
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    import uuid as _uuid
+    org = _org_id(admin)
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(400, "Nome macchina richiesto")
+    item = {"id": "cst-" + _uuid.uuid4().hex[:8], "name": nm[:80], "type": (body.type or "altro").strip()[:40] or "altro"}
+    await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+        {"$push": {"custom": item}, "$set": {"dept": dept, "organization_id": org, "updated_at": now_iso()}},
+        upsert=True)
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    return {"ok": True, "machine": item, "machines": _dept_machines_merged(dept, doc)}
+
+
+@api_router.patch("/depts/{dept}/machines/{mid}")
+async def dept_machine_rename(dept: str, mid: str, body: DeptMachineRenameReq, admin: dict = Depends(require_admin)):
+    """Rinomina una macchina (di base tramite override, o personalizzata direttamente)."""
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    org = _org_id(admin)
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(400, "Nome richiesto")
+    is_custom = any(m["id"] == mid for m in DEPARTMENTS[dept]["machines"]) is False
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    if is_custom and doc and any(c.get("id") == mid for c in (doc.get("custom") or [])):
+        await db.dept_machines.update_one({"dept": dept, "organization_id": org, "custom.id": mid},
+            {"$set": {"custom.$.name": nm[:80], "updated_at": now_iso()}})
+    else:
+        await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+            {"$set": {f"overrides.{mid}.name": nm[:80], "dept": dept, "organization_id": org, "updated_at": now_iso()}},
+            upsert=True)
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    return {"ok": True, "machines": _dept_machines_merged(dept, doc)}
+
+
+@api_router.delete("/depts/{dept}/machines/{mid}")
+async def dept_machine_delete(dept: str, mid: str, admin: dict = Depends(require_admin)):
+    """Elimina una macchina: se personalizzata la rimuove, se di base la nasconde."""
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    org = _org_id(admin)
+    is_base = any(m["id"] == mid for m in DEPARTMENTS[dept]["machines"])
+    if is_base:
+        await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+            {"$set": {f"overrides.{mid}.hidden": True, "dept": dept, "organization_id": org, "updated_at": now_iso()}},
+            upsert=True)
+    else:
+        await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+            {"$pull": {"custom": {"id": mid}}, "$set": {"updated_at": now_iso()}})
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    return {"ok": True, "machines": _dept_machines_merged(dept, doc)}
 
 class DeptAssignReq(BaseModel):
     dept: str = ""
