@@ -85,7 +85,7 @@ export default function SitorMaestro({ role }) {
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% -10%, rgba(166,177,188,0.10), transparent 60%)" }} />
       <div className="relative z-10 p-4 space-y-3">
         <div className="flex items-center gap-3">
-          <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-11 h-11 rounded-xl object-cover object-top border-2 border-[#a6b1bc]/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-11 h-11 rounded-xl object-cover object-top border-2 border-[#a6b1bc]/60 shrink-0" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div className="min-w-0 flex-1">
             <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-[#a6b1bc]" /> {tri("Sitor Maestro", "Sitor Meister", "Sitor Master", "Sitor Maestro", "Sitor Maître", "استاد سیتور")}

@@ -33,7 +33,7 @@ export default function MohamedInbox() {
     <div data-testid="mohamed-inbox" className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
-          <img src={`${PUB}/avatar_nexus.jpg`} alt="Sitor" className="w-9 h-9 rounded-full object-cover border border-[#64748B]/50 grayscale-[0.2]" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+          <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-9 h-9 rounded-full object-cover border border-[#64748B]/50 grayscale-[0.2]" onError={(e) => { e.currentTarget.style.display = "none"; }} />
           <div>
             <h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Inbox Accessi", "Zugangs-Postfach", "Access Inbox", "Bandeja de Accesos", "Boîte d'accès", "صندوق دسترسی")}</h4>
             <p className="text-[10px] text-[#94A3B8]">{tri("Smistate da Sitor · assistente subordinato", "Sortiert von Sitor · untergeordnet", "Routed by Sitor · subordinate assistant", "Clasificadas por Sitor", "Triées par Sitor", "توسط محمد")}</p>

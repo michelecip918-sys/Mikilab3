@@ -1983,8 +1983,123 @@ DEPARTMENTS = {
 }
 
 @api_router.get("/depts")
-async def depts_catalog():
-    return {"departments": [{"key": k, **v} for k, v in DEPARTMENTS.items()]}
+async def depts_catalog(org: str = Depends(effective_org)):
+    return {"departments": await _depts_merged(org)}
+
+
+# --- Reparti gestibili dal Capo: rinomina/icona/colore/nascondi sui base, aggiungi/elimina i custom ---
+async def _dept_cfg(org: str) -> dict:
+    doc = await db.dept_config.find_one({"organization_id": org}, {"_id": 0})
+    return doc or {"overrides": {}, "custom": []}
+
+
+async def _depts_merged(org: str) -> list:
+    """Reparti effettivi per l'organizzazione: base (override applicati, nascosti esclusi) + custom."""
+    cfg = await _dept_cfg(org)
+    overrides = cfg.get("overrides") or {}
+    out = []
+    for k, v in DEPARTMENTS.items():
+        ov = overrides.get(k) or {}
+        if ov.get("hidden"):
+            continue
+        out.append({"key": k, "name": ov.get("name") or v["name"], "accent": ov.get("accent") or v["accent"],
+                    "icon": ov.get("icon") or v["icon"], "machines": v["machines"], "silos": v.get("silos", []),
+                    "cells": v.get("cells", []), "warehouse": v.get("warehouse", ""), "custom": False})
+    for c in (cfg.get("custom") or []):
+        out.append({"key": c["key"], "name": c.get("name", ""), "accent": c.get("accent", "#64748B"),
+                    "icon": c.get("icon", "🏭"), "machines": [], "silos": [], "cells": [], "warehouse": "", "custom": True})
+    return out
+
+
+async def _dept_exists(org: str, dept: str) -> bool:
+    return any(d["key"] == dept for d in await _depts_merged(org))
+
+
+async def _dept_name(org: str, dept: str) -> str:
+    for d in await _depts_merged(org):
+        if d["key"] == dept:
+            return d["name"]
+    return DEPARTMENTS.get(dept, {}).get("name", dept)
+
+
+def _base_machines(dept: str) -> list:
+    return DEPARTMENTS.get(dept, {}).get("machines", [])
+
+
+def _dept_label(dept: str) -> str:
+    return DEPARTMENTS.get(dept, {}).get("name", dept)
+
+
+class DeptUpsertReq(BaseModel):
+    name: str = ""
+    icon: str = "🏭"
+    accent: str = "#64748B"
+
+
+class DeptEditReq(BaseModel):
+    name: Optional[str] = None
+    icon: Optional[str] = None
+    accent: Optional[str] = None
+
+
+@api_router.post("/depts")
+async def dept_create(body: DeptUpsertReq, admin: dict = Depends(require_admin)):
+    import uuid as _uuid
+    nm = (body.name or "").strip()
+    if not nm:
+        raise HTTPException(400, "Nome reparto richiesto")
+    org = _org_id(admin)
+    item = {"key": "dept-" + _uuid.uuid4().hex[:8], "name": nm[:60], "icon": (body.icon or "🏭")[:8], "accent": (body.accent or "#64748B")[:9]}
+    await db.dept_config.update_one({"organization_id": org},
+        {"$push": {"custom": item}, "$set": {"organization_id": org, "updated_at": now_iso()}}, upsert=True)
+    return {"ok": True, "department": item, "departments": await _depts_merged(org)}
+
+
+@api_router.patch("/depts/{dept}")
+async def dept_edit(dept: str, body: DeptEditReq, admin: dict = Depends(require_admin)):
+    org = _org_id(admin)
+    fields = {k: v for k, v in {"name": body.name, "icon": body.icon, "accent": body.accent}.items() if v is not None}
+    if not fields:
+        return {"ok": True, "departments": await _depts_merged(org)}
+    if dept in DEPARTMENTS:
+        upd = {f"overrides.{dept}.{k}": (v.strip()[:60] if k == "name" else v[:9]) for k, v in fields.items()}
+        await db.dept_config.update_one({"organization_id": org},
+            {"$set": {**upd, "organization_id": org, "updated_at": now_iso()}}, upsert=True)
+    else:
+        setter = {f"custom.$.{k}": (v.strip()[:60] if k == "name" else v[:9]) for k, v in fields.items()}
+        await db.dept_config.update_one({"organization_id": org, "custom.key": dept},
+            {"$set": {**setter, "updated_at": now_iso()}})
+    return {"ok": True, "departments": await _depts_merged(org)}
+
+
+@api_router.delete("/depts/{dept}")
+async def dept_delete(dept: str, admin: dict = Depends(require_admin)):
+    """Base → nasconde (storico intatto); custom → rimuove."""
+    org = _org_id(admin)
+    if dept in DEPARTMENTS:
+        await db.dept_config.update_one({"organization_id": org},
+            {"$set": {f"overrides.{dept}.hidden": True, "organization_id": org, "updated_at": now_iso()}}, upsert=True)
+    else:
+        await db.dept_config.update_one({"organization_id": org}, {"$pull": {"custom": {"key": dept}}})
+    return {"ok": True, "departments": await _depts_merged(org)}
+
+
+@api_router.post("/depts/{dept}/restore")
+async def dept_restore(dept: str, admin: dict = Depends(require_admin)):
+    """Riporta in vista un reparto base nascosto."""
+    org = _org_id(admin)
+    await db.dept_config.update_one({"organization_id": org}, {"$unset": {f"overrides.{dept}.hidden": ""}})
+    return {"ok": True, "departments": await _depts_merged(org)}
+
+
+@api_router.get("/depts/hidden")
+async def depts_hidden(admin: dict = Depends(require_admin)):
+    """Reparti base attualmente nascosti (per poterli ripristinare)."""
+    cfg = await _dept_cfg(_org_id(admin))
+    overrides = cfg.get("overrides") or {}
+    out = [{"key": k, "name": (overrides.get(k, {}).get("name") or DEPARTMENTS[k]["name"])}
+           for k in DEPARTMENTS if (overrides.get(k) or {}).get("hidden")]
+    return {"hidden": out}
 
 
 # --- Stato macchine per reparto: l'operaio collega/segna le macchine del proprio reparto ---
@@ -2009,7 +2124,7 @@ def _dept_machines_merged(dept: str, doc: dict | None) -> list:
     saved = {m.get("id"): m for m in (doc.get("machines") or [])}
     overrides = doc.get("overrides") or {}
     out = []
-    for m in DEPARTMENTS[dept]["machines"]:
+    for m in _base_machines(dept):
         ov = overrides.get(m["id"]) or {}
         if ov.get("hidden"):
             continue
@@ -2048,21 +2163,21 @@ async def dept_machines_overview(org: str = Depends(effective_org)):
 
 @api_router.get("/depts/{dept}/machines")
 async def dept_machines_get(dept: str, org: str = Depends(effective_org)):
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
-    return {"dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
+    return {"dept": dept, "dept_name": await _dept_name(org, dept),
             "machines": _dept_machines_merged(dept, doc),
             "updated_at": (doc or {}).get("updated_at"), "operator": (doc or {}).get("operator", "")}
 
 
 @api_router.post("/depts/{dept}/machines")
 async def dept_machines_set(dept: str, body: DeptMachinesReq, org: str = Depends(effective_org)):
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     prev = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     # ID validi = catalogo di base + macchine personalizzate del Capo.
-    valid_ids = {m["id"] for m in DEPARTMENTS[dept]["machines"]} | {c.get("id") for c in ((prev or {}).get("custom") or [])}
+    valid_ids = {m["id"] for m in _base_machines(dept)} | {c.get("id") for c in ((prev or {}).get("custom") or [])}
     clean = []
     for m in body.machines:
         if m.id not in valid_ids:
@@ -2074,7 +2189,7 @@ async def dept_machines_set(dept: str, body: DeptMachinesReq, org: str = Depends
         {"$set": {"dept": dept, "machines": clean, "operator": (body.operator or "").strip()[:80], "updated_at": now, "organization_id": org}},
         upsert=True)
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
-    return {"ok": True, "dept": dept, "dept_name": DEPARTMENTS[dept]["name"],
+    return {"ok": True, "dept": dept, "dept_name": await _dept_name(org, dept),
             "machines": _dept_machines_merged(dept, doc), "updated_at": now}
 
 
@@ -2091,7 +2206,7 @@ class DeptMachineRenameReq(BaseModel):
 @api_router.post("/depts/{dept}/machines/add")
 async def dept_machine_add(dept: str, body: DeptMachineAddReq, admin: dict = Depends(require_admin)):
     """Il Capo aggiunge una macchina/strumento personalizzato (forno, cella, silo, bilancia…)."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     import uuid as _uuid
     org = _org_id(admin)
@@ -2109,13 +2224,13 @@ async def dept_machine_add(dept: str, body: DeptMachineAddReq, admin: dict = Dep
 @api_router.patch("/depts/{dept}/machines/{mid}")
 async def dept_machine_rename(dept: str, mid: str, body: DeptMachineRenameReq, admin: dict = Depends(require_admin)):
     """Rinomina una macchina (di base tramite override, o personalizzata direttamente)."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     org = _org_id(admin)
     nm = (body.name or "").strip()
     if not nm:
         raise HTTPException(400, "Nome richiesto")
-    is_custom = any(m["id"] == mid for m in DEPARTMENTS[dept]["machines"]) is False
+    is_custom = any(m["id"] == mid for m in _base_machines(dept)) is False
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     if is_custom and doc and any(c.get("id") == mid for c in (doc.get("custom") or [])):
         await db.dept_machines.update_one({"dept": dept, "organization_id": org, "custom.id": mid},
@@ -2145,7 +2260,7 @@ _MACHINE_PRESETS = {
 @api_router.post("/depts/{dept}/machines/preset")
 async def dept_machine_preset(dept: str, body: DeptMachinePresetReq, admin: dict = Depends(require_admin)):
     """Precarica le macchine tipiche dell'attività nel reparto (dedup per nome, come i silos)."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     import uuid as _uuid
     org = _org_id(admin)
@@ -2172,7 +2287,7 @@ class DeptMachineReorderReq(BaseModel):
 @api_router.put("/depts/{dept}/machines/reorder")
 async def dept_machine_reorder(dept: str, body: DeptMachineReorderReq, admin: dict = Depends(require_admin)):
     """Il Capo trascina le macchine nell'ordine in cui le usa: l'ordine viene salvato."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     org = _org_id(admin)
     await db.dept_machines.update_one({"dept": dept, "organization_id": org},
@@ -2185,10 +2300,10 @@ async def dept_machine_reorder(dept: str, body: DeptMachineReorderReq, admin: di
 @api_router.delete("/depts/{dept}/machines/{mid}")
 async def dept_machine_delete(dept: str, mid: str, admin: dict = Depends(require_admin)):
     """Elimina una macchina: se personalizzata la rimuove, se di base la nasconde."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         raise HTTPException(404, "Reparto non trovato")
     org = _org_id(admin)
-    is_base = any(m["id"] == mid for m in DEPARTMENTS[dept]["machines"])
+    is_base = any(m["id"] == mid for m in _base_machines(dept))
     if is_base:
         await db.dept_machines.update_one({"dept": dept, "organization_id": org},
             {"$set": {f"overrides.{mid}.hidden": True, "dept": dept, "organization_id": org, "updated_at": now_iso()}},
@@ -2214,11 +2329,11 @@ async def depts_assignment(org: str = Depends(effective_org)):
 @api_router.post("/depts/assign")
 async def depts_assign(body: DeptAssignReq, admin: dict = Depends(require_admin)):
     import uuid as _uuid
-    if body.dept not in DEPARTMENTS:
+    if body.dept not in DEPARTMENTS and not body.dept.startswith("dept-"):
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
     doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
-           "dept_name": DEPARTMENTS[body.dept]["name"], "task": (body.task or "").strip(),
+           "dept_name": _dept_label(body.dept), "task": (body.task or "").strip(),
            "operator": (body.operator or "Sitor").strip(), "note": (body.note or "").strip(),
            "by": admin.get("email") or "master", "at": now_iso(), "organization_id": _org_id(admin)}
     await db.dept_assignments.insert_one({**doc})
@@ -2251,7 +2366,7 @@ class DeptAssignMultiReq(BaseModel):
 async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(require_admin)):
     """Assegna PIÙ operai a mansioni distinte nello stesso reparto in un colpo solo."""
     import uuid as _uuid
-    if body.dept not in DEPARTMENTS:
+    if body.dept not in DEPARTMENTS and not body.dept.startswith("dept-"):
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
     created = []
@@ -2260,7 +2375,7 @@ async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(req
         if not op:
             continue
         doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": body.dept,
-               "dept_name": DEPARTMENTS[body.dept]["name"], "task": (it.task or "").strip(),
+               "dept_name": _dept_label(body.dept), "task": (it.task or "").strip(),
                "operator": op, "note": "", "apprentice": bool(it.apprentice),
                "by": admin.get("email") or "master", "at": now_iso(), "organization_id": _org_id(admin)}
         await db.dept_assignments.insert_one({**doc})
@@ -2270,7 +2385,7 @@ async def depts_assign_multi(body: DeptAssignMultiReq, admin: dict = Depends(req
         org = _org_id(admin)
         await db.dept_objectives.update_one(
             {"date": today, "dept": body.dept, "organization_id": org},
-            {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
+            {"$set": {"date": today, "dept": body.dept, "dept_name": _dept_label(body.dept),
                       "target": int(body.target or 0), "unit": "pezzi", "label": (body.label or "").strip(),
                       "updated_at": now_iso(), "organization_id": org},
              "$setOnInsert": {"done": 0, "entries": []}},
@@ -2293,13 +2408,13 @@ class ProgressReq(BaseModel):
 
 @api_router.post("/depts/objective")
 async def depts_objective_set(body: ObjectiveReq, admin: dict = Depends(require_admin)):
-    if body.dept not in DEPARTMENTS:
+    if body.dept not in DEPARTMENTS and not body.dept.startswith("dept-"):
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
     org = _org_id(admin)
     await db.dept_objectives.update_one(
         {"date": today, "dept": body.dept, "organization_id": org},
-        {"$set": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"],
+        {"$set": {"date": today, "dept": body.dept, "dept_name": _dept_label(body.dept),
                   "target": int(body.target or 0), "unit": body.unit or "pezzi", "label": (body.label or "").strip(),
                   "updated_at": now_iso(), "organization_id": org},
          "$setOnInsert": {"done": 0, "entries": []}},
@@ -2309,7 +2424,7 @@ async def depts_objective_set(body: ObjectiveReq, admin: dict = Depends(require_
 
 @api_router.post("/depts/progress")
 async def depts_progress(body: ProgressReq, org: str = Depends(effective_org)):
-    if body.dept not in DEPARTMENTS:
+    if body.dept not in DEPARTMENTS and not body.dept.startswith("dept-"):
         raise HTTPException(status_code=400, detail="Reparto sconosciuto")
     today = now_iso()[:10]
     entry = {"pin": (body.pin or "??")[-4:], "operator": (body.operator or "").strip() or "Operaio",
@@ -2318,7 +2433,7 @@ async def depts_progress(body: ProgressReq, org: str = Depends(effective_org)):
         {"date": today, "dept": body.dept, "organization_id": org},
         {"$inc": {"done": int(body.qty or 0)},
          "$push": {"entries": {"$each": [entry], "$slice": -60}},
-         "$setOnInsert": {"date": today, "dept": body.dept, "dept_name": DEPARTMENTS[body.dept]["name"], "target": 0, "unit": "pezzi", "label": "", "organization_id": org}},
+         "$setOnInsert": {"date": today, "dept": body.dept, "dept_name": _dept_label(body.dept), "target": 0, "unit": "pezzi", "label": "", "organization_id": org}},
         upsert=True)
     doc = await db.dept_objectives.find_one({"date": today, "dept": body.dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "objective": doc}
@@ -2400,10 +2515,10 @@ async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
     for it in (tpl.get("items") or []):
         dept = it.get("dept", "")
         op = (it.get("operator") or "").strip()
-        if not op or dept not in DEPARTMENTS:
+        if not op or (dept not in DEPARTMENTS and not dept.startswith("dept-")):
             continue
         doc = {"id": _uuid.uuid4().hex[:10], "date": today, "dept": dept,
-               "dept_name": DEPARTMENTS[dept]["name"], "task": (it.get("task") or "").strip(),
+               "dept_name": _dept_label(dept), "task": (it.get("task") or "").strip(),
                "operator": op, "note": "", "by": admin.get("email") or "master", "at": now_iso(), "organization_id": org}
         await db.dept_assignments.insert_one({**doc})
         doc.pop("_id", None)
@@ -5665,15 +5780,8 @@ ACADEMY_COACH_LANG = {
 }
 
 
-@api_router.post("/academy/coach")
-async def academy_coach(payload: ChatRequest):
-    if not EMERGENT_LLM_KEY:
-        raise HTTPException(status_code=500, detail="LLM key non configurata")
-    return StreamingResponse(
-        _lab_assistant_stream(ACADEMY_COACH_SYSTEM, ACADEMY_COACH_LANG, payload.session_id, payload.message, payload.lang),
-        media_type="text/event-stream",
-        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
-    )
+async def academy_coach_DISABLED(payload):
+    raise HTTPException(status_code=404, detail="Non disponibile")
 
 
 class QuizRequest(BaseModel):
@@ -8017,15 +8125,9 @@ async def _grant_from_email(email, source="stripe", days=None, tier="lab"):
 
 
 
-@api_router.get("/subscription/status")
-async def subscription_status(user: Optional[dict] = Depends(optional_user)):
-    # Accesso completo GRATUITO per tutti: sempre "pro" attivo, nessun pagamento.
-    return {"pro": True, "academy": True, "plan_tier": "lab", "source": "free",
-            "expires_at": None, "trial_used": False,
-            "is_admin": bool(user and user.get("role") == "admin"),
-            "unlock_all": True, "unlock_panettoni": True,
-            "unlocked_recipes": [], "unlocked_bundles": [],
-            "diagnosi_used": 0, "diagnosi_limit": None}
+async def subscription_status_DISABLED(user: Optional[dict] = Depends(optional_user)):
+    # Endpoint rimosso (accesso sempre libero); mantenuto stub non instradato.
+    return {"pro": True, "academy": True}
 
 
 async def _subscription_status_legacy(user: Optional[dict] = Depends(optional_user)):
@@ -8065,8 +8167,7 @@ class TrialReq(BaseModel):
     hours: int = 24          # 1 oppure 24
 
 
-@api_router.post("/trial/activate")
-async def activate_trial(body: TrialReq, request: Request, user: dict = Depends(current_user)):
+async def activate_trial_DISABLED(body: TrialReq, request: Request, user: dict = Depends(current_user)):
     email = user["email"].strip().lower()
     # SEC-004: blocca domini email usa-e-getta (anti-abuso prova ripetuta)
     DISPOSABLE = {"mailinator.com", "guerrillamail.com", "10minutemail.com", "tempmail.com", "temp-mail.org",
@@ -8209,23 +8310,6 @@ class AcademyCheckoutReq(BaseModel):
     origin_url: str
     course_id: Optional[str] = None
     booking: Optional[dict] = None  # {name, date, topic, phone} per consulenza
-
-
-@api_router.get("/academy/catalog")
-async def academy_catalog():
-    return {"courses": [_course_public(c) for c in ACADEMY_COURSES], "consult": CONSULT}
-
-
-@api_router.get("/academy/my")
-async def academy_my(user: dict = Depends(current_user)):
-    email = user["email"].strip().lower()
-    access = await db.academy_access.find({"email": email}, {"_id": 0}).to_list(100)
-    owned = {a["course_id"] for a in access}
-    courses = [{"id": c["id"], "video_url": c["video_url"], "title": c["title"]} for c in ACADEMY_COURSES if c["id"] in owned]
-    bookings = await db.academy_orders.find({"email": email, "kind": "consult", "payment_status": "paid"}, {"_id": 0}).sort("created_at", -1).to_list(50)
-    return {"courses": courses, "bookings": bookings}
-
-
 
 
 async def _academy_fulfill(session_obj):

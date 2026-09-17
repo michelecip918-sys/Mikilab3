@@ -101,6 +101,7 @@ import TeamFaces from "@/components/console/TeamFaces";
 import MachineArrival from "@/components/console/MachineArrival";
 import ShiftReport from "@/components/console/ShiftReport";
 import MyMachines from "@/components/console/MyMachines";
+import DeptManager from "@/components/console/DeptManager";
 import SalaSitor from "@/components/console/SalaSitor";
 import TeamCoordination from "@/components/console/TeamCoordination";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
@@ -645,6 +646,9 @@ export default function App() {
                       </ul>
                     </div>
                     ); })()}
+                    <HoloPanel testid="panel-departments" accent="#D97736" beacon="#D97736" icon="🗂️" title={tri("I miei reparti", "Meine Bereiche", "My departments", "Mis departamentos", "Mes rayons", "بخش‌های من")}>
+                      <DeptManager />
+                    </HoloPanel>
                     <HoloPanel testid="panel-my-machines" accent="#3E9C93" beacon="#3E9C93" icon="🏭" defaultOpen title={tri("Le mie macchine", "Meine Maschinen", "My machines", "Mis máquinas", "Mes machines", "دستگاه‌های من")}>
                       <MyMachines />
                     </HoloPanel>
@@ -659,7 +663,7 @@ export default function App() {
                     <BatchPhoenixButton />
                     <HoloPanel testid="panel-hardware" accent="#64748B" beacon="#9aa6b2" icon="🏭" title={tri("Bilance & PLC Forni", "Waagen & Ofen-SPS", "Scales & Oven PLC", "Balanzas & PLC Horno", "Balances & API Four", "ترازو و پی‌ال‌سی")}>
                       <div className="mb-3 rounded-xl overflow-hidden border border-[#D97736]/30 bg-[#0b0f19]">
-                        <img src={`${PUB}/sitor-oven.jpg`} alt="Sitor al forno" data-testid="sitor-oven-img" className="w-full h-36 object-cover" loading="lazy" />
+                        <img src={`${PUB}/sitor_official.jpg`} alt="Sitor al forno" data-testid="sitor-oven-img" className="w-full h-36 object-cover" loading="lazy" />
                       </div>
                       <HardwareBridge />
                     </HoloPanel>
@@ -722,7 +726,7 @@ export default function App() {
               {/* ================= ZONA 2 · OPERATORI ================= */}
               {mode === "floor" && (
               <section ref={zoneRefs.operatori} data-zone="operatori" className="holo-zone pt-2">
-                <ZoneHero3D testid="hero-operatori" theme={activity} onEnter={() => jumpTo("operatori")} avatar="avatar_nexus.jpg" accent="#8a97a6" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
+                <ZoneHero3D testid="hero-operatori" theme={activity} onEnter={() => jumpTo("operatori")} avatar="sitor_official.jpg" accent="#8a97a6" tag="Z-02 · Produzione" name="Sitor" role={tri("Reparto Produzione · Fornaio", "Produktionsbereich · Bäcker", "Production Floor · Baker", "Área de Producción · Panadero", "Atelier Production · Boulanger", "بخش تولید · نانوا")} listenSpeaking />
                 {floorUnlocked ? (
                   <div data-testid="floor-zone"><FloorOperatorDay /></div>
                 ) : (

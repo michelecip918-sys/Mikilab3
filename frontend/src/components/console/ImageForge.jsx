@@ -34,7 +34,7 @@ export default function ImageForge() {
   return (
     <div data-testid="image-forge" className="space-y-3">
       <div className="flex items-center gap-2.5">
-        <img src={`${PUB}/avatar_sitor.jpg`} alt="Sitor" className="w-10 h-10 rounded-xl object-cover object-top border border-[#a6b1bc]/50" />
+        <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-10 h-10 rounded-xl object-cover object-top border border-[#a6b1bc]/50" />
         <div>
           <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#a6b1bc]" /> {tri("Generatore Immagini · Sitor", "Bildgenerator · Sitor", "Image Generator · Sitor", "Generador de Imágenes · Sitor", "Générateur d'Images · Sitor", "تولید تصویر · سیتور")}</p>
           <p className="text-[11px] text-[#94A3B8]">{tri("Descrivi l'immagine che ti serve: Sitor la genera per te.", "Beschreibe das gewünschte Bild: Sitor erzeugt es.", "Describe the image you need: Sitor generates it for you.", "Describe la imagen que necesitas: Sitor la genera.", "Décris l'image dont tu as besoin : Sitor la génère.", "تصویر موردنیاز را توصیف کن: سیتور آن را می‌سازد.")}</p>

@@ -354,8 +354,7 @@ class GuestPinSet(BaseModel):
     pin: str
 
 
-@api_router.put("/admin-gate/guest")
-async def admin_gate_guest_set(body: GuestPinSet, admin: dict = Depends(require_admin)):
+async def admin_gate_guest_set_DISABLED(body: GuestPinSet, admin: dict = Depends(require_admin)):
     """Il Capo imposta/aggiorna il PIN OSPITE (apre solo la Formazione)."""
     p = _norm_pin(body.pin)
     if not p:

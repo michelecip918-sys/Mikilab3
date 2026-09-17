@@ -140,7 +140,7 @@ export default function PublicGate({ onUnlock }) {
 
   const AVATARS = [
     { img: "avatar_miki.jpg", c: "#D97736", n: "MikiLab" },
-    { img: "avatar_nexus.jpg", c: "#a6b1bc", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
+    { img: "sitor_official.jpg", c: "#a6b1bc", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
   ];
 
   if (showPin) return <AdminGate onUnlock={handleUnlock} role={gateRole} onBack={() => { setShowPin(false); setGateRole(null); }} />;

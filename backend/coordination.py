@@ -149,7 +149,7 @@ async def list_operator_skills(org: str = Depends(effective_org)):
     """Elenco operatori (dal piano turni) con i reparti su cui sono abilitati e il flag autista."""
     pool = await _worker_pool(org)
     skills = await _skills_map(org)
-    depts = [{"key": k, "name": v["name"]} for k, v in DEPARTMENTS.items()]
+    depts = [{"key": d["key"], "name": d["name"]} for d in await _depts_merged(org)]
     rows = []
     seen = set()
     for w in pool:
@@ -182,7 +182,7 @@ async def set_operator_skills(body: OperatorSkillsReq, user: dict = Depends(requ
     name = (body.name or "").strip()
     if not name:
         raise HTTPException(status_code=400, detail="Operatore mancante")
-    valid = set(DEPARTMENTS.keys())
+    valid = {d["key"] for d in await _depts_merged(org)}
     depts = [d for d in (body.departments or []) if d in valid]
     await db.operator_skills.update_one(
         {"organization_id": org, "name": name},
@@ -220,7 +220,7 @@ async def _eligible_queue(org: str, dept: str) -> list:
 
 async def _available_machine(org: str, dept: str) -> Optional[dict]:
     """Prima macchina 'libera' (spenta e non in manutenzione) del reparto."""
-    if dept not in DEPARTMENTS:
+    if dept not in DEPARTMENTS and not dept.startswith("dept-"):
         return None
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     for m in _dept_machines_merged(dept, doc):

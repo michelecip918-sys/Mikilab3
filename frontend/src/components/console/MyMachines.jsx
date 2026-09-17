@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { Loader2, Plus, Trash2, Pencil, Check, X, GripVertical } from "lucide-react";
 import { toast } from "sonner";
-import { deptApi } from "@/lib/api";
+import { api, deptApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
@@ -30,11 +30,14 @@ export default function MyMachines() {
   };
 
   useEffect(() => {
-    deptApi.catalog().then((d) => {
-      const list = d.departments || [];
+    const loadDepts = () => api.get(`/depts`).then((r) => {
+      const list = r.data.departments || [];
       setDepts(list);
-      if (list.length && !dept) setDept(list[0].key);
+      setDept((cur) => cur || (list[0] ? list[0].key : ""));
     }).catch(() => {});
+    loadDepts();
+    window.addEventListener("mikilab-depts-updated", loadDepts);
+    return () => window.removeEventListener("mikilab-depts-updated", loadDepts);
   }, []); // eslint-disable-line
 
   const loadMachines = useCallback(() => {

@@ -772,6 +772,10 @@ export const capoApi = {
 // Reparti indipendenti + assegnazione Capo -> Sitor
 export const deptApi = {
   catalog: () => cachedGet("depts_catalog", () => api.get(`/depts`).then((r) => r.data), { depts: [] }),
+  deptCreate: (payload) => api.post(`/depts`, payload).then((r) => r.data),
+  deptEdit: (dept, payload) => api.patch(`/depts/${dept}`, payload).then((r) => r.data),
+  deptDelete: (dept) => api.delete(`/depts/${dept}`).then((r) => r.data),
+  deptRestore: (dept) => api.post(`/depts/${dept}/restore`).then((r) => r.data),
   assignment: () => cachedGet("depts_assignment", () => api.get(`/depts/assignment`).then((r) => r.data), { assignments: [] }),
   assign: (payload) => api.post(`/depts/assign`, payload).then((r) => r.data),
   assignMulti: (payload) => api.post(`/depts/assign-multi`, payload).then((r) => r.data),
