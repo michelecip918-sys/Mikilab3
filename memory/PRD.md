@@ -5681,3 +5681,9 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - **SOLUZIONE (manuale, utente)**: Deployments → app mikilab.de → pannello Deployment → Secrets → Edit Custom Keys → ADMIN_GATE_PIN = 739284 → Save → Save & Redeploy / Republish. Verificare poi: 739284=master, 1985/198505=rifiutati.
 - Login admin produzione (admin@mikilab.de e michelecip918@gmail.com con password preview) → 401: credenziali DB produzione diverse, da ripristinare dopo il lancio se serve l'area Master web.
 
+---
+## Changelog — 22 Set 2026, chiusura (produzione allineata)
+- **Secret ADMIN_GATE_PIN=739284 aggiornato nei Secrets del deployment dall'utente + Redeploy** → VERIFICATO live su mikilab.de: 739284 → master OK; 198505 → rifiutato; "1985" non più master.
+- **RESTANTE 1**: nel DB di produzione esiste un PIN OPERAIO "1985" (operator_pins, novizio) → apre solo la modalità Floor/Produzione. Da eliminare dal pannello Sicurezza (serve il login del Capo sul sito live, NON le credenziali di test).
+- **RESTANTE 2**: il bundle live (main.0b73d9dd.js) NON include ancora il "PIN a ogni apertura" (marker offline cache presente) → serve un ultimo Republish quando comodo; non blocca il login di domani (il gate server-side funziona già col nuovo PIN).
+
