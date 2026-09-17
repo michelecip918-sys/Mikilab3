@@ -48,9 +48,21 @@ export default function SiloManager() {
     try { await mikeApi.siloUpdate(edit.id, { name: edit.name.trim(), current_kg: Number(edit.current_kg) || 0, humidity_pct: Number(edit.humidity_pct) || 0 }); setEdit(null); toast.success(tri("Aggiornato ✓", "Aktualisiert ✓", "Updated ✓", "Actualizado ✓", "Mis à jour ✓", "به‌روزرسانی ✓")); load(); } catch { toast.error("Error"); }
   };
   const delSilo = async (sid) => { try { await mikeApi.siloDelete(sid); load(); } catch { /* */ } };
+  const loadPreset = async (activity) => {
+    try { const r = await mikeApi.siloPreset(activity); toast.success(r.added > 0 ? tri(`Aggiunti ${r.added} silos tipici`, `${r.added} Silos geladen`, `Added ${r.added} typical silos`, `Añadidos ${r.added}`, `${r.added} silos ajoutés`, `${r.added} سیلو اضافه شد`) : tri("Sono già presenti", "Bereits vorhanden", "Already present", "Ya presentes", "Déjà présents", "قبلاً موجود است")); load(); } catch { toast.error("Error"); }
+  };
 
   return (
     <div data-testid="silo-manager" className="space-y-2">
+      <div data-testid="silo-presets" className="rounded-lg bg-[#0C1019]/60 border border-[#3E9C93]/25 p-2.5">
+        <p className="text-[10px] uppercase tracking-[0.2em] text-[#64748b] mb-1.5">{tri("Precarica silos tipici", "Typische Silos laden", "Load typical silos", "Cargar silos típicos", "Charger silos types", "بارگذاری سیلوهای معمول")}</p>
+        <div className="flex flex-wrap gap-1.5">
+          {[["panificio", tri("Panificio", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی")], ["pizzeria", tri("Pizzeria", "Pizzeria", "Pizzeria", "Pizzería", "Pizzeria", "پیتزا")], ["pasticceria", tri("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "شیرینی")]].map(([k, label]) => (
+            <button key={k} data-testid={`silo-preset-${k}`} onClick={() => loadPreset(k)} className="px-3 py-1.5 rounded-full text-[12px] font-bold bg-[#3E9C93]/15 border border-[#3E9C93]/40 text-[#7fd4c9] active:scale-95 transition-all">{label}</button>
+          ))}
+        </div>
+      </div>
+
       <div className="flex items-center gap-1.5 rounded-lg bg-[#0C1019] border border-[#64748B]/30 px-2.5 py-1.5">
         <Mail className="w-4 h-4 text-[#64748B] shrink-0" />
         <input data-testid="silo-supplier-input" type="email" value={supplier} onChange={(e) => setSupplier(e.target.value)} placeholder={tri("Email fornitore (per micro-ordini)", "Lieferanten-E-Mail", "Supplier email", "Email proveedor", "Email fournisseur", "ایمیل تأمین‌کننده")} className="flex-1 min-w-0 bg-transparent text-[13px] text-white outline-none placeholder:text-[#4b6070]" />

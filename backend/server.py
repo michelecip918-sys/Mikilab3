@@ -2022,6 +2022,10 @@ def _dept_machines_merged(dept: str, doc: dict | None) -> list:
         st = s.get("status") if s.get("status") in _MACHINE_STATES else "spenta"
         out.append({"id": c.get("id"), "name": c.get("name", ""), "type": c.get("type", "altro"),
                     "status": st, "value": s.get("value", "") or "", "custom": True})
+    # Ordine scelto dal Capo (trascinamento): le macchine non elencate restano in coda, stabili.
+    order = doc.get("order") or []
+    pos = {mid: i for i, mid in enumerate(order)}
+    out.sort(key=lambda m: pos.get(m["id"], 9999))
     return out
 
 
@@ -2120,6 +2124,23 @@ async def dept_machine_rename(dept: str, mid: str, body: DeptMachineRenameReq, a
         await db.dept_machines.update_one({"dept": dept, "organization_id": org},
             {"$set": {f"overrides.{mid}.name": nm[:80], "dept": dept, "organization_id": org, "updated_at": now_iso()}},
             upsert=True)
+    doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
+    return {"ok": True, "machines": _dept_machines_merged(dept, doc)}
+
+
+class DeptMachineReorderReq(BaseModel):
+    order: List[str] = []
+
+
+@api_router.put("/depts/{dept}/machines/reorder")
+async def dept_machine_reorder(dept: str, body: DeptMachineReorderReq, admin: dict = Depends(require_admin)):
+    """Il Capo trascina le macchine nell'ordine in cui le usa: l'ordine viene salvato."""
+    if dept not in DEPARTMENTS:
+        raise HTTPException(404, "Reparto non trovato")
+    org = _org_id(admin)
+    await db.dept_machines.update_one({"dept": dept, "organization_id": org},
+        {"$set": {"order": [str(x) for x in (body.order or [])], "dept": dept, "organization_id": org, "updated_at": now_iso()}},
+        upsert=True)
     doc = await db.dept_machines.find_one({"dept": dept, "organization_id": org}, {"_id": 0})
     return {"ok": True, "machines": _dept_machines_merged(dept, doc)}
 

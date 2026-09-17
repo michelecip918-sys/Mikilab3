@@ -302,7 +302,7 @@ async def _accept_call(call: dict, org: str):
     await _set_worker_state(org, op, status="busy", dept=call["dept"], task=call["task_desc"],
                             task_id=call.get("task_id"), step_order=call.get("step_order"),
                             eta_min=call.get("eta_min"))
-    await _log_decision(org, kind="assigned_operator", dept=call["dept"], task_desc=call["task_desc"],
+    await _log_decision(org, kind="accepted", dept=call["dept"], task_desc=call["task_desc"],
                         operator=op, call_id=call["id"],
                         capo_present=call.get("capo_present_at_trigger"), auto=not call.get("capo_present_at_trigger"))
     return call
@@ -449,6 +449,8 @@ async def respond_call(call_id: str, body: RespondReq, org: str = Depends(effect
     else:
         op = call.get("current_operator")
         call.setdefault("decisions", []).append({"operator": op, "action": "declined", "at": now_iso()})
+        await _log_decision(org, kind="declined", dept=call["dept"], task_desc=call["task_desc"],
+                            operator=op, call_id=call["id"])
         await _advance_or_close(call, settings, org)
     await _persist_call(call)
     return {"ok": True, "status": call["status"], "call": _public_call(call)}

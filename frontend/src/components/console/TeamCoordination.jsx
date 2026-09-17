@@ -235,11 +235,15 @@ export default function TeamCoordination() {
           <div className="space-y-1.5 max-h-64 overflow-y-auto">
             {log.slice(0, 40).map((d) => (
               <div key={d.id} data-testid={`coord-log-${d.id}`} className="flex items-center gap-2 text-[12px]">
-                {d.kind === "assigned_operator" && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" style={{ color: SAGE }} />}
+                {(d.kind === "assigned_operator" || d.kind === "accepted") && <CheckCircle2 className="w-3.5 h-3.5 shrink-0" style={{ color: SAGE }} />}
                 {d.kind === "assigned_machine" && <Cpu className="w-3.5 h-3.5 shrink-0" style={{ color: COPPER }} />}
-                {d.kind === "uncovered" && <XCircle className="w-3.5 h-3.5 shrink-0 text-[#e08a95]" />}
+                {(d.kind === "uncovered" || d.kind === "declined") && <XCircle className="w-3.5 h-3.5 shrink-0 text-[#e08a95]" />}
                 <span className="text-[#CBD5E1] flex-1 min-w-0 truncate">
-                  <b className="text-white">{d.task_desc}</b> · {d.operator || d.machine || d.detail || ""} {d.auto ? <span className="text-[10px] text-[#c9a24a]">· AUTO</span> : null}
+                  <b className="text-white">{d.operator || d.machine || ""}</b>
+                  {d.kind === "accepted" && <span className="text-[#6e9e85]"> {tri("ha accettato", "hat angenommen", "accepted", "aceptó", "a accepté", "پذیرفت")}</span>}
+                  {d.kind === "declined" && <span className="text-[#e08a95]"> {tri("ha rifiutato", "hat abgelehnt", "declined", "rechazó", "a refusé", "رد کرد")}</span>}
+                  {d.kind === "uncovered" && <span className="text-[#e08a95]"> {tri("scoperto", "unbesetzt", "uncovered", "sin cubrir", "non couvert", "بدون پوشش")}</span>}
+                  {" · "}<span className="text-[#94A3B8]">{d.task_desc}</span> {d.auto ? <span className="text-[10px] text-[#c9a24a]">· AUTO</span> : null}
                 </span>
                 <span className="text-[10px] text-[#64748B] shrink-0">{(d.at || "").slice(11, 16)}</span>
               </div>

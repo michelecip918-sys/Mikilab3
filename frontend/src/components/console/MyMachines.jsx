@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Loader2, Plus, Trash2, Pencil, Check, X } from "lucide-react";
+import { Loader2, Plus, Trash2, Pencil, Check, X, GripVertical } from "lucide-react";
 import { toast } from "sonner";
 import { deptApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
@@ -18,6 +18,16 @@ export default function MyMachines() {
   const [newType, setNewType] = useState("");
   const [editId, setEditId] = useState("");
   const [editName, setEditName] = useState("");
+  const [dragIdx, setDragIdx] = useState(null);
+
+  const reorder = async (from, to) => {
+    if (from === null || from === to) return;
+    const arr = [...machines];
+    const [moved] = arr.splice(from, 1);
+    arr.splice(to, 0, moved);
+    setMachines(arr);
+    try { await deptApi.machineReorder(dept, arr.map((x) => x.id)); } catch { loadMachines(); }
+  };
 
   useEffect(() => {
     deptApi.catalog().then((d) => {
@@ -76,8 +86,14 @@ export default function MyMachines() {
 
       <div className="space-y-1.5">
         {machines.length === 0 && <p className="text-xs text-[#64748b]">{tri("Nessuno strumento. Aggiungine uno qui sotto.", "Keine Geräte. Füge unten eines hinzu.", "No tools. Add one below.", "Sin herramientas. Añade una abajo.", "Aucun outil. Ajoutes-en un.", "ابزاری نیست. یکی اضافه کن.")}</p>}
-        {machines.map((m) => (
-          <div key={m.id} data-testid={`my-machine-${m.id}`} className="flex items-center gap-2 bg-[#0C1019]/60 border border-[#1e293b] rounded-lg px-3 py-2">
+        {machines.map((m, idx) => (
+          <div key={m.id} data-testid={`my-machine-${m.id}`}
+            draggable={editId !== m.id}
+            onDragStart={() => setDragIdx(idx)}
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={() => { reorder(dragIdx, idx); setDragIdx(null); }}
+            onDragEnd={() => setDragIdx(null)}
+            className="flex items-center gap-2 bg-[#0C1019]/60 border border-[#1e293b] rounded-lg px-3 py-2" style={{ opacity: dragIdx === idx ? 0.5 : 1 }}>
             {editId === m.id ? (
               <>
                 <input data-testid={`my-machine-edit-input-${m.id}`} value={editName} autoFocus
@@ -88,6 +104,7 @@ export default function MyMachines() {
               </>
             ) : (
               <>
+                <GripVertical data-testid={`my-machine-drag-${m.id}`} className="w-3.5 h-3.5 shrink-0 text-[#64748B] cursor-grab active:cursor-grabbing" />
                 <span className="text-sm text-white flex-1 truncate">{m.name}
                   <span className="ml-2 text-[10px] uppercase tracking-wider text-[#64748b]">{m.type}</span>
                   {m.custom && <span className="ml-1.5 text-[9px] font-black uppercase text-[#c9a24a]">·{tri("mia", "eigen", "mine", "mía", "mienne", "من")}</span>}

@@ -695,6 +695,7 @@ export const mikeApi = {
   siloUpdate: (sid, payload) => api.put(`/mike/silos/${sid}`, payload).then((r) => r.data),
   siloDelete: (sid) => api.delete(`/mike/silos/${sid}`).then((r) => r.data),
   siloReorder: (order) => api.put(`/mike/silos/reorder`, { order }).then((r) => r.data),
+  siloPreset: (activity) => api.post(`/mike/silos/preset`, { activity }).then((r) => r.data),
   siloMicroorder: () => api.post(`/mike/silos/microorder`).then((r) => r.data),
   siloSupplierGet: () => api.get(`/mike/silo-supplier`).then((r) => r.data),
   siloSupplierSet: (email) => api.put(`/mike/silo-supplier`, { email }).then((r) => r.data),
@@ -790,6 +791,7 @@ export const deptApi = {
   machineAdd: (dept, payload) => api.post(`/depts/${dept}/machines/add`, payload).then((r) => r.data),
   machineRename: (dept, mid, name) => api.patch(`/depts/${dept}/machines/${mid}`, { name }).then((r) => r.data),
   machineDelete: (dept, mid) => api.delete(`/depts/${dept}/machines/${mid}`).then((r) => r.data),
+  machineReorder: (dept, order) => api.put(`/depts/${dept}/machines/reorder`, { order }).then((r) => r.data),
   machinesOverview: () => cachedGet("depts_machines_overview", () => api.get(`/depts/machines/overview`).then((r) => r.data), { depts: [] }),
 };
 

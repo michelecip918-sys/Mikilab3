@@ -25,6 +25,56 @@ async def _seed_silos(org: str = ORG_DEFAULT):
             await db.silos.insert_one(d)
 
 
+_SILO_PRESETS = {
+    "panificio": [
+        {"name": "Farina Tipo 0", "ingredient": "farina", "capacity_kg": 1500, "current_kg": 1200, "min_kg": 300, "humidity_pct": 14.5, "is_flour": True},
+        {"name": "Farina Tipo 00", "ingredient": "farina", "capacity_kg": 1500, "current_kg": 1000, "min_kg": 300, "humidity_pct": 14.2, "is_flour": True},
+        {"name": "Farina Integrale", "ingredient": "farina", "capacity_kg": 1000, "current_kg": 700, "min_kg": 250, "humidity_pct": 15.0, "is_flour": True},
+        {"name": "Farina di Segale", "ingredient": "farina", "capacity_kg": 800, "current_kg": 500, "min_kg": 200, "humidity_pct": 13.8, "is_flour": True},
+        {"name": "Sale", "ingredient": "sale", "capacity_kg": 300, "current_kg": 200, "min_kg": 60, "humidity_pct": 0.1, "is_flour": False},
+    ],
+    "pizzeria": [
+        {"name": "Farina Tipo 00 Pizza", "ingredient": "farina", "capacity_kg": 1500, "current_kg": 1200, "min_kg": 300, "humidity_pct": 14.0, "is_flour": True},
+        {"name": "Farina Manitoba", "ingredient": "farina", "capacity_kg": 1000, "current_kg": 800, "min_kg": 250, "humidity_pct": 14.5, "is_flour": True},
+        {"name": "Semola Rimacinata", "ingredient": "semola", "capacity_kg": 800, "current_kg": 500, "min_kg": 150, "humidity_pct": 13.5, "is_flour": True},
+        {"name": "Sale", "ingredient": "sale", "capacity_kg": 300, "current_kg": 200, "min_kg": 60, "humidity_pct": 0.1, "is_flour": False},
+    ],
+    "pasticceria": [
+        {"name": "Farina Debole (biscotti)", "ingredient": "farina", "capacity_kg": 1000, "current_kg": 700, "min_kg": 200, "humidity_pct": 14.0, "is_flour": True},
+        {"name": "Farina Forte (lievitati)", "ingredient": "farina", "capacity_kg": 1000, "current_kg": 700, "min_kg": 200, "humidity_pct": 14.3, "is_flour": True},
+        {"name": "Zucchero Semolato", "ingredient": "zucchero", "capacity_kg": 500, "current_kg": 350, "min_kg": 120, "humidity_pct": 0.2, "is_flour": False},
+        {"name": "Zucchero a Velo", "ingredient": "zucchero", "capacity_kg": 300, "current_kg": 180, "min_kg": 80, "humidity_pct": 0.2, "is_flour": False},
+    ],
+}
+
+
+class SiloPresetReq(BaseModel):
+    activity: str = "panificio"
+
+
+@api_router.post("/mike/silos/preset")
+async def mike_silos_preset(body: SiloPresetReq, admin: dict = Depends(require_admin)):
+    """Precarica i silos tipici dell'attività scelta (salta quelli già presenti per nome)."""
+    import uuid as _uuid
+    org = _org_id(admin)
+    await _seed_silos(org)
+    act = (body.activity or "panificio").strip().lower()
+    preset = _SILO_PRESETS.get(act, _SILO_PRESETS["panificio"])
+    existing = {(s.get("name") or "").strip().lower() for s in await db.silos.find({"organization_id": org}, {"name": 1, "_id": 0}).to_list(200)}
+    last = await db.silos.find({"organization_id": org}, {"order": 1, "_id": 0}).sort("order", -1).limit(1).to_list(1)
+    nxt = int((last[0].get("order", 0) if last else 0)) + 1
+    added = 0
+    for i, p in enumerate(preset):
+        if p["name"].strip().lower() in existing:
+            continue
+        d = dict(p)
+        d.update({"id": "silo-" + _uuid.uuid4().hex[:8], "drain_rate_kg_h": 0.0,
+                  "organization_id": org, "created_at": now_iso(), "order": nxt + i})
+        await db.silos.insert_one(d)
+        added += 1
+    return {"ok": True, "added": added, "activity": act}
+
+
 class SiloReorderReq(BaseModel):
     order: List[str] = []
 
