@@ -20,7 +20,7 @@ import { toast } from "sonner";
 const PUB = process.env.PUBLIC_URL;
 
 // Multiverso pubblico read-only: chi non ha il PIN puo GUARDARE i 4 mondi e gli avatar,
-// ma OGNI interazione porta al Muro del PIN (198505 · richiesta michelecip918@gmail.com).
+// ma OGNI interazione porta al Muro del PIN (richiesta accesso: michelecip918@gmail.com).
 export default function PublicGate({ onUnlock }) {
   const { lang } = useLang();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);

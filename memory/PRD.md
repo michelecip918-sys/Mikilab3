@@ -5646,3 +5646,15 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - Cause della flakiness del gate (NON bug app): (1) accumulo di aziende/dati di test sul backend condiviso → puliti 10 org orfane + artefatti; (2) blocco anti-bruteforce login (5 fail→15min, feature corretta) scattato per run ravvicinati → puliti login_attempts/rate_limits.
 - RISULTATO pre_deploy_check.sh: EXIT=0 ✅ — iter257 30, iter258 30, iter259 10, iter260 44 (tutti passed) + CI isolamento eseguito.
 - DEPLOY: inviato a send_to_deployer (job aa6b806a, queued).
+
+---
+## Changelog — 22 Set 2026 (Secret di produzione Gate Admin)
+- **ADMIN_GATE_PIN aggiornato** in backend/.env al nuovo PIN a 6 cifre scelto dal Capo (vedi /app/memory/test_credentials.md). Al riavvio il "salvagente" di startup riallinea automaticamente l'hash nel DB (app_meta.admin_gate_pin) al valore .env.
+- **GATE_JWT_SECRET**: già presente in .env con stringa lunga e casuale → mantenuto (nessuna rigenerazione necessaria).
+- **SICUREZZA — rimosso bypass hardcoded**: auth.py admin_gate_verify accettava il vecchio PIN master 198505 scritto nel codice (`if p == "198505": ok=True`). Rimosso: ora il master passa SOLO da env ADMIN_GATE_PIN o hash DB. Il vecchio PIN è morto (verificato: verify 198505 → ok:false).
+- Commento in PublicGate.jsx ripulito (niente PIN nel sorgente frontend).
+- ORG_ACTIVATION_CODE (198505) e Production PIN Floor (198505, hash DB) restano INVARIATI (flussi diversi, non richiesti).
+- Testato via curl: verify nuovo PIN → master + cookie mikilab_gate; login admin + /api/orgs → 200; PIN ospite 202020 → guest OK (nessuna regressione).
+- Credenziali aggiornate in /app/memory/test_credentials.md.
+- NOTA: i vecchi script di test in /app/backend/tests/test_iter*.py usano ancora GATE_PIN="198505" (snapshot storici, fallirebbero se rilanciati — aggiornare la costante se servono).
+
