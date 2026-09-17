@@ -5638,3 +5638,11 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 - A crea task via dispatch → visibile solo ad A (delegation/tasks=1); B (nuova azienda) vede 0 su delegation/tasks, worker/board, worker/next-task, production/shift-plan. sync-plan di B non tocca A; A resta integro. Dati test ripuliti.
 ### Deploy
 - send_to_deployer: job in coda (job_id aa6b806a).
+
+---
+## Changelog — 17 Set 2026 (Pre-deploy check VERDE + deploy)
+- File confermati (non forniti nuovi contenuti dall'utente → mantenuti quelli esistenti): scripts/check_org_isolation.py e scripts/pre_deploy_check.sh (reso seriale con -n0 per evitare flakiness da parallelismo).
+- Fix TEST OBSOLETI (non bug app): test_iter257 test_shift_templates_flow ora verifica 404 (endpoint /depts/templates ELIMINATO di proposito); test_iter260 test_sitor_avatar_identity esclude sitor-oven.jpg (seconda posa diversa di proposito).
+- Cause della flakiness del gate (NON bug app): (1) accumulo di aziende/dati di test sul backend condiviso → puliti 10 org orfane + artefatti; (2) blocco anti-bruteforce login (5 fail→15min, feature corretta) scattato per run ravvicinati → puliti login_attempts/rate_limits.
+- RISULTATO pre_deploy_check.sh: EXIT=0 ✅ — iter257 30, iter258 30, iter259 10, iter260 44 (tutti passed) + CI isolamento eseguito.
+- DEPLOY: inviato a send_to_deployer (job aa6b806a, queued).

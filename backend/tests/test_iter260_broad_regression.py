@@ -108,8 +108,9 @@ def test_asset_available(asset):
 
 
 def test_sitor_avatar_identity():
-    """4 Sitor character images must be identical (same md5)."""
-    sitor_imgs = ["/avatar_sitor.jpg", "/sitor-full.jpg", "/sitor-oven.jpg", "/avatar_nexus.jpg"]
+    """Le immagini-personaggio di Sitor devono essere identiche (stesso md5).
+    NB: sitor-oven.jpg è la SECONDA POSA (diversa di proposito), quindi esclusa."""
+    sitor_imgs = ["/avatar_sitor.jpg", "/sitor-full.jpg", "/avatar_nexus.jpg", "/sitor_official.jpg"]
     hashes = {}
     for p in sitor_imgs:
         r = requests.get(f"{BASE_URL}{p}", timeout=20)

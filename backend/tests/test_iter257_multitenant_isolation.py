@@ -172,23 +172,10 @@ def test_machines_flow(admin_session):
 # ---------- Shift templates ----------
 
 def test_shift_templates_flow(admin_session):
-    payload = {
-        "name": f"T1_{uuid.uuid4().hex[:5]}",
-        "items": [{"dept": "panificio", "operator": "Marco", "task": "impasto"}],
-    }
-    r = admin_session.post(f"{API}/depts/templates", json=payload, timeout=15)
-    assert r.status_code in (200, 201), f"tpl create: {r.status_code} {r.text[:300]}"
-    tid = (r.json().get("id") or r.json().get("_id") or r.json().get("template", {}).get("id"))
-    r2 = admin_session.get(f"{API}/depts/templates", timeout=15)
-    assert r2.status_code == 200
-    body = r2.json()
-    items = body.get("templates") or body.get("items") or (body if isinstance(body, list) else [])
-    match = [t for t in items if t.get("name") == payload["name"]]
-    assert match, f"template not listed. body={str(body)[:500]}"
-    if not tid:
-        tid = match[0].get("id") or match[0].get("_id")
-    rd = admin_session.delete(f"{API}/depts/templates/{tid}", timeout=15)
-    assert rd.status_code in (200, 204)
+    # dept_shift_templates è stato ELIMINATO di proposito (richiesta utente):
+    # l'endpoint deve rispondere 404. Nessun task/collezione template deve esistere.
+    r = admin_session.get(f"{API}/depts/templates", timeout=15)
+    assert r.status_code == 404, f"endpoint templates atteso 404 (rimosso), got {r.status_code}"
 
 
 # ---------- Shift plan ----------

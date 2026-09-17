@@ -25,7 +25,7 @@ SUITES=(
 for s in "${SUITES[@]}"; do
   if [ -f "$s" ]; then
     echo "--- $s ---"
-    if python3 -m pytest -q "$s" 2>&1 | tail -n 8; then :; else FAIL=1; fi
+    if python3 -m pytest -q -p no:cacheprovider -n0 "$s" 2>&1 | tail -n 8; then :; else FAIL=1; fi
   else
     echo "!! Suite mancante: $s"
   fi
