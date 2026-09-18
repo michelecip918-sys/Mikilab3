@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, Share2, BookOpen } from "lucide-react";
+import { Sparkles, GraduationCap, ShieldAlert, LogOut, LogIn, BookOpen } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import LangSelector from "@/components/LangSelector";
@@ -92,22 +92,6 @@ export default function PublicGate({ onUnlock }) {
       try { playTTS(m, { lang, voice: "mikemix" }); } catch { /* */ }
     }
     onUnlock({ mode: "floor", name: nm, level: lvl });
-  };
-
-  const shareUrl = "https://mikilab.de/";
-  const doShare = async () => {
-    const data = {
-      title: "MikiLab Pro",
-      text: tri("Scopri MikiLab Pro — il sistema operativo olografico per panificio, pizzeria e pasticceria.", "Entdecke MikiLab Pro.", "Discover MikiLab Pro — the holographic OS for bakery, pizzeria and pastry.", "Descubre MikiLab Pro.", "Découvre MikiLab Pro.", "MikiLab Pro را کشف کن."),
-      url: shareUrl,
-    };
-    try { if (navigator.share) { await navigator.share(data); return; } } catch { return; }
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      toast.success(tri("Link copiato! Condividilo dove vuoi.", "Link kopiert!", "Link copied! Share it anywhere.", "¡Enlace copiado!", "Lien copié !", "لینک کپی شد!"));
-    } catch {
-      toast.info(shareUrl);
-    }
   };
 
   const sendRequest = async () => {
@@ -205,9 +189,6 @@ export default function PublicGate({ onUnlock }) {
           </span>
         </div>
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <button data-testid="public-share-btn" onClick={doShare} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#8a97a6]/40 text-[#8a97a6] text-xs font-bold hover:border-[#8a97a6] active:scale-95 transition-all backdrop-blur-md whitespace-nowrap shrink-0">
-            <Share2 className="w-3.5 h-3.5" /> {tri("Condividi", "Teilen", "Share", "Compartir", "Partager", "اشتراک")}
-          </button>
           <button data-testid="public-guide-btn" onClick={() => setShowGuide(true)} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0b0f19]/80 border border-[#a6b1bc]/40 text-[#a6b1bc] text-xs font-bold hover:border-[#a6b1bc] active:scale-95 transition-all backdrop-blur-md whitespace-nowrap shrink-0">
             <BookOpen className="w-3.5 h-3.5" /> {tri("Guida", "Anleitung", "Guide", "Guía", "Guide", "راهنما")}
           </button>
@@ -433,21 +414,6 @@ export default function PublicGate({ onUnlock }) {
             "Panadería · Pizzería · Pastelería · Almacén — en cinco idiomas.",
             "Boulangerie · Pizzeria · Pâtisserie · Entrepôt — en cinq langues.",
             "نانوایی · پیتزا · شیرینی · انبار")}</p>
-
-          <div className="mt-7 flex flex-col items-center gap-2">
-            <button data-testid="vetrina-share-btn" onClick={doShare}
-              className="inline-flex items-center gap-2 px-7 py-3 rounded-full font-black text-sm text-[#030712] active:scale-95 transition-all"
-              style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)", boxShadow: "0 0 22px rgba(138,151,166,0.4)" }}>
-              <Share2 className="w-4 h-4" /> {tri("Condividi MikiLab", "MikiLab teilen", "Share MikiLab", "Compartir MikiLab", "Partager MikiLab", "اشتراک MikiLab")}
-            </button>
-            <p className="text-[11px] text-[#64748B]">{tri(
-              "Fai conoscere il laboratorio: condividi mikilab.de",
-              "Teile mikilab.de",
-              "Spread the word: share mikilab.de",
-              "Comparte mikilab.de",
-              "Partage mikilab.de",
-              "mikilab.de را به اشتراک بگذار")}</p>
-          </div>
         </section>
         )}
 

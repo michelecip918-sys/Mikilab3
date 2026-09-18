@@ -9,6 +9,8 @@ const OWNER = "Michele Signorella";
 const EMAIL = "michelecip918@gmail.com";
 const EMAIL2 = "";
 const CITY = "Stuttgart, Deutschland";
+const STREET = "Stitzenburgstraße 15";
+const POSTAL = "70182 Stuttgart";
 
 const T = {
   it: {
@@ -89,15 +91,12 @@ export default function LegalPage() {
         <p className={pcl}>{tr("Ai sensi del § 5 DDG (Digitale-Dienste-Gesetz, Germania):", "Angaben gemäß § 5 DDG:", "Information pursuant to § 5 DDG (Germany):")}</p>
         <div className={`${pcl} mt-2`}>
           <p className="font-bold text-white">{OWNER}</p>
-          <p>{CITY}</p>
+          <p>{tr("Panettiere", "Bäcker", "Baker", "Panadero", "Boulanger", "نانوا")}</p>
+          <p>{STREET}</p>
+          <p>{POSTAL}, Deutschland</p>
           <p>E-Mail: <span className="text-[#9aa6b2]">{EMAIL}</span></p>
           <p className="text-[#94A3B8]">{tr("Sito: mikilab.de", "Website: mikilab.de", "Website: mikilab.de")}</p>
         </div>
-        <p data-testid="impressum-todo" className="text-[11px] text-[#a4afbb] mt-3 italic border border-[#a4afbb]/30 rounded-lg px-3 py-2 bg-[#a4afbb]/5">
-          {tr("⚠ DA COMPLETARE: aggiungere l'indirizzo postale completo (ladungsfähige Anschrift) appena disponibile — obbligatorio per la piena conformità tedesca.",
-             "⚠ ZU ERGÄNZEN: vollständige ladungsfähige Anschrift hinzufügen, sobald verfügbar — für die volle deutsche Konformität erforderlich.",
-             "⚠ TO COMPLETE: add the full postal address (ladungsfähige Anschrift) as soon as available — required for full German compliance.")}
-        </p>
       </div>
 
       {/* Privacy sections */}
