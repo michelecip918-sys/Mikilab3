@@ -5802,3 +5802,16 @@ Verificato: curl E2E (smart-threshold 20kg/g×4=80kg, apply-threshold aggiorna m
 3. **Storico riordini** (`GET /mike/reorder/history`): elenco micro-ordini sent/received/dismissed con date e stato. Sezione a comparsa «Storico riordini» nel pannello.
 - Frontend: `ReorderProposals.jsx` esteso (toggle Soglia auto, bottone Ricevuta, sezioni collassabili Soglie intelligenti + Storico). `mikeApi.reorderReceive/reorderHistory/reorderSmartThresholds/reorderApplyThreshold` + `reorderConfigSet(autoSend, autoThreshold)`.
 - NB: deploy su mikilab.de in coda.
+
+---
+## Changelog — Set 2026, Grafico consumi + "Chiedi aiuto" a voce (operatore)
+Verificato: curl E2E completo help (parse IT/EN/DE emergenza/urgente/normale; trigger emergency→Capo subito, uncovered→Capo, calling→collega con frase originale; reping; log coordination_log; notifiche Capo push+email+banner) + screenshot (sparkline consumi nel pannello riordino). Backend py_compile OK, webpack OK. NB: il flusso VOCALE (SpeechRecognition/TTS) è verificato via code-review + backend E2E; non automatizzabile in browser senza microfono.
+1. **Grafico consumi** (warehouse.py `_smart_threshold.series` 14gg + ReorderProposals.jsx `Sparkline`): mini-grafico SVG dei consumi giornalieri accanto a ogni soglia intelligente.
+2. **"Chiedi aiuto" a voce** (coordination.py, parallelo al coordinamento esistente, non lo modifica):
+   - `POST /coordination/help/parse`: Sitor (SITOR_FAST) classifica la frase libera dell'operatore → {is_help, urgency: emergency|urgent|normal, category, summary, confirm_question, needs_confirm}. Multilingua IT/DE/EN/ES/FR/FA.
+   - `POST /coordination/help/trigger`: EMERGENZA → salta coda+conferma, avvisa il Capo SUBITO (banner+push+email, priorità critica), log help_emergency. NORMALE/URGENTE → coda liberi del reparto (`_eligible_queue`), chiama SUBITO il primo libero con la FRASE ORIGINALE come task_desc; urgente = timeout 15s (più breve). Nessuno libero → Capo avvisato (help_uncovered). Il collega accetta/rifiuta col sistema esistente (`/coordination/calls/{id}/respond`).
+   - `POST /coordination/help/reping`: «non è ancora arrivato nessuno» → rilancia la ricerca escludendo chi ha già rifiutato/timeout.
+   - Frontend HeadphonesMode.jsx (modalità cuffie già attiva a inizio turno): ascolto continuo; parole d'emergenza multilingua fanno partire l'aiuto ANCHE senza wake-word e senza conferma; conferma vocale sì/no per aiuti normali; rete assente/IA giù → messaggio vocale chiaro (mai silenzio); riconosce «nessuno è arrivato» → reping. `dept` passato da FloorOperatorDay (`mine.dept`).
+   - Tutte le richieste (aiuto/emergenza/scoperto) registrate nel Registro Decisioni (`coordination_log`).
+   - Modifica minima condivisa: `_start_pending` onora `call.help_timeout_sec` (solo per le chiamate d'aiuto urgenti; il coordinamento normale resta invariato).
+- NB: deploy su mikilab.de in coda.

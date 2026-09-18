@@ -339,14 +339,25 @@ async def _smart_threshold(org: str, name: str, lead_days: int = 4, weeks: int =
     since = (datetime.utcnow() - timedelta(days=weeks * 7)).isoformat()
     logs = await db.lab_consumption_log.find(
         {"organization_id": org, "name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}, "at": {"$gte": since}},
-        {"_id": 0, "kg": 1}).to_list(5000)
+        {"_id": 0, "kg": 1, "at": 1}).to_list(5000)
     total = round(sum(float(l.get("kg") or 0) for l in logs), 2)
     days = max(1, weeks * 7)
     daily = total / days
     weekly = round(daily * 7, 1)
     smart = round(daily * lead_days, 1)
+    # Serie giornaliera degli ultimi 14 giorni per il mini-grafico dei consumi.
+    span = 14
+    buckets = {}
+    for i in range(span):
+        d = (datetime.utcnow() - timedelta(days=span - 1 - i)).strftime("%Y-%m-%d")
+        buckets[d] = 0.0
+    for l in logs:
+        d = str(l.get("at") or "")[:10]
+        if d in buckets:
+            buckets[d] += float(l.get("kg") or 0)
+    series = [round(buckets[k], 1) for k in sorted(buckets.keys())]
     return {"smart_min_kg": smart, "weekly_avg_kg": weekly, "daily_avg_kg": round(daily, 2),
-            "samples": len(logs), "total_kg": total, "lead_days": lead_days, "weeks": weeks}
+            "samples": len(logs), "total_kg": total, "lead_days": lead_days, "weeks": weeks, "series": series}
 
 
 async def _supplier_email(admin: dict) -> str:

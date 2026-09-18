@@ -5,6 +5,21 @@ import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
+// Mini-grafico consumi (ultimi 14 giorni) accanto alla soglia intelligente.
+const Sparkline = ({ data = [], w = 76, h = 22, color = "#a58ce0" }) => {
+  if (!data || data.length < 2) return null;
+  const max = Math.max(...data, 1);
+  const step = w / (data.length - 1);
+  const pts = data.map((v, i) => `${(i * step).toFixed(1)},${(h - (v / max) * (h - 3) - 1.5).toFixed(1)}`).join(" ");
+  const area = `0,${h} ${pts} ${w},${h}`;
+  return (
+    <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="shrink-0" aria-hidden data-testid="reorder-sparkline">
+      <polygon points={area} fill={color} opacity="0.14" />
+      <polyline points={pts} fill="none" stroke={color} strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+    </svg>
+  );
+};
+
 export const ReorderProposals = () => {
   const { lang } = useLang();
   const tri = mkTri(lang);
@@ -123,7 +138,10 @@ export const ReorderProposals = () => {
             {smartActionable.map((t) => (
               <div key={t.name + t.source} data-testid={`reorder-smart-${t.source}-${t.name}`} className="flex items-center justify-between gap-2 text-[11.5px] text-[#cbd5e1] bg-[#0b0f19] border border-[#a58ce0]/20 rounded-lg px-2.5 py-1.5">
                 <span className="min-w-0"><b className="truncate">{t.name}</b> <span className="text-[#7c8794]">· {t.source === "silos" ? "Silos" : whName} · {tri("ora", "jetzt", "now", "ahora", "actuel", "اکنون")} {t.fixed_min_kg}kg → <span className="text-[#a58ce0] font-bold">{t.smart_min_kg}kg</span></span></span>
-                <button data-testid={`reorder-apply-${t.source}-${t.name}`} onClick={() => applyThreshold(t)} disabled={busy === (t.name + t.source)} className="px-2 py-1 rounded-lg border border-[#a58ce0]/40 text-[#a58ce0] text-[10.5px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === (t.name + t.source) ? <Loader2 className="w-3 h-3 animate-spin" /> : tri("Applica", "Anwenden", "Apply", "Aplicar", "Appliquer", "اعمال")}</button>
+                <span className="flex items-center gap-2 shrink-0">
+                  <Sparkline data={t.series} />
+                  <button data-testid={`reorder-apply-${t.source}-${t.name}`} onClick={() => applyThreshold(t)} disabled={busy === (t.name + t.source)} className="px-2 py-1 rounded-lg border border-[#a58ce0]/40 text-[#a58ce0] text-[10.5px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === (t.name + t.source) ? <Loader2 className="w-3 h-3 animate-spin" /> : tri("Applica", "Anwenden", "Apply", "Aplicar", "Appliquer", "اعمال")}</button>
+                </span>
               </div>
             ))}
           </div>

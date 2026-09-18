@@ -624,6 +624,10 @@ export const coordinationApi = {
   voiceQuota: (operator, critical = false) => api.post(`/coordination/voice-quota`, { operator, critical }).then((r) => r.data).catch(() => ({ allowed: true })),
   confirmProposal: (call_id) => api.post(`/coordination/proposals/${call_id}/confirm`).then((r) => r.data),
   changeProposal: (call_id, operator) => api.post(`/coordination/proposals/${call_id}/change`, { operator }).then((r) => r.data),
+  // "Chiedi aiuto" a voce dell'operatore.
+  helpParse: (transcript, lang) => api.post(`/coordination/help/parse`, { transcript, lang }).then((r) => r.data),
+  helpTrigger: (payload) => api.post(`/coordination/help/trigger`, payload).then((r) => r.data),
+  helpReping: (operator, dept, lang) => api.post(`/coordination/help/reping`, { operator, dept, lang }).then((r) => r.data),
   // Vista autista — giro consegne di oggi.
   deliveryRun: () => api.get(`/delivery/run`).then((r) => r.data).catch(() => ({ stops: [], not_ready_count: 0, total: 0 })),
   deliveryStop: (id, delivered) => api.patch(`/delivery/stop/${id}/status`, { delivered }).then((r) => r.data),

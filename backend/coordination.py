@@ -256,7 +256,8 @@ async def _start_pending(call: dict, settings: dict):
     op = call["queue"][idx]
     call["current_operator"] = op
     call["status"] = "pending"
-    call["expires_at"] = (datetime.now(timezone.utc) + timedelta(seconds=settings["response_timeout_sec"])).isoformat()
+    _to = call.get("help_timeout_sec") or settings["response_timeout_sec"]
+    call["expires_at"] = (datetime.now(timezone.utc) + timedelta(seconds=_to)).isoformat()
     call.setdefault("decisions", []).append({"operator": op, "action": "offered", "at": now_iso()})
     return call
 
@@ -648,3 +649,266 @@ async def apprentice_set(recipe_id: str, body: ApprenticeReq, user: dict = Depen
            "shaping_note": (body.shaping_note or "").strip(), "updated_at": now_iso()}
     await db.recipe_apprentice.update_one({"recipe_id": recipe_id, "organization_id": org}, {"$set": upd}, upsert=True)
     return {"ok": True}
+
+
+
+# ============================ "CHIEDI AIUTO" A VOCE (OPERATORE) ============================
+# Aggiunta parallela al coordinamento esistente: l'operatore, a mani libere, descrive con
+# parole sue cosa gli serve. Sitor capisce tipo/urgenza, conferma a voce (tranne emergenze),
+# poi usa la coda dei liberi del reparto per chiamare un collega. Emergenze → Capo subito.
+
+HELP_URGENT_TIMEOUT_SEC = 15  # attesa più breve per "mi serve una mano ORA" (urgenza fisica)
+
+
+def _tri6(lang, it, de, en, es, fr, fa):
+    return {"it": it, "de": de, "en": en, "es": es, "fr": fr, "fa": fa}.get((lang or "it")[:2], it)
+
+
+async def _capo_ids_emails(org: str):
+    admins = await db.users.find(
+        {"organization_id": org, "$or": [{"role": "admin"}, {"email": {"$in": [e.lower() for e in OWNER_EMAILS]}}]},
+        {"_id": 0, "user_id": 1, "email": 1}).to_list(50)
+    return [a.get("user_id") for a in admins if a.get("user_id")], [a.get("email") for a in admins if a.get("email")]
+
+
+async def _notify_capo_help(org: str, title: str, text: str, kind: str, call_id: str = None, priority: str = "alta"):
+    """Avvisa il Capo di una richiesta d'aiuto: banner in console + push + email. Best-effort."""
+    try:
+        await db.team_notifications.insert_one({
+            "id": str(uuid.uuid4()), "organization_id": org, "kind": kind,
+            "title": title, "text": text, "call_id": call_id, "priority": priority,
+            "read": False, "at": now_iso(),
+        })
+    except Exception:
+        pass
+    try:
+        ids, emails = await _capo_ids_emails(org)
+        if ids:
+            _, priv = await _get_vapid()
+            subs = await db.push_subs.find({"user_id": {"$in": ids}}, {"_id": 0}).to_list(100)
+            payload = {"title": title, "body": text, "tag": f"help-{kind}"}
+            for s in subs:
+                try:
+                    await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+                except Exception:
+                    pass
+        if RESEND_API_KEY and emails:
+            color = "#c0392b" if kind == "help_emergency" else "#D97736"
+            html = (f"<div style='font-family:sans-serif;max-width:520px'>"
+                    f"<h2 style='color:{color}'>{title}</h2><p>{text}</p>"
+                    f"<p style='color:#888;font-size:12px'>MikiLab · Coordinamento · {now_iso()[:16]}</p></div>")
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>",
+                                                          "to": [e for e in emails if e], "subject": title, "html": html})
+    except Exception as e:
+        logging.warning("notify_capo_help fail (%s)", str(e)[:120])
+
+
+async def _help_classify(transcript: str, lang: str) -> dict:
+    """Sitor capisce dalla frase libera dell'operatore: se è una richiesta d'aiuto, l'urgenza e il tipo.
+    urgency: 'emergency' (pericolo fisico serio) | 'urgent' (mi serve una mano ORA) | 'normal'."""
+    sys = (
+        "Sei Sitor, coordinatore di un laboratorio (panificio/pizzeria/pasticceria). Un OPERATORE parla a voce "
+        "e descrive con parole sue un problema o una richiesta. Classifica la frase. "
+        "urgency = 'emergency' SOLO per pericolo fisico serio o infortunio: scottatura, ustione, taglio, sangue, "
+        "caduta, infortunio, svenimento, fuga di gas, principio d'incendio, fumo, fiamme, qualcuno sta male. "
+        "urgency = 'urgent' se serve una mano SUBITO per non rovinare un lavoro o per sforzo fisico immediato "
+        "(es. impasto pesante che sta franando, teglia che sta cadendo, qualcosa che brucia in forno adesso). "
+        "urgency = 'normal' per aiuti ordinari (teglie da lavare, manca materiale, dare una mano tra poco). "
+        "is_help=false solo se NON è una richiesta d'aiuto (domanda generica, chiacchiera). "
+        f"'summary' e 'confirm_question' devono essere nella lingua con codice '{lang}'. "
+        "'confirm_question' è una domanda SÌ/NO breve che riformula la richiesta per conferma "
+        "(es. «Ho capito: ti serve una mano a lavare le teglie, giusto?»). "
+        "Rispondi SOLO con JSON valido: "
+        '{"is_help":true,"urgency":"emergency|urgent|normal","category":"pulizia|materiale|sforzo|macchina|sicurezza|altro",'
+        '"summary":"riformulazione breve","confirm_question":"domanda sì/no"}'
+    )
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"help-{uuid.uuid4().hex[:8]}",
+                   system_message=sys).with_model("anthropic", SITOR_FAST).with_params(max_tokens=500)
+    full = ""
+    async for ev in chat.stream_message(UserMessage(text=f"Frase dell'operatore: «{transcript}»")):
+        if isinstance(ev, TextDelta):
+            full += ev.content
+        elif isinstance(ev, StreamDone):
+            break
+    m = re.search(r"\{.*\}", full, re.S)
+    parsed = json.loads(m.group(0)) if m else None
+    if not parsed:
+        raise ValueError("no-json")
+    parsed["urgency"] = parsed.get("urgency") if parsed.get("urgency") in ("emergency", "urgent", "normal") else "normal"
+    parsed["is_help"] = bool(parsed.get("is_help", True))
+    return parsed
+
+
+class HelpParseReq(BaseModel):
+    transcript: str = Field(..., max_length=400)
+    lang: str = "it"
+
+
+@api_router.post("/coordination/help/parse")
+async def help_parse(body: HelpParseReq, org: str = Depends(effective_org)):
+    """Capisce la richiesta d'aiuto dell'operatore. Emergenza → nessuna conferma (needs_confirm=false)."""
+    txt = (body.transcript or "").strip()
+    if not txt:
+        raise HTTPException(status_code=400, detail="Nessuna frase")
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="NLP non disponibile")
+    try:
+        parsed = await _help_classify(txt, body.lang or "it")
+    except Exception as e:
+        logging.warning("help_parse failed: %s", str(e)[:120])
+        raise HTTPException(status_code=503, detail="NLP non disponibile")
+    emergency = parsed["urgency"] == "emergency"
+    return {"ok": True, "is_help": parsed["is_help"], "urgency": parsed["urgency"],
+            "category": parsed.get("category", "altro"), "summary": parsed.get("summary", txt),
+            "confirm_question": parsed.get("confirm_question", ""),
+            "needs_confirm": (parsed["is_help"] and not emergency), "emergency": emergency,
+            "transcript": txt}
+
+
+class HelpTriggerReq(BaseModel):
+    transcript: str = Field(..., max_length=400)
+    lang: str = "it"
+    operator: str = Field("", max_length=60)
+    dept: str = Field("", max_length=40)
+    urgency: str = "normal"
+    category: str = "altro"
+
+
+async def _dept_label(dept: str) -> str:
+    d = DEPARTMENTS.get(dept)
+    if d:
+        return d.get("name", dept)
+    doc = await db.dept_templates.find_one({"id": dept}, {"_id": 0, "name": 1})
+    return (doc or {}).get("name", dept)
+
+
+@api_router.post("/coordination/help/trigger")
+async def help_trigger(body: HelpTriggerReq, org: str = Depends(effective_org)):
+    """Attiva la richiesta d'aiuto confermata. Emergenza → Capo subito (salta coda e conferma).
+    Normale/urgente → chiama il primo collega libero del reparto con la frase ORIGINALE."""
+    txt = (body.transcript or "").strip()
+    op = (body.operator or "").strip()
+    dept = (body.dept or "").strip()
+    urgency = body.urgency if body.urgency in ("emergency", "urgent", "normal") else "normal"
+    dept_name = await _dept_label(dept) if dept else ""
+
+    # 7) EMERGENZA: salta tutto, avvisa il Capo IMMEDIATAMENTE con priorità assoluta.
+    if urgency == "emergency":
+        await _log_decision(org, kind="help_emergency", dept=dept, task_desc=txt, operator=op,
+                            urgency="emergency", detail="Emergenza segnalata a voce: Capo avvisato subito")
+        await _notify_capo_help(org, "🚨 EMERGENZA in laboratorio",
+                                f"{op or 'Un operatore'}{(' · ' + dept_name) if dept_name else ''}: «{txt}». Intervieni SUBITO.",
+                                kind="help_emergency", priority="critica")
+        spoken = _tri6(body.lang, "Emergenza registrata. Ho avvisato subito il Capo. Metti in sicurezza te stesso e chi ti sta vicino.",
+                       "Notfall erfasst. Ich habe sofort den Chef alarmiert. Bring dich und andere in Sicherheit.",
+                       "Emergency logged. I alerted the boss immediately. Get yourself and others to safety.",
+                       "Emergencia registrada. Avisé al jefe de inmediato. Ponte a salvo tú y los demás.",
+                       "Urgence enregistrée. J'ai prévenu le chef immédiatement. Mets-toi en sécurité.",
+                       "اضطراری ثبت شد. فوراً به رئیس اطلاع دادم. خودت و بقیه را ایمن کن.")
+        return {"mode": "emergency", "spoken": spoken}
+
+    # 2) Coda dei liberi/abilitati del reparto (riusa la logica esistente).
+    queue = await _eligible_queue(org, dept) if dept else []
+    settings = await _coord_settings(org)
+    call = {
+        "id": str(uuid.uuid4()), "organization_id": org, "dept": dept,
+        "task_desc": txt,  # 4) la frase ORIGINALE dell'operatore, non un'etichetta generica
+        "help_requester": op, "urgency": urgency, "source": "help", "category": body.category,
+        "queue": queue, "idx": 0, "current_operator": None,
+        "created_at": now_iso(), "capo_present_at_trigger": _capo_present(settings), "decisions": [],
+    }
+    # 9) urgenza fisica immediata → finestra di risposta più breve prima di escalare al Capo
+    if urgency == "urgent":
+        call["help_timeout_sec"] = HELP_URGENT_TIMEOUT_SEC
+
+    # 8) NESSUNO LIBERO → avvisa il Capo che serve aiuto e nessuno è disponibile.
+    if not queue:
+        call["status"] = "uncovered"
+        call["uncovered_at"] = now_iso()
+        await _persist_call(call)
+        await _log_decision(org, kind="help_uncovered", dept=dept, task_desc=txt, operator=op,
+                            urgency=urgency, call_id=call["id"], detail="Richiesta d'aiuto senza colleghi liberi")
+        await _notify_capo_help(org, "Aiuto richiesto · nessuno libero",
+                                f"{op or 'Un operatore'}{(' · ' + dept_name) if dept_name else ''} chiede aiuto: «{txt}». Nessun collega disponibile.",
+                                kind="help_uncovered", priority="alta")
+        spoken = _tri6(body.lang, "Al momento non c'è nessun collega libero. Ho avvisato il Capo perché ti aiuti.",
+                       "Gerade ist kein Kollege frei. Ich habe den Chef informiert.",
+                       "No colleague is free right now. I alerted the boss to help you.",
+                       "Ahora no hay ningún compañero libre. Avisé al jefe.",
+                       "Aucun collègue libre pour l'instant. J'ai prévenu le chef.",
+                       "الان همکاری آزاد نیست. به رئیس اطلاع دادم.")
+        return {"mode": "uncovered", "spoken": spoken, "call": _public_call(call)}
+
+    # Chiama SUBITO il primo collega libero (l'operatore ha bisogno ora, non serve proposta al Capo).
+    await _start_pending(call, settings)
+    await _persist_call(call)
+    await _log_decision(org, kind="help_requested", dept=dept, task_desc=txt, operator=op,
+                        urgency=urgency, call_id=call["id"], detail=f"Chiamato {call['current_operator']}")
+    spoken = _tri6(body.lang, f"Sto chiamando {call['current_operator']} per aiutarti. Ti avviso appena risponde.",
+                   f"Ich rufe {call['current_operator']} zur Hilfe. Ich sage Bescheid, sobald er antwortet.",
+                   f"I'm calling {call['current_operator']} to help you. I'll tell you when they answer.",
+                   f"Estoy llamando a {call['current_operator']} para ayudarte.",
+                   f"J'appelle {call['current_operator']} pour t'aider.",
+                   f"دارم {call['current_operator']} را برای کمک صدا می‌کنم.")
+    return {"mode": "calling", "spoken": spoken, "call": _public_call(call)}
+
+
+class HelpRepingReq(BaseModel):
+    operator: str = Field("", max_length=60)
+    dept: str = Field("", max_length=40)
+    lang: str = "it"
+
+
+@api_router.post("/coordination/help/reping")
+async def help_reping(body: HelpRepingReq, org: str = Depends(effective_org)):
+    """6) «Non è ancora arrivato nessuno»: rilancia la ricerca per l'ultima richiesta d'aiuto dell'operatore."""
+    op = (body.operator or "").strip()
+    last = await db.coordination_calls.find_one(
+        {"organization_id": org, "source": "help", "help_requester": op},
+        {"_id": 0}, sort=[("created_at", -1)])
+    if not last:
+        raise HTTPException(status_code=404, detail="Nessuna richiesta d'aiuto recente")
+    dept = last.get("dept") or body.dept
+    txt = last.get("task_desc") or ""
+    urgency = last.get("urgency") or "normal"
+    # Ricostruisci la coda dei liberi ORA, escludendo chi ha già rifiutato/non risposto.
+    already = {d.get("operator", "").lower() for d in (last.get("decisions") or []) if d.get("action") in ("declined", "timeout")}
+    queue = [w for w in await _eligible_queue(org, dept) if w.lower() not in already]
+    settings = await _coord_settings(org)
+    # Chiudi la vecchia chiamata come superata.
+    await db.coordination_calls.update_one({"id": last["id"], "organization_id": org}, {"$set": {"status": "superseded"}})
+    call = {
+        "id": str(uuid.uuid4()), "organization_id": org, "dept": dept, "task_desc": txt,
+        "help_requester": op, "urgency": urgency, "source": "help", "category": last.get("category", "altro"),
+        "queue": queue, "idx": 0, "current_operator": None,
+        "created_at": now_iso(), "capo_present_at_trigger": _capo_present(settings), "decisions": [],
+    }
+    if urgency == "urgent":
+        call["help_timeout_sec"] = HELP_URGENT_TIMEOUT_SEC
+    dept_name = await _dept_label(dept) if dept else ""
+    if not queue:
+        call["status"] = "uncovered"; call["uncovered_at"] = now_iso()
+        await _persist_call(call)
+        await _log_decision(org, kind="help_uncovered", dept=dept, task_desc=txt, operator=op,
+                            urgency=urgency, call_id=call["id"], detail="Reping: nessun altro collega libero")
+        await _notify_capo_help(org, "Aiuto ancora scoperto",
+                                f"{op or 'Un operatore'}{(' · ' + dept_name) if dept_name else ''} chiede di nuovo aiuto: «{txt}». Nessun altro collega libero.",
+                                kind="help_uncovered", priority="alta")
+        spoken = _tri6(body.lang, "Non è rimasto nessun altro collega libero. Ho di nuovo avvisato il Capo.",
+                       "Kein weiterer Kollege frei. Ich habe erneut den Chef informiert.",
+                       "No other colleague is free. I alerted the boss again.",
+                       "No queda ningún otro compañero libre. Avisé de nuevo al jefe.",
+                       "Aucun autre collègue libre. J'ai de nouveau prévenu le chef.",
+                       "همکار دیگری آزاد نیست. دوباره به رئیس اطلاع دادم.")
+        return {"mode": "uncovered", "spoken": spoken, "call": _public_call(call)}
+    await _start_pending(call, settings)
+    await _persist_call(call)
+    await _log_decision(org, kind="help_requested", dept=dept, task_desc=txt, operator=op,
+                        urgency=urgency, call_id=call["id"], detail=f"Reping: chiamato {call['current_operator']}")
+    spoken = _tri6(body.lang, f"Riprovo: sto chiamando {call['current_operator']}.",
+                   f"Neuer Versuch: ich rufe {call['current_operator']}.",
+                   f"Trying again: I'm calling {call['current_operator']}.",
+                   f"Reintento: llamando a {call['current_operator']}.",
+                   f"Nouvel essai : j'appelle {call['current_operator']}.",
+                   f"دوباره تلاش می‌کنم: {call['current_operator']} را صدا می‌زنم.")
+    return {"mode": "calling", "spoken": spoken, "call": _public_call(call)}

@@ -481,7 +481,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
         </div>
       )}
 
-      {showHeadphones && <HeadphonesMode lang={lang} tri={tri} operator={role} onClose={() => setShowHeadphones(false)} />}
+      {showHeadphones && <HeadphonesMode lang={lang} tri={tri} operator={role} dept={mine?.dept || ""} onClose={() => setShowHeadphones(false)} />}
 
 
       {/* Ricettario & Corsi passo-passo di Sitor — anche per la produzione */}

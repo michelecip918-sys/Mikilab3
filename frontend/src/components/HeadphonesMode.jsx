@@ -6,11 +6,15 @@ import { labAskApi, productionApi, coordinationApi } from "@/lib/api";
 const WAKE = /\b(sitor|sìtor|sitore)\b/i;
 const YES = /\b(s[iì]|sì|yes|ok|okay|va bene|certo|accetto|ja|oui|d'accordo|arrivo)\b/i;
 const NO = /\b(no|nein|non|niente|non posso|occupato|impossibile)\b/i;
+// Parole d'emergenza in tutte le lingue: se le sento, faccio partire l'aiuto anche SENZA wake-word.
+const EMERGENCY_RE = /\b(scottat|bruciat|ustion|sangue|taglio|tagliat|ferit|infortun|caduto|caduta|svenut|malore|gas|fumo|incendio|fiamme|fuoco|burn|bleeding|blood|\bcut\b|injur|fainted|smoke|\bfire\b|verbrenn|blut|schnitt|verletz|rauch|feuer|brand|quemad|sangre|cort|herid|humo|fuego|incendio|desmay|br[ûu]l|\bsang\b|coup|bless|fum[ée]e|\bfeu\b|سوخت|خون|برید|مصدوم|گاز|دود|آتش)/i;
+// "Non è ancora arrivato nessuno" in varie lingue → rilancia la ricerca.
+const NOBODY_RE = /(nessuno.*(arriv|venut)|non.*arriv|niemand|nobody.*(com|arriv)|no one|nadie|personne.*venu|هیچ‌کس)/i;
 const DAYS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 
 // Modalità Cuffie: ascolto continuo a mani libere. Dici "Sitor, ..." e Sitor risponde a voce.
 // Riceve anche le CHIAMATE DI COORDINAMENTO (assegnazione task) con risposta a voce sì/no.
-export default function HeadphonesMode({ lang = "it", tri, operator = "", onClose }) {
+export default function HeadphonesMode({ lang = "it", tri, operator = "", dept = "", onClose }) {
   const [status, setStatus] = useState("idle"); // idle | listening | thinking | speaking
   const [last, setLast] = useState("");
   const [reply, setReply] = useState("");
@@ -20,9 +24,45 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
   const activeRef = useRef(true);
   const busyRef = useRef(false);
   const callRef = useRef(null);
+  const helpConfirmRef = useRef(null); // richiesta d'aiuto in attesa di conferma sì/no
   useEffect(() => { callRef.current = call; }, [call]);
 
   const voiceLang = ({ it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR" }[lang] || "it-IT");
+
+  const say = useCallback((msg, back = true) => {
+    setReply(msg); setStatus("speaking");
+    playTTS(msg, { lang, onEnded: () => { if (back) { setStatus("listening"); busyRef.current = false; } } });
+  }, [lang]);
+
+  // Attiva la richiesta d'aiuto confermata (o l'emergenza) sul backend.
+  const fireHelp = useCallback(async (parsed) => {
+    setStatus("thinking");
+    try {
+      const r = await coordinationApi.helpTrigger({ transcript: parsed.transcript, lang, operator, dept, urgency: parsed.urgency, category: parsed.category });
+      say(r.spoken || "");
+    } catch {
+      say(tri("Non riesco ad avviare la chiamata ora. Chiedi aiuto direttamente a un collega vicino o al Capo.", "Ich kann den Ruf gerade nicht starten. Frag direkt einen Kollegen oder den Chef.", "I can't start the call right now. Ask a colleague nearby or the boss directly.", "No puedo iniciar la llamada ahora. Pide ayuda a un compañero o al jefe.", "Je ne peux pas lancer l'appel maintenant. Demande à un collègue ou au chef.", "الان نمی‌توانم تماس را شروع کنم. مستقیم از همکار یا رئیس کمک بخواه."));
+    }
+  }, [lang, operator, dept, say, tri]);
+
+  // Prova a interpretare la frase come richiesta d'aiuto. Ritorna true se gestita.
+  const tryHelp = useCallback(async (clean, forceEmergency = false) => {
+    setStatus("thinking");
+    let parsed;
+    try {
+      parsed = await coordinationApi.helpParse(clean, lang);
+    } catch {
+      // 10) RETE ASSENTE / IA non risponde: messaggio vocale chiaro, mai silenzio.
+      say(tri("Non riesco a capirti ora. Chiedi aiuto direttamente a un collega vicino o al Capo.", "Ich kann dich gerade nicht verstehen. Frag direkt einen Kollegen in der Nähe oder den Chef.", "I can't understand you right now. Ask a colleague nearby or the boss directly.", "No puedo entenderte ahora. Pide ayuda a un compañero cercano o al jefe.", "Je ne te comprends pas maintenant. Demande à un collègue proche ou au chef.", "الان نمی‌توانم بفهمم. مستقیم از همکار نزدیک یا رئیس کمک بخواه."));
+      return true;
+    }
+    if (!parsed.is_help && !forceEmergency) return false; // non è aiuto → lascia gestire come domanda
+    if (parsed.emergency || forceEmergency) { await fireHelp({ ...parsed, urgency: "emergency" }); return true; }
+    // 3) conferma vocale prima di attivare (evita falsi allarmi da rumore)
+    helpConfirmRef.current = parsed;
+    say(parsed.confirm_question || tri("Ho capito che ti serve aiuto, confermi?", "Du brauchst Hilfe, richtig?", "You need help, right?", "¿Necesitas ayuda?", "Tu as besoin d'aide ?", "کمک لازم داری؟"));
+    return true;
+  }, [lang, say, tri, fireHelp]);
 
   // Risposta a una chiamata di coordinamento (sì/no), a voce o con tocco.
   const answerCall = useCallback(async (yes) => {
@@ -70,14 +110,16 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
           return;
         }
       }
+      // Richiesta d'aiuto? Se sì, gestita qui; altrimenti prosegue come domanda a Sitor.
+      const handledAsHelp = await tryHelp(clean);
+      if (handledAsHelp) return;
       const d = await labAskApi.ask(clean, lang);
       const ans = d.answer || "";
-      setReply(ans); setStatus("speaking");
-      playTTS(ans, { lang, onEnded: () => { setStatus("listening"); busyRef.current = false; } });
+      say(ans);
     } catch {
       setStatus("listening"); busyRef.current = false;
     }
-  }, [lang, tri, operator]);
+  }, [lang, tri, operator, tryHelp, say]);
 
   const onPhrase = useCallback((t) => {
     // Se c'è una chiamata di coordinamento in attesa: sì/no risponde SENZA wake-word.
@@ -85,8 +127,24 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
       if (YES.test(t)) { answerCall(true); return; }
       if (NO.test(t)) { answerCall(false); return; }
     }
+    // Conferma di una richiesta d'aiuto in sospeso (sì/no, senza wake-word).
+    if (helpConfirmRef.current) {
+      if (YES.test(t)) { const p = helpConfirmRef.current; helpConfirmRef.current = null; fireHelp(p); return; }
+      if (NO.test(t)) { helpConfirmRef.current = null; say(tri("Va bene, annullo la richiesta.", "Okay, ich breche ab.", "Okay, cancelling the request.", "Vale, cancelo la solicitud.", "D'accord, j'annule.", "باشه، لغو کردم.")); return; }
+    }
+    if (busyRef.current) return;
+    // 7) EMERGENZA: parte anche senza wake-word e senza conferma.
+    if (EMERGENCY_RE.test(t)) { busyRef.current = true; setLast(t.trim()); tryHelp(t.trim(), true); return; }
+    // 6) "Non è ancora arrivato nessuno" → rilancia la ricerca.
+    if (NOBODY_RE.test(t) && operator) {
+      busyRef.current = true; setStatus("thinking");
+      coordinationApi.helpReping(operator, dept, lang)
+        .then((r) => say(r.spoken || ""))
+        .catch(() => say(tri("Non riesco a rilanciare la ricerca ora. Chiedi al Capo.", "Kann die Suche nicht neu starten. Frag den Chef.", "I can't restart the search now. Ask the boss.", "No puedo reintentar ahora. Pregunta al jefe.", "Je ne peux pas relancer. Demande au chef.", "الان نمی‌توانم دوباره جستجو کنم. از رئیس بپرس.")));
+      return;
+    }
     if (WAKE.test(t)) handle(t);
-  }, [answerCall, handle]);
+  }, [answerCall, handle, fireHelp, tryHelp, say, tri, operator, dept, lang]);
 
   // Polling delle chiamate di coordinamento indirizzate a questo operatore.
   useEffect(() => {
@@ -164,7 +222,7 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", onClos
               <p className="text-[11px] text-[#94A3B8] text-center mt-2">{tri("Puoi rispondere anche a voce: «sì» o «no»", "Du kannst auch per Stimme antworten.", "You can also answer by voice.", "También puedes responder por voz.", "Tu peux aussi répondre à la voix.", "می‌توانی با صدا هم پاسخ دهی.")}</p>
             </div>
           )}
-          <p className="mt-8 text-xs text-[#64748B] text-center max-w-xs">{tri("Esempi: \"Sitor, quanto impasto per le baguette?\" · \"Sitor, segna 40 pezzi di baguette\"", "Beispiele…", "Examples: \"Sitor, how much dough for baguettes?\" · \"Sitor, log 40 baguettes\"", "Ejemplos…", "Exemples…", "مثال‌ها…")}</p>
+          <p className="mt-8 text-xs text-[#64748B] text-center max-w-xs">{tri("Esempi: \"Sitor, le teglie sono finite\" · \"Sitor, mi serve una mano\" · in emergenza dì cosa è successo", "Beispiele: \"Sitor, die Bleche sind alle\" · \"Sitor, ich brauche Hilfe\"", "Examples: \"Sitor, we're out of trays\" · \"Sitor, I need a hand\" · in an emergency, just say what happened", "Ejemplos: \"Sitor, se acabaron las bandejas\" · \"Sitor, necesito una mano\"", "Exemples : \"Sitor, plus de plaques\" · \"Sitor, j'ai besoin d'aide\"", "مثال‌ها: «سیتور، سینی‌ها تمام شد» · «سیتور، یک کمک لازم دارم»")}</p>
         </>
       )}
     </div>
