@@ -97,6 +97,14 @@ async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     docs = await db.silos.find({"organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
     # Ordine scelto dal Capo (trascinamento); i vecchi documenti senza "order" restano in fondo ma stabili.
     docs.sort(key=lambda s: (s.get("order", 9999), s.get("created_at", ""), s.get("id", "")))
+    # Soglia intelligente: se il Capo ha attivato l'auto-soglia, allineo min_kg ai consumi reali.
+    _cfg = await _reorder_config(_org_id(admin))
+    if _cfg.get("auto_threshold"):
+        for s in docs:
+            sm = await _smart_threshold(_org_id(admin), s.get("name", ""))
+            if sm["smart_min_kg"] > 0 and abs(sm["smart_min_kg"] - float(s.get("min_kg") or 0)) >= 1:
+                s["min_kg"] = sm["smart_min_kg"]
+                await db.silos.update_one({"id": s["id"], "organization_id": _org_id(admin)}, {"$set": {"min_kg": sm["smart_min_kg"]}})
     out = []
     reorder = 0
     for s in docs:
@@ -321,7 +329,24 @@ async def mike_silo_supplier_set(body: SupplierReq, admin: dict = Depends(requir
 # ===========================================================================
 async def _reorder_config(org: str) -> dict:
     doc = (await db.app_meta.find_one({"_key": f"reorder_config:{org}"}, {"_id": 0})) or {}
-    return {"auto_send": bool(doc.get("auto_send"))}
+    return {"auto_send": bool(doc.get("auto_send")), "auto_threshold": bool(doc.get("auto_threshold"))}
+
+
+async def _smart_threshold(org: str, name: str, lead_days: int = 4, weeks: int = 3) -> dict:
+    """Soglia di riordino calcolata sui consumi reali delle ultime settimane invece di un valore fisso.
+    Media giornaliera dei consumi × giorni di copertura (lead time) = soglia consigliata."""
+    from datetime import datetime, timedelta
+    since = (datetime.utcnow() - timedelta(days=weeks * 7)).isoformat()
+    logs = await db.lab_consumption_log.find(
+        {"organization_id": org, "name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}, "at": {"$gte": since}},
+        {"_id": 0, "kg": 1}).to_list(5000)
+    total = round(sum(float(l.get("kg") or 0) for l in logs), 2)
+    days = max(1, weeks * 7)
+    daily = total / days
+    weekly = round(daily * 7, 1)
+    smart = round(daily * lead_days, 1)
+    return {"smart_min_kg": smart, "weekly_avg_kg": weekly, "daily_avg_kg": round(daily, 2),
+            "samples": len(logs), "total_kg": total, "lead_days": lead_days, "weeks": weeks}
 
 
 async def _supplier_email(admin: dict) -> str:
@@ -378,13 +403,15 @@ async def _propose_reorder(admin: dict, items: list, source: str):
         cur = float(it.get("current") or 0)
         mn = float(it.get("min") or 0)
         cap = float(it.get("capacity") or 0)
+        smart = await _smart_threshold(org, name)
         # quantità suggerita: rabbocco all'80% capacità (silos) o al doppio della soglia (magazzino)
         target = cap * 0.8 if cap > 0 else mn * 2
         suggested = round(max(mn, target - cur), 1)
         doc = {"id": str(uuid.uuid4()), "organization_id": org, "key": key, "source": source,
                "name": name, "current_kg": cur, "min_kg": mn, "suggested_qty_kg": suggested,
+               "smart_min_kg": smart["smart_min_kg"], "weekly_avg_kg": smart["weekly_avg_kg"],
                "status": "proposed", "auto": False, "supplier": supplier, "created_at": now_iso(),
-               "sent_at": None}
+               "sent_at": None, "received_at": None}
         # invio automatico se attivo e c'è un fornitore
         if cfg["auto_send"] and supplier and RESEND_API_KEY:
             try:
@@ -416,14 +443,15 @@ async def reorder_config_get(admin: dict = Depends(require_admin)):
 
 class ReorderConfigReq(BaseModel):
     auto_send: bool = False
+    auto_threshold: bool = False
 
 
 @api_router.put("/mike/reorder/config")
 async def reorder_config_set(body: ReorderConfigReq, admin: dict = Depends(require_admin)):
     org = _org_id(admin)
     await db.app_meta.update_one({"_key": f"reorder_config:{org}"},
-                                 {"$set": {"auto_send": bool(body.auto_send)}}, upsert=True)
-    return {"ok": True, "auto_send": bool(body.auto_send)}
+                                 {"$set": {"auto_send": bool(body.auto_send), "auto_threshold": bool(body.auto_threshold)}}, upsert=True)
+    return {"ok": True, "auto_send": bool(body.auto_send), "auto_threshold": bool(body.auto_threshold)}
 
 
 @api_router.get("/mike/reorder/proposals")
@@ -465,3 +493,80 @@ async def reorder_proposal_dismiss(pid: str, admin: dict = Depends(require_admin
     await db.reorder_proposals.update_one({"id": pid, "organization_id": _org_id(admin)},
                                           {"$set": {"status": "dismissed"}})
     return {"ok": True}
+
+
+@api_router.post("/mike/reorder/proposals/{pid}/receive")
+async def reorder_proposal_receive(pid: str, admin: dict = Depends(require_admin)):
+    """Merce arrivata: aggiorna la scorta col quantitativo ordinato e chiude la proposta come 'ricevuta'."""
+    org = _org_id(admin)
+    p = await db.reorder_proposals.find_one({"id": pid, "organization_id": org}, {"_id": 0})
+    if not p:
+        raise HTTPException(404, "Proposta non trovata")
+    qty = float(p.get("suggested_qty_kg") or 0)
+    new_qty = None
+    if p.get("source") == "silos":
+        s = await db.silos.find_one({"name": {"$regex": f"^{re.escape(p['name'])}$", "$options": "i"}, "organization_id": org})
+        if s:
+            cap = float(s.get("capacity_kg") or 0)
+            nq = round(float(s.get("current_kg") or 0) + qty, 1)
+            if cap > 0:
+                nq = min(nq, cap)
+            await db.silos.update_one({"id": s["id"], "organization_id": org}, {"$set": {"current_kg": nq}})
+            new_qty = nq
+    else:  # warehouse
+        w = await db.lab_warehouse.find_one({"name": {"$regex": f"^{re.escape(p['name'])}$", "$options": "i"}, "organization_id": org})
+        if w:
+            nq = round(float(w.get("quantity_kg") or 0) + qty, 1)
+            await db.lab_warehouse.update_one({"id": w["id"], "organization_id": org}, {"$set": {"quantity_kg": nq, "updated_at": now_iso()}})
+            new_qty = nq
+    await db.reorder_proposals.update_one({"id": pid, "organization_id": org},
+                                          {"$set": {"status": "received", "received_at": now_iso(), "received_qty_kg": qty}})
+    return {"ok": True, "name": p["name"], "added_kg": qty, "new_quantity_kg": new_qty}
+
+
+@api_router.get("/mike/reorder/history")
+async def reorder_history(admin: dict = Depends(require_admin)):
+    """Storico dei micro-ordini inviati/ricevuti/scartati, per tenere traccia dei rifornimenti nel tempo."""
+    org = _org_id(admin)
+    docs = await db.reorder_proposals.find(
+        {"organization_id": org, "status": {"$in": ["sent", "received", "dismissed"]}},
+        {"_id": 0}).sort("created_at", -1).to_list(200)
+    return {"history": docs, "count": len(docs)}
+
+
+@api_router.get("/mike/reorder/smart-thresholds")
+async def reorder_smart_thresholds(admin: dict = Depends(require_admin)):
+    """Sitor calcola la soglia di riordino consigliata dai consumi reali (ultime 3 settimane)."""
+    org = _org_id(admin)
+    out = []
+    silos = await db.silos.find({"organization_id": org}, {"_id": 0}).to_list(200)
+    for s in silos:
+        smart = await _smart_threshold(org, s.get("name", ""))
+        out.append({"name": s.get("name"), "source": "silos", "current_kg": float(s.get("current_kg") or 0),
+                    "fixed_min_kg": float(s.get("min_kg") or 0), **smart})
+    wh = await db.lab_warehouse.find({"organization_id": org}, {"_id": 0}).to_list(500)
+    for w in wh:
+        smart = await _smart_threshold(org, w.get("name", ""))
+        out.append({"name": w.get("name"), "source": "warehouse", "current_kg": float(w.get("quantity_kg") or 0),
+                    "fixed_min_kg": float(w.get("min_kg") or 0), **smart})
+    return {"thresholds": out, "config": await _reorder_config(org)}
+
+
+class ApplyThresholdReq(BaseModel):
+    name: str
+    source: str  # 'silos' | 'warehouse'
+
+
+@api_router.post("/mike/reorder/apply-threshold")
+async def reorder_apply_threshold(body: ApplyThresholdReq, admin: dict = Depends(require_admin)):
+    """Applica la soglia consigliata da Sitor come nuova soglia minima (min_kg)."""
+    org = _org_id(admin)
+    smart = await _smart_threshold(org, body.name)
+    val = smart["smart_min_kg"]
+    if val <= 0:
+        raise HTTPException(400, "Consumi insufficienti per calcolare una soglia affidabile.")
+    if body.source == "silos":
+        r = await db.silos.update_one({"name": {"$regex": f"^{re.escape(body.name)}$", "$options": "i"}, "organization_id": org}, {"$set": {"min_kg": val}})
+    else:
+        r = await db.lab_warehouse.update_one({"name": {"$regex": f"^{re.escape(body.name)}$", "$options": "i"}, "organization_id": org}, {"$set": {"min_kg": val}})
+    return {"ok": True, "name": body.name, "source": body.source, "new_min_kg": val, "updated": r.modified_count}

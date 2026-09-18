@@ -5793,3 +5793,12 @@ Verificato: curl E2E (proposta creata da bind-batch e da monitor silos, dedup, s
 - Frontend: `ReorderProposals.jsx` (pannello nella scheda Silos, con toggle invio auto, campo email fornitore, lista proposte con Invia/Scarta). `mikeApi.reorder*` in api.js.
 - Bugfix latente: sostituito `logger.` (non definito) con `logging.` in warehouse.py.
 - NB: con chiave Resend di test l'email risulta emailed:false ma il flusso è corretto (in prod con chiave valida invia).
+
+---
+## Changelog — Set 2026, Soglia intelligente + Conferma ricezione + Storico riordini
+Verificato: curl E2E (smart-threshold 20kg/g×4=80kg, apply-threshold aggiorna min_kg, receive scorta 50→1200 + status received, history) + screenshot mobile (toggle Soglia auto, bottone Ricevuta, sezioni Soglie intelligenti e Storico, no overflow). Backend py_compile OK, webpack OK.
+1. **Soglia intelligente** (warehouse.py `_smart_threshold` + `GET /mike/reorder/smart-thresholds` + `POST /mike/reorder/apply-threshold`): Sitor calcola la soglia di riordino dai consumi reali di `lab_consumption_log` (media giornaliera ultime 3 settimane × 4 giorni di lead time). Il Capo può applicarla come nuovo min_kg (silos o magazzino). Toggle `auto_threshold` in config: il monitor silos allinea automaticamente min_kg ai consumi. La proposta salva anche `smart_min_kg` e `weekly_avg_kg`.
+2. **Conferma ricezione** (`POST /mike/reorder/proposals/{id}/receive`): merce arrivata → aggiunge `suggested_qty_kg` alla scorta (silo current_kg cap a capacità / lab_warehouse quantity_kg) e chiude la proposta come `received` con `received_at`. Bottone verde «Ricevuta» sulle proposte inviate.
+3. **Storico riordini** (`GET /mike/reorder/history`): elenco micro-ordini sent/received/dismissed con date e stato. Sezione a comparsa «Storico riordini» nel pannello.
+- Frontend: `ReorderProposals.jsx` esteso (toggle Soglia auto, bottone Ricevuta, sezioni collassabili Soglie intelligenti + Storico). `mikeApi.reorderReceive/reorderHistory/reorderSmartThresholds/reorderApplyThreshold` + `reorderConfigSet(autoSend, autoThreshold)`.
+- NB: deploy su mikilab.de in coda.
