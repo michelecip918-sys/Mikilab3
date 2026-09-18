@@ -1,0 +1,415 @@
+/* Google Fonts self-hosted (GDPR): serviti localmente, nessuna richiesta a Google. */
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-500-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-600-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-600-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-700-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-800-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/PlayfairDisplay-800-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Manrope-400-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Manrope-400-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Manrope-500-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Manrope-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Manrope-600-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Manrope-600-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Manrope-700-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Manrope-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-500-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-700-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/JetBrainsMono-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-400-arabic.woff2') format('woff2');
+  /* subset: arabic */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-400-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-400-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-500-arabic.woff2') format('woff2');
+  /* subset: arabic */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-500-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-600-arabic.woff2') format('woff2');
+  /* subset: arabic */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-600-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-600-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-700-arabic.woff2') format('woff2');
+  /* subset: arabic */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-700-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-800-arabic.woff2') format('woff2');
+  /* subset: arabic */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-800-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Vazirmatn';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Vazirmatn-800-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Orbitron-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Orbitron-600-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Orbitron-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/Orbitron-800-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/Orbitron-900-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-500-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-500-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-600-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-600-latin.woff2') format('woff2');
+  /* subset: latin */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-700-latin-ext.woff2') format('woff2');
+  /* subset: latin-ext */
+}
+
+@font-face {
+  font-family: 'Rajdhani';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/Rajdhani-700-latin.woff2') format('woff2');
+  /* subset: latin */
+}

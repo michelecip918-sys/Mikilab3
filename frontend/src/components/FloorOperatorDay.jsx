@@ -10,7 +10,7 @@ import HeadphonesMode from "@/components/HeadphonesMode";
 import DriverRun from "@/components/console/DriverRun";
 import SosButton from "@/components/SosButton";
 import AskHelpButton from "@/components/AskHelpButton";
-import { PrivacyLink } from "@/components/PrivacyNotice";
+import { PrivacyLink, NotForSaleNote } from "@/components/PrivacyNotice";
 import SitorMaestro from "@/components/SitorMaestro";
 import SitorCard from "@/components/SitorCard";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
@@ -515,7 +515,10 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Fine turno */}
       <EndOfShiftForm tri={tri} role={role} />
-      <div className="pt-2 text-center"><PrivacyLink /></div>
+      <div className="pt-2 text-center space-y-1.5">
+        <PrivacyLink />
+        <NotForSaleNote />
+      </div>
       {showSitorCard && <SitorCard tri={tri} onClose={() => setShowSitorCard(false)} />}
     </div>
   );

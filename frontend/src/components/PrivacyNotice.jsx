@@ -56,6 +56,25 @@ export const PrivacyNotice = ({ onClose }) => {
   );
 };
 
+// Nota "non in vendita" — discreta, vicino al link Privacy.
+export const NotForSaleNote = ({ className = "" }) => {
+  const { lang } = useLang();
+  const tri = mkTri(lang);
+  return (
+    <p data-testid="not-for-sale-note"
+      className={className || "text-[10px] text-[#4b5563] italic leading-relaxed text-center max-w-md mx-auto"}>
+      {tri(
+        "MikiLab non è in vendita e non è un servizio commerciale. È un progetto personale nato per passione — chissà, un giorno potrebbe tornarmi utile per davvero.",
+        "MikiLab steht nicht zum Verkauf und ist kein kommerzieller Dienst. Es ist ein persönliches Projekt aus Leidenschaft — vielleicht wird es mir eines Tages wirklich nützlich sein.",
+        "MikiLab is not for sale and is not a commercial service. It is a personal project born out of passion — who knows, one day it might truly come in handy.",
+        "MikiLab no está a la venta y no es un servicio comercial. Es un proyecto personal nacido por pasión; quizá algún día me sea realmente útil.",
+        "MikiLab n'est pas à vendre et n'est pas un service commercial. C'est un projet personnel né par passion — qui sait, un jour il pourrait vraiment me servir.",
+        "میکی‌لب برای فروش نیست و خدمت تجاری نیست؛ پروژه‌ای شخصی از سر علاقه است — شاید روزی واقعاً به کارم آید."
+      )}
+    </p>
+  );
+};
+
 // Link testuale riutilizzabile che apre l'informativa.
 export const PrivacyLink = ({ className = "" }) => {
   const { lang } = useLang();

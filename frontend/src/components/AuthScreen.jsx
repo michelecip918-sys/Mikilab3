@@ -163,7 +163,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           <>
             <button data-testid="google-login-btn" onClick={google}
               className="w-full flex items-center justify-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl px-4 py-3 font-semibold text-[#2B303B] dark:text-[#e4eff8] shadow-sm active:scale-98 transition-all mb-4">
-              <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5 h-5" />
+              <img src="/brand/google.svg" alt="" className="w-5 h-5" />
               {T.google}
             </button>
 

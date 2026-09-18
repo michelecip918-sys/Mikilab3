@@ -2,9 +2,7 @@
  * MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
  * (c) 2026 MikiLab Pro — All rights reserved. Sole owner: the Master.
  */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap');
+/* Font self-hosted in /public/fonts/fonts.css, caricati via <link> in index.html (GDPR: nessuna richiesta a Google). */
 
 @tailwind base;
 @tailwind components;

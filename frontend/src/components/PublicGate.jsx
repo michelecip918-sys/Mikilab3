@@ -12,7 +12,7 @@ import LivingAvatar3D from "@/components/LivingAvatar3D";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
-import { PrivacyNotice } from "@/components/PrivacyNotice";
+import { PrivacyNotice, NotForSaleNote } from "@/components/PrivacyNotice";
 import { api, facesApi } from "@/lib/api";
 import { activityProfile as gateActivityProfile } from "@/lib/activityProfile";
 import { playTTS, isTTSMuted } from "@/lib/tts";
@@ -457,6 +457,7 @@ export default function PublicGate({ onUnlock }) {
           <button data-testid="public-privacy-btn" onClick={() => setPrivacyOpen(true)} className="hover:text-[#8a97a6] transition-colors">{tri("Privacy (GDPR)", "Datenschutz (DSGVO)", "Privacy (GDPR)", "Privacidad (RGPD)", "Confidentialité (RGPD)", "حریم خصوصی")}</button>
           <button data-testid="public-cookies-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#8a97a6] transition-colors">Cookies</button>
           <span className="text-[#334155]">© 2026 {tri("Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "mikilab.de")}</span>
+          <span className="w-full flex justify-center mt-1"><NotForSaleNote /></span>
         </footer>
 
       </div>

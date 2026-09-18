@@ -79,7 +79,9 @@ class OrgCreateReq(BaseModel):
 
 @api_router.post("/orgs")
 async def orgs_create(body: OrgCreateReq, admin: dict = Depends(require_admin)):
-    """Crea una nuova azienda e la aggiunge alle appartenenze del Capo (senza cambiare quella attiva)."""
+    """Crea una nuova azienda — SOLO l'owner (MikiLab è mono-azienda: un Capo non può creare aziende aggiuntive)."""
+    if not _is_owner(admin):
+        raise HTTPException(status_code=403, detail="Solo il proprietario può creare nuove aziende.")
     name = (body.name or "").strip()[:80]
     if not name:
         raise HTTPException(status_code=400, detail="Nome azienda richiesto")
