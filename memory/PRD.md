@@ -5815,3 +5815,13 @@ Verificato: curl E2E completo help (parse IT/EN/DE emergenza/urgente/normale; tr
    - Tutte le richieste (aiuto/emergenza/scoperto) registrate nel Registro Decisioni (`coordination_log`).
    - Modifica minima condivisa: `_start_pending` onora `call.help_timeout_sec` (solo per le chiamate d'aiuto urgenti; il coordinamento normale resta invariato).
 - NB: deploy su mikilab.de in coda.
+
+---
+## Changelog — Set 2026, Compliance legale DE/UE (ArbZG, GDPR/DSGVO) + pulsante "Chiedi aiuto"
+Verificato: testing_agent iteration_265 (18/18 PASS, nessun blocker) + curl (privacy IT/DE/EN pubblica, timelog 3 flag ArbZG + integrity_ok, TTL 365g, erase-request, catena robusta al TTL). NB: flusso vocale Chiedi aiuto verificato via testo (SpeechRecognition non automatizzabile).
+1. **Pagina Privacy PUBBLICA** (punto 1): GET /compliance/privacy aggiunta lingua DE (era solo IT/EN) + retention aggiornata a "12 mesi". Reso pubblico via _GATE_PUBLIC_PREFIXES (prima bloccato dal gate). Frontend `PrivacyNotice.jsx` (modale) + `PrivacyLink`: link in footer PublicGate (login) e a fine FloorOperatorDay (operatore), raggiungibile SENZA login, multilingua.
+2. **Report Timelog ArbZG** (punto 2): `ComplianceTimelog.jsx` nella console Capo → sezione Sicurezza → nuova scheda "ArbZG" (panel-arbzg). Mostra timbrature per lavoratore/giorno, flag ArbZG §3/§4 in ROSSO, badge integrità catena hash (integrity_ok). complianceApi.timelog ora usata.
+3. **Conservazione & cancellazione** (punto 3): indice TTL 12 mesi (365g) su compliance_timelog e compliance_training_ack via nuovo campo Date `at_dt` (NON entra nell'hash); backfill at_dt allo startup per le entry storiche. Verifica integrità RESA ROBUSTA al TTL (non pretende più genesis: verifica auto-coerenza hash + concatenazione tra entry rimaste). BUGFIX pre-esistente: l'insert calcolava l'hash includendo `verified` mentre la verifica no → disallineamento; ora entrambi usano payload {seq,worker,action,at}. Nuovo endpoint POST /compliance/erase-request (require_admin, GDPR Art.17) cancella timelog+training_ack di un worker della SOLA org; bottone cestino nel pannello ArbZG.
+4. **"Chiedi aiuto" operatore** (punto 4, opzione a): `AskHelpButton.jsx` accanto al SosButton su FloorOperatorDay — testo o voce libera → riusa gli endpoint /coordination/help/* già testati (parse→conferma→trigger coda colleghi; emergenza→Capo subito; nessuno libero→Capo; fallback vocale se rete giù; multilingua). SOS (/mike/sos) INVARIATO. /delegation/parse NON toccato.
+5. **ShiftPowerBoard** (punto 5): verificato che leaderboard/worker-aura/ShiftPowerBoard NON sono referenziati in nessuna schermata operatore (solo MikeMixSense lato Capo). NESSUNA modifica necessaria.
+- NB: deploy su mikilab.de in coda.
