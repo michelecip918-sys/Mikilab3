@@ -887,6 +887,7 @@ export const complianceApi = {
   safety: () => api.get(`/compliance/safety`).then((r) => r.data),
   ack: (worker, doc_id) => api.post(`/compliance/safety/ack`, { worker, doc_id }).then((r) => r.data),
   privacy: (lang) => api.get(`/compliance/privacy`, { params: { lang } }).then((r) => r.data),
+  eraseRequest: (worker) => api.post(`/compliance/erase-request`, { worker }).then((r) => r.data),
 };
 
 export const prooferApi = {

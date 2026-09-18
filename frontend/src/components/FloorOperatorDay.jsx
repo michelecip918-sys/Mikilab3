@@ -9,6 +9,8 @@ import RecipeList from "@/components/RecipeList";
 import HeadphonesMode from "@/components/HeadphonesMode";
 import DriverRun from "@/components/console/DriverRun";
 import SosButton from "@/components/SosButton";
+import AskHelpButton from "@/components/AskHelpButton";
+import { PrivacyLink } from "@/components/PrivacyNotice";
 import SitorMaestro from "@/components/SitorMaestro";
 import SitorCard from "@/components/SitorCard";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
@@ -463,6 +465,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Sempre disponibili: chiedi aiuto + analizzatore foto */}
       <SosButton role={role} operator={role} />
+      <AskHelpButton operator={role} dept={mine?.dept || ""} />
       <SitorPhotoAnalyzer tri={tri} lang={lang} />
 
       {/* Cuffie hands-free: ascolto continuo "Sitor…" mentre le mani sono occupate */}
@@ -512,6 +515,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Fine turno */}
       <EndOfShiftForm tri={tri} role={role} />
+      <div className="pt-2 text-center"><PrivacyLink /></div>
       {showSitorCard && <SitorCard tri={tri} onClose={() => setShowSitorCard(false)} />}
     </div>
   );

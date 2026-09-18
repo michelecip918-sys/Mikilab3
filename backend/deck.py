@@ -1053,9 +1053,10 @@ async def compliance_timeclock(body: TimeclockReq, request: Request, org: str = 
     last = await db.compliance_timelog.find_one({"organization_id": org}, {"_id": 0}, sort=[("seq", -1)])
     seq = (last["seq"] + 1) if last else 1
     prev_hash = last["hash"] if last else "genesis"
-    payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso(), "verified": verified}
+    payload = {"seq": seq, "worker": worker, "action": action, "at": now_iso()}
     h = _chain_hash(prev_hash, payload)
-    entry = {"id": str(uuid.uuid4()), "organization_id": org, **payload, "prev_hash": prev_hash, "hash": h}
+    entry = {"id": str(uuid.uuid4()), "organization_id": org, **payload, "verified": verified, "prev_hash": prev_hash, "hash": h,
+             "at_dt": datetime.now(timezone.utc)}  # at_dt: campo Date per l'indice TTL (12 mesi). NON entra nell'hash.
     await db.compliance_timelog.insert_one(dict(entry))
     return {"ok": True, "seq": seq, "hash": h, "action": action, "worker": worker, "verified": verified}
 
@@ -1108,13 +1109,20 @@ async def compliance_timelog(worker: Optional[str] = None, day: Optional[str] = 
     if day:
         q["at"] = {"$regex": f"^{re.escape(day)}"}
     entries = await db.compliance_timelog.find(q, {"_id": 0}).sort("seq", 1).to_list(1000)
-    # verifica integrità catena (tamper-evident)
+    # verifica integrità catena (tamper-evident). ROBUSTA al TTL: le entry più vecchie possono
+    # essere state cancellate (conservazione 12 mesi), quindi NON pretendiamo che la prima entry
+    # rimasta parta da "genesis". Verifichiamo che ogni entry sia auto-coerente (hash = f(prev_hash,payload))
+    # e che le entry consecutive rimaste si concatenino correttamente. Ciò rileva comunque le manomissioni.
     integrity_ok = True
     all_entries = await db.compliance_timelog.find({"organization_id": _org_id(admin)}, {"_id": 0}).sort("seq", 1).to_list(5000)
-    prev = "genesis"
+    prev = None
     for e in all_entries:
         payload = {"seq": e["seq"], "worker": e["worker"], "action": e["action"], "at": e["at"]}
-        if _chain_hash(prev, payload) != e.get("hash") or e.get("prev_hash") != prev:
+        stored_prev = e.get("prev_hash", "genesis")
+        if _chain_hash(stored_prev, payload) != e.get("hash"):
+            integrity_ok = False
+            break
+        if prev is not None and stored_prev != prev:
             integrity_ok = False
             break
         prev = e["hash"]
@@ -1149,9 +1157,26 @@ class SafetyAckReq(BaseModel):
 
 @api_router.post("/compliance/safety/ack")
 async def compliance_safety_ack(body: SafetyAckReq, admin: dict = Depends(require_admin)):
-    rec = {"id": str(uuid.uuid4()), "organization_id": _org_id(admin), "worker": (body.worker or "").strip(), "doc_id": body.doc_id, "at": now_iso()}
+    rec = {"id": str(uuid.uuid4()), "organization_id": _org_id(admin), "worker": (body.worker or "").strip(), "doc_id": body.doc_id, "at": now_iso(), "at_dt": datetime.now(timezone.utc)}
     await db.compliance_training_ack.insert_one(dict(rec))
     return {"ok": True, "ack": rec}
+
+
+class EraseReq(BaseModel):
+    worker: str
+
+
+@api_router.post("/compliance/erase-request")
+async def compliance_erase_request(body: EraseReq, admin: dict = Depends(require_admin)):
+    """GDPR/DSGVO Art. 17: cancella su richiesta i dati di conformità di un lavoratore
+    (timbrature + prese visione formazione) per la SOLA organizzazione del Capo."""
+    org = _org_id(admin)
+    w = (body.worker or "").strip()
+    if not w:
+        raise HTTPException(status_code=400, detail="Nome lavoratore mancante")
+    r1 = await db.compliance_timelog.delete_many({"organization_id": org, "worker": {"$regex": f"^{re.escape(w)}$", "$options": "i"}})
+    r2 = await db.compliance_training_ack.delete_many({"organization_id": org, "worker": {"$regex": f"^{re.escape(w)}$", "$options": "i"}})
+    return {"ok": True, "worker": w, "deleted_timelog": r1.deleted_count, "deleted_training_ack": r2.deleted_count}
 
 
 @api_router.get("/compliance/privacy")
@@ -1159,16 +1184,27 @@ async def compliance_privacy(lang: str = "it"):
     it = {
         "posture": "GDPR/DSGVO (UE) · minimizzazione dei dati, elaborazione locale.",
         "data_collected": ["Timbrature ArbZG / Direttiva UE 2003/88 (locali, tamper-proof)", "Posizione BLE indicativa (settore, non tracciamento GPS)", "Verifica vocale liveness: SOLO confronto testuale, NESSUNA registrazione audio conservata"],
-        "retention": "Dati conservati localmente nel DB interno UE; nessun trasferimento a terzi.",
+        "retention": "Dati conservati localmente nel DB interno UE (conservazione 12 mesi, poi cancellazione automatica); nessun trasferimento a terzi.",
         "principles": ["Data minimization (GDPR UE)", "Local encryption at rest", "No covert external harvesting", "Scopo limitato: sicurezza e conformità"],
     }
     en = {
         "posture": "GDPR/DSGVO (EU) · data minimization, local processing.",
         "data_collected": ["ArbZG / EU Directive 2003/88 time logs (local, tamper-proof)", "Indicative BLE sector position (no GPS tracking)", "Voice liveness: TEXT match only, NO audio stored"],
-        "retention": "Stored locally in the internal EU DB; no third-party transfer.",
+        "retention": "Stored locally in the internal EU DB (12-month retention, then auto-deletion); no third-party transfer.",
         "principles": ["Data minimization (EU GDPR)", "Local encryption at rest", "No covert external harvesting", "Purpose limitation: safety & compliance"],
     }
-    return en if (lang or "it").startswith("en") else it
+    de = {
+        "posture": "DSGVO/GDPR (EU) · Datenminimierung, lokale Verarbeitung.",
+        "data_collected": ["ArbZG- / EU-Richtlinie-2003/88-Zeiterfassung (lokal, manipulationssicher)", "Ungefähre BLE-Bereichsposition (kein GPS-Tracking)", "Sprach-Lebendigkeitsprüfung: NUR Textabgleich, KEINE Audioaufnahme gespeichert"],
+        "retention": "Lokal in der internen EU-Datenbank gespeichert (Aufbewahrung 12 Monate); keine Weitergabe an Dritte.",
+        "principles": ["Datenminimierung (EU-DSGVO)", "Lokale Verschlüsselung im Ruhezustand", "Keine verdeckte externe Datensammlung", "Zweckbindung: Sicherheit & Compliance"],
+    }
+    lg = (lang or "it")[:2]
+    if lg == "en":
+        return en
+    if lg == "de":
+        return de
+    return it
 
 
 @api_router.get("/production/worker-aura/{worker_name}")

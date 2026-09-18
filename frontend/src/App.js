@@ -79,6 +79,7 @@ import HardwareBridge from "@/components/console/HardwareBridge";
 import ShiftBriefing from "@/components/console/ShiftBriefing";
 import DigitalTwin from "@/components/console/DigitalTwin";
 import EmergencyCenter from "@/components/EmergencyCenter";
+import { ComplianceTimelog } from "@/components/console/ComplianceTimelog";
 import OvenQC from "@/components/console/OvenQC";
 import B2BOrders from "@/components/console/B2BOrders";
 import CarbonFootprint from "@/components/console/CarbonFootprint";
@@ -163,7 +164,7 @@ const PANEL_TAB = {
   "panel-ordini": ["ordini", "extra"], "panel-b2b": ["ordini", "b2b"], "panel-pastry": ["ordini", "pastry"], "panel-pizzeria": ["ordini", "pizzeria"],
   "panel-team-coordination": ["team", "coordinamento"], "panel-dept-assign": ["team", "assegnazione"], "panel-shift-team": ["team", "riepilogo"], "panel-shift-templates": ["team", "turni"], "panel-team-faces": ["team", "volti"],
   "panel-departments": ["strumenti", "reparti"], "panel-my-machines": ["strumenti", "macchine"], "panel-silos": ["strumenti", "silos"], "panel-sitor-atelier": ["strumenti", "macchine"], "panel-machine-arrival": ["strumenti", "arrival"], "panel-coldstorage": ["strumenti", "celle"], "panel-hardware": ["strumenti", "macchine"], "panel-ovenqc": ["strumenti", "macchine"],
-  "panel-docs": ["sicurezza", "report"], "panel-security": ["sicurezza", "accessi"], "panel-emergency": ["sicurezza", "emergenze"],
+  "panel-docs": ["sicurezza", "report"], "panel-arbzg": ["sicurezza", "arbzg"], "panel-security": ["sicurezza", "accessi"], "panel-emergency": ["sicurezza", "emergenze"],
 };
 
 
@@ -783,23 +784,27 @@ export default function App() {
                     <SecTabs sec="sicurezza" accent="#64748B" active={capoTab.sicurezza} onChange={(t) => activateTab("sicurezza", t)}
                       tabs={[
                         { id: "report", icon: "🧾", label: "Report" },
+                        { id: "arbzg", icon: "⏱️", label: "ArbZG" },
                         { id: "accessi", icon: "🛡️", label: tri("Accessi", "Zugriffe", "Access", "Accesos", "Accès", "دسترسی") },
                         { id: "emergenze", icon: "🚨", label: tri("Emergenze", "Notfälle", "Emergencies", "Emergencias", "Urgences", "اضطراری") },
                       ]} />
-                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "report" && (
+                    {effTab("sicurezza", ["report", "arbzg", "accessi", "emergenze"]) === "report" && (
                     <TabPanel testid="panel-docs">
                       <FloorShiftReports />
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><ShiftReport /></div>
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><DocsDownload /></div>
                     </TabPanel>
                     )}
-                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "accessi" && (
+                    {effTab("sicurezza", ["report", "arbzg", "accessi", "emergenze"]) === "arbzg" && (
+                    <TabPanel testid="panel-arbzg"><ComplianceTimelog /></TabPanel>
+                    )}
+                    {effTab("sicurezza", ["report", "arbzg", "accessi", "emergenze"]) === "accessi" && (
                     <TabPanel testid="panel-security">
                       <AdminSecurity />
                       <div className="mt-4 pt-4 border-t border-[#64748B]/15"><PinSetup /></div>
                     </TabPanel>
                     )}
-                    {effTab("sicurezza", ["report", "accessi", "emergenze"]) === "emergenze" && (
+                    {effTab("sicurezza", ["report", "arbzg", "accessi", "emergenze"]) === "emergenze" && (
                     <TabPanel testid="panel-emergency"><EmergencyCenter /></TabPanel>
                     )}
                     </SecBlock>

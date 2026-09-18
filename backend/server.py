@@ -159,7 +159,7 @@ api_router = APIRouter(prefix="/api")
 GATE_SECRET = os.environ.get("GATE_JWT_SECRET") or os.environ.get("INBOUND_SHARED_SECRET") or "mikilab-gate-dev"
 GATE_COOKIE = "mikilab_gate"
 GATE_TTL = int(os.environ.get("GATE_TTL_SECONDS", str(30 * 86400)))
-_GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/")
+_GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/", "/api/compliance/privacy")
 
 
 def issue_gate_token(ttl_seconds: int = None, org: str = "org_default") -> str:
@@ -11809,6 +11809,27 @@ async def on_startup_seed_mikilab():
                 pass
     except Exception as e:
         logging.getLogger(__name__).error(f"org index error: {e}")
+    try:
+        # CONSERVAZIONE 12 MESI (GDPR/DSGVO): TTL su compliance_timelog e compliance_training_ack.
+        # Il TTL agisce sul campo Date "at_dt"; le entry senza at_dt (storiche) non vengono toccate,
+        # quindi le backfillo dal campo ISO "at" così anche quelle vecchie scadono correttamente.
+        _TTL_12M = 365 * 24 * 3600
+        for _coll in ("compliance_timelog", "compliance_training_ack"):
+            try:
+                await db[_coll].create_index("at_dt", name="idx_ttl_12m", expireAfterSeconds=_TTL_12M, background=True)
+            except Exception:
+                pass
+            try:
+                async for _d in db[_coll].find({"at_dt": {"$exists": False}, "at": {"$exists": True}}, {"_id": 1, "at": 1}):
+                    try:
+                        _dt = datetime.fromisoformat(str(_d["at"]).replace("Z", "+00:00"))
+                        await db[_coll].update_one({"_id": _d["_id"]}, {"$set": {"at_dt": _dt}})
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+    except Exception as e:
+        logging.getLogger(__name__).error(f"compliance TTL error: {e}")
     try:
         await seed_shop_if_empty()
     except Exception as e:

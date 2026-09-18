@@ -12,6 +12,7 @@ import LivingAvatar3D from "@/components/LivingAvatar3D";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
 import LegalPage from "@/sections/LegalPage";
+import { PrivacyNotice } from "@/components/PrivacyNotice";
 import { api, facesApi } from "@/lib/api";
 import { activityProfile as gateActivityProfile } from "@/lib/activityProfile";
 import { playTTS, isTTSMuted } from "@/lib/tts";
@@ -40,6 +41,7 @@ export default function PublicGate({ onUnlock }) {
   const [showAuth, setShowAuth] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [legalOpen, setLegalOpen] = useState(false);
+  const [privacyOpen, setPrivacyOpen] = useState(false);
   const [showMore, setShowMore] = useState(false);
   const [cookieOk, setCookieOk] = useState(() => { try { return !!localStorage.getItem("mikilab_cookie_ok"); } catch { return true; } });
   const acceptCookies = () => { try { localStorage.setItem("mikilab_cookie_ok", "1"); } catch { /* */ } setCookieOk(true); };
@@ -452,7 +454,7 @@ export default function PublicGate({ onUnlock }) {
         {/* Footer legale (GDPR / Impressum) */}
         <footer data-testid="public-legal-footer" className="mt-10 mb-4 w-full max-w-3xl flex flex-wrap items-center justify-center gap-x-5 gap-y-2 font-mono-data text-[10px] tracking-widest uppercase text-[#64748B]">
           <button data-testid="public-impressum-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#8a97a6] transition-colors">Impressum</button>
-          <button data-testid="public-privacy-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#8a97a6] transition-colors">{tri("Privacy (GDPR)", "Datenschutz (DSGVO)", "Privacy (GDPR)", "Privacidad (RGPD)", "Confidentialité (RGPD)", "حریم خصوصی")}</button>
+          <button data-testid="public-privacy-btn" onClick={() => setPrivacyOpen(true)} className="hover:text-[#8a97a6] transition-colors">{tri("Privacy (GDPR)", "Datenschutz (DSGVO)", "Privacy (GDPR)", "Privacidad (RGPD)", "Confidentialité (RGPD)", "حریم خصوصی")}</button>
           <button data-testid="public-cookies-btn" onClick={() => setLegalOpen(true)} className="hover:text-[#8a97a6] transition-colors">Cookies</button>
           <span className="text-[#334155]">© 2026 {tri("Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "Michele Signorella · mikilab.de", "mikilab.de")}</span>
         </footer>
@@ -485,6 +487,7 @@ export default function PublicGate({ onUnlock }) {
           </div>
         </div>
       )}
+      {privacyOpen && <PrivacyNotice onClose={() => setPrivacyOpen(false)} />}
     </div>
   );
 }
