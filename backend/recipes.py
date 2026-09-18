@@ -1091,16 +1091,16 @@ class LabShiftState(BaseModel):
 
 
 @api_router.get("/lab/shift-state")
-async def get_lab_shift_state(user: Optional[dict] = Depends(optional_user)):
-    doc = await db.lab_shift_state.find_one({"_key": "default"}, {"_id": 0, "_key": 0})
+async def get_lab_shift_state(org: str = Depends(effective_org)):
+    doc = await db.lab_shift_state.find_one({"_key": "default", "organization_id": org}, {"_id": 0, "_key": 0})
     return doc or LabShiftState().model_dump()
 
 
 @api_router.put("/lab/shift-state", response_model=LabShiftState)
-async def save_lab_shift_state(payload: LabShiftState, user: Optional[dict] = Depends(optional_user)):
+async def save_lab_shift_state(payload: LabShiftState, org: str = Depends(effective_org)):
     payload.updated_at = now_iso()
     doc = payload.model_dump()
     await db.lab_shift_state.update_one(
-        {"_key": "default"}, {"$set": {**doc, "_key": "default"}}, upsert=True
+        {"_key": "default", "organization_id": org}, {"$set": {**doc, "_key": "default", "organization_id": org}}, upsert=True
     )
     return payload

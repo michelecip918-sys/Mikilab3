@@ -117,6 +117,12 @@ async def mike_silos(lang: str = "it", admin: dict = Depends(require_admin)):
     if reorder:
         spoken = (f"{reorder} silos sotto soglia: genero i micro-ordini di rifornimento." if it else
                   f"{reorder} silos below threshold: generating restock micro-orders.")
+        try:
+            await _propose_reorder(admin, [{"name": s.get("name"), "current": float(s.get("current_kg") or 0),
+                                            "min": float(s.get("min_kg") or 0), "capacity": float(s.get("capacity_kg") or 0)}
+                                           for s in docs if float(s.get("current_kg") or 0) <= float(s.get("min_kg") or 0)], "silos")
+        except Exception as e:
+            logging.warning("silos reorder proposal fail (%s)", str(e)[:120])
     return {"silos": out, "reorder_count": reorder, "spoken": spoken}
 
 
@@ -200,7 +206,7 @@ async def mike_silo_microorder(admin: dict = Depends(require_admin)):
                                                           "subject": "MikiLab · Micro-ordine rifornimento silos", "html": html})
             emailed = True
         except Exception as e:
-            logger.warning("silo microorder email fail (%s)", str(e)[:120])
+            logging.warning("silo microorder email fail (%s)", str(e)[:120])
     return {"ok": True, "orders": created, "count": len(created), "emailed": emailed, "supplier": supplier if emailed else None}
 
 
@@ -305,3 +311,157 @@ class SupplierReq(BaseModel):
 async def mike_silo_supplier_set(body: SupplierReq, admin: dict = Depends(require_admin)):
     await db.app_meta.update_one({"_key": "silo_supplier"}, {"$set": {"email": (body.email or "").strip()}}, upsert=True)
     return {"ok": True, "email": (body.email or "").strip()}
+
+
+# ===========================================================================
+# RIORDINO AUTOMATICO — Sitor PROPONE un micro-ordine al fornitore quando una
+# materia prima resta sotto soglia (silos + magazzino di produzione).
+# Bozza che il Capo conferma con un tocco; opzione invio automatico attivabile.
+# Alla creazione di una nuova proposta il Capo riceve NOTIFICA push + email.
+# ===========================================================================
+async def _reorder_config(org: str) -> dict:
+    doc = (await db.app_meta.find_one({"_key": f"reorder_config:{org}"}, {"_id": 0})) or {}
+    return {"auto_send": bool(doc.get("auto_send"))}
+
+
+async def _supplier_email(admin: dict) -> str:
+    sup = (await db.app_meta.find_one({"_key": "silo_supplier"}, {"_id": 0})) or {}
+    return sup.get("email") or os.environ.get("SILO_SUPPLIER_EMAIL") or admin.get("email") or ""
+
+
+async def _notify_capo(admin: dict, title: str, body_text: str):
+    """Avvisa il Capo su push (browser) + email (Resend). Best-effort, non blocca."""
+    uid = admin.get("user_id")
+    # PUSH
+    try:
+        if uid:
+            _, priv = await _get_vapid()
+            subs = await db.push_subs.find({"user_id": uid}, {"_id": 0}).to_list(50)
+            payload = {"title": title, "body": body_text, "tag": "mikilab-reorder"}
+            for s in subs:
+                try:
+                    await asyncio.to_thread(_send_push, s["subscription"], payload, priv)
+                except Exception:
+                    pass
+    except Exception as e:
+        logging.warning("reorder push fail (%s)", str(e)[:120])
+    # EMAIL
+    try:
+        to = admin.get("email")
+        if RESEND_API_KEY and to:
+            html = (f"<div style='font-family:sans-serif;max-width:520px'>"
+                    f"<h2 style='color:#b06e78'>{title}</h2><p>{body_text}</p>"
+                    f"<p style='color:#888;font-size:12px'>MikiLab · Sitor · {now_iso()[:16]}</p></div>")
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>",
+                                                          "to": [to], "subject": title, "html": html})
+    except Exception as e:
+        logging.warning("reorder email fail (%s)", str(e)[:120])
+
+
+async def _propose_reorder(admin: dict, items: list, source: str):
+    """items: [{name, current, min, capacity?}]. Crea UNA proposta per materia prima sotto
+    soglia (dedup finché resta aperta), notifica il Capo e — se auto_send è ON — invia al fornitore."""
+    org = _org_id(admin)
+    if not items:
+        return {"created": 0, "auto_sent": 0}
+    cfg = await _reorder_config(org)
+    supplier = await _supplier_email(admin)
+    created, auto_sent, created_names = 0, 0, []
+    for it in items:
+        name = (it.get("name") or "").strip()
+        if not name:
+            continue
+        key = f"{source}:{name.lower()}"
+        # dedup: salta se esiste già una proposta aperta (proposed) per questa materia prima
+        if await db.reorder_proposals.count_documents({"organization_id": org, "key": key, "status": "proposed"}):
+            continue
+        cur = float(it.get("current") or 0)
+        mn = float(it.get("min") or 0)
+        cap = float(it.get("capacity") or 0)
+        # quantità suggerita: rabbocco all'80% capacità (silos) o al doppio della soglia (magazzino)
+        target = cap * 0.8 if cap > 0 else mn * 2
+        suggested = round(max(mn, target - cur), 1)
+        doc = {"id": str(uuid.uuid4()), "organization_id": org, "key": key, "source": source,
+               "name": name, "current_kg": cur, "min_kg": mn, "suggested_qty_kg": suggested,
+               "status": "proposed", "auto": False, "supplier": supplier, "created_at": now_iso(),
+               "sent_at": None}
+        # invio automatico se attivo e c'è un fornitore
+        if cfg["auto_send"] and supplier and RESEND_API_KEY:
+            try:
+                html = (f"<div style='font-family:sans-serif;max-width:520px'>"
+                        f"<h2 style='color:#3f7cac'>MikiLab · Micro-ordine rifornimento</h2>"
+                        f"<p>Rifornimento richiesto: <b>{name}</b> — {suggested:g} kg "
+                        f"(scorta {cur:g} kg sotto soglia {mn:g} kg).</p>"
+                        f"<p style='color:#888;font-size:12px'>Inviato automaticamente da Sitor AI · {now_iso()[:16]}</p></div>")
+                await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [supplier],
+                                                              "subject": f"MikiLab · Micro-ordine {name}", "html": html})
+                doc["status"] = "sent"; doc["auto"] = True; doc["sent_at"] = now_iso()
+                auto_sent += 1
+            except Exception as e:
+                logging.warning("reorder auto-send fail (%s)", str(e)[:120])
+        await db.reorder_proposals.insert_one(dict(doc))
+        created += 1
+        created_names.append(f"{name} ({suggested:g} kg)")
+    if created_names:
+        verb = "inviato automaticamente al fornitore" if (cfg["auto_send"] and supplier) else "proposto"
+        await _notify_capo(admin, "MikiLab · Scorte sotto soglia",
+                           f"Sitor ha {verb} il rifornimento per: {', '.join(created_names)}.")
+    return {"created": created, "auto_sent": auto_sent}
+
+
+@api_router.get("/mike/reorder/config")
+async def reorder_config_get(admin: dict = Depends(require_admin)):
+    return await _reorder_config(_org_id(admin))
+
+
+class ReorderConfigReq(BaseModel):
+    auto_send: bool = False
+
+
+@api_router.put("/mike/reorder/config")
+async def reorder_config_set(body: ReorderConfigReq, admin: dict = Depends(require_admin)):
+    org = _org_id(admin)
+    await db.app_meta.update_one({"_key": f"reorder_config:{org}"},
+                                 {"$set": {"auto_send": bool(body.auto_send)}}, upsert=True)
+    return {"ok": True, "auto_send": bool(body.auto_send)}
+
+
+@api_router.get("/mike/reorder/proposals")
+async def reorder_proposals_list(admin: dict = Depends(require_admin)):
+    org = _org_id(admin)
+    docs = await db.reorder_proposals.find({"organization_id": org, "status": {"$ne": "dismissed"}},
+                                           {"_id": 0}).sort("created_at", -1).to_list(100)
+    pending = sum(1 for d in docs if d.get("status") == "proposed")
+    return {"proposals": docs, "pending": pending, "config": await _reorder_config(org)}
+
+
+@api_router.post("/mike/reorder/proposals/{pid}/send")
+async def reorder_proposal_send(pid: str, admin: dict = Depends(require_admin)):
+    """Il Capo conferma la bozza: invia il micro-ordine al fornitore via email."""
+    org = _org_id(admin)
+    p = await db.reorder_proposals.find_one({"id": pid, "organization_id": org}, {"_id": 0})
+    if not p:
+        raise HTTPException(404, "Proposta non trovata")
+    supplier = p.get("supplier") or await _supplier_email(admin)
+    emailed = False
+    if RESEND_API_KEY and supplier:
+        try:
+            html = (f"<div style='font-family:sans-serif;max-width:520px'>"
+                    f"<h2 style='color:#3f7cac'>MikiLab · Micro-ordine rifornimento</h2>"
+                    f"<p>Rifornimento richiesto: <b>{p['name']}</b> — {p['suggested_qty_kg']:g} kg.</p>"
+                    f"<p style='color:#888;font-size:12px'>Confermato dalla Direzione · {now_iso()[:16]}</p></div>")
+            await asyncio.to_thread(_resend.Emails.send, {"from": f"MikiLab <{SENDER_EMAIL}>", "to": [supplier],
+                                                          "subject": f"MikiLab · Micro-ordine {p['name']}", "html": html})
+            emailed = True
+        except Exception as e:
+            logging.warning("reorder send fail (%s)", str(e)[:120])
+    await db.reorder_proposals.update_one({"id": pid, "organization_id": org},
+                                          {"$set": {"status": "sent", "sent_at": now_iso(), "supplier": supplier}})
+    return {"ok": True, "emailed": emailed, "supplier": supplier if emailed else None}
+
+
+@api_router.post("/mike/reorder/proposals/{pid}/dismiss")
+async def reorder_proposal_dismiss(pid: str, admin: dict = Depends(require_admin)):
+    await db.reorder_proposals.update_one({"id": pid, "organization_id": _org_id(admin)},
+                                          {"$set": {"status": "dismissed"}})
+    return {"ok": True}

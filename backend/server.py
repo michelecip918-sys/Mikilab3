@@ -795,7 +795,7 @@ ORG_SCOPED_COLLECTIONS = [
     "compliance_timelog", "compliance_training_ack", "oven_qc_log",
     "mikiscore_history", "plan_suggestions", "sitor_memory",
     "day_production_closures", "production_logs", "deliveries",
-    "recipe_apprentice", "voice_usage", "lab_wake", "silos",
+    "recipe_apprentice", "voice_usage", "lab_wake", "silos", "reorder_proposals",
 ]
 
 
@@ -976,7 +976,7 @@ async def _bakery_snapshot(admin: dict) -> str:
     # Team e turni di oggi + operatori attivi
     try:
         asg = await db.dept_assignments.find({"date": today, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(100)
-        ops = await db.operator_pins.find({"active": True}, {"_id": 0, "name": 1}).to_list(200)
+        ops = await db.operator_pins.find({"active": True, "organization_id": _org_id(admin)}, {"_id": 0, "name": 1}).to_list(200)
         lines = []
         if asg:
             lines.append("; ".join(f"{a.get('operator')}→{a.get('dept_name') or a.get('dept')} ({(a.get('task') or '')[:24]})" for a in asg[:12]))
@@ -2533,7 +2533,7 @@ async def depts_templates_apply(tid: str, admin: dict = Depends(require_admin)):
 async def depts_presence(admin: dict = Depends(require_admin)):
     """Presenza live: operai la cui ultima timbratura di oggi non è 'out'."""
     today = now_iso()[:10]
-    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}, "organization_id": _org_id(admin)}, {"_id": 0}).sort("seq", 1).to_list(3000)
     last = {}
     for e in entries:
         w = (e.get("worker") or "").strip()
@@ -2550,7 +2550,7 @@ async def depts_shift_report(admin: dict = Depends(require_admin)):
     _org = _org_id(admin)
     asg = await db.dept_assignments.find({"date": today, "organization_id": _org}, {"_id": 0}).to_list(2000)
     objs = await db.dept_objectives.find({"date": today, "organization_id": _org}, {"_id": 0}).to_list(50)
-    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}}, {"_id": 0}).sort("seq", 1).to_list(3000)
+    entries = await db.compliance_timelog.find({"at": {"$regex": f"^{re.escape(today)}"}, "organization_id": _org}, {"_id": 0}).sort("seq", 1).to_list(3000)
     last = {}
     for e in entries:
         w = (e.get("worker") or "").strip()
@@ -3699,9 +3699,9 @@ class LayoutMove(BaseModel):
 
 
 @api_router.get("/enterprise/sites/{site_id}/layout")
-async def enterprise_get_layout(site_id: str, user: Optional[dict] = Depends(optional_user)):
-    await _seed_sites()
-    site = await db.lab_sites.find_one({"site_id": site_id}, {"_id": 0})
+async def enterprise_get_layout(site_id: str, org: str = Depends(effective_org)):
+    await _seed_sites(org)
+    site = await db.lab_sites.find_one({"site_id": site_id, "organization_id": org}, {"_id": 0})
     if not site:
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     return {"site_id": site_id, "name": site.get("name"), "spatial_layout": site.get("spatial_layout", {}),
@@ -3711,7 +3711,7 @@ async def enterprise_get_layout(site_id: str, user: Optional[dict] = Depends(opt
 
 @api_router.post("/enterprise/sites/{site_id}/layout/optimize")
 async def enterprise_optimize_layout(site_id: str, move: LayoutMove, user: dict = Depends(require_admin)):
-    site = await db.lab_sites.find_one({"site_id": site_id})
+    site = await db.lab_sites.find_one({"site_id": site_id, "organization_id": _org_id(user)})
     if not site:
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     layout = site.get("spatial_layout") or {"equipment": []}
@@ -3719,7 +3719,7 @@ async def enterprise_optimize_layout(site_id: str, move: LayoutMove, user: dict 
     if not eq:
         raise HTTPException(status_code=404, detail="Macchinario non trovato nel layout.")
     eq["x"] = round(move.target_x, 1); eq["y"] = round(move.target_y, 1)
-    await db.lab_sites.update_one({"site_id": site_id}, {"$set": {"spatial_layout": layout}})
+    await db.lab_sites.update_one({"site_id": site_id, "organization_id": _org_id(user)}, {"$set": {"spatial_layout": layout}})
     saving = round(min(18.0, abs(move.target_x) * 0.4 + abs(move.target_y) * 0.4 + 4.2), 1)
     return {"status": "success", "message": f"«{eq['name']}» riposizionato.",
             "new_coordinates": {"x": eq["x"], "y": eq["y"]},
@@ -3737,8 +3737,8 @@ class VisionFloorScan(BaseModel):
 
 @api_router.post("/enterprise/sites/{site_id}/layout/vision-scan")
 async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: dict = Depends(require_admin)):
-    await _seed_sites()
-    site = await db.lab_sites.find_one({"site_id": site_id})
+    await _seed_sites(_org_id(user))
+    site = await db.lab_sites.find_one({"site_id": site_id, "organization_id": _org_id(user)})
     if not site:
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     img = (payload.image_base64 or "").split(",")[-1]
@@ -3791,7 +3791,7 @@ async def enterprise_vision_scan(site_id: str, payload: VisionFloorScan, user: d
               "confidence": round(float(d.get("confidence", 0.8) or 0.8), 2)}
         layout["equipment"].append(eq)
         added.append(eq)
-    await db.lab_sites.update_one({"site_id": site_id}, {"$set": {"spatial_layout": layout}})
+    await db.lab_sites.update_one({"site_id": site_id, "organization_id": _org_id(user)}, {"$set": {"spatial_layout": layout}})
     return {"status": "success", "site_id": site_id, "added": added, "spatial_layout": layout,
             "detected_count": len(added),
             "mikemix_insight": f"{len(added)} macchinari riconosciuti e posizionati con l'aura AR."}
@@ -3938,9 +3938,9 @@ async def master_pocket_command(payload: MasterPocketCommand, user: dict = Depen
     await _seed_sites()
     text = (payload.command_text or "").lower()
     sid = payload.active_site_id
-    site = (await db.lab_sites.find_one({"site_id": sid}, {"_id": 0})) if sid else None
+    site = (await db.lab_sites.find_one({"site_id": sid, "organization_id": _org_id(user)}, {"_id": 0})) if sid else None
     if not site:
-        site = await db.lab_sites.find_one({}, {"_id": 0})
+        site = await db.lab_sites.find_one({"organization_id": _org_id(user)}, {"_id": 0})
     if any(k in text for k in ("forno", "scansiona", "inquadra", "layout")):
         return {"status": "success", "action_type": "vision_spatial_scan",
                 "mikemix_response": f"Scansione macchinari di {site['name']} completata, aure applicate.",
@@ -3966,8 +3966,8 @@ class SpatialScanReq(BaseModel):
 
 
 @api_router.post("/pocket/vision/scan-floor")
-async def pocket_scan_floor(body: SpatialScanReq, user: Optional[dict] = Depends(optional_user)):
-    site = await db.lab_sites.find_one({"site_id": body.site_id}, {"_id": 0})
+async def pocket_scan_floor(body: SpatialScanReq, org: str = Depends(effective_org)):
+    site = await db.lab_sites.find_one({"site_id": body.site_id, "organization_id": org}, {"_id": 0})
     if not site:
         raise HTTPException(status_code=404, detail="Sede non trovata.")
     return {"status": "success", "site_id": body.site_id, "vision_hud_status": "active_augmented_reality",
@@ -4212,14 +4212,14 @@ async def inventory_scan_drop(payload: InventoryScanDrop, user: dict = Depends(r
         except Exception:
             qty = 0
         kind = "farina" if str(it.get("kind") or "") == "farina" else "ingrediente"
-        existing = await db.lab_warehouse.find_one({"name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}})
+        existing = await db.lab_warehouse.find_one({"name": {"$regex": f"^{re.escape(name)}$", "$options": "i"}, "organization_id": _org_id(user)})
         if existing:
             newq = round(float(existing.get("quantity_kg", 0)) + qty, 3)
-            await db.lab_warehouse.update_one({"id": existing["id"]}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
+            await db.lab_warehouse.update_one({"id": existing["id"], "organization_id": _org_id(user)}, {"$set": {"quantity_kg": newq, "updated_at": now_iso()}})
             added.append({"name": existing["name"], "added_kg": qty, "quantity_kg": newq})
         else:
             doc = {"id": str(uuid.uuid4()), "name": name, "kind": kind, "force_w": "", "quantity_kg": qty,
-                   "unit": "kg", "min_kg": 0, "updated_at": now_iso()}
+                   "unit": "kg", "min_kg": 0, "updated_at": now_iso(), "organization_id": _org_id(user)}
             await db.lab_warehouse.insert_one(dict(doc))
             added.append({"name": name, "added_kg": qty, "quantity_kg": qty})
     stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("name", 1).to_list(500)
@@ -4261,7 +4261,7 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
             cand = sorted([s for s in stock if s.get("kind") == "farina"], key=lambda x: x.get("quantity_kg", 0), reverse=True)
         return cand[0] if cand else None
 
-    consumed, shortfalls, untracked = [], [], []
+    consumed, shortfalls, untracked, low_stock = [], [], [], []
     for it in needs:
         s = _find(it["name"], it["kind"])
         if not s:
@@ -4277,14 +4277,24 @@ async def inventory_bind_batch(body: BatchBindReq, user: dict = Depends(require_
                 x["quantity_kg"] = newq
         await db.lab_consumption_log.insert_one({"id": str(uuid.uuid4()), "organization_id": _org_id(user), "name": s["name"], "kg": it["kg"], "kind": it["kind"], "at": now_iso()})
         consumed.append({"name": s["name"], "kg": it["kg"], "quantity_kg": newq})
+        # Avviso scorta bassa: il silo è sceso a/sotto la soglia dopo l'aggancio del batch.
+        _min = float(s.get("min_kg") or 0)
+        if _min > 0 and newq <= _min:
+            low_stock.append({"name": s["name"], "quantity_kg": newq, "min_kg": _min})
 
     link = {"id": str(uuid.uuid4()), "organization_id": _org_id(user), "recipe_id": body.recipe_id, "recipe_name": rec.get("name"),
             "batches": factor, "line_sectors": ["dosaggio", "autolisi"], "consumed": consumed,
             "shortfalls": shortfalls, "at": now_iso()}
     await db.batch_links.insert_one(dict(link))
+    if low_stock:
+        try:
+            import warehouse as _wh
+            await _wh._propose_reorder(user, [{"name": l["name"], "current": l["quantity_kg"], "min": l["min_kg"]} for l in low_stock], "warehouse")
+        except Exception as e:
+            logging.warning("bind-batch reorder proposal fail: %s", str(e)[:120])
     new_stock = await db.lab_warehouse.find({"organization_id": _org_id(user)}, {"_id": 0}).sort("name", 1).to_list(500)
     return {"status": "success", "recipe_name": rec.get("name"), "batches": factor,
-            "consumed": consumed, "shortfalls": shortfalls, "untracked": untracked,
+            "consumed": consumed, "shortfalls": shortfalls, "untracked": untracked, "low_stock": low_stock,
             "line_sectors": ["Dosaggio", "Autolisi"], "stock": new_stock,
             "mikemix_insight": f"Batch «{rec.get('name')}» ×{factor} agganciato a Dosaggio & Autolisi. Consumi scalati in automatico."}
 
@@ -11790,6 +11800,15 @@ async def on_startup_seed_mikilab():
         await _migrate_organizations()
     except Exception as e:
         logging.getLogger(__name__).error(f"Org migration error: {e}")
+    try:
+        # Indici di ISOLAMENTO: organization_id su tutte le collezioni tenant (query multi-azienda veloci).
+        for _coll in ORG_SCOPED_COLLECTIONS:
+            try:
+                await db[_coll].create_index("organization_id", name="idx_org", background=True)
+            except Exception:
+                pass
+    except Exception as e:
+        logging.getLogger(__name__).error(f"org index error: {e}")
     try:
         await seed_shop_if_empty()
     except Exception as e:

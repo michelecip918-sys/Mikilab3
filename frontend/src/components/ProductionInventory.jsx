@@ -63,6 +63,18 @@ export default function ProductionInventory({ onClose }) {
       setStock(res.stock || []);
       setBindResult(res);
       toast.success(res.mikemix_insight || tri("Batch agganciato", "Charge verknüpft", "Batch bound", "Lote vinculado", "Lot lié", "دسته متصل شد"));
+      const low = res.low_stock || [];
+      if (low.length) {
+        const names = low.map((l) => `${l.name} (${l.quantity_kg}/${l.min_kg} kg)`).join(", ");
+        toast.warning(tri(
+          `Scorta bassa dopo il batch: ${names}. Rifornisci al più presto.`,
+          `Niedriger Bestand nach der Charge: ${names}. Bald nachfüllen.`,
+          `Low stock after the batch: ${names}. Restock soon.`,
+          `Stock bajo tras el lote: ${names}. Reponer pronto.`,
+          `Stock bas après le lot : ${names}. À réapprovisionner.`,
+          `موجودی کم پس از دسته: ${names}. زودتر تأمین کن.`
+        ), { duration: 9000 });
+      }
     } catch (e) {
       toast.error(e?.response?.data?.detail || tri("Errore", "Fehler", "Error", "Error", "Erreur", "خطا"));
     }
@@ -125,6 +137,9 @@ export default function ProductionInventory({ onClose }) {
               ))}
               {(bindResult.shortfalls || []).map((s, i) => (
                 <div key={`s${i}`} className="flex items-center gap-1.5 text-[12px] text-[#aaa795]" data-testid={`inventory-shortfall-${i}`}><AlertTriangle className="w-3.5 h-3.5" /> {s.name}: {tri("mancano", "fehlen", "missing", "faltan", "manquent", "کمبود")} {s.missing} kg</div>
+              ))}
+              {(bindResult.low_stock || []).map((l, i) => (
+                <div key={`l${i}`} className="flex items-center gap-1.5 text-[12px] text-[#e0a94a]" data-testid={`inventory-lowstock-${i}`}><AlertTriangle className="w-3.5 h-3.5" /> {tri("Scorta bassa", "Niedriger Bestand", "Low stock", "Stock bajo", "Stock bas", "موجودی کم")}: {l.name} — {l.quantity_kg}/{l.min_kg} kg</div>
               ))}
             </div>
           )}

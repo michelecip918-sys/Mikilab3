@@ -106,6 +106,7 @@ import TeamCoordination from "@/components/console/TeamCoordination";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import SitorAtelier from "@/components/console/SitorAtelier";
 import ImageForge from "@/components/console/ImageForge";
+import { ReorderProposals } from "@/components/console/ReorderProposals";
 import { PlantHeartbeatProvider } from "@/context/PlantHeartbeatContext";
 
 const PUB = process.env.PUBLIC_URL;
@@ -575,6 +576,10 @@ export default function App() {
                           <span aria-hidden>{s.icon}</span>{s.label}
                         </a>
                       ))}
+                      <button type="button" data-testid="capo-review-tour" onClick={() => { try { window.dispatchEvent(new Event("mikilab:start-tour")); } catch { /* */ } }}
+                        className="shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold text-[#7E9A82] border border-[#7E9A82]/50 hover:bg-[#7E9A82]/10 transition-colors active:scale-95">
+                        ✦ {tri("Rivedi il tour", "Tour ansehen", "Review tour", "Ver el tour", "Revoir le tour", "مرور تور")}
+                      </button>
                     </nav>
 
                     {/* Feed del giorno: sempre in cima alla console */}
@@ -762,7 +767,7 @@ export default function App() {
                     <TabPanel testid="panel-departments"><DeptManager /></TabPanel>
                     )}
                     {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "silos" && (
-                    <TabPanel testid="panel-silos"><SiloManager /></TabPanel>
+                    <TabPanel testid="panel-silos"><ReorderProposals /><SiloManager /></TabPanel>
                     )}
                     {effTab("strumenti", ["macchine", "reparti", "silos", "arrival", "celle"]) === "arrival" && (
                     <TabPanel testid="panel-machine-arrival"><MachineArrival /></TabPanel>

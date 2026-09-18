@@ -5774,3 +5774,22 @@ Verificato: testing_agent iteration_264 (47/50 verde, retest_needed:false) + sel
 3. **Chat Sitor in drawer**: FAB ask-sitor-fab ora apre un pannello laterale a comparsa (sitor-drawer, z-[60] sopra l'header z-50) con SalaSitor + Radio; chiusura via X (sitor-drawer-close, icona con pointer-events-none) o backdrop. Fix z-index dopo test: l'header sticky intercettava il click della X.
 4. **Reparti live-update (Parte 2)**: DeptAssign.jsx, ShiftTeamCall.jsx, ColdStorage.jsx ora ascoltano "mikilab-depts-updated" (schema MyMachines) — aggiungi/rinomina/nascondi da DeptManager si propaga senza reload. Verificato E2E (create/rename/delete propagati; reparto test ripulito).
 - NB: deployment_agent PASS. Per mikilab.de: usare il pulsante Deploy/Save & Redeploy della piattaforma.
+
+---
+## Changelog — Set 2026, Tour 6 sezioni + Audit tenant + Avviso scorte basse
+Verificato: curl (endpoint tenant OK, low_stock restituito), screenshot mobile (tour naviga alle sezioni giuste), sintassi backend OK, webpack OK.
+1. **SitorTour aggiornato** (SitorTour.jsx): CAPO_STEPS riscritti da 5 vecchi gruppi a 6 sezioni a schede (Ricettario/Piano/Ordini/Team/Strumenti/Sicurezza) + intro che cita il FAB «Chiedi a Sitor». `goTo` usa ora `s.sec` → dispatch `mikilab:open-group` con l'id sezione + scroll a `#capo-sec-<sec>` (prima cercava `capo-group-*` inesistente). 7 dot totali.
+2. **Audit multi-tenancy** (`/app/scripts/tenant_audit.py`, report in `/app/memory/tenant_audit_report.md`): trovati e corretti 7 gruppi di leak reali → lab_warehouse scan_drop, compliance_timelog (presence/shift-report/govern/proactive), operator_pins roster, lab_shift_state (chiave globale→per-org), lab_sites (site_id semantici condivisi, 5 endpoint). Restanti 95 hit rivisti = falsi positivi sicuri (q con org, chiavi univoche user_id/owner_id/token/id, recipes master condivise per design).
+3. **Avviso scorte basse** (server.py inventory_bind_batch + ProductionInventory.jsx): il bind-batch ora calcola `low_stock` (silo sceso <= min_kg dopo lo scarico) e lo restituisce; il frontend mostra un `toast.warning` (9s) al Capo + righe evidenziate nei risultati. Verificato: con min_kg alto il batch restituisce low_stock.
+- NB: deployment su mikilab.de in corso.
+
+---
+## Changelog — Set 2026, Riordino automatico + Notifiche scorte + Indici tenant + Tour on-demand
+Verificato: curl E2E (proposta creata da bind-batch e da monitor silos, dedup, send, toggle auto, indici idx_org presenti) + screenshot (pannello + pulsante tour). Backend py_compile OK, webpack OK.
+1. **Riordino automatico** (server.py helper `_propose_reorder/_notify_capo/_reorder_config/_supplier_email` + endpoint in warehouse.py): quando una materia prima resta sotto soglia Sitor CREA una proposta (bozza) di micro-ordine — dedup una-per-materia finché aperta. Quantità suggerita = 80% capacità (silos) o 2×soglia (magazzino). Il Capo la conferma con `POST /mike/reorder/proposals/{id}/send` (email fornitore) o la scarta. Toggle `auto_send` (`/mike/reorder/config`) invia automaticamente al fornitore. Trigger: `inventory_bind_batch` (fonte 'warehouse') e monitor `GET /mike/silos` (fonte 'silos'). Nuova collezione tenant `reorder_proposals`.
+2. **Notifica scorte push+email** (`_notify_capo`): alla creazione di nuove proposte il Capo riceve notifica PUSH browser (VAPID auto) + EMAIL (Resend) oltre al toast. Best-effort (non blocca il flusso).
+3. **Indici isolamento** (server.py startup): all'avvio crea indice `idx_org` su `organization_id` per tutte le collezioni in ORG_SCOPED_COLLECTIONS (query multi-azienda veloci). Verificato: idx_org presente su silos/lab_warehouse/reorder_proposals/team_tasks/dept_assignments.
+4. **Tour on-demand** (App.js): oltre al pulsante "Tour" in header, aggiunto chip "Rivedi il tour" (`capo-review-tour`) nella nav sezioni della console → dispatch `mikilab:start-tour`. Verificato: riapre il tour.
+- Frontend: `ReorderProposals.jsx` (pannello nella scheda Silos, con toggle invio auto, campo email fornitore, lista proposte con Invia/Scarta). `mikeApi.reorder*` in api.js.
+- Bugfix latente: sostituito `logger.` (non definito) con `logging.` in warehouse.py.
+- NB: con chiave Resend di test l'email risulta emailed:false ma il flusso è corretto (in prod con chiave valida invia).

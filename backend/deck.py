@@ -615,7 +615,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     # Oracolo COMPLIANCE (ArbZG/DGUV/GDPR): Sitor legge i dati autorizzati al Master.
     if any(k in _tl0 for k in ["ore lavor", "ore di lavoro", "stunden", "arbzg", "orario", "pausa", "sicurezz", "safety", "dguv", "gefährd", "gefaehrd", "gdpr", "dsgvo", "privacy", "formazione", "unterweisung", "compliance", "normativ", "legale"]):
         today = now_iso()[:10]
-        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
         workers = len({l.get("worker") for l in logs})
         by_w = {}
         for l in logs:
@@ -639,7 +639,7 @@ async def master_govern(body: MasterGovernReq, admin: dict = Depends(require_adm
     _leaders_now = _ld.get("leaders") or {}
     _sections_now = [s.get("name") for s in (_sd.get("sections") or []) if s.get("name")]
     _today = now_iso()[:10]
-    _logs_today = await db.compliance_timelog.find({"at": {"$regex": f"^{_today}"}}, {"_id": 0}).to_list(3000)
+    _logs_today = await db.compliance_timelog.find({"at": {"$regex": f"^{_today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
     _workers_today = len({l.get("worker") for l in _logs_today})
     _ctx = (f"Caposquadra per linea: {_leaders_now or 'nessuno'}. "
             f"Sezioni operative attive: {_sections_now or 'nessuna'}. "
@@ -805,7 +805,7 @@ async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin))
     # 2) Compliance ArbZG di oggi
     try:
         today = now_iso()[:10]
-        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}}, {"_id": 0}).to_list(3000)
+        logs = await db.compliance_timelog.find({"at": {"$regex": f"^{today}"}, "organization_id": _org_id(admin)}, {"_id": 0}).to_list(3000)
         by_w = {}
         for l in logs:
             by_w.setdefault(l["worker"], []).append(l)
@@ -827,7 +827,7 @@ async def mike_proactive(lang: str = "it", admin: dict = Depends(require_admin))
     try:
         soon = (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat()
         nowiso = now_iso()
-        async for d in db.operator_pins.find({"active": True, "expires_at": {"$exists": True}}, {"_id": 0}):
+        async for d in db.operator_pins.find({"active": True, "expires_at": {"$exists": True}, "organization_id": _org_id(admin)}, {"_id": 0}):
             exp = d.get("expires_at")
             if exp and nowiso < exp <= soon:
                 alerts.append({"id": f"pinexp-{d.get('name_key')}", "kind": "pin_expiring", "severity": "warning",
