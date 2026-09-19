@@ -3,10 +3,11 @@ import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, MoreHorizontal, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, GraduationCap, Loader2 } from "lucide-react";
-import { recipesApi, siteSettingsApi } from "@/lib/api";
+import { recipesApi, siteSettingsApi, api } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
+import RecipeExtrasPanel from "@/components/RecipeExtrasPanel";
 import PrintHeader from "@/components/PrintHeader";
 import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
@@ -54,11 +55,14 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [query, setQuery] = useState("");
   const [catFilter, setCatFilter] = useState("all");
   const [baseFilter, setBaseFilter] = useState("all");
+  const [diffFilter, setDiffFilter] = useState("all");
+  const [diffMap, setDiffMap] = useState({});
   const [favFilter, setFavFilter] = useState(false);
   const { favs, toggle: toggleFav, countOf } = useFavRecipes();
   const activeDept = useDept();
   const [openCats, setOpenCats] = useState(() => { try { return JSON.parse(localStorage.getItem(`mikilab_open_cats_${collectionName}`) || "{}"); } catch { return {}; } });
   useEffect(() => { try { localStorage.setItem(`mikilab_open_cats_${collectionName}`, JSON.stringify(openCats)); } catch { /* */ } }, [openCats, collectionName]);
+  useEffect(() => { api.get(`/recipe-extras`).then((r) => setDiffMap(r.data || {})).catch(() => { /* */ }); }, []);
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
   const { t, lang, setLang } = useLang();
@@ -312,6 +316,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
         const q = query.trim().toLowerCase();
         const matches = (r) => {
           if (favFilter && !favs.has(r.id)) return false;
+          const dm = diffMap[r.id];
+          if (dm && dm.hidden_public && !canEdit) return false;
+          if (diffFilter !== "all" && dm && dm.difficulty !== diffFilter) return false;
           if (deptScoped && !matchDept(r, activeDept, { autoDeduce: true })) return false;
           if (catFilter !== "all" && recipeCategory(r).key !== catFilter) return false;
           if (baseFilter === "colorati") { if (!isColored(r.name)) return false; }
@@ -456,7 +463,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
             )}
 
-            {/* Filtro rapido per categoria (chip colorate) */}
+            <div data-testid="recipe-difficulty-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none">
+              {[["all", triM("Tutte", "Alle", "All"), "#64748B"], ["facile", triM("Facile", "Einfach", "Easy"), "#6e9e85"], ["media", triM("Media", "Mittel", "Medium"), "#c9a227"], ["sfida", triM("Sfida", "Herausforderung", "Challenge"), "#b06e78"]].map(([k, lbl, col]) => (
+                <button key={k} data-testid={`diff-filter-${k}`} onClick={() => setDiffFilter(k)}
+                  className="shrink-0 text-xs font-semibold px-3.5 py-1.5 rounded-full border transition-all active:scale-97"
+                  style={diffFilter === k ? { background: col, color: "#fff", borderColor: col } : { background: "transparent", color: col, borderColor: `${col}66` }}>
+                  {lbl}
+                </button>
+              ))}
+            </div>
+
             {(() => {
               const favRecipes = recipes.filter((r) => favs.has(r.id));
               if (favRecipes.length === 0 || favFilter) return null;
@@ -509,7 +525,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {filtered.length} {filtered.length === 1 ? triM("ricetta", "Rezept", "recipe") : triM("ricette", "Rezepte", "recipes")}
               </span>
               {(catFilter !== "all" || baseFilter !== "all" || favFilter || (query || "").trim() !== "") && (
-                <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setFavFilter(false); setQuery(""); }}
+                <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setDiffFilter("all"); setFavFilter(false); setQuery(""); }}
                   className="inline-flex items-center gap-1 text-xs font-bold text-[#8a97a6] hover:text-white active:scale-95 transition-all">
                   <X className="w-3.5 h-3.5" /> {triM("Azzera filtri", "Filter zurücksetzen", "Clear filters")}
                 </button>
@@ -597,7 +613,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 {translating ? "…" : triM(`Traduci in ${lang.toUpperCase()}`, `Auf ${lang.toUpperCase()} übersetzen`, `Translate to ${lang.toUpperCase()}`)}
               </button>
             )}
-            {["it", "de", "en", "es", "fr", "fa"].map((lc) => (
+            {["it", "de", "en"].map((lc) => (
               <button key={lc} data-testid={`recipe-lang-${lc}`} onClick={() => setLang(lc)}
                 className={`text-[11px] font-bold uppercase px-2.5 py-1 rounded-lg border transition-all ${lang === lc ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
                 {lc}
@@ -842,6 +858,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
       {r.image_url && isPanettone && (
         <div className="relative h-40 w-full">
           <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
+          <span data-testid="recipe-illustrative" className="absolute bottom-1 right-1 z-[2] text-[9px] font-bold uppercase tracking-wide bg-black/55 text-white/90 px-1.5 py-0.5 rounded">{tri("Immagine illustrativa", "Symbolbild", "Illustrative image")}</span>
           {countryColors(r.origin) && (
             <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
               {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
@@ -861,6 +878,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           {r.flour_type ? <p className="text-sm text-[#7E8A93] mt-0.5">{rLoc(r, "flour_type", lang)}</p> : null}
           <div className="mt-3 no-print"><ApprenticeCard recipeId={r.id} canEdit={canEdit} autoSpeak={!canEdit} /></div>
         </div>
+
+        <RecipeExtrasPanel recipe={r} isAdmin={canEdit} />
 
         <div className="flex gap-1.5 no-print flex-wrap">
           <ActionBtn testid={`fav-recipe-${r.id}`} onClick={() => toggleFav(r.id)} color={isFav(r.id) ? "#ff3b5c" : "#7E8A93"} label={isFav(r.id) ? tri("Nei preferiti", "In Favoriten", "In favourites") : tri("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}>
@@ -1450,7 +1469,7 @@ function PanettoneStructure({ r, t, lang, flourG, farro, scaleVal, onScaleChange
         </div>
       )}
 
-      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/8 border border-[#3E9C93]/25 p-3">
+      <div className="hidden rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/8 border border-[#3E9C93]/25 p-3">
         <p className="text-[10px] font-bold uppercase tracking-wide text-[#3E9C93] mb-2">🌾 {tri("Gestione Lievito Madre (pH)", "Führung Lievito Madre (pH)", "Sourdough management (pH)")}</p>
         <div className="space-y-1">
           {PAN_MY[de ? "de" : lang === "en" ? "en" : "it"].map((m, i) => (
