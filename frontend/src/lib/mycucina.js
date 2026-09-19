@@ -21,7 +21,13 @@ export const setRemember = (on) => wr(REMEMBER_KEY, on ? "1" : "0");
 
 export const getTools = () => rd(TOOLS_KEY, {});
 
-export const clearMyKitchen = () => { [OVEN_KEY, KTEMP_KEY, DIARY_KEY, REMEMBER_KEY].forEach((k) => { try { localStorage.removeItem(k); } catch { /* */ } }); };
+// P1 — "Il mio palato": assaggi salvati SOLO nel dispositivo. [{ts,recipe,scores:{},note}]
+const PALATO_KEY = "mikilab_palato";
+export const getPalato = () => rd(PALATO_KEY, []);
+export const addPalato = (entry) => { const d = getPalato(); d.unshift({ ts: Date.now(), ...entry }); wr(PALATO_KEY, d.slice(0, 50)); return d; };
+export const getLastPalato = (recipe) => getPalato().find((e) => e.recipe === recipe) || null;
+
+export const clearMyKitchen = () => { [OVEN_KEY, KTEMP_KEY, DIARY_KEY, REMEMBER_KEY, PALATO_KEY].forEach((k) => { try { localStorage.removeItem(k); } catch { /* */ } }); };
 
 // Riassunto (max 400 char) aggiunto alla chat SOLO se "ricorda" è attivo.
 export function chatMemorySummary() {

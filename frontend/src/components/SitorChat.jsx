@@ -24,6 +24,11 @@ export default function SitorChat({ onClose }) {
   const isIOS = typeof navigator !== "undefined" && /iP(hone|ad|od)/.test(navigator.userAgent);
   const SR = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
   useEffect(() => { api.get(`/learning-path`).then((r) => setPath(r.data?.levels || [])).catch(() => {}); }, []);
+  useEffect(() => {
+    const h = (e) => { const t = e?.detail?.text; if (t) setInput(t); };
+    window.addEventListener("mikilab-chat-prefill", h);
+    return () => window.removeEventListener("mikilab-chat-prefill", h);
+  }, []);
 
   const startMic = () => {
     if (!SR) return;
@@ -88,6 +93,8 @@ export default function SitorChat({ onClose }) {
             <div className="text-center text-foreground/60 mt-8">
               <p className="font-display text-lg text-muted-foreground">{tri("Ciao! Da dove cominciamo?", "Hallo! Wo fangen wir an?", "Hi! Where do we start?")}</p>
               <p className="text-sm mt-2">{tri("Chiedimi di pane, pizza, dolci e delle ricette del sito.", "Frag mich zu Brot, Pizza, Süßem und den Rezepten der Seite.", "Ask me about bread, pizza, sweets and the site's recipes.")}</p>
+              <button data-testid="sitor-chat-quick-pane" onClick={() => setInput(tri("Ho pane vecchio: cosa posso farci?", "Ich habe altes Brot: was kann ich damit machen?", "I have old bread: what can I make with it?"))}
+                className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-salvia/15 border border-salvia/40 text-foreground text-xs font-bold active:scale-95">🥖 {tri("Ho pane vecchio", "Ich habe altes Brot", "I have old bread")}</button>
             </div>
           )}
           {msgs.map((m, i) => (

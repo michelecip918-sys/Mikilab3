@@ -5,6 +5,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { toast } from "sonner";
 import { getOvenAdj, getKitchenTemp, setKitchenTemp, getDiary, getRemember, setRemember, clearMyKitchen, getTools } from "@/lib/mycucina";
 import PhotoDiag from "@/components/PhotoDiag";
+import Palato from "@/components/Palato";
 
 export default function Cucina({ onBack }) {
   const { lang } = useLang();
@@ -64,7 +65,7 @@ export default function Cucina({ onBack }) {
           <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground">{tri("Diario del mio pane", "Mein Brot-Tagebuch", "My bread diary")}</p>
           <button data-testid="diary-export" onClick={exportDiary} className="inline-flex items-center gap-1 text-xs font-bold text-primary"><Download className="w-3.5 h-3.5" />{tri("Esporta", "Export", "Export")}</button>
         </div>
-        <div className="pt-1"><PhotoDiag level="casa" compact /></div>
+        <div className="pt-1 flex flex-wrap gap-2"><PhotoDiag level="casa" compact /><Palato level="casa" compact /></div>
         {diary.length === 0 ? (
           <p className="text-muted-foreground text-sm">{tri("Ancora nessuna prova. A fine corso puoi dare un voto e una nota.", "Noch keine Einträge. Am Kursende kannst du bewerten und notieren.", "No entries yet. At the end of a course you can rate and note.")}</p>
         ) : (

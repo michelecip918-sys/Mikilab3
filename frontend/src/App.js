@@ -44,6 +44,8 @@ import TestMese from "@/components/TestMese";
 import Farine from "@/components/Farine";
 import Calendario from "@/components/Calendario";
 import Admin2B from "@/components/Admin2B";
+import DalMondo from "@/components/DalMondo";
+import PaneDiIeri from "@/components/PaneDiIeri";
 import { useFeatures } from "@/lib/features";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
@@ -162,6 +164,8 @@ export default function App() {
               {route === "testmese" && <TestMese onBack={() => setRoute("home")} />}
               {route === "farine" && <Farine onBack={() => setRoute("home")} />}
               {route === "calendario" && <Calendario onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "dalmondo" && <DalMondo onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "paneieri" && <PaneDiIeri onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
