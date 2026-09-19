@@ -39,6 +39,14 @@ Salvati SOLO nel browser (localStorage), mai inviati al server:
 ## 7. Log del server
 - Log applicativi standard della piattaforma (richieste HTTP). Contatori dei limiti in MongoDB.
 
+## 9. Novità (percorso, condivisione, TikTok)
+- **Progressi del percorso** ("Segna come fatta"): salvati SOLO nel browser (`localStorage: mikilab_done`). Non inviati al server.
+- **Chat "cosa faccio dopo?"**: il browser invia a Sitor (Anthropic) solo i NOMI delle ricette segnate come fatte e i titoli dei livelli attivi. Nessun salvataggio sul server.
+- **TikTok**: solo un LINK al profilo (`https://www.tiktok.com/@<handle>`), aperto in nuova scheda al clic. Nessun embed/script/iframe/pixel. L'IP arriva a TikTok solo al clic.
+- **Regala MikiLab**: QR generato nel browser (libreria `qrcode`), nessun servizio esterno. "Condividi" usa `navigator.share` (o copia link). Copia hashtag/testo usano la clipboard locale.
+- **Anteprima link (Open Graph)**: immagine `hero-ricette.jpg`; rimosso l'uso della vecchia og-image sci-fi.
+- Nessuna nuova statistica, nessun pixel, nessun cookie nuovo.
+
 ## 8. Nota (dati storici ancora nel DB, non usati dal sito)
 Restano nel database dati aziendali di versioni precedenti (volti squadra, operatori, turni, magazzino,
 consegne, compliance, community, utenti). NON sono più raggiungibili da un visitatore anonimo
