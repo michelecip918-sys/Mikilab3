@@ -10,56 +10,9 @@ globals().update({k: v for k, v in vars(_core).items() if not k.startswith("__")
 
 @api_router.post("/auth/register")
 async def auth_register(payload: RegisterReq, request: Request, response: Response):
-    email = payload.email.strip().lower()
-    lang = payload.lang if payload.lang in ("it", "de", "en", "es", "fr", "fa") else "it"
-    # Anti-spam: max 5 registrazioni all'ora per dispositivo/IP
-    if not await _rate_limit("register", _client_ip(request), 5, 3600):
-        raise HTTPException(status_code=429, detail="Troppe registrazioni da questo dispositivo. Riprova più tardi.")
-    if not email or not payload.password:
-        raise HTTPException(status_code=400, detail="Email e password richieste")
-    _validate_password(payload.password, lang)
-    if await db.users.find_one({"email": email}):
-        raise HTTPException(status_code=400, detail="Email già registrata")
-    # GATE CREAZIONE AZIENDA: creare una NUOVA azienda/Capo richiede il codice di attivazione
-    # (salvato SOLO lato backend in ORG_ACTIVATION_CODE). Esente il bootstrap: owner o primo utente
-    # in assoluto, che appartengono all'azienda di default.
-    import secrets as _secrets
-    _is_bootstrap = (email in OWNER_EMAILS) or (await db.users.count_documents({}) == 0)
-    _new_org_id = ORG_DEFAULT
-    _invite = None
-    if not _is_bootstrap:
-        _code = (payload.activation_code or "").strip()
-        if not (ORG_ACTIVATION_CODE and _secrets.compare_digest(_code, ORG_ACTIVATION_CODE)):
-            raise HTTPException(status_code=403, detail="activation_code_invalid")
-        # Codice valido → nuova azienda dedicata, vuota.
-        _new_org_id = f"org_{uuid.uuid4().hex[:12]}"
-        # Se è stato passato anche un invito valido lo consumiamo (compatibilità), ma non è obbligatorio.
-        _invite = await _consume_access_invite((payload.invite_token or "").strip())
-    from pymongo.errors import DuplicateKeyError
-    user_id = f"user_{uuid.uuid4().hex[:12]}"
-    verify_enabled = False  # auto-login subito dopo la registrazione (nessuna conferma email obbligatoria)
-    try:
-        await db.users.insert_one({
-            "user_id": user_id, "email": email, "name": payload.name or email.split("@")[0],
-            "picture": "", "role": ("admin" if _new_org_id != ORG_DEFAULT else await _role_for_new_user()), "auth_provider": "email",
-            "password_hash": _hash_pw(payload.password), "created_at": now_iso(),
-            "email_verified": not verify_enabled, "organization_id": _new_org_id,
-        })
-    except DuplicateKeyError:
-        raise HTTPException(status_code=400, detail="Email già registrata")
-    if _invite:
-        await db.access_invites.update_one({"token": _invite["token"]}, {"$push": {"used_by": email}})
-    if verify_enabled:
-        await _send_verification(email, payload.origin_url or "", lang)
-        return {"needs_verification": True,
-                "message": {"it": "Ti abbiamo inviato un'email di conferma. Controlla la posta per attivare l'account.",
-                            "de": "Wir haben dir eine Bestätigungs-E-Mail gesendet. Prüfe dein Postfach.",
-                            "en": "We've sent you a confirmation email. Check your inbox to activate your account.",
-                            "es": "Te hemos enviado un correo de confirmación. Revisa tu bandeja para activar la cuenta."}.get(lang, "")}
-    token = await _make_session(user_id)
-    _set_cookie(response, token)
-    u = await db.users.find_one({"user_id": user_id}, {"_id": 0})
-    return {"user": _public_user(u), "session_token": token}
+    # Manuale pubblico di Sitor: registrazione pubblica DISATTIVATA.
+    # Esiste solo l'accesso admin del proprietario (email + password).
+    raise HTTPException(status_code=403, detail="registration_disabled")
 
 
 @api_router.post("/auth/verify-email")
@@ -122,36 +75,8 @@ async def auth_login(payload: LoginReq, request: Request, response: Response):
 
 @api_router.post("/auth/google/session")
 async def auth_google(payload: GoogleReq, response: Response):
-    try:
-        r = requests.get(EMERGENT_SESSION_URL, headers={"X-Session-ID": payload.session_id}, timeout=30)
-        r.raise_for_status()
-        data = r.json()
-    except Exception:
-        raise HTTPException(status_code=401, detail="Sessione Google non valida")
-    email = (data.get("email") or "").strip().lower()
-    if not email:
-        raise HTTPException(status_code=401, detail="Email mancante")
-    u = await db.users.find_one({"email": email}, {"_id": 0})
-    if not u:
-        from pymongo.errors import DuplicateKeyError
-        user_id = f"user_{uuid.uuid4().hex[:12]}"
-        try:
-            # Upsert atomico anti-race: se due login Google arrivano insieme, ne resta UNO solo.
-            await db.users.update_one(
-                {"email": email},
-                {"$setOnInsert": {
-                    "user_id": user_id, "email": email, "name": data.get("name", ""),
-                    "picture": data.get("picture", ""), "role": await _role_for_new_user(),
-                    "auth_provider": "google", "created_at": now_iso(),
-                }},
-                upsert=True,
-            )
-        except DuplicateKeyError:
-            pass  # l'altro request ha già creato l'account: lo rileggiamo sotto
-        u = await db.users.find_one({"email": email}, {"_id": 0})
-    token = await _make_session(u["user_id"], data.get("session_token"))
-    _set_cookie(response, token)
-    return {"user": _public_user(u), "session_token": token}
+    # Manuale pubblico di Sitor: login con Google DISATTIVATO.
+    raise HTTPException(status_code=403, detail="google_login_disabled")
 
 
 @api_router.get("/auth/me")

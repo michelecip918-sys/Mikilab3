@@ -191,12 +191,8 @@ def gate_org(request) -> str:
 
 class GateMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        path = request.url.path
-        if request.method == "OPTIONS" or not path.startswith("/api") or any(path.startswith(p) for p in _GATE_PUBLIC_PREFIXES):
-            return await call_next(request)
-        tok = request.cookies.get(GATE_COOKIE)
-        if not tok or not _gate_valid(tok):
-            return JSONResponse({"detail": "gate_required"}, status_code=401)
+        # Manuale pubblico di Sitor: nessun muro PIN. Le letture sono pubbliche;
+        # le scritture restano protette dai dipendenti di rotta (require_admin/current_user).
         return await call_next(request)
 
 
@@ -11858,6 +11854,26 @@ async def on_startup_seed_mikilab():
                 logging.getLogger(__name__).info("PIN Master Gate riallineato al segreto .env")
     except Exception as e:
         logging.getLogger(__name__).error(f"Gate PIN align error: {e}")
+    try:
+        # Accesso admin del proprietario (email + password). Se l'account owner non ha una
+        # password impostata, la si legge da ADMIN_INITIAL_PASSWORD (env, mai scritta nel codice).
+        _admin_email = (os.environ.get("ADMIN_EMAIL") or "michelecip918@gmail.com").strip().lower()
+        _admin_pw = os.environ.get("ADMIN_INITIAL_PASSWORD")
+        if _admin_pw:
+            _acc = await db.users.find_one({"email": _admin_email})
+            if not _acc:
+                await db.users.insert_one({
+                    "user_id": f"user_{uuid.uuid4().hex[:12]}", "email": _admin_email,
+                    "name": "MikiLab", "picture": "", "role": "admin", "auth_provider": "email",
+                    "password_hash": _hash_pw(_admin_pw), "created_at": now_iso(),
+                    "email_verified": True, "organization_id": ORG_DEFAULT,
+                })
+                logging.getLogger(__name__).info("Account admin creato da ADMIN_INITIAL_PASSWORD")
+            elif not _acc.get("password_hash"):
+                await db.users.update_one({"email": _admin_email}, {"$set": {"password_hash": _hash_pw(_admin_pw), "role": "admin", "email_verified": True}})
+                logging.getLogger(__name__).info("Password admin inizializzata da ADMIN_INITIAL_PASSWORD")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Admin seed error: {e}")
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")
