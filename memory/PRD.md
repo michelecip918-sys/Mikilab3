@@ -1,3 +1,12 @@
+# ⚡ AGGIORNAMENTO (2026-09) — Uniformazione visiva copertine
+
+- **baguette/1.webp rigenerata** in stile disegnato (comic/ink) coerente con le altre illustrazioni tecniche (era fotografica). Verificata in pagina Tecniche.
+- **26 copertine ricette rigenerate** in look caldo bottega (luce naturale, legno chiaro, toni crema/ambra): tutte le 10 snack (`sn_*`), 15 lievitati dolci/viennoiserie (`v_*`) e `p_spirulina` (ora verde naturale, non neon). Sovrascritti i WebP esistenti in `/recipes/` (stessi slug → nessuna modifica DB necessaria). Verificato a schermo nella sezione "Leavened Pastry & Viennoiserie".
+- Restano intenzionalmente invariati: la serie panettoni in forma rossa e le foto basi/pani già in stile caldo.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-09) — P1/P2: Tecniche, Miglioratore, Hero, WebP
 
 - **Immagini Tecniche (P1 FATTO)**: generate 16 illustrazioni stile manuale tecnico (tatuaggio blackwork sul braccio SX) con Gemini Nano Banana, salvate come WebP in `frontend/public/tecniche/<slug>/N.webp`. Distribuzione: baguette 1-3, croissant 1-3, pieghe 1-2, pirlatura 1-2, filone 1-3, panettone 1-3. `TecnichePage` carica slot 1-4 con onError che nasconde i mancanti. Testo tecnica ancora generato live da Sitor (Claude).
