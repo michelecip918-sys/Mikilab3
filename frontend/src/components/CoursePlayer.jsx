@@ -9,6 +9,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import SitorBadge from "@/components/SitorBadge";
+import PhotoDiag from "@/components/PhotoDiag";
 
 const MODE_KEY = "mikilab_recipe_mode";
 
@@ -344,6 +345,7 @@ export default function CoursePlayer({ recipe, onClose }) {
                     <button data-testid="oven-raw" onClick={() => { const n = bumpOvenAdj(10); toast.success(tri(`Forno: +${n}°C`, `Ofen: +${n}°C`, `Oven: +${n}°C`)); }} className="py-2 rounded-lg bg-ambra/20 text-foreground text-xs font-bold active:scale-95">{tri("Ancora crudo", "Noch roh", "Still raw")}</button>
                   </div>
                   {getOvenAdj() !== 0 && <p className="text-foreground/60 text-xs mt-2">{tri("Con il tuo forno", "Mit deinem Ofen", "With your oven")}: {getOvenAdj() > 0 ? "+" : ""}{getOvenAdj()} °C</p>}
+                  <div className="pt-2 mt-2 border-t border-border/40"><PhotoDiag level={mode} compact /></div>
                 </div>
 
                 {/* D2: Diario — voto + nota */}

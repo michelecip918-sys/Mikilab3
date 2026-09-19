@@ -373,8 +373,78 @@ async def sitor_chat(body: PublicChatReq, request: Request):
 
 
 # ---------------------------------------------------------------------------
-# TECNICHE — collezione NUOVA `technique_pages`. Testo scritto da Sitor (bozza) fino a verified.
+# STADIO H — "Com'è venuto?" · analisi foto della mollica (POST /api/sitor/photo)
+# Interruttore FEATURE_PHOTO_DIAG (default SPENTO). Foto MAI salvata su disco/DB.
 # ---------------------------------------------------------------------------
+class PhotoReq(_BM):
+    image_base64: str = ""
+    lang: str = "it"
+    level: _Opt[str] = None
+
+
+@api_router.post("/sitor/photo")
+async def sitor_photo(body: PhotoReq, request: Request):
+    lang2 = _lang2(body.lang)
+    langname = _CHAT_SYS.get(lang2, "italiano")
+    if not await _feature_on("FEATURE_PHOTO_DIAG", False):
+        raise HTTPException(status_code=404, detail="not_found")
+    slevel = await _savings_level()
+    if slevel >= 3:
+        msg = {"it": "Sitor sta riposando: riprova più tardi.",
+               "de": "Sitor macht Pause: versuch es später.",
+               "en": "Sitor is resting: try again later."}
+        return {"ok": False, "resting": True, "reply": msg.get(lang2, msg["it"])}
+    dev = _device_id(request)
+    if not await _rate_limit("sitor_photo_daily", dev, 3, 86400):
+        msg = {"it": "Hai già analizzato 3 foto oggi. Torna domani!",
+               "de": "Du hast heute schon 3 Fotos analysiert. Bis morgen!",
+               "en": "You've analysed 3 photos today. Come back tomorrow!"}
+        return {"ok": False, "limited": True, "reply": msg.get(lang2, msg["it"])}
+    b64 = (body.image_base64 or "").strip()
+    if b64.startswith("data:"):
+        b64 = b64.split(",", 1)[-1]
+    if not b64 or len(b64) < 100:
+        raise HTTPException(status_code=400, detail="no_image")
+    if len(b64) > 8_000_000:
+        raise HTTPException(status_code=413, detail="image_too_large")
+    level = (body.level or "casa").strip().lower()
+    tono = ("tono tecnico e conciso da panettiere di mestiere" if level == "esperto"
+            else "tono caloroso e incoraggiante per un principiante, normalizza l'errore")
+    sysmsg = (
+        "Sei Sitor, guida di panificazione. Ti mostro la FOTO di un pane o di un impasto. "
+        "Valuta mollica (alveolatura), crosta (colore, spessore) e forma secondo l'occhio di un buon panettiere. "
+        f"Usa un {tono}. Se la foto NON mostra pane, impasto o un lievitato, rispondi con is_bread=false e lascia gli altri campi vuoti. "
+        "Nessun consiglio medico o dietetico. Non descrivere persone. "
+        f"Rispondi in {langname}. Restituisci SOLO JSON valido: "
+        "{\"is_bread\":true,\"observations\":[\"oss.1\",\"oss.2\",\"oss.3\"],\"correction\":\"UNA sola correzione per la prossima prova\"}. "
+        "Esattamente 3 observations brevi e 1 correction."
+    )
+    try:
+        out = ""
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"photo-{dev}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=700)
+        async for ev in chat.stream_message(UserMessage(text="Analizza questa foto.", file_contents=[ImageContent(image_base64=b64)])):
+            if isinstance(ev, TextDelta):
+                out += ev.content or ""
+        parsed = _core._parse_llm_json(out) if hasattr(_core, "_parse_llm_json") else {}
+        if not parsed:
+            m = _re.search(r"\{.*\}", out, _re.S)
+            parsed = _json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.getLogger(__name__).warning("photo diag fail: %s", str(e)[:120])
+        fb = {"it": "Scusa, non riesco ad analizzare la foto ora. Riprova tra poco.",
+              "de": "Entschuldige, ich kann das Foto gerade nicht analysieren. Versuch es gleich nochmal.",
+              "en": "Sorry, I can't analyse the photo right now. Try again shortly."}
+        return {"ok": False, "reply": fb.get(lang2, fb["it"])}
+    del b64  # la foto NON viene salvata: scartata subito
+    await _bump_usage("vision_calls")
+    if not parsed.get("is_bread", False):
+        no = {"it": "Questa foto non sembra mostrare pane o impasto. Inviami una foto del tuo prodotto da forno!",
+              "de": "Dieses Foto zeigt anscheinend kein Brot oder keinen Teig. Schick mir ein Foto deines Backwerks!",
+              "en": "This photo doesn't seem to show bread or dough. Send me a photo of your bake!"}
+        return {"ok": True, "is_bread": False, "reply": no.get(lang2, no["it"])}
+    obs = [str(o)[:220] for o in (parsed.get("observations") or [])][:3]
+    corr = str(parsed.get("correction") or "")[:300]
+    return {"ok": True, "is_bread": True, "observations": obs, "correction": corr}
 TECHNIQUES = [
     {"slug": "baguette", "it": "Baguette (formatura)", "de": "Baguette (Formen)", "en": "Baguette (shaping)"},
     {"slug": "croissant", "it": "Croissant e cornetti", "de": "Croissants und Hörnchen", "en": "Croissants"},
