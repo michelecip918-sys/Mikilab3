@@ -1,3 +1,22 @@
+# ⚡ PIVOT (2026-06) — "MikiLab · Il Manuale di Sitor" (ricettario pubblico gratuito)
+
+MikiLab è stato convertito da OS aziendale a **ricettario pubblico gratuito guidato da Sitor** per chi cucina a casa.
+Eseguiti STADI 0→7 (mega-comando 2 parti). Stato:
+
+- **Pubblico, senza login**; admin solo per Michele via `?admin=1` (email+password, `ADMIN_INITIAL_PASSWORD` da env). Registrazione pubblica e Google login DISATTIVATI.
+- **Rimosso dalla vista**: console Capo, floor/operatori, multiverso, magazzino, turni, community, compliance, multi-azienda, muro PIN, paywall/teaser (tutto gratis).
+- **Frontend**: `App.js` (shell pubblica: Home→ricette/tecniche/verde/legali, FAB chat, radio in basso), `HomeManuale.jsx`, `RecipeExtrasPanel.jsx` (CASA/ESPERTO, trucco, difficoltà, attrezzi, allergeni, sicurezza, controllo LM/licoli, "Cucina con Sitor"), `CoursePlayer.jsx` (corso passo-passo, voce dispositivo, comandi vocali, timer, wakelock), `SitorChat.jsx` (chat pubblica), `TecnichePage.jsx`, `VerdeMikiLab.jsx`, `AttrezziGuide.jsx`, `LegalPlaceholder.jsx`. Lingue IT/DE/EN.
+- **Backend NUOVI moduli**: `recipe_extras.py` (collezione `recipe_extras`: difficoltà auto/override, allergeni, sicurezza, attrezzi, trucco, hidden_public, real_photo), `sitor_public.py` (`recipe_courses_v2` corso v2 + `/sitor/chat` chat con rate limit + `technique_pages` Tecniche). Le RICETTE non toccate salvo 2 eccezioni (Miglioratore + Verde Canapa THC). SEED_VERSION → `2026-06-v69-manuale-sitor`.
+- **Sicurezza (STADIO 6b)**: middleware DEFAULT-DENY sulle letture — allowlist pubblica; ogni altra GET → 404 per anonimi. Dati aziendali storici restano nel DB ma non raggiungibili.
+- **Env da impostare**: `ADMIN_INITIAL_PASSWORD` (obbligatoria per login admin), `SITOR_USER_DAILY` (15), `SITOR_GLOBAL_DAILY` (500), `COURSE_GEN_DAILY_CAP` (40).
+- **NON fatto**: STADIO 7 restyle "bottega" (saltato per budget, app funziona in stile attuale scuro); immagini Tecniche (5.8b) non generate; pagina guida "Il mio miglioratore" (5.1) non creata; WebP (5.7) non fatto; admin editor corso/tecniche minimale.
+- `LEGAL_DATA_MAP.md` in `/app` (flussi dati per l'informativa privacy).
+
+Ricette visibili anonimo: **132** (150 − 16 panettoni base − 2 extra, nascosti via `hidden_public`). Dati ricette non modificati salvo le 2 eccezioni.
+
+---
+
+
 # PRD — Mikilab / Il Maestro del Pane
 
 ## Problem statement
