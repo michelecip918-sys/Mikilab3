@@ -64,7 +64,7 @@ export function applyMeta(lang) {
   if (typeof document === "undefined") return;
   const m = metaFor(lang);
   const origin = window.location.origin;
-  const ogImg = `${origin}/og-${META[lang] ? lang : "it"}.jpg`;
+  const ogImg = `${origin}/hero-ricette.jpg`;
   document.title = m.title;
 
   const set = (sel, attr, val) => {

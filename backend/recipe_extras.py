@@ -60,6 +60,7 @@ def auto_difficulty(r: dict) -> str:
         hyd_high = False
     calc_h = calc_hydration(r)
     bt = _bake_temp(r)
+    is_focaccia = "focaccia" in blob
     # SFIDA
     if laminated or lye:
         return "sfida"
@@ -69,6 +70,9 @@ def auto_difficulty(r: dict) -> str:
         return "sfida"
     if bt is not None and bt > 280:
         return "sfida"
+    # FOCACCE in teglia: ignora l'idratazione. FACILE se non cita lievito madre, altrimenti MEDIA.
+    if is_focaccia:
+        return "media" if has_lm else "facile"
     # MEDIA
     if poolish_biga or (big_leaven and not has_lm) or rich or has_lm:
         return "media"
@@ -120,6 +124,8 @@ def derive_safety(r: dict) -> _List[str]:
     bt = _bake_temp(r)
     if bt is not None and bt > 280:
         out.append("hot_high_temp")
+    if any(k in blob for k in ["fritt", "friggere", "olio caldo", "panzerotti", "frittelle", "frittieren", "frying", "deep fry"]):
+        out.append("frying")
     return out
 
 

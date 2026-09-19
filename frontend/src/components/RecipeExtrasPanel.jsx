@@ -2,11 +2,12 @@ import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import CoursePlayer from "@/components/CoursePlayer";
 import { mkTri } from "@/i18n/triMaps";
-import { api } from "@/lib/api";
+import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
-import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save } from "lucide-react";
+import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, Music2, Copy } from "lucide-react";
 
 const MODE_KEY = "mikilab_recipe_mode"; // "casa" | "esperto"
+const DONE_KEY = "mikilab_done";
 const SKILL_KEY = "mikilab_skill";
 
 const DIFF = {
@@ -37,6 +38,19 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   const [flour, setFlour] = useState(500);
   const [saving, setSaving] = useState(false);
   const [showCourse, setShowCourse] = useState(false);
+  const [settings, setSettings] = useState({});
+  const [done, setDone] = useState(() => { try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")).has(recipe.id); } catch { return false; } });
+  useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
+  const toggleDone = () => {
+    let s; try { s = new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch { s = new Set(); }
+    s.has(recipe.id) ? s.delete(recipe.id) : s.add(recipe.id);
+    localStorage.setItem(DONE_KEY, JSON.stringify([...s]));
+    setDone(s.has(recipe.id));
+    window.dispatchEvent(new CustomEvent("mikilab-done-changed"));
+  };
+  const handle = (settings.tiktok_handle || "").trim();
+  const hashtag = settings.hashtag || "#MikiLab";
+  const copyHashtag = async () => { try { await navigator.clipboard.writeText(hashtag); toast.success(tri("Hashtag copiato", "Hashtag kopiert", "Hashtag copied")); } catch { /* */ } };
 
   useEffect(() => {
     let stop = false;
@@ -96,6 +110,10 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
       <button data-testid="cook-with-sitor" onClick={() => setShowCourse(true)}
         className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#A85A22] hover:bg-[#8F4A1B] text-[#FFFDF8] font-bold text-[16px] active:scale-[0.98] transition-all shadow-lg">
         <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
+      </button>
+      <button data-testid="mark-done" onClick={toggleDone}
+        className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-sm active:scale-[0.98] transition-all border ${done ? "bg-[#6E8F7A] border-[#6E8F7A] text-white" : "bg-transparent border-[#2A3B49] text-[#cbd5e1] hover:border-[#6E8F7A]"}`}>
+        <Check className="w-4 h-4" /> {done ? tri("Fatta ✓ (togli)", "Gemacht ✓ (entfernen)", "Done ✓ (undo)") : tri("Segna come fatta", "Als gemacht markieren", "Mark as done")}
       </button>
 
       {/* CASA / ESPERTO + difficoltà */}
@@ -214,6 +232,17 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         </div>
       )}
 
+      {/* L'HAI FATTA? — TikTok (solo se handle impostato) */}
+      {handle && (
+        <div data-testid="tiktok-box" className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-3.5">
+          <p className="text-sm text-[#e4eff8] mb-2">{tri(`L'hai fatta? Mostrami com'è venuta su TikTok con ${hashtag} e taggami @${handle}`, `Gemacht? Zeig's mir auf TikTok mit ${hashtag} und markiere @${handle}`, `Made it? Show me on TikTok with ${hashtag} and tag @${handle}`)}</p>
+          <div className="flex flex-wrap gap-2">
+            <button data-testid="tiktok-copy-hashtag" onClick={copyHashtag} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 text-white text-sm font-bold active:scale-95"><Copy className="w-4 h-4" />{tri("Copia hashtag", "Hashtag kopieren", "Copy hashtag")}</button>
+            <a data-testid="tiktok-open" href={`https://www.tiktok.com/@${handle}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-black text-white text-sm font-bold active:scale-95"><Music2 className="w-4 h-4" />{tri("Apri TikTok", "TikTok öffnen", "Open TikTok")}</a>
+          </div>
+        </div>
+      )}
+
       {/* COSA TI SERVE */}
       {ex.equipment && ex.equipment.length > 0 && (
         <div data-testid="recipe-equipment" className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-3.5">
@@ -259,6 +288,10 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
           {ex.safety.includes("hot_high_temp") && (
             <p data-testid="safety-hot-temp" className="flex items-start gap-2 text-[13px] text-[#f0c9cf]"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-[#b06e78]" />
               {tri("Questa ricetta prevede una temperatura oltre 300 °C: nel forno di casa (massimo circa 250 °C) il risultato sarà diverso.", "Dieses Rezept sieht über 300 °C vor: im Hausofen (max. ca. 250 °C) fällt das Ergebnis anders aus.", "This recipe calls for over 300 °C: in a home oven (about 250 °C max) the result will differ.")}</p>
+          )}
+          {ex.safety.includes("frying") && (
+            <p data-testid="safety-frying" className="flex items-start gap-2 text-[13px] text-[#f0c9cf]"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-[#b06e78]" />
+              {tri("Frittura: usa una pentola alta riempita al massimo a metà, controlla l'olio con un termometro, mai acqua nell'olio, non lasciare mai la pentola incustodita, tieni lontani i bambini.", "Frittieren: hoher Topf, höchstens halb gefüllt, Öl mit Thermometer prüfen, nie Wasser ins Öl, den Topf nie unbeaufsichtigt lassen, Kinder fernhalten.", "Frying: use a tall pot filled at most halfway, check the oil with a thermometer, never water in oil, never leave the pot unattended, keep children away.")}</p>
           )}
         </div>
       )}

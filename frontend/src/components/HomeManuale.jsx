@@ -12,8 +12,8 @@ const START_NAMES = [
   "Panino al Latte per Hamburger",
   "Panino alle Patate",
   "Panino al Sesamo",
-  "Grissini al Sesamo",
-  "Pizzette Rosse da Rosticceria",
+  "Panino ai Semi di Papavero",
+  "Panino al Farro",
 ];
 
 export const SKILL_KEY = "mikilab_skill"; // "learning" | "expert"
@@ -51,6 +51,7 @@ export default function HomeManuale({ onNav }) {
               "Ti guido passo-passo a rifare a casa le ricette di pane, pizza e dolci. Scegli una ricetta e cuciniamo insieme.",
               "Ich führe dich Schritt für Schritt, um Brot, Pizza und Süßes zu Hause nachzubacken. Wähle ein Rezept und wir backen zusammen.",
               "I guide you step by step to make bread, pizza and pastry at home. Pick a recipe and let's cook together.")}</p>
+            <p data-testid="home-motto" className="text-[13px] font-bold text-[#D97736] mt-2">{tri("Non solo fare il pane: capirlo.", "Nicht nur Brot backen: es verstehen.", "Not just making bread: understanding it.")}</p>
             <p data-testid="home-ai-disclaimer" className="inline-flex items-center gap-1.5 mt-3 text-[11px] text-[#94A3B8] bg-[#060A10]/60 border border-[#1e293b] rounded-full px-3 py-1">
               <Info className="w-3.5 h-3.5 text-[#8a97a6]" /> {tri("Sitor è un'intelligenza artificiale, non una persona.", "Sitor ist eine künstliche Intelligenz, keine Person.", "Sitor is an artificial intelligence, not a person.")}
             </p>
@@ -78,7 +79,7 @@ export default function HomeManuale({ onNav }) {
 
       {/* Azioni principali */}
       <section className="mt-4 grid sm:grid-cols-3 gap-3">
-        <button data-testid="home-btn-start" onClick={() => { const el = document.getElementById("home-start-section"); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+        <button data-testid="home-btn-start" onClick={() => onNav("percorso")}
           className="group rounded-2xl border border-[#8a97a6]/30 bg-[#0b0f19]/70 p-5 text-left hover:border-[#D97736] active:scale-[0.98] transition-all">
           <Sparkles className="w-6 h-6 text-[#D97736] mb-2" />
           <p className="font-black text-white">{tri("Comincia da qui", "Fang hier an", "Start here")}</p>

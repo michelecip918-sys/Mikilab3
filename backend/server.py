@@ -192,6 +192,7 @@ def gate_org(request) -> str:
 _PUBLIC_GET_ALLOW = (
     "/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide",
     "/api/site-settings", "/api/auth/me", "/api/health", "/api/sitemap",
+    "/api/learning-path", "/api/site-pages",
 )
 
 
@@ -8982,6 +8983,8 @@ async def share_preview(request: Request, lang: str = "it"):
 DEFAULT_SITE_SETTINGS = {
     "whatsapp_number": "491601253378",
     "tiktok_handle": "mikilab.de",  # senza @, usato per https://www.tiktok.com/@<handle>
+    "hashtag": "#MikiLab",
+    "site_url": "https://mikilab.de",
     "instagram_url": "",            # URL completo, vuoto = pulsante nascosto
     "facebook_url": "",             # URL completo, vuoto = pulsante nascosto
     "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
@@ -8992,7 +8995,7 @@ DEFAULT_SITE_SETTINGS = {
 def _merge_site_settings(doc):
     s = dict(DEFAULT_SITE_SETTINGS)
     if doc:
-        for k in ("whatsapp_number", "tiktok_handle", "instagram_url", "facebook_url", "avatar_bubbles", "folder_covers"):
+        for k in ("whatsapp_number", "tiktok_handle", "hashtag", "site_url", "instagram_url", "facebook_url", "avatar_bubbles", "folder_covers"):
             if doc.get(k) is not None:
                 s[k] = doc[k]
     return s
@@ -9018,6 +9021,8 @@ async def get_site_settings():
 class SiteSettingsReq(BaseModel):
     whatsapp_number: Optional[str] = None
     tiktok_handle: Optional[str] = None
+    hashtag: Optional[str] = None
+    site_url: Optional[str] = None
     instagram_url: Optional[str] = None
     facebook_url: Optional[str] = None
     avatar_bubbles: Optional[dict] = None
@@ -9038,6 +9043,13 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
         if "tiktok.com/@" in h:
             h = h.split("tiktok.com/@", 1)[1].split("/")[0].split("?")[0]
         update["tiktok_handle"] = h
+    if body.hashtag is not None:
+        hh = body.hashtag.strip()
+        if hh and not hh.startswith("#"):
+            hh = "#" + hh
+        update["hashtag"] = hh
+    if body.site_url is not None:
+        update["site_url"] = body.site_url.strip()
     if body.instagram_url is not None:
         update["instagram_url"] = _normalize_social_url(body.instagram_url, "https://instagram.com/")
     if body.facebook_url is not None:
@@ -11486,8 +11498,13 @@ for _k in list(vars(_mod_sitor_public)):  # noqa: E402
     if _k != '_core' and not _k.startswith('__') and _k not in globals():
         globals()[_k] = getattr(_mod_sitor_public, _k)
 
+import manuale_pages as _mod_manuale_pages  # noqa: E402  percorso a livelli + pagine sito
+for _k in list(vars(_mod_manuale_pages)):  # noqa: E402
+    if _k != '_core' and not _k.startswith('__') and _k not in globals():
+        globals()[_k] = getattr(_mod_manuale_pages, _k)
+
 # --- Sync finale cross-modulo: ogni modulo vede TUTTI i simboli del core (indipendente dall'ordine di import) ---
-for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras, _mod_sitor_public):  # noqa: E402
+for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras, _mod_sitor_public, _mod_manuale_pages):  # noqa: E402
     for _k, _v in list(globals().items()):
         if not _k.startswith('__') and _k not in _m.__dict__:
             _m.__dict__[_k] = _v

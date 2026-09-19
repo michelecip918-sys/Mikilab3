@@ -1,0 +1,87 @@
+import { useState, useEffect } from "react";
+import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps";
+import { api } from "@/lib/api";
+import { ChevronLeft, Check, Lock, ArrowRight, CheckCircle2 } from "lucide-react";
+
+const DONE_KEY = "mikilab_done";
+
+function loadDone() { try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch { return new Set(); } }
+
+export default function PercorsoPage({ onBack, onOpenRecipe, onNav }) {
+  const { lang } = useLang();
+  const tri = (i, d, e) => mkTri(lang)(i, d, e);
+  const li = (o) => (o ? (lang === "de" ? o.de : lang === "en" ? o.en : o.it) : "");
+  const [levels, setLevels] = useState([]);
+  const [done, setDone] = useState(loadDone);
+
+  useEffect(() => { api.get(`/learning-path`).then((r) => setLevels(r.data?.levels || [])).catch(() => {}); }, []);
+  useEffect(() => {
+    const h = () => setDone(loadDone());
+    window.addEventListener("mikilab-done-changed", h);
+    return () => window.removeEventListener("mikilab-done-changed", h);
+  }, []);
+
+  const toggle = (id) => {
+    const s = new Set(done);
+    s.has(id) ? s.delete(id) : s.add(id);
+    localStorage.setItem(DONE_KEY, JSON.stringify([...s]));
+    setDone(new Set(s));
+    window.dispatchEvent(new CustomEvent("mikilab-done-changed"));
+  };
+
+  return (
+    <div data-testid="percorso-page" className="space-y-6">
+      {onBack && <button onClick={onBack} className="inline-flex items-center gap-1 text-sm font-bold text-[#94A3B8] hover:text-white"><ChevronLeft className="w-4 h-4" />{tri("Home", "Start", "Home")}</button>}
+      <div>
+        <h1 className="font-display text-3xl font-black text-white">{tri("Il percorso", "Der Lernpfad", "The path")}</h1>
+        <p className="text-[#94A3B8] mt-1">{tri("Impara passo dopo passo. Nessun blocco: puoi sempre scegliere dalla galleria.", "Lerne Schritt für Schritt. Keine Sperren: du kannst immer aus der Galerie wählen.", "Learn step by step. No locks: you can always pick from the gallery.")}</p>
+      </div>
+
+      {levels.map((lv) => {
+        const doneCount = lv.recipes.filter((r) => done.has(r.id)).length;
+        const pct = lv.recipes.length ? Math.round((doneCount / lv.recipes.length) * 100) : 0;
+        const complete = lv.recipes.length > 0 && doneCount === lv.recipes.length;
+        const nextActive = levels.find((x) => x.n === lv.n + 1)?.active;
+        if (lv.coming_soon) {
+          return (
+            <div key={lv.n} data-testid={`level-${lv.n}`} className="rounded-2xl border border-dashed border-[#2A3B49] bg-[#0b1220]/50 p-4 opacity-70">
+              <p className="inline-flex items-center gap-2 font-bold text-[#7E8A93]"><Lock className="w-4 h-4" />{tri("Livello", "Level", "Level")} {lv.n} · {li(lv.title)}</p>
+              <p className="text-xs text-[#7E8A93] mt-1">{tri("In arrivo", "Kommt bald", "Coming soon")}</p>
+            </div>
+          );
+        }
+        return (
+          <div key={lv.n} data-testid={`level-${lv.n}`} className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-4">
+            <div className="flex items-center justify-between mb-2">
+              <p className="font-display font-black text-white text-lg">{tri("Livello", "Level", "Level")} {lv.n} · {li(lv.title)}</p>
+              <span className="text-xs font-bold text-[#E9A23B]">{doneCount}/{lv.recipes.length}</span>
+            </div>
+            <div className="h-2 rounded-full bg-white/10 overflow-hidden mb-3"><div className="h-full bg-[#6E8F7A] transition-all" style={{ width: `${pct}%` }} /></div>
+            <div className="space-y-1.5">
+              {lv.recipes.map((r) => (
+                <div key={r.id} className="flex items-center gap-2">
+                  <button data-testid={`level-done-${r.id}`} onClick={() => toggle(r.id)} className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 border-2 ${done.has(r.id) ? "bg-[#6E8F7A] border-[#6E8F7A]" : "border-[#2A3B49]"}`}>{done.has(r.id) && <Check className="w-3.5 h-3.5 text-white" />}</button>
+                  <button onClick={() => onOpenRecipe(r.id)} className={`text-left flex-1 text-sm hover:text-[#E9A23B] ${done.has(r.id) ? "text-[#94A3B8] line-through" : "text-white"}`}>{r.name}</button>
+                </div>
+              ))}
+            </div>
+            {complete && (
+              <div data-testid={`level-complete-${lv.n}`} className="mt-3 rounded-xl bg-[#6E8F7A]/20 border border-[#6E8F7A]/40 p-3 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-[#6E8F7A]" />
+                <p className="text-sm font-bold text-[#DDE8DF]">{nextActive ? `${tri("Livello completato! Vai al livello", "Level geschafft! Weiter zu Level", "Level complete! Go to level")} ${lv.n + 1}` : tri("Livello completato! Bravo.", "Level geschafft! Super.", "Level complete! Well done.")}</p>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-4">
+        <p className="font-bold text-white mb-2">{tri("Preferisci scegliere da solo?", "Lieber selbst wählen?", "Prefer to choose yourself?")}</p>
+        <div className="flex flex-wrap gap-2">
+          <button data-testid="percorso-gallery" onClick={() => onNav("recipes")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#A85A22] text-white text-sm font-bold active:scale-95"><ArrowRight className="w-4 h-4" />{tri("Galleria per tipo", "Galerie nach Art", "Gallery by type")}</button>
+        </div>
+      </div>
+    </div>
+  );
+}

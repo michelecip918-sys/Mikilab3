@@ -45,7 +45,7 @@ export default function Ricette() {
     return () => window.removeEventListener("mikilab-ricette-view", h);
   }, []);
 
-  if (view === "guida") return <Sub onBack={() => setView("main")}><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><Glossario /></div><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><AttrezziGuide /></div></Sub>;
+  if (view === "guida") return <Sub onBack={() => setView("main")}><div className="mb-4"><h2 className="font-display text-2xl font-black text-white">{mkTri(lang)("Studia il mestiere", "Lerne das Handwerk", "Study the craft")}</h2><p className="text-sm text-[#D97736] font-bold">{mkTri(lang)("Non solo fare il pane: capirlo.", "Nicht nur Brot backen: es verstehen.", "Not just making bread: understanding it.")}</p></div><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><Glossario /></div><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><AttrezziGuide /></div></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce onOpenRecipe={(id) => { setView("main"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 80); }} /></Sub>;

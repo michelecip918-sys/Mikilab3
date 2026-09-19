@@ -16,6 +16,8 @@ export default function SitorChat({ onClose }) {
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
   const scrollRef = useRef(null);
+  const [path, setPath] = useState([]);
+  useEffect(() => { api.get(`/learning-path`).then((r) => setPath(r.data?.levels || [])).catch(() => {}); }, []);
 
   useEffect(() => { try { localStorage.setItem(HIST_KEY, JSON.stringify(msgs.slice(-30))); } catch { /* */ } }, [msgs]);
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [msgs, busy]);
@@ -30,6 +32,14 @@ export default function SitorChat({ onClose }) {
     setMsgs(next); setBusy(true);
     let tools = {};
     try { tools = JSON.parse(localStorage.getItem(MYTOOLS_KEY) || "{}"); } catch { /* */ }
+    try {
+      const doneSet = new Set(JSON.parse(localStorage.getItem("mikilab_done") || "[]"));
+      const fatte = [];
+      path.forEach((lv) => (lv.recipes || []).forEach((r) => { if (doneSet.has(r.id)) fatte.push(r.name); }));
+      if (fatte.length) tools.ricette_fatte = fatte.join(", ");
+      const liv = path.filter((l) => l.active).map((l) => `L${l.n} ${(l.title && (l.title.it || l.title.en)) || ""}`);
+      if (liv.length) tools.livelli_attivi = liv.join("; ");
+    } catch { /* */ }
     try {
       const r = await api.post(`/sitor/chat`, { messages: next.slice(-10), lang, tools });
       const reply = r.data?.reply || tri("Riprova tra poco.", "Versuch es gleich nochmal.", "Try again shortly.");

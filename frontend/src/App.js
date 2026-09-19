@@ -29,6 +29,9 @@ import LegalPlaceholder from "@/components/LegalPlaceholder";
 import SitorChat from "@/components/SitorChat";
 import TecnichePage from "@/components/TecnichePage";
 import VerdeMikiLab from "@/components/VerdeMikiLab";
+import PercorsoPage from "@/components/PercorsoPage";
+import RegalaPage from "@/components/RegalaPage";
+import PaginaSito from "@/components/PaginaSito";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 
@@ -120,19 +123,27 @@ export default function App() {
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
+              {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
               {route === "impressum" && <LegalPlaceholder kind="impressum" onBack={() => setRoute("home")} />}
               {route === "datenschutz" && <LegalPlaceholder kind="datenschutz" onBack={() => setRoute("home")} />}
             </ErrorBoundary>
           </main>
 
           <footer data-testid="app-footer" className="border-t border-[#8a97a6]/12 bg-[#060A10]/70 px-4 py-6 mt-auto">
-            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#94A3B8]">
-              <p>© MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
-              <div className="flex items-center gap-4">
+            <div className="max-w-6xl mx-auto flex flex-col gap-3 text-[11px] text-[#94A3B8]">
+              <p className="text-center text-[#cbd5e1]">{tri("Gratis per uso personale. Vietato riprodurre o vendere ricette e testi. I link sono benvenuti.", "Kostenlos für den privaten Gebrauch. Rezepte und Texte dürfen nicht reproduziert oder verkauft werden. Links sind willkommen.", "Free for personal use. Reproducing or selling recipes and texts is forbidden. Links are welcome.")}</p>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+                <button data-testid="footer-regala" onClick={() => { setRoute("regala"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">{tri("Regala MikiLab", "MikiLab verschenken", "Gift MikiLab")}</button>
+                <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
                 <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">Impressum</button>
                 <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>
               </div>
-              <p data-testid="footer-langs" className="text-[#64748B]">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-[#8a97a6]/10">
+                <p>© MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
+                <p data-testid="footer-langs" className="text-[#64748B]">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
+              </div>
             </div>
           </footer>
         </div>
