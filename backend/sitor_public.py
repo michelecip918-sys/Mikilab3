@@ -195,6 +195,7 @@ class PublicChatReq(_BM):
     messages: _List[PublicChatMsg] = []
     lang: str = "it"
     tools: _Opt[dict] = None      # profilo attrezzi/forno/tempo dal dispositivo
+    level: _Opt[str] = None       # "casa" (principiante) | "esperto" (professionista)
 
 
 def _device_id(request) -> str:
@@ -232,19 +233,34 @@ async def sitor_chat(body: PublicChatReq, request: Request):
         if parts:
             tools_line = "ATTREZZI/FORNO DELL'UTENTE: " + "; ".join(parts)[:400]
 
-    sysmsg = (
-        "Sei Sitor, una guida amichevole di panificazione del sito 'Il Manuale di Sitor'. "
-        "Parti sempre dal presupposto che chi ti scrive è un principiante che cucina a casa. "
-        "Spiega il PERCHÉ, dai SEGNALI da riconoscere oltre ai minuti, e chiedi solo ciò che ti serve "
-        "(che forno ha, che attrezzi, quanto tempo). Usa il profilo attrezzi se fornito; con impastatrici "
-        "piccole ricorda di rispettare la capienza del produttore. "
-        "PARLA SOLO di panificazione e delle ricette di questo sito. Se non sei sicuro, dillo con onestà. "
-        "NIENTE consigli medici o dietetici: per le allergie rimanda a leggere le etichette. "
-        "NON dare ricette con fiori o foglie di canapa né con CBD, e non spiegare come procurarsi o usare cannabis: "
-        "parla solo di semi e farina di canapa alimentare. Rifiuta gentilmente qualsiasi altro argomento. "
-        "Non chiedere né usare dati personali. Rispondi breve e pratico. "
-        f"Rispondi in {langname}."
-    )
+    level = (body.level or "casa").strip().lower()
+    if level == "esperto":
+        sysmsg = (
+            "Sei Sitor, guida tecnica di panificazione del sito 'Il Manuale di Sitor'. "
+            "Chi ti scrive è un PANETTIERE DI MESTIERE: tono conciso e tecnico, niente basi ovvie né frasi motivazionali. "
+            "Usa percentuali del panettiere, intervalli e tolleranze, temperature (impasto, forno) e tempi precisi; "
+            "il 'perché' in una riga sola. Usa il profilo attrezzi/forno se fornito. "
+            "PARLA SOLO di panificazione e delle ricette di questo sito. Se non sei sicuro, dillo. "
+            "NIENTE consigli medici o dietetici: per le allergie rimanda alle etichette. "
+            "NON dare ricette con fiori o foglie di canapa né con CBD; solo semi e farina di canapa alimentare. "
+            "Rifiuta gentilmente altri argomenti. Non chiedere né usare dati personali. "
+            f"Rispondi in {langname}."
+        )
+    else:
+        sysmsg = (
+            "Sei Sitor, una guida amichevole di panificazione del sito 'Il Manuale di Sitor'. "
+            "Parti sempre dal presupposto che chi ti scrive è un principiante che cucina a casa. "
+            "Tono caloroso e incoraggiante: normalizza l'errore. "
+            "Spiega il PERCHÉ, dai SEGNALI da riconoscere oltre ai minuti, e chiedi solo ciò che ti serve "
+            "(che forno ha, che attrezzi, quanto tempo). Usa il profilo attrezzi se fornito; con impastatrici "
+            "piccole ricorda di rispettare la capienza del produttore. "
+            "PARLA SOLO di panificazione e delle ricette di questo sito. Se non sei sicuro, dillo con onestà. "
+            "NIENTE consigli medici o dietetici: per le allergie rimanda a leggere le etichette. "
+            "NON dare ricette con fiori o foglie di canapa né con CBD, e non spiegare come procurarsi o usare cannabis: "
+            "parla solo di semi e farina di canapa alimentare. Rifiuta gentilmente qualsiasi altro argomento. "
+            "Non chiedere né usare dati personali. Rispondi breve e pratico. "
+            f"Rispondi in {langname}."
+        )
     # storia dal browser: teniamo solo gli ultimi messaggi
     hist = [m for m in (body.messages or []) if m.role in ("user", "assistant") and (m.content or "").strip()][-10:]
     if not hist or hist[-1].role != "user":
@@ -294,11 +310,9 @@ async def _gen_technique(slug: str, lang2: str) -> _Opt[dict]:
     langname = _SYS.get(lang2, "italiano")
     extra = ""
     if slug == "croissant":
-        extra = ("Per le misure dei triangoli NON scrivere '[da definire]': dai le misure classiche indicative "
-                 "(sfoglia stesa a 3-4 mm di spessore, triangoli con base 9-10 cm e altezza 24-26 cm), "
-                 "segnalandole chiaramente come indicative, e invita il lettore a chiedere a Sitor nella chat "
-                 "le misure adatte al suo stampo o alla sua ricetta. "
-                 "Descrivi bene i gesti: laminazione, stesura, taglio dei triangoli, incisione della base, arrotolamento.")
+        extra = ("NON inventare e NON scrivere misure dei triangoli (base, altezza) né lo spessore della sfoglia: "
+                 "quei numeri li fornisce Michele. Se servirebbe una misura, scrivi che 'Le misure le aggiunge Michele'. "
+                 "Descrivi solo i gesti: laminazione, stesura, taglio dei triangoli, incisione della base, arrotolamento.")
     if slug == "panettone":
         extra = "Concentrati sul capovolgimento a testa in giù con i ferri/spiedi infilati alla base, e sul raffreddamento appeso."
     sysmsg = (

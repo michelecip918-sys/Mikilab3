@@ -34,7 +34,18 @@ export default function HomeManuale({ onNav }) {
     return () => { stop = true; };
   }, []);
 
-  const setSkillPref = (v) => { setSkill(v); try { localStorage.setItem(SKILL_KEY, v); } catch { /* */ } };
+  const setSkillPref = (v) => {
+    setSkill(v);
+    try {
+      localStorage.setItem(SKILL_KEY, v);
+      // B2.6: "So già panificare" attiva ESPERTO con scala Laboratorio; "Sto imparando" attiva CASA.
+      localStorage.setItem("mikilab_recipe_mode", v === "expert" ? "esperto" : "casa");
+      if (v === "expert") {
+        const cur = (() => { try { return JSON.parse(localStorage.getItem("mikilab_pro_scale") || "{}"); } catch { return {}; } })();
+        if (!cur.scale) localStorage.setItem("mikilab_pro_scale", JSON.stringify({ ...cur, scale: "laboratorio" }));
+      }
+    } catch { /* */ }
+  };
   const openRecipe = (id) => { onNav("recipes"); setTimeout(() => { try { window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })); } catch { /* */ } }, 120); };
 
   return (

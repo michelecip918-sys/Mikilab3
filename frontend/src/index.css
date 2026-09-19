@@ -30,17 +30,7 @@ html[lang="fa"] textarea {
 }
 
 /* Firma MikiLab: nastro tricolore Italia + Germania */
-.it-de-ribbon {
-  height: 6px;
-  width: 100%;
-  background: linear-gradient(90deg,
-    #009246 0%, #009246 16%,
-    #FFFFFF 16%, #FFFFFF 33%,
-    #CE2B37 33%, #CE2B37 50%,
-    #000000 50%, #000000 66%,
-    #DD0000 66%, #DD0000 83%,
-    #FFCE00 83%, #FFCE00 100%);
-}
+.it-de-ribbon { display: none; }
 
 @layer base {
     :root {

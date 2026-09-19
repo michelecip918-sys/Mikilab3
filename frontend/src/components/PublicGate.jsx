@@ -11,7 +11,7 @@ import DowntimeTraining from "@/components/DowntimeTraining";
 import LivingAvatar3D from "@/components/LivingAvatar3D";
 import GuidaMikiLab from "@/components/GuidaMikiLab";
 import AuthScreen from "@/components/AuthScreen";
-import LegalPage from "@/sections/LegalPage";
+import LegalPlaceholder from "@/components/LegalPlaceholder";
 import { PrivacyNotice, NotForSaleNote } from "@/components/PrivacyNotice";
 import { api, facesApi } from "@/lib/api";
 import { activityProfile as gateActivityProfile } from "@/lib/activityProfile";
@@ -450,7 +450,7 @@ export default function PublicGate({ onUnlock }) {
         <div data-testid="public-legal-modal" className="fixed inset-0 z-[60] bg-background overflow-auto p-4">
           <div className="max-w-xl mx-auto py-5">
             <button data-testid="public-legal-close" onClick={() => setLegalOpen(false)} className="mb-4 text-sm font-semibold text-muted-foreground">← {tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
-            <LegalPage />
+            <LegalPlaceholder kind="impressum" onBack={() => setLegalOpen(false)} />
           </div>
         </div>
       )}

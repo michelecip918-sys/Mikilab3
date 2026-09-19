@@ -196,7 +196,9 @@ _PUBLIC_GET_ALLOW = (
 )
 
 
-async def _has_valid_session(request) -> bool:
+async def _session_is_admin(request) -> bool:
+    """True solo se la richiesta ha una sessione valida di un utente con role == 'admin'.
+    Gli account legacy (operai/utenti del periodo aziendale) NON sono admin: negati."""
     token = request.cookies.get("session_token")
     if not token:
         auth = request.headers.get("Authorization", "")
@@ -205,7 +207,7 @@ async def _has_valid_session(request) -> bool:
     if not token:
         return False
     try:
-        sess = await db.user_sessions.find_one({"session_token": token}, {"_id": 0, "expires_at": 1})
+        sess = await db.user_sessions.find_one({"session_token": token}, {"_id": 0, "user_id": 1, "expires_at": 1})
         if not sess:
             return False
         exp = sess["expires_at"]
@@ -213,23 +215,48 @@ async def _has_valid_session(request) -> bool:
             exp = datetime.fromisoformat(exp)
         if exp.tzinfo is None:
             exp = exp.replace(tzinfo=timezone.utc)
-        return exp >= datetime.now(timezone.utc)
+        if exp < datetime.now(timezone.utc):
+            return False
+        u = await db.users.find_one({"user_id": sess["user_id"]}, {"_id": 0, "role": 1, "email": 1})
+        if not u:
+            return False
+        if u.get("role") == "admin":
+            return True
+        return (u.get("email") or "").strip().lower() in OWNER_EMAILS
     except Exception:
         return False
 
 
+# Scritture consentite agli ANONIMI (tutto il resto: solo admin, altrimenti 404).
+_PUBLIC_WRITE_ALLOW = (
+    "/api/sitor/chat",
+    "/api/auth/login", "/api/auth/logout",
+    "/api/auth/forgot-password", "/api/auth/reset-password",
+)
+
+
 class GateMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Manuale pubblico di Sitor — DEFAULT DENY sulle LETTURE (GET/HEAD):
-        # un anonimo può leggere SOLO le rotte dell'allowlist pubblica. Tutto il resto
-        # (dati aziendali: volti, turni, magazzino, coordinamento, community, utenti...) richiede
-        # una sessione valida. Le SCRITTURE restano protette dai dipendenti di rotta (require_admin).
+        # Manuale pubblico di Sitor — DEFAULT DENY totale (letture E scritture):
+        # un anonimo può leggere SOLO l'allowlist pubblica (_PUBLIC_GET_ALLOW) e
+        # scrivere SOLO l'allowlist pubblica (_PUBLIC_WRITE_ALLOW, es. /sitor/chat, login).
+        # Ogni altra rotta (dati aziendali, IA/voce, scritture legacy...) richiede una
+        # sessione con role == 'admin'; senza, rispondiamo 404 PRIMA di validare il corpo.
         path = request.url.path
-        if request.method in ("OPTIONS", "POST", "PUT", "PATCH", "DELETE") or not path.startswith("/api"):
+        method = request.method
+        if method == "OPTIONS" or not path.startswith("/api"):
             return await call_next(request)
-        if path == "/api" or path == "/api/" or any(path == p or path.startswith(p + "/") or path.startswith(p + "?") for p in _PUBLIC_GET_ALLOW):
-            return await call_next(request)
-        if await _has_valid_session(request):
+
+        def _match(allow):
+            return any(path == p or path.startswith(p + "/") or path.startswith(p + "?") for p in allow)
+
+        if method in ("POST", "PUT", "PATCH", "DELETE"):
+            if _match(_PUBLIC_WRITE_ALLOW):
+                return await call_next(request)
+        else:  # GET / HEAD
+            if _match(_PUBLIC_GET_ALLOW):
+                return await call_next(request)
+        if await _session_is_admin(request):
             return await call_next(request)
         return JSONResponse({"detail": "not_found"}, status_code=404)
 

@@ -53,7 +53,7 @@ export default function Ricette() {
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
         <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary to-primary p-6 text-white">
-          <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+          <div className="absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")}</h1></div>
           <div className="h-1 w-12 rounded-full bg-primary mb-3" />
           <p className="text-sm text-foreground/90 leading-relaxed italic">

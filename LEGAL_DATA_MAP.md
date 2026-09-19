@@ -24,8 +24,8 @@ il generatore di informativa privacy / Datenschutz. (Documento tecnico, non è l
 - Prima del clic non viene caricato né inviato nulla verso questi host.
 
 ## 4. Immagini e file statici
-- Le immagini delle ricette sono file **locali** serviti dall'app (`/recipes/*.jpg`) — nessun servizio esterno.
-- Eventuali illustrazioni delle Tecniche sarebbero file locali statici in `/tecniche/<slug>/*.webp`.
+- Le immagini delle ricette sono file **locali** serviti dall'app (`/recipes/*.webp`) — nessun servizio esterno.
+- Illustrazioni delle Tecniche: file locali statici in `/tecniche/<slug>/*.webp`.
 
 ## 5. Memoria locale del dispositivo (nessun server)
 Salvati SOLO nel browser (localStorage), mai inviati al server:
@@ -50,4 +50,21 @@ Salvati SOLO nel browser (localStorage), mai inviati al server:
 ## 8. Nota (dati storici ancora nel DB, non usati dal sito)
 Restano nel database dati aziendali di versioni precedenti (volti squadra, operatori, turni, magazzino,
 consegne, compliance, community, utenti). NON sono più raggiungibili da un visitatore anonimo
-(vedi STADIO 6b). Andranno cancellati in una fase separata dedicata.
+(vedi STADIO 6b e STADIO A: DEFAULT DENY su letture E scritture). Andranno cancellati in una fase separata dedicata.
+
+## 10. Contatti e newsletter — RIMOSSI dall'interfaccia (STADIO A4)
+- Il **modulo contatti** (era dentro la vecchia pagina legale, ora archiviata) e l'**iscrizione newsletter**
+  NON sono più presenti nell'interfaccia. Nessun nuovo dato di contatto/iscrizione può essere raccolto.
+- Dati storici ancora nel DB (solo NUMERI, mai le email): messaggi di contatto = **0**; iscritti newsletter = **1**.
+  Da cancellare in una fase separata dedicata.
+
+## 11. Sicurezza API (STADIO A)
+- **DEFAULT DENY totale**: un anonimo può leggere solo l'allowlist pubblica (ricette, extras, tecniche,
+  equipment-guide, site-settings, auth/me, learning-path, site-pages, sitemap) e scrivere solo
+  `/sitor/chat`, `/auth/login`, `/auth/logout`, `/auth/forgot-password`, `/auth/reset-password`.
+  Ogni altra rotta (GET o scrittura) richiede sessione con `role == "admin"`, altrimenti **404**.
+- **Login solo admin**: gli account non-admin ricevono 403 (dopo verifica password, nessuna enumerazione).
+  Brute-force: 5 tentativi falliti = blocco 15 min. Cookie `session_token`: Secure, HttpOnly, SameSite=Lax.
+- Verifica anonima (curl) su tutte le 443 rotte / 529 combinazioni metodo×path: **0 rotte fuori lista**
+  rispondono 200/422/500 (solo 18 combinazioni pubbliche consentite).
+

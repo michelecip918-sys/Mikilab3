@@ -67,6 +67,12 @@ async def auth_login(payload: LoginReq, request: Request, response: Response):
         raise HTTPException(status_code=401, detail="Credenziali non valide")
     if u.get("auth_provider") == "email" and u.get("email_verified") is False:
         raise HTTPException(status_code=403, detail="verify_email")
+    # Manuale pubblico: SOLO gli account admin (o l'owner) possono autenticarsi.
+    # Il controllo avviene DOPO la verifica password, quindi non rivela l'esistenza
+    # dell'email a chi non conosce la password (niente enumeration).
+    is_admin = u.get("role") == "admin" or (u.get("email") or "").strip().lower() in OWNER_EMAILS
+    if not is_admin:
+        raise HTTPException(status_code=403, detail="not_authorized")
     await db.login_attempts.delete_one({"identifier": ident})
     token = await _make_session(u["user_id"])
     _set_cookie(response, token)

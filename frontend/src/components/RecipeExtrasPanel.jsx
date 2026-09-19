@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import CoursePlayer from "@/components/CoursePlayer";
+import EspertoPro from "@/components/EspertoPro";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -77,20 +78,6 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
     return rows.map(([n, g]) => [n, round(g)]);
   }, [recipe, flour, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ESPERTO: percentuali del panificatore (base = farina della ricetta) + grammi per la farina scelta.
-  const bakerRows = useMemo(() => {
-    const fg = Number(recipe.flour_grams) || 0;
-    const pct = (grams) => (fg > 0 && grams ? Math.round((Number(grams) / fg) * 1000) / 10 : null);
-    const rows = [[tri("Farina", "Mehl", "Flour"), fg > 0 ? 100 : null, flour]];
-    if (recipe.water_grams) rows.push([tri("Acqua", "Wasser", "Water"), pct(recipe.water_grams), (Number(recipe.water_grams) || 0) / (fg || 1) * flour]);
-    if (recipe.sourdough_grams) rows.push([tri("Lievito madre", "Lievito madre", "Sourdough"), pct(recipe.sourdough_grams), (Number(recipe.sourdough_grams) || 0) / (fg || 1) * flour]);
-    if (recipe.salt_grams) rows.push([tri("Sale", "Salz", "Salt"), pct(recipe.salt_grams), (Number(recipe.salt_grams) || 0) / (fg || 1) * flour]);
-    (recipe.extra_ingredients || []).forEach((it2) => {
-      if (it2 && it2.name && it2.percent) rows.push([it2.name, Number(it2.percent), flour * (Number(it2.percent) / 100)]);
-    });
-    return rows;
-  }, [recipe, flour, lang]); // eslint-disable-line react-hooks/exhaustive-deps
-
   const saveAdmin = async (patch) => {
     setSaving(true);
     try { const r = await api.put(`/recipe-extras/${recipe.id}`, patch); setEx(r.data); toast.success(tri("Salvato", "Gespeichert", "Saved")); }
@@ -104,7 +91,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   const tipText = li([tip.it, tip.de, tip.en]) || tip.it || tip.de || tip.en || "";
 
   return (
-    <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4 no-print">
+    <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4">
       {showCourse && <CoursePlayer recipe={recipe} onClose={() => setShowCourse(false)} />}
       {/* CUCINA CON SITOR */}
       <button data-testid="cook-with-sitor" onClick={() => setShowCourse(true)}
@@ -128,9 +115,22 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
             <ChefHat className="w-3.5 h-3.5" /> {tri("Esperto", "Experte", "Expert")}
           </button>
         </div>
-        <span data-testid="recipe-difficulty" className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide px-2.5 py-1 rounded-full border" style={{ color: dcfg.c, borderColor: `${dcfg.c}66`, background: `${dcfg.c}18` }}>
-          {li([dcfg.it, dcfg.de, dcfg.en])}
-        </span>
+        {mode === "casa" ? (
+          <span data-testid="recipe-difficulty" className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide px-2.5 py-1 rounded-full border" style={{ color: dcfg.c, borderColor: `${dcfg.c}66`, background: `${dcfg.c}18` }}>
+            {li([dcfg.it, dcfg.de, dcfg.en])}
+          </span>
+        ) : (
+          <span data-testid="recipe-esperto-meta" className="inline-flex items-center gap-2 text-[11px] font-bold text-muted-foreground">
+            {(() => {
+              const h = (Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0);
+              const parts = [];
+              if (h > 0) parts.push(`${round(h)} h ${tri("lievitazione", "Gare", "proof")}`);
+              const pf = recipe.preferment_type || (recipe.sourdough_grams ? "lievito madre" : recipe.biga ? "biga" : null);
+              if (pf) parts.push(pf);
+              return parts.join(" · ") || tri("Ricetta professionale", "Profi-Rezept", "Professional recipe");
+            })()}
+          </span>
+        )}
       </div>
 
       {/* IL TRUCCO DI MICHELE */}
@@ -168,33 +168,9 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         </div>
       )}
 
-      {/* ESPERTO: percentuali del panificatore, idratazione calcolata, scaling a qualsiasi peso */}
+      {/* ESPERTO: scala professionale, tabella per impasto, temp. acqua, confronto, scheda stampa */}
       {mode === "esperto" && (
-        <div data-testid="esperto-note" className="rounded-2xl border border-border bg-background p-3.5">
-          <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-2">{tri("Percentuali del panificatore", "Bäckerprozente", "Baker's percentages")}</p>
-          <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="text-xs text-muted-foreground">{tri("Farina di riferimento", "Referenzmehl", "Reference flour")}:</span>
-            <input data-testid="esperto-flour" type="number" min="1" step="100" value={flour}
-              onChange={(e) => setFlour(Math.max(1, Number(e.target.value) || 0))}
-              className="w-28 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-background border border-border text-foreground outline-none focus:border-border" />
-            <span className="text-xs text-muted-foreground">g</span>
-            <span data-testid="esperto-hydration" className="ml-auto text-xs font-bold text-foreground">
-              {tri("Idratazione", "Hydration", "Hydration")}: {ex.calc_hydration != null ? `${ex.calc_hydration}%` : "—"}
-            </span>
-          </div>
-          <table className="w-full text-sm">
-            <thead><tr className="text-[10px] uppercase text-muted-foreground"><th className="text-left font-bold py-1">{tri("Ingrediente", "Zutat", "Ingredient")}</th><th className="text-right font-bold py-1">%</th><th className="text-right font-bold py-1">g</th></tr></thead>
-            <tbody>
-              {bakerRows.map(([n, pct, g], i) => (
-                <tr key={i} className="border-b border-border/50 last:border-0">
-                  <td className="py-1.5 text-foreground">{n}</td>
-                  <td className="py-1.5 text-right text-muted-foreground font-semibold">{pct == null ? "—" : `${pct}%`}</td>
-                  <td className="py-1.5 text-right font-bold text-foreground">{round(g)} g</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <EspertoPro recipe={recipe} ex={ex} settings={settings} />
       )}
 
       {/* CONTROLLO LIEVITO MADRE / LICOLI (solo in CASA) */}

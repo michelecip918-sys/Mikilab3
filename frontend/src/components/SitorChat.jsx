@@ -41,7 +41,9 @@ export default function SitorChat({ onClose }) {
       if (liv.length) tools.livelli_attivi = liv.join("; ");
     } catch { /* */ }
     try {
-      const r = await api.post(`/sitor/chat`, { messages: next.slice(-10), lang, tools });
+      let level = "casa";
+      try { level = localStorage.getItem("mikilab_recipe_mode") || (localStorage.getItem("mikilab_skill") === "expert" ? "esperto" : "casa"); } catch { /* */ }
+      const r = await api.post(`/sitor/chat`, { messages: next.slice(-10), lang, tools, level });
       const reply = r.data?.reply || tri("Riprova tra poco.", "Versuch es gleich nochmal.", "Try again shortly.");
       setMsgs((m) => [...m, { role: "assistant", content: reply }]);
     } catch {

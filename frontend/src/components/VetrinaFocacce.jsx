@@ -69,7 +69,7 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
       <div className="relative overflow-hidden rounded-3xl p-6 text-foreground shadow-xl mb-4" style={{ background: "linear-gradient(135deg,hsl(var(--primary)),hsl(var(--primary)))" }}>
-        <div className="it-de-ribbon absolute top-0 left-0 right-0" />
+        <div className="absolute top-0 left-0 right-0" />
         <div className="w-14 h-14 rounded-2xl bg-foreground/15 border border-foreground/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
         <p className="text-foreground/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>

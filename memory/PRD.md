@@ -1,3 +1,60 @@
+# ⚡ AGGIORNAMENTO (2026-09) — COMANDO 1/2: Sicurezza + Correzioni + Scala Pro (STADI A, B, B2, N)
+
+## STADIO A — SICUREZZA (DEFAULT DENY totale)
+- Riscritto `GateMiddleware` in `server.py`: ora blocca ANCHE le scritture. Anonimo può SOLO:
+  GET allowlist (`/api/recipes`, `/api/recipe-extras`, `/api/techniques`, `/api/equipment-guide`,
+  `/api/site-settings`, `/api/auth/me`, `/api/learning-path`, `/api/site-pages`, `/api/sitemap`, `/api/health`)
+  e WRITE allowlist (`/api/sitor/chat`, `/api/auth/login|logout|forgot-password|reset-password`).
+  Tutto il resto → richiede sessione `role=="admin"`, altrimenti **404 prima di validare il corpo**.
+- Nuovo helper `_session_is_admin()` (verifica role admin, non sessione generica) — A3.
+- Login (`auth.py`): consentito SOLO ad account admin/owner (403 dopo verifica password → no enumeration) — A3.
+  Brute-force già presente (5 tentativi/15min). Cookie `session_token`: Secure+HttpOnly+SameSite=lax — A6.
+- A5/N2: test anonimo su 443 rotte (529 combinazioni) → **0 leak** (0 rotte fuori lista con 200/422/500).
+- A4: nessun modulo contatti/newsletter montato nell'UI (era solo nella vecchia LegalPage, ora archiviata).
+  Conteggi DB: contatti=0, iscritti newsletter=1 (mai le email; cancellazione in fase separata).
+
+## STADIO B — CORREZIONI
+- B1: prompt croissant `_gen_technique` NON dà più misure ("Le misure le aggiunge Michele"); cache croissant azzerata.
+- B2(stile): rimossa `.it-de-ribbon` (3 componenti + regola CSS→display:none); manifest theme_color=#1F2124,
+  background_color=#F6F1E7; meta theme-color index.html=#1F2124; three.js già rimosso; DigitalTwin.jsx archiviato.
+- B3: `sections/LegalPage.jsx` (indirizzo reale + form contatto) ARCHIVIATA in `_archivio_non_pubblico/`;
+  PublicGate ora usa `LegalPlaceholder`. Restano solo pagine legali segnaposto.
+- B4: foto ricette solo WebP (i JPG originali non ci sono più; NON rigenerati — Michele ha lo zip).
+- B5: verificato — `AttrezziGuide` salva in `localStorage: mikilab_my_tools`, `SitorChat` lo invia nel campo `tools`.
+
+## STADIO B2 — DUE PUBBLICI (Casa/Esperto)
+- Nuovo `components/EspertoPro.jsx` montato in modalità ESPERTO di `RecipeExtrasPanel`:
+  - B2.1 Scala Laboratorio/Produzione/Personalizzata; input Farina totale (kg, passo 0,5) OPPURE N° pezzi × peso/pezzo;
+    Perdita cottura % + Peso cotto/pezzo; resa in pezzi. Salva in `localStorage: mikilab_pro_scale`.
+    Preset da `site_settings.pro_presets` (vuoto all'inizio = solo kg liberi). Nessun default inventato.
+  - B2.2 Tabella per impasto (1°/2°/Totale/%) quando c'è `biga`; altrimenti solo Totale+%.
+  - B2.3 Calcolatore temperatura acqua (DDT = 3×T − ambiente − attrito) riusando le label esistenti.
+  - B2.4 Scheda di produzione stampabile (window.print, CSS `.print-only`, monogramma ML, dicitura d'uso).
+  - B2.5 "Confronta con la tua ricetta" (Δ in punti %), solo sul dispositivo.
+  - B2.6 Chat `/sitor/chat` riceve `level` (casa=calorosa / esperto=tecnica) — prompt adattato in `sitor_public.py`.
+    In ESPERTO nascoste le etichette difficoltà; mostrati tempo lievitazione + prefermento. Onboarding
+    "Sto imparando / So già panificare" (già presente) ora imposta anche modalità + scala Laboratorio.
+- B2.7 Panettoni: nessuna modifica ai 16 nascosti.
+
+## STADIO N — CHIUSURA
+- N1: `LEGAL_DATA_MAP.md` aggiornato (rimossi contatti/newsletter, aggiunte sezioni sicurezza + stato dati).
+- N2: retest anonimo → 0 leak (18 combinazioni pubbliche consentite).
+- N3: home OK; ricetta Casa+Esperto con scala pro (2kg→2000g farina, 4036g impasto) OK; corso timer/voce OK;
+  chat Sitor con limiti + level OK; login admin OK (role=admin); POST legacy anonimo `/api/alarms`→404; PUT admin→200.
+- N4: **132 ricette visibili** (149 totali − 18 hidden via `recipe_extras.hidden_public`), 16 panettoni nascosti
+  (solo "Verde Canapa" pubblico). Nessun dato ricetta modificato.
+
+## Variabili d'ambiente
+- `ADMIN_INITIAL_PASSWORD` (seeding admin), `ADMIN_GATE_PIN`/`GUEST_GATE_PIN` (legacy, opzionali),
+  `RESEND_API_KEY`+`SENDER_EMAIL` (reset password admin, opzionali), `MONGO_URL`, `DB_NAME`, `EMERGENT_LLM_KEY`.
+  Nessun segreto nel codice.
+
+## Non fatto / da fare dopo
+- Cancellazione fisica dati storici + 1 iscritto newsletter (fase separata, non distruttiva ora).
+- COMANDO 2 (integrazioni extra) in attesa.
+- Preset pro (`site_settings.pro_presets`) da impostare da admin se Michele vuole i quick-kg.
+
+---
 # ⚡ AGGIORNAMENTO (2026-09) — Croissant verificato + 5 corsi Start Here
 
 - **Croissant verificato**: rilette le 8 fasi (misure indicative complete, niente "[da definire]"), accurate → marcata "Verificato da Michele ✓". Ora TUTTE e 6 le tecniche sono verificate.
