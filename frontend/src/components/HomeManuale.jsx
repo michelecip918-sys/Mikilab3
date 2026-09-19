@@ -3,7 +3,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import SitorBadge from "@/components/SitorBadge";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -132,6 +132,9 @@ export default function HomeManuale({ onNav, features }) {
         <button data-testid="home-chip-cucina" onClick={() => onNav("cucina")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><Wrench className="w-4 h-4 text-muted-foreground" />{tri("La mia cucina", "Meine Küche", "My kitchen")}</button>
         <button data-testid="home-chip-plan" onClick={() => onNav("plan")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><BookOpen className="w-4 h-4 text-muted-foreground" />{tri("Piano settimana", "Wochenplan", "Weekly plan")}</button>
         <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
+        <button data-testid="home-chip-calendario" onClick={() => onNav("calendario")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><CalendarDays className="w-4 h-4 text-primary" />{tri("Calendario", "Kalender", "Calendar")}</button>
+        <button data-testid="home-chip-farine" onClick={() => onNav("farine")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wheat className="w-4 h-4 text-ambra" />{tri("Farine", "Mehle", "Flours")}</button>
+        <button data-testid="home-chip-testmese" onClick={() => onNav("testmese")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Beaker className="w-4 h-4 text-mattone" />{tri("Test del mese", "Test des Monats", "Test of the month")}</button>
         <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
       </div>
 
