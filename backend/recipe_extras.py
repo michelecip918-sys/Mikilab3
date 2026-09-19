@@ -212,6 +212,9 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "verified": bool(stored.get("verified")),
         "hidden_public": bool(stored.get("hidden_public")),
         "michele_tip": stored.get("michele_tip") or {},
+        "kind": stored.get("kind") or "recipe",
+        "mix_unit_g": stored.get("mix_unit_g") or 100,
+        "mix_composition": stored.get("mix_composition") or [],
     }
 
 

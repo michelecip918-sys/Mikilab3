@@ -1,3 +1,23 @@
+# ⚡ AGGIORNAMENTO (2026-09) — COMANDO 4A: FRONTEND (Z, G2, G5, G4)
+
+## STADIO Z — correzioni visibili
+- Z0: rimossi i verified=true di PROVA dai corsi (erano: Panino al Latte per Hamburger, Panino alle Patate, Panino al Sesamo, Panino ai Semi di Papavero, Panino al Farro). Ora nessun corso è "Verificato": mostra "Bozza di Sitor". Le 6 TECNICHE restano verificate (badge tecnica, non corso).
+- Z1: `recipe_extras` del Miglioratore (id a052ba40-408a-495d-885a-6d7be260f3e9) → kind="mix", mix_unit_g=100, mix_composition [Malto44,Lino29,Lupino15,Psillio8,Acerola4]. Backend `_extras_public` ora restituisce kind/mix_unit_g/mix_composition.
+- Z2/Z3: nuovo `MixPanel.jsx`. CASA: "LA TUA SCORTA" (50/100/200/500g + libero con "g"), ingredienti = pct×scorta/100, calcolatore "Come si usa" (farina→2%/3%). ESPERTO: composizione in % (no farina/idratazione). Nessuna riga farina né 250/500/1000.
+- Z4: box "Extra morbidezza (da provare)" (fiocchi di patate 3-5%, marcato "Bozza di Sitor") in scheda miglioratore e pagina "Il mio miglioratore".
+- Z5: tema chiaro di default (index.js aggiunge dark solo se localStorage='dark') — l'apparenza scura era artefatto dei test.
+- Z6: campo farina libero mostra sempre "g".
+
+## STADIO G (frontend, usa rotte Comando 2A)
+- G2 `CosaFaccio.jsx` (route cosa-faccio, chip Home gated FEATURE_PLAN): textarea max 300 → POST /api/sitor/plan → max 3 ricette con motivo+farina+avvertenza, "Apri" e "Aggiungi al calendario" (CalendarReminder). Verificato.
+- G5 `Live.jsx` (route live, chip gated FEATURE_LIVE): GET /api/live + /api/time (offset orario), countdown, "in diretta ora", ping partecipanti ogni 30s (POST /api/live/ping, token effimero), "N persone stanno impastando con Michele", "Apri la diretta su TikTok" (handle da site-settings). Verificato con sessione di prova (creata e poi rimossa).
+- G4 `Mensola.jsx` (route mensola, chip Home): ricette fatte (localStorage mikilab_done) come card, 7 traguardi locali (no serie/penalità), "Crea la mia card" canvas 1080x1350 (monogramma ML, nome, #MikiLab + handle TikTok, foto facoltativa SOLO sul dispositivo), Condividi (navigator.share)/Scarica. Verificato.
+
+## NOTE
+- Nessuna nuova rotta pubblica aggiunta (riuso Comando 2A). Unica modifica backend: `_extras_public` espone 3 campi mix (nessuna nuova rotta).
+- FEATURE_* nascondono i chip in Home (Plan, Live). savings_level 3 → chat/plan "riposano" (già Comando 3).
+
+---
 # ⚡ AGGIORNAMENTO (2026-09) — COMANDO 3: FRONTEND CUCINA (U1, C1, C3, C4, C2)
 
 - **U1a features** (`lib/features.js`): legge `GET /api/features` (cache). Chat livello risparmio 3 mostra già il messaggio "Sitor sta riposando" (backend ok:false). SitorChat invia `level` e mostra reply su ok:false (riposo/limite).

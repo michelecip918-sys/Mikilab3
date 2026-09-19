@@ -99,6 +99,17 @@ export default function MiglioratorePage({ onBack, onOpenRecipe }) {
         </p>
       </div>
 
+      <div data-testid="miglioratore-extra-soft" className="rounded-2xl border border-border bg-card p-4">
+        <div className="flex items-center gap-2 mb-1">
+          <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground">{L({ it: "Extra morbidezza (da provare)", de: "Extra Weichheit (zum Ausprobieren)", en: "Extra softness (to try)" })}</p>
+          <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-foreground/10 text-muted-foreground">{L({ it: "Bozza di Sitor", de: "Sitor-Entwurf", en: "Sitor draft" })}</span>
+        </div>
+        <p className="text-sm text-foreground/80">{L({
+          it: "Fiocchi di patate (o farina di patate), da aggiungere A PARTE alla farina, indicativamente dal 3 al 5% del suo peso: possono aiutare a mantenere morbida la mollica più a lungo, come la patata lessa nella focaccia. NON vanno dentro la miscela. Prova con una dose bassa. Controlla le etichette.",
+          de: "Kartoffelflocken (oder Kartoffelmehl), SEPARAT zum Mehl zugeben, etwa 3–5% seines Gewichts: können die Krume länger weich halten, wie gekochte Kartoffel in der Focaccia. NICHT in die Mischung. Beginne mit wenig. Etiketten prüfen.",
+          en: "Potato flakes (or potato flour), added SEPARATELY to the flour, roughly 3–5% of its weight: may help keep the crumb soft longer, like boiled potato in focaccia. NOT inside the mix. Start with a small dose. Check labels." })}</p>
+      </div>
+
       {recipe && (
         <button data-testid="miglioratore-open-recipe" onClick={() => onOpenRecipe && onOpenRecipe(recipe.id)}
           className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-primary text-primary-foreground font-bold active:scale-[0.98] transition-all">

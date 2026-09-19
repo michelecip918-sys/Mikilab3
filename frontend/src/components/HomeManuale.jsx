@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -18,7 +18,7 @@ const START_NAMES = [
 
 export const SKILL_KEY = "mikilab_skill"; // "learning" | "expert"
 
-export default function HomeManuale({ onNav }) {
+export default function HomeManuale({ onNav, features }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [starts, setStarts] = useState([]);
@@ -120,6 +120,13 @@ export default function HomeManuale({ onNav }) {
       <div data-testid="home-chips" className="flex flex-wrap gap-2 mt-4">
         <button data-testid="home-chip-verde" onClick={() => onNav("verde")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent/15 border border-accent/40 text-accent-foreground text-sm font-bold hover:bg-accent/25 active:scale-95 transition-all"><Leaf className="w-4 h-4" />{tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")}</button>
         <button data-testid="home-chip-miglioratore" onClick={() => onNav("miglioratore")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/15 border border-primary/40 text-foreground text-sm font-bold hover:bg-primary/25 active:scale-95 transition-all"><FlaskConical className="w-4 h-4 text-primary" />{tri("Il mio miglioratore", "Mein Verbesserer", "My improver")}</button>
+        {(!features || features.FEATURE_PLAN !== false) && (
+          <button data-testid="home-chip-cosa-faccio" onClick={() => onNav("cosa-faccio")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Sparkles className="w-4 h-4 text-ambra" />{tri("Cosa faccio?", "Was mache ich?", "What can I make?")}</button>
+        )}
+        {(!features || features.FEATURE_LIVE !== false) && (
+          <button data-testid="home-chip-live" onClick={() => onNav("live")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-mattone/15 border border-mattone/40 text-foreground text-sm font-bold hover:bg-mattone/25 active:scale-95 transition-all"><Radio className="w-4 h-4 text-mattone" />{tri("Impastiamo insieme", "Zusammen backen", "Bake together")}</button>
+        )}
+        <button data-testid="home-chip-mensola" onClick={() => onNav("mensola")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-salvia/20 border border-salvia/50 text-foreground text-sm font-bold hover:bg-salvia/30 active:scale-95 transition-all"><Award className="w-4 h-4 text-salvia" />{tri("La mia mensola", "Mein Regal", "My shelf")}</button>
         <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
         <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
       </div>

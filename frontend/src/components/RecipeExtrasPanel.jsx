@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import CoursePlayer from "@/components/CoursePlayer";
 import CalendarReminder from "@/components/CalendarReminder";
+import MixPanel from "@/components/MixPanel";
 import EspertoPro from "@/components/EspertoPro";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
@@ -143,18 +144,24 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         </div>
       )}
 
+      {/* Z1-Z4: ricette MISCELA (kind=mix) — non sono pane */}
+      {ex.kind === "mix" && <MixPanel ex={ex} mode={mode} />}
+
       {/* CASA: dosi per la tua farina */}
-      {mode === "casa" && (
+      {ex.kind !== "mix" && mode === "casa" && (
         <div data-testid="casa-doses" className="rounded-2xl border border-border bg-background p-3.5">
           <p className="text-[11px] font-black uppercase tracking-wide text-primary mb-2">{tri("Le tue dosi (per la farina scelta)", "Deine Mengen (für die gewählte Mehlmenge)", "Your doses (for the chosen flour)")}</p>
           <div className="flex flex-wrap gap-1.5 mb-3">
             {[250, 500, 1000].map((f) => (
               <button key={f} data-testid={`casa-flour-${f}`} onClick={() => setFlour(f)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${flour === f ? "bg-primary text-white border-primary" : "text-muted-foreground border-border hover:text-foreground"}`}>{f} g</button>
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${flour === f ? "bg-primary text-primary-foreground border-primary" : "text-muted-foreground border-border hover:text-foreground"}`}>{f} g</button>
             ))}
-            <input data-testid="casa-flour-free" type="number" min="50" step="50" value={flour}
-              onChange={(e) => setFlour(Math.max(1, Number(e.target.value) || 0))}
-              className="w-24 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-background border border-border text-foreground outline-none focus:border-primary" />
+            <div className="inline-flex items-center gap-1">
+              <input data-testid="casa-flour-free" type="number" min="50" step="50" value={flour}
+                onChange={(e) => setFlour(Math.max(1, Number(e.target.value) || 0))}
+                className="w-20 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-background border border-border text-foreground outline-none focus:border-primary" />
+              <span className="text-xs text-muted-foreground font-bold">g</span>
+            </div>
           </div>
           <table className="w-full text-sm">
             <tbody>
@@ -171,7 +178,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
       )}
 
       {/* ESPERTO: scala professionale, tabella per impasto, temp. acqua, confronto, scheda stampa */}
-      {mode === "esperto" && (
+      {ex.kind !== "mix" && mode === "esperto" && (
         <EspertoPro recipe={recipe} ex={ex} settings={settings} />
       )}
 

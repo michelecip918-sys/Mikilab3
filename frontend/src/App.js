@@ -34,6 +34,10 @@ import RegalaPage from "@/components/RegalaPage";
 import PaginaSito from "@/components/PaginaSito";
 import MiglioratorePage from "@/components/MiglioratorePage";
 import AdminCosts from "@/components/AdminCosts";
+import CosaFaccio from "@/components/CosaFaccio";
+import Live from "@/components/Live";
+import Mensola from "@/components/Mensola";
+import { useFeatures } from "@/lib/features";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -49,6 +53,7 @@ function initialRoute() {
 
 export default function App() {
   const { lang } = useLang();
+  const features = useFeatures();
   const tri = (i, d, e, s, f, fa) => mkTri(lang)(i, d, e, s, f, fa);
   const { user, logout } = useAuth();
 
@@ -129,12 +134,15 @@ export default function App() {
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
             <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
-              {route === "home" && <HomeManuale onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; } if (r === "tecniche") { setTechSlug(null); } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
+              {route === "home" && <HomeManuale features={features} onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; } if (r === "tecniche") { setTechSlug(null); } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
+              {route === "cosa-faccio" && <CosaFaccio onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "live" && (!features || features.FEATURE_LIVE !== false) && <Live onBack={() => setRoute("home")} />}
+              {route === "mensola" && <Mensola onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
