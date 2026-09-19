@@ -1,6 +1,25 @@
-const CACHE_NAME = "mikilab-v61";
+const CACHE_NAME = "mikilab-v62";
+const API_CACHE = "mikilab-api-v62";
+const API_CACHE_MAX = 150;
+// GET API cui è consentita la copia offline (network-first). MAI /sitor/*, /live*, POST.
+const API_OFFLINE_ALLOW = ["/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide", "/api/learning-path", "/api/site-pages"];
 // App shell essenziale: precache così l'app si apre anche senza rete (backstube senza Wi-Fi).
 const SHELL = ["/", "/index.html", "/logo.png", "/manifest.json", "/wheat-bg.webp"];
+
+async function trimCache(name, max) {
+  try {
+    const cache = await caches.open(name);
+    const keys = await cache.keys();
+    if (keys.length > max) { for (const k of keys.slice(0, keys.length - max)) await cache.delete(k); }
+  } catch (e) { /* */ }
+}
+function isOfflineApi(url) {
+  try {
+    const p = new URL(url).pathname;
+    if (p.includes("/sitor/") || p.startsWith("/api/live") || p.startsWith("/api/done-ping")) return false;
+    return API_OFFLINE_ALLOW.some((a) => p === a || p.startsWith(a + "/"));
+  } catch (e) { return false; }
+}
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -18,7 +37,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
       const keys = await caches.keys();
-      await Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)));
+      await Promise.all(keys.filter((k) => k !== CACHE_NAME && k !== API_CACHE).map((k) => caches.delete(k)));
       await self.clients.claim();
     })()
   );
@@ -27,7 +46,28 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
-  if (req.url.includes("/api/")) return; // API: sempre freschi (la cache dati è in localStorage lato app)
+  if (req.url.includes("/api/")) {
+    // C8: solo alcune GET API hanno copia offline (network-first, max 150). Le altre restano solo-rete.
+    if (!isOfflineApi(req.url)) return;
+    event.respondWith(
+      (async () => {
+        try {
+          const fresh = await fetch(req);
+          if (fresh && fresh.status === 200) {
+            const cache = await caches.open(API_CACHE);
+            cache.put(req, fresh.clone()).catch(() => {});
+            trimCache(API_CACHE, API_CACHE_MAX);
+          }
+          return fresh;
+        } catch (e) {
+          const cached = await caches.match(req);
+          if (cached) return cached;
+          throw e;
+        }
+      })()
+    );
+    return;
+  }
 
   // Network-first con popolamento cache: online serve dati aggiornati, offline serve la copia.
   event.respondWith(

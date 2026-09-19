@@ -193,6 +193,7 @@ _PUBLIC_GET_ALLOW = (
     "/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide",
     "/api/site-settings", "/api/auth/me", "/api/health", "/api/sitemap",
     "/api/learning-path", "/api/site-pages",
+    "/api/time", "/api/live", "/api/features",
 )
 
 
@@ -229,7 +230,8 @@ async def _session_is_admin(request) -> bool:
 
 # Scritture consentite agli ANONIMI (tutto il resto: solo admin, altrimenti 404).
 _PUBLIC_WRITE_ALLOW = (
-    "/api/sitor/chat",
+    "/api/sitor/chat", "/api/sitor/plan",
+    "/api/live/ping", "/api/done-ping",
     "/api/auth/login", "/api/auth/logout",
     "/api/auth/forgot-password", "/api/auth/reset-password",
 )

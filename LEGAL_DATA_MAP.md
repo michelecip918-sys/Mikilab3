@@ -58,7 +58,16 @@ consegne, compliance, community, utenti). NON sono più raggiungibili da un visi
 - Dati storici ancora nel DB (solo NUMERI, mai le email): messaggi di contatto = **0**; iscritti newsletter = **1**.
   Da cancellare in una fase separata dedicata.
 
-## 11. Sicurezza API (STADIO A)
+## 12. Nuovi flussi COMANDO 2A (STADI F, G — backend) + C8 offline
+- **Contatori anonimi** (`usage_daily`): solo numeri per giorno (chat, corsi, tecniche, piano, foto, ping live, done). Nessun dato personale.
+- **Modalità risparmio** (`site_settings.savings_level` 0-3) e **feature flags** (`FEATURE_*`): letti a ogni chiamata IA. Livello 3 = nessuna chiamata IA pubblica.
+- **Cache chat** (`chat_cache`): risposte a domande identiche (stessa lingua+livello) per 24h, SOLO se la domanda non contiene email/telefono, non supera 300 caratteri e non ha profilo/conversazione. Nessuna domanda personale in cache.
+- **"Cosa faccio"** (`POST /api/sitor/plan`): il browser invia solo il testo libero (max 300); il server passa al modello l'elenco delle ricette VISIBILI e accetta SOLO id esistenti e non nascosti (Sitor non inventa). Limite 3/giorno (2 in risparmio).
+- **Live** (`GET /api/live`, `GET /api/time`, `POST /api/live/ping`): il ping usa un token casuale NON salvato in modo persistente (solo per contare i partecipanti dell'ultimo minuto; ping più vecchi di 10 min eliminati). Nessun identificativo personale.
+- **"Quanti l'hanno fatta"** (`POST /api/done-ping`): incrementa un contatore aggregato per ricetta/mese; l'hash dispositivo serve SOLO al limite 1/giorno. Mostrato solo se ≥ 20. Nessun dato personale.
+- **Offline (sw.js v62)**: copia offline (network-first, max 150 voci) delle GET già visitate di ricette, corso, tecniche, equipment-guide, learning-path, site-pages. MAI in cache `/sitor/*`, `/live*`, `/done-ping` né richieste POST.
+
+
 - **DEFAULT DENY totale**: un anonimo può leggere solo l'allowlist pubblica (ricette, extras, tecniche,
   equipment-guide, site-settings, auth/me, learning-path, site-pages, sitemap) e scrivere solo
   `/sitor/chat`, `/auth/login`, `/auth/logout`, `/auth/forgot-password`, `/auth/reset-password`.

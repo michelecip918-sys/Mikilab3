@@ -1,3 +1,33 @@
+# ⚡ AGGIORNAMENTO (2026-09) — COMANDO 2A: STADIO F + G (backend) + C8 offline
+
+## STADIO F — COSTI E RISPARMIO (backend COMPLETO)
+- `usage_daily` (F1): contatori anonimi giornalieri (chat_calls, course_gens, technique_gens, plan_calls, live_pings, done_pings, chat_cache_hits) via `_bump_usage()`.
+- Livello risparmio 0-3 (F2) in `site_settings.savings_level`, letto a OGNI chiamata IA:
+  L0 normale; L1 chat 8/persona, globale/2, modello SITOR_FAST, max_tokens 450, foto off; L2 chat 3/persona, globale/5, niente nuove gen corsi/tecniche pubbliche; L3 nessuna IA pubblica (chat/plan "riposano").
+- Endpoint admin: `GET/PUT /api/admin/costs` (tabella 30gg, limiti, alert >80%, savings_level, feature flags). `GET /api/features` pubblico per nascondere pulsanti.
+- Cache chat 24h `chat_cache` (F3): domande identiche (lingua+livello) senza profilo/conversazione, no email/telefono, ≤300 char. Verificato: 2ª domanda identica → cached=True.
+- Feature flags (F5): FEATURE_PHOTO_DIAG (off), FEATURE_PLAN, FEATURE_LIVE, FEATURE_VOICE_CHAT.
+
+## STADIO G — nuove rotte pubbliche (backend COMPLETO)
+- G2 `POST /api/sitor/plan`: "Cosa faccio con quello che ho" — modello riceve catalogo ricette visibili, torna solo JSON con max 3 id VALIDI (backend scarta id inventati/nascosti). Limite 3/gg (2 in risparmio). Contatore plan_calls.
+- G5 `GET /api/live`, `GET /api/time`, `POST /api/live/ping` + admin `GET/POST/DELETE /api/live-sessions`. Ping con token effimero, conta partecipanti ultimo minuto.
+- G6 `POST /api/done-ping`: contatore aggregato per ricetta/mese, mostrato solo se ≥20, limite 1/gg/dispositivo.
+
+## C8 — OFFLINE (sw.js v62)
+- Network-first con copia offline (max 150) per GET di recipes/recipe-extras/techniques/equipment-guide/learning-path/site-pages. MAI /sitor/*, /live*, /done-ping, né POST.
+
+## SICUREZZA (allowlist aggiornata)
+- GET pubbliche +: /api/time, /api/live, /api/features. WRITE pubbliche +: /api/sitor/plan, /api/live/ping, /api/done-ping.
+- Retest anonimo su 452 rotte: **0 leak** (24 combinazioni pubbliche). Admin routes (/admin/costs, /live-sessions) → 404 anonimo, 200 admin. 132 ricette visibili.
+
+## NON FATTO (frontend da costruire nel prossimo giro)
+- Pagina admin "Costi" (UI React) — backend pronto.
+- STADIO C1-C7 (timer assoluto+banner, calendario .ics, mani libere, "come va?" a tocchi, layout tablet, "il mio forno", piano+lista spesa) — frontend.
+- STADIO D1-D3 (idratazione vera, diario, tempo/temperatura) — frontend.
+- STADIO G1 (voce), G3 (la mia cucina), G4 (mensola+card), e le UI di G2/G5/G6 — frontend.
+- Nascondere i pulsanti in base a FEATURE_* e savings_level lato client.
+
+---
 # ⚡ AGGIORNAMENTO (2026-09) — COMANDO 1/2: Sicurezza + Correzioni + Scala Pro (STADI A, B, B2, N)
 
 ## STADIO A — SICUREZZA (DEFAULT DENY totale)

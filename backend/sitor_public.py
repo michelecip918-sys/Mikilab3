@@ -20,6 +20,64 @@ SITOR_GLOBAL_DAILY = int(_os.environ.get("SITOR_GLOBAL_DAILY", "500"))
 
 _COURSE_LANGS = ("it", "de", "en")
 _course_locks: dict = {}
+SITOR_FAST = _os.environ.get("SITOR_FAST", "") or None
+_CACHE_TTL = 86400
+
+
+async def _savings_level() -> int:
+    try:
+        s = await db.site_settings.find_one({}, {"_id": 0, "savings_level": 1})
+        return max(0, min(int((s or {}).get("savings_level") or 0), 3))
+    except Exception:
+        return 0
+
+
+async def _feature_on(name: str, default=True) -> bool:
+    try:
+        s = await db.site_settings.find_one({}, {"_id": 0, name: 1})
+        v = (s or {}).get(name)
+        return default if v is None else bool(v)
+    except Exception:
+        return default
+
+
+async def _bump_usage(field: str, n: int = 1):
+    try:
+        day = datetime.now(timezone.utc).date().isoformat()
+        await db.usage_daily.update_one({"day": day}, {"$inc": {field: int(n)}, "$setOnInsert": {"day": day}}, upsert=True)
+    except Exception:
+        pass
+
+
+def _chat_limits(level: int):
+    """(user_daily, global_daily, max_tokens, model) in base al livello risparmio."""
+    if level >= 3:
+        return (0, 0, 0, SITOR_BRAIN)
+    if level == 2:
+        return (3, max(1, SITOR_GLOBAL_DAILY // 5), 450, SITOR_FAST or SITOR_BRAIN)
+    if level == 1:
+        return (8, max(1, SITOR_GLOBAL_DAILY // 2), 450, SITOR_FAST or SITOR_BRAIN)
+    return (SITOR_USER_DAILY, SITOR_GLOBAL_DAILY, 900, SITOR_BRAIN)
+
+
+def _norm_q(s: str) -> str:
+    return _re.sub(r"[^\w\s]", "", (s or "").lower()).strip()
+
+
+def _cache_key(q: str, lang: str, level: str) -> str:
+    return _hashlib.sha256(f"{lang}|{level}|{_norm_q(q)}".encode()).hexdigest()[:32]
+
+
+def _cacheable(q: str, has_profile: bool) -> bool:
+    if has_profile or not q or len(q) > 300:
+        return False
+    if _re.search(r"[\w.+-]+@[\w-]+\.\w+", q):
+        return False
+    if _re.search(r"(?:\+?\d[\s-]?){7,}", q):
+        return False
+    return True
+
+
 
 
 def _lang2(lang: str) -> str:
@@ -131,6 +189,9 @@ async def course_v2(recipe_id: str, lang: str = "it", user: _Opt[dict] = Depends
     recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not recipe:
         raise HTTPException(status_code=404, detail="recipe_not_found")
+    # Livello risparmio >=2: nessuna NUOVA generazione per il pubblico (solo corsi già salvati); admin sì.
+    if not is_admin and await _savings_level() >= 2:
+        raise HTTPException(status_code=503, detail="savings_no_new_course")
     # tetto giornaliero alle NUOVE generazioni
     if not await _rate_limit("course_gen_daily", "all", COURSE_GEN_DAILY_CAP, 86400):
         raise HTTPException(status_code=503, detail="course_daily_cap")
@@ -144,6 +205,7 @@ async def course_v2(recipe_id: str, lang: str = "it", user: _Opt[dict] = Depends
         course = await _generate_course(recipe, lang2)
         if not course:
             raise HTTPException(status_code=503, detail="course_unavailable")
+        await _bump_usage("course_gens")
         # la verifica vale per la ricetta, non per la singola lingua
         prev = await db.recipe_courses_v2.find_one({"recipe_id": recipe_id, "verified": True}, {"_id": 0, "verified": 1})
         await db.recipe_courses_v2.update_one(
@@ -215,20 +277,30 @@ async def sitor_chat(body: PublicChatReq, request: Request):
     lang2 = _lang2(body.lang)
     langname = _CHAT_SYS.get(lang2, "italiano")
     dev = _device_id(request)
+    slevel = await _savings_level()
+    user_daily, global_daily, max_tok, model = _chat_limits(slevel)
+    level = (body.level or "casa").strip().lower()
+    # Livello 3: Sitor riposa, nessuna chiamata IA pubblica.
+    if slevel >= 3:
+        msg = {"it": "Sitor sta riposando: usa i pulsanti «Come va?» e i corsi già scritti.",
+               "de": "Sitor macht Pause: nutze die «Wie läuft's?»-Knöpfe und die fertigen Kurse.",
+               "en": "Sitor is resting: use the «How's it going?» buttons and the ready courses."}
+        return {"ok": False, "resting": True, "reply": msg.get(lang2, msg["it"])}
     # limiti: per-persona e globale (in questo ordine, senza consumare il globale se l'utente è già oltre)
-    if not await _rate_limit("sitor_user_daily", dev, SITOR_USER_DAILY, 86400):
+    if not await _rate_limit("sitor_user_daily", dev, user_daily, 86400):
         msg = {"it": "Hai raggiunto il limite di messaggi per oggi. Torna domani, ci sarò!",
                "de": "Du hast das heutige Nachrichtenlimit erreicht. Komm morgen wieder, ich bin da!",
                "en": "You've reached today's message limit. Come back tomorrow, I'll be here!"}
         return {"ok": False, "limited": True, "reply": msg.get(lang2, msg["it"])}
-    if not await _rate_limit("sitor_global_daily", "all", SITOR_GLOBAL_DAILY, 86400):
+    if not await _rate_limit("sitor_global_daily", "all", global_daily, 86400):
         msg = {"it": "Sitor ha ricevuto tantissime domande oggi. Torna domani, grazie!",
                "de": "Sitor hat heute sehr viele Fragen erhalten. Komm morgen wieder, danke!",
                "en": "Sitor got a lot of questions today. Please come back tomorrow, thanks!"}
         return {"ok": False, "limited": True, "reply": msg.get(lang2, msg["it"])}
 
     tools_line = ""
-    if body.tools and isinstance(body.tools, dict):
+    has_profile = bool(body.tools and isinstance(body.tools, dict) and any(v for v in body.tools.values()))
+    if has_profile:
         parts = [f"{k}: {v}" for k, v in body.tools.items() if v]
         if parts:
             tools_line = "ATTREZZI/FORNO DELL'UTENTE: " + "; ".join(parts)[:400]
@@ -269,10 +341,18 @@ async def sitor_chat(body: PublicChatReq, request: Request):
     last = hist[-1].content[:1500]
     convo_block = ("CONVERSAZIONE PRECEDENTE:\n" + convo) if convo else ""
     prompt = f"{tools_line}\n{convo_block}\n\nDOMANDA: {last}".strip()
+    # F3: cache 24h per domande identiche (stessa lingua+livello) senza profilo personale né conversazione.
+    use_cache = _cacheable(last, has_profile) and not convo
+    ck = _cache_key(last, lang2, level) if use_cache else None
+    if ck:
+        hit = await db.chat_cache.find_one({"key": ck, "exp": {"$gt": now_iso()}}, {"_id": 0, "reply": 1})
+        if hit and hit.get("reply"):
+            await _bump_usage("chat_cache_hits")
+            return {"ok": True, "reply": hit["reply"], "cached": True}
     try:
         reply = ""
         chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"sitorchat-{dev}",
-                       system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=900)
+                       system_message=sysmsg).with_model("anthropic", model).with_params(max_tokens=max_tok)
         async for ev in chat.stream_message(UserMessage(text=prompt)):
             if isinstance(ev, TextDelta):
                 reply += ev.content or ""
@@ -285,6 +365,10 @@ async def sitor_chat(body: PublicChatReq, request: Request):
               "de": "Entschuldige, kleiner Fehler. Versuch es gleich nochmal.",
               "en": "Sorry, small glitch. Please try again shortly."}
         return {"ok": False, "reply": fb.get(lang2, fb["it"])}
+    await _bump_usage("chat_calls")
+    if ck:
+        exp = (datetime.now(timezone.utc) + timedelta(seconds=_CACHE_TTL)).isoformat()
+        await db.chat_cache.update_one({"key": ck}, {"$set": {"key": ck, "reply": reply, "exp": exp}}, upsert=True)
     return {"ok": True, "reply": reply}
 
 
@@ -367,6 +451,9 @@ async def technique_get(slug: str, lang: str = "it", user: _Opt[dict] = Depends(
     if doc and doc.get("body"):
         return {"ok": True, "slug": slug, "title": t[lang2], "body": doc["body"],
                 "verified": bool(meta.get("verified")), "hidden_images": meta.get("hidden_images") or []}
+    is_admin = bool(user and user.get("role") == "admin")
+    if not is_admin and await _savings_level() >= 2:
+        raise HTTPException(status_code=503, detail="savings_no_new_technique")
     if not await _rate_limit("technique_gen_daily", "all", COURSE_GEN_DAILY_CAP, 86400):
         raise HTTPException(status_code=503, detail="technique_daily_cap")
     lk = _tq_locks.setdefault(f"{slug}:{lang2}", _asyncio.Lock())
@@ -378,6 +465,7 @@ async def technique_get(slug: str, lang: str = "it", user: _Opt[dict] = Depends(
         body = await _gen_technique(slug, lang2)
         if not body:
             raise HTTPException(status_code=503, detail="technique_unavailable")
+        await _bump_usage("technique_gens")
         await db.technique_pages.update_one({"slug": slug, "lang": lang2},
             {"$set": {"slug": slug, "lang": lang2, "body": body, "verified": bool(meta.get("verified")), "generated_at": now_iso()}}, upsert=True)
         return {"ok": True, "slug": slug, "title": t[lang2], "body": body,
@@ -410,3 +498,239 @@ async def technique_edit(slug: str, body: TechniqueEdit, admin: dict = Depends(r
         await db.technique_pages.update_many({"slug": slug}, {"$set": meta})
     doc = await db.technique_pages.find_one({"slug": slug}, {"_id": 0, "verified": 1})
     return {"ok": True, "verified": bool((doc or {}).get("verified"))}
+
+
+class LiveSessionReq(_BM):
+    title: str
+    recipe_id: _Opt[str] = None
+    scale: _Opt[str] = None
+    start_utc: str
+    duration_min: int = 180
+    notes: _Opt[str] = None
+
+
+@api_router.get("/live-sessions")
+async def live_sessions_list(admin: dict = Depends(require_admin)):
+    docs = await db.live_sessions.find({}, {"_id": 0}).sort("start_utc", -1).to_list(100)
+    return {"sessions": docs}
+
+
+@api_router.post("/live-sessions")
+async def live_sessions_create(body: LiveSessionReq, admin: dict = Depends(require_admin)):
+    doc = {"id": uuid.uuid4().hex, "title": body.title[:120], "recipe_id": body.recipe_id,
+           "scale": body.scale, "start_utc": body.start_utc, "duration_min": int(body.duration_min or 180),
+           "notes": (body.notes or "")[:500], "created_at": now_iso()}
+    await db.live_sessions.insert_one(dict(doc))
+    return {"ok": True, "session": doc}
+
+
+@api_router.delete("/live-sessions/{sid}")
+async def live_sessions_delete(sid: str, admin: dict = Depends(require_admin)):
+    await db.live_sessions.delete_one({"id": sid})
+    return {"ok": True}
+
+
+
+# ===========================================================================
+# STADIO F — COSTI (admin): usage 30 giorni, livello risparmio, feature flags
+# ===========================================================================
+@api_router.get("/admin/costs")
+async def admin_costs(admin: dict = Depends(require_admin)):
+    days = [(datetime.now(timezone.utc).date() - timedelta(days=i)).isoformat() for i in range(30)]
+    rows = {d["day"]: d async for d in db.usage_daily.find({"day": {"$in": days}}, {"_id": 0})}
+    s = await db.site_settings.find_one({}, {"_id": 0}) or {}
+    fields = ["chat_calls", "course_gens", "technique_gens", "plan_calls", "vision_calls", "live_pings", "done_pings", "chat_cache_hits"]
+    table = [{"day": d, **{f: int((rows.get(d) or {}).get(f, 0)) for f in fields}} for d in days]
+    over80 = {}
+    today = table[0]
+    lim = {"chat_calls": SITOR_GLOBAL_DAILY, "course_gens": COURSE_GEN_DAILY_CAP, "technique_gens": COURSE_GEN_DAILY_CAP}
+    for k, v in lim.items():
+        if v and today.get(k, 0) >= 0.8 * v:
+            over80[k] = {"used": today.get(k, 0), "limit": v}
+    return {"table": table, "savings_level": int(s.get("savings_level") or 0),
+            "features": {"FEATURE_PHOTO_DIAG": bool(s.get("FEATURE_PHOTO_DIAG", False)),
+                         "FEATURE_PLAN": bool(s.get("FEATURE_PLAN", True)),
+                         "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
+                         "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True))},
+            "limits": {"SITOR_USER_DAILY": SITOR_USER_DAILY, "SITOR_GLOBAL_DAILY": SITOR_GLOBAL_DAILY, "COURSE_GEN_DAILY_CAP": COURSE_GEN_DAILY_CAP},
+            "alerts_over_80pct": over80}
+
+
+class SavingsReq(_BM):
+    savings_level: _Opt[int] = None
+    FEATURE_PHOTO_DIAG: _Opt[bool] = None
+    FEATURE_PLAN: _Opt[bool] = None
+    FEATURE_LIVE: _Opt[bool] = None
+    FEATURE_VOICE_CHAT: _Opt[bool] = None
+
+
+@api_router.put("/admin/costs")
+async def admin_costs_set(body: SavingsReq, admin: dict = Depends(require_admin)):
+    upd = {}
+    if body.savings_level is not None:
+        upd["savings_level"] = max(0, min(int(body.savings_level), 3))
+    for f in ("FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT"):
+        v = getattr(body, f)
+        if v is not None:
+            upd[f] = bool(v)
+    if upd:
+        await db.site_settings.update_one({}, {"$set": upd}, upsert=True)
+    return {"ok": True, **upd}
+
+
+@api_router.get("/features")
+async def public_features():
+    """Interruttori pubblici (per nascondere i pulsanti lato client)."""
+    s = await db.site_settings.find_one({}, {"_id": 0}) or {}
+    return {"FEATURE_PHOTO_DIAG": bool(s.get("FEATURE_PHOTO_DIAG", False)),
+            "FEATURE_PLAN": bool(s.get("FEATURE_PLAN", True)),
+            "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
+            "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True)),
+            "savings_level": int(s.get("savings_level") or 0)}
+
+
+# ===========================================================================
+# STADIO G2 — "Cosa faccio con quello che ho?" · POST /api/sitor/plan
+# ===========================================================================
+class PlanReq(_BM):
+    prompt: str = ""
+    lang: str = "it"
+
+
+@api_router.post("/sitor/plan")
+async def sitor_plan(body: PlanReq, request: Request):
+    lang2 = _lang2(body.lang)
+    if not await _feature_on("FEATURE_PLAN", True):
+        raise HTTPException(status_code=404, detail="not_found")
+    slevel = await _savings_level()
+    if slevel >= 3:
+        return {"ok": False, "resting": True, "recipes": []}
+    dev = _device_id(request)
+    cap = 2 if slevel >= 1 else 3
+    if not await _rate_limit("sitor_plan_daily", dev, cap, 86400):
+        msg = {"it": "Hai già usato «Cosa faccio» per oggi. Torna domani!",
+               "de": "Du hast «Was mache ich» heute schon genutzt. Bis morgen!",
+               "en": "You've used «What can I make» for today. See you tomorrow!"}
+        return {"ok": False, "limited": True, "reply": msg.get(lang2, msg["it"]), "recipes": []}
+    q = (body.prompt or "").strip()[:300]
+    if not q:
+        raise HTTPException(status_code=400, detail="empty_prompt")
+    # elenco compatto delle ricette VISIBILI (id, nome, categoria, difficoltà, tempo, richiede LM)
+    vis = await db.recipes.find({"collection_name": "mikilab", "organization_id": ORG_DEFAULT}, {"_id": 0}).to_list(3000)
+    hidden = {e["recipe_id"] async for e in db.recipe_extras.find({"hidden_public": True}, {"_id": 0, "recipe_id": 1})}
+    ex_map = {e["recipe_id"]: e async for e in db.recipe_extras.find({}, {"_id": 0, "recipe_id": 1, "difficulty": 1})}
+    catalog = []
+    for r in vis:
+        rid = r.get("id")
+        if rid in hidden:
+            continue
+        hrs = (float(r.get("bulk_fermentation_hours") or 0) + float(r.get("proofing_hours") or 0))
+        catalog.append({"id": rid, "n": (r.get("name") or "")[:60], "cat": r.get("menu_category") or "",
+                        "d": (ex_map.get(rid) or {}).get("difficulty") or "facile",
+                        "h": round(hrs, 1), "lm": bool(r.get("sourdough_grams"))})
+    valid_ids = {c["id"] for c in catalog}
+    import json as __j
+    cat_txt = __j.dumps(catalog, ensure_ascii=False)[:9000]
+    sysmsg = ("Sei Sitor. Scegli AL MASSIMO 3 ricette DALL'ELENCO fornito che rispondono alla richiesta. "
+              "NON inventare ricette. Rispondi SOLO con JSON valido: "
+              '{"picks":[{"id":"<id esatto dall\'elenco>","flour_g":<intero>,"reason":"<una frase>"}],"warning":"<breve o vuoto>"}. '
+              f"Lingua della reason/warning: {_CHAT_SYS.get(lang2,'italiano')}.")
+    prompt = f"ELENCO RICETTE (JSON): {cat_txt}\n\nRICHIESTA UTENTE: {q}"
+    try:
+        raw = ""
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"plan-{dev}", system_message=sysmsg).with_model("anthropic", SITOR_FAST or SITOR_BRAIN).with_params(max_tokens=500)
+        async for ev in chat.stream_message(UserMessage(text=prompt)):
+            if isinstance(ev, TextDelta):
+                raw += ev.content or ""
+        m = _re.search(r"\{.*\}", raw, _re.S)
+        parsed = __j.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.getLogger(__name__).warning("plan fail: %s", str(e)[:120])
+        return {"ok": False, "recipes": []}
+    await _bump_usage("plan_calls")
+    out = []
+    for p in (parsed.get("picks") or [])[:3]:
+        rid = str(p.get("id") or "")
+        if rid in valid_ids:  # il backend scarta id inventati o nascosti
+            out.append({"id": rid, "flour_g": int(p.get("flour_g") or 0) or None, "reason": str(p.get("reason") or "")[:160]})
+    return {"ok": True, "recipes": out, "warning": str(parsed.get("warning") or "")[:200]}
+
+
+# ===========================================================================
+# STADIO G5 — Impastiamo insieme (Live) · G6 — "quanti l'hanno fatta"
+# ===========================================================================
+@api_router.get("/time")
+async def server_time():
+    return {"now": now_iso(), "epoch_ms": int(datetime.now(timezone.utc).timestamp() * 1000)}
+
+
+@api_router.get("/live")
+async def live_get():
+    if not await _feature_on("FEATURE_LIVE", True):
+        raise HTTPException(status_code=404, detail="not_found")
+    now = datetime.now(timezone.utc)
+    docs = await db.live_sessions.find({}, {"_id": 0}).sort("start_utc", 1).to_list(50)
+    current = nxt = None
+    for d in docs:
+        try:
+            st = datetime.fromisoformat(d["start_utc"])
+            if st.tzinfo is None:
+                st = st.replace(tzinfo=timezone.utc)
+        except Exception:
+            continue
+        dur = int(d.get("duration_min") or 180)
+        if st <= now <= st + timedelta(minutes=dur):
+            current = d
+        elif st > now and nxt is None:
+            nxt = d
+    part = 0
+    try:
+        cutoff = (now - timedelta(minutes=1)).isoformat()
+        part = len(await db.live_pings.distinct("token", {"at": {"$gt": cutoff}}))
+    except Exception:
+        pass
+    return {"ok": True, "current": current, "next": nxt, "participants": part, "server_now": now_iso()}
+
+
+class LivePing(_BM):
+    token: str = ""
+
+
+@api_router.post("/live/ping")
+async def live_ping(body: LivePing, request: Request):
+    if not await _feature_on("FEATURE_LIVE", True):
+        raise HTTPException(status_code=404, detail="not_found")
+    tok = (body.token or "")[:40] or secrets.token_urlsafe(8)
+    await db.live_pings.update_one({"token": tok}, {"$set": {"token": tok, "at": now_iso()}}, upsert=True)
+    await _bump_usage("live_pings")
+    # pulizia leggera dei ping vecchi (non distruttivo sui dati: solo ping effimeri)
+    try:
+        await db.live_pings.delete_many({"at": {"$lt": (datetime.now(timezone.utc) - timedelta(minutes=10)).isoformat()}})
+    except Exception:
+        pass
+    cutoff = (datetime.now(timezone.utc) - timedelta(minutes=1)).isoformat()
+    n = len(await db.live_pings.distinct("token", {"at": {"$gt": cutoff}}))
+    return {"ok": True, "participants": n}
+
+
+class DonePing(_BM):
+    recipe_id: str = ""
+
+
+@api_router.post("/done-ping")
+async def done_ping(body: DonePing, request: Request):
+    rid = (body.recipe_id or "").strip()
+    if not rid:
+        raise HTTPException(status_code=400, detail="no_recipe")
+    dev = _device_id(request)
+    month = datetime.now(timezone.utc).strftime("%Y-%m")
+    key = _hashlib.sha256(f"{dev}|{rid}|{month}".encode()).hexdigest()[:24]
+    # una volta al giorno per ricetta+dispositivo (hash solo per il limite)
+    if not await _rate_limit(f"done_{rid}", dev, 1, 86400):
+        pass  # oltre il limite: non incrementa di nuovo
+    else:
+        await db.done_counters.update_one({"recipe_id": rid, "month": month}, {"$inc": {"count": 1}, "$setOnInsert": {"recipe_id": rid, "month": month}}, upsert=True)
+        await _bump_usage("done_pings")
+    doc = await db.done_counters.find_one({"recipe_id": rid, "month": month}, {"_id": 0, "count": 1})
+    n = int((doc or {}).get("count") or 0)
+    return {"ok": True, "count": n if n >= 20 else 0, "threshold": 20}
