@@ -19,6 +19,32 @@ def _rblob(r: dict) -> str:
     return " ".join(str(p) for p in parts).lower()
 
 
+def calc_hydration(r: dict):
+    """Idratazione CALCOLATA (acqua ÷ farina × 100). None se non calcolabile o incoerente."""
+    try:
+        f = float(r.get("flour_grams") or 0)
+        w = float(r.get("water_grams") or 0)
+        if f <= 0 or w <= 0:
+            return None
+        h = w / f * 100.0
+        if h < 20 or h > 130:
+            return None
+        return round(h)
+    except Exception:
+        return None
+
+
+def _bake_temp(r: dict):
+    for k in ("bake_temp", "bake_temp_c", "oven_temp", "temperatura_cottura"):
+        try:
+            v = r.get(k)
+            if v is not None and float(v) > 0:
+                return float(v)
+        except Exception:
+            continue
+    return None
+
+
 def auto_difficulty(r: dict) -> str:
     blob = _rblob(r)
     hyd = r.get("hydration_percent")
@@ -32,6 +58,8 @@ def auto_difficulty(r: dict) -> str:
         hyd_high = hyd is not None and float(hyd) >= 85
     except Exception:
         hyd_high = False
+    calc_h = calc_hydration(r)
+    bt = _bake_temp(r)
     # SFIDA
     if laminated or lye:
         return "sfida"
@@ -39,8 +67,12 @@ def auto_difficulty(r: dict) -> str:
         return "sfida"
     if has_lm and hyd_high:
         return "sfida"
+    if bt is not None and bt > 280:
+        return "sfida"
     # MEDIA
     if poolish_biga or (big_leaven and not has_lm) or rich or has_lm:
+        return "media"
+    if calc_h is not None and calc_h >= 80:
         return "media"
     # FACILE
     return "facile"
@@ -85,6 +117,9 @@ def derive_safety(r: dict) -> _List[str]:
         out.append("lye")
     if any(k in blob for k in ["forno", "oven", "backofen", "vapore", "steam", "dampf", "cottura"]):
         out.append("oven")
+    bt = _bake_temp(r)
+    if bt is not None and bt > 280:
+        out.append("hot_high_temp")
     return out
 
 
@@ -165,6 +200,8 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "allergens": derive_allergens(r),
         "safety": derive_safety(r),
         "leaven_kind": _leaven_kind(r),
+        "calc_hydration": calc_hydration(r),
+        "bake_temp": _bake_temp(r),
         "real_photo": bool(stored.get("real_photo")),
         "verified": bool(stored.get("verified")),
         "hidden_public": bool(stored.get("hidden_public")),
@@ -192,6 +229,7 @@ async def recipe_extras_list(user: _Opt[dict] = Depends(optional_user)):
         out[rid] = {
             "difficulty": s.get("difficulty") or auto_difficulty(r),
             "hidden_public": bool(s.get("hidden_public")),
+            "real_photo": bool(s.get("real_photo")),
         }
     return out
 

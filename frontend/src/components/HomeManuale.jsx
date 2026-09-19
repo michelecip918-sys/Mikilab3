@@ -9,11 +9,11 @@ const PUB = process.env.PUBLIC_URL;
 // 5 ricette FACILI (impasto diretto, senza lievito madre, senza sfoglia, senza liscivia),
 // in ordine crescente di difficoltà. Risolte per NOME (id robusti tra ambienti).
 const START_NAMES = [
-  "Crackers Croccanti ai Semi",
-  "Grissini Stirati Torinesi",
-  "Focaccia Barese",
   "Panino al Latte per Hamburger",
-  "Pizza Napoletana (tonda)",
+  "Panino alle Patate",
+  "Panino al Sesamo",
+  "Grissini al Sesamo",
+  "Pizzette Rosse da Rosticceria",
 ];
 
 export const SKILL_KEY = "mikilab_skill"; // "learning" | "expert"

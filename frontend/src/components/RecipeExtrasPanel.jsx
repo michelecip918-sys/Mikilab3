@@ -61,6 +61,20 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
     return rows.map(([n, g]) => [n, round(g)]);
   }, [recipe, flour, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // ESPERTO: percentuali del panificatore (base = farina della ricetta) + grammi per la farina scelta.
+  const bakerRows = useMemo(() => {
+    const fg = Number(recipe.flour_grams) || 0;
+    const pct = (grams) => (fg > 0 && grams ? Math.round((Number(grams) / fg) * 1000) / 10 : null);
+    const rows = [[tri("Farina", "Mehl", "Flour"), fg > 0 ? 100 : null, flour]];
+    if (recipe.water_grams) rows.push([tri("Acqua", "Wasser", "Water"), pct(recipe.water_grams), (Number(recipe.water_grams) || 0) / (fg || 1) * flour]);
+    if (recipe.sourdough_grams) rows.push([tri("Lievito madre", "Lievito madre", "Sourdough"), pct(recipe.sourdough_grams), (Number(recipe.sourdough_grams) || 0) / (fg || 1) * flour]);
+    if (recipe.salt_grams) rows.push([tri("Sale", "Salz", "Salt"), pct(recipe.salt_grams), (Number(recipe.salt_grams) || 0) / (fg || 1) * flour]);
+    (recipe.extra_ingredients || []).forEach((it2) => {
+      if (it2 && it2.name && it2.percent) rows.push([it2.name, Number(it2.percent), flour * (Number(it2.percent) / 100)]);
+    });
+    return rows;
+  }, [recipe, flour, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const saveAdmin = async (patch) => {
     setSaving(true);
     try { const r = await api.put(`/recipe-extras/${recipe.id}`, patch); setEx(r.data); toast.success(tri("Salvato", "Gespeichert", "Saved")); }
@@ -127,11 +141,32 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         </div>
       )}
 
-      {/* ESPERTO: nota % del fornaio */}
+      {/* ESPERTO: percentuali del panificatore, idratazione calcolata, scaling a qualsiasi peso */}
       {mode === "esperto" && (
-        <div data-testid="esperto-note" className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-3.5 text-sm text-[#cbd5e1]">
-          {tri("Modalità esperto: usa le percentuali del panificatore e l'idratazione qui sotto; scala a qualsiasi peso.", "Expertenmodus: nutze Bäckerprozente und Hydration unten; auf jedes Gewicht skalierbar.", "Expert mode: use baker's percentages and hydration below; scale to any weight.")}
-          {recipe.hydration_percent ? <span className="block mt-1 font-bold text-white">{tri("Idratazione", "Hydration", "Hydration")}: {recipe.hydration_percent}%</span> : null}
+        <div data-testid="esperto-note" className="rounded-2xl border border-[#2A3B49] bg-[#0b1220] p-3.5">
+          <p className="text-[11px] font-black uppercase tracking-wide text-[#c9a227] mb-2">{tri("Percentuali del panificatore", "Bäckerprozente", "Baker's percentages")}</p>
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="text-xs text-[#7E8A93]">{tri("Farina di riferimento", "Referenzmehl", "Reference flour")}:</span>
+            <input data-testid="esperto-flour" type="number" min="1" step="100" value={flour}
+              onChange={(e) => setFlour(Math.max(1, Number(e.target.value) || 0))}
+              className="w-28 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-[#0D1520] border border-[#2A3B49] text-white outline-none focus:border-[#c9a227]" />
+            <span className="text-xs text-[#7E8A93]">g</span>
+            <span data-testid="esperto-hydration" className="ml-auto text-xs font-bold text-white">
+              {tri("Idratazione", "Hydration", "Hydration")}: {ex.calc_hydration != null ? `${ex.calc_hydration}%` : "—"}
+            </span>
+          </div>
+          <table className="w-full text-sm">
+            <thead><tr className="text-[10px] uppercase text-[#7E8A93]"><th className="text-left font-bold py-1">{tri("Ingrediente", "Zutat", "Ingredient")}</th><th className="text-right font-bold py-1">%</th><th className="text-right font-bold py-1">g</th></tr></thead>
+            <tbody>
+              {bakerRows.map(([n, pct, g], i) => (
+                <tr key={i} className="border-b border-[#2A3B49]/50 last:border-0">
+                  <td className="py-1.5 text-[#cbd5e1]">{n}</td>
+                  <td className="py-1.5 text-right text-[#c9a227] font-semibold">{pct == null ? "—" : `${pct}%`}</td>
+                  <td className="py-1.5 text-right font-bold text-white">{round(g)} g</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
 
@@ -211,6 +246,10 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
           {ex.safety.includes("oven") && (
             <p className="flex items-start gap-2 text-[13px] text-[#f0c9cf]"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-[#b06e78]" />
               {tri("Forno e vapore scottano.", "Ofen und Dampf verbrennen.", "Oven and steam can burn.")}</p>
+          )}
+          {ex.safety.includes("hot_high_temp") && (
+            <p data-testid="safety-hot-temp" className="flex items-start gap-2 text-[13px] text-[#f0c9cf]"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0 text-[#b06e78]" />
+              {tri("Questa ricetta prevede una temperatura oltre 300 °C: nel forno di casa (massimo circa 250 °C) il risultato sarà diverso.", "Dieses Rezept sieht über 300 °C vor: im Hausofen (max. ca. 250 °C) fällt das Ergebnis anders aus.", "This recipe calls for over 300 °C: in a home oven (about 250 °C max) the result will differ.")}</p>
           )}
         </div>
       )}

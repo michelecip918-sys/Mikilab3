@@ -3034,9 +3034,8 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
                 d.pop("owner_id", None)
             existing_ids = {d.get("id") for d in docs}
             docs = docs + [d for d in mine if d.get("id") not in existing_ids]
-        # Modalità "assaggio": i non-PRO vedono nome/foto/ingredienti base, il metodo è bloccato.
-        # Eccezione: 2 ricette DEMO + ricette sbloccate con acquisto singolo restano complete.
-        if not await user_is_pro(user):
+        # Manuale pubblico e GRATUITO: nessun blocco "assaggio"/PRO, ogni ricetta è completa.
+        if False:  # (teaser/paywall disattivato)
             ent = {}
             if user:
                 ent = await db.entitlements.find_one({"email": (user.get("email") or "").strip().lower()}, {"_id": 0}) or {}
@@ -3061,6 +3060,11 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
         # Accesso GRATUITO totale: nessuna ricetta bloccata.
         for d in docs:
             d["locked"] = False
+        # Nascondi al pubblico le ricette con recipe_extras.hidden_public=true (solo l'admin le vede).
+        if not (user and user.get("role") == "admin"):
+            hidden = {x["recipe_id"] async for x in db.recipe_extras.find({"hidden_public": True}, {"_id": 0, "recipe_id": 1})}
+            if hidden:
+                docs = [d for d in docs if d.get("id") not in hidden]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")

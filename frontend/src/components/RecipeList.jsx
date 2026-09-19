@@ -356,6 +356,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               {r.image_url && (
                 <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               )}
+              {r.image_url && !diffMap[r.id]?.real_photo && (
+                <span data-testid="card-illustrative" className="absolute bottom-1 right-1 z-[3] text-[8px] font-bold uppercase tracking-wide bg-black/55 text-white/90 px-1.5 py-0.5 rounded">{triM("Immagine illustrativa", "Symbolbild", "Illustrative image")}</span>
+              )}
               {/* overlay cyber: griglia + gradiente + scanline teal */}
               <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-[linear-gradient(to_right,#D9520011_1px,transparent_1px),linear-gradient(to_bottom,#D9520011_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] opacity-30" />
               <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-t from-[#0b0f19] via-[#0b0f19]/10 to-transparent" />
