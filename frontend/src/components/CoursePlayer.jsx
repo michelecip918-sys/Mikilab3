@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { X, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Mic, MicOff, ChefHat, AlertTriangle, Eye } from "lucide-react";
+import { X, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Mic, MicOff, ChefHat, AlertTriangle, Eye, Hand, HelpCircle, CalendarClock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { useAuth } from "@/auth/AuthContext";
@@ -27,12 +27,54 @@ export default function CoursePlayer({ recipe, onClose }) {
   const [ttsOn, setTtsOn] = useState(true);
   const [micOn, setMicOn] = useState(false);
   const [heard, setHeard] = useState("");
+  const [handsFree, setHandsFree] = useState(false);
+  const [comeVa, setComeVa] = useState(null);     // {problem,cause,fix} mostrato senza IA
+  const [endAt, setEndAt] = useState(null);       // C1: orario di fine ASSOLUTO (ms)
+  const [nowMs, setNowMs] = useState(Date.now());
+  const [expired, setExpired] = useState(false);
   const wlRef = useRef(null);
   const recRef = useRef(null);
   const ttsOnRef = useRef(true);
   const idxRef = useRef(0);
+  const beepRef = useRef(null);
+  const isIOS = typeof navigator !== "undefined" && /iP(hone|ad|od)/.test(navigator.userAgent);
   useEffect(() => { ttsOnRef.current = ttsOn; }, [ttsOn]);
   useEffect(() => { idxRef.current = idx; }, [idx]);
+
+  const remainingSec = endAt ? Math.max(0, Math.round((endAt - nowMs) / 1000)) : 0;
+  const fmtRemain = () => `${Math.floor(remainingSec / 60)}:${String(remainingSec % 60).padStart(2, "0")}`;
+
+  const playAlarm = useCallback(() => {
+    try { if (navigator.vibrate) navigator.vibrate([400, 200, 400, 200, 400]); } catch { /* */ }
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) {
+        const ctx = beepRef.current || new AC(); beepRef.current = ctx;
+        [0, 0.6, 1.2].forEach((t) => {
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.frequency.value = 880; o.connect(g); g.connect(ctx.destination);
+          g.gain.setValueAtTime(0.001, ctx.currentTime + t);
+          g.gain.exponentialRampToValueAtTime(0.25, ctx.currentTime + t + 0.05);
+          g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.4);
+          o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.42);
+        });
+      }
+    } catch { /* */ }
+  }, []);
+
+  // C1: tick al secondo + ricalcolo alla riapertura schermo (usa orario assoluto, non un contatore).
+  useEffect(() => {
+    if (!endAt) return;
+    const tick = () => {
+      const t = Date.now(); setNowMs(t);
+      if (t >= endAt) { setExpired(true); setEndAt(null); }
+    };
+    const id = setInterval(tick, 1000);
+    const onVis = () => { if (document.visibilityState === "visible") tick(); };
+    document.addEventListener("visibilitychange", onVis);
+    return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
+  }, [endAt]);
+  useEffect(() => { if (expired) playAlarm(); }, [expired, playAlarm]);
 
   useEffect(() => {
     let ok = true;
@@ -93,21 +135,50 @@ export default function CoursePlayer({ recipe, onClose }) {
 
   const doTimer = useCallback((mins) => {
     if (!mins || mins <= 0) { toast.info(tri("Nessun timer per questo passo.", "Kein Timer für diesen Schritt.", "No timer for this step.")); return; }
-    addTimer(course?.title || recipe.name || "Timer", mins);
+    const end = Date.now() + mins * 60000;
+    setExpired(false); setEndAt(end); setNowMs(Date.now());
+    try { localStorage.setItem(`mikilab_timer_${recipe.id}`, String(end)); } catch { /* */ }
+    addTimer(course?.title || recipe.name || "Timer", mins);   // anche nella barra globale
     if (navigator.vibrate) navigator.vibrate(120);
     toast.success(tri(`Timer di ${mins} minuti avviato`, `Timer über ${mins} Minuten gestartet`, `${mins}-minute timer started`));
   }, [addTimer, course, recipe, tri]);
 
+  // C1: ripristina un timer ancora attivo salvato nel dispositivo (dopo blocco schermo / ricarica).
+  useEffect(() => {
+    try {
+      const saved = Number(localStorage.getItem(`mikilab_timer_${recipe.id}`) || 0);
+      if (saved && saved > Date.now()) { setEndAt(saved); setNowMs(Date.now()); }
+    } catch { /* */ }
+  }, [recipe.id]);
+
+  // C4: apre "Chiedi a Sitor" con il contesto della fase (senza salvare nulla).
+  const askSitor = useCallback((p) => {
+    const ctx = p ? `${p.name}: ${p.signals || ""}`.trim() : (course?.title || recipe.name);
+    window.dispatchEvent(new CustomEvent("mikilab-open-chat", { detail: { context: ctx } }));
+    onClose();
+  }, [course, recipe, onClose]);
+
   const handleTranscript = useCallback((said) => {
     const s = said.toLowerCase(); setHeard(said);
+    const p = phases[idxRef.current];
     const m = s.match(/(\d{1,3})\s*(min|minut|minute|minuten)/);
     if (m) { doTimer(parseInt(m[1], 10)); return; }
+    if (/\b(stop|ferma|halt)\b/.test(s)) { try { window.speechSynthesis.cancel(); } catch { /* */ } return; }
     if (/\b(avanti|prossim|weiter|next)\b/.test(s)) { go((c) => c + 1); return; }
     if (/\b(indietro|precedente|zur[üu]ck|back)\b/.test(s)) { go((c) => c - 1); return; }
-    if (/\b(ripeti|wiederhol|repeat)\b/.test(s)) { speak(phaseText(phases[idxRef.current])); return; }
-    if (/\b(timer)\b/.test(s)) { doTimer(phases[idxRef.current]?.timer_min || 0); return; }
+    if (/\b(ripeti|wiederhol|repeat)\b/.test(s)) { speak(phaseText(p)); return; }
+    if (/(quanto manca|wie lange|how long|time left)/.test(s)) {
+      speak(endAt ? tri(`Mancano ${fmtRemain()}`, `Noch ${fmtRemain()}`, `${fmtRemain()} left`) : tri("Nessun timer attivo", "Kein Timer aktiv", "No timer running")); return;
+    }
+    // C3: "appiccicoso" / "non cresce" / "aiuto" → causa+rimedio dal corso, SENZA IA
+    const ts = course?.troubleshooting || [];
+    const findTs = (re) => ts.find((t) => re.test(`${t.problem} ${t.cause}`.toLowerCase()));
+    if (/(appiccicos|klebrig|sticky)/.test(s)) { const t = findTs(/appiccicos|klebrig|sticky|idrataz|water/); if (t) { setComeVa(t); speak(`${t.cause}. ${t.fix}`); return; } }
+    if (/(non cresce|non lievita|geht nicht auf|not rising|won.?t rise)/.test(s)) { const t = findTs(/cresc|lievit|aufge|geht|rise|proof/); if (t) { setComeVa(t); speak(`${t.cause}. ${t.fix}`); return; } }
+    if (/\b(aiuto|hilfe|help)\b/.test(s)) { if (ts[0]) { setComeVa(ts[0]); speak(`${ts[0].cause}. ${ts[0].fix}`); } else { askSitor(p); } return; }
+    if (/\b(timer)\b/.test(s)) { doTimer(p?.timer_min || 0); return; }
     if (/\b(chiudi|schlie|close|esci|exit)\b/.test(s)) { onClose(); return; }
-  }, [go, speak, phaseText, phases, doTimer, onClose]);
+  }, [go, speak, phaseText, phases, doTimer, onClose, course, endAt, askSitor, tri]); // eslint-disable-line
 
   const startMic = useCallback(() => {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -122,6 +193,23 @@ export default function CoursePlayer({ recipe, onClose }) {
     } catch { toast.error(tri("Microfono non disponibile.", "Mikrofon nicht verfügbar.", "Microphone not available.")); }
   }, [voiceLang, handleTranscript, tri]);
   const stopMic = useCallback(() => { const rec = recRef.current; recRef.current = null; try { rec && rec.stop(); } catch { /* */ } setMicOn(false); setHeard(""); }, []);
+
+  // C3: attiva la modalità mani libere (schermo acceso, voce, tocco = avanti, comandi vocali).
+  const toggleHandsFree = useCallback(() => {
+    setHandsFree((v) => {
+      const nv = !v;
+      if (nv) {
+        setTtsOn(true); ttsOnRef.current = true;
+        acquireWake();
+        speak(phaseText(phases[idxRef.current]));
+        if (!micOn) startMic();
+        toast.success(tri("Mani libere attive: tocca lo schermo per andare avanti.", "Freihändig aktiv: tippe zum Weitergehen.", "Hands-free on: tap the screen to go next."));
+      } else {
+        stopMic();
+      }
+      return nv;
+    });
+  }, [acquireWake, speak, phaseText, phases, micOn, startMic, stopMic, tri]);
 
   const openTechnique = (slug) => { window.dispatchEvent(new CustomEvent("mikilab-open-technique", { detail: { slug } })); onClose(); };
 
@@ -170,16 +258,50 @@ export default function CoursePlayer({ recipe, onClose }) {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-6 py-4">
+          <div className="flex-1 overflow-y-auto px-6 py-4" onClick={() => { if (handsFree && !isFinal) go((c) => c + 1); }}>
+            {expired && (
+              <div data-testid="timer-expired-banner" className="max-w-xl mx-auto mb-4 rounded-2xl bg-mattone text-white p-5 text-center" onClick={(e) => e.stopPropagation()}>
+                <p className="font-display text-3xl font-black mb-1">{tri("Tempo scaduto!", "Zeit abgelaufen!", "Time's up!")}</p>
+                <p className="text-white/85 text-sm mb-3">{tri("Il timer è finito.", "Der Timer ist zu Ende.", "The timer has ended.")}</p>
+                <button data-testid="timer-expired-next" onClick={() => { setExpired(false); go((c) => c + 1); }} className="w-full bg-white text-mattone font-bold py-3 rounded-xl active:scale-95">{tri("Vai al prossimo passo", "Zum nächsten Schritt", "Go to next step")}</button>
+              </div>
+            )}
+            {endAt && !expired && (
+              <div className="max-w-xl mx-auto mb-4 text-center" onClick={(e) => e.stopPropagation()}>
+                <p data-testid="timer-remaining" className="font-display text-4xl font-black text-primary tabular-nums">{fmtRemain()}</p>
+                <p className="text-foreground/50 text-xs mt-1">{tri("Tieni lo schermo acceso o usa il promemoria del calendario", "Lass den Bildschirm an oder nutze die Kalender-Erinnerung", "Keep the screen on or use the calendar reminder")}</p>
+              </div>
+            )}
             {!isFinal && cur && (
               <div className="max-w-xl mx-auto space-y-4">
                 <h2 data-testid="course-phase-name" className="font-display text-[26px] leading-tight font-bold text-muted-foreground">{cur.name}</h2>
-                <p data-testid="course-phase-do" className="text-[19px] leading-relaxed">{mode === "esperto" && cur.do_esperto ? cur.do_esperto : cur.do_casa}</p>
+                <p data-testid="course-phase-do" className={`leading-relaxed ${handsFree ? "text-[30px] font-semibold" : "text-[19px]"}`}>{mode === "esperto" && cur.do_esperto ? cur.do_esperto : cur.do_casa}</p>
                 {cur.why && <p className="text-foreground/75 text-[15px]"><span className="font-bold text-accent">{tri("Perché", "Warum", "Why")}:</span> {cur.why}</p>}
                 {cur.signals && <div className="rounded-xl bg-foreground/6 p-3 text-[15px]"><span className="font-bold text-muted-foreground">{tri("Segnali", "Zeichen", "Signals")}:</span> {cur.signals}</div>}
                 {(cur.time_min || cur.time_max) ? <p className="text-foreground/60 text-sm">⏱ {tri("Tempo", "Zeit", "Time")}: {cur.time_min || "?"}{cur.time_max ? `–${cur.time_max}` : ""} min</p> : null}
                 {cur.safety && <p className="flex items-start gap-2 text-foreground text-sm bg-muted/25 rounded-xl p-3"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />{cur.safety}</p>}
-                {cur.technique && <button data-testid="course-technique-link" onClick={() => openTechnique(cur.technique)} className="inline-flex items-center gap-1.5 text-muted-foreground font-bold text-sm underline underline-offset-2"><Eye className="w-4 h-4" />{tri("Guarda come si fa", "Sieh, wie es geht", "See how it's done")}</button>}
+                {cur.technique && <button data-testid="course-technique-link" onClick={(e) => { e.stopPropagation(); openTechnique(cur.technique); }} className="inline-flex items-center gap-1.5 text-muted-foreground font-bold text-sm underline underline-offset-2"><Eye className="w-4 h-4" />{tri("Guarda come si fa", "Sieh, wie es geht", "See how it's done")}</button>}
+
+                {/* C4: "Come va?" a tocchi — causa+rimedio SENZA IA, dal troubleshooting del corso */}
+                {(course?.troubleshooting?.length > 0) && (
+                  <div className="pt-1" onClick={(e) => e.stopPropagation()}>
+                    <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-1.5">{tri("Come va?", "Wie läuft's?", "How's it going?")}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {course.troubleshooting.slice(0, 4).map((t, i) => (
+                        <button key={i} data-testid={`come-va-${i}`} onClick={() => setComeVa(t)} className="px-3 py-1.5 rounded-full bg-foreground/10 text-foreground text-xs font-semibold active:scale-95">{t.problem}</button>
+                      ))}
+                      <button data-testid="come-va-ask-sitor" onClick={() => askSitor(cur)} className="px-3 py-1.5 rounded-full bg-accent/20 text-accent-foreground text-xs font-bold active:scale-95 inline-flex items-center gap-1"><HelpCircle className="w-3.5 h-3.5" />{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}</button>
+                    </div>
+                    {comeVa && (
+                      <div data-testid="come-va-answer" className="mt-2 rounded-xl bg-foreground/6 p-3">
+                        <p className="font-bold text-sm">{comeVa.problem}</p>
+                        <p className="text-foreground/70 text-sm mt-0.5"><span className="text-muted-foreground font-semibold">{tri("Causa", "Ursache", "Cause")}:</span> {comeVa.cause}</p>
+                        <p className="text-foreground/85 text-sm"><span className="text-accent font-semibold">{tri("Rimedio", "Lösung", "Fix")}:</span> {comeVa.fix}</p>
+                        <button onClick={() => setComeVa(null)} className="text-xs text-muted-foreground underline mt-1">{tri("Chiudi", "Schließen", "Close")}</button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             )}
             {isFinal && (
@@ -200,9 +322,15 @@ export default function CoursePlayer({ recipe, onClose }) {
             )}
           </div>
 
-          {micOn && <p className="text-center text-foreground/50 text-xs px-5 pb-1">🎙️ {tri("Di': avanti · indietro · ripeti · timer · chiudi", "Sag: weiter · zurück · wiederhole · Timer · schließen", "Say: next · back · repeat · timer · close")}{heard ? ` — “${heard}”` : ""}</p>}
+          {micOn && <p className="text-center text-foreground/50 text-xs px-5 pb-1">🎙️ {tri("Di': avanti · indietro · ripeti · timer · quanto manca · appiccicoso · non cresce · stop · chiudi", "Sag: weiter · zurück · wiederhole · Timer · wie lange · klebrig · geht nicht auf · stop · schließen", "Say: next · back · repeat · timer · how long · sticky · not rising · stop · close")}{heard ? ` — “${heard}”` : ""}</p>}
+          {handsFree && isIOS && <p className="text-center text-foreground/50 text-[11px] px-5 pb-1">{tri("Il riconoscimento vocale su iPhone può essere meno preciso: usa il tocco.", "Spracherkennung auf dem iPhone kann ungenauer sein: nutze das Tippen.", "Voice recognition on iPhone can be less accurate: use tap.")}</p>}
 
           <div className="p-4 shrink-0 space-y-2" style={{ paddingBottom: "calc(1rem + env(safe-area-inset-bottom))" }}>
+            {!isFinal && (
+              <button data-testid="course-handsfree" onClick={toggleHandsFree} className={`w-full flex items-center justify-center gap-2 py-3 rounded-2xl font-bold text-sm active:scale-95 ${handsFree ? "bg-accent text-accent-foreground" : "bg-primary text-primary-foreground"}`}>
+                <Hand className="w-5 h-5" />{handsFree ? tri("Esci da mani libere", "Freihändig beenden", "Exit hands-free") : tri("Ora mi sporco le mani", "Jetzt mach ich mir die Hände schmutzig", "Now I get my hands dirty")}
+              </button>
+            )}
             <div className="grid grid-cols-3 gap-2">
               <button data-testid="course-prev" onClick={() => go((c) => c - 1)} disabled={idx === 0} className="flex flex-col items-center gap-1 rounded-2xl bg-foreground/12 disabled:opacity-40 active:scale-95 font-bold text-sm" style={{ minHeight: 56 }}><SkipBack className="w-5 h-5" />{tri("Indietro", "Zurück", "Back")}</button>
               <button data-testid="course-timer" onClick={() => doTimer(cur?.timer_min || 0)} className="flex flex-col items-center gap-1 rounded-2xl bg-muted text-foreground active:scale-95 font-bold text-sm" style={{ minHeight: 56 }}><TimerIcon className="w-5 h-5" />{cur?.timer_min ? `${cur.timer_min}m` : "Timer"}</button>

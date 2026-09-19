@@ -33,6 +33,7 @@ import PercorsoPage from "@/components/PercorsoPage";
 import RegalaPage from "@/components/RegalaPage";
 import PaginaSito from "@/components/PaginaSito";
 import MiglioratorePage from "@/components/MiglioratorePage";
+import AdminCosts from "@/components/AdminCosts";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -62,7 +63,9 @@ export default function App() {
   useEffect(() => {
     const h = (e) => { setTechSlug(e?.detail?.slug || null); setRoute("tecniche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
     window.addEventListener("mikilab-open-technique", h);
-    return () => window.removeEventListener("mikilab-open-technique", h);
+    const hc = () => setChatOpen(true);
+    window.addEventListener("mikilab-open-chat", hc);
+    return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); };
   }, []);
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
@@ -108,6 +111,10 @@ export default function App() {
                       <div data-testid="account-menu" className="absolute right-0 top-11 w-64 holo-panel p-3 z-[80]">
                         <p className="text-[11px] text-foreground font-semibold truncate">{user.name || "Admin"}</p>
                         {user.email && <p className="text-[10px] text-muted-foreground truncate mb-2">{user.email}</p>}
+                        <button data-testid="costs-link" onClick={() => { setRoute("admin-costs"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
+                          className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-accent/50 active:scale-95 transition-all">
+                          {tri("Costi & Risparmio", "Kosten & Sparen", "Costs & Savings")}
+                        </button>
                         <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
                           className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-background border border-border text-mattone font-bold text-xs hover:border-mattone/50 active:scale-95 transition-all">
                           <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
@@ -127,6 +134,7 @@ export default function App() {
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}

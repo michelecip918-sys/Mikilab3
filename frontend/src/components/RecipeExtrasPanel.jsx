@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import CoursePlayer from "@/components/CoursePlayer";
+import CalendarReminder from "@/components/CalendarReminder";
 import EspertoPro from "@/components/EspertoPro";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
@@ -98,6 +99,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-muted hover:bg-muted text-foreground font-bold text-[16px] active:scale-[0.98] transition-all shadow-lg">
         <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
       </button>
+      {((Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0)) >= 4 && <CalendarReminder recipe={recipe} />}
       <button data-testid="mark-done" onClick={toggleDone}
         className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-sm active:scale-[0.98] transition-all border ${done ? "bg-accent border-accent text-white" : "bg-transparent border-border text-foreground hover:border-accent"}`}>
         <Check className="w-4 h-4" /> {done ? tri("Fatta ✓ (togli)", "Gemacht ✓ (entfernen)", "Done ✓ (undo)") : tri("Segna come fatta", "Als gemacht markieren", "Mark as done")}

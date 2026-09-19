@@ -1,3 +1,18 @@
+# ⚡ AGGIORNAMENTO (2026-09) — COMANDO 3: FRONTEND CUCINA (U1, C1, C3, C4, C2)
+
+- **U1a features** (`lib/features.js`): legge `GET /api/features` (cache). Chat livello risparmio 3 mostra già il messaggio "Sitor sta riposando" (backend ok:false). SitorChat invia `level` e mostra reply su ok:false (riposo/limite).
+- **U1b Pagina Costi** (`components/AdminCosts.jsx`): solo admin, nessun link pubblico. Route `admin-costs` in App.js + link nel menu account admin. Tabella 30gg (GET /api/admin/costs), selettore risparmio 0-3, toggle FEATURE_* (PUT /api/admin/costs), alert >80%. Verificato a schermo con dati reali.
+- **C1 Timer robusto** (CoursePlayer): orario di fine ASSOLUTO in localStorage (`mikilab_timer_<id>`), tick 1s + ricalcolo su visibilitychange, banner "Tempo scaduto" con suono (WebAudio) + vibrazione + "Vai al prossimo passo", display tempo rimanente + hint "tieni lo schermo acceso/usa calendario". Ripristino timer attivo dopo blocco/ricarica.
+- **C3 Mani libere** (CoursePlayer): pulsante "Ora mi sporco le mani" (wake lock + voce + mic), tap su TUTTA l'area = Avanti, comandi vocali estesi (quanto manca, stop, appiccicoso, non cresce, aiuto → causa+rimedio dal troubleshooting SENZA IA), nota iPhone, indicatore mic.
+- **C4 "Come va?" a tocchi** (CoursePlayer): 3-4 bottoni dal `course.troubleshooting` che mostrano causa+rimedio senza IA + "Chiedi a Sitor" (evento `mikilab-open-chat`, apre la chat).
+- **C2 Promemoria calendario** (`components/CalendarReminder.jsx`): mostrato nella scheda ricetta se attese ≥ 4h; input orario + calcolo A RITROSO dei passi lunghi (≥30 min) dalle fasi del corso → file `.ics` (Blob) con VEVENT+VALARM per passo. Nessun dato inviato.
+- **Nessuna nuova rotta pubblica** (riuso Comando 2A: /features, /admin/costs, course-v2, sitor/chat).
+
+## NON FATTO (fuori dai punti richiesti / prossimi comandi)
+- C5 (layout tablet/orizzontale, prefers-reduced-motion) non richiesto in questo ordine.
+- Voce "Parla con Sitor" G1, Piano/Live/Mensola UI: comandi successivi.
+
+---
 # ⚡ AGGIORNAMENTO (2026-09) — COMANDO 2A: STADIO F + G (backend) + C8 offline
 
 ## STADIO F — COSTI E RISPARMIO (backend COMPLETO)
