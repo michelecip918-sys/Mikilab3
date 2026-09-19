@@ -31,25 +31,25 @@ export default function FlourTable({ embedded = false }) {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [open, setOpen] = useState(embedded);
 
-  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-[#3E9C93] px-2 py-1.5";
-  const td = "px-2 py-1.5 text-xs text-[#2B303B] dark:text-[#e4eff8] border-t border-[#e4eff8] dark:border-[#2A3B49]";
+  const th = "text-left text-[10px] font-bold uppercase tracking-wide text-primary px-2 py-1.5";
+  const td = "px-2 py-1.5 text-xs text-foreground dark:text-foreground border-t border-border dark:border-border";
 
   const body = (
     <div className="space-y-4">
       <div>
-        <p className="text-xs font-bold uppercase text-[#1B2A38] mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
-        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49]">
+        <p className="text-xs font-bold uppercase text-foreground mb-1.5">{tri("Farine — una riga per tipo (sigla DE · nome IT)", "Mehle — eine Zeile pro Typ", "Flours — one row per type")}</p>
+        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-border dark:border-border">
           <table className="w-full border-collapse">
-            <thead className="bg-[#0D1520] dark:bg-[#1B2A38]">
+            <thead className="bg-background dark:bg-card">
               <tr><th className={th}>{tri("Tipo (DE · IT)", "Typ (DE · IT)", "Type (DE · IT)")}</th><th className={th}>W {tri("(forza)", "(Stärke)", "(strength)")}</th><th className={th}>{tri("Proteine", "Protein", "Protein")}</th><th className={th}>{tri("Metodo", "Methode", "Method")}</th></tr>
             </thead>
             <tbody>
               {FLOURS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#0D1520]/50 dark:bg-[#1B2A38]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-background/50 dark:bg-card/50" : ""}>
                   <td className={td + " font-semibold"}>{r[0]}</td>
                   <td className={td + " font-mono-data"}>{r[1]}</td>
                   <td className={td + " font-mono-data"}>{r[2]}</td>
-                  <td className={td + " text-[#7E8A93]"}>{r[3]}</td>
+                  <td className={td + " text-muted-foreground"}>{r[3]}</td>
                 </tr>
               ))}
             </tbody>
@@ -58,15 +58,15 @@ export default function FlourTable({ embedded = false }) {
       </div>
 
       <div>
-        <p className="text-xs font-bold uppercase text-[#1B2A38] mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
-        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49]">
+        <p className="text-xs font-bold uppercase text-foreground mb-1.5">{tri("Abbreviazioni d'impasto", "Teig-Abkürzungen", "Dough abbreviations")}</p>
+        <div className="overflow-x-auto rounded-2xl shadow-md border border-amber-900/40 border border-border dark:border-border">
           <table className="w-full border-collapse">
-            <thead className="bg-[#0D1520] dark:bg-[#1B2A38]">
+            <thead className="bg-background dark:bg-card">
               <tr><th className={th}>{tri("Sigla", "Kürzel", "Code")}</th><th className={th}>🇮🇹 IT</th><th className={th}>🇩🇪 DE</th><th className={th}>🌍 EN</th></tr>
             </thead>
             <tbody>
               {SIGNS.map((r, i) => (
-                <tr key={i} className={i % 2 ? "bg-[#0D1520]/50 dark:bg-[#1B2A38]/50" : ""}>
+                <tr key={i} className={i % 2 ? "bg-background/50 dark:bg-card/50" : ""}>
                   <td className={td + " font-mono-data font-semibold"}>{r[0]}</td>
                   <td className={td}>{r[1]}</td><td className={td}>{r[2]}</td><td className={td}>{r[3]}</td>
                 </tr>
@@ -76,7 +76,7 @@ export default function FlourTable({ embedded = false }) {
         </div>
       </div>
 
-      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/12 border border-[#3E9C93]/30 p-3 text-xs text-[#3E9C93] dark:text-[#8FB0C2] leading-relaxed">
+      <div className="rounded-2xl shadow-md border border-amber-900/40 bg-primary/12 border border-primary/30 p-3 text-xs text-primary dark:text-muted-foreground leading-relaxed">
         ⚠️ {tri(
           "Nota del Maestro: nel sistema tedesco il 630 è il FARRO (Dinkel), mentre il 550 è il GRANO (Weizen). Le ricette con 630 (farro) e con farine ad alta estrazione sono quasi sempre IMPASTI INDIRETTI (con prefermento/lievito madre); alcune usano un tocco di aceto/acido per dare struttura al glutine più debole del farro.",
           "Meister-Hinweis: Im deutschen System ist 630 der DINKEL, während 550 der WEIZEN ist. Rezepte mit 630 (Dinkel) und hoch ausgemahlenen Mehlen sind fast immer INDIREKTE TEIGE (mit Vorteig/Sauerteig); manche nutzen etwas Essig/Säure, um dem schwächeren Dinkelkleber Struktur zu geben.",
@@ -88,9 +88,9 @@ export default function FlourTable({ embedded = false }) {
   if (embedded) {
     return (
       <div data-testid="flour-table" className="pb-24">
-        <div className="flex items-center gap-2 mb-3 text-[#3E9C93]">
+        <div className="flex items-center gap-2 mb-3 text-primary">
           <Table2 className="w-5 h-5" />
-          <h1 className="font-display text-xl font-bold text-[#2B303B] dark:text-[#e4eff8]">{tri("Tabella Farine & Sigle", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</h1>
+          <h1 className="font-display text-xl font-bold text-foreground dark:text-foreground">{tri("Tabella Farine & Sigle", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</h1>
         </div>
         {body}
       </div>
@@ -98,11 +98,11 @@ export default function FlourTable({ embedded = false }) {
   }
 
   return (
-    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] overflow-hidden">
+    <div data-testid="flour-table" className="mb-4 rounded-2xl bg-card dark:bg-card border border-border dark:border-border overflow-hidden">
       <button data-testid="flour-table-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 text-left">
-        <Table2 className="w-5 h-5 text-[#3E9C93]" />
-        <span className="font-display text-sm font-bold text-[#2B303B] dark:text-[#e4eff8] flex-1">{tri("Tabella Farine & Sigle (DE / IT / EN)", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</span>
-        <ChevronDown className={`w-4 h-4 text-[#7E8A93] transition-transform ${open ? "rotate-180" : ""}`} />
+        <Table2 className="w-5 h-5 text-primary" />
+        <span className="font-display text-sm font-bold text-foreground dark:text-foreground flex-1">{tri("Tabella Farine & Sigle (DE / IT / EN)", "Mehl- & Kürzel-Tabelle", "Flour & Codes Table")}</span>
+        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       <AnimatePresence initial={false}>
         {open && (

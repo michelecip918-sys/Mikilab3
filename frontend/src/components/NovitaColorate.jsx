@@ -35,15 +35,15 @@ export const NovitaColorate = () => {
   return (
     <div data-testid="ricette-novita">
       <div className="flex items-center gap-2 mb-1">
-        <Sparkles className="w-5 h-5 text-[#3E9C93]" />
-        <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
+        <Sparkles className="w-5 h-5 text-primary" />
+        <h2 className="font-display text-lg font-bold text-foreground dark:text-foreground">
           {tri("Novità dal MikiLab", "Neu bei MikiLab", "New at MikiLab", "Novedades de MikiLab")}
         </h2>
-        <span className="text-[10px] font-bold uppercase tracking-wide text-[#3E9C93] bg-[#3E9C93]/15 border border-[#3E9C93]/40 px-2 py-0.5 rounded-full">
+        <span className="text-[10px] font-bold uppercase tracking-wide text-primary bg-primary/15 border border-primary/40 px-2 py-0.5 rounded-full">
           {tri("Colori naturali", "Natürliche Farben", "Natural colours", "Colores naturales")}
         </span>
       </div>
-      <p className="text-sm text-[#7E8A93] mb-3">
+      <p className="text-sm text-muted-foreground mb-3">
         {tri("Pani e cornetti colorati SOLO con ingredienti naturali, col metodo indiretto. Tocca per aprire la ricetta.",
              "Brote und Hörnchen NUR mit natürlichen Zutaten gefärbt, indirekte Methode. Zum Öffnen tippen.",
              "Breads and croissants coloured ONLY with natural ingredients, indirect method. Tap to open the recipe.",
@@ -52,26 +52,26 @@ export const NovitaColorate = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
         {items.map((r) => (
           <button key={r.id} data-testid={`novita-card-${r.id}`} onClick={() => open(r)}
-            className="text-left rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-[#f8fbfe] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] shadow-sm active:scale-97 transition-all">
+            className="text-left rounded-2xl shadow-md border border-amber-900/40 overflow-hidden bg-card dark:bg-card border border-border dark:border-border shadow-sm active:scale-97 transition-all">
             <div className="h-16 w-full overflow-hidden">
               <img src={r.image_url} alt={rn(r)} loading="lazy" className="w-full h-full object-cover" />
             </div>
             <div className="p-1.5">
-              <p className="font-display text-[11px] font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight line-clamp-2">{rn(r)}</p>
+              <p className="font-display text-[11px] font-semibold text-foreground dark:text-foreground leading-tight line-clamp-2">{rn(r)}</p>
             </div>
           </button>
         ))}
       </div>
 
       {/* Scheda: perché coloriamo naturalmente */}
-      <div data-testid="novita-why" className="mt-4 rounded-2xl bg-gradient-to-br from-[#eaf6ef] to-[#e4eff8] dark:from-[#1c2b26] dark:to-[#1B2A38] border border-[#2e8b6f]/30 p-4">
+      <div data-testid="novita-why" className="mt-4 rounded-2xl bg-gradient-to-br from-card to-muted dark:from-background dark:to-card border border-border/30 p-4">
         <div className="flex items-center gap-2 mb-2">
-          <Leaf className="w-5 h-5 text-[#2e8b6f]" />
-          <h3 className="font-display text-base font-bold text-[#2B303B] dark:text-[#e4eff8]">
+          <Leaf className="w-5 h-5 text-muted-foreground" />
+          <h3 className="font-display text-base font-bold text-foreground dark:text-foreground">
             {tri("Perché coloriamo naturalmente", "Warum wir natürlich färben", "Why we colour naturally", "Por qué coloreamos de forma natural")}
           </h3>
         </div>
-        <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed">
+        <p className="text-sm text-muted-foreground dark:text-muted-foreground leading-relaxed">
           {tri("Niente coloranti artificiali: solo ingredienti veri. La curcuma e lo zafferano danno il giallo-oro, gli spinaci e il pistacchio il verde, la spirulina il blu-verde, la barbabietola il rosa, il pomodoro e la nduja il rosso, il carbone vegetale il nero. Colore, sapore e valore nutrizionale in un solo impasto, sempre col metodo indiretto.",
                "Keine künstlichen Farbstoffe: nur echte Zutaten. Kurkuma und Safran geben Goldgelb, Spinat und Pistazie Grün, Spirulina Blaugrün, Rote Bete Rosa, Tomate und Nduja Rot, Aktivkohle Schwarz. Farbe, Geschmack und Nährwert in einem Teig, immer mit indirekter Methode.",
                "No artificial dyes: only real ingredients. Turmeric and saffron give golden-yellow, spinach and pistachio green, spirulina blue-green, beetroot pink, tomato and 'nduja red, vegetable charcoal black. Colour, flavour and nutrition in one dough, always with the indirect method.",

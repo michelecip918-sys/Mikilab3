@@ -65,12 +65,12 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-[#0D1520] dark:bg-[#0D1520] border-[#2A3B49] dark:border-[#2A3B49]">
+      <DialogContent className="max-w-md bg-background dark:bg-background border-border dark:border-border">
         <DialogHeader>
-          <DialogTitle className="font-display text-2xl text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-2">
-            <Scale className="w-6 h-6 text-[#3E9C93]" /> {t("scale_title")}
+          <DialogTitle className="font-display text-2xl text-foreground dark:text-foreground flex items-center gap-2">
+            <Scale className="w-6 h-6 text-primary" /> {t("scale_title")}
           </DialogTitle>
-          <DialogDescription className="text-[#7E8A93]">
+          <DialogDescription className="text-muted-foreground">
             {recipe?.name} {t("scale_desc_suffix")}
           </DialogDescription>
         </DialogHeader>
@@ -82,8 +82,8 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
               onClick={() => setMode("total")}
               className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium border ${
                 mode === "total"
-                  ? "bg-[#3E9C93] text-white border-[#3E9C93]"
-                  : "bg-white dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-card dark:bg-card text-muted-foreground border-border dark:border-border"
               }`}
             >
               {t("scale_mode_total")}
@@ -93,8 +93,8 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
               onClick={() => setMode("flour")}
               className={`px-3 py-2.5 rounded-2xl shadow-md border border-amber-900/40 text-sm font-medium border ${
                 mode === "flour"
-                  ? "bg-[#3E9C93] text-white border-[#3E9C93]"
-                  : "bg-white dark:bg-[#1B2A38] text-[#7E8A93] border-[#2A3B49] dark:border-[#2A3B49]"
+                  ? "bg-primary text-white border-primary"
+                  : "bg-card dark:bg-card text-muted-foreground border-border dark:border-border"
               }`}
             >
               {t("scale_mode_flour")}
@@ -102,7 +102,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
           </div>
 
           <div>
-            <label className="text-xs font-semibold uppercase tracking-wide text-[#7E8A93]">
+            <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {mode === "total" ? t("scale_target_total") : t("scale_target_flour")}
             </label>
             <input
@@ -110,23 +110,23 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
               type="number"
               value={target}
               onChange={(e) => setTarget(e.target.value)}
-              className="mt-1 w-full font-mono-data font-bold text-[#3E9C93] dark:text-[#8FB0C2] bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] focus:border-[#3E9C93] focus:ring-2 focus:ring-[#3E9C93]/20 rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg outline-none"
+              className="mt-1 w-full font-mono-data font-bold text-primary dark:text-muted-foreground bg-card dark:bg-card border border-border dark:border-border focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-2xl shadow-md border border-amber-900/40 p-3 text-lg outline-none"
             />
           </div>
 
           <div className="space-y-2" data-testid="scale-preview">
             {scaled.map((f) => (
-              <div key={f.key} className="flex items-center justify-between bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-4 py-2.5">
-                <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{t(f.labelKey)}</span>
-                <span className="font-mono-data font-bold text-[#3E9C93] dark:text-[#8FB0C2]">
+              <div key={f.key} className="flex items-center justify-between bg-card dark:bg-card border border-border dark:border-border rounded-2xl shadow-md border border-amber-900/40 px-4 py-2.5">
+                <span className="text-sm text-muted-foreground dark:text-muted-foreground">{t(f.labelKey)}</span>
+                <span className="font-mono-data font-bold text-primary dark:text-muted-foreground">
                   {f.value != null ? `${f.value} g` : "—"}
                 </span>
               </div>
             ))}
             {factor && (
               <div className="flex items-center justify-between px-4 pt-1">
-                <span className="text-xs text-[#7E8A93]">{t("scale_total_dough")}</span>
-                <span className="font-mono-data text-xs font-bold text-[#7E8A93]">{Math.round(newTotal)} g</span>
+                <span className="text-xs text-muted-foreground">{t("scale_total_dough")}</span>
+                <span className="font-mono-data text-xs font-bold text-muted-foreground">{Math.round(newTotal)} g</span>
               </div>
             )}
           </div>
@@ -135,7 +135,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
         <DialogFooter className="gap-2 sm:gap-2">
           <button
             onClick={() => onOpenChange(false)}
-            className="flex-1 bg-[#e4eff8] dark:bg-[#1B2A38] text-[#2B303B] dark:text-[#e4eff8] font-medium px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-[#2A3B49] dark:border-[#2A3B49]"
+            className="flex-1 bg-muted dark:bg-card text-foreground dark:text-foreground font-medium px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 border border-border dark:border-border"
           >
             {t("cancel")}
           </button>
@@ -143,7 +143,7 @@ export default function ScaleDialog({ recipe, open, onOpenChange, onSave }) {
             data-testid="scale-save-btn"
             onClick={submit}
             disabled={!factor}
-            className="flex-1 bg-[#3E9C93] hover:bg-[#64748B] disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
+            className="flex-1 bg-primary hover:bg-accent disabled:opacity-50 text-white font-semibold px-4 py-3 rounded-2xl shadow-md border border-amber-900/40 shadow-md active:scale-98 transition-all"
           >
             {t("save_as_new")}
           </button>

@@ -34,17 +34,17 @@ export default function ApprenticeCard({ recipeId, canEdit = false, autoSpeak = 
   if (empty && !canEdit) return null; // apprendista: se il Capo non ha ancora scritto, nulla da mostrare
 
   return (
-    <div data-testid={`apprentice-card-${recipeId}`} className="rounded-xl border border-[#7E9A82]/40 bg-[#7E9A82]/8 p-3">
+    <div data-testid={`apprentice-card-${recipeId}`} className="rounded-xl border border-accent/40 bg-accent/8 p-3">
       <div className="flex items-center gap-2 mb-2">
-        <GraduationCap className="w-4 h-4 text-[#7E9A82]" />
-        <span className="text-[11px] font-black uppercase tracking-widest text-[#7E9A82]">{tri("Sitor Apprendista", "Sitor Lehrling", "Sitor Apprentice", "Sitor Aprendiz", "Sitor Apprenti", "سیتور کارآموز")}</span>
+        <GraduationCap className="w-4 h-4 text-accent" />
+        <span className="text-[11px] font-black uppercase tracking-widest text-accent">{tri("Sitor Apprendista", "Sitor Lehrling", "Sitor Apprentice", "Sitor Aprendiz", "Sitor Apprenti", "سیتور کارآموز")}</span>
         {info.has_info && info.spoken && (
-          <button data-testid={`apprentice-speak-${recipeId}`} onClick={() => { try { playTTS(info.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }} className="ml-auto p-1 rounded-lg text-[#7E9A82] hover:bg-[#7E9A82]/15" title={tri("Ascolta", "Anhören", "Listen", "Escuchar", "Écouter", "بشنو")}>
+          <button data-testid={`apprentice-speak-${recipeId}`} onClick={() => { try { playTTS(info.spoken, { lang, voice: "bakemix" }); } catch { /* */ } }} className="ml-auto p-1 rounded-lg text-accent hover:bg-accent/15" title={tri("Ascolta", "Anhören", "Listen", "Escuchar", "Écouter", "بشنو")}>
             <Volume2 className="w-4 h-4" />
           </button>
         )}
         {canEdit && !editing && (
-          <button data-testid={`apprentice-edit-${recipeId}`} onClick={() => setEditing(true)} className={`p-1 rounded-lg text-[#D97736] hover:bg-[#D97736]/15 ${info.has_info && info.spoken ? "" : "ml-auto"}`} title={tri("Modifica", "Bearbeiten", "Edit", "Editar", "Modifier", "ویرایش")}>
+          <button data-testid={`apprentice-edit-${recipeId}`} onClick={() => setEditing(true)} className={`p-1 rounded-lg text-primary hover:bg-primary/15 ${info.has_info && info.spoken ? "" : "ml-auto"}`} title={tri("Modifica", "Bearbeiten", "Edit", "Editar", "Modifier", "ویرایش")}>
             <Pencil className="w-4 h-4" />
           </button>
         )}
@@ -54,27 +54,27 @@ export default function ApprenticeCard({ recipeId, canEdit = false, autoSpeak = 
         info.has_info ? (
           <div className="space-y-1.5">
             {info.pieces_per_tray ? (
-              <p className="text-sm text-[#2B303B] dark:text-[#e4eff8]"><span className="text-[#7E8A93]">{tri("Per teglia/formato:", "Pro Blech:", "Per tray:", "Por bandeja:", "Par plaque :", "در هر سینی:")}</span> <b>{info.pieces_per_tray}{info.tray_format ? ` · ${info.tray_format}` : ""}</b></p>
+              <p className="text-sm text-foreground dark:text-foreground"><span className="text-muted-foreground">{tri("Per teglia/formato:", "Pro Blech:", "Per tray:", "Por bandeja:", "Par plaque :", "در هر سینی:")}</span> <b>{info.pieces_per_tray}{info.tray_format ? ` · ${info.tray_format}` : ""}</b></p>
             ) : null}
             {info.shaping_note ? (
-              <p className="text-sm text-[#2B303B] dark:text-[#e4eff8] leading-relaxed"><span className="text-[#7E8A93]">{tri("Come formare:", "Formen:", "Shaping:", "Cómo formar:", "Façonnage :", "شکل‌دهی:")}</span> {info.shaping_note}</p>
+              <p className="text-sm text-foreground dark:text-foreground leading-relaxed"><span className="text-muted-foreground">{tri("Come formare:", "Formen:", "Shaping:", "Cómo formar:", "Façonnage :", "شکل‌دهی:")}</span> {info.shaping_note}</p>
             ) : null}
           </div>
         ) : (
-          <p className="text-xs text-[#7E8A93]">{tri("Nessuna istruzione pratica ancora. Scrivi tu quanti pezzi entrano in una teglia e come si formano.", "Noch keine Angaben.", "No practical instructions yet.", "Aún sin instrucciones.", "Aucune instruction pour le moment.", "هنوز دستوری نیست.")}</p>
+          <p className="text-xs text-muted-foreground">{tri("Nessuna istruzione pratica ancora. Scrivi tu quanti pezzi entrano in una teglia e come si formano.", "Noch keine Angaben.", "No practical instructions yet.", "Aún sin instrucciones.", "Aucune instruction pour le moment.", "هنوز دستوری نیست.")}</p>
         )
       ) : (
         <div className="space-y-2">
           <div className="grid grid-cols-2 gap-2">
-            <input data-testid={`apprentice-pieces-${recipeId}`} value={form.pieces_per_tray} onChange={(e) => setForm((f) => ({ ...f, pieces_per_tray: e.target.value }))} placeholder={tri("Pezzi (es. 12)", "Stück", "Pieces", "Piezas", "Pièces", "تعداد")} className="rounded-lg bg-white dark:bg-[#0b0f19] border border-[#7E9A82]/40 px-2.5 py-1.5 text-sm text-[#2B303B] dark:text-white" />
-            <input data-testid={`apprentice-format-${recipeId}`} value={form.tray_format} onChange={(e) => setForm((f) => ({ ...f, tray_format: e.target.value }))} placeholder={tri("Formato teglia", "Blechformat", "Tray format", "Formato", "Format plaque", "قالب سینی")} className="rounded-lg bg-white dark:bg-[#0b0f19] border border-[#7E9A82]/40 px-2.5 py-1.5 text-sm text-[#2B303B] dark:text-white" />
+            <input data-testid={`apprentice-pieces-${recipeId}`} value={form.pieces_per_tray} onChange={(e) => setForm((f) => ({ ...f, pieces_per_tray: e.target.value }))} placeholder={tri("Pezzi (es. 12)", "Stück", "Pieces", "Piezas", "Pièces", "تعداد")} className="rounded-lg bg-card dark:bg-background border border-accent/40 px-2.5 py-1.5 text-sm text-foreground dark:text-foreground" />
+            <input data-testid={`apprentice-format-${recipeId}`} value={form.tray_format} onChange={(e) => setForm((f) => ({ ...f, tray_format: e.target.value }))} placeholder={tri("Formato teglia", "Blechformat", "Tray format", "Formato", "Format plaque", "قالب سینی")} className="rounded-lg bg-card dark:bg-background border border-accent/40 px-2.5 py-1.5 text-sm text-foreground dark:text-foreground" />
           </div>
-          <textarea data-testid={`apprentice-shaping-${recipeId}`} value={form.shaping_note} onChange={(e) => setForm((f) => ({ ...f, shaping_note: e.target.value }))} rows={3} placeholder={tri("Come formare/piegare i pezzi…", "Wie formen…", "How to shape…", "Cómo formar…", "Comment façonner…", "چگونه شکل دهیم…")} className="w-full rounded-lg bg-white dark:bg-[#0b0f19] border border-[#7E9A82]/40 px-2.5 py-1.5 text-sm text-[#2B303B] dark:text-white" />
+          <textarea data-testid={`apprentice-shaping-${recipeId}`} value={form.shaping_note} onChange={(e) => setForm((f) => ({ ...f, shaping_note: e.target.value }))} rows={3} placeholder={tri("Come formare/piegare i pezzi…", "Wie formen…", "How to shape…", "Cómo formar…", "Comment façonner…", "چگونه شکل دهیم…")} className="w-full rounded-lg bg-card dark:bg-background border border-accent/40 px-2.5 py-1.5 text-sm text-foreground dark:text-foreground" />
           <div className="flex gap-2">
-            <button data-testid={`apprentice-save-${recipeId}`} onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#7E9A82] text-white text-xs font-bold px-3 py-1.5 disabled:opacity-50">
+            <button data-testid={`apprentice-save-${recipeId}`} onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-accent text-white text-xs font-bold px-3 py-1.5 disabled:opacity-50">
               {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Save className="w-3.5 h-3.5" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}
             </button>
-            <button onClick={() => setEditing(false)} className="text-xs font-bold text-[#7E8A93] px-2">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
+            <button onClick={() => setEditing(false)} className="text-xs font-bold text-muted-foreground px-2">{tri("Annulla", "Abbrechen", "Cancel", "Cancelar", "Annuler", "لغو")}</button>
           </div>
         </div>
       )}

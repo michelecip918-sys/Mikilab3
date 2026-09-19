@@ -11,7 +11,7 @@ function PlateauCountdown({ seconds, label }) {
   const [left, setLeft] = useState(seconds);
   useEffect(() => { setLeft(seconds); const iv = setInterval(() => setLeft((v) => (v > 0 ? v - 1 : 0)), 1000); return () => clearInterval(iv); }, [seconds]);
   return (
-    <div data-testid="plateau-countdown" className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#a4afbb] bg-[#a4afbb]/10 border border-[#a4afbb]/30 rounded-lg px-2 py-1">
+    <div data-testid="plateau-countdown" className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground bg-muted/10 border border-border/30 rounded-lg px-2 py-1">
       <Timer className="w-3.5 h-3.5" /> {label}: {left}s
     </div>
   );
@@ -43,11 +43,11 @@ export default function RecipeThermalFlow() {
   useEffect(() => { if (deb.current) clearTimeout(deb.current); deb.current = setTimeout(recompute, 350); return () => clearTimeout(deb.current); }, [recompute]);
 
   const setNum = (k, v) => setP((s) => ({ ...s, [k]: v }));
-  const rng = "w-full accent-[#8a97a6]";
+  const rng = "w-full accent-muted";
 
   return (
     <div data-testid="thermal-flow" className="space-y-3">
-      <select data-testid="tf-recipe" value={recipeId} onChange={(e) => setRecipeId(e.target.value)} className="w-full bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2 text-sm text-white outline-none">
+      <select data-testid="tf-recipe" value={recipeId} onChange={(e) => setRecipeId(e.target.value)} className="w-full bg-background border border-border/30 rounded-lg px-2.5 py-2 text-sm text-foreground outline-none">
         <option value="">{tri("Scegli una ricetta…", "Rezept wählen…", "Choose a recipe…", "Elige receta…", "Choisir recette…", "دستور را انتخاب کن…")}</option>
         {recipes.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
       </select>
@@ -59,7 +59,7 @@ export default function RecipeThermalFlow() {
           ["flour_temp_c", tri("Temp. farina", "Mehltemp.", "Flour temp", "Temp. harina", "Temp. farine", "دمای آرد"), 10, 32, "°C"],
           ["batch_kg", tri("Impasto", "Charge", "Batch", "Lote", "Lot", "دسته"), 5, 120, "kg"]].map(([k, lbl, mn, mx, suf]) => (
           <label key={k} className="flex flex-col gap-0.5">
-            <span className="flex justify-between text-[11px] text-[#94A3B8]"><span>{lbl}</span><b className="text-white">{p[k]}{suf}</b></span>
+            <span className="flex justify-between text-[11px] text-muted-foreground"><span>{lbl}</span><b className="text-foreground">{p[k]}{suf}</b></span>
             <input data-testid={`tf-${k}`} type="range" min={mn} max={mx} value={p[k]} onChange={(e) => setNum(k, Number(e.target.value))} className={rng} />
           </label>
         ))}
@@ -67,7 +67,7 @@ export default function RecipeThermalFlow() {
       <div className="flex flex-wrap gap-1.5">
         {MIXERS.map((m) => (
           <button key={m} data-testid={`tf-mixer-${m}`} onClick={() => setNum("mixer_type", m)}
-            className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 ${p.mixer_type === m ? "bg-[#8a97a6]/15 border-[#8a97a6]/50 text-[#8a97a6]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+            className={`text-[11px] font-bold px-2.5 py-1 rounded-full border active:scale-95 ${p.mixer_type === m ? "bg-muted/15 border-border/50 text-muted-foreground" : "bg-background border-border text-muted-foreground"}`}>
             {m.replace(/_/g, " ")}
           </button>
         ))}
@@ -75,16 +75,16 @@ export default function RecipeThermalFlow() {
 
       {flow && (
         <>
-          <div className="flex items-center gap-2 text-[12px] text-[#94A3B8]">
-            <Snowflake className="w-3.5 h-3.5 text-[#9aa6b2]" /> {tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}: <b className="text-white">{flow.water_temp_c}°C</b>
-            {flow.ice_kg > 0 && <span className="text-[#9aa6b2]">· {tri("ghiaccio", "Eis", "ice", "hielo", "glace", "یخ")} {flow.ice_kg} kg</span>}
+          <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
+            <Snowflake className="w-3.5 h-3.5 text-muted-foreground" /> {tri("Acqua", "Wasser", "Water", "Agua", "Eau", "آب")}: <b className="text-foreground">{flow.water_temp_c}°C</b>
+            {flow.ice_kg > 0 && <span className="text-muted-foreground">· {tri("ghiaccio", "Eis", "ice", "hielo", "glace", "یخ")} {flow.ice_kg} kg</span>}
           </div>
 
           {/* Thermal-Ingredient Interlock */}
           {flow.interlock && !interlockOk && (
-            <div data-testid="tf-interlock" className="rounded-xl border border-[#b06e78]/60 bg-[#b06e78]/8 p-3">
-              <p className="text-[12px] font-bold text-[#b06e78] flex items-center gap-1.5"><Lock className="w-4 h-4" /> {flow.steps[0]?.interlock_msg || tri("Impastatrice bloccata: farina troppo calda.", "Mixer gesperrt: Mehl zu warm.", "Mixer locked: flour too hot.", "Amasadora bloqueada.", "Pétrin verrouillé.", "میکسر قفل شد.")}</p>
-              <button data-testid="tf-interlock-unlock" onClick={() => { setInterlockOk(true); setUnlocked(1); }} className="mt-2 w-full py-2 rounded-lg bg-[#b06e78]/15 border border-[#b06e78]/50 text-[#b06e78] font-bold text-xs active:scale-95">
+            <div data-testid="tf-interlock" className="rounded-xl border border-mattone/60 bg-mattone/8 p-3">
+              <p className="text-[12px] font-bold text-mattone flex items-center gap-1.5"><Lock className="w-4 h-4" /> {flow.steps[0]?.interlock_msg || tri("Impastatrice bloccata: farina troppo calda.", "Mixer gesperrt: Mehl zu warm.", "Mixer locked: flour too hot.", "Amasadora bloqueada.", "Pétrin verrouillé.", "میکسر قفل شد.")}</p>
+              <button data-testid="tf-interlock-unlock" onClick={() => { setInterlockOk(true); setUnlocked(1); }} className="mt-2 w-full py-2 rounded-lg bg-mattone/15 border border-mattone/50 text-mattone font-bold text-xs active:scale-95">
                 {tri(`Acqua gelata pronta (${flow.ice_kg} kg) · Sblocca`, `Eiswasser bereit (${flow.ice_kg} kg) · Entsperren`, `Ice water ready (${flow.ice_kg} kg) · Unlock`, `Agua helada lista · Desbloquear`, `Eau glacée prête · Déverrouiller`, `آب یخ آماده · باز کن`)}
               </button>
             </div>
@@ -96,20 +96,20 @@ export default function RecipeThermalFlow() {
               const isUnlocked = i < unlocked;
               const isActive = i === unlocked - 1;
               return (
-                <div key={i} data-testid={`tf-step-${i}`} className={`rounded-xl border p-2.5 transition-all ${isUnlocked ? "border-[#8a97a6]/40 bg-[#8a97a6]/5" : "border-[#1e293b] bg-[#030712] opacity-55"}`}>
+                <div key={i} data-testid={`tf-step-${i}`} className={`rounded-xl border p-2.5 transition-all ${isUnlocked ? "border-border/40 bg-muted/5" : "border-border bg-background opacity-55"}`}>
                   <div className="flex items-center gap-2">
-                    <span className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black ${isUnlocked ? "bg-[#8a97a6] text-[#060A10]" : "bg-[#1e293b] text-[#64748b]"}`}>{isUnlocked ? st.order : <Lock className="w-3 h-3" />}</span>
-                    <span className="text-[13px] font-black text-white flex-1 min-w-0">{st.phase}</span>
-                    {st.rpm ? <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#9aa6b2]"><Gauge className="w-3 h-3" /> {st.rpm} rpm</span> : null}
-                    {st.temp_target_c ? <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#a4afbb]"><Thermometer className="w-3 h-3" /> {st.temp_target_c}°C</span> : null}
+                    <span className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-black ${isUnlocked ? "bg-muted text-foreground" : "bg-card text-muted-foreground"}`}>{isUnlocked ? st.order : <Lock className="w-3 h-3" />}</span>
+                    <span className="text-[13px] font-black text-foreground flex-1 min-w-0">{st.phase}</span>
+                    {st.rpm ? <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground"><Gauge className="w-3 h-3" /> {st.rpm} rpm</span> : null}
+                    {st.temp_target_c ? <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground"><Thermometer className="w-3 h-3" /> {st.temp_target_c}°C</span> : null}
                   </div>
                   {isUnlocked && (
                     <>
-                      <p className="mt-1 text-[12px] text-[#c9dbe8]">{st.action}{st.duration_min ? ` · ${st.duration_min} min` : ""}</p>
-                      {st.note && <p className="text-[11px] text-[#94A3B8]">{st.note}</p>}
+                      <p className="mt-1 text-[12px] text-foreground">{st.action}{st.duration_min ? ` · ${st.duration_min} min` : ""}</p>
+                      {st.note && <p className="text-[11px] text-muted-foreground">{st.note}</p>}
                       {isActive && st.plateau_recovery_s && <PlateauCountdown seconds={st.plateau_recovery_s} label={tri("Recupero platea", "Deck-Erholung", "Deck recovery", "Recuperación", "Récup. sole", "بازیابی کف")} />}
                       {isActive && i < flow.steps.length - 1 && (
-                        <button data-testid={`tf-next-${i}`} onClick={() => setUnlocked((u) => u + 1)} className="mt-2 w-full py-1.5 rounded-lg bg-[#8a97a6]/15 border border-[#8a97a6]/40 text-[#8a97a6] font-bold text-[11px] active:scale-95 inline-flex items-center justify-center gap-1.5">
+                        <button data-testid={`tf-next-${i}`} onClick={() => setUnlocked((u) => u + 1)} className="mt-2 w-full py-1.5 rounded-lg bg-muted/15 border border-border/40 text-muted-foreground font-bold text-[11px] active:scale-95 inline-flex items-center justify-center gap-1.5">
                           <Check className="w-3.5 h-3.5" /> {tri("Fatto · passo successivo", "Fertig · nächster", "Done · next", "Hecho · siguiente", "Fait · suivant", "انجام شد · بعدی")}
                         </button>
                       )}

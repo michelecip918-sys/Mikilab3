@@ -26,13 +26,13 @@ export default function CarbonFootprint() {
     setBusy(false);
   }, [f, lang, tri]);
 
-  const inp = "bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2 text-sm text-white outline-none";
+  const inp = "bg-background border border-border/30 rounded-lg px-2.5 py-2 text-sm text-white outline-none";
   const Field = ({ tid, label, k, suf }) => (
     <label className="flex flex-col gap-1">
-      <span className="text-[10px] text-[#7d97ac] uppercase tracking-wide">{label}</span>
-      <span className="flex items-center gap-1 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-2.5 py-2">
-        <input data-testid={tid} type="number" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className="w-full bg-transparent text-sm text-white outline-none" />
-        {suf && <span className="text-[10px] text-[#64748b]">{suf}</span>}
+      <span className="text-[10px] text-muted-foreground uppercase tracking-wide">{label}</span>
+      <span className="flex items-center gap-1 bg-background border border-border/30 rounded-lg px-2.5 py-2">
+        <input data-testid={tid} type="number" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} className="w-full bg-transparent text-sm text-foreground outline-none" />
+        {suf && <span className="text-[10px] text-muted-foreground">{suf}</span>}
       </span>
     </label>
   );
@@ -48,36 +48,36 @@ export default function CarbonFootprint() {
       <div className="flex gap-2">
         {["electric", "gas"].map((s) => (
           <button key={s} data-testid={`carbon-energy-${s}`} onClick={() => setF({ ...f, energy_source: s })}
-            className={`flex-1 py-2 rounded-lg text-xs font-bold border active:scale-95 ${f.energy_source === s ? "bg-[#64748B]/20 border-[#64748B]/60 text-[#9fc3dc]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
+            className={`flex-1 py-2 rounded-lg text-xs font-bold border active:scale-95 ${f.energy_source === s ? "bg-accent/20 border-border/60 text-accent-foreground" : "bg-background border-border text-muted-foreground"}`}>
             {s === "electric" ? tri("Forno elettrico", "Elektroofen", "Electric oven", "Horno eléctrico", "Four électrique", "فر برقی") : tri("Forno a gas", "Gasofen", "Gas oven", "Horno de gas", "Four à gaz", "فر گازی")}
           </button>
         ))}
       </div>
-      <button data-testid="carbon-compute" onClick={compute} disabled={busy} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#6e9e85]/15 border border-[#6e9e85]/50 text-[#6e9e85] font-black text-sm active:scale-95 disabled:opacity-50">
+      <button data-testid="carbon-compute" onClick={compute} disabled={busy} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-accent/15 border border-accent/50 text-accent font-black text-sm active:scale-95 disabled:opacity-50">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Leaf className="w-4 h-4" />} {tri("Calcola CO₂", "CO₂ berechnen", "Compute CO₂", "Calcular CO₂", "Calculer CO₂", "محاسبه CO₂")}
       </button>
 
       {res && (
-        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="carbon-result" className="rounded-xl border border-[#6e9e85]/40 bg-[#6e9e85]/5 p-3">
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="carbon-result" className="rounded-xl border border-accent/40 bg-accent/5 p-3">
           <div className="text-center">
-            <p className="text-[10px] uppercase tracking-widest text-[#6e9e85]">{tri("CO₂ per quintale", "CO₂ pro Zentner", "CO₂ per 100 kg", "CO₂ por quintal", "CO₂ par quintal", "CO₂ در هر صد کیلو")}</p>
-            <p data-testid="carbon-per-quintal" className="text-4xl font-black text-white tabular-nums">{res.co2_per_quintal_kg} <span className="text-lg text-[#6e9e85]">kg</span></p>
+            <p className="text-[10px] uppercase tracking-widest text-accent">{tri("CO₂ per quintale", "CO₂ pro Zentner", "CO₂ per 100 kg", "CO₂ por quintal", "CO₂ par quintal", "CO₂ در هر صد کیلو")}</p>
+            <p data-testid="carbon-per-quintal" className="text-4xl font-black text-foreground tabular-nums">{res.co2_per_quintal_kg} <span className="text-lg text-accent">kg</span></p>
           </div>
           <div className="mt-3 grid grid-cols-3 gap-2 text-center">
             {[["energy", tri("Energia", "Energie", "Energy", "Energía", "Énergie", "انرژی")], ["flour", tri("Farina", "Mehl", "Flour", "Harina", "Farine", "آرد")], ["packaging", tri("Imballo", "Verpackung", "Packaging", "Embalaje", "Emballage", "بسته‌بندی")]].map(([k, lbl]) => (
-              <div key={k} className="rounded-lg bg-[#030712] border border-[#1e293b] py-2">
-                <p className="text-[10px] text-[#64748b] uppercase">{lbl}</p>
-                <p className="text-sm font-bold text-white">{res.breakdown_kg[k]} kg</p>
+              <div key={k} className="rounded-lg bg-background border border-border py-2">
+                <p className="text-[10px] text-muted-foreground uppercase">{lbl}</p>
+                <p className="text-sm font-bold text-foreground">{res.breakdown_kg[k]} kg</p>
               </div>
             ))}
           </div>
-          <p data-testid="carbon-statement" className="mt-3 text-[12px] text-[#a7f3d0] leading-snug flex items-start gap-1.5"><Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-[#6e9e85]" /> {res.statement}</p>
-          <div className="mt-3 rounded-lg border border-[#a4afbb]/30 bg-[#a4afbb]/5 p-2.5">
+          <p data-testid="carbon-statement" className="mt-3 text-[12px] text-foreground leading-snug flex items-start gap-1.5"><Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-accent" /> {res.statement}</p>
+          <div className="mt-3 rounded-lg border border-border/30 bg-muted/5 p-2.5">
             <div className="flex items-center justify-between text-[13px]">
-              <span className="text-[#94A3B8]">{tri("Costo energia / kg cotto", "Energiekosten / kg", "Energy cost / kg baked", "Coste energía / kg", "Coût énergie / kg", "هزینه انرژی / کیلو")}</span>
-              <b data-testid="carbon-cost-kg" className="text-[#a4afbb]">€ {res.cost_per_kg_eur}</b>
+              <span className="text-muted-foreground">{tri("Costo energia / kg cotto", "Energiekosten / kg", "Energy cost / kg baked", "Coste energía / kg", "Coût énergie / kg", "هزینه انرژی / کیلو")}</span>
+              <b data-testid="carbon-cost-kg" className="text-muted-foreground">€ {res.cost_per_kg_eur}</b>
             </div>
-            <p className="mt-1 text-[11px] text-[#c9dbe8]">⚡ {res.optimal_slot}</p>
+            <p className="mt-1 text-[11px] text-foreground">⚡ {res.optimal_slot}</p>
           </div>
         </motion.div>
       )}

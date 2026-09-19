@@ -20,9 +20,9 @@ export const OrgBadge = () => {
   if (!name) return null;
   return (
     <div data-testid="org-badge" title={name}
-      className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#D97736]/40 bg-[#D97736]/10 max-w-[180px]">
-      <Building2 className="w-3.5 h-3.5 text-[#D97736] shrink-0" />
-      <span className="text-[11px] font-bold text-[#D97736] truncate">{name}</span>
+      className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-primary/40 bg-primary/10 max-w-[180px]">
+      <Building2 className="w-3.5 h-3.5 text-primary shrink-0" />
+      <span className="text-[11px] font-bold text-primary truncate">{name}</span>
     </div>
   );
 };

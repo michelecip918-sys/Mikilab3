@@ -6,7 +6,7 @@ const speak = (msg) => { try { playTTS(msg); } catch { /* */ } };
 
 // Parco macchine: 1 manuale (impastatrice) + termiche con sensore IoT simulato live.
 const DEFS = [
-  { id: "impastatrice", name: "Impastatrice Spirale 50kg", kind: "manual", states: ["Pronta", "In uso", "Ferma"], colors: ["#6b9a85", "#aaa795", "#94a3b8"] },
+  { id: "impastatrice", name: "Impastatrice Spirale 50kg", kind: "manual", states: ["Pronta", "In uso", "Ferma"], colors: ["hsl(var(--muted-foreground))", "hsl(var(--muted-foreground))", "hsl(var(--muted-foreground))"] },
   { id: "forno", name: "Forno Rotativo a Carrello", kind: "thermal", hot: true, base: 210, min: 190, max: 230, unit: "°C" },
   { id: "cella", name: "Armadio Fermo-Lievitazione", kind: "thermal", base: 4, min: 2, max: 6, unit: "°C" },
   { id: "freezer", name: "Freezer", kind: "thermal", base: -18, min: -22, max: -15, unit: "°C" },
@@ -16,12 +16,12 @@ const DEFS = [
 const thermalStatus = (d, temp, min, max) => {
   const alarm = temp > max;
   if (d.hot) {
-    if (alarm) return { status: "Surriscaldato", color: "#E63946", alarm: true };
-    if (temp < min) return { status: "In riscaldamento", color: "#aaa795", alarm: false };
-    return { status: "In temperatura", color: "#6b9a85", alarm: false };
+    if (alarm) return { status: "Surriscaldato", color: "hsl(var(--muted-foreground))", alarm: true };
+    if (temp < min) return { status: "In riscaldamento", color: "hsl(var(--muted-foreground))", alarm: false };
+    return { status: "In temperatura", color: "hsl(var(--muted-foreground))", alarm: false };
   }
-  if (alarm) return { status: "Allarme caldo", color: "#E63946", alarm: true };
-  return { status: temp < min ? "Molto fredda" : "OK", color: temp < min ? "#aaa795" : "#6b9a85", alarm: false };
+  if (alarm) return { status: "Allarme caldo", color: "hsl(var(--muted-foreground))", alarm: true };
+  return { status: temp < min ? "Molto fredda" : "OK", color: temp < min ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))", alarm: false };
 };
 
 const lsGet = (k, fb) => { try { return JSON.parse(localStorage.getItem(k) || "null") ?? fb; } catch { return fb; } };

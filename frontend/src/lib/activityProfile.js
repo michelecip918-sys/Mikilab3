@@ -10,7 +10,7 @@ export function getActivity() {
 
 const PROFILES = {
   panificio: {
-    id: "panificio", icon: "🥖", accent: "#E0A106",
+    id: "panificio", icon: "🥖", accent: "hsl(var(--muted-foreground))",
     label: (l) => mkTri(l)("Panificio", "Backstube", "Bakery", "Panadería", "Boulangerie", "نانوایی"),
     paradigm: (l) => mkTri(l)(
       "Produzione a catena: impasto → lievitazione in celle grandi → cottura in sequenza.",
@@ -52,7 +52,7 @@ const PROFILES = {
     ],
   },
   pizzeria: {
-    id: "pizzeria", icon: "🍕", accent: "#3E9C93",
+    id: "pizzeria", icon: "🍕", accent: "hsl(var(--primary))",
     label: () => "Pizzeria",
     paradigm: (l) => mkTri(l)(
       "Produzione a flusso continuo / su richiesta: celle piccole ma più macchine (impastatrici, banco topping).",
@@ -94,7 +94,7 @@ const PROFILES = {
     ],
   },
   pasticceria: {
-    id: "pasticceria", icon: "🧁", accent: "#7FB0A6",
+    id: "pasticceria", icon: "🧁", accent: "hsl(var(--muted-foreground))",
     label: (l) => mkTri(l)("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی"),
     paradigm: (l) => mkTri(l)(
       "Produzione su commessa/eventi (torte, matrimoni): non a catena, pianificata a ritroso dalla consegna.",

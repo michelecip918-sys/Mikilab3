@@ -66,17 +66,17 @@ export default function SitorShiftDraft() {
   return (
     <div data-testid="sitor-shift-draft" className="space-y-2.5">
       <div className="flex items-center gap-2">
-        <ClipboardCheck className="w-4 h-4 text-[#a6b1bc] shrink-0" />
-        <p className="text-xs font-black uppercase tracking-wide text-[#a6b1bc] flex-1 min-w-0">
+        <ClipboardCheck className="w-4 h-4 text-muted-foreground shrink-0" />
+        <p className="text-xs font-black uppercase tracking-wide text-muted-foreground flex-1 min-w-0">
           {tri("Report Fine Turno · Bozza di Sitor", "Schichtbericht · Sitor-Entwurf", "End-of-Shift Report · Sitor's Draft", "Informe Fin de Turno · Borrador de Sitor", "Rapport de Fin de Service · Brouillon de Sitor", "گزارش پایان شیفت · پیش‌نویس سیتور")}
         </p>
         <button data-testid="sitor-draft-generate" onClick={generate} disabled={busy}
-          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#a6b1bc]/10 border border-[#a6b1bc]/35 text-[#a6b1bc] text-xs font-bold hover:bg-[#a6b1bc]/20 active:scale-95 disabled:opacity-50">
+          className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/10 border border-border/35 text-muted-foreground text-xs font-bold hover:bg-muted/20 active:scale-95 disabled:opacity-50">
           {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wand2 className="w-3.5 h-3.5" />}
           {current ? tri("Rigenera", "Neu", "Regenerate", "Regenerar", "Régénérer", "بازسازی") : tri("Genera bozza", "Entwurf", "Generate draft", "Generar", "Générer", "بساز")}
         </button>
       </div>
-      <p className="text-[11px] text-[#94A3B8]">
+      <p className="text-[11px] text-muted-foreground">
         {tri("Sitor raccoglie da solo scarti, pezzi e ore effettive e compila la bozza appena un operaio chiude il suo rapporto.",
              "Sitor sammelt Ausschuss, Stückzahlen & Arbeitszeiten und erstellt den Entwurf automatisch.",
              "Sitor collects waste, pieces and actual hours on its own and drafts the report as soon as an operator submits theirs.",
@@ -86,26 +86,26 @@ export default function SitorShiftDraft() {
       </p>
 
       {/* Report programmato: Sitor genera la bozza da solo a un orario fisso di chiusura */}
-      <div data-testid="sitor-schedule" className="rounded-xl bg-[#0C1019] border border-[#1e293b] p-2.5 space-y-2">
+      <div data-testid="sitor-schedule" className="rounded-xl bg-background border border-border p-2.5 space-y-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <AlarmClock className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" />
+          <AlarmClock className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
           <label className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer">
             <input data-testid="sitor-schedule-toggle" type="checkbox" checked={sched.enabled}
               onChange={(e) => saveSched({ ...sched, enabled: e.target.checked })}
-              className="w-4 h-4 accent-[#a6b1bc] shrink-0" />
-            <span className="text-[11px] text-[#CBD5E1] font-semibold">
+              className="w-4 h-4 accent-muted shrink-0" />
+            <span className="text-[11px] text-foreground font-semibold">
               {tri("Report automatico all'orario di chiusura", "Automatischer Bericht zur Schließzeit", "Auto report at closing time", "Informe automático al cerrar", "Rapport auto à la fermeture", "گزارش خودکار در زمان بستن")}
             </span>
           </label>
           <div className="flex items-center gap-1.5 shrink-0">
-            <Clock className="w-3.5 h-3.5 text-[#64748B]" />
+            <Clock className="w-3.5 h-3.5 text-muted-foreground" />
             <input data-testid="sitor-schedule-time" type="time" value={sched.time}
               onChange={(e) => saveSched({ ...sched, time: e.target.value })}
               disabled={!sched.enabled}
-              className="bg-[#060A10] border border-[#1e293b] rounded-lg px-2 py-1 text-xs text-white focus:border-[#a6b1bc] outline-none disabled:opacity-40" />
+              className="bg-background border border-border rounded-lg px-2 py-1 text-xs text-foreground focus:border-border outline-none disabled:opacity-40" />
           </div>
         </div>
-        <p className="text-[10px] text-[#64748B]">
+        <p className="text-[10px] text-muted-foreground">
           {schedSaved
             ? tri("Salvato ✓ — Sitor scriverà la bozza da solo a quest'ora (ora locale della sede).", "Gespeichert ✓ — Sitor schreibt den Entwurf selbst (Ortszeit).", "Saved ✓ — Sitor will draft it on its own at this time (local time).", "Guardado ✓ (hora local).", "Enregistré ✓ (heure locale).", "ذخیره شد ✓ (زمان محلی)")
             : tri("Anche senza rapporto operaio, a quest'ora Sitor compila la bozza con i dati raccolti. Ora locale della sede.", "Auch ohne Bericht erstellt Sitor zur eingestellten Ortszeit den Entwurf.", "Even with no operator report, at this time Sitor compiles the draft from collected data. Local time.", "Aunque no haya informe, Sitor redacta a esa hora (local).", "Même sans rapport, Sitor rédige à cette heure (locale).", "حتی بدون گزارش، سیتور در این ساعت (محلی) پیش‌نویس را می‌سازد.")}
@@ -113,23 +113,23 @@ export default function SitorShiftDraft() {
       </div>
 
       {!current ? (
-        <div data-testid="sitor-draft-empty" className="rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-4 text-center text-[12px] text-[#64748B]">
+        <div data-testid="sitor-draft-empty" className="rounded-xl bg-background border border-border px-3 py-4 text-center text-[12px] text-muted-foreground">
           {tri("Nessuna bozza ancora: appena arrivano dati dal turno, Sitor la scrive da solo.", "Noch kein Entwurf: sobald Schichtdaten eintreffen, schreibt Sitor ihn selbst.", "No draft yet: as soon as shift data arrives, Sitor writes it on its own.", "Sin borrador: Sitor lo escribe solo al llegar datos.", "Aucun brouillon : Sitor l'écrit dès l'arrivée des données.", "هنوز پیش‌نویسی نیست.")}
         </div>
       ) : (
-        <div className="rounded-xl bg-[#0C1019] border border-[#a6b1bc]/25 p-3 space-y-2">
+        <div className="rounded-xl bg-background border border-border/25 p-3 space-y-2">
           <div className="flex items-center gap-2 flex-wrap">
-            <span data-testid="sitor-draft-status" className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded border ${current.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "bg-[#a6b1bc]/10 text-[#a6b1bc] border-[#a6b1bc]/30"}`}>
+            <span data-testid="sitor-draft-status" className={`text-[10px] font-black uppercase px-1.5 py-0.5 rounded border ${current.status === "approved" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/30" : "bg-muted/10 text-muted-foreground border-border/30"}`}>
               {current.status === "approved" ? tri("Approvato", "Freigegeben", "Approved", "Aprobado", "Approuvé", "تأییدشده") : tri("Bozza", "Entwurf", "Draft", "Borrador", "Brouillon", "پیش‌نویس")}
             </span>
-            <span className="text-[10px] text-[#64748B] font-mono-data">{current.date} · {current.trigger === "auto" ? tri("auto", "auto", "auto", "auto", "auto", "خودکار") : tri("manuale", "manuell", "manual", "manual", "manuel", "دستی")}</span>
+            <span className="text-[10px] text-muted-foreground font-mono-data">{current.date} · {current.trigger === "auto" ? tri("auto", "auto", "auto", "auto", "auto", "خودکار") : tri("manuale", "manuell", "manual", "manual", "manuel", "دستی")}</span>
             {current.snapshot && (
-              <span data-testid="sitor-draft-meta" className="text-[10px] text-[#64748B]">
+              <span data-testid="sitor-draft-meta" className="text-[10px] text-muted-foreground">
                 · {current.snapshot.reports || 0} {tri("rapporti", "Berichte", "reports", "informes", "rapports", "گزارش")} · {current.snapshot.workers || 0} {tri("timbrati", "gestempelt", "clocked", "fichados", "pointés", "ثبت‌شده")}
               </span>
             )}
           </div>
-          <div data-testid="sitor-draft-text" className="text-[13px] leading-relaxed text-[#E8EEF5] max-h-72 overflow-y-auto pr-1 [&_strong]:text-[#a6b1bc] [&_h1]:text-base [&_h1]:font-black [&_h1]:mb-2 [&_h2]:text-sm [&_h2]:font-black [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:mb-2 [&_li]:mb-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_hr]:border-[#1e293b] [&_hr]:my-2">
+          <div data-testid="sitor-draft-text" className="text-[13px] leading-relaxed text-foreground max-h-72 overflow-y-auto pr-1 [&_strong]:text-muted-foreground [&_h1]:text-base [&_h1]:font-black [&_h1]:mb-2 [&_h2]:text-sm [&_h2]:font-black [&_h2]:mt-3 [&_h2]:mb-1 [&_h3]:text-sm [&_h3]:font-bold [&_h3]:mt-2 [&_h3]:mb-1 [&_p]:mb-2 [&_li]:mb-0.5 [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_hr]:border-border [&_hr]:my-2">
             <ReactMarkdown>{current.text}</ReactMarkdown>
           </div>
           {current.status !== "approved" && (
@@ -145,11 +145,11 @@ export default function SitorShiftDraft() {
       {past.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {past.map((d) => (
-            <span key={d.id} data-testid={`sitor-draft-past-${d.date}`} className={`text-[10px] font-mono-data px-2 py-1 rounded-lg border ${d.status === "approved" ? "bg-emerald-500/5 text-emerald-400/80 border-emerald-500/20" : "bg-[#0C1019] text-[#64748B] border-[#1e293b]"}`}>
+            <span key={d.id} data-testid={`sitor-draft-past-${d.date}`} className={`text-[10px] font-mono-data px-2 py-1 rounded-lg border ${d.status === "approved" ? "bg-emerald-500/5 text-emerald-400/80 border-emerald-500/20" : "bg-background text-muted-foreground border-border"}`}>
               {d.date} {d.status === "approved" ? "✓" : ""}
             </span>
           ))}
-          <button data-testid="sitor-draft-refresh" onClick={load} className="text-[#64748B] hover:text-[#a6b1bc] active:scale-95"><RefreshCw className="w-3.5 h-3.5" /></button>
+          <button data-testid="sitor-draft-refresh" onClick={load} className="text-muted-foreground hover:text-muted-foreground active:scale-95"><RefreshCw className="w-3.5 h-3.5" /></button>
         </div>
       )}
     </div>

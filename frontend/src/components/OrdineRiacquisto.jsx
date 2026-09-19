@@ -46,12 +46,12 @@ export default function OrdineRiacquisto({ lowItems = [] }) {
 
       {open && (
         <div className="space-y-2">
-          <pre data-testid="ordine-riacquisto-text" className="text-[10px] text-[#cbd5e1] whitespace-pre-wrap bg-[#030712] border border-[#1e293b] rounded-lg p-2.5 leading-relaxed">{orderText}</pre>
+          <pre data-testid="ordine-riacquisto-text" className="text-[10px] text-foreground whitespace-pre-wrap bg-background border border-border rounded-lg p-2.5 leading-relaxed">{orderText}</pre>
           <div className="flex gap-2">
-            <button data-testid="ordine-riacquisto-copy" onClick={copy} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold bg-[#1e293b] text-white border border-[#334155] hover:border-amber-500 active:scale-95 transition-all">
+            <button data-testid="ordine-riacquisto-copy" onClick={copy} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold bg-card text-foreground border border-border hover:border-amber-500 active:scale-95 transition-all">
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />} {copied ? "Copiato" : "Copia ordine"}
             </button>
-            <a data-testid="ordine-riacquisto-email" href={mailto} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-[#030712] active:scale-95 transition-all">
+            <a data-testid="ordine-riacquisto-email" href={mailto} className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-[11px] font-bold bg-gradient-to-r from-amber-500 to-amber-600 text-foreground active:scale-95 transition-all">
               <Mail className="w-3.5 h-3.5" /> Invia al fornitore
             </a>
           </div>

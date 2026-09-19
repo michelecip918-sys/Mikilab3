@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const PUB = process.env.PUBLIC_URL;
-const LVL = { ok: "#6e9e85", warn: "#aaa795", high: "#b06e78" };
+const LVL = { ok: "hsl(var(--accent))", warn: "hsl(var(--muted-foreground))", high: "hsl(var(--mattone))" };
 
 // DUAL-MODE STRATEGICO: Sitor (Master Baker) critica la ricetta e presenta al
 // Boss la matrice sovrana a 3 opzioni. La decisione finale resta del Capo.
@@ -36,41 +36,41 @@ export default function RecipeAuditMatrix({ onClose }) {
   const goldState = audit && audit.recommended !== "approve";
 
   return (
-    <div data-testid="recipe-audit" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
+    <div data-testid="recipe-audit" className="fixed inset-0 z-[80] bg-background/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-lg mx-auto p-4 pb-16">
-        <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-[#aaa795]" /> {tri("Audit Ricetta · Matrice Sovrana", "Rezept-Audit · Souveräne Matrix", "Recipe Audit · Sovereign Matrix", "Auditoría · Matriz Soberana", "Audit Recette · Matrice Souveraine", "بازبینی دستور · ماتریس حاکم")}</h2>
-          <button data-testid="recipe-audit-close" onClick={onClose} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="flex items-center justify-between sticky top-0 bg-background/95 py-2 z-10">
+          <h2 className="text-lg font-black text-foreground flex items-center gap-2"><BrainCircuit className="w-5 h-5 text-muted-foreground" /> {tri("Audit Ricetta · Matrice Sovrana", "Rezept-Audit · Souveräne Matrix", "Recipe Audit · Sovereign Matrix", "Auditoría · Matriz Soberana", "Audit Recette · Matrice Souveraine", "بازبینی دستور · ماتریس حاکم")}</h2>
+          <button data-testid="recipe-audit-close" onClick={onClose} className="w-9 h-9 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
         </div>
 
         {/* Robot Sitor: stato oro/ambra in modalità strategica */}
-        <div className="flex items-center gap-3 my-3 rounded-2xl border p-3" style={{ borderColor: goldState ? "#f59e0b66" : "#1e293b", background: goldState ? "#f59e0b12" : "#0b0f19" }}>
+        <div className="flex items-center gap-3 my-3 rounded-2xl border p-3" style={{ borderColor: goldState ? "#f59e0b66" : "hsl(var(--card))", background: goldState ? "#f59e0b12" : "hsl(var(--card))" }}>
           <div className="relative">
-            {goldState && <span className="absolute inset-0 rounded-full bg-[#aaa795]/50 blur-md animate-pulse" />}
-            <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "#aaa795" : "#5EEAD4" }} />
+            {goldState && <span className="absolute inset-0 rounded-full bg-muted/50 blur-md animate-pulse" />}
+            <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "hsl(var(--muted-foreground))" : "hsl(var(--primary))" }} />
           </div>
-          <p className="text-[12px] text-[#cfe0ec] flex-1">{audit ? audit.mike_note : tri("Scegli una ricetta: la analizzo come Master Baker.", "Wähle ein Rezept: ich prüfe es als Master Baker.", "Pick a recipe: I'll audit it as Master Baker.", "Elige una receta: la audito como Master Baker.", "Choisis une recette : je l'audite en Master Baker.", "دستوری انتخاب کن تا مثل استاد نان بررسی کنم.")}</p>
+          <p className="text-[12px] text-foreground flex-1">{audit ? audit.mike_note : tri("Scegli una ricetta: la analizzo come Master Baker.", "Wähle ein Rezept: ich prüfe es als Master Baker.", "Pick a recipe: I'll audit it as Master Baker.", "Elige una receta: la audito como Master Baker.", "Choisis une recette : je l'audite en Master Baker.", "دستوری انتخاب کن تا مثل استاد نان بررسی کنم.")}</p>
         </div>
 
         {!audit && (
           <div className="space-y-1.5">
             {recipes.map((r) => (
-              <button key={r.id} data-testid={`audit-pick-${r.id}`} onClick={() => run(r.id)} className="w-full text-left rounded-xl bg-[#0b0f19] border border-[#1e293b] p-3 text-sm font-bold text-white hover:border-[#aaa795]/50 active:scale-[0.99] transition-all">{r.name}</button>
+              <button key={r.id} data-testid={`audit-pick-${r.id}`} onClick={() => run(r.id)} className="w-full text-left rounded-xl bg-background border border-border p-3 text-sm font-bold text-foreground hover:border-border/50 active:scale-[0.99] transition-all">{r.name}</button>
             ))}
-            {busy && <p className="text-center text-[#94A3B8] text-sm py-4">…</p>}
+            {busy && <p className="text-center text-muted-foreground text-sm py-4">…</p>}
           </div>
         )}
 
         {audit && (
           <>
-            <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] mb-2">{tri("Lettura del fornaio", "Bäcker-Analyse", "Baker's read", "Lectura del panadero", "Lecture du boulanger", "تحلیل نانوا")} · {audit.recipe}</p>
+            <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2">{tri("Lettura del fornaio", "Bäcker-Analyse", "Baker's read", "Lectura del panadero", "Lecture du boulanger", "تحلیل نانوا")} · {audit.recipe}</p>
             <div className="space-y-1.5 mb-4">
               {audit.critique.map((c, i) => (
-                <div key={i} data-testid={`audit-metric-${i}`} className="flex items-center gap-2 rounded-xl bg-[#0b0f19] border p-2.5" style={{ borderColor: `${LVL[c.level] || "#1e293b"}55` }}>
-                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: LVL[c.level] || "#64748B" }} />
-                  <span className="text-sm font-black text-white w-24">{c.metric}</span>
+                <div key={i} data-testid={`audit-metric-${i}`} className="flex items-center gap-2 rounded-xl bg-background border p-2.5" style={{ borderColor: `${LVL[c.level] || "hsl(var(--card))"}55` }}>
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: LVL[c.level] || "hsl(var(--muted-foreground))" }} />
+                  <span className="text-sm font-black text-foreground w-24">{c.metric}</span>
                   <span className="text-sm font-bold" style={{ color: LVL[c.level] }}>{c.value}</span>
-                  <span className="text-[11px] text-[#94A3B8] flex-1">{c.note}</span>
+                  <span className="text-[11px] text-muted-foreground flex-1">{c.note}</span>
                 </div>
               ))}
             </div>
@@ -79,19 +79,19 @@ export default function RecipeAuditMatrix({ onClose }) {
             <div className="grid grid-cols-3 gap-2">
               {["approve", "modify", "reject"].map((opt) => {
                 const rec = audit.recommended === opt;
-                const col = opt === "approve" ? "#6e9e85" : opt === "modify" ? "#aaa795" : "#b06e78";
+                const col = opt === "approve" ? "hsl(var(--accent))" : opt === "modify" ? "hsl(var(--muted-foreground))" : "hsl(var(--mattone))";
                 const Icon = opt === "approve" ? Check : opt === "modify" ? PencilLine : Ban;
                 return (
                   <button key={opt} data-testid={`audit-${opt}`} onClick={() => decide(opt)} className="rounded-2xl border-2 p-3 text-center active:scale-95 transition-transform" style={{ borderColor: col, background: rec ? `${col}22` : "transparent" }}>
                     <Icon className="w-5 h-5 mx-auto mb-1" style={{ color: col }} />
                     <p className="text-[12px] font-black" style={{ color: col }}>{audit.matrix[opt].label}</p>
-                    {rec && <p className="text-[9px] font-bold text-[#94A3B8] mt-0.5">{tri("consigliato", "empfohlen", "recommended", "recomendado", "conseillé", "پیشنهادی")}</p>}
+                    {rec && <p className="text-[9px] font-bold text-muted-foreground mt-0.5">{tri("consigliato", "empfohlen", "recommended", "recomendado", "conseillé", "پیشنهادی")}</p>}
                   </button>
                 );
               })}
             </div>
-            <p className="text-[11px] text-[#94A3B8] mt-3">{audit.matrix[audit.recommended].reason}</p>
-            <button data-testid="audit-back" onClick={() => setAudit(null)} className="w-full mt-4 py-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] text-[#94A3B8] text-sm font-bold">{tri("Altra ricetta", "Anderes Rezept", "Another recipe", "Otra receta", "Autre recette", "دستور دیگر")}</button>
+            <p className="text-[11px] text-muted-foreground mt-3">{audit.matrix[audit.recommended].reason}</p>
+            <button data-testid="audit-back" onClick={() => setAudit(null)} className="w-full mt-4 py-2 rounded-xl bg-background border border-border text-muted-foreground text-sm font-bold">{tri("Altra ricetta", "Anderes Rezept", "Another recipe", "Otra receta", "Autre recette", "دستور دیگر")}</button>
           </>
         )}
       </div>

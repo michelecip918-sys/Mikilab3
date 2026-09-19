@@ -6,7 +6,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 // Mini-grafico consumi (ultimi 14 giorni) accanto alla soglia intelligente.
-const Sparkline = ({ data = [], w = 76, h = 22, color = "#a58ce0" }) => {
+const Sparkline = ({ data = [], w = 76, h = 22, color = "hsl(var(--muted-foreground))" }) => {
   if (!data || data.length < 2) return null;
   const max = Math.max(...data, 1);
   const step = w / (data.length - 1);
@@ -77,70 +77,70 @@ export const ReorderProposals = () => {
   const whName = tri("Magazzino", "Lager", "Warehouse", "Almacén", "Entrepôt", "انبار");
 
   return (
-    <div data-testid="reorder-proposals" className="rounded-2xl border border-[#e0a94a]/30 p-3 mb-4" style={{ background: "#e0a94a0d" }}>
+    <div data-testid="reorder-proposals" className="rounded-2xl border border-border/30 p-3 mb-4" style={{ background: "#e0a94a0d" }}>
       <div className="flex items-center justify-between gap-2 mb-2 flex-wrap">
-        <p className="text-[11px] font-black uppercase tracking-widest text-[#e0a94a] flex items-center gap-1.5"><PackagePlus className="w-3.5 h-3.5" /> {tri("Proposte di riordino", "Nachbestell-Vorschläge", "Reorder proposals", "Propuestas de pedido", "Propositions de réappro", "پیشنهاد سفارش")}</p>
+        <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5"><PackagePlus className="w-3.5 h-3.5" /> {tri("Proposte di riordino", "Nachbestell-Vorschläge", "Reorder proposals", "Propuestas de pedido", "Propositions de réappro", "پیشنهاد سفارش")}</p>
         <div className="flex items-center gap-3">
-          <label className="flex items-center gap-1.5 text-[11px] text-[#9aa6b2] cursor-pointer">
+          <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground cursor-pointer">
             {tri("Invio auto", "Auto-Versand", "Auto-send", "Envío auto", "Envoi auto", "ارسال خودکار")}
             <button type="button" role="switch" aria-checked={autoSend} data-testid="reorder-auto-toggle" onClick={toggleAuto}
-              className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${autoSend ? "bg-[#3E9C93]" : "bg-[#334155]"}`}>
-              <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${autoSend ? "translate-x-5" : ""}`} />
+              className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${autoSend ? "bg-primary" : "bg-secondary"}`}>
+              <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-card transition-transform ${autoSend ? "translate-x-5" : ""}`} />
             </button>
           </label>
-          <label className="flex items-center gap-1.5 text-[11px] text-[#9aa6b2] cursor-pointer">
+          <label className="flex items-center gap-1.5 text-[11px] text-muted-foreground cursor-pointer">
             {tri("Soglia auto", "Auto-Schwelle", "Auto threshold", "Umbral auto", "Seuil auto", "آستانه خودکار")}
             <button type="button" role="switch" aria-checked={autoThreshold} data-testid="reorder-threshold-toggle" onClick={toggleThreshold}
-              className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${autoThreshold ? "bg-[#8a6bd0]" : "bg-[#334155]"}`}>
-              <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white transition-transform ${autoThreshold ? "translate-x-5" : ""}`} />
+              className={`relative w-10 h-5 rounded-full shrink-0 transition-colors ${autoThreshold ? "bg-muted" : "bg-secondary"}`}>
+              <span className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-card transition-transform ${autoThreshold ? "translate-x-5" : ""}`} />
             </button>
           </label>
         </div>
       </div>
 
       {proposed.length === 0 && sent.length === 0 && (
-        <p className="text-[12px] text-[#64748B] py-2">{tri("Nessuna proposta: le scorte sono sopra soglia.", "Keine Vorschläge: Bestände über Schwelle.", "No proposals: stock above threshold.", "Sin propuestas: stock sobre umbral.", "Aucune proposition : stock au-dessus du seuil.", "پیشنهادی نیست: موجودی بالای آستانه.")}</p>
+        <p className="text-[12px] text-muted-foreground py-2">{tri("Nessuna proposta: le scorte sono sopra soglia.", "Keine Vorschläge: Bestände über Schwelle.", "No proposals: stock above threshold.", "Sin propuestas: stock sobre umbral.", "Aucune proposition : stock au-dessus du seuil.", "پیشنهادی نیست: موجودی بالای آستانه.")}</p>
       )}
       <div className="space-y-1.5">
         {proposed.map((p) => (
-          <div key={p.id} data-testid={`reorder-item-${p.id}`} className="flex items-center justify-between gap-2 bg-[#0b0f19] border border-[#e0a94a]/25 rounded-xl px-3 py-2">
-            <span className="text-[12.5px] text-white min-w-0">
-              <b className="truncate">{p.name}</b> <span className="text-[#94A3B8]">· {tri("proponi", "vorschlagen", "suggest", "sugerir", "suggérer", "پیشنهاد")} {p.suggested_qty_kg}kg</span>
-              <span className="block text-[10.5px] text-[#7c8794]">{p.current_kg}/{p.min_kg} kg · {p.source === "silos" ? "Silos" : whName}{p.weekly_avg_kg > 0 ? ` · ${tri("consumo", "Verbrauch", "usage", "consumo", "conso", "مصرف")} ~${p.weekly_avg_kg}kg/${tri("sett", "Wo", "wk", "sem", "sem", "هفته")}` : ""}</span>
+          <div key={p.id} data-testid={`reorder-item-${p.id}`} className="flex items-center justify-between gap-2 bg-background border border-border/25 rounded-xl px-3 py-2">
+            <span className="text-[12.5px] text-foreground min-w-0">
+              <b className="truncate">{p.name}</b> <span className="text-muted-foreground">· {tri("proponi", "vorschlagen", "suggest", "sugerir", "suggérer", "پیشنهاد")} {p.suggested_qty_kg}kg</span>
+              <span className="block text-[10.5px] text-muted-foreground">{p.current_kg}/{p.min_kg} kg · {p.source === "silos" ? "Silos" : whName}{p.weekly_avg_kg > 0 ? ` · ${tri("consumo", "Verbrauch", "usage", "consumo", "conso", "مصرف")} ~${p.weekly_avg_kg}kg/${tri("sett", "Wo", "wk", "sem", "sem", "هفته")}` : ""}</span>
             </span>
             <span className="flex items-center gap-1 shrink-0">
-              <button data-testid={`reorder-send-${p.id}`} onClick={() => send(p)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#3E9C93] text-white text-[11px] font-bold active:scale-95 disabled:opacity-50">{busy === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />} {tri("Invia", "Senden", "Send", "Enviar", "Envoyer", "ارسال")}</button>
-              <button data-testid={`reorder-dismiss-${p.id}`} onClick={() => dismiss(p)} disabled={busy === p.id} className="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-[#334155] text-[#94A3B8] active:scale-95"><X className="w-3.5 h-3.5" /></button>
+              <button data-testid={`reorder-send-${p.id}`} onClick={() => send(p)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-primary text-white text-[11px] font-bold active:scale-95 disabled:opacity-50">{busy === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />} {tri("Invia", "Senden", "Send", "Enviar", "Envoyer", "ارسال")}</button>
+              <button data-testid={`reorder-dismiss-${p.id}`} onClick={() => dismiss(p)} disabled={busy === p.id} className="inline-flex items-center justify-center w-7 h-7 rounded-lg border border-border text-muted-foreground active:scale-95"><X className="w-3.5 h-3.5" /></button>
             </span>
           </div>
         ))}
         {sent.map((p) => (
-          <div key={p.id} data-testid={`reorder-sent-${p.id}`} className="flex items-center justify-between gap-2 bg-[#0b0f19] border border-[#6e9e85]/25 rounded-xl px-3 py-2">
-            <span className="flex items-center gap-1.5 text-[11.5px] text-[#6e9e85] min-w-0">
+          <div key={p.id} data-testid={`reorder-sent-${p.id}`} className="flex items-center justify-between gap-2 bg-background border border-accent/25 rounded-xl px-3 py-2">
+            <span className="flex items-center gap-1.5 text-[11.5px] text-accent min-w-0">
               <Truck className="w-3.5 h-3.5 shrink-0" /> <b className="truncate">{p.name}</b> · {p.suggested_qty_kg}kg — {p.auto ? tri("inviato auto", "auto gesendet", "auto-sent", "auto enviado", "envoi auto", "ارسال خودکار") : tri("inviato", "gesendet", "sent", "enviado", "envoyé", "ارسال‌شده")}
             </span>
-            <button data-testid={`reorder-receive-${p.id}`} onClick={() => receive(p)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-[#6e9e85] text-[#04140c] text-[11px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />} {tri("Ricevuta", "Erhalten", "Received", "Recibida", "Reçue", "دریافت شد")}</button>
+            <button data-testid={`reorder-receive-${p.id}`} onClick={() => receive(p)} disabled={busy === p.id} className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-accent text-accent-foreground text-[11px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === p.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle2 className="w-3.5 h-3.5" />} {tri("Ricevuta", "Erhalten", "Received", "Recibida", "Reçue", "دریافت شد")}</button>
           </div>
         ))}
       </div>
 
       {/* Soglie intelligenti calcolate da Sitor sui consumi reali */}
-      <div className="mt-3 pt-2 border-t border-[#e0a94a]/15">
+      <div className="mt-3 pt-2 border-t border-border/15">
         <button type="button" data-testid="reorder-smart-toggle" onClick={() => { const nv = !showSmart; setShowSmart(nv); if (nv && thresholds === null) loadThresholds(); }}
-          className="w-full flex items-center justify-between text-[11px] font-bold text-[#a58ce0] py-1">
+          className="w-full flex items-center justify-between text-[11px] font-bold text-muted-foreground py-1">
           <span className="flex items-center gap-1.5"><Brain className="w-3.5 h-3.5" /> {tri("Soglie intelligenti (dai consumi)", "Smart-Schwellen", "Smart thresholds (from usage)", "Umbrales inteligentes", "Seuils intelligents", "آستانه هوشمند")}</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${showSmart ? "rotate-180" : ""}`} />
         </button>
         {showSmart && (
           <div data-testid="reorder-smart-list" className="mt-1.5 space-y-1">
-            {thresholds === null && <p className="text-[11px] text-[#64748B] py-1"><Loader2 className="w-3.5 h-3.5 animate-spin inline" /></p>}
-            {thresholds !== null && smartActionable.length === 0 && <p className="text-[11px] text-[#64748B] py-1">{tri("Le soglie attuali sono già in linea con i consumi recenti.", "Schwellen passen zum Verbrauch.", "Current thresholds already match recent usage.", "Los umbrales ya coinciden con el consumo.", "Les seuils correspondent déjà à la conso.", "آستانه‌ها با مصرف اخیر همخوان است.")}</p>}
+            {thresholds === null && <p className="text-[11px] text-muted-foreground py-1"><Loader2 className="w-3.5 h-3.5 animate-spin inline" /></p>}
+            {thresholds !== null && smartActionable.length === 0 && <p className="text-[11px] text-muted-foreground py-1">{tri("Le soglie attuali sono già in linea con i consumi recenti.", "Schwellen passen zum Verbrauch.", "Current thresholds already match recent usage.", "Los umbrales ya coinciden con el consumo.", "Les seuils correspondent déjà à la conso.", "آستانه‌ها با مصرف اخیر همخوان است.")}</p>}
             {smartActionable.map((t) => (
-              <div key={t.name + t.source} data-testid={`reorder-smart-${t.source}-${t.name}`} className="flex items-center justify-between gap-2 text-[11.5px] text-[#cbd5e1] bg-[#0b0f19] border border-[#a58ce0]/20 rounded-lg px-2.5 py-1.5">
-                <span className="min-w-0"><b className="truncate">{t.name}</b> <span className="text-[#7c8794]">· {t.source === "silos" ? "Silos" : whName} · {tri("ora", "jetzt", "now", "ahora", "actuel", "اکنون")} {t.fixed_min_kg}kg → <span className="text-[#a58ce0] font-bold">{t.smart_min_kg}kg</span></span></span>
+              <div key={t.name + t.source} data-testid={`reorder-smart-${t.source}-${t.name}`} className="flex items-center justify-between gap-2 text-[11.5px] text-foreground bg-background border border-border/20 rounded-lg px-2.5 py-1.5">
+                <span className="min-w-0"><b className="truncate">{t.name}</b> <span className="text-muted-foreground">· {t.source === "silos" ? "Silos" : whName} · {tri("ora", "jetzt", "now", "ahora", "actuel", "اکنون")} {t.fixed_min_kg}kg → <span className="text-muted-foreground font-bold">{t.smart_min_kg}kg</span></span></span>
                 <span className="flex items-center gap-2 shrink-0">
                   <Sparkline data={t.series} />
-                  <button data-testid={`reorder-apply-${t.source}-${t.name}`} onClick={() => applyThreshold(t)} disabled={busy === (t.name + t.source)} className="px-2 py-1 rounded-lg border border-[#a58ce0]/40 text-[#a58ce0] text-[10.5px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === (t.name + t.source) ? <Loader2 className="w-3 h-3 animate-spin" /> : tri("Applica", "Anwenden", "Apply", "Aplicar", "Appliquer", "اعمال")}</button>
+                  <button data-testid={`reorder-apply-${t.source}-${t.name}`} onClick={() => applyThreshold(t)} disabled={busy === (t.name + t.source)} className="px-2 py-1 rounded-lg border border-border/40 text-muted-foreground text-[10.5px] font-bold active:scale-95 disabled:opacity-50 shrink-0">{busy === (t.name + t.source) ? <Loader2 className="w-3 h-3 animate-spin" /> : tri("Applica", "Anwenden", "Apply", "Aplicar", "Appliquer", "اعمال")}</button>
                 </span>
               </div>
             ))}
@@ -149,26 +149,26 @@ export const ReorderProposals = () => {
       </div>
 
       {/* Storico riordini */}
-      <div className="mt-1 pt-2 border-t border-[#e0a94a]/15">
+      <div className="mt-1 pt-2 border-t border-border/15">
         <button type="button" data-testid="reorder-history-toggle" onClick={() => { const nv = !showHist; setShowHist(nv); if (nv && history === null) loadHistory(); }}
-          className="w-full flex items-center justify-between text-[11px] font-bold text-[#9aa6b2] py-1">
+          className="w-full flex items-center justify-between text-[11px] font-bold text-muted-foreground py-1">
           <span className="flex items-center gap-1.5"><History className="w-3.5 h-3.5" /> {tri("Storico riordini", "Nachbestell-Verlauf", "Reorder history", "Historial de pedidos", "Historique réappro", "تاریخچه سفارش")}</span>
           <ChevronDown className={`w-4 h-4 transition-transform ${showHist ? "rotate-180" : ""}`} />
         </button>
         {showHist && (
           <div data-testid="reorder-history-list" className="mt-1.5 space-y-1 max-h-64 overflow-y-auto">
-            {history === null && <p className="text-[11px] text-[#64748B] py-1"><Loader2 className="w-3.5 h-3.5 animate-spin inline" /></p>}
-            {history !== null && history.length === 0 && <p className="text-[11px] text-[#64748B] py-1">{tri("Nessun rifornimento registrato.", "Keine Nachbestellungen.", "No restocks recorded.", "Sin reposiciones.", "Aucun réappro.", "بدون سابقه.")}</p>}
+            {history === null && <p className="text-[11px] text-muted-foreground py-1"><Loader2 className="w-3.5 h-3.5 animate-spin inline" /></p>}
+            {history !== null && history.length === 0 && <p className="text-[11px] text-muted-foreground py-1">{tri("Nessun rifornimento registrato.", "Keine Nachbestellungen.", "No restocks recorded.", "Sin reposiciones.", "Aucun réappro.", "بدون سابقه.")}</p>}
             {(history || []).map((h) => {
-              const st = h.status === "received" ? { c: "#6e9e85", t: tri("ricevuta", "erhalten", "received", "recibida", "reçue", "دریافت‌شده") }
-                : h.status === "sent" ? { c: "#3E9C93", t: tri("inviata", "gesendet", "sent", "enviada", "envoyée", "ارسال‌شده") }
-                : { c: "#7c8794", t: tri("scartata", "verworfen", "dismissed", "descartada", "rejetée", "رد‌شده") };
+              const st = h.status === "received" ? { c: "hsl(var(--accent))", t: tri("ricevuta", "erhalten", "received", "recibida", "reçue", "دریافت‌شده") }
+                : h.status === "sent" ? { c: "hsl(var(--primary))", t: tri("inviata", "gesendet", "sent", "enviada", "envoyée", "ارسال‌شده") }
+                : { c: "hsl(var(--muted-foreground))", t: tri("scartata", "verworfen", "dismissed", "descartada", "rejetée", "رد‌شده") };
               return (
-                <div key={h.id} className="flex items-center justify-between gap-2 text-[11px] px-2.5 py-1 rounded-lg bg-[#0b0f19]">
-                  <span className="text-[#cbd5e1] min-w-0 truncate"><b>{h.name}</b> · {h.suggested_qty_kg}kg · {h.source === "silos" ? "Silos" : whName}</span>
+                <div key={h.id} className="flex items-center justify-between gap-2 text-[11px] px-2.5 py-1 rounded-lg bg-background">
+                  <span className="text-foreground min-w-0 truncate"><b>{h.name}</b> · {h.suggested_qty_kg}kg · {h.source === "silos" ? "Silos" : whName}</span>
                   <span className="flex items-center gap-2 shrink-0">
                     <span style={{ color: st.c }} className="font-bold">{st.t}</span>
-                    <span className="text-[#64748B]">{(h.received_at || h.sent_at || h.created_at || "").slice(0, 10)}</span>
+                    <span className="text-muted-foreground">{(h.received_at || h.sent_at || h.created_at || "").slice(0, 10)}</span>
                   </span>
                 </div>
               );

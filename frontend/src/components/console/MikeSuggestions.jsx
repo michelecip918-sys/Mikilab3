@@ -8,7 +8,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const ICON = { flame: Flame, alert: AlertOctagon, waves: Waves, truck: Truck, container: Container, cart: ShoppingCart };
-const SEV = { alto: "#b06e78", medio: "#a4afbb", info: "#9aa6b2" };
+const SEV = { alto: "hsl(var(--mattone))", medio: "hsl(var(--muted-foreground))", info: "hsl(var(--muted-foreground))" };
 // Azioni eseguibili in UN CLIC direttamente dalla card (pilota automatico assistito).
 const EXEC = {
   silos: async () => { const r = await mikeApi.siloMicroorder(); return { kind: "silos", ...r }; },
@@ -71,14 +71,14 @@ export default function MikeSuggestions() {
   };
 
   return (
-    <div data-testid="mike-suggestions" className="rounded-2xl border border-[#8a97a6]/40 bg-gradient-to-br from-[#8a97a6]/8 to-transparent p-3">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#8a97a6] flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Sitor · Suggerimenti", "Sitor · Vorschläge", "Sitor · Suggestions", "Sitor · Sugerencias", "Sitor · Suggestions", "بوکومیکس · پیشنهادها")}
-        <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-[#7E9A82]/20 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#64748b]"}`}>
+    <div data-testid="mike-suggestions" className="rounded-2xl border border-border/40 bg-gradient-to-br from-muted/8 to-transparent p-3">
+      <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 mb-2"><Brain className="w-3.5 h-3.5" /> {tri("Sitor · Suggerimenti", "Sitor · Vorschläge", "Sitor · Suggestions", "Sitor · Sugerencias", "Sitor · Suggestions", "بوکومیکس · پیشنهادها")}
+        <button data-testid="autopilot-toggle" onClick={toggleAuto} className={`ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border transition-all ${autopilot ? "bg-accent/20 border-accent/60 text-accent" : "bg-background border-border text-muted-foreground"}`}>
           <Zap className="w-3 h-3" /> {tri("Auto-pilota", "Autopilot", "Autopilot", "Auto", "Auto", "خودکار")} {autopilot ? "ON" : "OFF"}
         </button>
       </p>
       {autoActions.map((a, i) => (
-        <p key={i} data-testid={`autopilot-action-${i}`} className="mb-2 text-[12px] text-[#7E9A82] font-semibold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {a}</p>
+        <p key={i} data-testid={`autopilot-action-${i}`} className="mb-2 text-[12px] text-accent font-semibold flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {a}</p>
       ))}
       {sug.length === 0 ? (
         <p data-testid="suggestions-clear" className="flex items-center gap-2 text-sm text-emerald-300/90"><CheckCircle2 className="w-4 h-4 text-emerald-400" /> {tri("Tutto sotto controllo. Impianto fluido.", "Alles im Griff.", "All under control. Plant nominal.", "Todo bajo control.", "Tout sous contrôle.", "همه‌چیز تحت کنترل.")}</p>
@@ -87,15 +87,15 @@ export default function MikeSuggestions() {
           <AnimatePresence>
             {sug.map((s) => {
               const Icon = ICON[s.icon] || Brain;
-              const col = SEV[s.severity] || "#9aa6b2";
+              const col = SEV[s.severity] || "hsl(var(--muted-foreground))";
               return (
                 <motion.button key={s.id} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0 }}
                   data-testid={`suggestion-${s.id}`} onClick={() => goTo(s.target)}
                   className="w-full flex items-center gap-2.5 text-left rounded-xl border p-2.5 active:scale-98 transition-all" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
                   <span className="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center" style={{ background: `${col}1a`, border: `1px solid ${col}55` }}><Icon className="w-4 h-4" style={{ color: col }} /></span>
-                  <span className="flex-1 min-w-0 text-[13px] text-white leading-snug">{s.text}</span>
+                  <span className="flex-1 min-w-0 text-[13px] text-foreground leading-snug">{s.text}</span>
                   {EXEC[s.id] ? (
-                    <span data-testid={`suggestion-exec-${s.id}`} onClick={(e) => exec(s, e)} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2 py-1 rounded-lg" style={{ color: "#060A10", background: col }}>
+                    <span data-testid={`suggestion-exec-${s.id}`} onClick={(e) => exec(s, e)} className="shrink-0 inline-flex items-center gap-1 text-[11px] font-black px-2 py-1 rounded-lg" style={{ color: "hsl(var(--card))", background: col }}>
                       {busy === s.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Zap className="w-3.5 h-3.5" />} {tri("Esegui", "Ausführen", "Run", "Ejecutar", "Exécuter", "اجرا")}
                     </span>
                   ) : (

@@ -67,8 +67,8 @@ export default function EmergencyCenter() {
   return (
     <div data-testid="emergency-center">
       {!active ? (
-        <div data-testid="emergency-idle" className="flex items-center gap-3 py-2 text-sm text-[#7d97ac]">
-          <ShieldAlert className="w-4 h-4 text-[#9aa6b2]" />
+        <div data-testid="emergency-idle" className="flex items-center gap-3 py-2 text-sm text-muted-foreground">
+          <ShieldAlert className="w-4 h-4 text-muted-foreground" />
           {tri("Nessuna emergenza attiva. Il radar è in ascolto del reparto.", "Keine aktiven Notfälle. Der Radar hört mit.", "No active emergencies. The radar is listening to the floor.", "Sin emergencias activas. El radar escucha.", "Aucune urgence active. Le radar écoute.", "هیچ اضطراری فعالی نیست. رادار در حال گوش دادن است.")}
         </div>
       ) : (
@@ -76,20 +76,20 @@ export default function EmergencyCenter() {
           data-testid="emergency-active"
           animate={{ boxShadow: ["0 0 0px rgba(176,110,120,0)", "0 0 26px rgba(176,110,120,0.55)", "0 0 0px rgba(176,110,120,0)"] }}
           transition={{ duration: 1.6, repeat: Infinity }}
-          className="rounded-2xl border border-[#b06e78]/60 bg-[#b06e78]/8 p-3 space-y-2"
+          className="rounded-2xl border border-mattone/60 bg-mattone/8 p-3 space-y-2"
         >
-          <p className="text-[11px] font-black uppercase tracking-widest text-[#b06e78] flex items-center gap-1.5"><AlertOctagon className="w-4 h-4" /> {events.length} {tri("SOS ATTIVI", "AKTIVE SOS", "ACTIVE SOS", "SOS ACTIVOS", "SOS ACTIFS", "SOS فعال")}</p>
+          <p className="text-[11px] font-black uppercase tracking-widest text-mattone flex items-center gap-1.5"><AlertOctagon className="w-4 h-4" /> {events.length} {tri("SOS ATTIVI", "AKTIVE SOS", "ACTIVE SOS", "SOS ACTIVOS", "SOS ACTIFS", "SOS فعال")}</p>
           <AnimatePresence>
             {events.map((ev) => (
-              <motion.div key={ev.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid={`sos-event-${ev.id}`} className="rounded-xl border border-[#b06e78]/40 bg-[#030712] p-2.5">
+              <motion.div key={ev.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid={`sos-event-${ev.id}`} className="rounded-xl border border-mattone/40 bg-background p-2.5">
                 <div className="flex items-center gap-2">
-                  <span className="relative flex w-2.5 h-2.5"><span className="absolute inline-flex w-full h-full rounded-full bg-[#b06e78] animate-ping opacity-60" /><span className="relative w-2.5 h-2.5 rounded-full bg-[#b06e78]" /></span>
-                  <p className="text-sm font-black text-white flex-1 min-w-0 truncate">{ev.operator}{ev.machine ? ` · ${ev.machine}` : ev.line ? ` · ${ev.line}` : ""}</p>
-                  <span className="text-[10px] text-[#94A3B8]">{(ev.created_at || "").slice(11, 16)}</span>
+                  <span className="relative flex w-2.5 h-2.5"><span className="absolute inline-flex w-full h-full rounded-full bg-mattone animate-ping opacity-60" /><span className="relative w-2.5 h-2.5 rounded-full bg-mattone" /></span>
+                  <p className="text-sm font-black text-foreground flex-1 min-w-0 truncate">{ev.operator}{ev.machine ? ` · ${ev.machine}` : ev.line ? ` · ${ev.line}` : ""}</p>
+                  <span className="text-[10px] text-muted-foreground">{(ev.created_at || "").slice(11, 16)}</span>
                 </div>
                 <div className="mt-2 flex gap-2">
                   <button data-testid={`sos-guide-${ev.id}`} onClick={() => genGuide(ev)} disabled={loadingGuide === ev.id}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#a4afbb]/15 border border-[#a4afbb]/50 text-[#a4afbb] font-bold text-xs active:scale-95 disabled:opacity-50">
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-muted/15 border border-border/50 text-muted-foreground font-bold text-xs active:scale-95 disabled:opacity-50">
                     {loadingGuide === ev.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Wrench className="w-3.5 h-3.5" />} {tri("Guida Rapida", "Schnellanleitung", "Quick Guide", "Guía Rápida", "Guide Rapide", "راهنمای سریع")}
                   </button>
                   <button data-testid={`sos-ack-${ev.id}`} onClick={() => ack(ev.id)}
@@ -98,12 +98,12 @@ export default function EmergencyCenter() {
                   </button>
                 </div>
                 {guides[ev.id] && (
-                  <div data-testid={`sos-guide-content-${ev.id}`} className="mt-2 rounded-lg border border-[#a4afbb]/30 bg-[#a4afbb]/5 p-2.5">
-                    <p className="text-[12px] font-bold text-[#a4afbb] mb-1">{guides[ev.id].summary}</p>
+                  <div data-testid={`sos-guide-content-${ev.id}`} className="mt-2 rounded-lg border border-border/30 bg-muted/5 p-2.5">
+                    <p className="text-[12px] font-bold text-muted-foreground mb-1">{guides[ev.id].summary}</p>
                     <ol className="space-y-1 list-decimal list-inside">
-                      {(guides[ev.id].steps || []).map((s, i) => (<li key={i} className="text-[12px] text-[#e6f6fa] leading-snug">{s}</li>))}
+                      {(guides[ev.id].steps || []).map((s, i) => (<li key={i} className="text-[12px] text-foreground leading-snug">{s}</li>))}
                     </ol>
-                    {guides[ev.id].safety && <p className="mt-1.5 text-[11px] text-[#b06e78] font-semibold">⚠ {guides[ev.id].safety}</p>}
+                    {guides[ev.id].safety && <p className="mt-1.5 text-[11px] text-mattone font-semibold">⚠ {guides[ev.id].safety}</p>}
                   </div>
                 )}
               </motion.div>
@@ -114,39 +114,39 @@ export default function EmergencyCenter() {
 
       {hist && hist.resolved_count > 0 && (
         <div className="mt-2">
-          <button data-testid="sos-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full inline-flex items-center gap-1.5 text-[11px] font-bold text-[#9aa6b2] py-1.5">
+          <button data-testid="sos-history-toggle" onClick={() => setShowHist((v) => !v)} className="w-full inline-flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground py-1.5">
             <History className="w-3.5 h-3.5" /> {tri("Storico & Reattività", "Verlauf & Reaktion", "History & Reactivity", "Historial & Reactividad", "Historique & Réactivité", "تاریخچه و واکنش")} ({hist.resolved_count}) {showHist ? "▲" : "▼"}
           </button>
           {showHist && (
             <div data-testid="sos-history" className="space-y-2 mt-1">
               {chal && chal.leaderboard && chal.leaderboard.length > 0 && (
-                <div data-testid="sos-challenge" className="rounded-xl border border-[#8a97a6]/30 bg-[#8a97a6]/5 p-2.5">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-[#8a97a6] mb-1.5">🏁 {chal.title}</p>
+                <div data-testid="sos-challenge" className="rounded-xl border border-border/30 bg-muted/5 p-2.5">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-1.5">🏁 {chal.title}</p>
                   {chal.leaderboard.map((b) => (
-                    <div key={b.shift} data-testid={`sos-challenge-${b.shift}`} className="flex items-center justify-between text-[12px] text-white py-0.5">
-                      <span className="capitalize">{(b.badges || []).join(" ")} {b.shift} <span className="text-[#64748b]">({b.count})</span></span>
-                      <span className="font-bold text-[#8a97a6]">{fmtDur(b.avg_response_s)}</span>
+                    <div key={b.shift} data-testid={`sos-challenge-${b.shift}`} className="flex items-center justify-between text-[12px] text-foreground py-0.5">
+                      <span className="capitalize">{(b.badges || []).join(" ")} {b.shift} <span className="text-muted-foreground">({b.count})</span></span>
+                      <span className="font-bold text-muted-foreground">{fmtDur(b.avg_response_s)}</span>
                     </div>
                   ))}
                 </div>
               )}
               {hist.leaderboard.length > 0 && (
-                <div className="rounded-xl border border-[#a4afbb]/30 bg-[#a4afbb]/5 p-2.5">
-                  <p className="text-[11px] font-black uppercase tracking-widest text-[#a4afbb] flex items-center gap-1.5 mb-1.5"><Trophy className="w-3.5 h-3.5" /> {tri("Reattività per turno", "Reaktion pro Schicht", "Reactivity per shift", "Reactividad por turno", "Réactivité par équipe", "واکنش هر شیفت")}</p>
+                <div className="rounded-xl border border-border/30 bg-muted/5 p-2.5">
+                  <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5 mb-1.5"><Trophy className="w-3.5 h-3.5" /> {tri("Reattività per turno", "Reaktion pro Schicht", "Reactivity per shift", "Reactividad por turno", "Réactivité par équipe", "واکنش هر شیفت")}</p>
                   {hist.leaderboard.map((b, i) => (
-                    <div key={b.shift} data-testid={`sos-board-${b.shift}`} className="flex items-center justify-between text-[12px] text-white py-0.5">
-                      <span className="capitalize">{i === 0 ? "🏆 " : ""}{b.shift} <span className="text-[#64748b]">({b.count})</span></span>
-                      <span className="font-bold text-[#a4afbb]">{fmtDur(b.avg_response_s)}</span>
+                    <div key={b.shift} data-testid={`sos-board-${b.shift}`} className="flex items-center justify-between text-[12px] text-foreground py-0.5">
+                      <span className="capitalize">{i === 0 ? "🏆 " : ""}{b.shift} <span className="text-muted-foreground">({b.count})</span></span>
+                      <span className="font-bold text-muted-foreground">{fmtDur(b.avg_response_s)}</span>
                     </div>
                   ))}
                 </div>
               )}
               {hist.history.slice(0, 8).map((h, i) => (
-                <div key={i} data-testid={`sos-hist-${i}`} className="flex items-center gap-2 rounded-lg border border-[#1e293b] bg-[#030712] px-2.5 py-1.5">
+                <div key={i} data-testid={`sos-hist-${i}`} className="flex items-center gap-2 rounded-lg border border-border bg-background px-2.5 py-1.5">
                   <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                  <span className="text-[12px] text-white flex-1 min-w-0 truncate">{h.operator}{h.machine ? ` · ${h.machine}` : ""}</span>
-                  <span className="text-[10px] text-[#64748b] capitalize">{h.shift}</span>
-                  <span className="text-[11px] font-bold text-[#9aa6b2]">{fmtDur(h.response_seconds)}</span>
+                  <span className="text-[12px] text-foreground flex-1 min-w-0 truncate">{h.operator}{h.machine ? ` · ${h.machine}` : ""}</span>
+                  <span className="text-[10px] text-muted-foreground capitalize">{h.shift}</span>
+                  <span className="text-[11px] font-bold text-muted-foreground">{fmtDur(h.response_seconds)}</span>
                 </div>
               ))}
             </div>

@@ -78,7 +78,7 @@ function DayTasks({ tri, lang, role, apprentice }) {
       {apprentice && (
         <div data-testid="floor-appr-guide" className="rounded-2xl border border-amber-500/50 bg-amber-500/8 px-4 py-3">
           <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-amber-400 mb-1"><GraduationCap className="w-3.5 h-3.5" /> {tri("Guida apprendista · Sitor", "Lehrlings-Guide · Sitor", "Apprentice guide · Sitor", "Guía aprendiz · Sitor", "Guide apprenti · Sitor", "راهنمای کارآموز · سیتور")}</p>
-          <p className="text-[12.5px] text-[#e7d9b8] leading-snug">{tri(
+          <p className="text-[12.5px] text-foreground leading-snug">{tri(
             "Fai un passo alla volta. Premi 🔊 per farti leggere ogni compito. Se qualcosa non è chiaro, chiedimi aiuto qui sotto: ci sono io.",
             "Ein Schritt nach dem anderen. 🔊 zum Vorlesen. Bei Fragen: frag mich unten.",
             "One step at a time. Tap 🔊 to hear each task. If unsure, ask me for help below.",
@@ -88,28 +88,28 @@ function DayTasks({ tri, lang, role, apprentice }) {
         </div>
       )}
       {mine && (
-        <div data-testid="floor-my-assignment" className="rounded-2xl border-2 border-[#8a97a6]/60 bg-[#8a97a6]/10 px-4 py-3" style={{ boxShadow: "0 0 22px rgba(138,151,166,0.25)" }}>
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#9aa6b2] mb-0.5">{tri("Sitor · Il tuo compito assegnato", "Sitor · Deine Aufgabe", "Sitor · Your assigned task", "Sitor · Tu tarea", "Sitor · Ta tâche", "سیتور · وظیفه تو")}</p>
-          <p className="text-base text-white font-black leading-tight">{mine.dept_name || mine.dept}{mine.task ? ` · ${mine.task}` : ""}</p>
-          <button data-testid="floor-my-assignment-read" onClick={() => { try { playTTS(`${role}, oggi ${mine.dept_name || mine.dept}. ${mine.task || ""}`, { lang, voice: "nexus" }); } catch { /* */ } }} className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#9aa6b2]"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta da Sitor", "Von Sitor hören", "Hear from Sitor", "Escuchar", "Écouter", "بشنو")}</button>
+        <div data-testid="floor-my-assignment" className="rounded-2xl border-2 border-border/60 bg-muted/10 px-4 py-3" style={{ boxShadow: "0 0 22px rgba(138,151,166,0.25)" }}>
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">{tri("Sitor · Il tuo compito assegnato", "Sitor · Deine Aufgabe", "Sitor · Your assigned task", "Sitor · Tu tarea", "Sitor · Ta tâche", "سیتور · وظیفه تو")}</p>
+          <p className="text-base text-foreground font-black leading-tight">{mine.dept_name || mine.dept}{mine.task ? ` · ${mine.task}` : ""}</p>
+          <button data-testid="floor-my-assignment-read" onClick={() => { try { playTTS(`${role}, oggi ${mine.dept_name || mine.dept}. ${mine.task || ""}`, { lang, voice: "nexus" }); } catch { /* */ } }} className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta da Sitor", "Von Sitor hören", "Hear from Sitor", "Escuchar", "Écouter", "بشنو")}</button>
         </div>
       )}
       {plan && plan.headline && (
-        <div data-testid="floor-plan-headline" className="rounded-2xl border border-[#8a97a6]/40 bg-[#8a97a6]/8 px-4 py-3">
-          <p className="text-[10px] font-black uppercase tracking-widest text-[#8a97a6] mb-0.5">{tri("Piano della Direzione · Sitor", "Plan des Capo", "Capo's Plan", "Plan del Capo", "Plan du Capo", "برنامه کاپو")}</p>
-          <p className="text-sm text-white font-semibold leading-snug">{plan.headline}</p>
+        <div data-testid="floor-plan-headline" className="rounded-2xl border border-border/40 bg-muted/8 px-4 py-3">
+          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">{tri("Piano della Direzione · Sitor", "Plan des Capo", "Capo's Plan", "Plan del Capo", "Plan du Capo", "برنامه کاپو")}</p>
+          <p className="text-sm text-foreground font-semibold leading-snug">{plan.headline}</p>
         </div>
       )}
       {!!shown.length && (
-        <div data-testid="floor-day-tasks" className="rounded-2xl border border-[#a4afbb]/40 bg-[#0b0f19] p-3">
-          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#a4afbb] mb-2"><ListChecks className="w-4 h-4" /> {myBatches.length ? tri("I tuoi lotti di oggi", "Deine Lose heute", "Your batches today", "Tus lotes de hoy", "Tes lots du jour", "دسته‌های امروز تو") : tri("Coda di produzione", "Produktionswarteschlange", "Production queue", "Cola de producción", "File de production", "صف تولید")}</p>
+        <div data-testid="floor-day-tasks" className="rounded-2xl border border-border/40 bg-background p-3">
+          <p className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-muted-foreground mb-2"><ListChecks className="w-4 h-4" /> {myBatches.length ? tri("I tuoi lotti di oggi", "Deine Lose heute", "Your batches today", "Tus lotes de hoy", "Tes lots du jour", "دسته‌های امروز تو") : tri("Coda di produzione", "Produktionswarteschlange", "Production queue", "Cola de producción", "File de production", "صف تولید")}</p>
           <div className="space-y-1.5">
             {shown.slice(0, 12).map((t) => (
-              <div key={t.id} data-testid={`floor-day-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5">
-                {t.dept && <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#8a97a6]/10 text-[#9aa6b2] border border-[#8a97a6]/20 shrink-0">{t.dept}</span>}
-                <div className="min-w-0 flex-1"><p className="text-sm font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[11px] text-[#64748B] truncate">{t.detail}</p>}</div>
-                <button data-testid={`floor-day-read-${t.id}`} onClick={() => read(t)} className="shrink-0 w-8 h-8 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/40 text-[#8a97a6] flex items-center justify-center active:scale-95"><Volume2 className="w-4 h-4" /></button>
-                <button data-testid={`floor-day-done-${t.id}`} onClick={() => done(t)} className="shrink-0 w-8 h-8 rounded-lg bg-[#6e9e85]/10 border border-[#6e9e85]/40 text-[#6e9e85] flex items-center justify-center active:scale-95"><Check className="w-4 h-4" /></button>
+              <div key={t.id} data-testid={`floor-day-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-background border border-border px-3 py-2.5">
+                {t.dept && <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-muted/10 text-muted-foreground border border-border/20 shrink-0">{t.dept}</span>}
+                <div className="min-w-0 flex-1"><p className="text-sm font-bold text-foreground truncate">{t.title}</p>{t.detail && <p className="text-[11px] text-muted-foreground truncate">{t.detail}</p>}</div>
+                <button data-testid={`floor-day-read-${t.id}`} onClick={() => read(t)} className="shrink-0 w-8 h-8 rounded-lg bg-muted/10 border border-border/40 text-muted-foreground flex items-center justify-center active:scale-95"><Volume2 className="w-4 h-4" /></button>
+                <button data-testid={`floor-day-done-${t.id}`} onClick={() => done(t)} className="shrink-0 w-8 h-8 rounded-lg bg-accent/10 border border-accent/40 text-accent flex items-center justify-center active:scale-95"><Check className="w-4 h-4" /></button>
               </div>
             ))}
           </div>
@@ -175,26 +175,26 @@ function SitorPhotoAnalyzer({ tri, lang }) {
   };
 
   return (
-    <div data-testid="floor-analyzer" className="rounded-2xl border border-[#7E9A82]/40 bg-[#18181A] p-4">
-      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#7E9A82] mb-3"><Camera className="w-4 h-4" /> {tri("Sitor, guarda qui", "Sitor, schau her", "Sitor, look here", "Sitor, mira aquí", "Sitor, regarde ici", "سیتور، اینجا را ببین")}</p>
+    <div data-testid="floor-analyzer" className="rounded-2xl border border-accent/40 bg-background p-4">
+      <p className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-accent mb-3"><Camera className="w-4 h-4" /> {tri("Sitor, guarda qui", "Sitor, schau her", "Sitor, look here", "Sitor, mira aquí", "Sitor, regarde ici", "سیتور، اینجا را ببین")}</p>
       <input ref={fileRef} data-testid="floor-analyzer-input" type="file" accept="image/*" capture="environment" onChange={onFile} className="hidden" />
       {preview ? (
-        <div className="relative w-full rounded-xl overflow-hidden border border-[#7E9A82]/30 bg-black mb-3">
+        <div className="relative w-full rounded-xl overflow-hidden border border-accent/30 bg-background mb-3">
           <img src={preview} alt="anteprima" className="w-full h-auto max-h-64 object-contain" />
-          <button data-testid="floor-analyzer-clear" onClick={() => { setPreview(""); setResult(""); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#030712]/80 border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-4 h-4" /></button>
+          <button data-testid="floor-analyzer-clear" onClick={() => { setPreview(""); setResult(""); }} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-background/80 border border-border flex items-center justify-center text-muted-foreground"><X className="w-4 h-4" /></button>
         </div>
       ) : null}
       <div className="grid grid-cols-2 gap-2">
-        <button data-testid="floor-analyzer-take" onClick={() => fileRef.current && fileRef.current.click()} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#7E9A82]/12 border border-[#7E9A82]/40 text-[#7E9A82] font-bold text-sm active:scale-95">
+        <button data-testid="floor-analyzer-take" onClick={() => fileRef.current && fileRef.current.click()} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/12 border border-accent/40 text-accent font-bold text-sm active:scale-95">
           <Camera className="w-4 h-4" /> {preview ? tri("Cambia foto", "Foto ändern", "Change photo", "Cambiar foto", "Changer", "تغییر عکس") : tri("Scatta foto", "Foto machen", "Take photo", "Tomar foto", "Photo", "عکس بگیر")}
         </button>
-        <button data-testid="floor-analyzer-run" onClick={analyze} disabled={!preview || analyzing} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#7E9A82] text-white font-black text-sm disabled:opacity-40 active:scale-95">
+        <button data-testid="floor-analyzer-run" onClick={analyze} disabled={!preview || analyzing} className="inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-accent text-white font-black text-sm disabled:opacity-40 active:scale-95">
           {analyzing ? <Loader2 className="w-4 h-4 animate-spin" /> : <ScanLine className="w-4 h-4" />} {tri("Chiedi a Sitor", "Sitor fragen", "Ask Sitor", "Preguntar a Sitor", "Demander à Sitor", "از سیتور بپرس")}
         </button>
       </div>
       {result && (
-        <div data-testid="floor-analyzer-result" className="mt-3 rounded-xl border border-[#7E9A82]/25 bg-[#030712] p-3 max-h-64 overflow-y-auto">
-          <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-[#cbd5e1]">{result}</p>
+        <div data-testid="floor-analyzer-result" className="mt-3 rounded-xl border border-accent/25 bg-background p-3 max-h-64 overflow-y-auto">
+          <p className="whitespace-pre-wrap text-[13px] leading-relaxed text-foreground">{result}</p>
         </div>
       )}
     </div>
@@ -223,12 +223,12 @@ function EndOfShiftForm({ tri, role }) {
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
 
   return (
-    <div data-testid="floor-endshift" className="rounded-2xl border border-[#6e9e85]/40 bg-[#0b0f19] overflow-hidden">
+    <div data-testid="floor-endshift" className="rounded-2xl border border-accent/40 bg-background overflow-hidden">
       <button data-testid="floor-endshift-toggle" onClick={() => setOpen((o) => !o)} className="w-full flex items-center gap-2 px-4 py-3 active:scale-[0.99] transition-all">
-        <span className="w-8 h-8 rounded-lg bg-[#6e9e85]/15 border border-[#6e9e85]/40 flex items-center justify-center shrink-0"><ClipboardCheck className="w-4 h-4 text-[#6e9e85]" /></span>
+        <span className="w-8 h-8 rounded-lg bg-accent/15 border border-accent/40 flex items-center justify-center shrink-0"><ClipboardCheck className="w-4 h-4 text-accent" /></span>
         <span className="flex-1 text-left">
-          <span className="block text-xs font-black uppercase tracking-wide text-[#6e9e85]">{tri("Fine turno · Compila", "Schichtende · Ausfüllen", "End of shift · Fill in", "Fin de turno · Rellenar", "Fin de service · Remplir", "پایان شیفت · تکمیل")}</span>
-          <span className="block text-[11px] text-[#94A3B8]">{tri("Le cose essenziali per la Direzione.", "Das Wichtigste für den Chef.", "The essentials for the Capo.", "Lo esencial para el Capo.", "L'essentiel pour le Capo.", "موارد مهم برای کاپو.")}</span>
+          <span className="block text-xs font-black uppercase tracking-wide text-accent">{tri("Fine turno · Compila", "Schichtende · Ausfüllen", "End of shift · Fill in", "Fin de turno · Rellenar", "Fin de service · Remplir", "پایان شیفت · تکمیل")}</span>
+          <span className="block text-[11px] text-muted-foreground">{tri("Le cose essenziali per la Direzione.", "Das Wichtigste für den Chef.", "The essentials for the Capo.", "Lo esencial para el Capo.", "L'essentiel pour le Capo.", "موارد مهم برای کاپو.")}</span>
         </span>
       </button>
       {open && (
@@ -237,19 +237,19 @@ function EndOfShiftForm({ tri, role }) {
             <p data-testid="floor-endshift-sent" className="text-[13px] text-emerald-400 font-bold py-2">✓ {tri("Rapporto inviato alla Direzione. Turno concluso.", "Bericht an die Direktion gesendet. Schicht beendet.", "Report sent to Management. Shift closed.", "Informe enviado a Dirección. Turno finalizado.", "Rapport envoyé à la Direction. Service terminé.", "گزارش به مدیریت ارسال شد. شیفت پایان یافت.")}</p>
           ) : (
             <>
-              <label className="block text-[11px] font-bold text-[#94A3B8]">{tri("Pezzi prodotti", "Produzierte Stück", "Pieces produced", "Piezas producidas", "Pièces produites", "قطعات تولیدشده")}</label>
-              <input data-testid="floor-endshift-pieces" value={form.pieces} onChange={set("pieces")} placeholder={tri("es. 120 pani, 80 panini", "z.B. 120 Brote", "e.g. 120 loaves", "ej. 120 panes", "ex. 120 pains", "مثلاً ۱۲۰ نان")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#6e9e85] outline-none" />
-              <label className="block text-[11px] font-bold text-[#94A3B8]">{tri("Scarti / sprechi", "Ausschuss", "Waste", "Desperdicios", "Rebuts", "ضایعات")}</label>
-              <input data-testid="floor-endshift-waste" value={form.waste} onChange={set("waste")} placeholder={tri("es. 3 pani bruciati", "z.B. 3 verbrannt", "e.g. 3 burnt loaves", "ej. 3 quemados", "ex. 3 brûlés", "مثلاً ۳ نان سوخته")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#6e9e85] outline-none" />
-              <label className="block text-[11px] font-bold text-[#94A3B8]">{tri("Problemi / macchinari", "Probleme / Maschinen", "Issues / machines", "Problemas / máquinas", "Problèmes / machines", "مشکلات / دستگاه‌ها")}</label>
-              <input data-testid="floor-endshift-issues" value={form.issues} onChange={set("issues")} placeholder={tri("es. forno 2 scalda poco", "z.B. Ofen 2", "e.g. oven 2 underheats", "ej. horno 2", "ex. four 2", "مثلاً فر ۲")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#6e9e85] outline-none" />
-              <label className="block text-[11px] font-bold text-[#94A3B8]">{tri("Note per il prossimo turno", "Notiz für nächste Schicht", "Notes for next shift", "Notas próximo turno", "Notes prochaine équipe", "یادداشت شیفت بعد")}</label>
-              <textarea data-testid="floor-endshift-notes" value={form.notes} onChange={set("notes")} rows={2} placeholder={tri("Scrivi qui…", "Hier schreiben…", "Write here…", "Escribe aquí…", "Écris ici…", "اینجا بنویس…")} className="w-full rounded-lg bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2 focus:border-[#6e9e85] outline-none resize-none" />
+              <label className="block text-[11px] font-bold text-muted-foreground">{tri("Pezzi prodotti", "Produzierte Stück", "Pieces produced", "Piezas producidas", "Pièces produites", "قطعات تولیدشده")}</label>
+              <input data-testid="floor-endshift-pieces" value={form.pieces} onChange={set("pieces")} placeholder={tri("es. 120 pani, 80 panini", "z.B. 120 Brote", "e.g. 120 loaves", "ej. 120 panes", "ex. 120 pains", "مثلاً ۱۲۰ نان")} className="w-full rounded-lg bg-background border border-border text-foreground text-sm px-3 py-2 focus:border-accent outline-none" />
+              <label className="block text-[11px] font-bold text-muted-foreground">{tri("Scarti / sprechi", "Ausschuss", "Waste", "Desperdicios", "Rebuts", "ضایعات")}</label>
+              <input data-testid="floor-endshift-waste" value={form.waste} onChange={set("waste")} placeholder={tri("es. 3 pani bruciati", "z.B. 3 verbrannt", "e.g. 3 burnt loaves", "ej. 3 quemados", "ex. 3 brûlés", "مثلاً ۳ نان سوخته")} className="w-full rounded-lg bg-background border border-border text-foreground text-sm px-3 py-2 focus:border-accent outline-none" />
+              <label className="block text-[11px] font-bold text-muted-foreground">{tri("Problemi / macchinari", "Probleme / Maschinen", "Issues / machines", "Problemas / máquinas", "Problèmes / machines", "مشکلات / دستگاه‌ها")}</label>
+              <input data-testid="floor-endshift-issues" value={form.issues} onChange={set("issues")} placeholder={tri("es. forno 2 scalda poco", "z.B. Ofen 2", "e.g. oven 2 underheats", "ej. horno 2", "ex. four 2", "مثلاً فر ۲")} className="w-full rounded-lg bg-background border border-border text-foreground text-sm px-3 py-2 focus:border-accent outline-none" />
+              <label className="block text-[11px] font-bold text-muted-foreground">{tri("Note per il prossimo turno", "Notiz für nächste Schicht", "Notes for next shift", "Notas próximo turno", "Notes prochaine équipe", "یادداشت شیفت بعد")}</label>
+              <textarea data-testid="floor-endshift-notes" value={form.notes} onChange={set("notes")} rows={2} placeholder={tri("Scrivi qui…", "Hier schreiben…", "Write here…", "Escribe aquí…", "Écris ici…", "اینجا بنویس…")} className="w-full rounded-lg bg-background border border-border text-foreground text-sm px-3 py-2 focus:border-accent outline-none resize-none" />
               <label data-testid="floor-endshift-cleaning" className="flex items-center gap-2 py-1 cursor-pointer">
-                <input type="checkbox" checked={form.cleaning_done} onChange={(e) => setForm((f) => ({ ...f, cleaning_done: e.target.checked }))} className="w-4 h-4 accent-[#6e9e85]" />
-                <span className="text-[13px] text-[#cbd5e1]">{tri("Pulizia postazione completata", "Reinigung erledigt", "Station cleaning done", "Limpieza hecha", "Nettoyage fait", "نظافت انجام شد")}</span>
+                <input type="checkbox" checked={form.cleaning_done} onChange={(e) => setForm((f) => ({ ...f, cleaning_done: e.target.checked }))} className="w-4 h-4 accent-accent" />
+                <span className="text-[13px] text-foreground">{tri("Pulizia postazione completata", "Reinigung erledigt", "Station cleaning done", "Limpieza hecha", "Nettoyage fait", "نظافت انجام شد")}</span>
               </label>
-              <button data-testid="floor-endshift-submit" onClick={submit} disabled={busy} className="w-full py-3 rounded-xl font-black text-sm text-[#030712] bg-gradient-to-r from-[#5f8a70] to-[#6e9e85] active:scale-95 disabled:opacity-50">
+              <button data-testid="floor-endshift-submit" onClick={submit} disabled={busy} className="w-full py-3 rounded-xl font-black text-sm text-foreground bg-gradient-to-r from-muted to-accent active:scale-95 disabled:opacity-50">
                 {busy ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia alla Direzione", "An Chef senden", "Send to Capo", "Enviar al Capo", "Envoyer au Capo", "ارسال به کاپو")}
               </button>
             </>
@@ -266,13 +266,13 @@ function FloorNameEntry({ tri, onSet }) {
   return (
     <div data-testid="floor-name-entry" className="space-y-3">
       <FaceCheckIn tri={tri} onRecognized={onSet} />
-      <div className="rounded-2xl border border-[#8a97a6]/40 bg-[#0b0f19] p-4">
-        <p className="flex items-center gap-2 text-sm font-black text-white mb-1"><UserRound className="w-4 h-4 text-[#8a97a6]" /> {tri("Oppure dì il tuo nome", "Oder sag deinen Namen", "Or tell your name", "O di tu nombre", "Ou dis ton nom", "یا نامت را بگو")}</p>
-      <p className="text-[11px] text-[#94A3B8] mb-2">{tri("Inserendo il tuo nome ti viene mostrato il compito assegnato per oggi.", "Mit deinem Namen siehst du deine heutige Aufgabe.", "Enter your name to see your assigned task for today.", "Al ingresar tu nombre verás tu tarea asignada de hoy.", "En indiquant ton nom tu verras ta tâche du jour.", "با وارد کردن نامت، وظیفه امروزت نمایش داده می‌شود.")}</p>
+      <div className="rounded-2xl border border-border/40 bg-background p-4">
+        <p className="flex items-center gap-2 text-sm font-black text-foreground mb-1"><UserRound className="w-4 h-4 text-muted-foreground" /> {tri("Oppure dì il tuo nome", "Oder sag deinen Namen", "Or tell your name", "O di tu nombre", "Ou dis ton nom", "یا نامت را بگو")}</p>
+      <p className="text-[11px] text-muted-foreground mb-2">{tri("Inserendo il tuo nome ti viene mostrato il compito assegnato per oggi.", "Mit deinem Namen siehst du deine heutige Aufgabe.", "Enter your name to see your assigned task for today.", "Al ingresar tu nombre verás tu tarea asignada de hoy.", "En indiquant ton nom tu verras ta tâche du jour.", "با وارد کردن نامت، وظیفه امروزت نمایش داده می‌شود.")}</p>
       <div className="flex items-center gap-2">
         <input data-testid="floor-name-input" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter" && name.trim()) onSet(name.trim()); }}
-          placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="flex-1 rounded-xl bg-[#030712] border border-[#1e293b] text-white text-sm px-3 py-2.5 focus:border-[#8a97a6] outline-none" />
-        <button data-testid="floor-name-go" onClick={() => name.trim() && onSet(name.trim())} disabled={!name.trim()} className="shrink-0 px-4 py-2.5 rounded-xl bg-[#8a97a6] text-[#04070d] font-black text-sm active:scale-95 disabled:opacity-40">{tri("Entra", "Los", "Go", "Entrar", "Entrer", "ورود")}</button>
+          placeholder={tri("Il tuo nome", "Dein Name", "Your name", "Tu nombre", "Ton nom", "نام تو")} className="flex-1 rounded-xl bg-background border border-border text-foreground text-sm px-3 py-2.5 focus:border-border outline-none" />
+        <button data-testid="floor-name-go" onClick={() => name.trim() && onSet(name.trim())} disabled={!name.trim()} className="shrink-0 px-4 py-2.5 rounded-xl bg-muted text-foreground font-black text-sm active:scale-95 disabled:opacity-40">{tri("Entra", "Los", "Go", "Entrar", "Entrer", "ورود")}</button>
       </div>
       </div>
     </div>
@@ -296,16 +296,16 @@ function FloorProductionLog({ tri }) {
       setTimeout(() => setSaved(false), 1500);
     } catch { toast.error(tri("Non salvato", "Nicht gespeichert", "Not saved", "No guardado", "Non enregistré", "ذخیره نشد")); }
   };
-  const fld = "bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-2 text-[13px] text-white focus:outline-none focus:border-[#3E9C93]";
+  const fld = "bg-background border border-border/30 rounded-md px-2 py-2 text-[13px] text-white focus:outline-none focus:border-primary";
   return (
-    <div data-testid="floor-prod-log" className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 p-5 space-y-3">
-      <div className="flex items-center gap-2"><ListChecks className="w-4 h-4 text-[#8a97a6]" /><span className="text-sm font-black text-white">{tri("Registra produzione", "Produktion erfassen", "Log production", "Registrar producción", "Enregistrer la production", "ثبت تولید")}</span></div>
+    <div data-testid="floor-prod-log" className="rounded-2xl border border-border/25 bg-background/60 p-5 space-y-3">
+      <div className="flex items-center gap-2"><ListChecks className="w-4 h-4 text-muted-foreground" /><span className="text-sm font-black text-foreground">{tri("Registra produzione", "Produktion erfassen", "Log production", "Registrar producción", "Enregistrer la production", "ثبت تولید")}</span></div>
       <input data-testid="floor-log-product" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")} className={`${fld} w-full`} />
       <div className="grid grid-cols-2 gap-2">
         <input data-testid="floor-log-produced" value={produced} onChange={(e) => setProduced(e.target.value)} placeholder={tri("Prodotti", "Produziert", "Produced", "Producidos", "Produits", "تولیدشده")} className={fld} inputMode="numeric" />
         <input data-testid="floor-log-leftover" value={leftover} onChange={(e) => setLeftover(e.target.value)} placeholder={tri("Avanzati", "Reste", "Leftover", "Sobrantes", "Restes", "باقی‌مانده")} className={fld} inputMode="numeric" />
       </div>
-      <button data-testid="floor-log-submit" onClick={submit} className="w-full inline-flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#347f78] text-white font-bold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
+      <button data-testid="floor-log-submit" onClick={submit} className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-muted text-white font-bold px-4 py-2.5 rounded-xl active:scale-98 transition-all">
         {saved ? <Check className="w-4 h-4" /> : <ListChecks className="w-4 h-4" />} {tri("Registra", "Erfassen", "Log", "Registrar", "Enregistrer", "ثبت")}
       </button>
     </div>
@@ -423,23 +423,23 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
         <FloorNameEntry tri={tri} onSet={(nm) => { try { localStorage.setItem(ROLE_KEY, nm); } catch { /* */ } try { window.dispatchEvent(new CustomEvent("mikilab-role-changed", { detail: { role: nm } })); } catch { /* */ } setRole(nm); }} />
       )}
       {supervise && (
-        <div data-testid="supervise-banner" className="rounded-2xl border-2 border-[#9aa6b2]/50 bg-[#9aa6b2]/10 px-4 py-3">
-          <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#9aa6b2]">{tri("Supervisione Direzione · sola lettura", "Chef-Aufsicht · nur Lesen", "Capo supervision · read-only", "Supervisión · solo lectura", "Supervision · lecture seule", "نظارت · فقط خواندن")}</p>
-          <p className="text-base text-white font-black leading-tight">{superviseDeptName || superviseDept}</p>
+        <div data-testid="supervise-banner" className="rounded-2xl border-2 border-border/50 bg-muted/10 px-4 py-3">
+          <p className="text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground">{tri("Supervisione Direzione · sola lettura", "Chef-Aufsicht · nur Lesen", "Capo supervision · read-only", "Supervisión · solo lectura", "Supervision · lecture seule", "نظارت · فقط خواندن")}</p>
+          <p className="text-base text-foreground font-black leading-tight">{superviseDeptName || superviseDept}</p>
         </div>
       )}
       {/* Sitor parla direttamente con l'operaio */}
-      <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-[#0b0f19]"}`}>
+      <div className={`flex items-center gap-3 rounded-2xl border p-4 ${apprentice ? "border-amber-500/60 bg-amber-500/8" : "border-amber-500/40 bg-background"}`}>
         <button type="button" data-testid="sitor-card-open" onClick={() => setShowSitorCard(true)}
           className="w-14 h-14 rounded-xl overflow-hidden border-2 border-amber-500/60 shrink-0 active:scale-95 transition-transform"
           aria-label={tri("Apri la scheda di Sitor", "Sitor-Karte öffnen", "Open Sitor's card", "Abrir ficha de Sitor", "Ouvrir la fiche de Sitor", "کارت سیتور را باز کن")}>
-          <LivingAvatar3D src={`${PUB}/sitor_official.jpg`} accent="#a6b1bc" nexus className="w-full h-full" />
+          <LivingAvatar3D src={`${PUB}/sitor_official.jpg`} accent="hsl(var(--muted-foreground))" nexus className="w-full h-full" />
         </button>
         <div className="min-w-0">
-          <p className="text-sm font-black text-white uppercase tracking-wide flex items-center gap-2">Sitor
+          <p className="text-sm font-black text-foreground uppercase tracking-wide flex items-center gap-2">Sitor
             {apprentice && <span data-testid="floor-appr-badge" className="inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 border border-amber-500/50"><GraduationCap className="w-3 h-3" /> {tri("Modalità apprendista", "Lehrlingsmodus", "Apprentice mode", "Modo aprendiz", "Mode apprenti", "حالت کارآموز")}</span>}
           </p>
-          <p className="text-[12px] text-[#94A3B8] leading-snug">{!role
+          <p className="text-[12px] text-muted-foreground leading-snug">{!role
             ? tri("Seleziona la tua postazione qui sopra per ricevere il compito del giorno.", "Wähle oben deine Station für die Tagesaufgabe.", "Select your station above to receive today's task.", "Selecciona tu puesto arriba.", "Choisis ton poste ci-dessus.", "پست کاری‌ات را بالا انتخاب کن.")
             : apprentice
               ? tri(`Ciao ${role}, oggi sei in apprendistato. Andiamo con calma, un passo alla volta: ti spiego tutto e ti guido a voce.`, `Hallo ${role}, heute als Lehrling. Ruhig, Schritt für Schritt.`, `Hi ${role}, today as an apprentice. Calmly, step by step — I'll guide you by voice.`, `Hola ${role}, hoy como aprendiz. Con calma, paso a paso.`, `Salut ${role}, apprenti aujourd'hui. Doucement, pas à pas.`, `سلام ${role}، امروز کارآموز. آرام، قدم‌به‌قدم.`)
@@ -470,7 +470,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Cuffie hands-free: ascolto continuo "Sitor…" mentre le mani sono occupate */}
       <button data-testid="floor-headphones-btn" onClick={() => setShowHeadphones(true)}
-        className="w-full flex items-center justify-center gap-2.5 bg-[#3E9C93] hover:bg-[#347f78] text-white font-black px-4 py-4 rounded-2xl shadow-lg shadow-[#3E9C93]/20 active:scale-98 transition-all">
+        className="w-full flex items-center justify-center gap-2.5 bg-primary hover:bg-muted text-white font-black px-4 py-4 rounded-2xl shadow-lg shadow-primary/20 active:scale-98 transition-all">
         <Headphones className="w-5 h-5" /> {tri("Cuffie · Mani libere", "Kopfhörer · Freihändig", "Headphones · Hands-free", "Auriculares · Manos libres", "Casque · Mains libres", "هدفون · بدون دست")}
       </button>
 
@@ -479,7 +479,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
       {/* Giro consegne di oggi — solo per gli operatori abilitati come autisti */}
       {isDriver && (
-        <div className="rounded-2xl border border-[#D97736]/30 bg-[#242427] px-4 py-3">
+        <div className="rounded-2xl border border-primary/30 bg-card px-4 py-3">
           <DriverRun />
         </div>
       )}
@@ -488,19 +488,19 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
 
 
       {/* Ricettario & Corsi passo-passo di Sitor — anche per la produzione */}
-      <div className="rounded-2xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 overflow-hidden">
+      <div className="rounded-2xl border border-border/25 bg-background/60 overflow-hidden">
         <button data-testid="floor-recipes-toggle" onClick={() => setShowRecipes((v) => !v)}
           className="w-full flex items-center gap-2.5 px-4 py-3 text-left active:scale-[0.99] transition-transform">
-          <BookOpen className="w-4 h-4 text-[#9aa6b2] shrink-0" />
+          <BookOpen className="w-4 h-4 text-muted-foreground shrink-0" />
           <span className="flex-1 min-w-0">
-            <span className="block text-sm font-black text-white">{tri("Ricettario & Corsi", "Rezepte & Kurse", "Recipes & Courses", "Recetario & Cursos", "Recettes & Cours", "دستورها و دوره‌ها")}</span>
-            <span className="block text-[11px] text-[#94A3B8]">{tri("Apri una ricetta e leggi il corso passo-passo di Sitor.", "Öffne ein Rezept und lies Sitors Schritt-für-Schritt-Kurs.", "Open a recipe and read Sitor's step-by-step course.", "Abre una receta y lee el curso paso a paso.", "Ouvre une recette et lis le cours pas à pas.", "یک دستور را باز کن و دوره گام‌به‌گام سیتور را بخوان.")}</span>
+            <span className="block text-sm font-black text-foreground">{tri("Ricettario & Corsi", "Rezepte & Kurse", "Recipes & Courses", "Recetario & Cursos", "Recettes & Cours", "دستورها و دوره‌ها")}</span>
+            <span className="block text-[11px] text-muted-foreground">{tri("Apri una ricetta e leggi il corso passo-passo di Sitor.", "Öffne ein Rezept und lies Sitors Schritt-für-Schritt-Kurs.", "Open a recipe and read Sitor's step-by-step course.", "Abre una receta y lee el curso paso a paso.", "Ouvre une recette et lis le cours pas à pas.", "یک دستور را باز کن و دوره گام‌به‌گام سیتور را بخوان.")}</span>
           </span>
-          <GraduationCap className={`w-4 h-4 shrink-0 transition-colors ${showRecipes ? "text-[#3E9C93]" : "text-[#8a97a6]"}`} />
+          <GraduationCap className={`w-4 h-4 shrink-0 transition-colors ${showRecipes ? "text-primary" : "text-muted-foreground"}`} />
         </button>
         {showRecipes && (
-          <div data-testid="floor-recipes-panel" className="border-t border-[#8a97a6]/15">
-            <p data-testid="floor-recipes-hint" className="px-4 pt-3 text-[11px] text-[#94A3B8] leading-snug">
+          <div data-testid="floor-recipes-panel" className="border-t border-border/15">
+            <p data-testid="floor-recipes-hint" className="px-4 pt-3 text-[11px] text-muted-foreground leading-snug">
               {tri("Se l'elenco appare vuoto, entra con il PIN del tuo reparto per vedere le ricette e i corsi.",
                    "Wenn die Liste leer ist, melde dich mit deiner Bereichs-PIN an, um Rezepte und Kurse zu sehen.",
                    "If the list looks empty, enter with your department PIN to see recipes and courses.",

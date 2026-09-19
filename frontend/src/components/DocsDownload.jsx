@@ -20,11 +20,11 @@ export default function DocsDownload() {
   const current = DOCS.find((d) => d.code === lang) || DOCS.find((d) => d.code === "en") || DOCS[0];
 
   return (
-    <div data-testid="docs-download" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-[#D95200] flex items-center gap-2 mb-1">
+    <div data-testid="docs-download" className="p-4 rounded-xl bg-background/80 border border-border">
+      <h3 className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2 mb-1">
         <FileText className="w-4 h-4" /> {tri("Documento Ecosistema (PDF)", "Ökosystem-Dokument (PDF)", "Ecosystem Document (PDF)", "Documento Ecosistema (PDF)", "Document Écosystème (PDF)", "سند اکوسیستم (PDF)")}
       </h3>
-      <p className="text-[10px] text-[#64748B] mb-3">{tri(
+      <p className="text-[10px] text-muted-foreground mb-3">{tri(
         "Manuale illustrato dei 64 moduli, hardware B2B e schermate reali — disponibile in tutte le lingue del sito.",
         "Illustriertes Handbuch der 64 Module, B2B-Hardware und echte Screenshots — in allen Sprachen der Seite.",
         "Illustrated manual of the 64 modules, B2B hardware and real screens — available in all site languages.",
@@ -37,7 +37,7 @@ export default function DocsDownload() {
         href={fileFor(current.code)}
         target="_blank"
         rel="noreferrer"
-        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-[#D95200] text-[#030712] hover:bg-[#0d9488] active:scale-95 transition-all"
+        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold bg-primary text-primary-foreground hover:bg-muted active:scale-95 transition-all"
       >
         <FileDown className="w-4 h-4" /> {tri("Scarica", "Herunterladen", "Download", "Descargar", "Télécharger", "دانلود")} ({current.flag} {current.label})
       </a>
@@ -52,8 +52,8 @@ export default function DocsDownload() {
             rel="noreferrer"
             className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-[11px] font-semibold border transition-all ${
               d.code === current.code
-                ? "border-[#D95200] text-[#D95200] bg-[#D95200]/10"
-                : "border-[#374151] text-[#94A3B8] hover:text-white hover:border-[#D95200]"
+                ? "border-primary text-primary bg-primary/10"
+                : "border-border text-muted-foreground hover:text-foreground hover:border-primary"
             }`}
           >
             <span>{d.flag}</span> {d.label}

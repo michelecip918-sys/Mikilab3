@@ -1,6 +1,7 @@
 /*
- * MIKILAB PRO & Mike Mix AI — PROPRIETARY & CONFIDENTIAL
- * (c) 2026 MikiLab Pro — All rights reserved. Sole owner: the Master.
+ * MikiLab · Il Manuale di Sitor — PROPRIETARY & CONFIDENTIAL
+ * (c) 2026 MikiLab — Tutti i diritti riservati.
+ * STADIO 7: tema "La bottega di Michele" — chiaro caldo di default, scuro opzionale.
  */
 /* Font self-hosted in /public/fonts/fonts.css, caricati via <link> in index.html (GDPR: nessuna richiesta a Google). */
 
@@ -13,86 +14,9 @@ body { -webkit-user-select: none; -ms-user-select: none; user-select: none; -web
 input, textarea, [contenteditable="true"] { -webkit-user-select: text; -ms-user-select: text; user-select: text; }
 img { -webkit-user-drag: none; user-drag: none; }
 
-/* Carattere distintivo per i titoli (editoriale, artigianale) + pulito per i dati */
-.font-cyber { font-family: 'Playfair Display', 'Cormorant Garamond', serif; letter-spacing: .02em; }
-.font-tech { font-family: 'Manrope', 'Rajdhani', sans-serif; letter-spacing: .02em; }
-
-/* Dynamic Focus Animation (mod. 55): glow teal lampeggiante sul parametro critico */
-@keyframes focusGlowTeal {
-  0%,100% { box-shadow: 0 0 0 1px rgba(62,156,147,.5), 0 0 6px rgba(62,156,147,.25); }
-  50% { box-shadow: 0 0 0 2px rgba(62,156,147,.95), 0 0 22px rgba(62,156,147,.7); }
-}
-.module-focus { animation: focusGlowTeal 1.15s ease-in-out infinite; border-color: rgba(62,156,147,.8) !important; }
-
-/* Startup Splash (mod. 51): glitch neon del trio/logo all'avvio */
-@keyframes cyberGlitch {
-  0% { transform: translate(0,0); clip-path: inset(0 0 0 0); }
-  20% { transform: translate(-2px,1px); }
-  40% { transform: translate(2px,-1px); clip-path: inset(8% 0 6% 0); }
-  60% { transform: translate(-1px,0); clip-path: inset(0 0 0 0); }
-  80% { transform: translate(1px,1px); clip-path: inset(4% 0 10% 0); }
-  100% { transform: translate(0,0); }
-}
-@keyframes splashFade { 0%{opacity:0;} 10%{opacity:1;} 86%{opacity:1;} 100%{opacity:0;} }
-.splash-glitch { animation: cyberGlitch .35s steps(2) infinite; }
-.splash-wrap { animation: splashFade 2.6s ease-in-out forwards; }
-
-/* Splash logo: pulsazione con luce ciano */
-@keyframes splashLogoPulse {
-  0%,100% { transform: scale(1); box-shadow: 0 0 22px rgba(138,151,166,.30), 0 0 4px rgba(138,151,166,.5) inset; }
-  50%     { transform: scale(1.06); box-shadow: 0 0 52px rgba(138,151,166,.75), 0 0 10px rgba(138,151,166,.7) inset; }
-}
-.splash-logo { animation: splashLogoPulse 1.7s ease-in-out infinite; }
-
-/* Anelli radar ciano che si espandono */
-@keyframes splashRingPulse {
-  0%   { transform: scale(.55); opacity: .8; }
-  100% { transform: scale(1.9); opacity: 0; }
-}
-.splash-ring {
-  position: absolute; width: 6.5rem; height: 6.5rem; border-radius: 9999px;
-  border: 1.5px solid rgba(138,151,166,.55);
-  animation: splashRingPulse 2.1s ease-out infinite;
-}
-
-@keyframes splashTitleUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.splash-title { animation: splashTitleUp .7s ease-out .25s both; }
-
-
-/* Menu hamburger: glow caldo "grano" pulsante (no neon) */
-@keyframes menuAttnGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(212,163,115,0.55), 0 0 0 0 rgba(212,163,115,0.0); border-color: rgba(212,163,115,0.35); }
-  50% { box-shadow: 0 0 14px 3px rgba(212,163,115,0.85), 0 0 0 4px rgba(212,163,115,0.18); border-color: rgba(212,163,115,0.95); }
-}
-.menu-attn { animation: menuAttnGlow 1.8s ease-in-out infinite; }
-@media (prefers-reduced-motion: reduce) { .menu-attn { animation: none; box-shadow: 0 0 10px 2px rgba(212,163,115,0.6); } }
-
-
-body {
-    margin: 0;
-    font-family: 'Manrope', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #f0f6fb;
-}
-
-/* ===== Tema Chiaro opzionale (Day Mode) =====
-   L'app usa colori scuri "hardcoded": invertiamo la luminanza mantenendo le tinte
-   (hue-rotate 180) per un tema chiaro coerente su TUTTO, e ripristiniamo media e avatar. */
-html.theme-light .holo-root {
-  filter: invert(1) hue-rotate(180deg);
-  background: #eef2f6;
-}
-html.theme-light .holo-root img,
-html.theme-light .holo-root video,
-html.theme-light .holo-root canvas,
-html.theme-light .holo-root [data-keepcolor] {
-  filter: invert(1) hue-rotate(180deg);
-}
-html.theme-light { background: #eef2f6; }
-
-
-.font-display { font-family: 'Playfair Display', serif; }
+/* Tipografia: Playfair Display per i titoli, Manrope per il corpo */
+.font-display { font-family: 'Playfair Display', 'Cormorant Garamond', serif; letter-spacing: .02em; }
+.font-tech { font-family: 'Manrope', sans-serif; letter-spacing: .02em; }
 .font-mono-data { font-family: 'JetBrains Mono', monospace; }
 
 /* Persiano/Farsi: usa Vazirmatn (shaping arabo corretto) per tutte le famiglie */
@@ -105,11 +29,10 @@ html[lang="fa"] textarea {
   font-family: 'Vazirmatn', 'Manrope', sans-serif !important;
 }
 
-/* Firma MikiLab: nastro tricolore calmo Italia + Germania (verde → crema → rosso → oro → carbone) */
+/* Firma MikiLab: nastro tricolore Italia + Germania */
 .it-de-ribbon {
   height: 6px;
   width: 100%;
-  /* Tricolore Italia (verde-bianco-rosso) + Germania (nero-rosso-oro) con colori veri */
   background: linear-gradient(90deg,
     #009246 0%, #009246 16%,
     #FFFFFF 16%, #FFFFFF 33%,
@@ -121,47 +44,49 @@ html[lang="fa"] textarea {
 
 @layer base {
     :root {
-        --background: 140 14% 97%;
-        --foreground: 210 16% 20%;
-        --card: 0 0% 100%;
-        --card-foreground: 210 16% 20%;
-        --popover: 0 0% 100%;
-        --popover-foreground: 210 16% 20%;
-        --primary: 163 20% 46%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 150 15% 92%;
-        --secondary-foreground: 210 16% 20%;
-        --muted: 150 12% 92%;
-        --muted-foreground: 210 10% 45%;
-        --accent: 203 22% 53%;
-        --accent-foreground: 0 0% 100%;
-        --destructive: 6 55% 52%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 150 14% 86%;
-        --input: 150 14% 86%;
-        --ring: 163 20% 46%;
+        /* Palette chiara "Bottega" */
+        --background: 40 46% 94%;          /* #F6F1E7 */
+        --foreground: 218 9% 18%;          /* #2B2E33 */
+        --card: 43 100% 99%;               /* #FFFDF8 */
+        --card-foreground: 218 9% 18%;
+        --popover: 43 100% 99%;
+        --popover-foreground: 218 9% 18%;
+        --primary: 25 66% 40%;             /* RAME #A85A22 */
+        --primary-foreground: 43 100% 98%;
+        --secondary: 40 30% 90%;
+        --secondary-foreground: 218 9% 18%;
+        --muted: 39 24% 89%;
+        --muted-foreground: 218 6% 38%;    /* #5B5F66 */
+        --accent: 142 13% 50%;             /* SALVIA #6E8F7A */
+        --accent-foreground: 43 100% 98%;
+        --destructive: 13 57% 41%;         /* MATTONE #A4472D */
+        --destructive-foreground: 43 100% 98%;
+        --border: 39 28% 79%;              /* #D9CFBC */
+        --input: 39 28% 79%;
+        --ring: 25 66% 40%;
         --radius: 0.85rem;
     }
     .dark {
-        --background: 240 3% 11%;
-        --foreground: 240 5% 96%;
-        --card: 240 3% 15%;
-        --card-foreground: 240 5% 96%;
-        --popover: 240 3% 15%;
-        --popover-foreground: 240 5% 96%;
-        --primary: 24 65% 53%;
-        --primary-foreground: 0 0% 100%;
-        --secondary: 240 3% 18%;
-        --secondary-foreground: 240 5% 96%;
-        --muted: 240 3% 18%;
-        --muted-foreground: 240 5% 60%;
-        --accent: 128 12% 55%;
-        --accent-foreground: 240 3% 11%;
-        --destructive: 0 60% 55%;
-        --destructive-foreground: 0 0% 98%;
-        --border: 240 4% 24%;
-        --input: 240 4% 24%;
-        --ring: 24 65% 53%;
+        /* Palette scura "Notte in bottega" */
+        --background: 220 7% 13%;          /* #1F2124 */
+        --foreground: 40 46% 94%;          /* #F6F1E7 */
+        --card: 216 8% 18%;                /* #2A2D31 */
+        --card-foreground: 40 46% 94%;
+        --popover: 216 8% 18%;
+        --popover-foreground: 40 46% 94%;
+        --primary: 36 80% 57%;             /* AMBRA #E9A23B (più leggibile sullo scuro) */
+        --primary-foreground: 220 7% 13%;
+        --secondary: 216 8% 22%;
+        --secondary-foreground: 40 46% 94%;
+        --muted: 216 8% 22%;
+        --muted-foreground: 40 12% 68%;
+        --accent: 142 14% 56%;             /* salvia schiarita */
+        --accent-foreground: 220 7% 13%;
+        --destructive: 13 60% 52%;
+        --destructive-foreground: 40 46% 94%;
+        --border: 216 7% 27%;
+        --input: 216 7% 27%;
+        --ring: 36 80% 57%;
     }
 }
 
@@ -170,11 +95,88 @@ html[lang="fa"] textarea {
     body { @apply bg-background text-foreground; }
 }
 
-/* Custom scrollbar for chat */
-.thin-scroll::-webkit-scrollbar { width: 6px; }
-.thin-scroll::-webkit-scrollbar-thumb { background: #A9C5D433; border-radius: 8px; }
+body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
-/* Markdown rendering for AI output */
+/* ==========================================================================
+   SUPERFICI "BOTTEGA" — alias ereditati dalla vecchia console (holo-*),
+   ora resi caldi e artigianali. Niente neon, niente ologrammi.
+   ========================================================================== */
+.holo-root { background: hsl(var(--background)); color: hsl(var(--foreground)); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.holo-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  background:
+    radial-gradient(95% 65% at 50% -10%, rgba(233,162,59,.10), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(110,143,122,.07), transparent 60%),
+    linear-gradient(180deg, #F6F1E7 0%, #F1EADA 100%);
+}
+.dark .holo-canvas {
+  background:
+    radial-gradient(95% 65% at 50% -10%, rgba(233,162,59,.06), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(110,143,122,.05), transparent 60%),
+    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,.42) 100%),
+    linear-gradient(180deg, #1F2124 0%, #1A1C1F 100%);
+}
+/* Grana di farina appena percettibile */
+.holo-canvas::after {
+  content: ""; position: absolute; inset: 0; opacity: .05;
+  background: radial-gradient(rgba(120,88,40,.5) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+.dark .holo-canvas::after {
+  background: radial-gradient(rgba(255,246,226,.5) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.holo-panel {
+  position: relative; border-radius: 16px; isolation: isolate;
+  background: #FFFDF8;
+  border: 1px solid #D9CFBC;
+  box-shadow: 0 2px 10px rgba(90,66,32,.08), inset 0 1px 0 rgba(255,255,255,.6);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .2s cubic-bezier(.2,.7,.2,1);
+}
+.holo-panel > * { position: relative; z-index: 1; }
+.holo-panel:hover { border-color: #C8B99C; box-shadow: 0 10px 26px rgba(90,66,32,.14); transform: translate3d(0,-1px,0); }
+.dark .holo-panel { background: #2A2D31; border-color: #3A3F45; box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04); }
+.dark .holo-panel:hover { border-color: #4A5057; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+
+.holo-section-title {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .2em; margin-bottom: 1rem;
+}
+.holo-zone { scroll-margin-top: 88px; }
+
+/* Texture artigianale: grana di farina riutilizzabile */
+.grain-overlay::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar calda + selezione ambra */
+.holo-root ::-webkit-scrollbar { width: 10px; height: 10px; }
+.holo-root ::-webkit-scrollbar-track { background: transparent; }
+.holo-root ::-webkit-scrollbar-thumb { background: rgba(168,90,34,.28); border-radius: 8px; }
+.holo-root ::-webkit-scrollbar-thumb:hover { background: rgba(168,90,34,.45); }
+.holo-root ::selection { background: rgba(233,162,59,.35); color: #2B2E33; }
+.dark .holo-root ::selection { background: rgba(233,162,59,.35); color: #1F2124; }
+
+/* Custom scrollbar per chat */
+.thin-scroll::-webkit-scrollbar { width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(168,90,34,.25); border-radius: 8px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Vapore (animazione usata dalle pagine ricette) */
+.steam { animation: steamRise 3s ease-in-out infinite; }
+@keyframes steamRise { 0%,100% { opacity:.25; transform: translateY(0) scale(1);} 50% { opacity:.6; transform: translateY(-6px) scale(1.05);} }
+
+/* Markdown rendering per l'output AI */
 .markdown-body { overflow-wrap: anywhere; word-break: break-word; }
 .markdown-body > *:first-child { margin-top: 0; }
 .markdown-body > *:last-child { margin-bottom: 0; }
@@ -188,12 +190,13 @@ html[lang="fa"] textarea {
 .markdown-body ul { list-style: disc; }
 .markdown-body ol { list-style: decimal; }
 .markdown-body strong { font-weight: 700; }
-.markdown-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: rgba(94,139,126,0.10); padding: 0.05em 0.35em; border-radius: 4px; }
+.markdown-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: rgba(168,90,34,.10); padding: 0.05em 0.35em; border-radius: 4px; }
 .markdown-body table { width: 100%; border-collapse: collapse; margin: 0.5em 0; font-size: 0.92em; display: block; overflow-x: auto; }
-.markdown-body th, .markdown-body td { border: 1px solid #d5e4f0; padding: 6px 8px; text-align: left; }
-.dark .markdown-body th, .dark .markdown-body td { border-color: #2A3B49; }
-.markdown-body th { background: rgba(110,140,160,0.15); }
-.markdown-body a { color: #3E9C93; text-decoration: underline; }
+.markdown-body th, .markdown-body td { border: 1px solid #D9CFBC; padding: 6px 8px; text-align: left; }
+.dark .markdown-body th, .dark .markdown-body td { border-color: #3A3F45; }
+.markdown-body th { background: rgba(110,143,122,.15); }
+.markdown-body a { color: #A85A22; text-decoration: underline; }
+.dark .markdown-body a { color: #E9A23B; }
 
 /* Stampa etichette: mostra solo l'area etichette */
 @media print {
@@ -225,276 +228,35 @@ html[dir="rtl"] table td.num,
 html[dir="rtl"] table th.num { text-align: left; direction: ltr; }
 html[dir="rtl"] ol,
 html[dir="rtl"] ul { padding-right: 1.1rem; padding-left: 0; }
-/* la navigazione e le griglie di layout restano orientate a sinistra per non rompere l'app */
 html[dir="rtl"] nav,
 html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
 
-/* ===== Tema "Panificio Digitale" ===== */
-.wood-surface {
-  background-color: #7a4a24;
-  background-image:
-    repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 2px, rgba(255,255,255,.04) 2px 5px, rgba(0,0,0,.05) 5px 9px),
-    linear-gradient(180deg, #a06a33 0%, #7d4c23 45%, #613914 100%);
-  background-blend-mode: overlay, normal;
-}
-.wood-emboss { box-shadow: inset 0 2px 3px rgba(255,240,210,.35), inset 0 -3px 6px rgba(60,35,15,.45), 0 6px 14px rgba(44,30,16,.35); }
-.peel-shadow { filter: drop-shadow(0 8px 10px rgba(44,30,16,.35)); }
-/* portale ad arco in mattoni */
-.brick-arch {
-  border: 10px solid transparent;
-  border-image: linear-gradient(160deg,#64748B,#3E9C93 55%,#3E9C93) 1;
-}
-.grain-overlay::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-}
-.chalkboard {
-  background: radial-gradient(120% 120% at 30% 20%, #1B2A38 0%, #242427 60%, #242427 100%);
-  border: 7px solid #2A3B49; border-radius: 14px;
-  box-shadow: inset 0 0 18px rgba(0,0,0,.5), 0 8px 16px rgba(44,30,16,.35);
-}
-.font-chalk { font-family: "Caveat", "Comic Sans MS", cursive; }
-@keyframes peelRise { from { transform: translateY(6px) rotate(var(--rot)); } to { transform: translateY(0) rotate(var(--rot)); } }
-.steam { animation: steamRise 3s ease-in-out infinite; }
-@keyframes steamRise { 0%,100%{ opacity:.25; transform: translateY(0) scale(1);} 50%{ opacity:.6; transform: translateY(-6px) scale(1.05);} }
-
-/* Sfondo caldo "panificio" per tutte le pagine */
-.app-warm-bg {
-  background:
-    radial-gradient(95% 55% at 50% 0%, #1C1C1E 0%, transparent 55%),
-    radial-gradient(120% 80% at 50% 100%, #242427 0%, transparent 60%),
-    linear-gradient(180deg, #1C1C1E 0%, #242427 100%);
-  background-attachment: fixed;
-}
-.dark .app-warm-bg {
-  background:
-    radial-gradient(85% 42% at 50% -4%, rgba(62,156,147,.18) 0%, transparent 58%),
-    radial-gradient(120% 70% at 50% 105%, rgba(94,140,168,.10) 0%, transparent 60%),
-    linear-gradient(180deg, #1C1C1E 0%, #1C1C1E 45%, #242427 100%);
-  background-attachment: fixed;
-}
-
-/* Pulviscolo di farina che fluttua nel portale */
-@keyframes floatDust {
-  0%   { transform: translateY(0) translateX(0); opacity: 0; }
-  20%  { opacity: .8; }
-  100% { transform: translateY(-46px) translateX(10px); opacity: 0; }
-}
-.dust-particle {
-  position: absolute; border-radius: 9999px; background: #fff6e2;
-  box-shadow: 0 0 6px rgba(255,240,200,.9);
-  animation: floatDust linear infinite;
-}
-/* brillìo che scorre sulla pala attiva */
-@keyframes peelShine { 0% { left: -40%; } 60%,100% { left: 130%; } }
-.peel-shine::before {
-  content: ""; position: absolute; top: 0; bottom: 0; width: 35%;
-  background: linear-gradient(100deg, transparent, rgba(255,240,210,.55), transparent);
-  transform: skewX(-18deg); animation: peelShine 3.2s ease-in-out infinite;
-}
-
-/* ===== REGOLA UX: cosa si legge (bianco/grigio) vs cosa si clicca (arancio/giallo) ===== */
-/* Base: sfondo nero, testo chiaro */
-body { background:#1C1C1E; color:#E2E8F0; }
-/* Titoli/paragrafi STATICI che erano arancioni tornano bianchi. I pulsanti mantengono i loro colori. */
-h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\], h4.text-\[\#3E9C93\], p.text-\[\#3E9C93\],
-h1.text-\[\#64748B\], h2.text-\[\#64748B\], h3.text-\[\#64748B\], p.text-\[\#64748B\],
-h1.text-\[\#3E9C93\], h2.text-\[\#3E9C93\], h3.text-\[\#3E9C93\] { color:#FFFFFF !important; }
-/* Affordance: ogni pulsante/link con sfondo arancione o giallo ha ombra netta */
-button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"], button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"],
-button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"], button[class*="bg-[#3E9C93]"], a[class*="bg-[#3E9C93]"] {
-  box-shadow: 0 4px 0 rgba(0,0,0,.35), 0 6px 14px rgba(138,151,166,.28) !important;
-}
-
-.no-scrollbar::-webkit-scrollbar { display: none; }
-.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-/* Modalità operativa "Braccio": zero-scroll ma la barra inferiore resta sempre visibile e non copre i contenuti */
+/* Modalità operativa "Braccio": zero-scroll ma la barra inferiore resta sempre visibile */
 body.braccio-mode [data-testid="page-footer"] { display: none !important; }
 body.braccio-mode main { padding-bottom: 7rem !important; }
 /* Header e barra inferiore sempre fissi e in primo piano su ogni schermata */
 header[data-testid="app-header"] { position: sticky !important; top: 0 !important; z-index: 60 !important; }
-/* Mobile: i pulsanti dell'header non devono mai spezzare il testo a metà parola
-   (es. "S ha re"). Restano interi e vanno a capo come blocchi con flex-wrap. */
 header[data-testid="app-header"] button,
 header[data-testid="app-header"] .lang-selector,
 header[data-testid="app-header"] select { white-space: nowrap !important; flex-shrink: 0; }
 @media (max-width: 640px) {
   header[data-testid="app-header"] { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-  header[data-testid="app-header"] [data-testid="brand-home"] .font-cyber { letter-spacing: 0.08em !important; }
+  header[data-testid="app-header"] [data-testid="brand-home"] .font-display { letter-spacing: 0.08em !important; }
   header[data-testid="app-header"] > div { row-gap: 0.375rem; }
 }
 nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important; z-index: 55 !important; }
-
-/* Scenografia Cinematic Dark & Gold — effetto "Luce Forno" su hover carte/pulsanti */
-.oven-hover { transition: box-shadow .28s ease, border-color .28s ease, transform .15s ease; }
-.oven-hover:hover { box-shadow: 0 0 22px rgba(231,178,60,.42), inset 0 0 14px rgba(255,160,50,.16); border-color: #64748B !important; }
-.trinity-seal { box-shadow: 0 0 14px rgba(231,178,60,.55); }
-.trinity-seal:hover { box-shadow: 0 0 26px rgba(231,178,60,.9), 0 0 44px rgba(255,140,40,.45); }
 
 /* Responsive smartphone: evita testo tagliato/overflow orizzontale senza toccare il desktop */
 @media (max-width: 640px) {
   body { overflow-x: hidden; overflow-wrap: break-word; word-break: break-word; }
   main { overflow-x: hidden; }
-  /* Le tabelle scorrono orizzontalmente nel loro contenitore invece di essere tagliate */
   table { max-width: 100%; }
-  /* Contenitori con scroll orizzontale fluido su touch */
   .overflow-x-auto { -webkit-overflow-scrolling: touch; }
 }
 
-
 /* ==========================================================================
-   PANIFICIO VIRTUALE — Palette generale "warm artisan" (no neon/rosa/viola)
+   Gerarchia visiva e feedback tattile
    ========================================================================== */
-:root {
-  --bg-primary: #1C1C1E; /* Marrone legno scuro forno */
-  --bg-secondary: #242427;
-  --accent-warm: #64748B; /* Tono grano / pane caldo */
-  --accent-border: #2A3B49;
-  --text-main: #F7F9FC;
-  --neon-pink: transparent;
-  --neon-purple: transparent;
-  --neon-green: transparent;
-  --neon-orange: transparent;
-}
-
-body, .app-container, .main-layout {
-  background-color: var(--bg-primary) !important;
-  color: var(--text-main) !important;
-}
-
-
-/* ==========================================================================
-   LAB 3D — effetto "postazione 3D" sottile e caldo (no neon), reversibile
-   ========================================================================== */
-.lab-3d-card {
-  perspective: 1000px;
-  transform: translateZ(0);
-  background: rgba(18, 23, 34, 0.55);
-  backdrop-filter: blur(16px) saturate(120%);
-  -webkit-backdrop-filter: blur(16px) saturate(120%);
-  border: 1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.06);
-  transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s ease, border-color 0.4s ease;
-  will-change: transform;
-}
-.lab-3d-card:hover {
-  transform: perspective(1000px) rotateX(1.2deg) rotateY(-1.2deg) translateY(-3px);
-  border-color: rgba(62,156,147,0.45);
-  box-shadow: 0 18px 40px -12px rgba(0,0,0,0.7), 0 0 26px -4px rgba(62,156,147,0.35);
-}
-@media (prefers-reduced-motion: reduce) { .lab-3d-card:hover { transform: none; } }
-
-/* ============================================================
-   TEMA VETRO INDUSTRIALE GLOBALE — "Black Industrial Glass"
-   Trasforma i pannelli antracite piatti in vetro dimensionale
-   (sheen diagonale + inset highlight + hairline acciaio).
-   Non tocca il background-color di Tailwind: aggiunge solo layer.
-   ============================================================ */
-[class*="bg-[#1B2A38]"],
-[class*="bg-[#0b0f19]"],
-[class*="bg-[#0f172a]"] {
-  background-image:
-    linear-gradient(160deg, rgba(94,140,168,0.07) 0%, rgba(3,7,18,0) 42%),
-    linear-gradient(to bottom, rgba(255,255,255,0.035), rgba(0,0,0,0.12));
-  box-shadow: inset 0 1px 0 rgba(148,163,184,0.10), inset 0 0 0 1px rgba(94,140,168,0.05);
-}
-/* Bagliore acciaio all'hover sugli elementi cliccabili in vetro */
-button[class*="bg-[#1B2A38]"]:hover,
-button[class*="bg-[#0b0f19]"]:hover,
-a[class*="bg-[#1B2A38]"]:hover {
-  box-shadow: inset 0 1px 0 rgba(148,163,184,0.12), 0 0 18px -2px rgba(94,140,168,0.38);
-  border-color: rgba(94,140,168,0.45);
-  transition: box-shadow 0.25s ease, border-color 0.25s ease;
-}
-/* Avatar & logo: alone acciaio hi-tech attorno ai contenitori */
-*:has(> img[src*="avatar_"]),
-*:has(> img[src*="logo-emblem"]),
-*:has(> img[src$="/logo.png"]) {
-  box-shadow: 0 0 0 1px rgba(94,140,168,0.35), 0 0 16px -2px rgba(94,140,168,0.30);
-}
-
-/* ==========================================================================
-   MIKILAB PRO — CONSOLE ARTIGIANALE PREMIUM (antracite caldo, no sci-fi)
-   Unica interfaccia continua dark-mode calda. Accenti: rame (Capo), salvia (Sitor).
-   ========================================================================== */
-.holo-root { background:#1C1C1E !important; color:#F2F2F5 !important; scroll-behavior:smooth; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
-.holo-canvas {
-  position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden;
-  background:
-    radial-gradient(95% 65% at 50% -10%, rgba(217,119,54,0.05), transparent 62%),
-    radial-gradient(60% 45% at 10% 28%, rgba(126,154,130,0.04), transparent 60%),
-    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,0.42) 100%),
-    linear-gradient(180deg,#1C1C1E 0%, #18181A 100%);
-}
-/* Niente griglia olografica né scanline: superficie calda e pulita */
-.holo-canvas::before { content:none; }
-.holo-canvas::after { /* grana di farina appena percettibile, calda */
-  content:""; position:absolute; inset:0; opacity:.05;
-  background: radial-gradient(rgba(255,246,226,0.5) 1px, transparent 1px);
-  background-size: 4px 4px;
-}
-
-.holo-panel {
-  position:relative; border-radius:16px; isolation:isolate;
-  background: #242427;
-  border:1px solid #3A3A3E;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
-  transition: border-color .25s ease, box-shadow .25s ease, transform .2s cubic-bezier(.2,.7,.2,1);
-}
-.holo-panel::before { content:none; } /* rimosso hairline luminoso sci-fi */
-.holo-panel::after { content:none; }  /* rimossa velatura scanline */
-.holo-panel > * { position:relative; z-index:1; }
-.holo-panel:hover { border-color:#4A4A50; box-shadow: 0 16px 40px rgba(0,0,0,0.5); transform: translate3d(0,-1px,0); }
-.holo-corner { display:none; }        /* rimossi angoli luminosi sci-fi */
-.holo-scan-top { display:none; }      /* rimossa scanline superiore */
-
-/* Scrollbar premium + selezione ciano (tocco cinematografico) */
-.holo-root ::-webkit-scrollbar { width:10px; height:10px; }
-.holo-root ::-webkit-scrollbar-track { background:#18181A; }
-.holo-root ::-webkit-scrollbar-thumb { background:linear-gradient(180deg, rgba(138,151,166,0.35), rgba(138,151,166,0.12)); border-radius:8px; border:2px solid #18181A; }
-.holo-root ::-webkit-scrollbar-thumb:hover { background:rgba(138,151,166,0.5); }
-.holo-root ::selection { background:rgba(138,151,166,0.28); color:#EAFDFF; }
-@keyframes holoSweep { 0%{transform:translateY(0); opacity:0;} 10%{opacity:.8;} 100%{transform:translateY(240px); opacity:0;} }
-.holo-zone { scroll-margin-top:88px; }
-
-
-/* Sitor — anelli orbitali della coscienza strategica */
-.nexus-ring {
-  position: absolute;
-  border-radius: 9999px;
-  border-width: 2px;
-  border-style: solid;
-  opacity: 0.55;
-  pointer-events: none;
-}
-.nexus-ring-1 {
-  inset: -12px;
-  animation: nexusSpin 7s linear infinite, nexusPulse 3s ease-in-out infinite;
-}
-.nexus-ring-2 {
-  inset: -22px;
-  border-style: dashed;
-  animation: nexusSpinRev 11s linear infinite;
-  opacity: 0.4;
-}
-@keyframes nexusSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-@keyframes nexusSpinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
-@keyframes nexusPulse { 0%,100% { opacity: 0.35; } 50% { opacity: 0.8; } }
-
-
-/* ==========================================================================
-   BLOCCO D — Gerarchia visiva, titoli uniformi, feedback tattile
-   Teal #3E9C93 riservato alle azioni primarie; ardesia per il resto.
-   ========================================================================== */
-/* Titolo di sezione uniforme dentro i pannelli della Console */
-.holo-section-title {
-  display: flex; align-items: center; gap: .5rem;
-  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
-  text-transform: uppercase; letter-spacing: .2em; margin-bottom: 1rem;
-}
-/* Feedback di pressione chiaro su ogni pulsante (scala + luce), senza rompere
-   i bottoni posizionati con transform di Tailwind: usa la proprietà `scale`. */
 button:not(:disabled),
 [role="button"]:not(:disabled) {
   transition-property: scale, filter, background-color, border-color, box-shadow, opacity, color;
@@ -502,9 +264,9 @@ button:not(:disabled),
 }
 button:not(:disabled):not([class*="active:scale"]):active,
 [role="button"]:not(:disabled):not([class*="active:scale"]):active { scale: .965; filter: brightness(1.08); }
-/* Anello di focus visibile e coerente col primario */
+/* Anello di focus visibile e coerente col primario (rame) */
 :is(button, a, input, select, textarea):focus-visible {
-  outline: 2px solid rgba(62,156,147,.65); outline-offset: 2px; border-radius: 8px;
+  outline: 2px solid rgba(168,90,34,.55); outline-offset: 2px; border-radius: 8px;
 }
 @media (prefers-reduced-motion: reduce) {
   button:not(:disabled):active, [role="button"]:not(:disabled):active { scale: 1; }

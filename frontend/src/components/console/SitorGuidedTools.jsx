@@ -43,11 +43,11 @@ export default function SitorGuidedTools() {
   return (
     <div data-testid="sitor-guided-tools" className="space-y-3">
       {/* Aggiungi una macchina/strumento: scrivi, allega il PDF del venditore o fotografala */}
-      <div data-testid="add-machine" className="rounded-2xl border border-[#9aa6b2]/40 bg-[#0b0f19] p-4">
-        <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[#9aa6b2] mb-2"><Sparkles className="w-3.5 h-3.5" /> {tri("Aggiungi una macchina o strumento", "Maschine/Werkzeug hinzufügen", "Add a machine or tool", "Añadir máquina o herramienta", "Ajouter une machine/outil", "افزودن دستگاه یا ابزار")}</p>
+      <div data-testid="add-machine" className="rounded-2xl border border-border/40 bg-background p-4">
+        <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-muted-foreground mb-2"><Sparkles className="w-3.5 h-3.5" /> {tri("Aggiungi una macchina o strumento", "Maschine/Werkzeug hinzufügen", "Add a machine or tool", "Añadir máquina o herramienta", "Ajouter une machine/outil", "افزودن دستگاه یا ابزار")}</p>
         <textarea data-testid="add-machine-text" value={machineText} onChange={(e) => setMachineText(e.target.value)} rows={2}
           placeholder={tri("Scrivi la macchina… oppure allega il PDF del venditore o fotografala: Sitor capisce e compila.", "Schreibe die Maschine… oder hänge das PDF an.", "Type the machine… or attach the vendor PDF or photograph it: Sitor understands and fills in.", "Escribe la máquina… o adjunta el PDF.", "Écris la machine… ou joins le PDF.", "دستگاه را بنویس… یا PDF را پیوست کن.")}
-          className="w-full bg-[#0C1019] border border-[#9aa6b2]/25 rounded-lg px-3 py-2 text-sm text-white focus:border-[#9aa6b2] outline-none resize-none mb-2" />
+          className="w-full bg-background border border-border/25 rounded-lg px-3 py-2 text-sm text-foreground focus:border-border outline-none resize-none mb-2" />
         <SmartAttach context={tri("scheda macchina/attrezzatura nuova (nome, marca, specifiche, manutenzione)", "neue Maschine (Name, Marke, Spezifikationen)", "new machine/equipment sheet (name, brand, specs, maintenance)", "ficha de máquina nueva", "fiche machine neuve", "مشخصات دستگاه جدید")}
           onExtract={(t) => setMachineText((m) => (m ? m + "\n" : "") + t)} />
       </div>
@@ -56,11 +56,11 @@ export default function SitorGuidedTools() {
       <div className="rounded-2xl border border-amber-500/40 bg-amber-500/8 p-4">
         <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-amber-400 mb-2"><Sparkles className="w-3.5 h-3.5" /> Sitor · {tri("Domanda", "Frage", "Question", "Pregunta", "Question", "پرسش")} {idx + 1}/{Q.length}</p>
         <AnimatePresence mode="wait">
-          <motion.p key={cur.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid="sitor-guided-q" className="text-[14px] text-white font-semibold leading-snug mb-3">{cur.q}</motion.p>
+          <motion.p key={cur.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid="sitor-guided-q" className="text-[14px] text-foreground font-semibold leading-snug mb-3">{cur.q}</motion.p>
         </AnimatePresence>
         <div className="flex items-center gap-2">
-          <button data-testid="sitor-guided-yes" onClick={() => answer(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-amber-500 text-[#04070d] font-black text-sm active:scale-95"><Check className="w-4 h-4" /> {tri("Sì, attiva", "Ja", "Yes, enable", "Sí", "Oui", "بله")}</button>
-          <button data-testid="sitor-guided-no" onClick={() => answer(false)} className="flex-1 py-2.5 rounded-xl bg-[#030712] border border-[#1e293b] text-[#94A3B8] font-bold text-sm active:scale-95">{tri("No, salta", "Nein", "No, skip", "No", "Non", "نه")}</button>
+          <button data-testid="sitor-guided-yes" onClick={() => answer(true)} className="flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-amber-500 text-foreground font-black text-sm active:scale-95"><Check className="w-4 h-4" /> {tri("Sì, attiva", "Ja", "Yes, enable", "Sí", "Oui", "بله")}</button>
+          <button data-testid="sitor-guided-no" onClick={() => answer(false)} className="flex-1 py-2.5 rounded-xl bg-background border border-border text-muted-foreground font-bold text-sm active:scale-95">{tri("No, salta", "Nein", "No, skip", "No", "Non", "نه")}</button>
         </div>
         <button data-testid="sitor-guided-demo" onClick={() => setDemo(cur)} className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-400/80 hover:text-amber-400"><PlayCircle className="w-3.5 h-3.5" /> {tri("Mostrami come funziona", "Zeig mir wie", "Show me how it works", "Muéstrame cómo", "Montre-moi", "نشانم بده")}</button>
       </div>
@@ -68,19 +68,19 @@ export default function SitorGuidedTools() {
       {/* Riepilogo attivazioni */}
       <div className="flex flex-wrap gap-1.5">
         {Q.map((x) => enabled[x.id] !== undefined && (
-          <span key={x.id} data-testid={`sitor-int-${x.id}`} className={`text-[10px] font-bold px-2 py-1 rounded-full border ${enabled[x.id] ? "bg-[#6e9e85]/12 border-[#6e9e85]/40 text-[#6e9e85]" : "bg-[#030712] border-[#1e293b] text-[#64748B]"}`}>
+          <span key={x.id} data-testid={`sitor-int-${x.id}`} className={`text-[10px] font-bold px-2 py-1 rounded-full border ${enabled[x.id] ? "bg-accent/12 border-accent/40 text-accent" : "bg-background border-border text-muted-foreground"}`}>
             {enabled[x.id] ? "✓" : "✕"} {x.id}
           </span>
         ))}
       </div>
 
       {/* Elenco completo opzionale — cosa sa fare Sitor */}
-      <button data-testid="sitor-caps-toggle" onClick={() => setShowAll((v) => !v)} className="w-full flex items-center justify-between rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2.5 text-left active:scale-[0.99]">
-        <span className="text-[12px] font-bold text-[#cbd5e1]">{tri("Cosa sa fare Sitor (elenco completo)", "Was Sitor kann (Liste)", "What Sitor can do (full list)", "Qué sabe hacer Sitor", "Ce que Sitor sait faire", "توانایی‌های سیتور")}</span>
-        <ChevronDown className={`w-4 h-4 text-[#64748B] transition-transform ${showAll ? "rotate-180" : ""}`} />
+      <button data-testid="sitor-caps-toggle" onClick={() => setShowAll((v) => !v)} className="w-full flex items-center justify-between rounded-xl bg-background border border-border px-3 py-2.5 text-left active:scale-[0.99]">
+        <span className="text-[12px] font-bold text-foreground">{tri("Cosa sa fare Sitor (elenco completo)", "Was Sitor kann (Liste)", "What Sitor can do (full list)", "Qué sabe hacer Sitor", "Ce que Sitor sait faire", "توانایی‌های سیتور")}</span>
+        <ChevronDown className={`w-4 h-4 text-muted-foreground transition-transform ${showAll ? "rotate-180" : ""}`} />
       </button>
       {showAll && (
-        <ul data-testid="sitor-caps-list" className="space-y-1.5 text-[12px] text-[#94A3B8] pl-1">
+        <ul data-testid="sitor-caps-list" className="space-y-1.5 text-[12px] text-muted-foreground pl-1">
           {[
             tri("Genera il piano di produzione e più opzioni tra cui scegliere", "Erstellt Produktionsplan", "Generates the production plan and options", "Genera el plan", "Génère le plan", "برنامه تولید می‌سازد"),
             tri("Coordina la squadra e comunica i compiti nei dettagli", "Koordiniert das Team", "Coordinates the team and communicates tasks", "Coordina el equipo", "Coordonne l'équipe", "تیم را هماهنگ می‌کند"),
@@ -94,14 +94,14 @@ export default function SitorGuidedTools() {
 
       {/* Modale demo */}
       {demo && (
-        <div data-testid="sitor-demo-modal" className="fixed inset-0 z-[80] bg-[#04070d]/95 backdrop-blur-md flex items-center justify-center p-5" onClick={() => setDemo(null)}>
-          <div className="max-w-sm w-full rounded-2xl border border-amber-500/50 bg-[#0b0f19] p-5" onClick={(e) => e.stopPropagation()}>
+        <div data-testid="sitor-demo-modal" className="fixed inset-0 z-[80] bg-background/95 backdrop-blur-md flex items-center justify-center p-5" onClick={() => setDemo(null)}>
+          <div className="max-w-sm w-full rounded-2xl border border-amber-500/50 bg-background p-5" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-2">
               <p className="text-xs font-black uppercase tracking-wide text-amber-400">Sitor · Demo</p>
-              <button data-testid="sitor-demo-close" onClick={() => setDemo(null)} className="w-8 h-8 rounded-full bg-[#030712] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
+              <button data-testid="sitor-demo-close" onClick={() => setDemo(null)} className="w-8 h-8 rounded-full bg-background border border-border text-muted-foreground flex items-center justify-center"><X className="w-4 h-4" /></button>
             </div>
-            <p className="text-sm text-white leading-relaxed">{demo.demo}</p>
-            <button data-testid="sitor-demo-enable" onClick={() => { answer(true); setDemo(null); }} className="mt-4 w-full py-2.5 rounded-xl bg-amber-500 text-[#04070d] font-black text-sm active:scale-95">{tri("Attivalo per me", "Aktivieren", "Enable it for me", "Actívalo", "Active-le", "فعالش کن")}</button>
+            <p className="text-sm text-foreground leading-relaxed">{demo.demo}</p>
+            <button data-testid="sitor-demo-enable" onClick={() => { answer(true); setDemo(null); }} className="mt-4 w-full py-2.5 rounded-xl bg-amber-500 text-foreground font-black text-sm active:scale-95">{tri("Attivalo per me", "Aktivieren", "Enable it for me", "Actívalo", "Active-le", "فعالش کن")}</button>
           </div>
         </div>
       )}

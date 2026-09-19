@@ -7,7 +7,7 @@ const PUB = process.env.PUBLIC_URL;
 // Hero 3D GRANDE e INTERATTIVO per ogni zona del sito: scena olografica AvatarWorld3D
 // come sfondo + avatar grande che reagisce al MOVIMENTO del dispositivo (giroscopio)
 // e al mouse (parallax). Sitor pulsa quando parla (evento TTS globale).
-export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6", theme = "miki", testid, listenSpeaking = false, onEnter }) {
+export default function ZoneHero3D({ avatar, name, role, tag, accent = "hsl(var(--muted-foreground))", theme = "miki", testid, listenSpeaking = false, onEnter }) {
   const ref = useRef(null);
   const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const [speaking, setSpeaking] = useState(false);
@@ -46,12 +46,12 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6"
   return (
     <div ref={ref} data-testid={testid} onMouseMove={onMove} onMouseLeave={() => setTilt({ x: 0, y: 0 })}
       className="relative w-full mb-5 rounded-3xl overflow-hidden border"
-      style={{ height: 340, borderColor: `${accent}44`, boxShadow: `0 0 34px ${accent}22`, background: "#04070d" }}>
+      style={{ height: 340, borderColor: `${accent}44`, boxShadow: `0 0 34px ${accent}22`, background: "hsl(var(--card))" }}>
       {/* Scena 3D di sfondo — desaturata per un look sobrio ed elegante */}
       <div className="absolute inset-0 z-0" style={{ filter: "saturate(0.28) brightness(0.82) contrast(1.02)" }}>
         <AvatarWorld3D theme={theme} accent={accent} speaking={speaking} />
       </div>
-      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: `radial-gradient(circle at 50% 42%, transparent 30%, #04070d 92%)` }} />
+      <div className="absolute inset-0 z-[1] pointer-events-none" style={{ background: `radial-gradient(circle at 50% 42%, transparent 30%, hsl(var(--card)) 92%)` }} />
 
       {/* Avatar GRANDE interattivo (segue mouse/giroscopio) */}
       <div className="absolute inset-0 z-[2] flex items-center justify-center" style={{ perspective: 900 }}>
@@ -73,16 +73,16 @@ export default function ZoneHero3D({ avatar, name, role, tag, accent = "#8a97a6"
             onError={(e) => { e.currentTarget.style.display = "none"; }} />
           {onEnter && (
             <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider whitespace-nowrap"
-              style={{ background: accent, color: "#04070d" }}>Entra →</span>
+              style={{ background: accent, color: "hsl(var(--card))" }}>Entra →</span>
           )}
         </motion.button>
       </div>
 
       {/* Overlay testo */}
-      <div className="absolute left-0 right-0 bottom-0 z-[3] p-4 sm:p-5 bg-gradient-to-t from-[#04070d] via-[#04070d]/80 to-transparent">
+      <div className="absolute left-0 right-0 bottom-0 z-[3] p-4 sm:p-5 bg-gradient-to-t from-background via-background/80 to-transparent">
         {tag && <span className="inline-block font-mono-data text-[9px] tracking-[0.28em] uppercase mb-1" style={{ color: accent }}>{tag}</span>}
-        <h3 className="font-cyber text-xl sm:text-2xl font-black text-white uppercase tracking-wide" style={{ textShadow: `0 0 16px ${accent}66` }}>{name}</h3>
-        {role && <p className="text-xs sm:text-sm text-[#CBD5E1]">{role}</p>}
+        <h3 className="font-display text-xl sm:text-2xl font-black text-foreground uppercase tracking-wide" style={{ textShadow: `0 0 16px ${accent}66` }}>{name}</h3>
+        {role && <p className="text-xs sm:text-sm text-foreground">{role}</p>}
       </div>
     </div>
   );

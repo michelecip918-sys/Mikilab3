@@ -6,14 +6,14 @@ import { PanelIcon } from "./panelIcons";
 // Kit olografico della plancia MikiLab Pro (Zero-Menu). Pannelli industriali,
 // divisori di zona a laser, indicatori di stato fluorescenti. Nessun menu classico.
 
-export function ZoneDivider({ title, code, accent = "#8a97a6", testid }) {
+export function ZoneDivider({ title, code, accent = "hsl(var(--muted-foreground))", testid }) {
   return (
     <div data-testid={testid} className="relative my-10 sm:my-16 flex items-center justify-center">
       <div className="absolute inset-0 flex items-center">
         <div className="w-full border-t" style={{ borderColor: `${accent}33`, boxShadow: `0 0 8px ${accent}44` }} />
       </div>
-      <div className="relative z-10 inline-flex items-center gap-2 px-5 py-2 rounded-full font-cyber text-[11px] sm:text-xs tracking-[0.25em] uppercase"
-        style={{ background: "#0C1019", border: `1px solid ${accent}66`, color: accent, boxShadow: `0 0 15px ${accent}33` }}>
+      <div className="relative z-10 inline-flex items-center gap-2 px-5 py-2 rounded-full font-display text-[11px] sm:text-xs tracking-[0.25em] uppercase"
+        style={{ background: "hsl(var(--card))", border: `1px solid ${accent}66`, color: accent, boxShadow: `0 0 15px ${accent}33` }}>
         <span className="relative flex w-2 h-2">
           <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: accent, opacity: 0.6 }} />
           <span className="relative inline-flex w-2 h-2 rounded-full" style={{ background: accent }} />
@@ -25,7 +25,7 @@ export function ZoneDivider({ title, code, accent = "#8a97a6", testid }) {
   );
 }
 
-export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaultOpen = false, collapsible = true, beacon = "#9aa6b2", children }) {
+export function HoloPanel({ title, sub, testid, accent = "hsl(var(--muted-foreground))", icon, defaultOpen = false, collapsible = true, beacon = "hsl(var(--muted-foreground))", children }) {
   const [open, setOpen] = useState(defaultOpen);
   const rootRef = useRef(null);
   useEffect(() => {
@@ -52,19 +52,19 @@ export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaul
         {icon && <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl shrink-0"
           style={{ background: `${accent}14`, border: `1px solid ${accent}3a` }}><PanelIcon icon={icon} color={accent} /></span>}
         <span className="min-w-0 flex-1">
-          <span className="block font-tech font-bold text-sm sm:text-base text-white tracking-wide truncate" style={{ textShadow: `0 0 12px ${accent}22` }}>{title}</span>
+          <span className="block font-tech font-bold text-sm sm:text-base text-foreground tracking-wide truncate" style={{ textShadow: `0 0 12px ${accent}22` }}>{title}</span>
         </span>
         <span className="relative flex w-2.5 h-2.5 shrink-0" title="stato">
           <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: beacon, opacity: 0.55 }} />
           <span className="relative inline-flex w-2.5 h-2.5 rounded-full" style={{ background: beacon, boxShadow: `0 0 8px ${beacon}` }} />
         </span>
-        {collapsible && <ChevronDown className="w-4 h-4 text-[#94A3B8] shrink-0 transition-transform" style={{ transform: open ? "rotate(180deg)" : "none" }} />}
+        {collapsible && <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0 transition-transform" style={{ transform: open ? "rotate(180deg)" : "none" }} />}
       </button>
       <AnimatePresence initial={false}>
         {(open || !collapsible) && (
           <motion.div key="body" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.28, ease: "easeInOut" }} className="overflow-hidden">
-            <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-[#8a97a6]/10">{children}</div>
+            <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-border/10">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -72,7 +72,7 @@ export function HoloPanel({ title, sub, testid, accent = "#8a97a6", icon, defaul
   );
 }
 
-export function ZoneHero({ avatar, name, role, tag, accent = "#8a97a6", testid, reactive = false }) {
+export function ZoneHero({ avatar, name, role, tag, accent = "hsl(var(--muted-foreground))", testid, reactive = false }) {
   const PUB = process.env.PUBLIC_URL;
   return (
     <div data-testid={testid} className="relative flex items-center gap-4 mb-5 rounded-2xl p-4 holo-panel overflow-hidden">
@@ -87,8 +87,8 @@ export function ZoneHero({ avatar, name, role, tag, accent = "#8a97a6", testid, 
       </div>
       <div className="relative min-w-0">
         {tag && <span className="inline-block font-mono-data text-[9px] tracking-[0.25em] uppercase mb-1" style={{ color: accent }}>{tag}</span>}
-        <h3 className="font-cyber text-lg sm:text-xl font-black text-white uppercase tracking-wide truncate" style={{ textShadow: `0 0 14px ${accent}33` }}>{name}</h3>
-        {role && <p className="text-xs text-[#CBD5E1] truncate">{role}</p>}
+        <h3 className="font-display text-lg sm:text-xl font-black text-foreground uppercase tracking-wide truncate" style={{ textShadow: `0 0 14px ${accent}33` }}>{name}</h3>
+        {role && <p className="text-xs text-foreground truncate">{role}</p>}
       </div>
     </div>
   );
@@ -102,7 +102,7 @@ export function ZoneRail({ zones, active, onJump }) {
         return (
           <button key={z.id} data-testid={`rail-${z.id}`} onClick={() => onJump(z.id)} title={z.label}
             className="pointer-events-auto group relative flex items-center justify-end gap-2 active:scale-90 transition-transform">
-            <span className="hidden sm:block font-cyber text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
+            <span className="hidden sm:block font-display text-[9px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity"
               style={{ color: z.accent }}>{z.label}</span>
             <span className="relative flex items-center justify-center" style={{ width: 14, height: 14 }}>
               {on && <span className="absolute inline-flex w-full h-full rounded-full animate-ping" style={{ background: z.accent, opacity: 0.5 }} />}

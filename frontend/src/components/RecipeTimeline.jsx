@@ -20,7 +20,7 @@ const parseDuration = (s) => {
   return Math.round(total);
 };
 
-const COLORS = ["#3E9C93", "#3E9C93", "#2e8b6f", "#3E9C93", "#a05eb5", "#3E9C93", "#3E9C93"];
+const COLORS = ["hsl(var(--primary))", "hsl(var(--primary))", "hsl(var(--muted-foreground))", "hsl(var(--primary))", "hsl(var(--muted-foreground))", "hsl(var(--primary))", "hsl(var(--primary))"];
 
 export default function RecipeTimeline({ recipe, lang: langProp }) {
   const { lang: ctxLang } = useLang();
@@ -66,46 +66,46 @@ export default function RecipeTimeline({ recipe, lang: langProp }) {
   }, [phases, target, totalMins, lang]);
 
   const durStr = (m) => (m >= 60 ? `${Math.floor(m / 60)}h${m % 60 ? " " + (m % 60) + "m" : ""}` : `${m}m`);
-  const inp = "bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93]";
+  const inp = "bg-background dark:bg-card border border-border dark:border-border rounded-lg px-2 py-1.5 outline-none text-sm font-mono-data text-foreground dark:text-foreground focus:border-primary";
 
   if (phases.length < 2) {
     return (
-      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#3E9C93] flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
-        <p className="text-sm text-[#7E8A93]">{tri("Questa ricetta non ha una sequenza di lievitazione/cottura con tempi (es. una base, un lievito o un miglioratore).", "Dieses Rezept hat keine Gär-/Backsequenz mit Zeiten (z. B. eine Basis, ein Sauerteig oder ein Verbesserer).", "This recipe has no proof/bake sequence with times (e.g. a base, a starter or an improver).", "Esta receta no tiene una secuencia de fermentación/horneado con tiempos (p. ej. una base, una masa madre o un mejorante).")}</p>
+      <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-card dark:bg-card border border-border dark:border-border p-4">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-primary flex items-center gap-1 mb-2"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
+        <p className="text-sm text-muted-foreground">{tri("Questa ricetta non ha una sequenza di lievitazione/cottura con tempi (es. una base, un lievito o un miglioratore).", "Dieses Rezept hat keine Gär-/Backsequenz mit Zeiten (z. B. eine Basis, ein Sauerteig oder ein Verbesserer).", "This recipe has no proof/bake sequence with times (e.g. a base, a starter or an improver).", "Esta receta no tiene una secuencia de fermentación/horneado con tiempos (p. ej. una base, una masa madre o un mejorante).")}</p>
       </div>
     );
   }
 
   return (
-    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-4">
+    <div data-testid={`recipe-timeline-${recipe.id}`} className="rounded-2xl shadow-md border border-amber-900/40 bg-card dark:bg-card border border-border dark:border-border p-4">
       <div className="flex items-center justify-between mb-3 gap-2 flex-wrap">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-[#3E9C93] flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
-        <label className="text-[11px] font-semibold text-[#7E8A93] flex items-center gap-1.5 no-print">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-primary flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}</p>
+        <label className="text-[11px] font-semibold text-muted-foreground flex items-center gap-1.5 no-print">
           {tri("Sforno alle", "Ausbacken um", "Bake out at", "Sacar a las")}
           <input data-testid={`timeline-target-${recipe.id}`} type="time" value={target} onChange={(e) => setTarget(e.target.value)} className={inp} />
         </label>
       </div>
-      <p className="text-xs text-[#7E8A93] mb-3">{tri("Inizia a impastare alle", "Beginne zu kneten um", "Start mixing at", "Empieza a amasar a las")} <b data-testid={`timeline-start-${recipe.id}`} className="text-[#3E9C93] dark:text-[#a9d2ec] font-mono-data">{rows.startClock}</b> · {tri("durata totale", "Gesamtdauer", "total", "duración total")} {durStr(totalMins)}</p>
+      <p className="text-xs text-muted-foreground mb-3">{tri("Inizia a impastare alle", "Beginne zu kneten um", "Start mixing at", "Empieza a amasar a las")} <b data-testid={`timeline-start-${recipe.id}`} className="text-primary dark:text-foreground font-mono-data">{rows.startClock}</b> · {tri("durata totale", "Gesamtdauer", "total", "duración total")} {durStr(totalMins)}</p>
       <div className="relative pl-4">
-        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-[#2A3B49] dark:bg-[#2A3B49]" />
+        <div className="absolute left-[6px] top-1 bottom-1 w-0.5 bg-secondary dark:bg-secondary" />
         {rows.out.map((p) => (
           <div key={p.i} data-testid={`timeline-phase-${recipe.id}-${p.i}`} className="relative mb-3 last:mb-0">
-            <span className="absolute -left-4 top-1 w-3 h-3 rounded-full border-2 border-white dark:border-[#1B2A38]" style={{ background: COLORS[p.i % COLORS.length] }} />
+            <span className="absolute -left-4 top-1 w-3 h-3 rounded-full border-2 border-border dark:border-border" style={{ background: COLORS[p.i % COLORS.length] }} />
             <div className="flex items-baseline justify-between gap-2">
-              <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8]">{p.name}</p>
-              <span className="font-mono-data text-xs text-[#3E9C93] dark:text-[#8FB0C2] shrink-0">{p.start} → {p.end}</span>
+              <p className="text-sm font-semibold text-foreground dark:text-foreground">{p.name}</p>
+              <span className="font-mono-data text-xs text-primary dark:text-muted-foreground shrink-0">{p.start} → {p.end}</span>
             </div>
-            <p className="text-[11px] text-[#7E8A93]">{durStr(p.mins)}{p.temp ? ` · ${p.temp}°C` : ""}</p>
+            <p className="text-[11px] text-muted-foreground">{durStr(p.mins)}{p.temp ? ` · ${p.temp}°C` : ""}</p>
           </div>
         ))}
         <div className="relative">
-          <span className="absolute -left-4 top-1 w-3 h-3 rounded-full bg-[#3E9C93] border-2 border-white dark:border-[#1B2A38]" />
-          <p className="text-sm font-bold text-[#3E9C93]">🍞 {tri("Pronto / Sforno", "Fertig / Ausbacken", "Ready / Bake out", "Listo / Sacar")} — <span className="font-mono-data">{target}</span></p>
+          <span className="absolute -left-4 top-1 w-3 h-3 rounded-full bg-primary border-2 border-border dark:border-border" />
+          <p className="text-sm font-bold text-primary">🍞 {tri("Pronto / Sforno", "Fertig / Ausbacken", "Ready / Bake out", "Listo / Sacar")} — <span className="font-mono-data">{target}</span></p>
         </div>
       </div>
       {!isReal && (
-        <p className="text-[10.5px] text-[#7E8A93] mt-3 italic">{tri("Orari basati sui tempi della ricetta; regola l'ora di sforno e valida sempre a vista.", "Zeiten aus dem Rezept; Ausback-Zeit anpassen und per Auge prüfen.", "Times from the recipe; adjust the bake-out time and always check by eye.", "Horarios según los tiempos de la receta; ajusta la hora y valida a la vista.")}</p>
+        <p className="text-[10.5px] text-muted-foreground mt-3 italic">{tri("Orari basati sui tempi della ricetta; regola l'ora di sforno e valida sempre a vista.", "Zeiten aus dem Rezept; Ausback-Zeit anpassen und per Auge prüfen.", "Times from the recipe; adjust the bake-out time and always check by eye.", "Horarios según los tiempos de la receta; ajusta la hora y valida a la vista.")}</p>
       )}
     </div>
   );

@@ -32,15 +32,15 @@ export default function AudioRouteIndicator() {
 
   return createPortal(
     <div data-testid="audio-route-indicator" className="fixed inset-x-0 top-3 z-[400] flex justify-center pointer-events-none px-3">
-      <div className="flex items-center gap-2.5 rounded-2xl bg-[#0D1520]/95 backdrop-blur border border-[#3B82F6]/60 px-3.5 py-2.5 shadow-2xl max-w-sm">
+      <div className="flex items-center gap-2.5 rounded-2xl bg-background/95 backdrop-blur border border-border/60 px-3.5 py-2.5 shadow-2xl max-w-sm">
         <span className="relative flex w-2.5 h-2.5 shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#3B82F6] opacity-70" />
-          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#3B82F6]" />
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-muted opacity-70" />
+          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-muted" />
         </span>
-        <Headphones className="w-4 h-4 text-[#3B82F6] shrink-0" />
+        <Headphones className="w-4 h-4 text-muted-foreground shrink-0" />
         <div className="min-w-0">
-          <p className="text-[10px] font-bold uppercase tracking-wide text-[#3B82F6]">{tri("In cuffia a", "Im Headset an", "To headset", "Al auricular")}: <span className="text-white">{who}</span><span className="text-white/60">{zone}{ear}</span></p>
-          {msg.text && <p className="text-[12px] text-white leading-snug truncate" data-testid="audio-route-text">{msg.text}</p>}
+          <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">{tri("In cuffia a", "Im Headset an", "To headset", "Al auricular")}: <span className="text-foreground">{who}</span><span className="text-foreground/60">{zone}{ear}</span></p>
+          {msg.text && <p className="text-[12px] text-foreground leading-snug truncate" data-testid="audio-route-text">{msg.text}</p>}
         </div>
       </div>
     </div>,

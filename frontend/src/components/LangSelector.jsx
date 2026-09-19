@@ -50,30 +50,30 @@ export default function LangSelector({ testid = "lang-selector" }) {
   return (
     <div ref={ref} className="relative">
       <button data-testid={`${testid}-btn`} onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#0f172a] border border-[#1e293b] text-white hover:border-[#D95200] active:scale-95 transition-all">
-        <Globe className="w-4 h-4 text-[#D95200]" />
+        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-background border border-border text-foreground hover:border-primary active:scale-95 transition-all">
+        <Globe className="w-4 h-4 text-primary" />
         <span className="text-base leading-none">{cur.flag}</span>
         <span className="text-xs font-bold uppercase">{cur.code}</span>
       </button>
       {open && (
-        <div data-testid={`${testid}-menu`} className="absolute right-0 top-11 w-64 max-h-[70vh] overflow-hidden rounded-xl bg-[#0b0f19] border border-[#1e293b] shadow-2xl z-[95] flex flex-col">
-          <div className="p-2 border-b border-[#1e293b]">
-            <div className="flex items-center gap-2 bg-[#030712] rounded-lg px-2.5 py-2 border border-[#1e293b] focus-within:border-[#D95200]">
-              <Search className="w-4 h-4 text-[#64748B] shrink-0" />
+        <div data-testid={`${testid}-menu`} className="absolute right-0 top-11 w-64 max-h-[70vh] overflow-hidden rounded-xl bg-background border border-border shadow-2xl z-[95] flex flex-col">
+          <div className="p-2 border-b border-border">
+            <div className="flex items-center gap-2 bg-background rounded-lg px-2.5 py-2 border border-border focus-within:border-primary">
+              <Search className="w-4 h-4 text-muted-foreground shrink-0" />
               <input ref={inputRef} data-testid={`${testid}-search`} value={q} onChange={(e) => setQ(e.target.value)}
                 placeholder={tri("Cerca la tua lingua…", "Sprache suchen…", "Search your language…", "Busca tu idioma…", "Cherche ta langue…", "زبان خود را جستجو کن…")}
-                className="flex-1 min-w-0 bg-transparent text-sm text-white outline-none placeholder:text-[#64748B]" />
+                className="flex-1 min-w-0 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
             </div>
           </div>
           <div className="overflow-y-auto p-1.5 space-y-0.5">
             {ready.map((l) => (
               <button key={l.code} data-testid={`${testid}-${l.code}`} onClick={() => { setLang(l.code); setOpen(false); setQ(""); }}
-                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${l.code === lang ? "bg-[#D95200]/15 text-[#D95200] font-bold" : "text-[#cbd5e1] hover:bg-[#0f172a]"}`}>
+                className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${l.code === lang ? "bg-primary/15 text-primary font-bold" : "text-foreground hover:bg-background"}`}>
                 <span className="text-base leading-none">{l.flag}</span>
                 <span className="flex-1 text-left">{l.label}</span>
                 <span data-testid={`${testid}-preview-${l.code}`} role="button" tabIndex={0}
                   onClick={(e) => { e.stopPropagation(); try { playTTS(SAMPLE[l.code] || SAMPLE.en, { lang: l.code, voice: "bakemix" }); } catch { /* */ } }}
-                  className="shrink-0 p-1 rounded-md hover:bg-[#D95200]/20 text-[#D95200]" title={tri("Ascolta un esempio", "Beispiel anhören", "Listen to a sample", "Escuchar ejemplo", "Écouter un exemple", "شنیدن نمونه")}>
+                  className="shrink-0 p-1 rounded-md hover:bg-primary/20 text-primary" title={tri("Ascolta un esempio", "Beispiel anhören", "Listen to a sample", "Escuchar ejemplo", "Écouter un exemple", "شنیدن نمونه")}>
                   <Volume2 className="w-3.5 h-3.5" />
                 </span>
                 {l.code === lang && <Check className="w-4 h-4" />}
@@ -81,10 +81,10 @@ export default function LangSelector({ testid = "lang-selector" }) {
             ))}
             {soon.length > 0 && (
               <>
-                <p className="px-2.5 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-[#475569]">{tri("In arrivo (espandibile)", "Bald (erweiterbar)", "Coming soon (expandable)", "Próximamente", "Bientôt", "به‌زودی")}</p>
+                <p className="px-2.5 pt-2 pb-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{tri("In arrivo (espandibile)", "Bald (erweiterbar)", "Coming soon (expandable)", "Próximamente", "Bientôt", "به‌زودی")}</p>
                 {soon.map((l) => (
                   <div key={l.code} data-testid={`${testid}-soon-${l.code}`} title={tri("Presto disponibile", "Bald verfügbar", "Available soon", "Pronto", "Bientôt", "به‌زودی")}
-                    className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-[#475569] cursor-not-allowed">
+                    className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-muted-foreground cursor-not-allowed">
                     <span className="text-base leading-none opacity-60">{l.flag}</span>
                     <span className="flex-1 text-left">{l.label}</span>
                     <Clock className="w-3.5 h-3.5" />
@@ -93,7 +93,7 @@ export default function LangSelector({ testid = "lang-selector" }) {
               </>
             )}
             {ready.length === 0 && soon.length === 0 && (
-              <p data-testid={`${testid}-empty`} className="px-3 py-4 text-center text-xs text-[#64748B]">{tri("Nessuna lingua trovata", "Keine Sprache gefunden", "No language found", "Sin resultados", "Aucune langue", "زبانی یافت نشد")}</p>
+              <p data-testid={`${testid}-empty`} className="px-3 py-4 text-center text-xs text-muted-foreground">{tri("Nessuna lingua trovata", "Keine Sprache gefunden", "No language found", "Sin resultados", "Aucune langue", "زبانی یافت نشد")}</p>
             )}
           </div>
         </div>

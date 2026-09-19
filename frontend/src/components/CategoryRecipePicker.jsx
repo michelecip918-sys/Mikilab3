@@ -91,18 +91,18 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
     const already = inPlan.has(r.id);
     const meta = picked.get(r.id) || {};
     return (
-      <div key={r.id} className={`rounded-2xl shadow-md border border-amber-900/40 border-b border-[#2A3B49]/60 ${isPicked ? "bg-[#3E9C93]/10" : ""}`}>
+      <div key={r.id} className={`rounded-2xl shadow-md border border-amber-900/40 border-b border-border/60 ${isPicked ? "bg-primary/10" : ""}`}>
         <button type="button" data-testid={`${testid}-item-${r.id}`}
           onClick={() => (multi ? toggle(r.id) : pickSingle(r.id))}
-          className={`w-full text-left px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-white text-[15px] font-medium flex items-center gap-2.5 transition-colors ${isPicked ? "" : "hover:bg-[#1B2A38]"}`}>
+          className={`w-full text-left px-3 py-3 rounded-2xl shadow-md border border-amber-900/40 text-foreground text-[15px] font-medium flex items-center gap-2.5 transition-colors ${isPicked ? "" : "hover:bg-card"}`}>
           {multi ? (
-            <span className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center ${isPicked ? "bg-[#3E9C93] border-[#3E9C93]" : already ? "border-[#3E9C93]/50 bg-[#3E9C93]/10" : "border-[#4a5560]"}`}>
-              {isPicked && <Check className="w-3.5 h-3.5 text-white" />}
+            <span className={`w-5 h-5 rounded-md border-2 shrink-0 flex items-center justify-center ${isPicked ? "bg-primary border-primary" : already ? "border-primary/50 bg-primary/10" : "border-border"}`}>
+              {isPicked && <Check className="w-3.5 h-3.5 text-foreground" />}
             </span>
-          ) : value === r.id ? <Check className="w-4 h-4 text-[#3E9C93] shrink-0" /> : null}
+          ) : value === r.id ? <Check className="w-4 h-4 text-primary shrink-0" /> : null}
           <span className="flex-1 truncate">{recipeTitle(r, lang)}</span>
           {multi && already && !isPicked && (
-            <span className="text-[10px] text-[#3E9C93] font-semibold shrink-0">{lang === "de" ? "im Plan" : lang === "en" ? "in plan" : "nel piano"}</span>
+            <span className="text-[10px] text-primary font-semibold shrink-0">{lang === "de" ? "im Plan" : lang === "en" ? "in plan" : "nel piano"}</span>
           )}
         </button>
         {multi && quickAdd && isPicked && (
@@ -110,12 +110,12 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
             <div className="relative">
               <input type="number" data-testid={`${testid}-qty-${r.id}`} value={meta.qty ?? ""} placeholder={quickAdd.qtyLabel || (lang === "de" ? "Menge" : lang === "en" ? "Qty" : "Qtà")}
                 onChange={(e) => setMeta(r.id, { qty: e.target.value })}
-                className="w-24 bg-[#1B2A38] border border-[#2A3B49] rounded-lg py-1.5 pl-2.5 pr-8 text-sm text-white outline-none focus:border-[#3E9C93] [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
-              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[#7E8A93]">{quickAdd.qtyLabel || (lang === "de" ? "St." : lang === "en" ? "pcs" : "pz")}</span>
+                className="w-24 bg-card border border-border rounded-lg py-1.5 pl-2.5 pr-8 text-sm text-foreground outline-none focus:border-primary [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+              <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground">{quickAdd.qtyLabel || (lang === "de" ? "St." : lang === "en" ? "pcs" : "pz")}</span>
             </div>
             {quickAdd.day && (
               <select data-testid={`${testid}-day-${r.id}`} value={meta.day ?? ""} onChange={(e) => setMeta(r.id, { day: e.target.value })}
-                className="flex-1 min-w-0 bg-[#1B2A38] border border-[#2A3B49] rounded-lg py-1.5 px-2 text-sm text-white outline-none focus:border-[#3E9C93]">
+                className="flex-1 min-w-0 bg-card border border-border rounded-lg py-1.5 px-2 text-sm text-foreground outline-none focus:border-primary">
                 {DAYS.map((d) => <option key={d} value={d}>{d === "" ? t("capo_day_any") : t(`day_${d}`)}</option>)}
               </select>
             )}
@@ -130,54 +130,54 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
       {multi ? (
         compact ? (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="flex items-center gap-1 text-sm font-medium text-[#3E9C93] active:scale-95 transition-all">
+            className="flex items-center gap-1 text-sm font-medium text-primary active:scale-95 transition-all">
             <Plus className="w-4 h-4" /> {triggerLabel || t("weekly_add")}
           </button>
         ) : (
           <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-            className="w-full flex items-center justify-center gap-1.5 bg-[#3E9C93] hover:bg-[#64748B] text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+            className="w-full flex items-center justify-center gap-1.5 bg-primary hover:bg-accent text-white text-sm font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
             <ChefHat className="w-4 h-4" /> {triggerLabel || (lang === "de" ? "Rezepte hinzufügen" : lang === "en" ? "Add recipes" : "Aggiungi ricette")}
           </button>
         )
       ) : (
         <button type="button" data-testid={`${testid}-trigger`} onClick={() => setOpen(true)}
-          className="w-full appearance-none bg-white dark:bg-[#1B2A38] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-9 text-sm font-medium text-[#2B303B] dark:text-white outline-none focus:border-[#3E9C93] transition-all text-left relative">
-          <span className={`block truncate pr-1 ${selected ? "" : "text-[#7E8A93]"}`}>{selected ? recipeTitle(selected, lang) : (placeholder || t("capo_pick_recipe"))}</span>
-          <ChevronDown className="w-4 h-4 text-[#3E9C93] absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          className="w-full appearance-none bg-card dark:bg-card border border-border rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-3 pr-9 text-sm font-medium text-foreground dark:text-foreground outline-none focus:border-primary transition-all text-left relative">
+          <span className={`block truncate pr-1 ${selected ? "" : "text-muted-foreground"}`}>{selected ? recipeTitle(selected, lang) : (placeholder || t("capo_pick_recipe"))}</span>
+          <ChevronDown className="w-4 h-4 text-primary absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </button>
       )}
 
       {open && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center" data-testid={`${testid}-modal`}>
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={close} />
-          <div className="relative w-full sm:max-w-md bg-[#14212C] border-t sm:border border-[#2A3B49] rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl">
-            <div className="flex items-center gap-2 p-4 border-b border-[#2A3B49] shrink-0">
+          <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" onClick={close} />
+          <div className="relative w-full sm:max-w-md bg-background border-t sm:border border-border rounded-t-3xl sm:rounded-3xl max-h-[85vh] flex flex-col shadow-2xl">
+            <div className="flex items-center gap-2 p-4 border-b border-border shrink-0">
               {cat ? (
-                <button data-testid={`${testid}-back`} onClick={() => setCat(null)} className="p-1 text-[#3E9C93]"><ChevronLeft className="w-6 h-6" /></button>
+                <button data-testid={`${testid}-back`} onClick={() => setCat(null)} className="p-1 text-primary"><ChevronLeft className="w-6 h-6" /></button>
               ) : null}
-              <h3 className="font-display text-lg font-extrabold text-white flex-1 truncate">
+              <h3 className="font-display text-lg font-extrabold text-foreground flex-1 truncate">
                 {cat === "__fav__" ? `❤ ${lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}`
                   : cat ? `${catObj?.icon || ""} ${t(catObj?.label)}`
                   : (multi ? (triggerLabel || (lang === "de" ? "Rezepte hinzufügen" : lang === "en" ? "Add recipes" : "Aggiungi ricette")) : t("capo_pick_recipe"))}
               </h3>
-              <button data-testid={`${testid}-close`} onClick={close} className="p-1 text-[#7E8A93] hover:text-white"><X className="w-6 h-6" /></button>
+              <button data-testid={`${testid}-close`} onClick={close} className="p-1 text-muted-foreground hover:text-foreground"><X className="w-6 h-6" /></button>
             </div>
 
             {!cat && (
-              <div className="p-3 border-b border-[#2A3B49] shrink-0 relative">
-                <Search className="w-4 h-4 text-[#7E8A93] absolute left-6 top-1/2 -translate-y-1/2" />
+              <div className="p-3 border-b border-border shrink-0 relative">
+                <Search className="w-4 h-4 text-muted-foreground absolute left-6 top-1/2 -translate-y-1/2" />
                 <input data-testid={`${testid}-search`} value={q} onChange={(e) => setQ(e.target.value)} placeholder={lang === "de" ? "Suchen…" : lang === "en" ? "Search…" : "Cerca…"}
-                  className="w-full bg-[#1B2A38] border border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-10 pr-3 text-sm text-white outline-none focus:border-[#3E9C93]" />
+                  className="w-full bg-card border border-border rounded-2xl shadow-md border border-amber-900/40 py-2.5 pl-10 pr-3 text-sm text-foreground outline-none focus:border-primary" />
               </div>
             )}
 
             <div className="overflow-y-auto p-3 flex-1">
               {q.trim() ? (
                 searchHits.length ? searchHits.map((r) => RecipeRow(r))
-                  : <p className="text-center text-[#7E8A93] py-6 text-sm">{lang === "de" ? "Kein Ergebnis" : lang === "en" ? "No results" : "Nessun risultato"}</p>
+                  : <p className="text-center text-muted-foreground py-6 text-sm">{lang === "de" ? "Kein Ergebnis" : lang === "en" ? "No results" : "Nessun risultato"}</p>
               ) : !cat ? (
                 list.length === 0 ? (
-                  <p className="text-center text-[#7E8A93] py-10 px-4 text-sm leading-relaxed">
+                  <p className="text-center text-muted-foreground py-10 px-4 text-sm leading-relaxed">
                     {lang === "de" ? "Noch keine Rezepte verfügbar. Füge deine Rezepte hinzu oder schalte die MikiLab-Rezepte frei."
                       : lang === "en" ? "No recipes available yet. Add your own recipes or unlock the MikiLab recipes."
                       : "Nessuna ricetta disponibile. Aggiungi le tue ricette o sblocca le ricette MikiLab."}
@@ -186,14 +186,14 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                 <>
                   {recentRecipes.length > 0 && (
                     <div className="mb-3" data-testid={`${testid}-recent-row`}>
-                      <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-[#7E8A93] mb-1.5"><Clock className="w-3.5 h-3.5" /> {lang === "de" ? "Kürzlich verwendet" : lang === "en" ? "Recently used" : "Usate di recente"}</p>
+                      <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1.5"><Clock className="w-3.5 h-3.5" /> {lang === "de" ? "Kürzlich verwendet" : lang === "en" ? "Recently used" : "Usate di recente"}</p>
                       <div className="flex gap-1.5 overflow-x-auto pb-1">
                         {recentRecipes.map((r) => {
                           const isPicked = picked.has(r.id);
                           return (
                             <button key={r.id} type="button" data-testid={`${testid}-recent-${r.id}`}
                               onClick={() => (multi ? toggle(r.id) : pickSingle(r.id))}
-                              className={`shrink-0 flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-all ${isPicked ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-[#1B2A38] text-[#e4eff8] border-[#2A3B49] hover:border-[#3E9C93]"}`}>
+                              className={`shrink-0 flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-all ${isPicked ? "bg-primary text-white border-primary" : "bg-card text-foreground border-border hover:border-primary"}`}>
                               {isPicked && <Check className="w-3 h-3" />} <span className="max-w-[130px] truncate">{recipeTitle(r, lang)}</span>
                             </button>
                           );
@@ -204,23 +204,23 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
                   <div className="grid grid-cols-2 gap-2.5">
                     {favRecipes.length > 0 && (
                       <button data-testid={`${testid}-cat-favs`} onClick={() => setCat("__fav__")}
-                        className="group relative overflow-hidden rounded-2xl border border-[#3E9C93]/40 hover:border-[#3E9C93] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end bg-gradient-to-br from-[#3E9C93]/30 via-[#3a1a10] to-[#14212C]">
+                        className="group relative overflow-hidden rounded-2xl border border-primary/40 hover:border-primary active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end bg-gradient-to-br from-primary/30 via-background to-background">
                         <div className="relative p-3">
-                          <Heart className="w-6 h-6 text-[#3E9C93] fill-[#3E9C93] mb-0.5" />
-                          <span className="font-display text-[15px] font-bold text-white leading-tight block">{lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}</span>
-                          <span className="text-[11px] text-[#64748B] font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <Heart className="w-6 h-6 text-primary fill-primary mb-0.5" />
+                          <span className="font-display text-[15px] font-bold text-foreground leading-tight block">{lang === "de" ? "Favoriten" : lang === "en" ? "Favorites" : "Preferite"}</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">{favRecipes.length} {favRecipes.length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     )}
                     {CATS.filter((c) => byCat[c.key].length > 0).map((c) => (
                       <button key={c.key} data-testid={`${testid}-cat-${c.key}`} onClick={() => setCat(c.key)}
-                        className="group relative overflow-hidden rounded-2xl border border-[#3E9C93]/30 hover:border-[#3E9C93] active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end">
+                        className="group relative overflow-hidden rounded-2xl border border-primary/30 hover:border-primary active:scale-97 transition-all text-left min-h-[112px] flex flex-col justify-end">
                         <img src={CAT_IMAGES[c.key]} alt={t(c.label)} loading="lazy" className="absolute inset-0 w-full h-full object-cover" />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10" />
                         <div className="relative p-3">
                           <span className="text-xl block leading-none mb-0.5">{c.icon}</span>
-                          <span className="font-display text-[15px] font-bold text-white leading-tight block">{t(c.label)}</span>
-                          <span className="text-[11px] text-[#64748B] font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
+                          <span className="font-display text-[15px] font-bold text-foreground leading-tight block">{t(c.label)}</span>
+                          <span className="text-[11px] text-muted-foreground font-semibold">{byCat[c.key].length} {byCat[c.key].length === 1 ? (lang === "de" ? "Rezept" : lang === "en" ? "recipe" : "ricetta") : (lang === "de" ? "Rezepte" : lang === "en" ? "recipes" : "ricette")}</span>
                         </div>
                       </button>
                     ))}
@@ -233,9 +233,9 @@ export default function CategoryRecipePicker({ recipes, value, onChange, onAddMa
             </div>
 
             {multi && (
-              <div className="p-3 border-t border-[#2A3B49] shrink-0">
+              <div className="p-3 border-t border-border shrink-0">
                 <button data-testid={`${testid}-done`} onClick={confirmMulti} disabled={picked.size === 0}
-                  className="w-full flex items-center justify-center gap-1.5 bg-[#3E9C93] disabled:opacity-40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
+                  className="w-full flex items-center justify-center gap-1.5 bg-primary disabled:opacity-40 text-white font-semibold py-2.5 rounded-2xl shadow-md border border-amber-900/40 active:scale-98 transition-all">
                   <Plus className="w-4 h-4" /> {lang === "de" ? "Hinzufügen" : lang === "en" ? "Add" : "Aggiungi"} ({picked.size})
                 </button>
               </div>

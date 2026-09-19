@@ -7,7 +7,7 @@ export const DEPT_PROFILES = {
   panificazione: {
     id: "panificazione",
     icon: "🍞",
-    accent: "#64748B",
+    accent: "hsl(var(--muted-foreground))",
     label: (l) => mkTri(l)("Panificazione", "Bäckerei", "Bakery", "Panadería", "Boulangerie", "نانوایی"),
     tagline: (l) => mkTri(l)("Industriale · lotti massivi", "Industriell · Großchargen", "Industrial · bulk batches", "Industrial · lotes grandes", "Industriel · grandes fournées", "صنعتی · دسته‌های انبوه"),
     // Parametri d'impasto tipici (prefill del recipe builder).
@@ -30,7 +30,7 @@ export const DEPT_PROFILES = {
   pizzeria: {
     id: "pizzeria",
     icon: "🍕",
-    accent: "#3E9C93",
+    accent: "hsl(var(--primary))",
     label: () => "Pizzeria",
     tagline: (l) => mkTri(l)("Alta idratazione · assi di fermentazione", "Hohe Hydration · Gärbretter", "High hydration · fermentation boards", "Alta hidratación · tablas de fermentación", "Haute hydratation · planches de pousse", "هیدراسیون بالا · تخته تخمیر"),
     defaults: { method_type: "diretto", hydration: 75, dough_temp_c: 22, preferment_type: "biga" },
@@ -47,7 +47,7 @@ export const DEPT_PROFILES = {
   pasticceria: {
     id: "pasticceria",
     icon: "🥐",
-    accent: "#7FB0A6",
+    accent: "hsl(var(--muted-foreground))",
     label: (l) => mkTri(l)("Pasticceria", "Konditorei", "Pastry", "Pastelería", "Pâtisserie", "قنادی"),
     tagline: (l) => mkTri(l)("Precisione al milligrammo · registro di abbattimento", "Milligramm-Präzision · Kühlprotokoll", "Milligram precision · chilling logs", "Precisión al miligramo · registro de abatido", "Précision au milligramme · relevé de refroidissement", "دقت میلی‌گرمی · گزارش سردسازی"),
     defaults: { method_type: "indiretto", hydration: 50, dough_temp_c: 26, preferment_type: "lm" },

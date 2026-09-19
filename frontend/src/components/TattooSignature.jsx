@@ -12,17 +12,17 @@ export function TattooSignature({ className = "", testid = "tattoo-signature" })
     : "Fatto con le mani di Michele";
 
   return (
-    <div data-testid={testid} className={`flex items-center gap-3 rounded-2xl bg-[#1A1412]/[0.04] dark:bg-white/[0.04] border border-[#2A3B49] dark:border-[#2A3B49] p-2.5 ${className}`}>
+    <div data-testid={testid} className={`flex items-center gap-3 rounded-2xl bg-background/[0.04] dark:bg-foreground/[0.04] border border-border dark:border-border p-2.5 ${className}`}>
       <img
         src={`${BASE}/bio-dough.jpg`}
         alt="Michele"
         loading="lazy"
-        className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-[#1B2A38]/30 shrink-0"
+        className="w-12 h-12 rounded-2xl shadow-md border border-amber-900/40 object-cover ring-1 ring-border/30 shrink-0"
         draggable={false}
       />
       <div className="min-w-0">
-        <p className="text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] leading-tight">{caption}</p>
-        <p className="text-[11px] font-bold tracking-wide text-[#1B2A38]">MikiLab 🇮🇹🇩🇪</p>
+        <p className="text-sm font-semibold text-foreground dark:text-foreground leading-tight">{caption}</p>
+        <p className="text-[11px] font-bold tracking-wide text-foreground">MikiLab 🇮🇹🇩🇪</p>
       </div>
     </div>
   );

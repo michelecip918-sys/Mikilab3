@@ -6,9 +6,9 @@ import { mkTri } from "@/i18n/triMaps";
 import { toast } from "sonner";
 
 const STATUS_META = {
-  "attiva": { color: "#22C55E", it: "Attiva", de: "Aktiv", en: "Active", es: "Activa", fr: "Active", fa: "فعال" },
-  "in manutenzione": { color: "#E0A106", it: "In manutenzione", de: "Wartung", en: "Maintenance", es: "Mantenimiento", fr: "Maintenance", fa: "تعمیر" },
-  "spenta": { color: "#64748B", it: "Spenta", de: "Aus", en: "Off", es: "Apagada", fr: "Éteinte", fa: "خاموش" },
+  "attiva": { color: "hsl(var(--muted-foreground))", it: "Attiva", de: "Aktiv", en: "Active", es: "Activa", fr: "Active", fa: "فعال" },
+  "in manutenzione": { color: "hsl(var(--muted-foreground))", it: "In manutenzione", de: "Wartung", en: "Maintenance", es: "Mantenimiento", fr: "Maintenance", fa: "تعمیر" },
+  "spenta": { color: "hsl(var(--muted-foreground))", it: "Spenta", de: "Aus", en: "Off", es: "Apagada", fr: "Éteinte", fa: "خاموش" },
 };
 const STATUSES = ["attiva", "in manutenzione", "spenta"];
 
@@ -50,8 +50,8 @@ function DeptMachines({ deptKey, operator = "", readOnly = false }) {
   if (!deptKey || !machines.length) return null;
 
   return (
-    <div data-testid="dept-machines" className="rounded-2xl border border-[#3E9C93]/25 bg-[#0C1019]/50 p-4 space-y-2.5">
-      <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#3E9C93]">
+    <div data-testid="dept-machines" className="rounded-2xl border border-primary/25 bg-background/50 p-4 space-y-2.5">
+      <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-primary">
         <Cpu className="w-4 h-4" /> {readOnly
           ? tri("Macchine del reparto", "Maschinen der Abteilung", "Department machines", "Máquinas del área", "Machines du rayon", "ماشین‌های بخش")
           : tri("Collega le macchine del tuo reparto", "Verbinde die Maschinen deiner Abteilung", "Connect your department machines", "Conecta las máquinas de tu área", "Connecte les machines de ton rayon", "ماشین‌های بخش خود را وصل کن")}
@@ -60,9 +60,9 @@ function DeptMachines({ deptKey, operator = "", readOnly = false }) {
         {machines.map((m) => {
           const meta = STATUS_META[m.status] || STATUS_META.spenta;
           return (
-            <div key={m.id} data-testid={`dept-machine-${m.id}`} className="rounded-xl bg-[#060A10] border border-[#1e293b] p-3">
+            <div key={m.id} data-testid={`dept-machine-${m.id}`} className="rounded-xl bg-background border border-border p-3">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[13px] font-bold text-white min-w-0 truncate">{m.name}</p>
+                <p className="text-[13px] font-bold text-foreground min-w-0 truncate">{m.name}</p>
                 {readOnly ? (
                   <span data-testid={`dept-machine-status-${m.id}`} className="shrink-0 text-[10px] font-black uppercase px-2 py-1 rounded-full" style={{ color: meta.color, background: `${meta.color}1f`, border: `1px solid ${meta.color}55` }}>
                     {tri(meta.it, meta.de, meta.en, meta.es, meta.fr, meta.fa)}{m.value ? ` · ${m.value}` : ""}
@@ -74,12 +74,12 @@ function DeptMachines({ deptKey, operator = "", readOnly = false }) {
               {!readOnly && (
                 <div className="mt-2 flex items-center gap-2">
                   <select data-testid={`dept-machine-select-${m.id}`} value={m.status} onChange={(e) => setField(m.id, { status: e.target.value })}
-                    className="flex-1 min-w-0 rounded-lg bg-[#0b0f19] border border-[#3E9C93]/30 px-2.5 py-1.5 text-[12px] text-white">
+                    className="flex-1 min-w-0 rounded-lg bg-background border border-primary/30 px-2.5 py-1.5 text-[12px] text-foreground">
                     {STATUSES.map((s) => (<option key={s} value={s}>{tri(STATUS_META[s].it, STATUS_META[s].de, STATUS_META[s].en, STATUS_META[s].es, STATUS_META[s].fr, STATUS_META[s].fa)}</option>))}
                   </select>
                   <input data-testid={`dept-machine-value-${m.id}`} value={m.value || ""} onChange={(e) => setField(m.id, { value: e.target.value })}
                     placeholder={tri("es. 220°C", "z.B. 220°C", "e.g. 220°C", "ej. 220°C", "ex. 220°C", "مثلاً ۲۲۰°C")}
-                    className="w-28 shrink-0 rounded-lg bg-[#0b0f19] border border-[#3E9C93]/30 px-2.5 py-1.5 text-[12px] text-white placeholder:text-[#64748B]" />
+                    className="w-28 shrink-0 rounded-lg bg-background border border-primary/30 px-2.5 py-1.5 text-[12px] text-foreground placeholder:text-muted-foreground" />
                 </div>
               )}
             </div>
@@ -88,7 +88,7 @@ function DeptMachines({ deptKey, operator = "", readOnly = false }) {
       </div>
       {!readOnly && (
         <button data-testid="dept-machines-save" onClick={save} disabled={saving || !dirty}
-          className="w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-black uppercase tracking-wider bg-[#3E9C93] text-[#04070d] disabled:opacity-40 active:scale-[0.99] transition-all">
+          className="w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-black uppercase tracking-wider bg-primary text-primary-foreground disabled:opacity-40 active:scale-[0.99] transition-all">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
           {dirty ? tri("Salva stato macchine", "Status speichern", "Save machine status", "Guardar estado", "Enregistrer l'état", "ذخیره وضعیت") : tri("Aggiornato", "Aktuell", "Up to date", "Actualizado", "À jour", "به‌روز")}
         </button>
@@ -116,20 +116,20 @@ export default function SharedWidgets({ dept = "", deptKey = "", readOnly = fals
     <div className="space-y-4">
       <DeptMachines deptKey={deptKey} operator={operator} readOnly={readOnly} />
       {widgets.length > 0 && (
-        <div data-testid="shared-widgets" className="rounded-2xl border border-[#a6b1bc]/25 bg-[#0C1019]/50 p-4 space-y-2.5">
-          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#a6b1bc]">
+        <div data-testid="shared-widgets" className="rounded-2xl border border-border/25 bg-background/50 p-4 space-y-2.5">
+          <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-muted-foreground">
             <Sparkles className="w-4 h-4" /> {tri("Dalla Direzione · condiviso", "Vom Chef · geteilt", "From the Capo · shared", "Del Capo · compartido", "Du Capo · partagé", "از کاپو · اشتراکی")}
           </p>
           {widgets.map((w) => (
-            <div key={w.id} data-testid={`shared-widget-${w.id}`} className="rounded-xl bg-[#060A10] border border-[#1e293b] p-3">
-              <p className="text-[13px] font-bold text-white mb-1.5">{w.title}</p>
-              {w.type === "note" && <p className="text-[12px] text-[#CBD5E1] whitespace-pre-wrap">{w.config.text}</p>}
-              {w.type === "metric" && <p className="text-xl font-black text-[#a6b1bc]">{w.config.value || "—"} <span className="text-xs text-[#94A3B8]">{w.config.unit}</span></p>}
-              {w.type === "reminder" && <p className="text-[12px] text-[#CBD5E1] flex items-center gap-1.5"><Bell className="w-3.5 h-3.5 text-[#9aa6b2]" />{w.config.text}{w.config.date ? ` · ${w.config.date}` : ""}</p>}
-              {w.type === "counter" && <p className="text-xl font-black text-[#a6b1bc]">{w.config.value || 0} <span className="text-xs text-[#94A3B8]">{w.config.label}</span></p>}
+            <div key={w.id} data-testid={`shared-widget-${w.id}`} className="rounded-xl bg-background border border-border p-3">
+              <p className="text-[13px] font-bold text-foreground mb-1.5">{w.title}</p>
+              {w.type === "note" && <p className="text-[12px] text-foreground whitespace-pre-wrap">{w.config.text}</p>}
+              {w.type === "metric" && <p className="text-xl font-black text-muted-foreground">{w.config.value || "—"} <span className="text-xs text-muted-foreground">{w.config.unit}</span></p>}
+              {w.type === "reminder" && <p className="text-[12px] text-foreground flex items-center gap-1.5"><Bell className="w-3.5 h-3.5 text-muted-foreground" />{w.config.text}{w.config.date ? ` · ${w.config.date}` : ""}</p>}
+              {w.type === "counter" && <p className="text-xl font-black text-muted-foreground">{w.config.value || 0} <span className="text-xs text-muted-foreground">{w.config.label}</span></p>}
               {w.type === "checklist" && (
                 <ul className="space-y-1">
-                  {(w.config.items || []).map((it, k) => <li key={k} className={`text-[12px] ${it.done ? "line-through text-[#64748B]" : "text-[#CBD5E1]"}`}>• {it.t}</li>)}
+                  {(w.config.items || []).map((it, k) => <li key={k} className={`text-[12px] ${it.done ? "line-through text-muted-foreground" : "text-foreground"}`}>• {it.t}</li>)}
                 </ul>
               )}
               {w.type === "chart" && (() => {
@@ -138,9 +138,9 @@ export default function SharedWidgets({ dept = "", deptKey = "", readOnly = fals
                   <div className="flex items-end gap-1.5 h-20">
                     {s.map((p, k) => (
                       <div key={k} className="flex-1 flex flex-col items-center justify-end h-full">
-                        <span className="text-[9px] text-[#a6b1bc] font-bold">{Number(p.v) || 0}</span>
-                        <div className="w-full rounded-t" style={{ height: `${Math.max(4, ((Number(p.v) || 0) / max) * 100)}%`, background: "linear-gradient(180deg,#a6b1bc,#8a97a6)" }} />
-                        <span className="text-[9px] text-[#64748B] mt-0.5">{p.d}</span>
+                        <span className="text-[9px] text-muted-foreground font-bold">{Number(p.v) || 0}</span>
+                        <div className="w-full rounded-t" style={{ height: `${Math.max(4, ((Number(p.v) || 0) / max) * 100)}%`, background: "linear-gradient(180deg,hsl(var(--muted-foreground)),hsl(var(--muted-foreground)))" }} />
+                        <span className="text-[9px] text-muted-foreground mt-0.5">{p.d}</span>
                       </div>
                     ))}
                   </div>

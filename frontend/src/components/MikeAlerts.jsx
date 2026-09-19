@@ -25,24 +25,24 @@ export default function MikeAlerts() {
     <div data-testid="mike-alerts" className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="relative"><BellRing className="w-5 h-5 text-[#aaa795]" />{unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-[#b06e78] text-[9px] font-black text-white flex items-center justify-center">{unread}</span>}</div>
-          <h4 className="font-cyber text-sm font-black text-white uppercase tracking-wide">{tri("Allarmi di Sitor", "Sitor Alarme", "Sitor Alerts", "Alertas de Sitor", "Alertes de Sitor", "هشدارهای Sitor")}</h4>
+          <div className="relative"><BellRing className="w-5 h-5 text-muted-foreground" />{unread > 0 && <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full bg-mattone text-[9px] font-black text-white flex items-center justify-center">{unread}</span>}</div>
+          <h4 className="font-display text-sm font-black text-foreground uppercase tracking-wide">{tri("Allarmi di Sitor", "Sitor Alarme", "Sitor Alerts", "Alertas de Sitor", "Alertes de Sitor", "هشدارهای Sitor")}</h4>
         </div>
         <div className="flex items-center gap-2">
-          <button data-testid="alerts-refresh" onClick={load} className="text-[#9aa6b2] active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>
-          {unread > 0 && <button data-testid="alerts-read" onClick={markRead} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#6e9e85] active:scale-95"><CheckCheck className="w-3.5 h-3.5" /> {tri("Segna letti", "Gelesen", "Mark read", "Marcar leídos", "Marquer lus", "خوانده شد")}</button>}
+          <button data-testid="alerts-refresh" onClick={load} className="text-muted-foreground active:scale-90"><RefreshCw className={`w-4 h-4 ${busy ? "animate-spin" : ""}`} /></button>
+          {unread > 0 && <button data-testid="alerts-read" onClick={markRead} className="inline-flex items-center gap-1 text-[11px] font-bold text-accent active:scale-95"><CheckCheck className="w-3.5 h-3.5" /> {tri("Segna letti", "Gelesen", "Mark read", "Marcar leídos", "Marquer lus", "خوانده شد")}</button>}
         </div>
       </div>
       {alerts.length === 0 ? (
-        <p data-testid="alerts-empty" className="text-[12px] text-[#94A3B8]">{tri("Nessuna anomalia. Il campo è sereno.", "Keine Anomalien. Alles ruhig.", "No anomalies. The floor is calm.", "Sin anomalías.", "Aucune anomalie.", "بدون ناهنجاری.")}</p>
+        <p data-testid="alerts-empty" className="text-[12px] text-muted-foreground">{tri("Nessuna anomalia. Il campo è sereno.", "Keine Anomalien. Alles ruhig.", "No anomalies. The floor is calm.", "Sin anomalías.", "Aucune anomalie.", "بدون ناهنجاری.")}</p>
       ) : (
         <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
           {alerts.map((a) => (
-            <div key={a.id} data-testid={`alert-${a.id}`} className={`rounded-lg border p-3 ${a.read ? "border-[#1e293b] bg-[#060A10]" : "border-[#aaa795]/40 bg-[#aaa795]/8"}`}>
-              <p className="flex items-center gap-1.5 text-[12px] font-bold text-[#b0aea0]"><AlertTriangle className="w-3.5 h-3.5" /> {a.operator}{a.recipe_name ? ` · ${a.recipe_name}` : ""}</p>
-              <p className="mt-0.5 text-[12px] text-white leading-snug">{a.action}</p>
-              {a.advice && <p className="mt-1 text-[11.5px] text-[#CBD5E1] leading-snug">→ {a.advice}</p>}
-              <p className="mt-1 font-mono text-[9px] text-[#64748B] uppercase tracking-widest">{(a.created_at || "").slice(0, 16).replace("T", " ")}</p>
+            <div key={a.id} data-testid={`alert-${a.id}`} className={`rounded-lg border p-3 ${a.read ? "border-border bg-background" : "border-border/40 bg-muted/8"}`}>
+              <p className="flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground"><AlertTriangle className="w-3.5 h-3.5" /> {a.operator}{a.recipe_name ? ` · ${a.recipe_name}` : ""}</p>
+              <p className="mt-0.5 text-[12px] text-foreground leading-snug">{a.action}</p>
+              {a.advice && <p className="mt-1 text-[11.5px] text-foreground leading-snug">→ {a.advice}</p>}
+              <p className="mt-1 font-mono text-[9px] text-muted-foreground uppercase tracking-widest">{(a.created_at || "").slice(0, 16).replace("T", " ")}</p>
             </div>
           ))}
         </div>

@@ -45,12 +45,12 @@ export default function FloorInvitePanel() {
   const active = invites.filter((i) => i.active && (!i.expires_at || i.expires_at > new Date().toISOString()));
 
   return (
-    <div data-testid="floor-invite-panel" className="rounded-2xl border border-[#7E9A82]/25 bg-[#141416]/70 p-4">
+    <div data-testid="floor-invite-panel" className="rounded-2xl border border-accent/25 bg-background/70 p-4">
       <div className="flex items-center gap-2 mb-3">
-        <Link2 className="w-4 h-4 text-[#7E9A82]" />
-        <h3 className="font-bold text-sm text-white">{tri("Inviti Operai (link)", "Bediener-Einladungen (Link)", "Operator invites (link)", "Invitaciones operarios (enlace)", "Invitations opérateurs (lien)", "دعوت اپراتورها (لینک)")}</h3>
+        <Link2 className="w-4 h-4 text-accent" />
+        <h3 className="font-bold text-sm text-foreground">{tri("Inviti Operai (link)", "Bediener-Einladungen (Link)", "Operator invites (link)", "Invitaciones operarios (enlace)", "Invitations opérateurs (lien)", "دعوت اپراتورها (لینک)")}</h3>
       </div>
-      <p className="text-[11.5px] text-[#a6b1bc] mb-3 leading-snug">
+      <p className="text-[11.5px] text-muted-foreground mb-3 leading-snug">
         {tri("Genera un link: l'operaio lo apre, sceglie il nome e imposta un PIN personale ed entra in Produzione. Nessun PIN condiviso.",
              "Erzeuge einen Link: der Bediener öffnet ihn, wählt Namen und persönliche PIN und betritt die Produktion. Kein geteilter PIN.",
              "Generate a link: the operator opens it, picks a name and a personal PIN and enters Production. No shared PIN.",
@@ -62,35 +62,35 @@ export default function FloorInvitePanel() {
       <div className="flex flex-wrap items-center gap-2 mb-3">
         <input data-testid="floor-invite-note" value={note} onChange={(e) => setNote(e.target.value)}
           placeholder={tri("Nota (es. Reparto pane)", "Notiz (z.B. Brot)", "Note (e.g. Bread line)", "Nota (p. ej. Panadería)", "Note (ex. Ligne pain)", "یادداشت")}
-          className="flex-1 min-w-[140px] rounded-lg bg-[#0A0A0C] border border-[#8a97a6]/30 text-white text-[12px] px-3 py-2 outline-none focus:border-[#7E9A82]" />
+          className="flex-1 min-w-[140px] rounded-lg bg-background border border-border/30 text-foreground text-[12px] px-3 py-2 outline-none focus:border-accent" />
         <select data-testid="floor-invite-days" value={days} onChange={(e) => setDays(e.target.value)}
-          className="rounded-lg bg-[#0A0A0C] border border-[#8a97a6]/30 text-[#a6b1bc] text-[12px] px-2 py-2 outline-none">
+          className="rounded-lg bg-background border border-border/30 text-muted-foreground text-[12px] px-2 py-2 outline-none">
           <option value={7}>7 {tri("giorni", "Tage", "days", "días", "jours", "روز")}</option>
           <option value={30}>30 {tri("giorni", "Tage", "days", "días", "jours", "روز")}</option>
           <option value={90}>90 {tri("giorni", "Tage", "days", "días", "jours", "روز")}</option>
         </select>
         <button data-testid="floor-invite-create" onClick={create} disabled={busy}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#7E9A82]/20 border border-[#7E9A82]/50 text-[#7E9A82] font-bold text-[12px] active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-accent/20 border border-accent/50 text-accent font-bold text-[12px] active:scale-95 transition-all">
           {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />} {tri("Crea link", "Link erstellen", "Create link", "Crear enlace", "Créer lien", "ساخت لینک")}
         </button>
       </div>
 
       <div className="space-y-1.5 max-h-64 overflow-auto pr-0.5">
-        {active.length === 0 && <p className="text-[11px] text-[#8a97a6] py-2 text-center">{tri("Nessun link attivo", "Keine aktiven Links", "No active links", "Sin enlaces activos", "Aucun lien actif", "لینکی فعال نیست")}</p>}
+        {active.length === 0 && <p className="text-[11px] text-muted-foreground py-2 text-center">{tri("Nessun link attivo", "Keine aktiven Links", "No active links", "Sin enlaces activos", "Aucun lien actif", "لینکی فعال نیست")}</p>}
         {active.map((iv) => (
-          <div key={iv.token} data-testid={`floor-invite-row-${iv.token}`} className="flex items-center gap-2 rounded-lg bg-[#0C1019] border border-[#1e293b] px-2.5 py-2">
+          <div key={iv.token} data-testid={`floor-invite-row-${iv.token}`} className="flex items-center gap-2 rounded-lg bg-background border border-border px-2.5 py-2">
             <div className="flex-1 min-w-0">
-              <p className="text-[12px] font-semibold text-white truncate">{iv.note || tri("Link produzione", "Produktions-Link", "Production link", "Enlace producción", "Lien production", "لینک تولید")}</p>
-              <p className="text-[10px] text-[#8a97a6] truncate flex items-center gap-1">
+              <p className="text-[12px] font-semibold text-foreground truncate">{iv.note || tri("Link produzione", "Produktions-Link", "Production link", "Enlace producción", "Lien production", "لینک تولید")}</p>
+              <p className="text-[10px] text-muted-foreground truncate flex items-center gap-1">
                 <Clock className="w-3 h-3" /> {tri("scade", "läuft ab", "expires", "expira", "expire", "انقضا")} {String(iv.expires_at || "").slice(0, 10)} · {iv.uses || 0} {tri("ingressi", "Zugänge", "entries", "accesos", "entrées", "ورود")}
               </p>
             </div>
             <button data-testid={`floor-invite-copy-${iv.token}`} onClick={() => copy(iv.token)}
-              className="shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-md bg-[#0A0A0C] border border-[#8a97a6]/30 text-[#a6b1bc] text-[11px] font-bold">
-              {copied === iv.token ? <Check className="w-3.5 h-3.5 text-[#7E9A82]" /> : <Copy className="w-3.5 h-3.5" />}
+              className="shrink-0 inline-flex items-center gap-1 px-2 py-1.5 rounded-md bg-background border border-border/30 text-muted-foreground text-[11px] font-bold">
+              {copied === iv.token ? <Check className="w-3.5 h-3.5 text-accent" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
             <button data-testid={`floor-invite-revoke-${iv.token}`} onClick={() => revoke(iv.token)}
-              className="shrink-0 inline-flex items-center px-2 py-1.5 rounded-md bg-[#0A0A0C] border border-[#bb8489]/30 text-[#bb8489] text-[11px]">
+              className="shrink-0 inline-flex items-center px-2 py-1.5 rounded-md bg-background border border-mattone/30 text-mattone text-[11px]">
               <Trash2 className="w-3.5 h-3.5" />
             </button>
           </div>

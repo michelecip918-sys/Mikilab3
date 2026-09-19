@@ -15,13 +15,13 @@ export const CATS = [
 
 // Colore identificativo per categoria (badge/icone nelle liste ricette). Toni caldi distinti su fondo nero.
 export const CAT_COLORS = {
-  basi: "#F0B429",
-  viennoiserie: "#E8823A",
-  pane: "#C77D48",
-  focacce: "#7FA650",
-  pizza: "#E4572E",
-  pasticceria: "#D98CB3",
-  snack: "#D06A4A",
+  basi: "hsl(var(--muted-foreground))",
+  viennoiserie: "hsl(var(--muted-foreground))",
+  pane: "hsl(var(--muted-foreground))",
+  focacce: "hsl(var(--muted-foreground))",
+  pizza: "hsl(var(--muted-foreground))",
+  pasticceria: "hsl(var(--muted-foreground))",
+  snack: "hsl(var(--muted-foreground))",
 };
 
 // Parole chiave che identificano un prodotto di pasticceria lievitata / viennoiserie / grande lievitato dolce.

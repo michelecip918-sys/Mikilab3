@@ -164,7 +164,7 @@ export default function SalaSitor() {
   ];
 
   return (
-    <div data-testid="sala-sitor" className="relative rounded-3xl overflow-hidden border border-[#7E9A82]/35 bg-[#18181A] shadow-[0_0_40px_rgba(126,154,130,0.10)]">
+    <div data-testid="sala-sitor" className="relative rounded-3xl overflow-hidden border border-accent/35 bg-background shadow-[0_0_40px_rgba(126,154,130,0.10)]">
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(circle at 50% 0%, rgba(126,154,130,0.12), transparent 60%)" }} />
       <div className="relative z-10 p-5 sm:p-6 space-y-4">
 
@@ -172,29 +172,29 @@ export default function SalaSitor() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="relative w-14 h-14 shrink-0">
             <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(126,154,130,0.55), rgba(126,154,130,0.28) 60%, transparent 72%)" }} />
-            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-[#7E9A82]/70">
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-accent/70">
               <img src="/sitor_official.jpg" alt="Sitor" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <h2 className="font-cyber text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-white flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-[#7E9A82]" /> {tri("Sala Sitor", "Sitor-Saal", "Sitor Hall", "Sala Sitor", "Salle Sitor", "تالار سیتور")}
+            <h2 className="font-display text-lg sm:text-xl font-black uppercase tracking-[0.12em] text-foreground flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-accent" /> {tri("Sala Sitor", "Sitor-Saal", "Sitor Hall", "Sala Sitor", "Salle Sitor", "تالار سیتور")}
             </h2>
-            <p className="text-[11px] text-[#94A3B8]">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
-            {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-[#7E9A82] mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
+            <p className="text-[11px] text-muted-foreground">{tri("Il canale diretto con Sitor: parla, scrivi o allega un ordine per pianificazione e risposte.", "Direkter Kanal zu Sitor: sprich, schreibe oder hänge einen Auftrag an.", "The direct channel with Sitor: talk, write or attach an order for planning and answers.", "El canal directo con Sitor: habla, escribe o adjunta un pedido.", "Le canal direct avec Sitor : parle, écris ou joins une commande.", "کانال مستقیم با سیتور: بگو، بنویس یا سفارش پیوست کن.")}</p>
+            {bond && <p data-testid="sitor-bond" className="text-[10px] font-mono-data uppercase tracking-widest text-accent mt-0.5">♥ {bond.level_name || bond.level || ""}</p>}
           </div>
           {/* Azioni: vanno a capo su mobile, restano in linea su schermi ampi */}
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
             <button data-testid="sitor-delegate-btn" onClick={() => setDelegateOpen(true)} title={tri("Delega vocale o comando diretto («Sposta Sara ai forni»)", "Sprachdelegation", "Voice delegation", "Delegación por voz", "Délégation vocale", "واگذاری صوتی")}
-              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#7E9A82]/12 border border-[#7E9A82]/40 text-[#7E9A82] text-xs font-bold hover:bg-[#7E9A82]/22 active:scale-95">
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-accent/12 border border-accent/40 text-accent text-xs font-bold hover:bg-accent/22 active:scale-95">
               <Mic className="w-3.5 h-3.5" /> {tri("Delega Vocale", "Sprachdelegation", "Voice Delegation", "Delegación", "Délégation", "واگذاری")}
             </button>
             <button data-testid="sitor-report-btn" onClick={shiftReport} disabled={reporting}
-              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#8a97a6]/10 border border-[#8a97a6]/30 text-[#8a97a6] text-xs font-bold hover:bg-[#8a97a6]/20 active:scale-95 disabled:opacity-50">
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-muted/10 border border-border/30 text-muted-foreground text-xs font-bold hover:bg-muted/20 active:scale-95 disabled:opacity-50">
               {reporting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <ClipboardList className="w-3.5 h-3.5" />} {tri("Report Turno", "Schichtbericht", "Shift Report", "Informe Turno", "Rapport", "گزارش شیفت")}
             </button>
             <button data-testid="sitor-reset-memory-btn" onClick={resetMemory} title={tri("Azzera la memoria di Sitor e riparti da zero", "Speicher löschen", "Clear Sitor memory", "Borrar memoria", "Effacer la mémoire", "پاک کردن حافظه")}
-              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#64748B]/10 border border-[#64748B]/30 text-[#94A3B8] text-xs font-bold hover:bg-[#64748B]/20 active:scale-95">
+              className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-accent/10 border border-border/30 text-muted-foreground text-xs font-bold hover:bg-accent/20 active:scale-95">
               <Trash2 className="w-3.5 h-3.5" /> {tri("Nuova conversazione", "Neues Gespräch", "New chat", "Nueva conversación", "Nouvelle conversation", "گفتگوی جدید")}
             </button>
           </div>
@@ -207,9 +207,9 @@ export default function SalaSitor() {
         <OperatorStatusBoard />
 
         {/* Conversazione */}
-        <div ref={listRef} data-testid="sitor-chat" className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3 space-y-2 min-h-[120px] max-h-72 overflow-y-auto">
+        <div ref={listRef} data-testid="sitor-chat" className="rounded-2xl bg-background border border-border p-3 space-y-2 min-h-[120px] max-h-72 overflow-y-auto">
           {msgs.length === 0 && (
-            <p data-testid="sitor-chat-empty" className="text-[12px] text-[#64748B] text-center py-6 px-4">
+            <p data-testid="sitor-chat-empty" className="text-[12px] text-muted-foreground text-center py-6 px-4">
               {tri("«Sono Sitor. Detta un ordine, incolla un'email o fai una domanda: genero io la produzione.»", "«Chef, ich bin Sitor. Diktiere einen Auftrag oder stelle eine Frage.»", "«Capo, I am Sitor. Dictate an order, paste an email or ask a question: I generate production.»", "«Soy Sitor. Dicta una orden o pregunta.»", "«Je suis Sitor. Dicte un ordre ou pose une question.»", "«من سیتور هستم. دستور بده یا سؤال بپرس.»")}
             </p>
           )}
@@ -217,53 +217,53 @@ export default function SalaSitor() {
             {msgs.map((m) => (
               <motion.div key={m.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} data-testid={`sitor-msg-${m.who}`}
                 className={`flex ${m.who === "capo" ? "justify-end" : "justify-start"} items-end gap-1.5`}>
-                {m.who === "sitor" && <NexusAvatar size={24} className="shrink-0 rounded-full border border-[#7E9A82]/50" />}
-                <div className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-snug ${m.who === "capo" ? "bg-[#D97736] text-white font-semibold" : "bg-[#242427] text-[#F2F2F5] border border-[#7E9A82]/25"}`}>
+                {m.who === "sitor" && <NexusAvatar size={24} className="shrink-0 rounded-full border border-accent/50" />}
+                <div className={`max-w-[82%] rounded-2xl px-3 py-2 text-sm leading-snug ${m.who === "capo" ? "bg-primary text-white font-semibold" : "bg-card text-foreground border border-accent/25"}`}>
                   {m.text}
                   {m.who === "sitor" && (
-                    <button data-testid="sitor-replay" onClick={() => speak(m.text)} className="ml-2 inline-flex align-middle text-[#7E9A82] active:scale-90"><Volume2 className="w-3.5 h-3.5" /></button>
+                    <button data-testid="sitor-replay" onClick={() => speak(m.text)} className="ml-2 inline-flex align-middle text-accent active:scale-90"><Volume2 className="w-3.5 h-3.5" /></button>
                   )}
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
-          {busy && <p data-testid="sitor-thinking" className="text-[11px] text-[#7E9A82] flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Sitor elabora…", "Sitor denkt…", "Sitor is thinking…", "Sitor procesa…", "Sitor réfléchit…", "سیتور فکر می‌کند…")}</p>}
+          {busy && <p data-testid="sitor-thinking" className="text-[11px] text-accent flex items-center gap-1.5"><Loader2 className="w-3.5 h-3.5 animate-spin" /> {tri("Sitor elabora…", "Sitor denkt…", "Sitor is thinking…", "Sitor procesa…", "Sitor réfléchit…", "سیتور فکر می‌کند…")}</p>}
         </div>
 
         {/* Chip rapidi */}
         <div className="flex flex-wrap gap-1.5">
           {QUICK.map((q, i) => (
             <button key={i} data-testid={`sitor-quick-${i}`} onClick={() => { setIntent("domanda"); send(q); }} disabled={busy}
-              className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-[#7E9A82]/10 border border-[#7E9A82]/35 text-[#7E9A82] active:scale-95 disabled:opacity-50">
+              className="text-[11px] font-bold px-2.5 py-1.5 rounded-full bg-accent/10 border border-accent/35 text-accent active:scale-95 disabled:opacity-50">
               {q}
             </button>
           ))}
         </div>
 
         {/* Compositore universale */}
-        <div className="rounded-2xl border border-[#1e293b] bg-[#0C1019]/60 p-3">
+        <div className="rounded-2xl border border-border bg-background/60 p-3">
           <div className="grid grid-cols-4 gap-1.5 mb-2">
             {MODES.map(({ key, Icon, label }) => (
               <button key={key} data-testid={`sitor-mode-${key}`} onClick={() => { setMode(key); if (key === "voice") setTimeout(startVoice, 60); else stopVoice(); }}
-                className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border text-[11px] font-bold transition-all active:scale-95 ${mode === key ? "bg-[#7E9A82]/15 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8] hover:border-[#7E9A82]/40"}`}>
+                className={`flex flex-col items-center gap-0.5 py-2 rounded-xl border text-[11px] font-bold transition-all active:scale-95 ${mode === key ? "bg-accent/15 border-accent/60 text-accent" : "bg-background border-border text-muted-foreground hover:border-accent/40"}`}>
                 <Icon className="w-4 h-4" /> {label}
               </button>
             ))}
           </div>
           <div className="grid grid-cols-2 gap-1.5 mb-2">
             <button data-testid="sitor-intent-ordine" onClick={() => setIntent("ordine")}
-              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "ordine" ? "bg-[#8a97a6]/15 border-[#8a97a6]/60 text-[#8a97a6]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "ordine" ? "bg-muted/15 border-border/60 text-muted-foreground" : "bg-background border-border text-muted-foreground"}`}>
               <Factory className="w-3.5 h-3.5" /> {tri("Ordine → Produzione", "Auftrag → Produktion", "Order → Production", "Orden → Producción", "Ordre → Production", "سفارش → تولید")}
             </button>
             <button data-testid="sitor-intent-domanda" onClick={() => setIntent("domanda")}
-              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "domanda" ? "bg-[#7E9A82]/15 border-[#7E9A82]/60 text-[#7E9A82]" : "bg-[#030712] border-[#1e293b] text-[#94A3B8]"}`}>
+              className={`inline-flex items-center justify-center gap-1.5 py-2 rounded-xl border text-xs font-black uppercase tracking-wide transition-all active:scale-95 ${intent === "domanda" ? "bg-accent/15 border-accent/60 text-accent" : "bg-background border-border text-muted-foreground"}`}>
               <MessageSquareText className="w-3.5 h-3.5" /> {tri("Domanda → Risposta", "Frage → Antwort", "Question → Answer", "Pregunta → Respuesta", "Question → Réponse", "سؤال → پاسخ")}
             </button>
           </div>
           {mode === "photo" && (
             <div className="mb-2 flex items-center gap-2 flex-wrap">
-              {imageUrl && <img src={imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover border border-[#7E9A82]/40" />}
-              <label data-testid="sitor-photo-input" className={`cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-[#7E9A82]/10 border border-[#7E9A82]/40 text-[#7E9A82] text-sm font-bold ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              {imageUrl && <img src={imageUrl} alt="" className="w-16 h-16 rounded-xl object-cover border border-accent/40" />}
+              <label data-testid="sitor-photo-input" className={`cursor-pointer inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-accent/10 border border-accent/40 text-accent text-sm font-bold ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />} {tri("Scatta / Allega", "Aufnehmen / Anhängen", "Take / Attach", "Hacer / Adjuntar", "Prendre / Joindre", "گرفتن / پیوست")}
                 <input type="file" accept="image/*" capture="environment" className="hidden" onChange={onPhoto} disabled={uploading} />
               </label>
@@ -274,53 +274,53 @@ export default function SalaSitor() {
               placeholder={intent === "domanda"
                 ? tri("Chiedi qualsiasi cosa a Sitor…", "Frag Sitor alles…", "Ask Sitor anything…", "Pregunta lo que sea…", "Demande tout à Sitor…", "از سیتور بپرس…")
                 : tri("Scrivi o detta qualsiasi cosa: ricetta, ordine, piano, nota…", "Schreibe oder diktiere alles…", "Write or dictate anything: recipe, order, plan, note…", "Escribe o dicta lo que sea…", "Écris ou dicte tout…", "بنویس یا بگو…")}
-              className="w-full rounded-xl bg-[#030712] border border-[#1e293b] focus:border-[#7E9A82]/60 outline-none text-sm text-white p-3 pr-12 resize-none" />
+              className="w-full rounded-xl bg-background border border-border focus:border-accent/60 outline-none text-sm text-foreground p-3 pr-12 resize-none" />
             {mode === "voice" && (
               <button data-testid="sitor-mic" onClick={() => (listening ? stopVoice() : startVoice())}
-                className={`absolute right-2 top-2 w-9 h-9 rounded-lg flex items-center justify-center border ${listening ? "bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse" : "bg-[#7E9A82]/10 border-[#7E9A82]/40 text-[#7E9A82]"}`}>
+                className={`absolute right-2 top-2 w-9 h-9 rounded-lg flex items-center justify-center border ${listening ? "bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse" : "bg-accent/10 border-accent/40 text-accent"}`}>
                 {listening ? <StopCircle className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               </button>
             )}
           </div>
           <button data-testid="sitor-send" onClick={() => send()} disabled={busy || !text.trim()}
-            className="mt-2.5 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all disabled:opacity-50"
-            style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)", boxShadow: "0 0 20px rgba(166,177,188,0.3)" }}>
+            className="mt-2.5 w-full inline-flex items-center justify-center gap-2 py-3 rounded-xl font-display font-black text-sm text-foreground active:scale-95 transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(90deg,hsl(var(--accent)),hsl(var(--muted-foreground)))", boxShadow: "0 0 20px rgba(166,177,188,0.3)" }}>
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {busy ? tri("Sitor genera…", "Sitor generiert…", "Sitor generating…", "Sitor genera…", "Sitor génère…", "سیتور تولید می‌کند…") : tri("Manda a Sitor", "An Sitor senden", "Send to Sitor", "Enviar a Sitor", "Envoyer à Sitor", "به سیتور بفرست")}
           </button>
         </div>
 
         {/* Coda di produzione generata qui */}
-        <div className="pt-3 border-t border-[#1e293b]">
+        <div className="pt-3 border-t border-border">
           <div className="flex items-center justify-between mb-2">
-            <span data-testid="sitor-queue-count" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#7E9A82]"><Factory className="w-4 h-4" /> {tri("Produzione generata", "Erzeugte Produktion", "Generated production", "Producción generada", "Production générée", "تولید تولیدشده")}: <span className="text-white">{counts.pending}</span> {tri("da fare", "offen", "to do", "por hacer", "à faire", "برای انجام")}</span>
-            {queue.length > 0 && <button data-testid="sitor-queue-clear" onClick={clearAll} className="text-[11px] text-[#64748B] hover:text-rose-400 inline-flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Svuota", "Leeren", "Clear", "Vaciar", "Vider", "پاک")}</button>}
+            <span data-testid="sitor-queue-count" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-accent"><Factory className="w-4 h-4" /> {tri("Produzione generata", "Erzeugte Produktion", "Generated production", "Producción generada", "Production générée", "تولید تولیدشده")}: <span className="text-foreground">{counts.pending}</span> {tri("da fare", "offen", "to do", "por hacer", "à faire", "برای انجام")}</span>
+            {queue.length > 0 && <button data-testid="sitor-queue-clear" onClick={clearAll} className="text-[11px] text-muted-foreground hover:text-rose-400 inline-flex items-center gap-1"><Trash2 className="w-3.5 h-3.5" /> {tri("Svuota", "Leeren", "Clear", "Vaciar", "Vider", "پاک")}</button>}
           </div>
           <div data-testid="sitor-queue" className="space-y-1.5 max-h-56 overflow-y-auto">
             {queue.filter((t) => t.status === "pending").slice(0, 20).map((t) => (
-              <div key={t.id} data-testid={`sitor-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-[#0C1019] border border-[#1e293b] px-3 py-2">
-                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-[#8a97a6]/10 text-[#9aa6b2] border border-[#8a97a6]/20 shrink-0">{t.dept}</span>
-                <div className="min-w-0 flex-1"><p className="text-xs font-bold text-white truncate">{t.title}</p>{t.detail && <p className="text-[10px] text-[#64748B] truncate">{t.detail}</p>}</div>
-                <button data-testid={`sitor-task-done-${t.id}`} onClick={() => markDone(t)} className="shrink-0 w-7 h-7 rounded-lg bg-[#6e9e85]/10 border border-[#6e9e85]/40 text-[#6e9e85] flex items-center justify-center active:scale-95"><CheckCircle2 className="w-4 h-4" /></button>
+              <div key={t.id} data-testid={`sitor-task-${t.id}`} className="flex items-center gap-2 rounded-xl bg-background border border-border px-3 py-2">
+                <span className="text-[9px] font-black uppercase px-1.5 py-0.5 rounded bg-muted/10 text-muted-foreground border border-border/20 shrink-0">{t.dept}</span>
+                <div className="min-w-0 flex-1"><p className="text-xs font-bold text-foreground truncate">{t.title}</p>{t.detail && <p className="text-[10px] text-muted-foreground truncate">{t.detail}</p>}</div>
+                <button data-testid={`sitor-task-done-${t.id}`} onClick={() => markDone(t)} className="shrink-0 w-7 h-7 rounded-lg bg-accent/10 border border-accent/40 text-accent flex items-center justify-center active:scale-95"><CheckCircle2 className="w-4 h-4" /></button>
               </div>
             ))}
-            {queue.filter((t) => t.status === "pending").length === 0 && <p className="text-[11px] text-[#64748B] text-center py-3">{tri("Vuota. Ordina qui sopra e Sitor genera la produzione.", "Leer. Oben bestellen, Sitor erzeugt die Produktion.", "Empty. Order above and Sitor generates production.", "Vacía. Ordena arriba.", "Vide. Ordonne ci-dessus.", "خالی است.")}</p>}
+            {queue.filter((t) => t.status === "pending").length === 0 && <p className="text-[11px] text-muted-foreground text-center py-3">{tri("Vuota. Ordina qui sopra e Sitor genera la produzione.", "Leer. Oben bestellen, Sitor erzeugt die Produktion.", "Empty. Order above and Sitor generates production.", "Vacía. Ordena arriba.", "Vide. Ordonne ci-dessus.", "خالی است.")}</p>}
           </div>
         </div>
 
         {/* Modifiche proposte dagli operai — approvazione del Capo */}
-        <div className="pt-3 border-t border-[#1e293b]">
+        <div className="pt-3 border-t border-border">
           <FloorChangeApprovals />
         </div>
 
         {/* Report fine turno automatico — Sitor compila, il Capo approva */}
-        <div className="pt-3 border-t border-[#1e293b]">
+        <div className="pt-3 border-t border-border">
           <SitorShiftDraft />
         </div>
 
         {/* Sitor parla da solo: proposte e allarmi arrivano QUI */}
-        <div className="pt-3 border-t border-[#1e293b] space-y-3">
-          <p className="text-[10px] font-mono-data uppercase tracking-[0.22em] text-[#94A3B8]">{tri("Sitor ti parla · proposte e allarmi", "Sitor spricht · Vorschläge & Alarme", "Sitor speaks · suggestions & alerts", "Sitor habla · propuestas y alarmas", "Sitor parle · suggestions & alertes", "سیتور حرف می‌زند")}</p>
+        <div className="pt-3 border-t border-border space-y-3">
+          <p className="text-[10px] font-mono-data uppercase tracking-[0.22em] text-muted-foreground">{tri("Sitor ti parla · proposte e allarmi", "Sitor spricht · Vorschläge & Alarme", "Sitor speaks · suggestions & alerts", "Sitor habla · propuestas y alarmas", "Sitor parle · suggestions & alertes", "سیتور حرف می‌زند")}</p>
           <MikeSuggestions />
           <MikeAlerts />
         </div>

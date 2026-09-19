@@ -106,37 +106,37 @@ export default function SitorTour({ variant = "capo" }) {
 
   return (
     <div data-testid="sitor-tour" className="fixed inset-x-0 bottom-0 z-[65] pointer-events-none">
-      <div className="pointer-events-auto max-w-md mx-auto m-3 rounded-2xl border border-[#7E9A82]/45 bg-[#0b0f19]/95 backdrop-blur-xl p-4 shadow-[0_0_30px_rgba(166,177,188,0.25)]">
+      <div className="pointer-events-auto max-w-md mx-auto m-3 rounded-2xl border border-accent/45 bg-background/95 backdrop-blur-xl p-4 shadow-[0_0_30px_rgba(166,177,188,0.25)]">
         <div className="flex items-start gap-3">
-          <span className="shrink-0 w-9 h-9 rounded-xl inline-flex items-center justify-center bg-[#7E9A82]/15 border border-[#7E9A82]/40"><Sparkles className="w-5 h-5 text-[#7E9A82]" /></span>
+          <span className="shrink-0 w-9 h-9 rounded-xl inline-flex items-center justify-center bg-accent/15 border border-accent/40"><Sparkles className="w-5 h-5 text-accent" /></span>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-2">
-              <h3 className="font-cyber font-black text-white text-sm uppercase tracking-wide">{s.title}</h3>
+              <h3 className="font-display font-black text-foreground text-sm uppercase tracking-wide">{s.title}</h3>
               <div className="flex items-center gap-1">
-                <button data-testid="sitor-tour-mute" onClick={toggleMute} title={muted ? "Voce off" : "Voce on"} className="text-[#8a97a6] active:scale-90 p-1">{muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}</button>
-                <button data-testid="sitor-tour-close" onClick={finish} className="text-[#8a97a6] active:scale-90 p-1"><X className="w-4 h-4" /></button>
+                <button data-testid="sitor-tour-mute" onClick={toggleMute} title={muted ? "Voce off" : "Voce on"} className="text-muted-foreground active:scale-90 p-1">{muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}</button>
+                <button data-testid="sitor-tour-close" onClick={finish} className="text-muted-foreground active:scale-90 p-1"><X className="w-4 h-4" /></button>
               </div>
             </div>
-            <p className="text-[13px] text-[#c7d2dc] leading-relaxed mt-1">{s.body}</p>
+            <p className="text-[13px] text-foreground leading-relaxed mt-1">{s.body}</p>
           </div>
         </div>
 
         <div className="flex items-center justify-center gap-1.5 mt-3">
           {STEPS.map((_, i) => (
-            <span key={i} data-testid={`sitor-tour-dot-${i}`} className="rounded-full transition-all" style={{ width: i === step ? 18 : 6, height: 6, background: i === step ? "#7E9A82" : "#334155" }} />
+            <span key={i} data-testid={`sitor-tour-dot-${i}`} className="rounded-full transition-all" style={{ width: i === step ? 18 : 6, height: 6, background: i === step ? "hsl(var(--accent))" : "hsl(var(--secondary))" }} />
           ))}
         </div>
 
         <div className="flex items-center justify-between gap-2 mt-3">
-          <button data-testid="sitor-tour-skip" onClick={finish} className="text-[11px] font-bold text-[#64748b] hover:text-[#8a97a6]">{tri("Salta il tour", "Tour überspringen", "Skip tour", "Saltar", "Passer", "رد کردن")}</button>
+          <button data-testid="sitor-tour-skip" onClick={finish} className="text-[11px] font-bold text-muted-foreground hover:text-muted-foreground">{tri("Salta il tour", "Tour überspringen", "Skip tour", "Saltar", "Passer", "رد کردن")}</button>
           <div className="flex items-center gap-2">
             {step > 0 && (
-              <button data-testid="sitor-tour-prev" onClick={() => goTo(step - 1)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-[#334155] text-[#9aa6b2] text-xs font-bold active:scale-95"><ChevronLeft className="w-3.5 h-3.5" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "قبلی")}</button>
+              <button data-testid="sitor-tour-prev" onClick={() => goTo(step - 1)} className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-muted-foreground text-xs font-bold active:scale-95"><ChevronLeft className="w-3.5 h-3.5" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "قبلی")}</button>
             )}
             {last ? (
-              <button data-testid="sitor-tour-finish" onClick={finish} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)" }}>{tri("Ho capito", "Verstanden", "Understood", "Entendido", "Compris", "متوجه شدم")}</button>
+              <button data-testid="sitor-tour-finish" onClick={finish} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-foreground active:scale-95" style={{ background: "linear-gradient(90deg,hsl(var(--accent)),hsl(var(--muted-foreground)))" }}>{tri("Ho capito", "Verstanden", "Understood", "Entendido", "Compris", "متوجه شدم")}</button>
             ) : (
-              <button data-testid="sitor-tour-next" onClick={() => goTo(step + 1)} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-[#060A10] active:scale-95" style={{ background: "linear-gradient(90deg,#7E9A82,#8a97a6)" }}>{tri("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-3.5 h-3.5" /></button>
+              <button data-testid="sitor-tour-next" onClick={() => goTo(step + 1)} className="inline-flex items-center gap-1 px-4 py-1.5 rounded-lg font-black text-xs text-foreground active:scale-95" style={{ background: "linear-gradient(90deg,hsl(var(--accent)),hsl(var(--muted-foreground)))" }}>{tri("Avanti", "Weiter", "Next", "Siguiente", "Suivant", "بعدی")} <ChevronRight className="w-3.5 h-3.5" /></button>
             )}
           </div>
         </div>

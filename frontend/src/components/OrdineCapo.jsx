@@ -46,67 +46,67 @@ export default function OrdineCapo() {
     finally { setSending(false); }
   };
 
-  const inputCls = "bg-[#030712] border border-[#334155] rounded-xl px-3 py-2.5 text-sm text-white focus:border-[#D95200] outline-none w-full";
+  const inputCls = "bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-white focus:border-primary outline-none w-full";
 
   return (
     <div data-testid="ordine-capo" className="space-y-4">
       <div>
-        <h3 className="text-sm font-bold text-[#D95200] flex items-center gap-2"><CalendarClock className="w-4 h-4" /> {tri("Ordine & Piano a Ritroso", "Auftrag & Rückwärtsplan", "Order & Backwards Plan", "Pedido & Plan a la Inversa", "Commande & Plan à Rebours", "سفارش و برنامه معکوس")}</h3>
-        <p className="text-[11px] text-[#94A3B8] mt-1">{tri("Detta l'ordine: dall'ora di consegna calcolo a ritroso impasto, lievitazione e cottura, poi invio la scaletta a Sitor.", "Diktiere den Auftrag: von der Lieferzeit rechne ich rückwärts.", "Dictate the order: from the delivery time I schedule mixing, proofing and baking backwards, then send it to Sitor.", "Dicta el pedido: desde la hora de entrega calculo hacia atrás.", "Dicte la commande : depuis l'heure de livraison je planifie à rebours.", "سفارش را بگو: از زمان تحویل به‌صورت معکوس برنامه‌ریزی می‌کنم.")}</p>
+        <h3 className="text-sm font-bold text-primary flex items-center gap-2"><CalendarClock className="w-4 h-4" /> {tri("Ordine & Piano a Ritroso", "Auftrag & Rückwärtsplan", "Order & Backwards Plan", "Pedido & Plan a la Inversa", "Commande & Plan à Rebours", "سفارش و برنامه معکوس")}</h3>
+        <p className="text-[11px] text-muted-foreground mt-1">{tri("Detta l'ordine: dall'ora di consegna calcolo a ritroso impasto, lievitazione e cottura, poi invio la scaletta a Sitor.", "Diktiere den Auftrag: von der Lieferzeit rechne ich rückwärts.", "Dictate the order: from the delivery time I schedule mixing, proofing and baking backwards, then send it to Sitor.", "Dicta el pedido: desde la hora de entrega calculo hacia atrás.", "Dicte la commande : depuis l'heure de livraison je planifie à rebours.", "سفارش را بگو: از زمان تحویل به‌صورت معکوس برنامه‌ریزی می‌کنم.")}</p>
       </div>
 
       {/* comando libero (NLP) */}
       <input data-testid="ordine-command" value={command} onChange={(e) => setCommand(e.target.value)} className={inputCls}
         placeholder={tri("Es. 300 baguette per domani alle 06:00", "z.B. 300 Baguettes für morgen 06:00", "E.g. 300 baguettes for tomorrow at 06:00", "Ej. 300 baguettes para mañana a las 06:00", "Ex. 300 baguettes pour demain à 06:00", "مثال: ۳۰۰ باگت برای فردا ساعت ۶")} />
-      <div className="text-center text-[10px] text-[#64748B] uppercase tracking-widest">{tri("oppure compila", "oder ausfüllen", "or fill in", "o rellena", "ou remplis", "یا پر کن")}</div>
+      <div className="text-center text-[10px] text-muted-foreground uppercase tracking-widest">{tri("oppure compila", "oder ausfüllen", "or fill in", "o rellena", "ou remplis", "یا پر کن")}</div>
 
       <div className="grid grid-cols-2 gap-3">
         <div>
-          <label className="text-[10px] text-[#94A3B8] uppercase tracking-wide">{tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")}</label>
+          <label className="text-[10px] text-muted-foreground uppercase tracking-wide">{tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")}</label>
           <select data-testid="ordine-product" value={product} onChange={(e) => setProduct(e.target.value)} className={inputCls}>
-            {PRODUCTS.map((p) => <option key={p} value={p} className="bg-[#0b0f19]">{p.charAt(0).toUpperCase() + p.slice(1)}</option>)}
+            {PRODUCTS.map((p) => <option key={p} value={p} className="bg-background">{p.charAt(0).toUpperCase() + p.slice(1)}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-[10px] text-[#94A3B8] uppercase tracking-wide">{tri("Quantità", "Menge", "Quantity", "Cantidad", "Quantité", "تعداد")}</label>
+          <label className="text-[10px] text-muted-foreground uppercase tracking-wide">{tri("Quantità", "Menge", "Quantity", "Cantidad", "Quantité", "تعداد")}</label>
           <input data-testid="ordine-quantity" type="number" min="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} className={inputCls} />
         </div>
         <div>
-          <label className="text-[10px] text-[#94A3B8] uppercase tracking-wide">{tri("Consegna (ora)", "Lieferung (Zeit)", "Delivery (time)", "Entrega (hora)", "Livraison (heure)", "تحویل (ساعت)")}</label>
+          <label className="text-[10px] text-muted-foreground uppercase tracking-wide">{tri("Consegna (ora)", "Lieferung (Zeit)", "Delivery (time)", "Entrega (hora)", "Livraison (heure)", "تحویل (ساعت)")}</label>
           <input data-testid="ordine-deadline" type="time" value={deadline} onChange={(e) => setDeadline(e.target.value)} className={inputCls} />
         </div>
         <div>
-          <label className="text-[10px] text-[#94A3B8] uppercase tracking-wide">{tri("Giorno", "Tag", "Day", "Día", "Jour", "روز")}</label>
+          <label className="text-[10px] text-muted-foreground uppercase tracking-wide">{tri("Giorno", "Tag", "Day", "Día", "Jour", "روز")}</label>
           <select data-testid="ordine-day" value={dayOffset} onChange={(e) => setDayOffset(e.target.value)} className={inputCls}>
-            <option value={0} className="bg-[#0b0f19]">{tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}</option>
-            <option value={1} className="bg-[#0b0f19]">{tri("Domani", "Morgen", "Tomorrow", "Mañana", "Demain", "فردا")}</option>
+            <option value={0} className="bg-background">{tri("Oggi", "Heute", "Today", "Hoy", "Aujourd'hui", "امروز")}</option>
+            <option value={1} className="bg-background">{tri("Domani", "Morgen", "Tomorrow", "Mañana", "Demain", "فردا")}</option>
           </select>
         </div>
       </div>
 
       <button data-testid="ordine-calc-btn" onClick={calc} disabled={busy}
-        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-[#D95200]/20 disabled:opacity-50 active:scale-95 transition-all">
+        className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-primary to-muted text-foreground font-extrabold text-xs rounded-xl shadow-lg shadow-primary/20 disabled:opacity-50 active:scale-95 transition-all">
         {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
         {busy ? tri("Calcolo…", "Berechne…", "Computing…", "Calculando…", "Calcul…", "در حال محاسبه…") : tri("Calcola Piano a Ritroso", "Rückwärtsplan berechnen", "Compute Backwards Plan", "Calcular Plan a la Inversa", "Calculer le Plan à Rebours", "محاسبه برنامه معکوس")}
       </button>
 
       {res && (
-        <div data-testid="ordine-result" className="rounded-xl bg-[#030712] border border-[#D95200]/30 p-4">
+        <div data-testid="ordine-result" className="rounded-xl bg-background border border-primary/30 p-4">
           <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-bold text-white">{res.title}</span>
-            <button data-testid="ordine-listen" onClick={() => { try { playTTS(res.plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#D95200]"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta", "Hören", "Listen", "Escuchar", "Écouter", "بشنو")}</button>
+            <span className="text-sm font-bold text-foreground">{res.title}</span>
+            <button data-testid="ordine-listen" onClick={() => { try { playTTS(res.plan, { lang }); } catch { /* */ } }} className="inline-flex items-center gap-1 text-[11px] font-bold text-primary"><Volume2 className="w-3.5 h-3.5" /> {tri("Ascolta", "Hören", "Listen", "Escuchar", "Écouter", "بشنو")}</button>
           </div>
           <div className="space-y-2">
             {res.steps.map((s, i) => (
-              <div key={i} className={`flex items-center gap-3 rounded-lg px-3 py-2 border ${s.phase === "consegna" ? "bg-[#D95200]/10 border-[#D95200]/40" : "bg-[#0b0f19] border-[#1e293b]"}`}>
-                <span className="text-sm font-black text-[#D95200] tabular-nums w-12">{s.clock}</span>
-                <span className="flex-1 text-sm font-semibold text-white">{s.label}</span>
-                {s.minutes ? <span className="text-[11px] text-[#64748B]">{s.minutes} min</span> : null}
+              <div key={i} className={`flex items-center gap-3 rounded-lg px-3 py-2 border ${s.phase === "consegna" ? "bg-primary/10 border-primary/40" : "bg-background border-border"}`}>
+                <span className="text-sm font-black text-primary tabular-nums w-12">{s.clock}</span>
+                <span className="flex-1 text-sm font-semibold text-foreground">{s.label}</span>
+                {s.minutes ? <span className="text-[11px] text-muted-foreground">{s.minutes} min</span> : null}
               </div>
             ))}
           </div>
           <button data-testid="ordine-send-mikemix" onClick={sendToMikeMix} disabled={sending}
-            className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-[#030712] font-extrabold text-xs rounded-xl shadow-lg shadow-amber-500/20 disabled:opacity-50 active:scale-95 transition-all">
+            className="mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 text-foreground font-extrabold text-xs rounded-xl shadow-lg shadow-amber-500/20 disabled:opacity-50 active:scale-95 transition-all">
             {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             {sending ? tri("Invio…", "Senden…", "Sending…", "Enviando…", "Envoi…", "ارسال…") : tri("Invia a Sitor (coordina il team)", "An Sitor senden", "Send to Sitor (coordinates the team)", "Enviar a Sitor", "Envoyer à Sitor", "ارسال به Sitor")}
           </button>

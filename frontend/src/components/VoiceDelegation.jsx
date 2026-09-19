@@ -8,10 +8,10 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
-  sanificazione: { icon: Brush, c: "#6e9e85", it: "Sanificazione", de: "Reinigung", en: "Sanitation", es: "Sanitización", fr: "Nettoyage", fa: "بهداشت" },
-  regola: { icon: ShieldAlert, c: "#64748B", it: "Regola", de: "Regel", en: "Rule", es: "Regla", fr: "Règle", fa: "قاعده" },
-  crisis_override: { icon: Gauge, c: "#aaa795", it: "Crisis Override", de: "Crisis Override", en: "Crisis Override", es: "Crisis Override", fr: "Crisis Override", fa: "بازنویسی بحران" },
-  generico: { icon: ListChecks, c: "#5EEAD4", it: "Task", de: "Aufgabe", en: "Task", es: "Tarea", fr: "Tâche", fa: "وظیفه" },
+  sanificazione: { icon: Brush, c: "hsl(var(--accent))", it: "Sanificazione", de: "Reinigung", en: "Sanitation", es: "Sanitización", fr: "Nettoyage", fa: "بهداشت" },
+  regola: { icon: ShieldAlert, c: "hsl(var(--muted-foreground))", it: "Regola", de: "Regel", en: "Rule", es: "Regla", fr: "Règle", fa: "قاعده" },
+  crisis_override: { icon: Gauge, c: "hsl(var(--muted-foreground))", it: "Crisis Override", de: "Crisis Override", en: "Crisis Override", es: "Crisis Override", fr: "Crisis Override", fa: "بازنویسی بحران" },
+  generico: { icon: ListChecks, c: "hsl(var(--primary))", it: "Task", de: "Aufgabe", en: "Task", es: "Tarea", fr: "Tâche", fa: "وظیفه" },
 };
 
 export default function VoiceDelegation({ onClose }) {
@@ -116,11 +116,11 @@ export default function VoiceDelegation({ onClose }) {
   const K = proposal ? (KIND[proposal.kind] || KIND.generico) : null;
 
   return (
-    <div data-testid="voice-delegation" data-tour-suppress="true" className="fixed inset-0 z-[80] bg-[#030712]/97 backdrop-blur-xl overflow-y-auto">
+    <div data-testid="voice-delegation" data-tour-suppress="true" className="fixed inset-0 z-[80] bg-background/97 backdrop-blur-xl overflow-y-auto">
       <div className="max-w-2xl mx-auto p-4 pb-16">
-        <div className="flex items-center justify-between sticky top-0 bg-[#030712]/95 py-2 z-10">
-          <h2 className="text-lg font-black text-white flex items-center gap-2"><Mic className="w-5 h-5 text-[#D95200]" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation (Eclipse)", "Voice Delegation (Eclipse)", "Delegación por Voz (Eclipse)", "Délégation Vocale (Eclipse)", "واگذاری صوتی (اکلیپس)")}</h2>
-          <button data-testid="delegation-close" onClick={() => { try { recRef.current?.stop(); } catch { /* */ } onClose(); }} className="w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8] hover:text-white"><X className="w-5 h-5" /></button>
+        <div className="flex items-center justify-between sticky top-0 bg-background/95 py-2 z-10">
+          <h2 className="text-lg font-black text-foreground flex items-center gap-2"><Mic className="w-5 h-5 text-primary" /> {tri("Delega Vocale (Eclipse)", "Sprachdelegation (Eclipse)", "Voice Delegation (Eclipse)", "Delegación por Voz (Eclipse)", "Délégation Vocale (Eclipse)", "واگذاری صوتی (اکلیپس)")}</h2>
+          <button data-testid="delegation-close" onClick={() => { try { recRef.current?.stop(); } catch { /* */ } onClose(); }} className="w-9 h-9 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground hover:text-foreground"><X className="w-5 h-5" /></button>
         </div>
 
         {done ? (
@@ -128,38 +128,38 @@ export default function VoiceDelegation({ onClose }) {
             <div className="w-20 h-20 rounded-full bg-emerald-500/15 border-2 border-emerald-500 flex items-center justify-center"><CheckCircle2 className="w-10 h-10 text-emerald-400" /></div>
             <div>
               <h3 className="text-lg font-black text-emerald-300">{done.title}</h3>
-              <p className="text-sm text-[#94A3B8] mt-1">{tri("Inviato in produzione senza annuncio vocale · gli operatori vedranno i loro step.", "An die Produktion gesendet.", "Sent to production.", "Enviado a producción.", "Envoyé en production.", "به تولید ارسال شد.")}</p>
+              <p className="text-sm text-muted-foreground mt-1">{tri("Inviato in produzione senza annuncio vocale · gli operatori vedranno i loro step.", "An die Produktion gesendet.", "Sent to production.", "Enviado a producción.", "Envoyé en production.", "به تولید ارسال شد.")}</p>
             </div>
             <div className="flex gap-2">
-              <button data-testid="delegation-new" onClick={() => { setDone(null); setProposal(null); setTranscript(""); }} className="px-5 py-3 rounded-xl bg-[#0b0f19] border border-[#2A3B49] text-white text-sm font-bold active:scale-95">{tri("Nuova delega", "Neue Delegation", "New delegation", "Nueva delegación", "Nouvelle délégation", "واگذاری جدید")}</button>
-              <button data-testid="delegation-exit" onClick={onClose} className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] text-sm font-black active:scale-95">{tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
+              <button data-testid="delegation-new" onClick={() => { setDone(null); setProposal(null); setTranscript(""); }} className="px-5 py-3 rounded-xl bg-background border border-border text-foreground text-sm font-bold active:scale-95">{tri("Nuova delega", "Neue Delegation", "New delegation", "Nueva delegación", "Nouvelle délégation", "واگذاری جدید")}</button>
+              <button data-testid="delegation-exit" onClick={onClose} className="px-5 py-3 rounded-xl bg-gradient-to-r from-primary to-muted text-foreground text-sm font-black active:scale-95">{tri("Chiudi", "Schließen", "Close", "Cerrar", "Fermer", "بستن")}</button>
             </div>
           </motion.div>
         ) : (
           <>
-            <p className="text-[12px] text-[#94A3B8] mb-4">{tri("Detta un ordine: Sitor lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio. Oppure dai un comando diretto: «Sposta Sara ai forni» (priorità assoluta).", "Diktiere einen Befehl: Sitor macht daraus eine Team-Aufgabe. Oder direkt: «Verschiebe Sara zu den Öfen».", "Dictate an order: Sitor turns it into a team task. Or a direct command: «Move Sara to the ovens» (absolute priority).", "Dicta una orden o un comando directo: «Mueve a Sara a los hornos» (prioridad absoluta).", "Dicte un ordre ou une commande directe : «Déplace Sara vers les fours» (priorité absolue).", "دستوری بگو یا فرمان مستقیم: «سارا را به فرها منتقل کن».")}</p>
+            <p className="text-[12px] text-muted-foreground mb-4">{tri("Detta un ordine: Sitor lo trasforma in task di squadra e propone gli operatori. Confermi tu prima dell'invio. Oppure dai un comando diretto: «Sposta Sara ai forni» (priorità assoluta).", "Diktiere einen Befehl: Sitor macht daraus eine Team-Aufgabe. Oder direkt: «Verschiebe Sara zu den Öfen».", "Dictate an order: Sitor turns it into a team task. Or a direct command: «Move Sara to the ovens» (absolute priority).", "Dicta una orden o un comando directo: «Mueve a Sara a los hornos» (prioridad absoluta).", "Dicte un ordre ou une commande directe : «Déplace Sara vers les fours» (priorité absolue).", "دستوری بگو یا فرمان مستقیم: «سارا را به فرها منتقل کن».")}</p>
 
             {moved && (
-              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="capo-move-done" className="mb-4 rounded-2xl border border-[#3E9C93]/40 bg-[#3E9C93]/10 p-3 flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-[#3E9C93] shrink-0" />
-                <p className="text-[13px] text-white font-semibold">{tri(`${moved.operator} spostato a ${moved.dest} · priorità assoluta della Direzione`, `${moved.operator} nach ${moved.dest} verschoben · absolute Priorität`, `${moved.operator} moved to ${moved.dest} · absolute priority`, `${moved.operator} movido a ${moved.dest} · prioridad absoluta`, `${moved.operator} déplacé vers ${moved.dest} · priorité absolue`, `${moved.operator} به ${moved.dest} منتقل شد · اولویت مطلق`)}</p>
+              <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="capo-move-done" className="mb-4 rounded-2xl border border-primary/40 bg-primary/10 p-3 flex items-center gap-2">
+                <CheckCircle2 className="w-5 h-5 text-primary shrink-0" />
+                <p className="text-[13px] text-foreground font-semibold">{tri(`${moved.operator} spostato a ${moved.dest} · priorità assoluta della Direzione`, `${moved.operator} nach ${moved.dest} verschoben · absolute Priorität`, `${moved.operator} moved to ${moved.dest} · absolute priority`, `${moved.operator} movido a ${moved.dest} · prioridad absoluta`, `${moved.operator} déplacé vers ${moved.dest} · priorité absolue`, `${moved.operator} به ${moved.dest} منتقل شد · اولویت مطلق`)}</p>
               </motion.div>
             )}
 
             {/* MIC + testo */}
             <div className="flex flex-col items-center mb-4">
               <button data-testid="delegation-mic" onClick={toggleMic} className="relative active:scale-95 transition-transform">
-                {listening && <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-[#D95200]/50 animate-ping" />}
-                <span className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 ${listening ? "bg-[#D95200] border-[#D95200] text-[#030712]" : "bg-[#0b0f19] border-[#2A3B49] text-[#D95200]"}`}><Mic className="w-8 h-8" /></span>
+                {listening && <span aria-hidden className="absolute -inset-2 rounded-full border-2 border-primary/50 animate-ping" />}
+                <span className={`relative w-20 h-20 rounded-full flex items-center justify-center border-4 ${listening ? "bg-primary border-primary text-primary-foreground" : "bg-background border-border text-primary"}`}><Mic className="w-8 h-8" /></span>
               </button>
-              <p className="mt-2 text-[11px] text-[#7E8A93]">{listening ? tri("Sto ascoltando…", "Ich höre zu…", "Listening…", "Escuchando…", "J'écoute…", "در حال شنیدن…") : tri("Tocca e parla: «Sposta Sara ai forni» parte subito", "Tippen & sprechen: «Verschiebe Sara zu den Öfen»", "Tap & speak: «Move Sara to the ovens» runs instantly", "Toca y habla: «Mueve a Sara a los hornos»", "Touche et parle : «Déplace Sara vers les fours»", "بزن و بگو: «سارا را به فرها منتقل کن»")}</p>
+              <p className="mt-2 text-[11px] text-muted-foreground">{listening ? tri("Sto ascoltando…", "Ich höre zu…", "Listening…", "Escuchando…", "J'écoute…", "در حال شنیدن…") : tri("Tocca e parla: «Sposta Sara ai forni» parte subito", "Tippen & sprechen: «Verschiebe Sara zu den Öfen»", "Tap & speak: «Move Sara to the ovens» runs instantly", "Toca y habla: «Mueve a Sara a los hornos»", "Touche et parle : «Déplace Sara vers les fours»", "بزن و بگو: «سارا را به فرها منتقل کن»")}</p>
             </div>
             <textarea
               data-testid="delegation-transcript" value={transcript} onChange={(e) => setTranscript(e.target.value)} rows={2}
               placeholder={tri("Es. «Sanificate i carrelli al reparto forni»", "z.B. «Reinigt die Wagen am Ofen»", "e.g. «Sanitize the trolleys at the ovens»", "Ej. «Sanitizad los carros en hornos»", "Ex. «Nettoyez les chariots aux fours»", "مثال «چرخ‌ها را کنار فرها بشویید»")}
-              className="w-full bg-[#0b0f19] border border-[#1e293b] rounded-2xl p-3 text-sm text-white outline-none focus:border-[#D95200] resize-none"
+              className="w-full bg-background border border-border rounded-2xl p-3 text-sm text-foreground outline-none focus:border-primary resize-none"
             />
-            <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#D95200] to-[#0d9488] text-[#030712] font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
+            <button data-testid="delegation-analyze" onClick={analyze} disabled={!transcript.trim() || parsing} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-primary to-muted text-foreground font-black text-sm disabled:opacity-40 active:scale-98 transition-all">
               {parsing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />} {tri("Analizza con Sitor", "Mit Sitor analysieren", "Analyze with Sitor", "Analizar con Sitor", "Analyser avec Sitor", "تحلیل با Sitor")}
             </button>
 
@@ -169,23 +169,23 @@ export default function VoiceDelegation({ onClose }) {
                 <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} data-testid="delegation-proposal" className="mt-5 rounded-3xl border p-4" style={{ borderColor: `${K.c}55`, background: `${K.c}0d` }}>
                   <div className="flex items-center gap-2 flex-wrap mb-2">
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wider px-3 py-1 rounded-full" style={{ background: `${K.c}22`, color: K.c }}><K.icon className="w-3.5 h-3.5" /> {tri(K.it, K.de, K.en, K.es, K.fr, K.fa)}</span>
-                    <span className="text-[11px] font-bold text-[#94A3B8]">{tri("priorità", "Priorität", "priority", "prioridad", "priorité", "اولویت")}: {proposal.priority}</span>
-                    <span className="text-[11px] text-[#64748B]">👥 {proposal.staff?.present}/{proposal.staff?.total}</span>
+                    <span className="text-[11px] font-bold text-muted-foreground">{tri("priorità", "Priorität", "priority", "prioridad", "priorité", "اولویت")}: {proposal.priority}</span>
+                    <span className="text-[11px] text-muted-foreground">👥 {proposal.staff?.present}/{proposal.staff?.total}</span>
                   </div>
-                  <h3 className="text-base font-black text-white mb-1">{proposal.title}</h3>
+                  <h3 className="text-base font-black text-foreground mb-1">{proposal.title}</h3>
                   {proposal.kind === "crisis_override" && proposal.pacing && (
-                    <div className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#aaa795] bg-[#aaa795]/10 border border-[#aaa795]/30 rounded-lg px-3 py-1.5" data-testid="delegation-pacing"><Gauge className="w-4 h-4" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {proposal.pacing}{proposal.pacing_target ? ` · ${proposal.pacing_target}` : ""}</div>
+                    <div className="mb-3 inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground bg-muted/10 border border-border/30 rounded-lg px-3 py-1.5" data-testid="delegation-pacing"><Gauge className="w-4 h-4" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {proposal.pacing}{proposal.pacing_target ? ` · ${proposal.pacing_target}` : ""}</div>
                   )}
                   <div className="space-y-2" data-testid="delegation-steps">
                     {(proposal.steps || []).map((s) => (
-                      <div key={s.order} className="rounded-2xl bg-[#030712] border border-[#1e293b] p-3">
+                      <div key={s.order} className="rounded-2xl bg-background border border-border p-3">
                         <div className="flex items-start gap-2">
-                          <span className="shrink-0 w-6 h-6 rounded-full bg-[#D95200]/20 text-[#D95200] text-xs font-black flex items-center justify-center">{s.order}</span>
+                          <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-black flex items-center justify-center">{s.order}</span>
                           <div className="min-w-0 flex-1">
-                            <p className="text-[13px] text-white font-semibold leading-snug">{s.instruction}</p>
-                            <p className="text-[10px] text-[#64748B] mt-0.5">{tri("competenza", "Kompetenz", "skill", "competencia", "compétence", "مهارت")}: {s.sub_role || "—"}</p>
+                            <p className="text-[13px] text-foreground font-semibold leading-snug">{s.instruction}</p>
+                            <p className="text-[10px] text-muted-foreground mt-0.5">{tri("competenza", "Kompetenz", "skill", "competencia", "compétence", "مهارت")}: {s.sub_role || "—"}</p>
                             <div className="mt-1.5 flex items-center gap-2">
-                              <select data-testid={`delegation-assignee-${s.order}`} value={s.assignee || ""} onChange={(e) => setAssignee(s.order, e.target.value)} className="flex-1 bg-[#0b0f19] border border-[#1e293b] rounded-lg px-2 py-1.5 text-[12px] text-white outline-none focus:border-[#D95200]">
+                              <select data-testid={`delegation-assignee-${s.order}`} value={s.assignee || ""} onChange={(e) => setAssignee(s.order, e.target.value)} className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-[12px] text-foreground outline-none focus:border-primary">
                                 <option value="">{tri("— nessuno —", "— keiner —", "— none —", "— ninguno —", "— aucun —", "— هیچ —")}</option>
                                 {pool.map((w) => (<option key={w.name} value={w.name}>{w.name}{w.position ? ` · ${w.position}` : ""}</option>))}
                               </select>
@@ -196,10 +196,10 @@ export default function VoiceDelegation({ onClose }) {
                       </div>
                     ))}
                   </div>
-                  <button data-testid="delegation-confirm" onClick={confirm} disabled={confirming} className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-black text-sm disabled:opacity-50 active:scale-98 transition-all">
+                  <button data-testid="delegation-confirm" onClick={confirm} disabled={confirming} className="mt-4 w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-foreground font-black text-sm disabled:opacity-50 active:scale-98 transition-all">
                     {confirming ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />} {tri("Conferma e invia in produzione", "Bestätigen & senden", "Confirm & dispatch", "Confirmar y enviar", "Confirmer & envoyer", "تأیید و ارسال")}
                   </button>
-                  <p className="mt-1.5 text-center text-[10px] text-[#64748B] flex items-center justify-center gap-1"><ChevronRight className="w-3 h-3" /> {tri("Puoi riassegnare ogni step prima di confermare.", "Du kannst jeden Schritt neu zuweisen.", "You can reassign each step before confirming.", "Puedes reasignar cada paso.", "Tu peux réassigner chaque étape.", "می‌توانی هر گام را دوباره اختصاص دهی.")}</p>
+                  <p className="mt-1.5 text-center text-[10px] text-muted-foreground flex items-center justify-center gap-1"><ChevronRight className="w-3 h-3" /> {tri("Puoi riassegnare ogni step prima di confermare.", "Du kannst jeden Schritt neu zuweisen.", "You can reassign each step before confirming.", "Puedes reasignar cada paso.", "Tu peux réassigner chaque étape.", "می‌توانی هر گام را دوباره اختصاص دهی.")}</p>
                 </motion.div>
               )}
             </AnimatePresence>

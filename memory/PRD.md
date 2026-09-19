@@ -1,3 +1,15 @@
+# ⚡ AGGIORNAMENTO (2026-09) — STADIO 7 COMPLETATO: stile "La bottega di Michele"
+
+- **Tema chiaro di default** (bg `#F6F1E7`, card `#FFFDF8`, bordi `#D9CFBC`, testo `#2B2E33`, RAME `#A85A22` primario, AMBRA `#E9A23B`, SALVIA `#6E8F7A`, MATTONE `#A4472D`) + **tema scuro opzionale** (`#1F2124`/`#2A2D31`) con toggle utente `theme-toggle` nell'header (nuovo `components/ThemeToggle.jsx`, persistenza `localStorage: mikilab_theme`). `index.js` non forza più il dark.
+- **`index.css` riscritto**: rimossi tutti gli effetti sci-fi (splash glitch, holo glow, lab-3d, black industrial glass, nexus-ring, filtro invert). Alias `holo-root/holo-canvas/holo-panel` convertiti in superfici calde da bottega (grana di farina mantenuta). Nastro tricolore IT/DE mantenuto.
+- **Migrazione automatica colori** (script `/tmp/restyle*.py`): ~5300 token hex hardcoded sostituiti in 147+ file con token semantici Tailwind (`bg-background`, `text-foreground`, `bg-primary`...). `font-cyber` → `font-display` (Playfair Display titoli, Manrope corpo). Passata 3: contrasto testo su bottoni colorati (`text-primary-foreground` ecc.).
+- **tailwind.config.js**: nuovi colori `rame/ambra/salvia/mattone`. **Rimossi `three` e `@react-three/fiber`** da package.json (solo codice morto enterprise li usava). Meta theme-color → `#F6F1E7`. sw.js → `mikilab-v61` (forza refresh cache).
+- Verificato via screenshot: Home chiara/scura, scheda ricetta, Course Player (generazione AI OK), Sitor Chat. I 404/401 su endpoint legacy (alarms, sensors, apprentice) sono il comportamento voluto del DEFAULT-DENY.
+- **Prossimi (backlog)**: P1 immagini Tecniche (16 illustrazioni); P2 pagina "Il mio miglioratore"; P2 ottimizzazione WebP; P2 admin minimale flag `verified`.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-06, MESSAGGIO 3) — STADI 8→11
 
 - **Percorso a livelli** (`learning_path`): 6 livelli, attivi 1 e 2, gli altri "In arrivo". Nessun blocco: tutte le ricette restano in galleria. "Segna come fatta" salvato in `localStorage: mikilab_done`. `PercorsoPage.jsx` (barra progressi, spunta, "Livello completato! Vai al livello N"). Endpoint `GET /learning-path` (pubblico), `PUT /learning-path/{n}` (admin).

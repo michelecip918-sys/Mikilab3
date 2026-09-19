@@ -37,46 +37,46 @@ export default function FloorChangeApprovals() {
 
   const badge = (r) => {
     const map = {
-      pending: { c: "#a6b1bc", t: tri("In attesa", "Wartet", "Pending", "Pendiente", "En attente", "منتظر"), I: Clock },
-      auto_applied: { c: "#6e9e85", t: tri("Applicata da Sitor", "Von Sitor angewandt", "Applied by Sitor", "Aplicada por Sitor", "Appliquée par Sitor", "توسط سیتور اعمال شد"), I: CheckCircle2 },
-      approved: { c: "#6e9e85", t: tri("Approvata", "Genehmigt", "Approved", "Aprobada", "Approuvée", "تأیید"), I: Check },
-      rejected: { c: "#bb8489", t: tri("Rifiutata", "Abgelehnt", "Rejected", "Rechazada", "Refusée", "رد"), I: XCircle },
+      pending: { c: "hsl(var(--muted-foreground))", t: tri("In attesa", "Wartet", "Pending", "Pendiente", "En attente", "منتظر"), I: Clock },
+      auto_applied: { c: "hsl(var(--accent))", t: tri("Applicata da Sitor", "Von Sitor angewandt", "Applied by Sitor", "Aplicada por Sitor", "Appliquée par Sitor", "توسط سیتور اعمال شد"), I: CheckCircle2 },
+      approved: { c: "hsl(var(--accent))", t: tri("Approvata", "Genehmigt", "Approved", "Aprobada", "Approuvée", "تأیید"), I: Check },
+      rejected: { c: "hsl(var(--mattone))", t: tri("Rifiutata", "Abgelehnt", "Rejected", "Rechazada", "Refusée", "رد"), I: XCircle },
     };
     return map[r.status] || map.pending;
   };
 
   return (
-    <div data-testid="floor-change-approvals" className="rounded-2xl border border-[#a6b1bc]/25 bg-[#0C1019]/50 p-4">
+    <div data-testid="floor-change-approvals" className="rounded-2xl border border-border/25 bg-background/50 p-4">
       <div className="flex items-center justify-between mb-2.5">
-        <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#a6b1bc]">
+        <p className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-wide text-muted-foreground">
           <Wand2 className="w-4 h-4" /> {tri("Modifiche proposte dagli operai", "Vorschläge der Bediener", "Changes proposed by operators", "Cambios propuestos", "Changements proposés", "پیشنهادهای اپراتورها")}
-          {pending > 0 && <span data-testid="change-pending-count" className="ml-1 px-1.5 py-0.5 rounded-full bg-[#a6b1bc] text-[#060A10] text-[10px] font-black">{pending}</span>}
+          {pending > 0 && <span data-testid="change-pending-count" className="ml-1 px-1.5 py-0.5 rounded-full bg-muted text-foreground text-[10px] font-black">{pending}</span>}
         </p>
       </div>
 
       {pendingReqs.length === 0 && recent.length === 0 && (
-        <p data-testid="change-empty" className="text-[12px] text-[#64748B] py-3 text-center">{tri("Nessuna proposta. Gli operai possono suggerirti modifiche dal reparto: le grandi arrivano qui.", "Keine Vorschläge.", "No proposals yet. Operators can suggest changes from the floor; big ones land here.", "Sin propuestas.", "Aucune proposition.", "پیشنهادی نیست.")}</p>
+        <p data-testid="change-empty" className="text-[12px] text-muted-foreground py-3 text-center">{tri("Nessuna proposta. Gli operai possono suggerirti modifiche dal reparto: le grandi arrivano qui.", "Keine Vorschläge.", "No proposals yet. Operators can suggest changes from the floor; big ones land here.", "Sin propuestas.", "Aucune proposition.", "پیشنهادی نیست.")}</p>
       )}
 
       <AnimatePresence>
         {pendingReqs.map((r) => (
           <motion.div key={r.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            data-testid={`change-req-${r.id}`} className="rounded-xl bg-[#060A10] border border-[#a6b1bc]/30 p-3 mb-2">
+            data-testid={`change-req-${r.id}`} className="rounded-xl bg-background border border-border/30 p-3 mb-2">
             <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-[#9aa6b2]"><User className="w-3 h-3" /> {r.operator}</span>
-              {r.dept && <span className="text-[9px] uppercase text-[#64748B]">· {r.dept}</span>}
-              <span className="ml-auto inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded" style={{ color: "#a6b1bc", background: "#EAB30818", border: "1px solid #EAB30840" }}><Clock className="w-3 h-3" /> {tri("In attesa", "Wartet", "Pending", "Pendiente", "En attente", "منتظر")}</span>
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold text-muted-foreground"><User className="w-3 h-3" /> {r.operator}</span>
+              {r.dept && <span className="text-[9px] uppercase text-muted-foreground">· {r.dept}</span>}
+              <span className="ml-auto inline-flex items-center gap-1 text-[9px] font-black uppercase px-1.5 py-0.5 rounded" style={{ color: "hsl(var(--muted-foreground))", background: "#EAB30818", border: "1px solid #EAB30840" }}><Clock className="w-3 h-3" /> {tri("In attesa", "Wartet", "Pending", "Pendiente", "En attente", "منتظر")}</span>
             </div>
-            {r.task && <p className="text-[10px] text-[#64748B] mb-0.5">{tri("Compito", "Aufgabe", "Task", "Tarea", "Tâche", "وظیفه")}: {r.task}</p>}
-            <p className="text-[13px] text-white leading-snug font-semibold">{r.capo_summary || r.proposal}</p>
-            {r.suggested_action && <p className="text-[11px] text-[#a6b1bc]/90 mt-1 leading-snug">✦ {r.suggested_action}</p>}
+            {r.task && <p className="text-[10px] text-muted-foreground mb-0.5">{tri("Compito", "Aufgabe", "Task", "Tarea", "Tâche", "وظیفه")}: {r.task}</p>}
+            <p className="text-[13px] text-foreground leading-snug font-semibold">{r.capo_summary || r.proposal}</p>
+            {r.suggested_action && <p className="text-[11px] text-muted-foreground/90 mt-1 leading-snug">✦ {r.suggested_action}</p>}
             <div className="flex items-center gap-2 mt-2.5">
               <button data-testid={`change-approve-${r.id}`} onClick={() => decide(r, "approve")} disabled={busyId === r.id}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#6e9e85]/12 border border-[#6e9e85]/45 text-[#6e9e85] font-bold text-xs active:scale-95 disabled:opacity-50">
+                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-accent/12 border border-accent/45 text-accent font-bold text-xs active:scale-95 disabled:opacity-50">
                 {busyId === r.id ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />} {tri("Approva", "Genehmigen", "Approve", "Aprobar", "Approuver", "تأیید")}
               </button>
               <button data-testid={`change-reject-${r.id}`} onClick={() => decide(r, "reject")} disabled={busyId === r.id}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-[#bb8489]/10 border border-[#bb8489]/40 text-[#bb8489] font-bold text-xs active:scale-95 disabled:opacity-50">
+                className="flex-1 inline-flex items-center justify-center gap-1.5 py-2 rounded-lg bg-mattone/10 border border-mattone/40 text-mattone font-bold text-xs active:scale-95 disabled:opacity-50">
                 <X className="w-3.5 h-3.5" /> {tri("Rifiuta", "Ablehnen", "Reject", "Rechazar", "Refuser", "رد")}
               </button>
             </div>
@@ -87,10 +87,10 @@ export default function FloorChangeApprovals() {
       {recent.length > 0 && (
         <div className="mt-1 space-y-1">
           {recent.map((r) => { const b = badge(r); const I = b.I; return (
-            <div key={r.id} data-testid={`change-log-${r.id}`} className="flex items-center gap-2 text-[11px] px-2 py-1.5 rounded-lg bg-[#060A10]/60 border border-[#1e293b]">
+            <div key={r.id} data-testid={`change-log-${r.id}`} className="flex items-center gap-2 text-[11px] px-2 py-1.5 rounded-lg bg-background/60 border border-border">
               <I className="w-3.5 h-3.5 shrink-0" style={{ color: b.c }} />
-              <span className="text-[#94A3B8] shrink-0">{r.operator}</span>
-              <span className="text-white truncate flex-1">{r.capo_summary || r.proposal}</span>
+              <span className="text-muted-foreground shrink-0">{r.operator}</span>
+              <span className="text-foreground truncate flex-1">{r.capo_summary || r.proposal}</span>
               <span className="text-[9px] font-black uppercase shrink-0" style={{ color: b.c }}>{b.t}</span>
             </div>
           ); })}

@@ -36,67 +36,67 @@ export default function ShiftPowerBoard({ editable = false }) {
   const topId = plan.length ? plan.reduce((a, b) => ((b.efficiency_score || 0) > (a.efficiency_score || 0) ? b : a)).id : null;
 
   return (
-    <div data-testid="shift-power-board" className="rounded-2xl border border-[#1e293b] bg-[#030712] p-3">
+    <div data-testid="shift-power-board" className="rounded-2xl border border-border bg-background p-3">
       <div className="flex items-center justify-between mb-3">
-        <p className="text-[11px] font-black uppercase tracking-widest text-[#aaa795] flex items-center gap-1.5">
+        <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
           <Zap className="w-4 h-4" /> {tri("Turni & Power", "Schicht & Power", "Shifts & Power", "Turnos & Power", "Services & Power", "شیفت و پاور")}
         </p>
         {editable && (
-          <button data-testid="shift-add-toggle" onClick={() => setAdding((v) => !v)} className="inline-flex items-center gap-1 text-[11px] font-bold text-[#5EEAD4]">
+          <button data-testid="shift-add-toggle" onClick={() => setAdding((v) => !v)} className="inline-flex items-center gap-1 text-[11px] font-bold text-primary">
             <Plus className="w-3.5 h-3.5" /> {tri("Assegna", "Zuweisen", "Assign", "Asignar", "Affecter", "افزودن")}
           </button>
         )}
       </div>
 
       {adding && editable && (
-        <div className="mb-3 space-y-2 rounded-xl bg-[#0b0f19] border border-[#1e293b] p-3">
+        <div className="mb-3 space-y-2 rounded-xl bg-background border border-border p-3">
           <div className="grid grid-cols-2 gap-2">
-            <input data-testid="shift-form-name" value={form.worker_name} onChange={(e) => setForm({ ...form, worker_name: e.target.value })} placeholder={tri("Nome", "Name", "Name", "Nombre", "Nom", "نام")} className="bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-sm text-white outline-none focus:border-[#5EEAD4]" />
-            <input data-testid="shift-form-position" value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} placeholder={tri("Postazione", "Position", "Position", "Puesto", "Poste", "پست")} className="bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-sm text-white outline-none focus:border-[#5EEAD4]" />
+            <input data-testid="shift-form-name" value={form.worker_name} onChange={(e) => setForm({ ...form, worker_name: e.target.value })} placeholder={tri("Nome", "Name", "Name", "Nombre", "Nom", "نام")} className="bg-background border border-border rounded-lg px-2 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+            <input data-testid="shift-form-position" value={form.position} onChange={(e) => setForm({ ...form, position: e.target.value })} placeholder={tri("Postazione", "Position", "Position", "Puesto", "Poste", "پست")} className="bg-background border border-border rounded-lg px-2 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
           </div>
           <div className="flex items-center gap-2">
-            <input value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })} className="flex-1 bg-[#030712] border border-[#1e293b] rounded-lg px-2 py-1.5 text-sm text-white outline-none focus:border-[#5EEAD4]" />
-            <input type="range" min="0" max="100" value={form.efficiency_score} onChange={(e) => setForm({ ...form, efficiency_score: parseInt(e.target.value, 10) })} className="flex-1 accent-[#aaa795]" />
-            <span className="text-xs font-black text-[#aaa795] w-8 text-right">{form.efficiency_score}</span>
+            <input value={form.day} onChange={(e) => setForm({ ...form, day: e.target.value })} className="flex-1 bg-background border border-border rounded-lg px-2 py-1.5 text-sm text-foreground outline-none focus:border-primary" />
+            <input type="range" min="0" max="100" value={form.efficiency_score} onChange={(e) => setForm({ ...form, efficiency_score: parseInt(e.target.value, 10) })} className="flex-1 accent-muted" />
+            <span className="text-xs font-black text-muted-foreground w-8 text-right">{form.efficiency_score}</span>
           </div>
-          <button data-testid="shift-form-save" onClick={add} className="w-full py-2 rounded-lg bg-[#5EEAD4] text-[#030712] font-black text-xs active:scale-95 transition-transform">{tri("Salva assegnazione", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
+          <button data-testid="shift-form-save" onClick={add} className="w-full py-2 rounded-lg bg-primary text-primary-foreground font-black text-xs active:scale-95 transition-transform">{tri("Salva assegnazione", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}</button>
         </div>
       )}
 
       <div className="space-y-2">
         {plan.map((w) => {
-          const a = w.aura || { color: "#94A3B8", stage: 1, aura_effect: "Aura", power_level: "" };
+          const a = w.aura || { color: "hsl(var(--muted-foreground))", stage: 1, aura_effect: "Aura", power_level: "" };
           return (
-            <div key={w.id} data-testid={`shift-worker-${w.id}`} className="flex items-center gap-3 rounded-xl bg-[#0b0f19] border p-2.5" style={{ borderColor: `${a.color}44` }}>
+            <div key={w.id} data-testid={`shift-worker-${w.id}`} className="flex items-center gap-3 rounded-xl bg-background border p-2.5" style={{ borderColor: `${a.color}44` }}>
               <div className="relative shrink-0">
                 <style>{`@keyframes auraSpin${a.stage}{0%,100%{opacity:${0.3 + a.stage * 0.2};transform:scale(1)}50%{opacity:${0.6 + a.stage * 0.13};transform:scale(1.18)}}`}</style>
                 <span aria-hidden className="absolute inset-0 rounded-full blur-md" style={{ background: a.color, animation: `auraSpin${a.stage} ${1.6 - a.stage * 0.3}s ease-in-out infinite` }} />
-                <div className="relative w-11 h-11 rounded-full flex items-center justify-center border-2 font-black text-sm" style={{ borderColor: a.color, color: a.color, background: "#030712" }}>
+                <div className="relative w-11 h-11 rounded-full flex items-center justify-center border-2 font-black text-sm" style={{ borderColor: a.color, color: a.color, background: "hsl(var(--card))" }}>
                   {(w.worker_name || "?").slice(0, 1).toUpperCase()}
                 </div>
-                {a.stage === 3 && <Flame className="absolute -top-1 -right-1 w-4 h-4 text-[#aaa795]" />}
+                {a.stage === 3 && <Flame className="absolute -top-1 -right-1 w-4 h-4 text-muted-foreground" />}
               </div>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-black text-white truncate flex items-center gap-1">
-                  {w.worker_name} <span className="text-[11px] font-medium text-[#94A3B8]">· {w.position}</span>
-                  {w.id === topId && <span data-testid="shift-crown" className="inline-flex items-center gap-0.5 text-[9px] font-black text-[#aaa795]"><Crown className="w-3 h-3" /> {tri("Master", "Master", "Master", "Master", "Master", "استاد")}</span>}
+                <p className="text-sm font-black text-foreground truncate flex items-center gap-1">
+                  {w.worker_name} <span className="text-[11px] font-medium text-muted-foreground">· {w.position}</span>
+                  {w.id === topId && <span data-testid="shift-crown" className="inline-flex items-center gap-0.5 text-[9px] font-black text-muted-foreground"><Crown className="w-3 h-3" /> {tri("Master", "Master", "Master", "Master", "Master", "استاد")}</span>}
                 </p>
                 <p className="text-[11px] font-bold" style={{ color: a.color }}>{a.power_level} · {(a.label && a.label[lang]) || a.aura_effect}
-                  {w.streak_days > 1 && <span className="ml-1 text-[#aaa795]">🔥{w.streak_days}</span>}
+                  {w.streak_days > 1 && <span className="ml-1 text-muted-foreground">🔥{w.streak_days}</span>}
                 </p>
                 {editable && (
-                  <input type="range" min="0" max="100" value={w.efficiency_score} onChange={(e) => setScore(w, parseInt(e.target.value, 10))} data-testid={`shift-score-${w.id}`} className="w-full mt-1 accent-[#aaa795]" />
+                  <input type="range" min="0" max="100" value={w.efficiency_score} onChange={(e) => setScore(w, parseInt(e.target.value, 10))} data-testid={`shift-score-${w.id}`} className="w-full mt-1 accent-muted" />
                 )}
               </div>
               <span className="text-lg font-black shrink-0" style={{ color: a.color }}>{w.efficiency_score}</span>
               {editable && (
-                <button data-testid={`shift-remove-${w.id}`} onClick={() => remove(w)} className="shrink-0 text-[#64748B] hover:text-[#bb8489]"><Trash2 className="w-4 h-4" /></button>
+                <button data-testid={`shift-remove-${w.id}`} onClick={() => remove(w)} className="shrink-0 text-muted-foreground hover:text-mattone"><Trash2 className="w-4 h-4" /></button>
               )}
             </div>
           );
         })}
         {!plan.length && editable && (
-          <p className="text-[11px] text-[#94A3B8] text-center py-2">{tri("Nessun turno. Assegna il primo lavoratore.", "Keine Schicht. Ersten Mitarbeiter zuweisen.", "No shifts. Assign the first worker.", "Sin turnos. Asigna el primero.", "Aucun service. Affecte le premier.", "بدون شیفت. اولین نفر را اضافه کن.")}</p>
+          <p className="text-[11px] text-muted-foreground text-center py-2">{tri("Nessun turno. Assegna il primo lavoratore.", "Keine Schicht. Ersten Mitarbeiter zuweisen.", "No shifts. Assign the first worker.", "Sin turnos. Asigna el primero.", "Aucun service. Affecte le premier.", "بدون شیفت. اولین نفر را اضافه کن.")}</p>
         )}
       </div>
     </div>

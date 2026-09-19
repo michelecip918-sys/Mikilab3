@@ -54,7 +54,7 @@ export default function MiglioratoreDetail() {
   return (
     <div ref={rootRef} data-testid="miglioratore-detail" className="mt-3 pl-9 scroll-mt-24">
       <button data-testid="miglioratore-detail-toggle" onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-1.5 text-[12px] font-bold text-white bg-white/15 border border-white/25 rounded-full px-3 py-1.5 active:scale-95 hover:bg-white/25 transition-all">
+        className="inline-flex items-center gap-1.5 text-[12px] font-bold text-foreground bg-foreground/15 border border-foreground/25 rounded-full px-3 py-1.5 active:scale-95 hover:bg-foreground/25 transition-all">
         <FlaskConical className="w-3.5 h-3.5" />
         {L({ it: "Il Miglioratore MikiLab: scopri di più", de: "Der MikiLab-Verbesserer: mehr erfahren", en: "The MikiLab Improver: learn more", es: "El Mejorador MikiLab: saber más", fr: "L'Améliorant MikiLab : en savoir plus", fa: "بهبوددهندهٔ MikiLab: بیشتر بدانید" })}
         {open ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -63,8 +63,8 @@ export default function MiglioratoreDetail() {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
-            <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-black/20 border border-white/20 p-3">
-              <p className="text-[12.5px] text-white/90 leading-snug mb-2.5">
+            <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-background/20 border border-foreground/20 p-3">
+              <p className="text-[12.5px] text-foreground/90 leading-snug mb-2.5">
                 {L({
                   it: "Trovi il Miglioratore Naturale MikiLab già dosato nelle basi delle ricette: è pronto all'uso. 5 ingredienti 100% naturali che danno al pane forza, profumo e una morbidezza che dura — senza additivi chimici.",
                   de: "Den Natürlichen MikiLab-Verbesserer findest du bereits dosiert in den Rezept-Basen: einsatzbereit. 5 zu 100% natürliche Zutaten für Kraft, Aroma und lang anhaltende Weichheit — ohne chemische Zusätze.",
@@ -77,13 +77,13 @@ export default function MiglioratoreDetail() {
               <div className="space-y-1.5">
                 {ING.map((x, i) => (
                   <div key={i} data-testid={`miglioratore-ing-${i}`} className="flex items-baseline gap-2 text-[12.5px]">
-                    <span className="font-mono-data font-bold text-[#ffe0c2] w-11 shrink-0">{x.pct}</span>
-                    <span className="text-white font-semibold">{x.name}</span>
-                    <span className="text-white/75">— {x.fn}</span>
+                    <span className="font-mono-data font-bold text-foreground w-11 shrink-0">{x.pct}</span>
+                    <span className="text-foreground font-semibold">{x.name}</span>
+                    <span className="text-foreground/75">— {x.fn}</span>
                   </div>
                 ))}
               </div>
-              <p className="mt-3 text-[12px] text-white bg-white/15 rounded-lg px-3 py-2 border border-white/20">
+              <p className="mt-3 text-[12px] text-foreground bg-foreground/15 rounded-lg px-3 py-2 border border-foreground/20">
                 <strong>{L({ it: "Dosaggio", de: "Dosierung", en: "Dosage", es: "Dosis", fr: "Dosage", fa: "دوز" })}:</strong>{" "}
                 {L({
                   it: "2–4% sul peso della farina (indiretto 2–3%, diretto 3–4%).",

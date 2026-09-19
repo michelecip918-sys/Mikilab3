@@ -10,12 +10,12 @@ export default function LegalPlaceholder({ kind = "impressum", onBack }) {
   const title = isImp ? tri("Impressum", "Impressum", "Impressum") : tri("Informativa privacy", "Datenschutz", "Privacy / Datenschutz");
   return (
     <div data-testid={`legal-${kind}`} className="max-w-2xl mx-auto pt-6">
-      <button data-testid="legal-back" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-bold text-[#8a97a6] hover:text-white mb-4">
+      <button data-testid="legal-back" onClick={onBack} className="inline-flex items-center gap-1.5 text-sm font-bold text-muted-foreground hover:text-foreground mb-4">
         <ChevronLeft className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back")}
       </button>
-      <h1 className="font-cyber text-2xl font-black text-white uppercase tracking-wide mb-4">{title}</h1>
-      <div className="rounded-2xl border border-[#1e293b] bg-[#0b0f19]/70 p-5 space-y-3 text-sm text-[#cbd5e1]">
-        <p className="inline-block text-[11px] font-bold uppercase tracking-wider text-[#D97736] bg-[#D97736]/10 border border-[#D97736]/30 rounded-full px-3 py-1">
+      <h1 className="font-display text-2xl font-black text-foreground uppercase tracking-wide mb-4">{title}</h1>
+      <div className="rounded-2xl border border-border bg-background/70 p-5 space-y-3 text-sm text-foreground">
+        <p className="inline-block text-[11px] font-bold uppercase tracking-wider text-primary bg-primary/10 border border-primary/30 rounded-full px-3 py-1">
           {tri("Da compilare", "Auszufüllen", "To be completed")}
         </p>
         {isImp ? (
@@ -23,19 +23,19 @@ export default function LegalPlaceholder({ kind = "impressum", onBack }) {
             <p>[NOME]</p>
             <p>[INDIRIZZO]</p>
             <p>{tri("Contatto:", "Kontakt:", "Contact:")} [EMAIL]</p>
-            <p className="text-[#94A3B8]">{tri(
+            <p className="text-muted-foreground">{tri(
               "Contenuti di questa pagina da definire prima della pubblicazione.",
               "Inhalte dieser Seite vor der Veröffentlichung festzulegen.",
               "Contents of this page to be defined before publication.")}</p>
           </div>
         ) : (
           <div className="space-y-2">
-            <p className="text-[#94A3B8]">{tri(
+            <p className="text-muted-foreground">{tri(
               "Questo sito usa solo memoria locale funzionale (preferenze e preferiti nel tuo dispositivo). Nessuna statistica, nessun tracciamento.",
               "Diese Seite nutzt nur funktionalen lokalen Speicher (Einstellungen und Favoriten auf deinem Gerät). Keine Statistik, kein Tracking.",
               "This site only uses functional local storage (preferences and favourites on your device). No analytics, no tracking.")}</p>
             <p>{tri("Titolare:", "Verantwortlicher:", "Controller:")} [NOME] — [INDIRIZZO]</p>
-            <p className="text-[#94A3B8]">{tri("Testo completo da compilare.", "Vollständiger Text auszufüllen.", "Full text to be completed.")}</p>
+            <p className="text-muted-foreground">{tri("Testo completo da compilare.", "Vollständiger Text auszufüllen.", "Full text to be completed.")}</p>
           </div>
         )}
       </div>

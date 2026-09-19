@@ -3,7 +3,7 @@ import { ArrowLeft, GripVertical, Check } from "lucide-react";
 
 // Schede interne per accorpare più strumenti simili in un unico pannello.
 // Il Capo può riordinare le schede: l'ordine viene ricordato (localStorage) per mettere davanti quelle che usa di più.
-export function SubTabs({ tabs, accent = "#475569", testid = "subtabs" }) {
+export function SubTabs({ tabs, accent = "hsl(var(--muted-foreground))", testid = "subtabs" }) {
   const items = (tabs || []).filter(Boolean);
   const storageKey = `mikilab_subtabs_order_${testid}`;
 
@@ -62,8 +62,8 @@ export function SubTabs({ tabs, accent = "#475569", testid = "subtabs" }) {
                 onClick={() => !editing && setActive(t.id)}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[13px] font-medium border transition-all"
                 style={on
-                  ? { background: accent, color: "#ffffff", borderColor: accent }
-                  : { background: "#ffffff", color: "#475569", borderColor: "#E2E8F0" }}
+                  ? { background: accent, color: "hsl(var(--foreground))", borderColor: accent }
+                  : { background: "hsl(var(--foreground))", color: "hsl(var(--muted-foreground))", borderColor: "hsl(var(--foreground))" }}
               >
                 {editing && <GripVertical className="w-3.5 h-3.5 opacity-60" />}
                 {t.label}
@@ -75,7 +75,7 @@ export function SubTabs({ tabs, accent = "#475569", testid = "subtabs" }) {
           data-testid={`${testid}-reorder-toggle`}
           onClick={() => setEditing((v) => !v)}
           title={editing ? "Fine" : "Riordina schede"}
-          className={`ml-1 p-1.5 rounded-lg border text-[11px] font-medium transition-colors ${editing ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-500 border-slate-200 hover:text-slate-800"}`}
+          className={`ml-1 p-1.5 rounded-lg border text-[11px] font-medium transition-colors ${editing ? "bg-slate-900 text-foreground border-slate-900" : "bg-card text-slate-500 border-slate-200 hover:text-slate-800"}`}
         >
           {editing ? <Check className="w-3.5 h-3.5" /> : <GripVertical className="w-3.5 h-3.5" />}
         </button>

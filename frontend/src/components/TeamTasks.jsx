@@ -7,11 +7,11 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const KIND = {
-  sanificazione: { icon: Brush, c: "#6e9e85" },
-  regola: { icon: ShieldAlert, c: "#64748B" },
-  crisis_override: { icon: Gauge, c: "#aaa795" },
-  produzione: { icon: ListChecks, c: "#8a97a6" },
-  generico: { icon: ListChecks, c: "#5EEAD4" },
+  sanificazione: { icon: Brush, c: "hsl(var(--accent))" },
+  regola: { icon: ShieldAlert, c: "hsl(var(--muted-foreground))" },
+  crisis_override: { icon: Gauge, c: "hsl(var(--muted-foreground))" },
+  produzione: { icon: ListChecks, c: "hsl(var(--muted-foreground))" },
+  generico: { icon: ListChecks, c: "hsl(var(--primary))" },
 };
 
 export default function TeamTasks({ operatorName = "" }) {
@@ -83,7 +83,7 @@ export default function TeamTasks({ operatorName = "" }) {
 
   return (
     <div data-testid="team-tasks" className="w-full space-y-2 mb-4">
-      <p className="text-[11px] font-black uppercase tracking-widest text-[#94A3B8] flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-[#D95200]" /> {tri("Task di squadra dalla Direzione", "Team-Aufgaben vom Chef", "Team tasks from the Boss", "Tareas de equipo del Jefe", "Tâches d'équipe du Chef", "وظایف تیمی از رئیس")}</p>
+      <p className="text-[11px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5"><Users className="w-3.5 h-3.5 text-primary" /> {tri("Task di squadra dalla Direzione", "Team-Aufgaben vom Chef", "Team tasks from the Boss", "Tareas de equipo del Jefe", "Tâches d'équipe du Chef", "وظایف تیمی از رئیس")}</p>
       <AnimatePresence>
         {tasks.map((t) => {
           const K = KIND[t.kind] || KIND.generico;
@@ -93,13 +93,13 @@ export default function TeamTasks({ operatorName = "" }) {
             <motion.div key={t.id} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} data-testid={`team-task-${t.id}`} className="rounded-2xl border p-3 text-left" style={{ borderColor: `${K.c}55`, background: `${K.c}0d` }}>
               <div className="flex items-center gap-2 mb-2">
                 <K.icon className="w-4 h-4 shrink-0" style={{ color: K.c }} />
-                <p className="text-sm font-black text-white flex-1 min-w-0 truncate">{t.title}</p>
+                <p className="text-sm font-black text-foreground flex-1 min-w-0 truncate">{t.title}</p>
                 {t.start && <span data-testid={`team-task-start-${t.id}`} className="shrink-0 text-[10px] font-black px-2 py-0.5 rounded-full" style={{ color: K.c, background: `${K.c}1a`, border: `1px solid ${K.c}55` }}>🕐 {t.start}</span>}
-                {t.line && <span className="shrink-0 text-[10px] font-bold text-[#94A3B8] uppercase">{t.line}</span>}
-                <span className="text-[10px] font-bold text-[#94A3B8]">{doneN}/{total}</span>
+                {t.line && <span className="shrink-0 text-[10px] font-bold text-muted-foreground uppercase">{t.line}</span>}
+                <span className="text-[10px] font-bold text-muted-foreground">{doneN}/{total}</span>
               </div>
               {t.kind === "crisis_override" && t.pacing && (
-                <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#aaa795] bg-[#aaa795]/10 border border-[#aaa795]/30 rounded-lg px-2.5 py-1"><Gauge className="w-3.5 h-3.5" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {t.pacing}{t.pacing_target ? ` · ${t.pacing_target}` : ""}</div>
+                <div className="mb-2 inline-flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground bg-muted/10 border border-border/30 rounded-lg px-2.5 py-1"><Gauge className="w-3.5 h-3.5" /> {tri("Ritmo", "Tempo", "Pacing", "Ritmo", "Rythme", "ریتم")}: {t.pacing}{t.pacing_target ? ` · ${t.pacing_target}` : ""}</div>
               )}
               <div className="space-y-1.5">
                 {(t.steps || []).map((s) => (
@@ -108,25 +108,25 @@ export default function TeamTasks({ operatorName = "" }) {
                     data-testid={`team-step-${t.id}-${s.order}`}
                     onClick={() => !s.done && markDone(t.id, s.order)}
                     disabled={s.done}
-                    className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 border text-left transition-all active:scale-98 ${s.done ? "bg-emerald-500/10 border-emerald-500/40" : "bg-[#030712] border-[#1e293b]"}`}
+                    className={`w-full flex items-center gap-2 rounded-xl px-3 py-2 border text-left transition-all active:scale-98 ${s.done ? "bg-emerald-500/10 border-emerald-500/40" : "bg-background border-border"}`}
                   >
-                    <span className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center border-2 ${s.done ? "bg-emerald-500 border-emerald-500 text-[#030712]" : "border-[#334155] text-[#64748B]"}`}>
+                    <span className={`shrink-0 w-6 h-6 rounded-full flex items-center justify-center border-2 ${s.done ? "bg-emerald-500 border-emerald-500 text-foreground" : "border-border text-muted-foreground"}`}>
                       {s.done ? <Check className="w-3.5 h-3.5" /> : s.order}
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className={`block text-[13px] font-semibold leading-snug ${s.done ? "text-emerald-300 line-through" : "text-white"}`}>{s.instruction || s.text}</span>
-                      {s.assignee && <span className="block text-[10px] text-[#64748B]">{s.assignee}{s.assignee_position ? ` · ${s.assignee_position}` : ""}</span>}
+                      <span className={`block text-[13px] font-semibold leading-snug ${s.done ? "text-emerald-300 line-through" : "text-foreground"}`}>{s.instruction || s.text}</span>
+                      {s.assignee && <span className="block text-[10px] text-muted-foreground">{s.assignee}{s.assignee_position ? ` · ${s.assignee_position}` : ""}</span>}
                     </span>
                   </button>
                 ))}
               </div>
               {t.kind === "sanificazione" && (t.steps || []).every((s) => s.done) && (
-                <button data-testid={`team-clean-check-${t.id}`} onClick={() => openCheck(t.id)} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-[#6e9e85]/15 border border-[#6e9e85]/50 text-[#6e9e85] font-black text-[12px] active:scale-98">
+                <button data-testid={`team-clean-check-${t.id}`} onClick={() => openCheck(t.id)} className="mt-2 w-full inline-flex items-center justify-center gap-2 py-2 rounded-xl bg-accent/15 border border-accent/50 text-accent font-black text-[12px] active:scale-98">
                   <Camera className="w-4 h-4" /> {tri("Valida pulizia con foto (checkpoint AR)", "Sauberkeit per Foto prüfen", "Validate cleanliness with photo", "Validar limpieza con foto", "Valider la propreté par photo", "تأیید پاکیزگی با عکس")}
                 </button>
               )}
               {t.cleanliness && !t.cleanliness.clean && (
-                <p className="mt-1.5 text-[11px] text-[#aaa795]" data-testid={`team-clean-note-${t.id}`}>⚠ {t.cleanliness.note}</p>
+                <p className="mt-1.5 text-[11px] text-muted-foreground" data-testid={`team-clean-note-${t.id}`}>⚠ {t.cleanliness.note}</p>
               )}
             </motion.div>
           );
@@ -134,20 +134,20 @@ export default function TeamTasks({ operatorName = "" }) {
       </AnimatePresence>
 
       {checkTask && (
-        <div data-testid="clean-check-overlay" className="fixed inset-0 z-[90] bg-[#030712]/95 backdrop-blur-md flex flex-col items-center justify-center p-4">
-          <button data-testid="clean-check-close" onClick={closeCheck} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-[#0b0f19] border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-5 h-5" /></button>
-          <p className="text-sm font-black text-[#6e9e85] mb-3 flex items-center gap-2"><ScanLine className="w-4 h-4" /> {tri("Checkpoint AR · Pulizia", "AR-Checkpoint · Sauberkeit", "AR Checkpoint · Cleanliness", "Checkpoint AR · Limpieza", "Checkpoint AR · Propreté", "چک‌پوینت AR · پاکیزگی")}</p>
-          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-[#6e9e85]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
+        <div data-testid="clean-check-overlay" className="fixed inset-0 z-[90] bg-background/95 backdrop-blur-md flex flex-col items-center justify-center p-4">
+          <button data-testid="clean-check-close" onClick={closeCheck} className="absolute top-4 right-4 w-9 h-9 rounded-full bg-background border border-border flex items-center justify-center text-muted-foreground"><X className="w-5 h-5" /></button>
+          <p className="text-sm font-black text-accent mb-3 flex items-center gap-2"><ScanLine className="w-4 h-4" /> {tri("Checkpoint AR · Pulizia", "AR-Checkpoint · Sauberkeit", "AR Checkpoint · Cleanliness", "Checkpoint AR · Limpieza", "Checkpoint AR · Propreté", "چک‌پوینت AR · پاکیزگی")}</p>
+          <div className="relative w-full max-w-sm rounded-2xl overflow-hidden border border-accent/40 bg-background" style={{ aspectRatio: "4 / 3" }}>
             <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
-            <div className="absolute inset-4 border-2 border-[#6e9e85]/60 rounded-xl pointer-events-none" />
-            {checking && <div className="absolute inset-0 bg-[#6e9e85]/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-[#6e9e85] animate-spin" /></div>}
+            <div className="absolute inset-4 border-2 border-accent/60 rounded-xl pointer-events-none" />
+            {checking && <div className="absolute inset-0 bg-accent/10 flex items-center justify-center"><Loader2 className="w-8 h-8 text-accent animate-spin" /></div>}
           </div>
           {checkRes && !checkRes.clean && (
-            <div data-testid="clean-check-result" className="mt-3 w-full max-w-sm rounded-xl border border-[#aaa795]/50 bg-[#aaa795]/10 p-3 text-[13px] text-[#aaa795] font-semibold text-center">
+            <div data-testid="clean-check-result" className="mt-3 w-full max-w-sm rounded-xl border border-border/50 bg-muted/10 p-3 text-[13px] text-muted-foreground font-semibold text-center">
               {tri("Non ancora a standard", "Noch nicht Standard", "Not up to standard yet", "Aún no estándar", "Pas encore au standard", "هنوز استاندارد نیست")} ({checkRes.score}%) — {checkRes.note}
             </div>
           )}
-          <button data-testid="clean-check-shoot" onClick={runCheck} disabled={checking} className="mt-4 w-full max-w-sm inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-[#5f8a70] to-[#15803d] text-white font-black text-sm disabled:opacity-50 active:scale-98">
+          <button data-testid="clean-check-shoot" onClick={runCheck} disabled={checking} className="mt-4 w-full max-w-sm inline-flex items-center justify-center gap-2 py-3 rounded-2xl bg-gradient-to-r from-muted to-muted text-foreground font-black text-sm disabled:opacity-50 active:scale-98">
             {checking ? <Loader2 className="w-4 h-4 animate-spin" /> : <Camera className="w-4 h-4" />} {tri("Scatta e valida", "Foto & prüfen", "Shoot & validate", "Tomar y validar", "Photo & valider", "عکس و تأیید")}
           </button>
         </div>

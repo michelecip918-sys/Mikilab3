@@ -8,9 +8,9 @@ import { X } from "lucide-react";
 import AvatarWorld3D from "@/components/AvatarWorld3D";
 
 const PUB = process.env.PUBLIC_URL;
-const STRESS = { calmo: "#9aa6b2", medio: "#a4afbb", alto: "#b06e78" };
+const STRESS = { calmo: "hsl(var(--muted-foreground))", medio: "hsl(var(--muted-foreground))", alto: "hsl(var(--mattone))" };
 const themeFor = (av) => (av || "").includes("nexus") ? "bigmix" : "miki";
-const accentFor = (t) => t === "mikemix" ? "#3E9C93" : t === "bigmix" ? "#6EA8FE" : "#E0A106";
+const accentFor = (t) => t === "mikemix" ? "hsl(var(--primary))" : t === "bigmix" ? "hsl(var(--muted-foreground))" : "hsl(var(--muted-foreground))";
 const roleFor = (t, tri) => t === "mikemix" ? tri("Reparto Produzione", "Produktion", "Production Floor", "Producción", "Production", "تولید") : t === "bigmix" ? tri("Assistente AI", "KI-Assistent", "AI Assistant", "Asistente IA", "Assistant IA", "دستیار") : tri("La Direzione", "Der Capo", "The Capo", "El Capo", "Le Capo", "کاپو");
 
 // FASE 1 — Cyber-Trio: briefing d'apertura turno. Avatar olografici che REAGISCONO
@@ -40,21 +40,21 @@ export default function ShiftBriefing({ onClose }) {
     return () => timers.current.forEach(clearTimeout);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const stressColor = STRESS[data?.level] || "#9aa6b2";
+  const stressColor = STRESS[data?.level] || "hsl(var(--muted-foreground))";
 
   return (
-    <div data-testid="shift-briefing" className="fixed inset-0 z-[90] bg-[#050810]/97 backdrop-blur-xl flex flex-col items-center justify-center p-5 overflow-auto">
+    <div data-testid="shift-briefing" className="fixed inset-0 z-[90] bg-background/97 backdrop-blur-xl flex flex-col items-center justify-center p-5 overflow-auto">
       <div className="absolute inset-0 pointer-events-none" style={{ background: `radial-gradient(70% 55% at 50% 40%, ${stressColor}22, transparent 70%)` }} />
-      <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
+      <button data-testid="briefing-close" aria-label={tri("Chiudi briefing", "Briefing schließen", "Close briefing", "Cerrar briefing", "Fermer", "بستن")} onClick={onClose} className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-background border border-border/40 text-foreground flex items-center justify-center active:scale-90"><X className="w-5 h-5" /></button>
 
-      <p className="relative font-cyber text-xs tracking-[0.35em] uppercase mb-1" style={{ color: stressColor }}>{tri("Apertura Turno", "Schichtbeginn", "Shift Open", "Apertura de Turno", "Ouverture", "شروع شیفت")}</p>
-      <h2 className="relative font-cyber text-2xl sm:text-3xl font-black text-white uppercase tracking-wider mb-1">Sitor</h2>
+      <p className="relative font-display text-xs tracking-[0.35em] uppercase mb-1" style={{ color: stressColor }}>{tri("Apertura Turno", "Schichtbeginn", "Shift Open", "Apertura de Turno", "Ouverture", "شروع شیفت")}</p>
+      <h2 className="relative font-display text-2xl sm:text-3xl font-black text-foreground uppercase tracking-wider mb-1">Sitor</h2>
       {data && <p className="relative font-mono-data text-[11px] tracking-widest uppercase mb-8" style={{ color: stressColor }}>{tri("Stato impianto", "Anlagenstatus", "Plant status", "Estado planta", "État usine", "وضعیت")}: {data.level} · {data.stats.workers} op · {data.stats.leaders} {tri("linee","Linien","lines","líneas","lignes","خط")} · {data.stats.low_stock} {tri("scorte basse","niedrig","low stock","stock bajo","stock bas","کم")}</p>}
 
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">
         {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "sitor_official.jpg" }, { avatar: "sitor_official.jpg" }]).map((ln, i) => {
           const on = active === i;
-          const c = ln.accent || "#64748B";
+          const c = ln.accent || "hsl(var(--muted-foreground))";
           return (
             <div key={i} data-testid={`briefing-avatar-${i}`} onClick={() => openWorld(i, ln)} role="button" tabIndex={0} className="flex flex-col items-center cursor-pointer group">
               <motion.div animate={{ scale: on ? 1.12 : 1, opacity: on ? 1 : 0.55 }} transition={{ duration: 0.5 }} className="relative group-hover:opacity-100 group-hover:scale-105">
@@ -71,7 +71,7 @@ export default function ShiftBriefing({ onClose }) {
                   </div>
                 )}
               </motion.div>
-              <span className="mt-2 font-cyber text-[10px] sm:text-xs uppercase tracking-wider" style={{ color: on ? stressColor : "#7d97ac" }}>{ln.who || ""}</span>
+              <span className="mt-2 font-display text-[10px] sm:text-xs uppercase tracking-wider" style={{ color: on ? stressColor : "hsl(var(--muted-foreground))" }}>{ln.who || ""}</span>
             </div>
           );
         })}
@@ -80,33 +80,33 @@ export default function ShiftBriefing({ onClose }) {
       <AnimatePresence mode="wait">
         {data && active >= 0 && (
           <motion.p key={active} data-testid="briefing-line" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            className="relative max-w-lg text-center text-base sm:text-lg text-[#e6f6fa] leading-relaxed min-h-[3.5rem]">
+            className="relative max-w-lg text-center text-base sm:text-lg text-foreground leading-relaxed min-h-[3.5rem]">
             {data.lines[active]?.text}
           </motion.p>
         )}
       </AnimatePresence>
 
-      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-cyber font-black text-sm text-[#060A10] active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},#8a97a6)` }}>
+      <button data-testid="briefing-start" onClick={onClose} className="relative mt-8 px-6 py-3 rounded-xl font-display font-black text-sm text-foreground active:scale-95 transition-all" style={{ background: `linear-gradient(90deg,${stressColor},hsl(var(--muted-foreground)))` }}>
         {tri("Entra nella plancia", "Zur Konsole", "Enter the console", "Entrar a la consola", "Entrer", "ورود به کنسول")}
       </button>
-      <p className="relative mt-3 text-[11px] text-[#64748B]">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>
+      <p className="relative mt-3 text-[11px] text-muted-foreground">{tri("Tocca un avatar per entrare nel suo mondo 3D", "Tippe einen Avatar für seine 3D-Welt", "Tap an avatar to enter its 3D world", "Toca un avatar para su mundo 3D", "Touche un avatar pour son monde 3D", "برای دنیای سه‌بعدی روی آواتار بزن")}</p>
 
       <AnimatePresence>
         {worldFor && (() => {
           const t = themeFor(worldFor.avatar); const acc = accentFor(t);
           return (
             <motion.div key="world" data-testid="avatar-world-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[95] bg-[#050810] overflow-hidden">
+              className="fixed inset-0 z-[95] bg-background overflow-hidden">
               <AvatarWorld3D theme={t} accent={acc} speaking={t === "bigmix" && speaking} />
-              <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-[#0C1019]/80 border border-[#64748B]/40 text-[#cfe6f5] text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
+              <button data-testid="avatar-world-close" onClick={() => setWorldFor(null)} className="absolute top-4 left-4 z-20 flex items-center gap-2 px-4 py-2 rounded-full bg-background/80 border border-border/40 text-foreground text-sm font-bold active:scale-95"><X className="w-4 h-4" /> {tri("Indietro", "Zurück", "Back", "Atrás", "Retour", "بازگشت")}</button>
               <div className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-6">
                 <motion.div initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ delay: 0.35, type: "spring", stiffness: 120 }}
                   className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2" style={{ borderColor: acc, boxShadow: `0 0 60px ${acc}cc, inset 0 0 22px ${acc}66` }}>
                   <img src={`${PUB}/${worldFor.avatar}`} alt="" className="w-full h-full object-cover object-top" />
                 </motion.div>
-                <motion.h3 initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="mt-5 font-cyber text-2xl font-black uppercase tracking-wider text-white">{worldFor.who || ""}</motion.h3>
+                <motion.h3 initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="mt-5 font-display text-2xl font-black uppercase tracking-wider text-foreground">{worldFor.who || ""}</motion.h3>
                 <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="font-mono-data text-[11px] uppercase tracking-[0.3em] mb-4" style={{ color: acc }}>{roleFor(t, tri)}</motion.p>
-                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }} className="max-w-md text-center text-sm sm:text-base text-[#dbeaf2] leading-relaxed">{worldFor.text || ""}</motion.p>
+                <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 }} className="max-w-md text-center text-sm sm:text-base text-foreground leading-relaxed">{worldFor.text || ""}</motion.p>
               </div>
             </motion.div>
           );

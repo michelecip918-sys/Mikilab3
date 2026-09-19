@@ -5,7 +5,7 @@ import { useHeartbeat } from "@/context/PlantHeartbeatContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const HEALTH_COL = { ok: "#6e9e85", attenzione: "#a4afbb", manutenzione: "#b06e78" };
+const HEALTH_COL = { ok: "hsl(var(--accent))", attenzione: "hsl(var(--muted-foreground))", manutenzione: "hsl(var(--mattone))" };
 
 // v14 · Flotta AGV: routing autonomo + rilevamento acustico preventivo guasti.
 export default function AgvFleet() {
@@ -25,14 +25,14 @@ export default function AgvFleet() {
   return (
     <div data-testid="agv-fleet" className="space-y-2">
       {data.carts.map((c) => {
-        const col = HEALTH_COL[c.health] || "#6e9e85";
+        const col = HEALTH_COL[c.health] || "hsl(var(--accent))";
         return (
           <div key={c.id} data-testid={`agv-${c.id}`} className="rounded-xl border p-2.5" style={{ borderColor: `${col}44`, background: `${col}0a` }}>
             <div className="flex items-center gap-2">
               <Truck className="w-4 h-4 shrink-0" style={{ color: col }} />
-              <span className="text-sm font-black text-white">{c.name}</span>
-              <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8] flex-1 min-w-0"><Route className="w-3 h-3" /> {c.route_label}</span>
-              <span className="inline-flex items-center gap-1 text-[11px] text-[#94A3B8]"><BatteryMedium className="w-3.5 h-3.5" /> {c.battery_pct}%</span>
+              <span className="text-sm font-black text-foreground">{c.name}</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground flex-1 min-w-0"><Route className="w-3 h-3" /> {c.route_label}</span>
+              <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"><BatteryMedium className="w-3.5 h-3.5" /> {c.battery_pct}%</span>
             </div>
             <div className="mt-1 flex items-center gap-2 text-[11px]">
               <span className="inline-flex items-center gap-1" style={{ color: col }}><Volume2 className="w-3 h-3" /> {c.acoustic_db} dB</span>
@@ -42,7 +42,7 @@ export default function AgvFleet() {
         );
       })}
       {data.alerts.map((a, i) => (
-        <p key={i} data-testid={`agv-alert-${i}`} className="text-[12px] text-[#b06e78] font-semibold">🔧 {a.text}</p>
+        <p key={i} data-testid={`agv-alert-${i}`} className="text-[12px] text-mattone font-semibold">🔧 {a.text}</p>
       ))}
     </div>
   );

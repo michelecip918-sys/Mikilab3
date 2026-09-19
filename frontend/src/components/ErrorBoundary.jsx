@@ -30,23 +30,23 @@ export default class ErrorBoundary extends React.Component {
     const lang = this.props.lang;
     const tri = (i, d, e) => mkTri(lang)(i, d, e);
     return (
-      <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] p-6 text-center">
-        <div className="w-14 h-14 mx-auto rounded-full bg-[#3E9C93]/12 flex items-center justify-center mb-3">
-          <AlertTriangle className="w-7 h-7 text-[#3E9C93]" />
+      <div data-testid="error-boundary" className="max-w-md mx-auto mt-10 rounded-2xl bg-card dark:bg-card border border-border dark:border-border p-6 text-center">
+        <div className="w-14 h-14 mx-auto rounded-full bg-primary/12 flex items-center justify-center mb-3">
+          <AlertTriangle className="w-7 h-7 text-primary" />
         </div>
-        <h2 className="font-display text-lg font-bold text-[#2B303B] dark:text-[#e4eff8]">
+        <h2 className="font-display text-lg font-bold text-foreground dark:text-foreground">
           {tri("Ops, qualcosa si è bloccato", "Ups, etwas ist hängengeblieben", "Oops, something got stuck")}
         </h2>
-        <p className="text-sm text-[#7E8A93] mt-1.5">
+        <p className="text-sm text-muted-foreground mt-1.5">
           {tri("Nessun problema: riprova o torna alla Home.", "Kein Problem: versuch es erneut oder geh zur Startseite.", "No worries: retry or go back Home.")}
         </p>
         <div className="flex flex-col gap-2 mt-5">
           <button data-testid="error-retry" onClick={() => this.setState({ hasError: false })}
-            className="inline-flex items-center justify-center gap-2 bg-[#3E9C93] text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-primary text-white font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <RotateCcw className="w-4.5 h-4.5" /> {tri("Riprova", "Erneut versuchen", "Retry")}
           </button>
           <button data-testid="error-home" onClick={() => { window.location.assign(window.location.origin + "/"); }}
-            className="inline-flex items-center justify-center gap-2 bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93] dark:text-[#a9d2ec] font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
+            className="inline-flex items-center justify-center gap-2 bg-background dark:bg-card border border-border dark:border-border text-primary dark:text-foreground font-semibold px-5 py-3 rounded-2xl active:scale-98 transition-all">
             <Home className="w-4.5 h-4.5" /> {tri("Torna alla Home", "Zur Startseite", "Go Home")}
           </button>
         </div>

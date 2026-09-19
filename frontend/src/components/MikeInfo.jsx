@@ -58,45 +58,45 @@ export default function MikeInfo({ context = "" }) {
   return (
     <>
       <button data-testid="mike-info-trigger" onClick={() => setOpen(true)} title="Sitor"
-        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#8ba3b4]/15 border border-[#8ba3b4]/50 text-[#8ba3b4] active:scale-90 transition-all hover:bg-[#8ba3b4]/25">
+        className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-muted/15 border border-border/50 text-muted-foreground active:scale-90 transition-all hover:bg-muted/25">
         <Info className="w-4 h-4" />
       </button>
       <AnimatePresence>
         {open && (
-          <motion.div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-black/60 p-3"
+          <motion.div className="fixed inset-0 z-[80] flex items-end sm:items-center justify-center bg-background/60 p-3"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setOpen(false)}>
             <motion.div data-testid="mike-info-panel" onClick={(e) => e.stopPropagation()}
               initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 40, opacity: 0 }}
-              className="w-full max-w-md rounded-2xl bg-[#0b0f19] border border-[#8ba3b4]/40 shadow-2xl p-4 space-y-3">
+              className="w-full max-w-md rounded-2xl bg-background border border-border/40 shadow-2xl p-4 space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Sparkles className="w-5 h-5 text-[#8ba3b4]" />
+                  <Sparkles className="w-5 h-5 text-muted-foreground" />
                   <div>
-                    <h3 className="text-sm font-extrabold text-[#8ba3b4]">Sitor{context ? ` · ${context}` : ""}</h3>
-                    <p className="text-[11px] text-[#94A3B8]">{tri("Comanda a voce: delego, creo o modifico all'istante.", "Sprich: ich delegiere, erstelle oder ändere sofort.", "Speak: I delegate, create or change instantly.", "Habla: delego, creo o cambio al instante.", "Parle : je délègue, crée ou modifie à l'instant.", "بگو: فوری واگذار، می‌سازم یا تغییر می‌دهم.")}</p>
+                    <h3 className="text-sm font-extrabold text-muted-foreground">Sitor{context ? ` · ${context}` : ""}</h3>
+                    <p className="text-[11px] text-muted-foreground">{tri("Comanda a voce: delego, creo o modifico all'istante.", "Sprich: ich delegiere, erstelle oder ändere sofort.", "Speak: I delegate, create or change instantly.", "Habla: delego, creo o cambio al instante.", "Parle : je délègue, crée ou modifie à l'instant.", "بگو: فوری واگذار، می‌سازم یا تغییر می‌دهم.")}</p>
                   </div>
                 </div>
-                <button data-testid="mike-info-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-[#0f172a] border border-[#1e293b] text-[#94A3B8] flex items-center justify-center"><X className="w-4 h-4" /></button>
+                <button data-testid="mike-info-close" onClick={() => setOpen(false)} className="w-8 h-8 rounded-full bg-background border border-border text-muted-foreground flex items-center justify-center"><X className="w-4 h-4" /></button>
               </div>
 
-              <p className="text-[11px] text-[#64748B]">{tri("Es.: «Assegna la linea baguette ad Antonio» · «Crea sezione Controllo Qualità»", "Z.B.: «Weise die Baguette-Linie Antonio zu»", "E.g.: \u00abAssign the baguette line to Antonio\u00bb", "Ej.: \u00abAsigna la línea baguette a Antonio\u00bb", "Ex. : \u00abAssigne la ligne baguette à Antonio\u00bb", "مثلاً: «خط باگت را به آنتونیو بده»")}</p>
+              <p className="text-[11px] text-muted-foreground">{tri("Es.: «Assegna la linea baguette ad Antonio» · «Crea sezione Controllo Qualità»", "Z.B.: «Weise die Baguette-Linie Antonio zu»", "E.g.: \u00abAssign the baguette line to Antonio\u00bb", "Ej.: \u00abAsigna la línea baguette a Antonio\u00bb", "Ex. : \u00abAssigne la ligne baguette à Antonio\u00bb", "مثلاً: «خط باگت را به آنتونیو بده»")}</p>
 
               <div className="flex items-center gap-2">
                 <button data-testid="mike-info-mic" onClick={listen} disabled={!supported || busy}
-                  className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-[#8ba3b4]/15 border-[#8ba3b4]/50 text-[#8ba3b4]"} disabled:opacity-40`}>
+                  className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center border transition-all ${listening ? "bg-rose-500/20 border-rose-500 text-rose-300 animate-pulse" : "bg-muted/15 border-border/50 text-muted-foreground"} disabled:opacity-40`}>
                   <Mic className="w-5 h-5" />
                 </button>
                 <input data-testid="mike-info-input" value={text} onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter") send(); }}
                   placeholder={tri("Scrivi o parla…", "Schreib oder sprich…", "Type or speak…", "Escribe o habla…", "Écris ou parle…", "بنویس یا بگو…")}
-                  className="flex-1 min-w-0 bg-[#030712] border border-[#1e293b] rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-[#8ba3b4]" />
+                  className="flex-1 min-w-0 bg-background border border-border rounded-xl px-3 py-2.5 text-sm text-foreground outline-none focus:border-border" />
                 <button data-testid="mike-info-send" onClick={() => send()} disabled={busy || !text.trim()}
-                  className="shrink-0 w-11 h-11 rounded-xl bg-[#8ba3b4] text-[#030712] flex items-center justify-center disabled:opacity-40 active:scale-95">
+                  className="shrink-0 w-11 h-11 rounded-xl bg-muted text-foreground flex items-center justify-center disabled:opacity-40 active:scale-95">
                   {busy ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                 </button>
               </div>
 
-              {reply && <div data-testid="mike-info-reply" className="rounded-xl bg-[#8ba3b4]/8 border border-[#8ba3b4]/30 p-3 text-sm text-[#cbd5e1]">{reply}</div>}
+              {reply && <div data-testid="mike-info-reply" className="rounded-xl bg-muted/8 border border-border/30 p-3 text-sm text-foreground">{reply}</div>}
             </motion.div>
           </motion.div>
         )}

@@ -115,17 +115,17 @@ export default function MagazzinoManager() {
   return (
     <div data-testid="magazzino-manager" className="space-y-4">
       <div className="flex items-center justify-between gap-2">
-        <h3 className="text-sm font-bold text-[#D95200] flex items-center gap-2">
+        <h3 className="text-sm font-bold text-primary flex items-center gap-2">
           <Package className="w-4 h-4" /> {tri("Magazzino & Ceste", "Lager & Körbe", "Warehouse & Baskets", "Almacén y Cestas", "Magasin & Paniers", "انبار و سبدها")}
         </h3>
-        <button data-testid="magazzino-refresh" onClick={load} className="p-1.5 rounded-lg bg-[#1F2937] border border-[#374151] text-[#94A3B8] hover:text-white active:scale-95 transition-all">
+        <button data-testid="magazzino-refresh" onClick={load} className="p-1.5 rounded-lg bg-background border border-border text-muted-foreground hover:text-foreground active:scale-95 transition-all">
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
         </button>
       </div>
 
       {activeDept && activeDept !== "tutti" && (
-        <div data-testid="magazzino-dept-banner" className="flex items-center gap-1.5 rounded-lg border border-[#D95200]/40 bg-[#D95200]/10 px-3 py-1.5 text-xs font-bold text-[#D95200]">
-          <span>{deptIcon(activeDept)}</span> {tri("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, tri)} <span className="font-normal text-[#94A3B8]">· {visibleItems.length}/{items.length} {tri("materie", "Zutaten", "items", "materias", "matières", "مواد")}</span>
+        <div data-testid="magazzino-dept-banner" className="flex items-center gap-1.5 rounded-lg border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+          <span>{deptIcon(activeDept)}</span> {tri("Reparto", "Bereich", "Department", "Departamento", "Rayon", "بخش")}: {deptLabel(activeDept, tri)} <span className="font-normal text-muted-foreground">· {visibleItems.length}/{items.length} {tri("materie", "Zutaten", "items", "materias", "matières", "مواد")}</span>
         </div>
       )}
 
@@ -138,8 +138,8 @@ export default function MagazzinoManager() {
             {prof.warehouse.map((n) => (
               <button key={n} data-testid={`magazzino-suggest-${n.replace(/[^a-zA-Z0-9]/g, "").toLowerCase()}`}
                 onClick={() => setForm((f) => ({ ...f, name: n, department: activeDept, kind: /farina|mehl|semola|w\d/i.test(n) ? "farina" : "ingrediente" }))}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#0f172a] border border-[#D95200]/30 text-[11px] font-semibold text-[#94A3B8] hover:text-white hover:border-[#D95200] active:scale-95 transition-all">
-                <Plus className="w-3 h-3 text-[#D95200]" /> {n}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-background border border-primary/30 text-[11px] font-semibold text-muted-foreground hover:text-foreground hover:border-primary active:scale-95 transition-all">
+                <Plus className="w-3 h-3 text-primary" /> {n}
               </button>
             ))}
           </div>
@@ -156,51 +156,51 @@ export default function MagazzinoManager() {
       {low.length > 0 && <OrdineRiacquisto lowItems={low} />}
 
       {/* Form di carico rapido */}
-      <form onSubmit={submit} className="grid grid-cols-2 sm:grid-cols-7 gap-2 p-3 rounded-xl bg-[#030712] border border-[#1F2937]">
-        <input data-testid="magazzino-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Nome (es. Farina 0)", "Name (z.B. Mehl 0)", "Name (e.g. Flour 0)", "Nombre (ej. Harina 0)", "Nom (ex. Farine 0)", "نام (مثلاً آرد ۰)")} className="col-span-2 sm:col-span-2 bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
-        <select data-testid="magazzino-kind" value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#D95200]">
+      <form onSubmit={submit} className="grid grid-cols-2 sm:grid-cols-7 gap-2 p-3 rounded-xl bg-background border border-border">
+        <input data-testid="magazzino-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tri("Nome (es. Farina 0)", "Name (z.B. Mehl 0)", "Name (e.g. Flour 0)", "Nombre (ej. Harina 0)", "Nom (ex. Farine 0)", "نام (مثلاً آرد ۰)")} className="col-span-2 sm:col-span-2 bg-background border border-border rounded-lg px-2.5 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary outline-none" />
+        <select data-testid="magazzino-kind" value={form.kind} onChange={(e) => setForm({ ...form, kind: e.target.value })} className="bg-background border border-border rounded-lg px-2 py-2 text-xs text-foreground outline-none focus:border-primary">
           {KINDS.map((k) => <option key={k.v} value={k.v}>{tri(...k.labels)}</option>)}
         </select>
-        <input data-testid="magazzino-qty" type="number" step="0.1" min="0" value={form.quantity_kg} onChange={(e) => setForm({ ...form, quantity_kg: e.target.value })} placeholder={tri("Q.tà kg", "Menge kg", "Qty kg", "Cant. kg", "Qté kg", "مقدار kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
-        <input data-testid="magazzino-min" type="number" step="0.1" min="0" value={form.min_kg} onChange={(e) => setForm({ ...form, min_kg: e.target.value })} placeholder={tri("Soglia kg", "Schwelle kg", "Threshold kg", "Umbral kg", "Seuil kg", "آستانه kg")} className="bg-[#111827] border border-[#374151] rounded-lg px-2.5 py-2 text-xs text-white placeholder:text-[#64748B] focus:border-[#D95200] outline-none" />
-        <select data-testid="magazzino-dept" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="bg-[#111827] border border-[#374151] rounded-lg px-2 py-2 text-xs text-white outline-none focus:border-[#D95200]">
+        <input data-testid="magazzino-qty" type="number" step="0.1" min="0" value={form.quantity_kg} onChange={(e) => setForm({ ...form, quantity_kg: e.target.value })} placeholder={tri("Q.tà kg", "Menge kg", "Qty kg", "Cant. kg", "Qté kg", "مقدار kg")} className="bg-background border border-border rounded-lg px-2.5 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary outline-none" />
+        <input data-testid="magazzino-min" type="number" step="0.1" min="0" value={form.min_kg} onChange={(e) => setForm({ ...form, min_kg: e.target.value })} placeholder={tri("Soglia kg", "Schwelle kg", "Threshold kg", "Umbral kg", "Seuil kg", "آستانه kg")} className="bg-background border border-border rounded-lg px-2.5 py-2 text-xs text-foreground placeholder:text-muted-foreground focus:border-primary outline-none" />
+        <select data-testid="magazzino-dept" value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="bg-background border border-border rounded-lg px-2 py-2 text-xs text-foreground outline-none focus:border-primary">
           <option value="">🌐 {tri("Tutti i reparti", "Alle Bereiche", "All departments", "Todos los departamentos", "Tous les rayons", "همه بخش‌ها")}</option>
           {DEPTS.map((d) => <option key={d} value={d}>{deptIcon(d)} {deptLabel(d, tri)}</option>)}
         </select>
-        <button data-testid="magazzino-add" type="submit" disabled={saving} className="inline-flex items-center justify-center gap-1 bg-[#D95200] text-[#030712] text-xs font-bold rounded-lg px-2.5 py-2 disabled:opacity-50 active:scale-95 transition-all">
+        <button data-testid="magazzino-add" type="submit" disabled={saving} className="inline-flex items-center justify-center gap-1 bg-primary text-primary-foreground text-xs font-bold rounded-lg px-2.5 py-2 disabled:opacity-50 active:scale-95 transition-all">
           {saving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Plus className="w-3.5 h-3.5" />} {tri("Carica", "Laden", "Load", "Cargar", "Charger", "بارگذاری")}
         </button>
       </form>
 
       {/* Elenco scorte */}
       {loading ? (
-        <div className="py-6 text-center text-[#64748B] text-xs flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {tri("Caricamento…", "Wird geladen…", "Loading…", "Cargando…", "Chargement…", "در حال بارگیری…")}</div>
+        <div className="py-6 text-center text-muted-foreground text-xs flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {tri("Caricamento…", "Wird geladen…", "Loading…", "Cargando…", "Chargement…", "در حال بارگیری…")}</div>
       ) : visibleItems.length === 0 ? (
-        <p data-testid="magazzino-empty" className="py-6 text-center text-[#64748B] text-xs">{items.length === 0 ? tri("Nessuna materia prima registrata. Usa il form sopra per il primo carico.", "Keine Zutaten erfasst. Nutze das Formular oben für den ersten Eingang.", "No ingredients registered. Use the form above for the first load.", "No hay materias primas. Usa el formulario para la primera carga.", "Aucune matière première. Utilise le formulaire ci-dessus.", "هیچ ماده‌ای ثبت نشده. از فرم بالا استفاده کن.") : `${tri("Nessuna materia prima per il reparto", "Keine Zutaten für den Bereich", "No ingredients for department", "Sin materias para el departamento", "Aucune matière pour le rayon", "ماده‌ای برای بخش")} ${deptLabel(activeDept, tri)}. ${tri("Le materie condivise (senza reparto) restano sempre visibili.", "Gemeinsame Zutaten (ohne Bereich) bleiben immer sichtbar.", "Shared items (no department) stay always visible.", "Las materias compartidas siempre son visibles.", "Les matières partagées restent visibles.", "مواد مشترک همیشه نمایش داده می‌شوند.")}`}</p>
+        <p data-testid="magazzino-empty" className="py-6 text-center text-muted-foreground text-xs">{items.length === 0 ? tri("Nessuna materia prima registrata. Usa il form sopra per il primo carico.", "Keine Zutaten erfasst. Nutze das Formular oben für den ersten Eingang.", "No ingredients registered. Use the form above for the first load.", "No hay materias primas. Usa el formulario para la primera carga.", "Aucune matière première. Utilise le formulaire ci-dessus.", "هیچ ماده‌ای ثبت نشده. از فرم بالا استفاده کن.") : `${tri("Nessuna materia prima per il reparto", "Keine Zutaten für den Bereich", "No ingredients for department", "Sin materias para el departamento", "Aucune matière pour le rayon", "ماده‌ای برای بخش")} ${deptLabel(activeDept, tri)}. ${tri("Le materie condivise (senza reparto) restano sempre visibili.", "Gemeinsame Zutaten (ohne Bereich) bleiben immer sichtbar.", "Shared items (no department) stay always visible.", "Las materias compartidas siempre son visibles.", "Les matières partagées restent visibles.", "مواد مشترک همیشه نمایش داده می‌شوند.")}`}</p>
       ) : (
         <div className="space-y-2">
           {visibleItems.map((it) => {
             const isLow = Number(it.min_kg) > 0 && Number(it.quantity_kg) <= Number(it.min_kg);
             return (
-              <div key={it.id} data-testid={`magazzino-item-${it.id}`} className={`flex items-center gap-2 p-3 rounded-xl border ${isLow ? "border-rose-500/50 bg-rose-500/5" : "border-[#1F2937] bg-[#111827]"}`}>
+              <div key={it.id} data-testid={`magazzino-item-${it.id}`} className={`flex items-center gap-2 p-3 rounded-xl border ${isLow ? "border-rose-500/50 bg-rose-500/5" : "border-border bg-background"}`}>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white truncate">{it.name}</span>
-                    <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-[#1F2937] text-[#94A3B8] border border-[#374151]">{it.kind}</span>
-                    {it.department && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#D95200]/15 text-[#D95200] border border-[#D95200]/30">{deptIcon(it.department)} {deptLabel(it.department, tri)}</span>}
+                    <span className="text-sm font-bold text-foreground truncate">{it.name}</span>
+                    <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-background text-muted-foreground border border-border">{it.kind}</span>
+                    {it.department && <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary/15 text-primary border border-primary/30">{deptIcon(it.department)} {deptLabel(it.department, tri)}</span>}
                     {isLow && <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 flex items-center gap-1"><AlertTriangle className="w-2.5 h-2.5" /> {tri("Bassa", "Niedrig", "Low", "Baja", "Basse", "کم")}</span>}
                   </div>
-                  <div className="text-[11px] text-[#94A3B8] mt-0.5">
-                    <strong className={isLow ? "text-rose-300" : "text-[#D95200]"}>{it.quantity_kg} {it.unit || "kg"}</strong>
-                    {Number(it.min_kg) > 0 && <span className="text-[#64748B]"> · {tri("soglia", "Schwelle", "threshold", "umbral", "seuil", "آستانه")} {it.min_kg} {it.unit || "kg"}</span>}
+                  <div className="text-[11px] text-muted-foreground mt-0.5">
+                    <strong className={isLow ? "text-rose-300" : "text-primary"}>{it.quantity_kg} {it.unit || "kg"}</strong>
+                    {Number(it.min_kg) > 0 && <span className="text-muted-foreground"> · {tri("soglia", "Schwelle", "threshold", "umbral", "seuil", "آستانه")} {it.min_kg} {it.unit || "kg"}</span>}
                     {stats[it.id] && stats[it.id].days_left != null && (
-                      <span className="text-[#64748B]"> · ~<strong className="text-[#38bdf8]">{stats[it.id].days_left}g</strong> {tri("autonomia", "Reichweite", "autonomy", "autonomía", "autonomie", "خودکفایی")}</span>
+                      <span className="text-muted-foreground"> · ~<strong className="text-muted-foreground">{stats[it.id].days_left}g</strong> {tri("autonomia", "Reichweite", "autonomy", "autonomía", "autonomie", "خودکفایی")}</span>
                     )}
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
-                  <button data-testid={`magazzino-dec-${it.id}`} onClick={() => adjust(it, -1)} className="w-7 h-7 rounded-lg bg-[#1F2937] border border-[#374151] text-white flex items-center justify-center active:scale-90 transition-all"><Minus className="w-3.5 h-3.5" /></button>
-                  <button data-testid={`magazzino-inc-${it.id}`} onClick={() => adjust(it, +1)} className="w-7 h-7 rounded-lg bg-[#1F2937] border border-[#374151] text-white flex items-center justify-center active:scale-90 transition-all"><Plus className="w-3.5 h-3.5" /></button>
+                  <button data-testid={`magazzino-dec-${it.id}`} onClick={() => adjust(it, -1)} className="w-7 h-7 rounded-lg bg-background border border-border text-foreground flex items-center justify-center active:scale-90 transition-all"><Minus className="w-3.5 h-3.5" /></button>
+                  <button data-testid={`magazzino-inc-${it.id}`} onClick={() => adjust(it, +1)} className="w-7 h-7 rounded-lg bg-background border border-border text-foreground flex items-center justify-center active:scale-90 transition-all"><Plus className="w-3.5 h-3.5" /></button>
                   <button data-testid={`magazzino-del-${it.id}`} onClick={() => remove(it)} className="w-7 h-7 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-300 flex items-center justify-center active:scale-90 transition-all"><Trash2 className="w-3.5 h-3.5" /></button>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export default function MagazzinoManager() {
         </div>
       )}
       <ConsumiChart />
-      <p className="text-[10px] text-[#64748B]">{tri("I pulsanti +/- regolano la giacenza di 1 unità; imposta una soglia per attivare l'allarme vocale di scorta minima.", "Die +/- Tasten ändern den Bestand um 1 Einheit; lege eine Schwelle für den Sprachalarm fest.", "The +/- buttons adjust stock by 1 unit; set a threshold to enable the low-stock voice alert.", "Los botones +/- ajustan 1 unidad; fija un umbral para la alerta de voz.", "Les boutons +/- ajustent d'1 unité ; définis un seuil pour l'alerte vocale.", "دکمه‌های +/- موجودی را ۱ واحد تغییر می‌دهند؛ برای هشدار صوتی آستانه تعیین کن.")}</p>
+      <p className="text-[10px] text-muted-foreground">{tri("I pulsanti +/- regolano la giacenza di 1 unità; imposta una soglia per attivare l'allarme vocale di scorta minima.", "Die +/- Tasten ändern den Bestand um 1 Einheit; lege eine Schwelle für den Sprachalarm fest.", "The +/- buttons adjust stock by 1 unit; set a threshold to enable the low-stock voice alert.", "Los botones +/- ajustan 1 unidad; fija un umbral para la alerta de voz.", "Les boutons +/- ajustent d'1 unité ; définis un seuil pour l'alerte vocale.", "دکمه‌های +/- موجودی را ۱ واحد تغییر می‌دهند؛ برای هشدار صوتی آستانه تعیین کن.")}</p>
     </div>
   );
 }

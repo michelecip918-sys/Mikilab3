@@ -65,8 +65,8 @@ export const OrgSwitcher = ({ onSwitched }) => {
   if (!data) return null;
 
   return (
-    <div data-testid="org-switcher" className="mt-2 pt-2 border-t border-[#1e293b]">
-      <div className="flex items-center gap-1.5 text-[10px] font-bold text-[#8a97a6] mb-1.5">
+    <div data-testid="org-switcher" className="mt-2 pt-2 border-t border-border">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground mb-1.5">
         <Building2 className="w-3.5 h-3.5" /> {tri("LE TUE AZIENDE", "DEINE FIRMEN", "YOUR COMPANIES", "TUS EMPRESAS", "VOS ENTREPRISES", "شرکت‌های شما")}
       </div>
       <div className="space-y-1 max-h-52 overflow-auto pr-0.5">
@@ -76,18 +76,18 @@ export const OrgSwitcher = ({ onSwitched }) => {
               <div className="flex items-center gap-1 w-full">
                 <input data-testid={`org-edit-input-${o.org_id}`} value={editName} onChange={(e) => setEditName(e.target.value)} autoFocus
                   onKeyDown={(e) => { if (e.key === "Enter") doRename(o.org_id); if (e.key === "Escape") setEditId(null); }}
-                  className="flex-1 min-w-0 rounded-md bg-[#060A10] border border-[#8a97a6]/40 text-white text-[11px] px-2 py-1.5 outline-none" />
-                <button data-testid={`org-edit-save-${o.org_id}`} onClick={() => doRename(o.org_id)} className="shrink-0 px-2 py-1.5 rounded-md bg-[#7E9A82]/20 border border-[#7E9A82]/50 text-[#7E9A82] text-[11px] font-bold"><Check className="w-3.5 h-3.5" /></button>
+                  className="flex-1 min-w-0 rounded-md bg-background border border-border/40 text-foreground text-[11px] px-2 py-1.5 outline-none" />
+                <button data-testid={`org-edit-save-${o.org_id}`} onClick={() => doRename(o.org_id)} className="shrink-0 px-2 py-1.5 rounded-md bg-accent/20 border border-accent/50 text-accent text-[11px] font-bold"><Check className="w-3.5 h-3.5" /></button>
               </div>
             ) : (
               <>
                 <button data-testid={`org-switch-${o.org_id}`} onClick={() => doSwitch(o.org_id)} disabled={busy}
-                  className={`flex-1 min-w-0 flex items-center gap-1.5 px-2 py-1.5 rounded-md text-left text-[11px] font-bold border transition-all active:scale-[0.98] ${o.is_active ? "bg-[#D97736]/18 border-[#D97736]/55 text-[#D97736]" : "bg-[#0C1019] border-[#1e293b] text-white hover:border-[#8a97a6]/50"}`}>
+                  className={`flex-1 min-w-0 flex items-center gap-1.5 px-2 py-1.5 rounded-md text-left text-[11px] font-bold border transition-all active:scale-[0.98] ${o.is_active ? "bg-primary/18 border-primary/55 text-primary" : "bg-background border-border text-white hover:border-border/50"}`}>
                   {o.is_active ? <Check className="w-3.5 h-3.5 shrink-0" /> : <Building2 className="w-3.5 h-3.5 shrink-0 opacity-60" />}
                   <span className="truncate">{o.name}</span>
                 </button>
                 <button data-testid={`org-rename-open-${o.org_id}`} onClick={() => { setEditId(o.org_id); setEditName(o.name); }}
-                  className="shrink-0 px-1.5 py-1.5 rounded-md bg-[#0C1019] border border-[#1e293b] text-[#8a97a6] hover:border-[#8a97a6]/50"><Pencil className="w-3 h-3" /></button>
+                  className="shrink-0 px-1.5 py-1.5 rounded-md bg-background border border-border text-muted-foreground hover:border-border/50"><Pencil className="w-3 h-3" /></button>
               </>
             )}
           </div>
@@ -99,14 +99,14 @@ export const OrgSwitcher = ({ onSwitched }) => {
           <input data-testid="org-new-input" value={newName} onChange={(e) => setNewName(e.target.value)} autoFocus
             placeholder={tri("Nome nuova azienda", "Name neue Firma", "New company name", "Nombre nueva empresa", "Nom nouvelle entreprise", "نام شرکت جدید")}
             onKeyDown={(e) => { if (e.key === "Enter") doCreate(); if (e.key === "Escape") setCreating(false); }}
-            className="flex-1 min-w-0 rounded-md bg-[#060A10] border border-[#8a97a6]/40 text-white text-[11px] px-2 py-1.5 outline-none placeholder:text-[#8a97a6]/50" />
-          <button data-testid="org-new-save" onClick={doCreate} disabled={busy} className="shrink-0 px-2 py-1.5 rounded-md bg-[#7E9A82]/20 border border-[#7E9A82]/50 text-[#7E9A82] text-[11px] font-bold">
+            className="flex-1 min-w-0 rounded-md bg-background border border-border/40 text-foreground text-[11px] px-2 py-1.5 outline-none placeholder:text-muted-foreground/50" />
+          <button data-testid="org-new-save" onClick={doCreate} disabled={busy} className="shrink-0 px-2 py-1.5 rounded-md bg-accent/20 border border-accent/50 text-accent text-[11px] font-bold">
             {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
           </button>
         </div>
       ) : (
         <button data-testid="org-new-open" onClick={() => setCreating(true)}
-          className="w-full mt-1.5 inline-flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-[#0C1019] border border-dashed border-[#8a97a6]/40 text-[#8a97a6] text-[11px] font-bold hover:border-[#8a97a6]/70 active:scale-[0.98] transition-all">
+          className="w-full mt-1.5 inline-flex items-center justify-center gap-1.5 py-1.5 rounded-md bg-background border border-dashed border-border/40 text-muted-foreground text-[11px] font-bold hover:border-border/70 active:scale-[0.98] transition-all">
           <Plus className="w-3.5 h-3.5" /> {tri("Nuova azienda", "Neue Firma", "New company", "Nueva empresa", "Nouvelle entreprise", "شرکت جدید")}
         </button>
       )}

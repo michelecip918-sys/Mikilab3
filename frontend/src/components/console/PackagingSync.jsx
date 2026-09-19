@@ -4,7 +4,7 @@ import { mikeApi } from "@/lib/api";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
-const MODE_COL = { attendi: "#b06e78", rallenta: "#a4afbb", nominale: "#6e9e85" };
+const MODE_COL = { attendi: "hsl(var(--mattone))", rallenta: "hsl(var(--muted-foreground))", nominale: "hsl(var(--accent))" };
 
 // v14 · Packaging & Slicing: velocità affettatrici sincronizzata alla curva di raffreddamento del pane.
 export default function PackagingSync() {
@@ -16,28 +16,28 @@ export default function PackagingSync() {
   const load = useCallback(async () => { try { setData(await mikeApi.packaging(temp, lang)); } catch { /* */ } }, [temp, lang]);
   useEffect(() => { const t = setTimeout(load, 250); return () => clearTimeout(t); }, [load]);
 
-  const col = data ? (MODE_COL[data.mode] || "#a4afbb") : "#a4afbb";
+  const col = data ? (MODE_COL[data.mode] || "hsl(var(--muted-foreground))") : "hsl(var(--muted-foreground))";
 
   return (
     <div data-testid="packaging-sync" className="space-y-3">
       <label className="flex flex-col gap-1">
-        <span className="flex justify-between text-[12px] text-[#94A3B8]"><span className="inline-flex items-center gap-1"><Thermometer className="w-3.5 h-3.5 text-[#a4afbb]" /> {tri("Temp. pane in uscita", "Brottemp.", "Bread exit temp", "Temp. pan", "Temp. pain", "دمای نان")}</span><b className="text-white">{temp}°C</b></span>
-        <input data-testid="pkg-temp" type="range" min={30} max={90} value={temp} onChange={(e) => setTemp(Number(e.target.value))} className="w-full accent-[#8a97a6]" />
+        <span className="flex justify-between text-[12px] text-muted-foreground"><span className="inline-flex items-center gap-1"><Thermometer className="w-3.5 h-3.5 text-muted-foreground" /> {tri("Temp. pane in uscita", "Brottemp.", "Bread exit temp", "Temp. pan", "Temp. pain", "دمای نان")}</span><b className="text-foreground">{temp}°C</b></span>
+        <input data-testid="pkg-temp" type="range" min={30} max={90} value={temp} onChange={(e) => setTemp(Number(e.target.value))} className="w-full accent-muted" />
       </label>
       {data && (
         <>
           <div className="flex items-center justify-center py-2">
-            <div className="relative w-32 h-32 rounded-full flex flex-col items-center justify-center" style={{ background: `conic-gradient(${col} ${data.slicer_speed_pct * 3.6}deg, #0C1420 0deg)` }}>
-              <div className="absolute inset-2 rounded-full bg-[#060A10] flex flex-col items-center justify-center">
+            <div className="relative w-32 h-32 rounded-full flex flex-col items-center justify-center" style={{ background: `conic-gradient(${col} ${data.slicer_speed_pct * 3.6}deg, hsl(var(--card)) 0deg)` }}>
+              <div className="absolute inset-2 rounded-full bg-background flex flex-col items-center justify-center">
                 <Scissors className="w-4 h-4 mb-1" style={{ color: col }} />
-                <span data-testid="pkg-speed" className="text-2xl font-black text-white tabular-nums">{data.slicer_speed_pct}%</span>
-                <span className="text-[9px] uppercase tracking-wide text-[#64748b]">{tri("affettatrici", "Schneider", "slicers", "cortadoras", "trancheuses", "برش")}</span>
+                <span data-testid="pkg-speed" className="text-2xl font-black text-foreground tabular-nums">{data.slicer_speed_pct}%</span>
+                <span className="text-[9px] uppercase tracking-wide text-muted-foreground">{tri("affettatrici", "Schneider", "slicers", "cortadoras", "trancheuses", "برش")}</span>
               </div>
             </div>
           </div>
           <div className="flex items-center justify-center gap-3">
             <span data-testid="pkg-mode" className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black" style={{ color: col, border: `1px solid ${col}66`, background: `${col}12` }}><Gauge className="w-3.5 h-3.5" /> {data.mode_label}</span>
-            {data.cooling_minutes_left > 0 && <span className="inline-flex items-center gap-1 text-[12px] text-[#94A3B8]"><Timer className="w-3.5 h-3.5" /> {tri("pronte tra", "bereit in", "ready in", "listas en", "prêtes dans", "آماده در")} {data.cooling_minutes_left} min</span>}
+            {data.cooling_minutes_left > 0 && <span className="inline-flex items-center gap-1 text-[12px] text-muted-foreground"><Timer className="w-3.5 h-3.5" /> {tri("pronte tra", "bereit in", "ready in", "listas en", "prêtes dans", "آماده در")} {data.cooling_minutes_left} min</span>}
           </div>
         </>
       )}

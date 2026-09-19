@@ -6,8 +6,8 @@ export const MikiAvatar = ({ label, subtitle, size = 46, className = "" }) => (
     <SitorAvatar size={size} />
     {(label || subtitle) && (
       <div className="min-w-0">
-        {label && <p className="text-sm font-bold text-white truncate">{label}</p>}
-        {subtitle && <p className="text-xs text-[#94A3B8] truncate">{subtitle}</p>}
+        {label && <p className="text-sm font-bold text-foreground truncate">{label}</p>}
+        {subtitle && <p className="text-xs text-muted-foreground truncate">{subtitle}</p>}
       </div>
     )}
   </div>

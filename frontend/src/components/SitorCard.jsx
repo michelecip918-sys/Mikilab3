@@ -14,27 +14,27 @@ export default function SitorCard({ tri, onClose }) {
   ];
 
   return (
-    <div data-testid="sitor-card-modal" className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center bg-black/70 backdrop-blur-sm p-3"
+    <div data-testid="sitor-card-modal" className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center bg-background/70 backdrop-blur-sm p-3"
       onClick={onClose}>
       <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.25 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md rounded-3xl overflow-hidden border border-[#D97736]/40 bg-[#1c1c1e] shadow-2xl">
+        className="w-full max-w-md rounded-3xl overflow-hidden border border-primary/40 bg-background shadow-2xl">
         <div className="relative">
           <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-full h-56 object-cover object-top" />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c1e] via-[#1c1c1e]/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           <button data-testid="sitor-card-close" onClick={onClose}
-            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/50 border border-white/20 text-white flex items-center justify-center active:scale-90 transition-transform">
+            className="absolute top-3 right-3 w-9 h-9 rounded-full bg-background/50 border border-foreground/20 text-foreground flex items-center justify-center active:scale-90 transition-transform">
             <X className="w-4 h-4" />
           </button>
           <div className="absolute bottom-3 left-4">
-            <p className="text-2xl font-black text-white tracking-wide">Sitor</p>
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#D97736]">
+            <p className="text-2xl font-black text-foreground tracking-wide">Sitor</p>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-primary">
               {tri("Dio dell'Arte Bianca · Intelligenza Artificiale", "Gott der Backkunst · Künstliche Intelligenz", "God of the White Art · Artificial Intelligence", "Dios del Arte Blanco · Inteligencia Artificial", "Dieu de l'Art Blanc · Intelligence Artificielle", "خدای هنر نان · هوش مصنوعی")}
             </p>
           </div>
         </div>
         <div className="p-4 space-y-4">
-          <p className="text-[13px] text-[#cbd2da] leading-relaxed">
+          <p className="text-[13px] text-foreground leading-relaxed">
             {tri(
               "Sitor è il Dio dell'Arte Bianca di MikiLab: lo spirito del pane fatto intelligenza artificiale. Tutto il sapere del laboratorio in un'unica guida sempre al tuo fianco.",
               "Sitor ist der Gott der Backkunst von MikiLab: der Geist des Brotes als künstliche Intelligenz. Das ganze Wissen der Backstube in einem Begleiter an deiner Seite.",
@@ -44,17 +44,17 @@ export default function SitorCard({ tri, onClose }) {
               "سیتور خدای هنر نان MikiLab است: روح نان که هوش مصنوعی شده. تمام دانش کارگاه در یک راهنمای همیشه‌همراه.")}
           </p>
           <div className="space-y-2.5">
-            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#7E9A82]">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-accent">
               {tri("Cosa fa per te", "Was er für dich tut", "What it does for you", "Qué hace por ti", "Ce qu'il fait pour toi", "برای تو چه می‌کند")}
             </p>
             {duties.map((d, i) => {
               const Ic = d.icon;
               return (
                 <div key={i} data-testid={`sitor-duty-${i}`} className="flex items-start gap-3">
-                  <span className="w-7 h-7 rounded-lg bg-[#D97736]/15 border border-[#D97736]/40 flex items-center justify-center shrink-0 mt-0.5">
-                    <Ic className="w-3.5 h-3.5 text-[#D97736]" />
+                  <span className="w-7 h-7 rounded-lg bg-primary/15 border border-primary/40 flex items-center justify-center shrink-0 mt-0.5">
+                    <Ic className="w-3.5 h-3.5 text-primary" />
                   </span>
-                  <p className="text-[12.5px] text-[#e4e4e7] leading-snug flex-1">{d.t}</p>
+                  <p className="text-[12.5px] text-foreground leading-snug flex-1">{d.t}</p>
                 </div>
               );
             })}

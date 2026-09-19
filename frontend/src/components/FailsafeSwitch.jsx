@@ -32,7 +32,7 @@ export const FailsafeSwitch = ({ active, onConfirm, labelOn, labelOff, holdMs = 
     raf.current = requestAnimationFrame(tick);
   }, [tick]);
 
-  const color = active ? "#b06e78" : "#D95200";
+  const color = active ? "hsl(var(--mattone))" : "hsl(var(--primary))";
   return (
     <button
       data-testid={testid}

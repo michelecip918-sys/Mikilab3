@@ -81,21 +81,21 @@ export default function ChiusuraGiornata() {
     finally { setSaving(false); }
   };
 
-  const fld = "bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-1 text-[13px] text-white focus:outline-none focus:border-[#3E9C93] w-full";
+  const fld = "bg-background border border-border/30 rounded-md px-2 py-1 text-[13px] text-white focus:outline-none focus:border-primary w-full";
 
   return (
     <div data-testid="chiusura-giornata" className="space-y-6">
       <div className="flex items-center gap-2 flex-wrap">
-        <ClipboardCheck className="w-4 h-4 text-[#8a97a6]" />
-        <span className="text-sm font-black text-white">Chiusura giornata</span>
-        <select data-testid="chiusura-day" value={day} onChange={(e) => setDay(e.target.value)} className="ml-auto bg-[#060A10] border border-[#8a97a6]/30 rounded-md px-2 py-1 text-[12px] text-[#cbd5e1]">
+        <ClipboardCheck className="w-4 h-4 text-muted-foreground" />
+        <span className="text-sm font-black text-foreground">Chiusura giornata</span>
+        <select data-testid="chiusura-day" value={day} onChange={(e) => setDay(e.target.value)} className="ml-auto bg-background border border-border/30 rounded-md px-2 py-1 text-[12px] text-foreground">
           {DAYS.map((d) => <option key={d} value={d}>{DAY_LABEL[d]}</option>)}
         </select>
       </div>
 
       {/* Righe prodotti: pianificato vs prodotto vs avanzato + costo/prezzo */}
       <div className="space-y-2">
-        <div className="grid grid-cols-[1fr_54px_54px_54px_64px_64px_28px] gap-1.5 text-[9px] uppercase tracking-wide text-[#64748B] px-1">
+        <div className="grid grid-cols-[1fr_54px_54px_54px_64px_64px_28px] gap-1.5 text-[9px] uppercase tracking-wide text-muted-foreground px-1">
           <span>Prodotto</span><span className="text-center">Pian.</span><span className="text-center">Prod.</span><span className="text-center">Avanz.</span><span className="text-center">€ costo</span><span className="text-center">€ prezzo</span><span></span>
         </div>
         {lines.map((l, i) => (
@@ -106,48 +106,48 @@ export default function ChiusuraGiornata() {
             <input data-testid={`chiusura-leftover-${i}`} value={l.leftover} onChange={(e) => patch(i, { leftover: e.target.value })} className={`${fld} text-center`} />
             <input data-testid={`chiusura-cost-${i}`} value={l.unit_cost} onChange={(e) => patch(i, { unit_cost: e.target.value })} placeholder="0.00" className={`${fld} text-center`} />
             <input data-testid={`chiusura-price-${i}`} value={l.unit_price} onChange={(e) => patch(i, { unit_price: e.target.value })} placeholder="0.00" className={`${fld} text-center`} />
-            <button data-testid={`chiusura-del-${i}`} onClick={() => delLine(i)} className="p-1 text-[#b06e78] hover:bg-[#b06e78]/10 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
+            <button data-testid={`chiusura-del-${i}`} onClick={() => delLine(i)} className="p-1 text-mattone hover:bg-mattone/10 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         ))}
-        <button data-testid="chiusura-add-line" onClick={addLine} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white"><Plus className="w-4 h-4" /> Aggiungi prodotto</button>
+        <button data-testid="chiusura-add-line" onClick={addLine} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground"><Plus className="w-4 h-4" /> Aggiungi prodotto</button>
       </div>
 
       {/* Food-cost in tempo reale */}
-      <div className="rounded-xl border border-[#8a97a6]/25 bg-[#8a97a6]/5 p-3 flex items-center gap-4 flex-wrap">
-        <TrendingUp className="w-4 h-4 text-[#8a97a6]" />
-        <span className="text-[12px] text-[#94A3B8]">Ricavo <b className="text-white">€{preview.rev}</b></span>
-        <span className="text-[12px] text-[#94A3B8]">Costo <b className="text-white">€{preview.cost}</b></span>
-        <span className="text-[12px] text-[#94A3B8]">Margine <b className="text-white">€{preview.margin}</b></span>
-        <span data-testid="chiusura-fc-preview" className="text-[12px] text-[#94A3B8]">Food-cost <b className="text-white">{preview.fc ?? "—"}%</b></span>
+      <div className="rounded-xl border border-border/25 bg-muted/5 p-3 flex items-center gap-4 flex-wrap">
+        <TrendingUp className="w-4 h-4 text-muted-foreground" />
+        <span className="text-[12px] text-muted-foreground">Ricavo <b className="text-foreground">€{preview.rev}</b></span>
+        <span className="text-[12px] text-muted-foreground">Costo <b className="text-foreground">€{preview.cost}</b></span>
+        <span className="text-[12px] text-muted-foreground">Margine <b className="text-foreground">€{preview.margin}</b></span>
+        <span data-testid="chiusura-fc-preview" className="text-[12px] text-muted-foreground">Food-cost <b className="text-foreground">{preview.fc ?? "—"}%</b></span>
       </div>
 
       {/* Correzioni → memoria di Sitor */}
       <div className="space-y-2">
-        <div className="flex items-center gap-2"><BrainCircuit className="w-4 h-4 text-[#a4afbb]" /><span className="text-[12px] font-bold text-[#cbd5e1]">Correzioni di oggi (memoria di Sitor)</span></div>
+        <div className="flex items-center gap-2"><BrainCircuit className="w-4 h-4 text-muted-foreground" /><span className="text-[12px] font-bold text-foreground">Correzioni di oggi (memoria di Sitor)</span></div>
         {corrections.map((c, i) => (
           <div key={i} data-testid={`chiusura-corr-${i}`} className="flex gap-1.5 items-center flex-wrap">
             <input value={c.recipe_name} onChange={(e) => patchCorr(i, { recipe_name: e.target.value })} placeholder="Ricetta" className={`${fld} w-28`} />
             <input data-testid={`chiusura-corr-change-${i}`} value={c.change} onChange={(e) => patchCorr(i, { change: e.target.value })} placeholder="es. più acqua 2%" className={`${fld} flex-1 min-w-[120px]`} />
             <input value={c.temp_c} onChange={(e) => patchCorr(i, { temp_c: e.target.value })} placeholder="°C" className={`${fld} w-14 text-center`} />
             <input value={c.flour_lot} onChange={(e) => patchCorr(i, { flour_lot: e.target.value })} placeholder="lotto farina" className={`${fld} w-28`} />
-            <button onClick={() => delCorr(i)} className="p-1 text-[#b06e78] hover:bg-[#b06e78]/10 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
+            <button onClick={() => delCorr(i)} className="p-1 text-mattone hover:bg-mattone/10 rounded"><Trash2 className="w-3.5 h-3.5" /></button>
           </div>
         ))}
-        <button data-testid="chiusura-add-corr" onClick={addCorr} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white"><Plus className="w-4 h-4" /> Aggiungi correzione</button>
+        <button data-testid="chiusura-add-corr" onClick={addCorr} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground"><Plus className="w-4 h-4" /> Aggiungi correzione</button>
       </div>
 
       <textarea value={note} onChange={(e) => setNote(e.target.value)} placeholder="Nota della giornata (facoltativa)" rows={2} className={`${fld} resize-none`} />
 
-      <button data-testid="chiusura-submit" onClick={submit} disabled={saving} className="w-full inline-flex items-center justify-center gap-2 bg-[#3E9C93] hover:bg-[#347f78] disabled:opacity-60 text-white font-bold px-4 py-3 rounded-2xl active:scale-98 transition-all">
+      <button data-testid="chiusura-submit" onClick={submit} disabled={saving} className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-muted disabled:opacity-60 text-white font-bold px-4 py-3 rounded-2xl active:scale-98 transition-all">
         {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />} Chiudi la giornata
       </button>
 
       {result && (
-        <div data-testid="chiusura-result" className="rounded-2xl border border-[#8a97a6]/30 bg-[#0b0f19]/70 p-4 space-y-2">
-          <p className="text-sm font-black text-white">Giornata registrata · Food-cost {result.food_cost.food_cost_pct ?? "—"}% · Margine €{result.food_cost.day_margin}</p>
+        <div data-testid="chiusura-result" className="rounded-2xl border border-border/30 bg-background/70 p-4 space-y-2">
+          <p className="text-sm font-black text-foreground">Giornata registrata · Food-cost {result.food_cost.food_cost_pct ?? "—"}% · Margine €{result.food_cost.day_margin}</p>
           {(result.suggestions || []).length > 0 && (
-            <div className="flex items-start gap-2 text-[12px] text-[#cbd5e1]">
-              <Lightbulb className="w-4 h-4 text-[#f0c000] shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 text-[12px] text-foreground">
+              <Lightbulb className="w-4 h-4 text-foreground shrink-0 mt-0.5" />
               <span>Piano della prossima settimana suggerito: {result.suggestions.map((s) => `${s.recipe_name} → ${s.suggested_qty}`).join(" · ")}</span>
             </div>
           )}
@@ -156,17 +156,17 @@ export default function ChiusuraGiornata() {
 
       {/* Suggerimenti storici + memoria */}
       {suggestions.length > 0 && !result && (
-        <div className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3 text-[12px] text-[#cbd5e1]">
-          <span className="font-bold text-[#a4afbb]">Suggerimenti da chiusure precedenti ({DAY_LABEL[day]}): </span>
+        <div className="rounded-xl bg-muted/10 border border-border/20 p-3 text-[12px] text-foreground">
+          <span className="font-bold text-muted-foreground">Suggerimenti da chiusure precedenti ({DAY_LABEL[day]}): </span>
           {suggestions.map((s) => `${s.recipe_name} → ${s.suggested_qty}`).join(" · ")}
         </div>
       )}
       {memory.length > 0 && (
-        <div data-testid="chiusura-memory" className="rounded-xl bg-[#0b0f19]/60 border border-[#8a97a6]/20 p-3">
-          <p className="text-[11px] font-black uppercase tracking-wide text-[#a4afbb] mb-1.5">Memoria del metodo del Capo</p>
+        <div data-testid="chiusura-memory" className="rounded-xl bg-background/60 border border-border/20 p-3">
+          <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-1.5">Memoria del metodo del Capo</p>
           <ul className="space-y-1">
             {memory.slice(0, 8).map((m, i) => (
-              <li key={i} className="text-[12px] text-[#94A3B8] flex gap-2"><span className="text-[#8a97a6]">•</span><span><b className="text-[#cbd5e1]">{m.recipe_name || "generale"}:</b> {m.change} {m.context?.season ? `(${m.context.season}${m.context.flour_lot ? ", farina " + m.context.flour_lot : ""})` : ""}</span></li>
+              <li key={i} className="text-[12px] text-muted-foreground flex gap-2"><span className="text-muted-foreground">•</span><span><b className="text-foreground">{m.recipe_name || "generale"}:</b> {m.change} {m.context?.season ? `(${m.context.season}${m.context.flour_lot ? ", farina " + m.context.flour_lot : ""})` : ""}</span></li>
             ))}
           </ul>
         </div>

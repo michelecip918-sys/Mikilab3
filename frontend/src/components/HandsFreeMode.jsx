@@ -111,28 +111,28 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
   if (!steps.length) {
     return createPortal((
-      <div className="fixed inset-0 z-[95] bg-[#0D1520] text-white flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
+      <div className="fixed inset-0 z-[95] bg-background text-foreground flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
         <p className="mb-4">{tri("Questa ricetta non ha un procedimento passo-passo.", "Dieses Rezept hat keine Schritt-für-Schritt-Anleitung.", "This recipe has no step-by-step procedure.", "Esta receta no tiene un procedimiento paso a paso.")}</p>
-        <button data-testid="handsfree-close" onClick={onClose} className="bg-[#3E9C93] px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
+        <button data-testid="handsfree-close" onClick={onClose} className="bg-primary px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
       </div>
     ), document.body);
   }
 
   return createPortal((
-    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-[#3E9C93] to-[#12212e] text-white flex flex-col" data-testid="handsfree-overlay">
+    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-primary to-background text-white flex flex-col" data-testid="handsfree-overlay">
       <div className="flex items-center justify-between px-5 pt-5 pb-2">
         <div className="flex items-center gap-2 min-w-0">
           <Hand className="w-5 h-5 shrink-0" />
           <p className="font-semibold truncate">{tri("Mani in Pasta", "Hände im Teig", "Hands in the Dough", "Manos en la Masa")}</p>
         </div>
-        <button data-testid="handsfree-close" onClick={onClose} className="p-2 rounded-full bg-white/15 active:scale-90"><X className="w-5 h-5" /></button>
+        <button data-testid="handsfree-close" onClick={onClose} className="p-2 rounded-full bg-foreground/15 active:scale-90"><X className="w-5 h-5" /></button>
       </div>
 
       <div className="px-5">
         <div className="flex items-center gap-1.5">
-          {steps.map((_, i) => <div key={i} className={`h-1 flex-1 rounded-full ${i <= idx ? "bg-white" : "bg-white/25"}`} />)}
+          {steps.map((_, i) => <div key={i} className={`h-1 flex-1 rounded-full ${i <= idx ? "bg-card" : "bg-foreground/25"}`} />)}
         </div>
-        <p className="text-white/70 text-xs mt-2 font-mono-data" data-testid="handsfree-counter">{tri("Passo", "Schritt", "Step", "Paso")} {idx + 1}/{steps.length}</p>
+        <p className="text-foreground/70 text-xs mt-2 font-mono-data" data-testid="handsfree-counter">{tri("Passo", "Schritt", "Step", "Paso")} {idx + 1}/{steps.length}</p>
       </div>
 
       <div className="flex-1 flex items-center justify-center px-7 py-4 overflow-y-auto">
@@ -141,27 +141,27 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
       {micOn && (
         <div className="px-5 pb-1 text-center">
-          <p className="text-white/60 text-xs">🎙️ {tri("Di': avanti · indietro · ripeti · timer 20 minuti · stop", "Sag: weiter · zurück · wiederhole · Timer 20 Minuten · stop", "Say: next · back · repeat · timer 20 minutes · stop", "Di: adelante · atrás · repite · temporizador 20 minutos · stop")}</p>
-          {heard && <p className="text-white/40 text-[11px] mt-0.5 italic truncate">“{heard}”</p>}
+          <p className="text-foreground/60 text-xs">🎙️ {tri("Di': avanti · indietro · ripeti · timer 20 minuti · stop", "Sag: weiter · zurück · wiederhole · Timer 20 Minuten · stop", "Say: next · back · repeat · timer 20 minutes · stop", "Di: adelante · atrás · repite · temporizador 20 minutos · stop")}</p>
+          {heard && <p className="text-foreground/40 text-[11px] mt-0.5 italic truncate">“{heard}”</p>}
         </div>
       )}
 
       <div className="p-5 pb-8 space-y-3" style={{ paddingBottom: "calc(2rem + env(safe-area-inset-bottom))" }}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <button data-testid="handsfree-prev" onClick={() => go((c) => c - 1)} disabled={idx === 0}
-            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-white/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipBack className="w-5 h-5" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
+            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-foreground/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipBack className="w-5 h-5" />{tri("Indietro", "Zurück", "Back", "Atrás")}</button>
           <button data-testid="handsfree-repeat" onClick={() => speak(steps[idx])}
-            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-white/12 active:scale-95 font-semibold text-sm"><RotateCcw className="w-5 h-5" />{tri("Ripeti", "Wiederh.", "Repeat", "Repite")}</button>
+            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-foreground/12 active:scale-95 font-semibold text-sm"><RotateCcw className="w-5 h-5" />{tri("Ripeti", "Wiederh.", "Repeat", "Repite")}</button>
           <button data-testid="handsfree-next" onClick={() => go((c) => c + 1)} disabled={idx === steps.length - 1}
-            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-white/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipForward className="w-5 h-5" />{tri("Avanti", "Weiter", "Next", "Adelante")}</button>
+            className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-foreground/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipForward className="w-5 h-5" />{tri("Avanti", "Weiter", "Next", "Adelante")}</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           <button data-testid="handsfree-tts" onClick={() => { setTtsOn((v) => { const nv = !v; if (!nv) { try { window.speechSynthesis.cancel(); } catch { /* */ } } return nv; }); }}
-            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-white text-[#3E9C93]" : "bg-white/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-card text-primary" : "bg-foreground/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
           <button data-testid="handsfree-timer" onClick={() => doTimer(20)}
-            className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-white/12 font-semibold text-sm active:scale-95"><TimerIcon className="w-5 h-5" />+20m</button>
+            className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-foreground/12 font-semibold text-sm active:scale-95"><TimerIcon className="w-5 h-5" />+20m</button>
           <button data-testid="handsfree-mic" onClick={toggleMic}
-            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-[#3E9C93] text-white animate-pulse" : "bg-white/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
+            className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-primary text-white animate-pulse" : "bg-foreground/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
         </div>
       </div>
     </div>

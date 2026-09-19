@@ -8,7 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { getActivity, activityProfile } from "@/lib/activityProfile";
 import { toast } from "sonner";
 
-const LINE_COLOR = { baguette: "#a4afbb", pane: "#c9a24a", pizzeria: "#b06e78", pasticceria: "#6e9e85" };
+const LINE_COLOR = { baguette: "hsl(var(--muted-foreground))", pane: "hsl(var(--ambra))", pizzeria: "hsl(var(--mattone))", pasticceria: "hsl(var(--accent))" };
 
 const DAYS = ["lun", "mar", "mer", "gio", "ven", "sab", "dom"];
 const DAY_TRI = {
@@ -35,7 +35,7 @@ const fromMin = (min) => {
 };
 
 const Section = ({ icon: Ic, title, accent, testid, children }) => (
-  <div data-testid={testid} className="rounded-xl border bg-[#060A10]/70 p-4 sm:p-5" style={{ borderColor: `${accent}33` }}>
+  <div data-testid={testid} className="rounded-xl border bg-background/70 p-4 sm:p-5" style={{ borderColor: `${accent}33` }}>
     <div className="holo-section-title" style={{ color: accent }}>
       <Ic className="w-4 h-4" /> {title}
     </div>
@@ -74,12 +74,12 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
   return (
     <div className="space-y-5">
       {suggestions.length > 0 && (
-        <div data-testid={`piano-suggestions-${day}`} className="rounded-xl border border-[#f0c000]/30 bg-[#f0c000]/5 p-3.5">
-          <p className="text-[11px] font-black uppercase tracking-wide text-[#c9a24a] mb-1.5">{tri("Sitor suggerisce (da chiusura precedente)", "Sitor schlägt vor", "Sitor suggests (from last close)", "Sitor sugiere", "Sitor suggère", "پیشنهاد سیتور")}</p>
+        <div data-testid={`piano-suggestions-${day}`} className="rounded-xl border border-border/30 bg-card/5 p-3.5">
+          <p className="text-[11px] font-black uppercase tracking-wide text-ambra mb-1.5">{tri("Sitor suggerisce (da chiusura precedente)", "Sitor schlägt vor", "Sitor suggests (from last close)", "Sitor sugiere", "Sitor suggère", "پیشنهاد سیتور")}</p>
           <div className="flex flex-wrap gap-1.5">
             {suggestions.map((s, i) => (
               <button key={i} data-testid={`piano-sugg-apply-${day}-${i}`} onClick={() => onApplySuggestion(day, s.recipe_name, s.suggested_qty)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#8a97a6]/15 hover:bg-[#8a97a6]/30 text-[#cbd5e1] text-[12px] font-bold px-3 py-1.5 transition-colors">
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted/15 hover:bg-muted/30 text-foreground text-[12px] font-bold px-3 py-1.5 transition-colors">
                 {s.recipe_name} → {s.suggested_qty} <Check className="w-3.5 h-3.5" />
               </button>
             ))}
@@ -87,75 +87,75 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
         </div>
       )}
       {/* Turni del giorno — chi lavora e con quale mansione */}
-      <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="#8a97a6" testid="piano-team">
+      <Section icon={Users} title={tri("Turni del giorno", "Schicht des Tages", "Day shift", "Turno del día", "Équipe du jour", "شیفت روز")} accent="hsl(var(--muted-foreground))" testid="piano-team">
         {team.length === 0 ? (
-          <p className="text-[12px] text-[#64748B] mb-2">{tri("Nessuno assegnato a questo giorno.", "Niemand zugewiesen.", "No one assigned to this day.", "Nadie asignado.", "Personne assigné.", "کسی تخصیص نیافته.")}</p>
+          <p className="text-[12px] text-muted-foreground mb-2">{tri("Nessuno assegnato a questo giorno.", "Niemand zugewiesen.", "No one assigned to this day.", "Nadie asignado.", "Personne assigné.", "کسی تخصیص نیافته.")}</p>
         ) : (
           <div className="space-y-1.5 mb-2">
             {team.map((m, i) => (
-              <div key={i} data-testid={`piano-team-row-${day}-${i}`} className="flex items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
-                <Users className="w-3.5 h-3.5 text-[#8a97a6] shrink-0" />
+              <div key={i} data-testid={`piano-team-row-${day}-${i}`} className="flex items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
+                <Users className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 <input
                   data-testid={`piano-team-name-${day}-${i}`}
                   value={m.name || ""}
                   onChange={(e) => onTeamPatch(day, i, { name: e.target.value })}
                   placeholder={tri("Nome", "Name", "Name", "Nombre", "Nom", "نام")}
-                  className="flex-1 min-w-0 bg-transparent text-[13px] font-bold text-white placeholder:text-[#475569] focus:outline-none"
+                  className="flex-1 min-w-0 bg-transparent text-[13px] font-bold text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
                 <select
                   data-testid={`piano-team-role-${day}-${i}`}
                   value={m.role || ""}
                   onChange={(e) => onTeamPatch(day, i, { role: e.target.value })}
-                  className="shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[11px] text-[#cbd5e1]"
+                  className="shrink-0 rounded-md bg-background border border-border/30 px-2 py-1 text-[11px] text-foreground"
                 >
                   <option value="">{tri("Mansione…", "Aufgabe…", "Role…", "Tarea…", "Rôle…", "نقش…")}</option>
                   {ROLE_OPTS.map((r) => (<option key={r} value={r}>{r}</option>))}
                 </select>
-                <button data-testid={`piano-team-del-${day}-${i}`} onClick={() => onTeamDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
+                <button data-testid={`piano-team-del-${day}-${i}`} onClick={() => onTeamDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-mattone hover:bg-mattone/10">
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}
           </div>
         )}
-        <button data-testid={`piano-team-add-${day}`} onClick={() => onTeamAdd(day)} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white">
+        <button data-testid={`piano-team-add-${day}`} onClick={() => onTeamAdd(day)} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground">
           <Plus className="w-4 h-4" /> {tri("Aggiungi persona al turno", "Person zur Schicht", "Add person to shift", "Añadir persona", "Ajouter une personne", "افزودن نفر")}
         </button>
       </Section>
 
       {/* Calendario del giorno (modificabile dalla Direzione) */}
-      <Section icon={CalendarClock} title={tri("Calendario del giorno", "Tageskalender", "Day calendar", "Calendario del día", "Calendrier du jour", "تقویم روز")} accent="#a4afbb" testid="piano-calendar">
+      <Section icon={CalendarClock} title={tri("Calendario del giorno", "Tageskalender", "Day calendar", "Calendario del día", "Calendrier du jour", "تقویم روز")} accent="hsl(var(--muted-foreground))" testid="piano-calendar">
         {batches.length === 0 ? (
-          <p className="text-[12px] text-[#64748B]">{tri("Nessun lotto per questo giorno.", "Keine Chargen an diesem Tag.", "No batches for this day.", "Sin lotes este día.", "Aucun lot ce jour.", "بدون دسته در این روز.")}</p>
+          <p className="text-[12px] text-muted-foreground">{tri("Nessun lotto per questo giorno.", "Keine Chargen an diesem Tag.", "No batches for this day.", "Sin lotes este día.", "Aucun lot ce jour.", "بدون دسته در این روز.")}</p>
         ) : (
           <div className="space-y-1.5">
             {batches.map((b, i) => (
-              <div key={i} data-testid={`piano-cal-row-${day}-${i}`} className="flex flex-wrap items-center gap-2 rounded-lg bg-[#0b0f19]/60 px-3 py-2">
+              <div key={i} data-testid={`piano-cal-row-${day}-${i}`} className="flex flex-wrap items-center gap-2 rounded-lg bg-background/60 px-3 py-2">
                 <input
                   data-testid={`piano-batch-start-${day}-${i}`}
                   value={b.start || ""}
                   onChange={(e) => onPatch(day, i, { start: e.target.value })}
                   placeholder="HH:MM"
-                  className="w-16 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-1.5 py-1 font-cyber text-sm font-black text-white text-center tabular-nums"
+                  className="w-16 shrink-0 rounded-md bg-background border border-border/30 px-1.5 py-1 font-display text-sm font-black text-foreground text-center tabular-nums"
                 />
-                <span className="w-1.5 h-8 rounded-full shrink-0" style={{ background: LINE_COLOR[b.line] || "#8a97a6" }} />
+                <span className="w-1.5 h-8 rounded-full shrink-0" style={{ background: LINE_COLOR[b.line] || "hsl(var(--muted-foreground))" }} />
                 <div className="min-w-0 flex-1 basis-[50%]">
                   <input
                     data-testid={`piano-batch-product-${day}-${i}`}
                     value={b.product || ""}
                     onChange={(e) => onPatch(day, i, { product: e.target.value })}
                     placeholder={tri("Prodotto", "Produkt", "Product", "Producto", "Produit", "محصول")}
-                    className="w-full bg-transparent text-[13px] font-bold text-white placeholder:text-[#475569] focus:outline-none"
+                    className="w-full bg-transparent text-[13px] font-bold text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                   <div className="flex items-center gap-1.5 mt-0.5">
-                    <span className="text-[11px] text-[#64748B] shrink-0">{[b.line, b.rationale].filter(Boolean).join(" · ")}</span>
+                    <span className="text-[11px] text-muted-foreground shrink-0">{[b.line, b.rationale].filter(Boolean).join(" · ")}</span>
                     <input
                       list={`piano-team-list-${day}`}
                       data-testid={`piano-batch-assignee-${day}-${i}`}
                       value={b.assignee || ""}
                       onChange={(e) => onPatch(day, i, { assignee: e.target.value })}
                       placeholder={tri("assegna a…", "zuweisen…", "assign to…", "asignar a…", "assigner à…", "به…")}
-                      className="min-w-0 flex-1 bg-transparent text-[11px] text-[#cbd5e1] placeholder:text-[#475569] border-b border-dashed border-[#8a97a6]/30 focus:outline-none focus:border-[#D97736]"
+                      className="min-w-0 flex-1 bg-transparent text-[11px] text-foreground placeholder:text-muted-foreground border-b border-dashed border-border/30 focus:outline-none focus:border-primary"
                     />
                   </div>
                 </div>
@@ -166,13 +166,13 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
                     value={b.qty || ""}
                     onChange={(e) => onPatch(day, i, { qty: e.target.value })}
                     placeholder={tri("qtà", "Menge", "qty", "cant.", "qté", "مقدار")}
-                    className="w-20 shrink-0 rounded-md bg-[#060A10] border border-[#8a97a6]/30 px-2 py-1 text-[12px] text-[#cbd5e1]"
+                    className="w-20 shrink-0 rounded-md bg-background border border-border/30 px-2 py-1 text-[12px] text-foreground"
                   />
-                  <span className="text-[10px] font-mono text-[#64748B] shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
-                  <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-[#8a97a6] hover:text-[#D97736] hover:bg-[#D97736]/10">
+                  <span className="text-[10px] font-mono text-muted-foreground shrink-0 w-8 text-right">{b.duration_min ? `${b.duration_min}′` : ""}</span>
+                  <button data-testid={`piano-batch-course-${day}-${i}`} onClick={() => onCourse && onCourse(b.product)} title={tri("Corso della ricetta", "Rezeptkurs", "Recipe course", "Curso de receta", "Cours de recette", "دوره دستور")} className="shrink-0 p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10">
                     <GraduationCap className="w-3.5 h-3.5" />
                   </button>
-                  <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
+                  <button data-testid={`piano-batch-del-${day}-${i}`} onClick={() => onDel(day, i)} className="shrink-0 p-1.5 rounded-lg text-mattone hover:bg-mattone/10">
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -183,38 +183,38 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
         <datalist id={`piano-team-list-${day}`}>
           {teamNames.map((n) => (<option key={n} value={n} />))}
         </datalist>
-        <button data-testid={`piano-day-add-${day}`} onClick={() => onAdd(day)} className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white">
+        <button data-testid={`piano-day-add-${day}`} onClick={() => onAdd(day)} className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground">
           <Plus className="w-4 h-4" /> {tri("Aggiungi lotto", "Charge hinzufügen", "Add batch", "Añadir lote", "Ajouter un lot", "افزودن دسته")}
         </button>
       </Section>
 
       {/* Orari a ritroso */}
-      <Section icon={Clock3} title={tri("Orari a ritroso", "Rückwärts-Zeiten", "Backward times", "Horarios inversos", "Horaires à rebours", "زمان‌های معکوس")} accent="#c9a24a" testid="piano-backward">
+      <Section icon={Clock3} title={tri("Orari a ritroso", "Rückwärts-Zeiten", "Backward times", "Horarios inversos", "Horaires à rebours", "زمان‌های معکوس")} accent="hsl(var(--ambra))" testid="piano-backward">
         {span ? (
           <>
-            <div className="mb-3 rounded-lg border border-[#c9a24a]/30 bg-[#c9a24a]/8 px-3 py-2 text-[12px] text-[#f6d27a]">
-              {tri("Prima azione (sveglia):", "Erste Aktion:", "First action (wake):", "Primera acción:", "Première action :", "اولین اقدام:")} <b className="font-cyber tabular-nums">{fromMin(span.min - 30)}</b> — {tri("30 min di preparazione prima del primo impasto.", "30 Min. Vorbereitung vor der ersten Charge.", "30 min prep before the first batch.", "30 min de preparación.", "30 min de préparation.", "۳۰ دقیقه آماده‌سازی.")}
+            <div className="mb-3 rounded-lg border border-ambra/30 bg-ambra/8 px-3 py-2 text-[12px] text-[#2B2E33]">
+              {tri("Prima azione (sveglia):", "Erste Aktion:", "First action (wake):", "Primera acción:", "Première action :", "اولین اقدام:")} <b className="font-display tabular-nums">{fromMin(span.min - 30)}</b> — {tri("30 min di preparazione prima del primo impasto.", "30 Min. Vorbereitung vor der ersten Charge.", "30 min prep before the first batch.", "30 min de preparación.", "30 min de préparation.", "۳۰ دقیقه آماده‌سازی.")}
             </div>
             <div className="space-y-1.5">
               {batches.filter((b) => toMin(b.start) != null).map((b, i) => (
                 <div key={i} data-testid={`piano-back-row-${day}-${i}`} className="flex items-center gap-3 text-[12px]">
-                  <span className="font-cyber font-black text-[#c9a24a] tabular-nums w-14 shrink-0">{b.start}</span>
-                  <span className="text-[#94a3b8]">→</span>
-                  <span className="text-[#cbd5e1] truncate">{tri("inizia", "starte", "start", "empieza", "commence", "شروع")} {b.product}</span>
+                  <span className="font-display font-black text-ambra tabular-nums w-14 shrink-0">{b.start}</span>
+                  <span className="text-muted-foreground">→</span>
+                  <span className="text-foreground truncate">{tri("inizia", "starte", "start", "empieza", "commence", "شروع")} {b.product}</span>
                 </div>
               ))}
             </div>
           </>
         ) : (
-          <p className="text-[12px] text-[#64748B]">{tri("Orari non disponibili per questo giorno.", "Keine Zeiten für diesen Tag.", "No times for this day.", "Sin horarios.", "Pas d'horaires.", "بدون زمان.")}</p>
+          <p className="text-[12px] text-muted-foreground">{tri("Orari non disponibili per questo giorno.", "Keine Zeiten für diesen Tag.", "No times for this day.", "Sin horarios.", "Pas d'horaires.", "بدون زمان.")}</p>
         )}
       </Section>
 
       {/* Timeline */}
-      <Section icon={GanttChartSquare} title={tri("Timeline del turno", "Schicht-Timeline", "Shift timeline", "Línea de tiempo", "Chronologie", "خط زمانی شیفت")} accent="#6e9e85" testid="piano-timeline">
+      <Section icon={GanttChartSquare} title={tri("Timeline del turno", "Schicht-Timeline", "Shift timeline", "Línea de tiempo", "Chronologie", "خط زمانی شیفت")} accent="hsl(var(--accent))" testid="piano-timeline">
         {span ? (
           <div className="space-y-1.5">
-            <div className="flex justify-between text-[10px] font-mono text-[#64748B] mb-1">
+            <div className="flex justify-between text-[10px] font-mono text-muted-foreground mb-1">
               <span>{fromMin(span.min)}</span>
               <span>{fromMin(span.max)}</span>
             </div>
@@ -222,27 +222,27 @@ function DayPlan({ day, data, tri, onPatch, onDel, onAdd, onTeamAdd, onTeamPatch
               const left = ((toMin(b.start) - span.min) / span.dur) * 100;
               const width = Math.max(4, ((parseInt(b.duration_min, 10) || 60) / span.dur) * 100);
               return (
-                <div key={i} data-testid={`piano-timeline-row-${day}-${i}`} className="relative h-7 rounded bg-[#0b0f19]/60">
+                <div key={i} data-testid={`piano-timeline-row-${day}-${i}`} className="relative h-7 rounded bg-background/60">
                   <div
                     className="absolute top-0 h-7 rounded flex items-center px-2 overflow-hidden"
-                    style={{ left: `${left}%`, width: `${Math.min(width, 100 - left)}%`, background: `${LINE_COLOR[b.line] || "#8a97a6"}cc` }}
+                    style={{ left: `${left}%`, width: `${Math.min(width, 100 - left)}%`, background: `${LINE_COLOR[b.line] || "hsl(var(--muted-foreground))"}cc` }}
                   >
-                    <span className="text-[10px] font-bold text-[#0b0f19] truncate">{b.product}</span>
+                    <span className="text-[10px] font-bold text-foreground truncate">{b.product}</span>
                   </div>
                 </div>
               );
             })}
           </div>
         ) : (
-          <p className="text-[12px] text-[#64748B]">{tri("Timeline non disponibile.", "Keine Timeline.", "No timeline.", "Sin línea de tiempo.", "Pas de chronologie.", "بدون خط زمانی.")}</p>
+          <p className="text-[12px] text-muted-foreground">{tri("Timeline non disponibile.", "Keine Timeline.", "No timeline.", "Sin línea de tiempo.", "Pas de chronologie.", "بدون خط زمانی.")}</p>
         )}
       </Section>
 
       {(data.warnings || []).length > 0 && (
-        <div data-testid="piano-warnings" className="rounded-xl border border-[#b06e78]/30 bg-[#b06e78]/8 p-3">
-          <p className="text-[11px] font-mono uppercase tracking-widest text-[#b06e78] mb-1.5">{tri("Avvisi di Sitor", "Sitor-Warnungen", "Sitor warnings", "Avisos de Sitor", "Avertissements", "هشدارها")}</p>
+        <div data-testid="piano-warnings" className="rounded-xl border border-mattone/30 bg-mattone/8 p-3">
+          <p className="text-[11px] font-mono uppercase tracking-widest text-mattone mb-1.5">{tri("Avvisi di Sitor", "Sitor-Warnungen", "Sitor warnings", "Avisos de Sitor", "Avertissements", "هشدارها")}</p>
           <ul className="space-y-1">
-            {data.warnings.map((w, i) => (<li key={i} className="text-[12px] text-[#fda4af]">• {w}</li>))}
+            {data.warnings.map((w, i) => (<li key={i} className="text-[12px] text-foreground">• {w}</li>))}
           </ul>
         </div>
       )}
@@ -443,8 +443,8 @@ export default function PianoUnico({ activity: activityProp }) {
         <span className="text-2xl shrink-0 leading-none">{prof.icon}</span>
         <div className="min-w-0">
           <p className="font-black text-[13px] uppercase tracking-wide" style={{ color: prof.accent }} data-testid="piano-activity-label">{prof.label(lang)}</p>
-          <p className="text-[12px] text-[#94A3B8] leading-snug">{prof.paradigm(lang)}</p>
-          <p className="text-[11.5px] text-[#7c8794] leading-snug mt-1">{prof.planHint(lang)}</p>
+          <p className="text-[12px] text-muted-foreground leading-snug">{prof.paradigm(lang)}</p>
+          <p className="text-[11.5px] text-muted-foreground leading-snug mt-1">{prof.planHint(lang)}</p>
         </div>
       </div>
 
@@ -455,9 +455,9 @@ export default function PianoUnico({ activity: activityProp }) {
       )}
 
       {/* STEP 1 — Prodotti della settimana */}
-      <div className="rounded-xl border border-[#8a97a6]/25 bg-[#0b0f19]/60 p-4">
-        <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#a4afbb] mb-3">
-          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#a4afbb]/15 text-[#a4afbb] font-black">1</span>
+      <div className="rounded-xl border border-border/25 bg-background/60 p-4">
+        <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-3">
+          <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted/15 text-muted-foreground font-black">1</span>
           {tri("Cosa produrre questa settimana", "Was diese Woche produzieren", "What to produce this week", "Qué producir esta semana", "Que produire cette semaine", "این هفته چه تولید کنیم")}
         </div>
         <div className="space-y-2">
@@ -470,7 +470,7 @@ export default function PianoUnico({ activity: activityProp }) {
                   const r = recipes.find((x) => x.id === e.target.value);
                   setRow(i, { recipe_id: e.target.value, name: r ? (r.name || "") : "" });
                 }}
-                className="flex-1 min-w-0 rounded-lg bg-[#060A10] border border-[#8a97a6]/30 px-3 py-2 text-sm text-white"
+                className="flex-1 min-w-0 rounded-lg bg-background border border-border/30 px-3 py-2 text-sm text-foreground"
               >
                 <option value="">{tri("Scegli una ricetta…", "Rezept wählen…", "Choose a recipe…", "Elige receta…", "Choisir une recette…", "انتخاب دستور…")}</option>
                 {recipes.map((r) => (<option key={r.id} value={r.id}>{r.name}</option>))}
@@ -481,15 +481,15 @@ export default function PianoUnico({ activity: activityProp }) {
                 onChange={(e) => setRow(i, { qty: e.target.value.replace(/[^0-9]/g, "") })}
                 inputMode="numeric"
                 placeholder={tri("pezzi/sett.", "Stück/Woche", "pieces/week", "piezas/sem.", "pièces/sem.", "تعداد/هفته")}
-                className="w-28 shrink-0 rounded-lg bg-[#060A10] border border-[#8a97a6]/30 px-3 py-2 text-sm text-white"
+                className="w-28 shrink-0 rounded-lg bg-background border border-border/30 px-3 py-2 text-sm text-foreground"
               />
-              <button data-testid={`piano-del-row-${i}`} onClick={() => delRow(i)} className="shrink-0 p-2 rounded-lg text-[#b06e78] hover:bg-[#b06e78]/10">
+              <button data-testid={`piano-del-row-${i}`} onClick={() => delRow(i)} className="shrink-0 p-2 rounded-lg text-mattone hover:bg-mattone/10">
                 <Trash2 className="w-4 h-4" />
               </button>
             </div>
           ))}
         </div>
-        <button data-testid="piano-add-row" onClick={addRow} className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a4afbb] hover:text-white">
+        <button data-testid="piano-add-row" onClick={addRow} className="mt-2 inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground">
           <Plus className="w-4 h-4" /> {tri("Aggiungi prodotto", "Produkt hinzufügen", "Add product", "Añadir producto", "Ajouter un produit", "افزودن محصول")}
         </button>
         <textarea
@@ -498,13 +498,13 @@ export default function PianoUnico({ activity: activityProp }) {
           onChange={(e) => setExtra(e.target.value)}
           rows={2}
           placeholder={prof.orderPlaceholder(lang)}
-          className="mt-3 w-full rounded-lg bg-[#060A10] border border-[#8a97a6]/30 px-3 py-2 text-sm text-white placeholder:text-[#64748B]"
+          className="mt-3 w-full rounded-lg bg-background border border-border/30 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground"
         />
         <button
           data-testid="piano-generate"
           onClick={generate}
           disabled={!canGenerate}
-          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-[#D97736] hover:bg-[#C86A2B] text-white disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
+          className="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-black uppercase tracking-wider bg-primary hover:bg-muted text-white disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.99] transition-all"
         >
           {loadingOpt ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
           {loadingOpt
@@ -512,15 +512,15 @@ export default function PianoUnico({ activity: activityProp }) {
             : tri("Genera le strategie con Sitor", "Strategien mit Sitor generieren", "Generate strategies with Sitor", "Generar estrategias con Sitor", "Générer les stratégies avec Sitor", "ساخت راهبردها با سیتور")}
         </button>
         {loadingOpt && (
-          <p className="mt-2 text-center text-[11px] text-[#64748B]">{tri("Può richiedere ~30 secondi.", "Kann ~30 Sekunden dauern.", "May take ~30 seconds.", "Puede tardar ~30 s.", "Peut prendre ~30 s.", "حدود ۳۰ ثانیه.")}</p>
+          <p className="mt-2 text-center text-[11px] text-muted-foreground">{tri("Può richiedere ~30 secondi.", "Kann ~30 Sekunden dauern.", "May take ~30 seconds.", "Puede tardar ~30 s.", "Peut prendre ~30 s.", "حدود ۳۰ ثانیه.")}</p>
         )}
       </div>
 
       {/* STEP 2 — Le 3 strategie settimanali di Sitor */}
       {options.length > 0 && (
-        <div className="rounded-xl border border-[#9aa6b2]/25 bg-[#0b0f19]/60 p-4">
-          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-[#9aa6b2] mb-3">
-            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#9aa6b2]/15 text-[#9aa6b2] font-black">2</span>
+        <div className="rounded-xl border border-border/25 bg-background/60 p-4">
+          <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-[0.2em] text-muted-foreground mb-3">
+            <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-muted/15 text-muted-foreground font-black">2</span>
             {tri("Scegli la strategia della settimana", "Wochenstrategie wählen", "Choose the weekly strategy", "Elige la estrategia semanal", "Choisis la stratégie de la semaine", "راهبرد هفته را انتخاب کن")}
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
@@ -531,20 +531,20 @@ export default function PianoUnico({ activity: activityProp }) {
                   key={i}
                   data-testid={`piano-option-${i}`}
                   onClick={() => choose(i)}
-                  className={`text-left rounded-xl border p-3 transition-all ${isSel ? "border-[#c9a24a] bg-[#c9a24a]/10" : "border-[#8a97a6]/25 bg-[#060A10]/60 hover:border-[#9aa6b2]/50"}`}
+                  className={`text-left rounded-xl border p-3 transition-all ${isSel ? "border-ambra bg-ambra/10" : "border-border/25 bg-background/60 hover:border-border/50"}`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-cyber text-sm font-black text-white">{o.label || `Opzione ${i + 1}`}</span>
-                    {isSel && <Check className="w-4 h-4 text-[#c9a24a]" />}
+                    <span className="font-display text-sm font-black text-foreground">{o.label || `Opzione ${i + 1}`}</span>
+                    {isSel && <Check className="w-4 h-4 text-ambra" />}
                   </div>
-                  <p className="mt-1 text-[11px] text-[#9aa6b2] leading-snug">{o.strategy || ""}</p>
-                  <p className="mt-1.5 text-[12px] text-[#cbd5e1] leading-snug">{o.summary || ""}</p>
+                  <p className="mt-1 text-[11px] text-muted-foreground leading-snug">{o.strategy || ""}</p>
+                  <p className="mt-1.5 text-[12px] text-foreground leading-snug">{o.summary || ""}</p>
                   <div className="mt-2 flex flex-wrap gap-1">
                     {DAYS.map((d) => {
                       const n = (((o.days || {})[d]) || []).length;
                       if (!n) return null;
                       return (
-                        <span key={d} className="rounded-md bg-[#8a97a6]/10 border border-[#8a97a6]/20 px-1.5 py-0.5 text-[10px] font-mono text-[#9aa6b2]">
+                        <span key={d} className="rounded-md bg-muted/10 border border-border/20 px-1.5 py-0.5 text-[10px] font-mono text-muted-foreground">
                           {tri(...DAY_TRI[d]).slice(0, 3)} · {n}
                         </span>
                       );
@@ -559,11 +559,11 @@ export default function PianoUnico({ activity: activityProp }) {
 
       {/* STEP 3 — Dettaglio dei 7 giorni */}
       {loadingDetail && (
-        <div data-testid="piano-detail-loading" className="rounded-xl border border-[#c9a24a]/30 bg-[#c9a24a]/8 p-4 flex items-center gap-3">
-          <Loader2 className="w-5 h-5 animate-spin text-[#c9a24a]" />
+        <div data-testid="piano-detail-loading" className="rounded-xl border border-ambra/30 bg-ambra/8 p-4 flex items-center gap-3">
+          <Loader2 className="w-5 h-5 animate-spin text-ambra" />
           <div>
-            <p className="text-[13px] font-bold text-[#f6d27a]">{tri("Sitor sta dettagliando i 7 giorni…", "Sitor erstellt die 7 Tage…", "Sitor is detailing the 7 days…", "Sitor detalla los 7 días…", "Sitor détaille les 7 jours…", "سیتور در حال جزئیات ۷ روز…")}</p>
-            <p className="text-[11px] text-[#94a3b8]">{tri("Orari, linee e assegnatari per ogni giorno. Può richiedere ~40 secondi.", "Zeiten, Linien und Zuständige pro Tag. Kann ~40 Sekunden dauern.", "Times, lines and assignees for each day. May take ~40 seconds.", "Puede tardar ~40 s.", "Peut prendre ~40 s.", "حدود ۴۰ ثانیه.")}</p>
+            <p className="text-[13px] font-bold text-foreground">{tri("Sitor sta dettagliando i 7 giorni…", "Sitor erstellt die 7 Tage…", "Sitor is detailing the 7 days…", "Sitor detalla los 7 días…", "Sitor détaille les 7 jours…", "سیتور در حال جزئیات ۷ روز…")}</p>
+            <p className="text-[11px] text-muted-foreground">{tri("Orari, linee e assegnatari per ogni giorno. Può richiedere ~40 secondi.", "Zeiten, Linien und Zuständige pro Tag. Kann ~40 Sekunden dauern.", "Times, lines and assignees for each day. May take ~40 seconds.", "Puede tardar ~40 s.", "Peut prendre ~40 s.", "حدود ۴۰ ثانیه.")}</p>
           </div>
         </div>
       )}
@@ -577,23 +577,23 @@ export default function PianoUnico({ activity: activityProp }) {
             className="space-y-4"
           >
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#c9a24a]">
-                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#c9a24a]/15 text-[#c9a24a] font-black mr-1.5">3</span>
+              <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-ambra">
+                <span className="inline-flex items-center justify-center w-5 h-5 rounded-full bg-ambra/15 text-ambra font-black mr-1.5">3</span>
                 {(chosenLabel || savedInfo)
                   ? tri("Piano settimanale pronto · generato da Sitor", "Wochenplan bereit · von Sitor erzeugt", "Weekly plan ready · generated by Sitor", "Plan semanal listo · generado por Sitor", "Plan hebdomadaire prêt · généré par Sitor", "برنامه هفتگی آماده · ساختهٔ سیتور")
                   : tri("La tua settimana · tocca un giorno e componi il lavoro", "Deine Woche · Tag antippen und Arbeit eintragen", "Your week · tap a day and fill in the work", "Tu semana · toca un día y compón el trabajo", "Ta semaine · touche un jour et compose le travail", "هفتهٔ تو · روی یک روز بزن و کار را بنویس")}
               </span>
-              {chosenLabel && <span className="text-[12px] font-black text-white">— {chosenLabel}</span>}
+              {chosenLabel && <span className="text-[12px] font-black text-foreground">— {chosenLabel}</span>}
               <div className="ml-auto flex gap-2 no-print">
-                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-[#D97736] hover:bg-[#C86A2B] text-white text-[12px] font-bold px-3 py-1.5 disabled:opacity-50 active:scale-95 transition-all">
+                <button data-testid="piano-save" onClick={saveAll} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-primary hover:bg-muted text-white text-[12px] font-bold px-3 py-1.5 disabled:opacity-50 active:scale-95 transition-all">
                   {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />} {tri("Salva settimana", "Woche speichern", "Save week", "Guardar semana", "Enregistrer la semaine", "ذخیره هفته")}
                 </button>
                 {options.length > 0 && (
-                <button data-testid="piano-speak" onClick={speak} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a6b1bc] hover:text-white">
+                <button data-testid="piano-speak" onClick={speak} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground">
                   <Volume2 className="w-4 h-4" /> {tri("Ascolta", "Anhören", "Listen", "Escuchar", "Écouter", "بشنو")}
                 </button>
                 )}
-                <button data-testid="piano-print" onClick={() => window.print()} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-[#a6b1bc] hover:text-white">
+                <button data-testid="piano-print" onClick={() => window.print()} className="inline-flex items-center gap-1.5 text-[12px] font-bold text-muted-foreground hover:text-foreground">
                   <Printer className="w-4 h-4" /> {tri("Stampa", "Drucken", "Print", "Imprimir", "Imprimer", "چاپ")}
                 </button>
               </div>
@@ -609,10 +609,10 @@ export default function PianoUnico({ activity: activityProp }) {
                     key={d}
                     data-testid={`piano-day-tab-${d}`}
                     onClick={() => setActiveDay(d)}
-                    className={`rounded-lg border px-3 py-1.5 text-[12px] font-bold transition-all ${isAct ? "border-[#c9a24a] bg-[#c9a24a]/15 text-white" : "border-[#8a97a6]/25 bg-[#060A10]/60 text-[#9aa6b2] hover:border-[#9aa6b2]/50"}`}
+                    className={`rounded-lg border px-3 py-1.5 text-[12px] font-bold transition-all ${isAct ? "border-ambra bg-ambra/15 text-white" : "border-border/25 bg-background/60 text-muted-foreground hover:border-border/50"}`}
                   >
                     {tri(...DAY_TRI[d])}
-                    <span className={`ml-1.5 rounded-md px-1.5 py-0.5 text-[10px] font-mono ${isAct ? "bg-[#c9a24a]/20 text-[#f6d27a]" : "bg-[#8a97a6]/10 text-[#64748B]"}`}>{cnt}</span>
+                    <span className={`ml-1.5 rounded-md px-1.5 py-0.5 text-[10px] font-mono ${isAct ? "bg-ambra/20 text-[#2B2E33]" : "bg-muted/10 text-muted-foreground"}`}>{cnt}</span>
                   </button>
                 );
               })}
@@ -628,39 +628,39 @@ export default function PianoUnico({ activity: activityProp }) {
       <AnimatePresence>
         {courseModal && (
           <motion.div data-testid="piano-course-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-0 sm:p-4" onClick={() => setCourseModal(null)}>
+            className="fixed inset-0 z-[70] flex items-end sm:items-center justify-center bg-background/60 backdrop-blur-sm p-0 sm:p-4" onClick={() => setCourseModal(null)}>
             <motion.div initial={{ y: 40 }} animate={{ y: 0 }} exit={{ y: 40 }} onClick={(e) => e.stopPropagation()}
-              className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-[#D97736]/30 bg-[#0b0f19] p-5 space-y-3">
-              <div className="flex items-center gap-2 sticky top-0 bg-[#0b0f19] pb-2">
-                <GraduationCap className="w-5 h-5 text-[#D97736]" />
-                <span className="flex-1 min-w-0 text-sm font-black text-white truncate">{courseModal.name}</span>
-                <button data-testid="piano-course-close" onClick={() => setCourseModal(null)} className="p-1.5 rounded-lg text-[#94A3B8] hover:bg-white/10"><X className="w-4 h-4" /></button>
+              className="w-full sm:max-w-lg max-h-[85vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border border-primary/30 bg-background p-5 space-y-3">
+              <div className="flex items-center gap-2 sticky top-0 bg-background pb-2">
+                <GraduationCap className="w-5 h-5 text-primary" />
+                <span className="flex-1 min-w-0 text-sm font-black text-foreground truncate">{courseModal.name}</span>
+                <button data-testid="piano-course-close" onClick={() => setCourseModal(null)} className="p-1.5 rounded-lg text-muted-foreground hover:bg-foreground/10"><X className="w-4 h-4" /></button>
               </div>
               {courseModal.loading && (
-                <div data-testid="piano-course-loading" className="flex items-center gap-2 text-sm text-[#94A3B8] py-6">
-                  <Loader2 className="w-4 h-4 animate-spin text-[#D97736]" />
+                <div data-testid="piano-course-loading" className="flex items-center gap-2 text-sm text-muted-foreground py-6">
+                  <Loader2 className="w-4 h-4 animate-spin text-primary" />
                   {tri("Sitor sta preparando il corso… (solo la prima volta)", "Sitor bereitet den Kurs vor…", "Sitor is preparing the course… (first time only)", "Sitor prepara el curso…", "Sitor prépare le cours…", "سیتور در حال آماده‌سازی دوره…")}
                 </div>
               )}
-              {courseModal.err && !courseModal.loading && <p className="text-sm text-[#b06e78] py-4">{courseModal.err}</p>}
+              {courseModal.err && !courseModal.loading && <p className="text-sm text-mattone py-4">{courseModal.err}</p>}
               {courseModal.course && !courseModal.loading && (
                 <div className="space-y-3">
-                  {courseModal.course.intro && <p className="text-sm text-[#AEB8BF] leading-relaxed italic">{courseModal.course.intro}</p>}
+                  {courseModal.course.intro && <p className="text-sm text-muted-foreground leading-relaxed italic">{courseModal.course.intro}</p>}
                   <ol className="space-y-3">
                     {(courseModal.course.phases || []).map((p, i) => (
                       <li key={i} data-testid={`piano-course-phase-${i}`} className="flex gap-3">
-                        <span className="shrink-0 w-6 h-6 rounded-full bg-[#D97736] text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
+                        <span className="shrink-0 w-6 h-6 rounded-full bg-primary text-white text-xs font-black flex items-center justify-center mt-0.5">{i + 1}</span>
                         <div className="min-w-0">
-                          <p className="text-sm font-bold text-[#e4eff8]">{p.name}</p>
-                          <p className="text-sm text-[#AEB8BF] leading-relaxed mt-0.5">{p.detail}</p>
+                          <p className="text-sm font-bold text-foreground">{p.name}</p>
+                          <p className="text-sm text-muted-foreground leading-relaxed mt-0.5">{p.detail}</p>
                         </div>
                       </li>
                     ))}
                   </ol>
                   {(courseModal.course.tips || []).length > 0 && (
-                    <div className="rounded-xl bg-[#8a97a6]/10 border border-[#8a97a6]/20 p-3">
-                      <p className="text-[11px] font-black uppercase tracking-wide text-[#8a97a6] mb-1.5">{tri("Consigli del maestro", "Tipps vom Meister", "Master's tips", "Consejos del maestro", "Conseils du maître", "توصیه‌های استاد")}</p>
-                      <ul className="space-y-1">{courseModal.course.tips.map((tp, i) => (<li key={i} className="text-sm text-[#AEB8BF] leading-relaxed flex gap-2"><span className="text-[#D97736]">•</span><span>{tp}</span></li>))}</ul>
+                    <div className="rounded-xl bg-muted/10 border border-border/20 p-3">
+                      <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-1.5">{tri("Consigli del maestro", "Tipps vom Meister", "Master's tips", "Consejos del maestro", "Conseils du maître", "توصیه‌های استاد")}</p>
+                      <ul className="space-y-1">{courseModal.course.tips.map((tp, i) => (<li key={i} className="text-sm text-muted-foreground leading-relaxed flex gap-2"><span className="text-primary">•</span><span>{tp}</span></li>))}</ul>
                     </div>
                   )}
                 </div>

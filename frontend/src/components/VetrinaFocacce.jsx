@@ -68,25 +68,25 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
 
   return (
     <div className="pb-8" data-testid="vetrina-focacce">
-      <div className="relative overflow-hidden rounded-3xl p-6 text-[#0D1520] shadow-xl mb-4" style={{ background: "linear-gradient(135deg,#3E9C93,#3E9C93)" }}>
+      <div className="relative overflow-hidden rounded-3xl p-6 text-foreground shadow-xl mb-4" style={{ background: "linear-gradient(135deg,hsl(var(--primary)),hsl(var(--primary)))" }}>
         <div className="it-de-ribbon absolute top-0 left-0 right-0" />
-        <div className="w-14 h-14 rounded-2xl bg-white/15 border border-white/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
+        <div className="w-14 h-14 rounded-2xl bg-foreground/15 border border-foreground/30 flex items-center justify-center mb-3"><Wheat className="w-7 h-7" /></div>
         <h1 className="font-display text-2xl font-bold">{tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes", "ویترین دستورها")}</h1>
-        <p className="text-[#0D1520]/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
+        <p className="text-foreground/85 text-sm mt-2 leading-snug">{tri("Ogni ricetta con la sua foto. Scegli una categoria e tocca per ingrandire.", "Jedes Rezept mit eigenem Foto. Wähle eine Kategorie und tippe zum Vergrößern.", "Every recipe with its own photo. Pick a category and tap to enlarge.", "Cada receta con su foto. Elige una categoría y toca para ampliar.", "Chaque recette avec sa photo. Choisis une catégorie et touche pour agrandir.", "هر دستور با عکس خودش")}</p>
       </div>
 
       {/* Tab categorie */}
       <div className="flex gap-2 overflow-x-auto pb-2 mb-3 -mx-1 px-1" data-testid="vetrina-tabs">
         {tabs.map((t) => (
           <button key={t.key} data-testid={`vetrina-tab-${t.key}`} onClick={() => setCat(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-[#3E9C93] text-[#0D1520] border-[#3E9C93]" : "bg-[#1B2A38] text-[#AEB8BF] border-[#2A3B49]"}`}>
+            className={`px-3 py-1.5 rounded-full text-sm font-bold whitespace-nowrap border transition-all ${cat === t.key ? "bg-primary text-primary-foreground border-primary" : "bg-card text-muted-foreground border-border"}`}>
             {t.icon} {catName(t.key)}
           </button>
         ))}
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-[#3E9C93]" /></div>
+        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>
       ) : (
         <div className="grid grid-cols-2 gap-2.5" data-testid="vetrina-grid">
           {items.map((r) => (
@@ -96,30 +96,30 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               <div className="absolute inset-0" style={{ background: "linear-gradient(180deg,transparent 40%,#0D1520ee)" }} />
               <div className="relative h-full flex flex-col justify-end p-2.5">
-                <h3 className="font-display text-[13px] font-bold text-white leading-tight drop-shadow">{rLoc(r, "name", lang)}</h3>
+                <h3 className="font-display text-[13px] font-bold text-foreground leading-tight drop-shadow">{rLoc(r, "name", lang)}</h3>
               </div>
             </button>
           ))}
-          {items.length === 0 && <p className="col-span-2 text-center text-sm text-[#7E8A93] py-10">{tri("Nessuna foto in questa categoria.", "Keine Fotos in dieser Kategorie.", "No photos in this category.", "Sin fotos en esta categoría.")}</p>}
+          {items.length === 0 && <p className="col-span-2 text-center text-sm text-muted-foreground py-10">{tri("Nessuna foto in questa categoria.", "Keine Fotos in dieser Kategorie.", "No photos in this category.", "Sin fotos en esta categoría.")}</p>}
         </div>
       )}
 
       {zoom && (
         <div data-testid="vetrina-lightbox" className="fixed inset-0 z-[300] flex items-center justify-center p-4" onClick={() => setZoom(null)}>
-          <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
-          <div className="relative max-w-sm w-full bg-[#1a1a1a] border border-[#2A3B49] rounded-3xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
-            <button data-testid="vetrina-lightbox-close" onClick={() => setZoom(null)} className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-black/60 text-white flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          <div className="relative max-w-sm w-full bg-background border border-border rounded-3xl overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
+            <button data-testid="vetrina-lightbox-close" onClick={() => setZoom(null)} className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-background/60 text-foreground flex items-center justify-center active:scale-95"><X className="w-5 h-5" /></button>
             <img src={zoom.image_url} alt={rLoc(zoom, "name", lang)} className="w-full aspect-square object-cover" />
             <div className="p-4">
-              <h3 className="font-display text-lg font-bold text-white leading-tight">{rLoc(zoom, "name", lang)}</h3>
-              {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-[#AEB8BF] leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
+              <h3 className="font-display text-lg font-bold text-foreground leading-tight">{rLoc(zoom, "name", lang)}</h3>
+              {rLoc(zoom, "notes", lang) && <p className="text-[12.5px] text-muted-foreground leading-snug mt-1.5 whitespace-pre-line line-clamp-4">{rLoc(zoom, "notes", lang)}</p>}
               <button data-testid="vetrina-share" onClick={() => shareItem(zoom)}
-                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#1B2A38] border border-[#3E9C93]/40 text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
-                <Share2 className="w-4 h-4 text-[#3E9C93]" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
+                className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-card border border-primary/40 text-foreground font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                <Share2 className="w-4 h-4 text-primary" /> {tri("Condividi la foto", "Foto teilen", "Share the photo", "Compartir la foto", "Partager la photo", "اشتراک عکس")}
               </button>
               {onOpenRecipe && (
                 <button data-testid="vetrina-open-recipe" onClick={() => onOpenRecipe(zoom.id)}
-                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93] text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
+                  className="mt-3 w-full flex items-center justify-center gap-2 rounded-2xl shadow-md border border-amber-900/40 bg-primary text-white font-semibold py-2.5 text-sm active:scale-95 transition-all">
                   <BookOpen className="w-4 h-4" /> {tri("Vedi ricetta completa", "Ganzes Rezept ansehen", "See full recipe", "Ver receta completa", "Voir la recette complète", "دیدن دستور کامل")}
                 </button>
               )}

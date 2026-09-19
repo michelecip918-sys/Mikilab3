@@ -10,10 +10,10 @@ import { getSensors, subscribeSensors } from "@/lib/sensors";
 // ============================================================================
 
 const MOODS = {
-  sereno:  { color: "#D95200", base: 110.0, fifth: 164.8, filter: 620,  pulse: 55, drive: 0.0 },
-  attivo:  { color: "#64748B", base: 123.5, fifth: 185.0, filter: 820,  pulse: 60, drive: 0.06 },
-  teso:    { color: "#aaa795", base: 138.6, fifth: 196.0, filter: 1050, pulse: 62, drive: 0.14 },
-  critico: { color: "#b06e78", base: 155.6, fifth: 208.0, filter: 1500, pulse: 66, drive: 0.24 },
+  sereno:  { color: "hsl(var(--primary))", base: 110.0, fifth: 164.8, filter: 620,  pulse: 55, drive: 0.0 },
+  attivo:  { color: "hsl(var(--muted-foreground))", base: 123.5, fifth: 185.0, filter: 820,  pulse: 60, drive: 0.06 },
+  teso:    { color: "hsl(var(--muted-foreground))", base: 138.6, fifth: 196.0, filter: 1050, pulse: 62, drive: 0.14 },
+  critico: { color: "hsl(var(--mattone))", base: 155.6, fifth: 208.0, filter: 1500, pulse: 66, drive: 0.24 },
 };
 
 export const auraColor = (mood) => (MOODS[mood] || MOODS.sereno).color;

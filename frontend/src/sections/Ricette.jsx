@@ -45,18 +45,18 @@ export default function Ricette() {
     return () => window.removeEventListener("mikilab-ricette-view", h);
   }, []);
 
-  if (view === "guida") return <Sub onBack={() => setView("main")}><div className="mb-4"><h2 className="font-display text-2xl font-black text-white">{mkTri(lang)("Studia il mestiere", "Lerne das Handwerk", "Study the craft")}</h2><p className="text-sm text-[#D97736] font-bold">{mkTri(lang)("Non solo fare il pane: capirlo.", "Nicht nur Brot backen: es verstehen.", "Not just making bread: understanding it.")}</p></div><GuidaMetodi /><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><Glossario /></div><div className="mt-6 pt-6 border-t border-[#2A3B49] dark:border-[#2A3B49]"><AttrezziGuide /></div></Sub>;
+  if (view === "guida") return <Sub onBack={() => setView("main")}><div className="mb-4"><h2 className="font-display text-2xl font-black text-foreground">{mkTri(lang)("Studia il mestiere", "Lerne das Handwerk", "Study the craft")}</h2><p className="text-sm text-primary font-bold">{mkTri(lang)("Non solo fare il pane: capirlo.", "Nicht nur Brot backen: es verstehen.", "Not just making bread: understanding it.")}</p></div><GuidaMetodi /><div className="mt-6 pt-6 border-t border-border dark:border-border"><Glossario /></div><div className="mt-6 pt-6 border-t border-border dark:border-border"><AttrezziGuide /></div></Sub>;
   if (view === "custodite") return <Sub onBack={() => { setView("main"); setCustoditeInit(null); }}><RicetteCustodite initialId={custoditeInit} /></Sub>;
   if (view === "sapori") return <SaporiCasa onBack={() => setView("main")} />;
   if (view === "focacce") return <Sub onBack={() => setView("main")}><VetrinaFocacce onOpenRecipe={(id) => { setView("main"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 80); }} /></Sub>;
   if (view === "farine") return (
     <Sub onBack={() => setView("main")}>
       <div data-testid="ricette-farine" className="space-y-4">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-[#3E9C93] to-[#3E9C93] p-6 text-white">
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary to-primary p-6 text-white">
           <div className="it-de-ribbon absolute top-0 left-0 right-0" />
           <div className="flex items-center gap-2 mb-1"><Wheat className="w-6 h-6" /><h1 className="font-display text-2xl font-bold">{tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")}</h1></div>
-          <div className="h-1 w-12 rounded-full bg-[#3E9C93] mb-3" />
-          <p className="text-sm text-white/90 leading-relaxed italic">
+          <div className="h-1 w-12 rounded-full bg-primary mb-3" />
+          <p className="text-sm text-foreground/90 leading-relaxed italic">
             {tri(
               "«La farina è la mia lingua madre. In Italia ho imparato che ogni grano racconta una storia: la forza (W), l'assorbimento, i tempi. Qui trovi le sigle e le tabelle che uso ogni giorno per scegliere la farina giusta per ogni impasto. Rispetta il grano e il grano ti ripagherà.» — Michele",
               "„Mehl ist meine Muttersprache. In Italien habe ich gelernt, dass jedes Korn eine Geschichte erzählt: Stärke (W), Wasseraufnahme, Zeiten. Hier findest du die Kürzel und Tabellen, die ich täglich nutze, um das richtige Mehl für jeden Teig zu wählen. Respektiere das Korn, und das Korn belohnt dich.“ — Michele",
@@ -76,18 +76,18 @@ export default function Ricette() {
       {/* HEADER UNICO — Ricette del MikiLab (foto nuova) */}
       <div data-testid="ricette-title" className="relative rounded-3xl overflow-hidden mb-4 h-44">
         <img src={`${process.env.PUBLIC_URL}/mikilab-ricette-hero.jpg`} alt="" className="w-full h-full object-cover" style={{ objectPosition: "50% 55%" }} />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030712] via-[#030712]/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         <div aria-hidden className="absolute inset-0 pointer-events-none bg-[linear-gradient(to_right,#D9520011_1px,transparent_1px),linear-gradient(to_bottom,#D9520011_1px,transparent_1px)] bg-[size:1.5rem_1.5rem] opacity-30" />
-        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-black/35 backdrop-blur rounded-full px-2.5 py-1 border border-white/25">
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-background/35 backdrop-blur rounded-full px-2.5 py-1 border border-foreground/25">
           <span className="text-lg leading-none" title="Italiano">🇮🇹</span>
           <span className="text-lg leading-none" title="Deutsch">🇩🇪</span>
         </div>
         <div className="absolute bottom-0 left-0 p-5">
-          <h1 className="font-display text-3xl font-bold text-white leading-tight" style={{ textShadow: "0 2px 10px rgba(0,0,0,.85)" }}>
+          <h1 className="font-display text-3xl font-bold text-foreground leading-tight" style={{ textShadow: "0 2px 10px rgba(0,0,0,.85)" }}>
             {mkTri(lang)("Le ricette di Sitor", "Sitors Rezepte", "Sitor's recipes", "Las recetas de Sitor", "Les recettes de Sitor", "دستورهای سیتور")}
           </h1>
-          <div className="h-1 w-12 rounded-full bg-[#D95200] mt-1.5 mb-1" />
-          <p className="text-white/90 text-sm max-w-md" style={{ textShadow: "0 1px 6px rgba(0,0,0,.9)" }}>
+          <div className="h-1 w-12 rounded-full bg-primary mt-1.5 mb-1" />
+          <p className="text-foreground/90 text-sm max-w-md" style={{ textShadow: "0 1px 6px rgba(0,0,0,.9)" }}>
             {mkTri(lang)("Sfoglia le ricette e falle a casa: dosi ricalcolate per il forno di casa, spiegate passo-passo.", "Blättere durch die Rezepte und mach sie zu Hause: Mengen für den Hausofen umgerechnet, Schritt für Schritt erklärt.", "Browse the recipes and make them at home: doses recalculated for the home oven, explained step by step.", "Hojea las recetas y hazlas en casa: dosis recalculadas para el horno de casa, paso a paso.", "Feuillette les recettes et fais-les à la maison : quantités adaptées au four domestique, pas à pas.", "دستورها را ورق بزن و در خانه بپز: مقادیر برای فر خانگی، مرحله‌به‌مرحله.")}
           </p>
         </div>
@@ -103,9 +103,9 @@ export default function Ricette() {
       </div>
 
       {/* STRUMENTI EXTRA — in fondo alla pagina, dove non danno fastidio */}
-      <div className="mt-8 pt-5 border-t border-[#2A3B49] dark:border-[#2A3B49]">
-        <div className="mb-4 rounded-2xl bg-white dark:bg-[#1B2A38] border border-[#2A3B49] p-4"><NovitaColorate /></div>
-        <p className="text-[11px] font-bold uppercase tracking-widest text-[#7E8A93] mb-3">
+      <div className="mt-8 pt-5 border-t border-border dark:border-border">
+        <div className="mb-4 rounded-2xl bg-card dark:bg-card border border-border p-4"><NovitaColorate /></div>
+        <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
           {tri("Strumenti del ricettario", "Rezeptbuch-Werkzeuge", "Recipe book tools", "Herramientas del recetario", "Outils du livre de recettes")}
         </p>
         <div data-testid="ricette-toolbar" className="grid grid-cols-3 gap-2">
@@ -120,23 +120,23 @@ export default function Ricette() {
 
       {backupOpen && (
         <div data-testid="ricette-backup-modal" className="fixed inset-0 z-[300] flex items-end sm:items-center justify-center p-4" onClick={() => setBackupOpen(false)}>
-          <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
-          <div className="relative w-full max-w-sm bg-[#14212C] border border-[#2A3B49] rounded-3xl shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" />
+          <div className="relative w-full max-w-sm bg-background border border-border rounded-3xl shadow-2xl p-5" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center gap-2.5 mb-1">
-              <span className="w-10 h-10 rounded-2xl bg-[#3E9C93]/15 border border-[#3E9C93]/40 flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-[#3E9C93]" /></span>
-              <h3 className="font-display text-lg font-extrabold text-white">{tri("Backup delle tue ricette", "Backup deiner Rezepte", "Backup your recipes", "Copia de tus recetas", "Sauvegarde de tes recettes")}</h3>
+              <span className="w-10 h-10 rounded-2xl bg-primary/15 border border-primary/40 flex items-center justify-center shrink-0"><Download className="w-5 h-5 text-primary" /></span>
+              <h3 className="font-display text-lg font-extrabold text-foreground">{tri("Backup delle tue ricette", "Backup deiner Rezepte", "Backup your recipes", "Copia de tus recetas", "Sauvegarde de tes recettes")}</h3>
             </div>
-            <p className="text-[13px] text-[#AEB8BF] leading-snug mb-4">{tri("Scarica una copia delle tue ricette personali. Scegli il formato.", "Lade eine Kopie deiner eigenen Rezepte herunter. Wähle das Format.", "Download a copy of your personal recipes. Choose the format.", "Descarga una copia de tus recetas personales. Elige el formato.", "Télécharge une copie de tes recettes personnelles. Choisis le format.")}</p>
+            <p className="text-[13px] text-muted-foreground leading-snug mb-4">{tri("Scarica una copia delle tue ricette personali. Scegli il formato.", "Lade eine Kopie deiner eigenen Rezepte herunter. Wähle das Format.", "Download a copy of your personal recipes. Choose the format.", "Descarga una copia de tus recetas personales. Elige el formato.", "Télécharge une copie de tes recettes personnelles. Choisis le format.")}</p>
             <div className="grid grid-cols-2 gap-2.5">
               <button data-testid="ricette-export-csv-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("csv"); }}
-                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1B2A38] border border-[#3E9C93]/40 text-white active:scale-97 hover:border-[#3E9C93] transition-all disabled:opacity-50">
-                <Download className="w-5 h-5 text-[#3E9C93]" /><span className="font-display text-sm font-bold">CSV</span>
-                <span className="text-[10.5px] text-[#7E8A93]">{tri("Fogli di calcolo", "Tabellen", "Spreadsheets", "Hojas de cálculo", "Tableurs")}</span>
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-card border border-primary/40 text-foreground active:scale-97 hover:border-primary transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-primary" /><span className="font-display text-sm font-bold">CSV</span>
+                <span className="text-[10.5px] text-muted-foreground">{tri("Fogli di calcolo", "Tabellen", "Spreadsheets", "Hojas de cálculo", "Tableurs")}</span>
               </button>
               <button data-testid="ricette-export-pdf-btn" disabled={expBusy} onClick={() => { setBackupOpen(false); exportMine("pdf"); }}
-                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-[#1B2A38] border border-[#3E9C93]/40 text-white active:scale-97 hover:border-[#3E9C93] transition-all disabled:opacity-50">
-                <Download className="w-5 h-5 text-[#3E9C93]" /><span className="font-display text-sm font-bold">PDF</span>
-                <span className="text-[10.5px] text-[#7E8A93]">{tri("Da stampare", "Zum Drucken", "For printing", "Para imprimir", "À imprimer")}</span>
+                className="flex flex-col items-center gap-1.5 py-4 rounded-2xl bg-card border border-primary/40 text-foreground active:scale-97 hover:border-primary transition-all disabled:opacity-50">
+                <Download className="w-5 h-5 text-primary" /><span className="font-display text-sm font-bold">PDF</span>
+                <span className="text-[10.5px] text-muted-foreground">{tri("Da stampare", "Zum Drucken", "For printing", "Para imprimir", "À imprimer")}</span>
               </button>
             </div>
           </div>
@@ -149,11 +149,11 @@ export default function Ricette() {
 function UtilBtn({ testid, Icon, label, onClick }) {
   return (
     <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl p-3 shadow-sm active:scale-97 hover:border-[#3E9C93]/60 transition-all min-w-0">
-      <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-[#3E9C93]/15 border border-[#3E9C93]/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-[#3E9C93]" />
+      className="flex flex-col items-center justify-start gap-2 bg-card dark:bg-card border border-border dark:border-border rounded-2xl p-3 shadow-sm active:scale-97 hover:border-primary/60 transition-all min-w-0">
+      <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0">
+        <Icon className="w-5 h-5 text-primary" />
       </div>
-      <span className="w-full font-display text-xs sm:text-sm font-semibold text-[#2B303B] dark:text-[#e4eff8] text-center leading-tight break-words hyphens-auto">{label}</span>
+      <span className="w-full font-display text-xs sm:text-sm font-semibold text-foreground dark:text-foreground text-center leading-tight break-words hyphens-auto">{label}</span>
     </button>
   );
 }
@@ -163,7 +163,7 @@ function Sub({ onBack, children }) {
   const backLabel = lang === "de" ? "Rezepte" : lang === "en" ? "Recipes" : lang === "es" ? "Recetas" : lang === "fr" ? "Recettes" : lang === "fa" ? (triFA("Ricette") || "دستورها") : "Ricette";
   return (
     <div className="pb-4">
-      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-[#3E9C93] font-medium mb-4">
+      <button data-testid="ricette-back-btn" onClick={onBack} className="flex items-center gap-1 text-primary font-medium mb-4">
         <ChevronLeft className="w-5 h-5" /> {backLabel}
       </button>
       {children}

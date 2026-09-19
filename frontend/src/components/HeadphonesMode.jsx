@@ -189,16 +189,16 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", dept =
 
   const close = () => { activeRef.current = false; try { recRef.current?.stop(); } catch { /* */ } stopTTS(); onClose(); };
 
-  const ring = status === "speaking" ? "#7E9A82" : status === "thinking" ? "#c9a24a" : status === "listening" ? "#7E9A82" : "#64748B";
+  const ring = status === "speaking" ? "hsl(var(--accent))" : status === "thinking" ? "hsl(var(--ambra))" : status === "listening" ? "hsl(var(--accent))" : "hsl(var(--muted-foreground))";
   const label = status === "speaking" ? tri("Sitor parla…", "Sitor spricht…", "Sitor speaking…", "Sitor habla…", "Sitor parle…", "سیتور صحبت می‌کند…")
     : status === "thinking" ? tri("Sitor pensa…", "Sitor denkt…", "Sitor thinking…", "Sitor piensa…", "Sitor réfléchit…", "سیتور فکر می‌کند…")
     : tri("In ascolto… di' \"Sitor, …\"", "Höre zu… sag \"Sitor, …\"", "Listening… say \"Sitor, …\"", "Escuchando… di \"Sitor, …\"", "À l'écoute… dis \"Sitor, …\"", "در حال شنیدن… بگو «سیتور…»");
 
   return (
-    <div data-testid="headphones-overlay" className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-[#18181A]/95 backdrop-blur-md p-6">
-      <button data-testid="headphones-close" onClick={close} className="absolute top-5 right-5 p-2 rounded-xl text-[#94A3B8] hover:bg-white/10"><X className="w-6 h-6" /></button>
+    <div data-testid="headphones-overlay" className="fixed inset-0 z-[80] flex flex-col items-center justify-center bg-background/95 backdrop-blur-md p-6">
+      <button data-testid="headphones-close" onClick={close} className="absolute top-5 right-5 p-2 rounded-xl text-muted-foreground hover:bg-foreground/10"><X className="w-6 h-6" /></button>
       {!supported ? (
-        <p className="text-center text-[#b06e78] max-w-xs">{tri("Le cuffie vocali non sono supportate su questo dispositivo/browser.", "Sprachmodus wird hier nicht unterstützt.", "Voice headphones not supported on this device/browser.", "No soportado en este dispositivo.", "Non supporté sur cet appareil.", "پشتیبانی نمی‌شود.")}</p>
+        <p className="text-center text-mattone max-w-xs">{tri("Le cuffie vocali non sono supportate su questo dispositivo/browser.", "Sprachmodus wird hier nicht unterstützt.", "Voice headphones not supported on this device/browser.", "No soportado en este dispositivo.", "Non supporté sur cet appareil.", "پشتیبانی نمی‌شود.")}</p>
       ) : (
         <>
           <div className="relative flex items-center justify-center w-40 h-40 mb-8">
@@ -207,22 +207,22 @@ export default function HeadphonesMode({ lang = "it", tri, operator = "", dept =
               {status === "thinking" ? <Loader2 className="w-12 h-12 animate-spin" style={{ color: ring }} /> : status === "speaking" ? <Volume2 className="w-12 h-12" style={{ color: ring }} /> : <Mic className="w-12 h-12" style={{ color: ring }} />}
             </span>
           </div>
-          <p data-testid="headphones-status" className="text-lg font-bold text-white mb-2">{label}</p>
-          {last && <p className="text-sm text-[#94A3B8] mb-1 text-center max-w-md">“{last}”</p>}
-          {reply && <p data-testid="headphones-reply" className="text-base text-[#7fd3c9] text-center max-w-md mt-2 leading-relaxed">{reply}</p>}
+          <p data-testid="headphones-status" className="text-lg font-bold text-foreground mb-2">{label}</p>
+          {last && <p className="text-sm text-muted-foreground mb-1 text-center max-w-md">“{last}”</p>}
+          {reply && <p data-testid="headphones-reply" className="text-base text-foreground text-center max-w-md mt-2 leading-relaxed">{reply}</p>}
 
           {call && (
-            <div data-testid="headphones-call" className="mt-6 w-full max-w-sm rounded-2xl bg-[#242427] border border-[#D97736]/50 p-4">
-              <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[#D97736] mb-1"><PhoneCall className="w-3.5 h-3.5" /> {tri("Chiamata di coordinamento", "Koordinationsruf", "Coordination call", "Llamada de coordinación", "Appel de coordination", "تماس هماهنگی")}</p>
-              <p className="text-sm text-white font-bold mb-3">{call.task_desc}</p>
+            <div data-testid="headphones-call" className="mt-6 w-full max-w-sm rounded-2xl bg-card border border-primary/50 p-4">
+              <p className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-primary mb-1"><PhoneCall className="w-3.5 h-3.5" /> {tri("Chiamata di coordinamento", "Koordinationsruf", "Coordination call", "Llamada de coordinación", "Appel de coordination", "تماس هماهنگی")}</p>
+              <p className="text-sm text-foreground font-bold mb-3">{call.task_desc}</p>
               <div className="grid grid-cols-2 gap-2">
-                <button data-testid="headphones-call-yes" onClick={() => answerCall(true)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#7E9A82] text-white font-bold active:scale-95"><Check className="w-4 h-4" /> {tri("Sì", "Ja", "Yes", "Sí", "Oui", "بله")}</button>
-                <button data-testid="headphones-call-no" onClick={() => answerCall(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-[#3a2a2a] text-[#e0a878] border border-[#D97736]/40 font-bold active:scale-95"><XCircle className="w-4 h-4" /> {tri("No", "Nein", "No", "No", "Non", "خیر")}</button>
+                <button data-testid="headphones-call-yes" onClick={() => answerCall(true)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-accent text-white font-bold active:scale-95"><Check className="w-4 h-4" /> {tri("Sì", "Ja", "Yes", "Sí", "Oui", "بله")}</button>
+                <button data-testid="headphones-call-no" onClick={() => answerCall(false)} className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-card text-muted-foreground border border-primary/40 font-bold active:scale-95"><XCircle className="w-4 h-4" /> {tri("No", "Nein", "No", "No", "Non", "خیر")}</button>
               </div>
-              <p className="text-[11px] text-[#94A3B8] text-center mt-2">{tri("Puoi rispondere anche a voce: «sì» o «no»", "Du kannst auch per Stimme antworten.", "You can also answer by voice.", "También puedes responder por voz.", "Tu peux aussi répondre à la voix.", "می‌توانی با صدا هم پاسخ دهی.")}</p>
+              <p className="text-[11px] text-muted-foreground text-center mt-2">{tri("Puoi rispondere anche a voce: «sì» o «no»", "Du kannst auch per Stimme antworten.", "You can also answer by voice.", "También puedes responder por voz.", "Tu peux aussi répondre à la voix.", "می‌توانی با صدا هم پاسخ دهی.")}</p>
             </div>
           )}
-          <p className="mt-8 text-xs text-[#64748B] text-center max-w-xs">{tri("Esempi: \"Sitor, le teglie sono finite\" · \"Sitor, mi serve una mano\" · in emergenza dì cosa è successo", "Beispiele: \"Sitor, die Bleche sind alle\" · \"Sitor, ich brauche Hilfe\"", "Examples: \"Sitor, we're out of trays\" · \"Sitor, I need a hand\" · in an emergency, just say what happened", "Ejemplos: \"Sitor, se acabaron las bandejas\" · \"Sitor, necesito una mano\"", "Exemples : \"Sitor, plus de plaques\" · \"Sitor, j'ai besoin d'aide\"", "مثال‌ها: «سیتور، سینی‌ها تمام شد» · «سیتور، یک کمک لازم دارم»")}</p>
+          <p className="mt-8 text-xs text-muted-foreground text-center max-w-xs">{tri("Esempi: \"Sitor, le teglie sono finite\" · \"Sitor, mi serve una mano\" · in emergenza dì cosa è successo", "Beispiele: \"Sitor, die Bleche sind alle\" · \"Sitor, ich brauche Hilfe\"", "Examples: \"Sitor, we're out of trays\" · \"Sitor, I need a hand\" · in an emergency, just say what happened", "Ejemplos: \"Sitor, se acabaron las bandejas\" · \"Sitor, necesito una mano\"", "Exemples : \"Sitor, plus de plaques\" · \"Sitor, j'ai besoin d'aide\"", "مثال‌ها: «سیتور، سینی‌ها تمام شد» · «سیتور، یک کمک لازم دارم»")}</p>
         </>
       )}
     </div>

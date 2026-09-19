@@ -50,12 +50,12 @@ export default function PinSetup() {
   };
 
   return (
-    <div data-testid="pin-setup" className="p-4 rounded-xl bg-[#0f172a]/80 border border-[#334155]">
-      <h3 className="text-xs font-bold uppercase tracking-wider text-[#D95200] flex items-center gap-2 mb-2">
+    <div data-testid="pin-setup" className="p-4 rounded-xl bg-background/80 border border-border">
+      <h3 className="text-xs font-bold uppercase tracking-wider text-primary flex items-center gap-2 mb-2">
         <KeyRound className="w-4 h-4" /> {tri("PIN Produzione (unico, scelto dalla Direzione)", "Produktions-PIN (einer, vom Chef)", "Production PIN (single, set by the Capo)", "PIN de producción (único, del Capo)", "PIN de production (unique, par le Capo)", "پین تولید (یکتا، توسط کاپو)")}
       </h3>
-      <p className="text-[11px] text-[#64748B] mb-1 flex items-center gap-1.5">
-        <Globe className="w-3.5 h-3.5 text-[#D95200]" />
+      <p className="text-[11px] text-muted-foreground mb-1 flex items-center gap-1.5">
+        <Globe className="w-3.5 h-3.5 text-primary" />
         {tri("PIN unico per tutti i dispositivi. Con questo gli operai entrano in Produzione a mani libere.",
              "Ein PIN für alle Geräte. Damit betreten die Mitarbeiter den Floor-Modus freihändig.",
              "One PIN for all devices. Workers use it to enter hands-free Floor Mode.",
@@ -63,7 +63,7 @@ export default function PinSetup() {
              "Un seul PIN pour tous les appareils. Les ouvriers entrent en mode Floor mains libres.",
              "یک پین برای همه دستگاه‌ها. کارگران با آن وارد حالت فلور می‌شوند.")}
       </p>
-      <p className="text-[11px] text-[#64748B] mb-3">
+      <p className="text-[11px] text-muted-foreground mb-3">
         {status?.is_set
           ? tri("Stato: PIN impostato sul server ✓", "Status: PIN am Server gesetzt ✓", "Status: PIN set on the server ✓", "Estado: PIN configurado en el servidor ✓", "État : PIN défini sur le serveur ✓", "وضعیت: پین روی سرور تنظیم شده ✓")
           : tri("Stato: nessun PIN sul server — è attivo il default 1985", "Status: kein Server-PIN — Standard 1985 aktiv", "Status: no server PIN — default 1985 active", "Estado: sin PIN en el servidor — activo 1985", "État : aucun PIN serveur — défaut 1985 actif", "وضعیت: پینی روی سرور نیست — پیش‌فرض ۱۹۸۵")}
@@ -76,18 +76,18 @@ export default function PinSetup() {
           inputMode="numeric"
           maxLength={4}
           placeholder={tri("Nuovo PIN (4 cifre)", "Neuer PIN (4 Ziffern)", "New PIN (4 digits)", "Nuevo PIN (4 dígitos)", "Nouveau PIN (4 chiffres)", "پین جدید (۴ رقم)")}
-          className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#D95200] outline-none"
+          className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-foreground placeholder:tracking-normal placeholder:text-muted-foreground focus:border-primary outline-none"
         />
-        <button data-testid="pin-setup-save" onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#D95200] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
+        <button data-testid="pin-setup-save" onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
           {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}
         </button>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-[#334155]">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-[#aaa795] flex items-center gap-2 mb-1">
+      <div className="mt-4 pt-4 border-t border-border">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2 mb-1">
           <KeyRound className="w-4 h-4" /> {tri("PIN d'accesso al SITO (solo tu)", "Zugangs-PIN zur SEITE (nur du)", "SITE access PIN (only you)", "PIN de acceso al SITIO (solo tú)", "PIN d'accès au SITE (toi seul)", "پین ورود سایت (فقط تو)")}
         </h3>
-        <p className="text-[11px] text-[#64748B] mb-2">
+        <p className="text-[11px] text-muted-foreground mb-2">
           {tri("Il cancello d'ingresso al sito. Cambialo quando vuoi: solo chi conosce questo PIN può entrare, e la verifica avviene sul server.",
                "Das Eingangstor der Seite. Ändere es jederzeit: nur wer diesen PIN kennt, kommt rein; die Prüfung erfolgt am Server.",
                "The site's entry gate. Change it anytime: only who knows this PIN can enter, verified on the server.",
@@ -98,8 +98,8 @@ export default function PinSetup() {
         <div className="flex gap-2">
           <input data-testid="admin-gate-input" value={gateVal} onChange={(e) => setGateVal(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" maxLength={4}
             placeholder={tri("Nuovo PIN sito (4 cifre)", "Neuer Seiten-PIN", "New site PIN (4 digits)", "Nuevo PIN sitio", "Nouveau PIN site", "پین جدید سایت")}
-            className="flex-1 bg-[#030712] border border-[#334155] rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-white placeholder:tracking-normal placeholder:text-[#475569] focus:border-[#aaa795] outline-none" />
-          <button data-testid="admin-gate-save" onClick={saveGate} disabled={gateSaving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#aaa795] text-[#030712] font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
+            className="flex-1 bg-background border border-border rounded-lg px-3 py-2 text-sm tracking-[0.4em] text-foreground placeholder:tracking-normal placeholder:text-muted-foreground focus:border-border outline-none" />
+          <button data-testid="admin-gate-save" onClick={saveGate} disabled={gateSaving} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-muted text-foreground font-bold text-xs active:scale-95 transition-all disabled:opacity-50">
             {gateSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} {tri("Salva", "Speichern", "Save", "Guardar", "Enregistrer", "ذخیره")}
           </button>
         </div>

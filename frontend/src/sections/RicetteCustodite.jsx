@@ -699,39 +699,39 @@ export default function RicetteCustodite({ initialId = null }) {
     }
   };
 
-  const inp = "bg-[#0D1520] dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-[#2B303B] dark:text-[#e4eff8] focus:border-[#3E9C93] font-mono-data text-center w-28";
+  const inp = "bg-background dark:bg-card border border-border dark:border-border rounded-2xl shadow-md border border-amber-900/40 px-3 py-2.5 outline-none text-foreground dark:text-foreground focus:border-primary font-mono-data text-center w-28";
 
   if (recipe) {
     return (
       <div className="pb-40" data-testid="custodite-detail">
         <button data-testid="custodite-back" onClick={() => setOpenId(null)}
-          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#3E9C93] dark:text-[#a9d2ec] font-semibold text-sm shadow-sm active:scale-95 transition-all">
+          className="inline-flex items-center gap-1.5 mb-4 px-4 py-2 rounded-full bg-card dark:bg-card border border-border dark:border-border text-primary dark:text-foreground font-semibold text-sm shadow-sm active:scale-95 transition-all">
           <ChevronLeft className="w-4 h-4" /> {L({ it: "Tutte le ricette", de: "Alle Rezepte", en: "All recipes", es: "Todas", fr: "Toutes les recettes" })}
         </button>
 
         <div className="print-area">
-          <div className="rounded-3xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] shadow-sm">
+          <div className="rounded-3xl overflow-hidden border border-border dark:border-border bg-card dark:bg-card shadow-sm">
             <div className="relative h-40">
               <img src={recipe.img} onError={onImgErr} alt="" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#3a2415]/80 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
               <button type="button" data-testid={`custodite-fav-detail-${recipe.id}`} aria-pressed={isFav(`custodite:${recipe.id}`)}
                 onClick={() => toggleFav(`custodite:${recipe.id}`)}
-                className="no-print absolute top-3 right-3 z-10 bg-white/90 dark:bg-[#0D1520]/80 rounded-full p-2 shadow active:scale-90 transition-transform">
-                <Heart className={`w-5 h-5 ${isFav(`custodite:${recipe.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
+                className="no-print absolute top-3 right-3 z-10 bg-foreground/90 dark:bg-background/80 rounded-full p-2 shadow active:scale-90 transition-transform">
+                <Heart className={`w-5 h-5 ${isFav(`custodite:${recipe.id}`) ? "text-destructive fill-destructive" : "text-muted-foreground"}`} />
               </button>
-              <div className="absolute bottom-3 left-4 right-4 text-white">
+              <div className="absolute bottom-3 left-4 right-4 text-foreground">
                 <h1 className="font-display text-2xl font-bold drop-shadow">{recipe.flag} {L(recipe.name)}</h1>
                 <p className="text-xs opacity-90 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {L(recipe.place)}</p>
               </div>
             </div>
             <div className="p-4">
-              <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] leading-relaxed italic">{L(recipe.story)}</p>
+              <p className="text-sm text-muted-foreground dark:text-muted-foreground leading-relaxed italic">{L(recipe.story)}</p>
               {(() => {
                 const wa = recipe.ing.find((x) => x.n === ING.acqua);
                 const h = wa ? wa.pct : 0;
                 if (!(h >= 65 && h <= 85)) return null;
                 return (
-                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,#a6b1bc,#64748B)", color: "#3A2408", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid #a6b1bc" }}>
+                  <div data-testid="badge-idratazione" className="mt-3 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5" style={{ background: "linear-gradient(90deg,hsl(var(--muted-foreground)),hsl(var(--muted-foreground)))", color: "hsl(var(--card))", boxShadow: "0 0 16px rgba(231,178,60,.55)", border: "1px solid hsl(var(--muted-foreground))" }}>
                     <span className="text-base">🏅</span>
                     <span className="text-[12.5px] font-extrabold">{L({ it: `Capolavoro — Idratazione Perfetta (${h}%)`, de: `Meisterwerk — Perfekte Hydration (${h}%)`, en: `Masterpiece — Perfect Hydration (${h}%)`, es: `Obra maestra — Hidratación perfecta (${h}%)`, fr: `Chef-d'œuvre — Hydratation parfaite (${h}%)` })}</span>
                   </div>
@@ -741,19 +741,19 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Dal mio laboratorio — foto reale di Michele al lavoro */}
-          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49] relative">
+          <div data-testid="custodite-lab-photo" className="mt-4 rounded-2xl overflow-hidden border border-border dark:border-border relative">
             <img src={`${process.env.PUBLIC_URL || ""}/avatar_miki.jpg`} alt="Michele" className="w-full h-44 object-cover object-top" loading="lazy" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent" />
-            <div className="absolute bottom-3 left-4 right-4 text-white">
-              <p className="text-[11px] font-bold uppercase tracking-wide text-[#ff8c3a]">{L({ it: "Dal mio laboratorio", de: "Aus meiner Backstube", en: "From my bakery", es: "Desde mi laboratorio", fr: "De mon laboratoire", fa: "از کارگاه من" })}</p>
+            <div className="absolute bottom-3 left-4 right-4 text-foreground">
+              <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">{L({ it: "Dal mio laboratorio", de: "Aus meiner Backstube", en: "From my bakery", es: "Desde mi laboratorio", fr: "De mon laboratoire", fa: "از کارگاه من" })}</p>
               <p className="text-[13px] font-semibold leading-snug drop-shadow">{L({ it: "Ogni ricetta nasce qui, tra le mie mani e i miei impasti.", de: "Jedes Rezept entsteht hier, in meinen Händen und Teigen.", en: "Every recipe is born here, in my hands and my dough.", es: "Cada receta nace aquí, entre mis manos y mis masas.", fr: "Chaque recette naît ici, entre mes mains et mes pâtes.", fa: "هر دستور اینجا متولد می‌شود، میان دستان و خمیرهای من." })}</p>
             </div>
           </div>
 
           {/* Arma segreta: Miglioratore Naturale — sistema didascalia (salute & naturalezza) */}
-          <div className="mt-4 bg-[#3E9C93] rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
+          <div className="mt-4 bg-primary rounded-2xl p-4 text-white" data-testid="custodite-improver-note">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-[#f0c9a3]" />
+              <ShieldCheck className="w-6 h-6 shrink-0 mt-0.5 text-foreground" />
               <p className="text-sm leading-relaxed">
                 {L({
                   it: "Il Miglioratore Naturale MikiLab lo trovi già pronto nelle basi (prefermenti e impasti): usalo così com'è, senza pensarci. 100% naturale e senza additivi chimici.",
@@ -764,7 +764,7 @@ export default function RicetteCustodite({ initialId = null }) {
                 })}
               </p>
             </div>
-            <p key={miglIdx} data-testid="custodite-improver-rotating" className="text-[13px] leading-snug text-[#f7e6d3] italic mt-3 pl-9 animate-in fade-in duration-500">
+            <p key={miglIdx} data-testid="custodite-improver-rotating" className="text-[13px] leading-snug text-foreground italic mt-3 pl-9 animate-in fade-in duration-500">
               “{L(MIGL_PHRASES[miglIdx])}”
             </p>
             <div className="flex flex-wrap gap-1.5 mt-3 pl-9">
@@ -774,41 +774,41 @@ export default function RicetteCustodite({ initialId = null }) {
                 { it: "✨ Alta digeribilità", de: "✨ Gut bekömmlich", en: "✨ Highly digestible", es: "✨ Alta digestibilidad", fr: "✨ Haute digestibilité" },
                 { it: "🚫 Zero additivi chimici", de: "🚫 Keine Chemie", en: "🚫 No chemical additives", es: "🚫 Sin aditivos químicos", fr: "🚫 Sans additifs chimiques" },
               ].map((chip, i) => (
-                <span key={i} data-testid={`migl-chip-${i}`} className="text-[11px] font-semibold bg-white/15 border border-white/25 rounded-full px-2.5 py-1">{L(chip)}</span>
+                <span key={i} data-testid={`migl-chip-${i}`} className="text-[11px] font-semibold bg-foreground/15 border border-foreground/25 rounded-full px-2.5 py-1">{L(chip)}</span>
               ))}
             </div>
             <MiglioratoreDetail />
           </div>
 
           {/* Adatta alle mie dosi */}
-          <div className="mt-4 bg-[#3E9C93]/10 border border-[#3E9C93]/30 rounded-2xl p-4">
-            <p className="text-xs font-bold uppercase tracking-wide text-[#3E9C93] mb-2 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L({ it: "Adatta alle mie dosi", de: "An meine Mengen anpassen", en: "Adapt to my amounts", es: "Adapta a mis dosis", fr: "Adapte à mes quantités" })}</p>
+          <div className="mt-4 bg-primary/10 border border-primary/30 rounded-2xl p-4">
+            <p className="text-xs font-bold uppercase tracking-wide text-primary mb-2 flex items-center gap-1.5"><Scale className="w-4 h-4" /> {L({ it: "Adatta alle mie dosi", de: "An meine Mengen anpassen", en: "Adapt to my amounts", es: "Adapta a mis dosis", fr: "Adapte à mes quantités" })}</p>
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-sm text-[#3F4A54] dark:text-[#AEB8BF]">{L({ it: "Quanta farina hai?", de: "Wie viel Mehl hast du?", en: "How much flour do you have?", es: "¿Cuánta harina tienes?", fr: "Combien de farine as-tu ?" })}</span>
+              <span className="text-sm text-muted-foreground dark:text-muted-foreground">{L({ it: "Quanta farina hai?", de: "Wie viel Mehl hast du?", en: "How much flour do you have?", es: "¿Cuánta harina tienes?", fr: "Combien de farine as-tu ?" })}</span>
               <input data-testid="custodite-flour" type="number" inputMode="numeric" value={flour} onChange={(e) => setFlour(e.target.value)} className={inp} />
-              <span className="text-sm text-[#7E8A93]">g</span>
+              <span className="text-sm text-muted-foreground">g</span>
               <div className="flex gap-1.5 ms-auto">
                 {[500, 1000, 2000].map((v) => (
                   <button key={v} data-testid={`custodite-quick-${v}`} onClick={() => setFlour(v)}
-                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
+                    className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-card dark:bg-card border border-border dark:border-border active:scale-95">{v >= 1000 ? `${v / 1000}kg` : `${v}g`}</button>
                 ))}
               </div>
             </div>
           </div>
 
           {/* Ingredienti ricalcolati */}
-          <div className="mt-4 rounded-2xl border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] overflow-hidden">
-            <div className="px-4 py-2.5 bg-[#0D1520] dark:bg-[#1B2A38] flex items-center gap-2 border-b border-[#2A3B49] dark:border-[#2A3B49]">
-              <Wheat className="w-4 h-4 text-[#3E9C93]" />
-              <span className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8]">{L({ it: "Ingredienti", de: "Zutaten", en: "Ingredients", es: "Ingredientes", fr: "Ingrédients" })}</span>
+          <div className="mt-4 rounded-2xl border border-border dark:border-border bg-card dark:bg-card overflow-hidden">
+            <div className="px-4 py-2.5 bg-background dark:bg-card flex items-center gap-2 border-b border-border dark:border-border">
+              <Wheat className="w-4 h-4 text-primary" />
+              <span className="font-display font-semibold text-foreground dark:text-foreground">{L({ it: "Ingredienti", de: "Zutaten", en: "Ingredients", es: "Ingredientes", fr: "Ingrédients" })}</span>
             </div>
             <div data-testid="custodite-ingredients">
               {rows.map((r, i) => (
-                <div key={i} className="flex items-center justify-between px-4 py-2.5 border-b last:border-0 border-[#F0E7D6] dark:border-[#2C343C]">
-                  <span className="text-sm text-[#2B303B] dark:text-[#e4eff8]">{r.name}</span>
+                <div key={i} className="flex items-center justify-between px-4 py-2.5 border-b last:border-0 border-border dark:border-border">
+                  <span className="text-sm text-foreground dark:text-foreground">{r.name}</span>
                   <span className="flex items-baseline gap-2">
-                    <span className="font-mono-data font-bold text-[#3E9C93] dark:text-[#d8a679]">{r.grams} g</span>
-                    <span className="text-xs text-[#7E8A93]">{r.pct}%</span>
+                    <span className="font-mono-data font-bold text-primary dark:text-muted-foreground">{r.grams} g</span>
+                    <span className="text-xs text-muted-foreground">{r.pct}%</span>
                   </span>
                 </div>
               ))}
@@ -816,25 +816,25 @@ export default function RicetteCustodite({ initialId = null }) {
           </div>
 
           {/* Procedimento */}
-          <div className="mt-4 rounded-2xl border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] p-4">
-            <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-[#3E9C93]" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
-            <p className="text-sm text-[#3F4A54] dark:text-[#AEB8BF] whitespace-pre-line leading-relaxed">{renderProcWithImprover(L(recipe.proc))}</p>
+          <div className="mt-4 rounded-2xl border border-border dark:border-border bg-card dark:bg-card p-4">
+            <p className="font-display font-semibold text-foreground dark:text-foreground mb-2 flex items-center gap-1.5"><Clock className="w-4 h-4 text-primary" /> {L({ it: "Procedimento", de: "Zubereitung", en: "Method", es: "Procedimiento", fr: "Préparation" })}</p>
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground whitespace-pre-line leading-relaxed">{renderProcWithImprover(L(recipe.proc))}</p>
           </div>
 
           {/* Scheda condivisibile con QR */}
-          <div className="mt-4 rounded-2xl border-2 border-dashed border-[#3E9C93]/40 bg-[#0D1520] dark:bg-[#1B2A38] p-4 flex items-center gap-4">
-            {qr && <img data-testid="custodite-qr" src={qr} alt="QR" className="w-24 h-24 rounded-lg bg-white p-1 shrink-0" />}
+          <div className="mt-4 rounded-2xl border-2 border-dashed border-primary/40 bg-background dark:bg-card p-4 flex items-center gap-4">
+            {qr && <img data-testid="custodite-qr" src={qr} alt="QR" className="w-24 h-24 rounded-lg bg-card p-1 shrink-0" />}
             <div className="min-w-0">
-              <p className="font-display font-semibold text-[#2B303B] dark:text-[#e4eff8] flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-[#3E9C93]" /> {L({ it: "Scheda da condividere", de: "Karte zum Teilen", en: "Shareable card", es: "Ficha para compartir", fr: "Fiche à partager" })}</p>
-              <p className="text-xs text-[#7E8A93] mt-0.5">{L({ it: "Inquadra il QR per avere ricetta e dosi.", de: "QR scannen für Rezept und Mengen.", en: "Scan the QR for recipe and amounts.", es: "Escanea el QR.", fr: "Scanne le QR pour la recette et les quantités." })}</p>
+              <p className="font-display font-semibold text-foreground dark:text-foreground flex items-center gap-1.5"><Sparkles className="w-4 h-4 text-primary" /> {L({ it: "Scheda da condividere", de: "Karte zum Teilen", en: "Shareable card", es: "Ficha para compartir", fr: "Fiche à partager" })}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{L({ it: "Inquadra il QR per avere ricetta e dosi.", de: "QR scannen für Rezept und Mengen.", en: "Scan the QR for recipe and amounts.", es: "Escanea el QR.", fr: "Scanne le QR pour la recette et les quantités." })}</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 mt-4 no-print">
-          <button data-testid="custodite-share" onClick={doShare} className="flex items-center justify-center gap-2 bg-[#3E9C93] text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Share2 className="w-5 h-5" /> {L({ it: "Condividi", de: "Teilen", en: "Share", es: "Compartir", fr: "Partager" })}</button>
-          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
-          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-white dark:bg-[#1B2A38] border border-[#2A3B49] dark:border-[#2A3B49] text-[#2B303B] dark:text-[#e4eff8] font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
+          <button data-testid="custodite-share" onClick={doShare} className="flex items-center justify-center gap-2 bg-primary text-white font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Share2 className="w-5 h-5" /> {L({ it: "Condividi", de: "Teilen", en: "Share", es: "Compartir", fr: "Partager" })}</button>
+          <button data-testid="custodite-copy" onClick={copyText} className="flex items-center justify-center gap-2 bg-card dark:bg-card border border-border dark:border-border text-foreground dark:text-foreground font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97">{L({ it: "Copia", de: "Kopieren", en: "Copy", es: "Copiar", fr: "Copier" })}</button>
+          <button data-testid="custodite-print" onClick={() => window.print()} className="flex items-center justify-center gap-2 bg-card dark:bg-card border border-border dark:border-border text-foreground dark:text-foreground font-semibold py-3 rounded-2xl shadow-md border border-amber-900/40 active:scale-97"><Printer className="w-5 h-5" /> {L({ it: "Stampa", de: "Druck", en: "Print", es: "Imprimir", fr: "Imprimer" })}</button>
         </div>
       </div>
     );
@@ -850,7 +850,7 @@ export default function RicetteCustodite({ initialId = null }) {
       <div className="flex flex-wrap gap-2 mt-4 pb-1" data-testid="custodite-filters">
         {CATS.map((c) => (
           <button key={c.id} data-testid={`custodite-cat-${c.id}`} onClick={() => setCat(c.id)}
-            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-[#3E9C93] text-white border-[#3E9C93]" : "bg-white dark:bg-[#1B2A38] text-[#3E9C93] dark:text-[#a9d2ec] border-[#2A3B49] dark:border-[#2A3B49]"}`}>
+            className={`shrink-0 px-3.5 py-1.5 rounded-full text-sm font-semibold border transition-all active:scale-95 ${cat === c.id ? "bg-primary text-white border-primary" : "bg-card dark:bg-card text-primary dark:text-foreground border-border dark:border-border"}`}>
             {L(c.label)}
           </button>
         ))}
@@ -860,19 +860,19 @@ export default function RicetteCustodite({ initialId = null }) {
         {list.map((r) => (
           <div key={r.id} className="relative">
             <button data-testid={`custodite-open-${r.id}`} onClick={() => setOpenId(r.id)}
-              className="w-full flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-[#2A3B49] dark:border-[#2A3B49] bg-white dark:bg-[#1B2A38] shadow-sm active:scale-98 transition-all hover:border-[#3E9C93]/50">
+              className="w-full flex items-center gap-3 text-start rounded-2xl overflow-hidden border border-border dark:border-border bg-card dark:bg-card shadow-sm active:scale-98 transition-all hover:border-primary/50">
               <img src={r.img} onError={onImgErr} alt="" className="w-24 h-24 object-cover shrink-0" />
               <div className="py-2 pe-3 min-w-0">
-                <p className="font-display font-bold text-[#2B303B] dark:text-[#e4eff8]">{r.flag} {L(r.name)}</p>
-                <p className="text-xs text-[#7E8A93] flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {L(r.place)}</p>
-                <p className="text-xs text-[#3F4A54] dark:text-[#AEB8BF] mt-1 line-clamp-2">{L(r.story)}</p>
+                <p className="font-display font-bold text-foreground dark:text-foreground">{r.flag} {L(r.name)}</p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1 mt-0.5"><MapPin className="w-3 h-3" /> {L(r.place)}</p>
+                <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1 line-clamp-2">{L(r.story)}</p>
               </div>
             </button>
             <button type="button" data-testid={`custodite-fav-${r.id}`} aria-pressed={isFav(`custodite:${r.id}`)}
               onClick={() => toggleFav(`custodite:${r.id}`)}
-              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-white/90 dark:bg-[#0D1520]/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
-              <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-[#ff3b5c] fill-[#ff3b5c]" : "text-[#7E8A93]"}`} />
-              {countOf(`custodite:${r.id}`) > 0 && <span data-testid={`custodite-fav-count-${r.id}`} className="text-[11px] font-bold text-[#ff3b5c] leading-none">{countOf(`custodite:${r.id}`)}</span>}
+              className="absolute top-2 right-2 z-10 inline-flex items-center gap-1 bg-foreground/90 dark:bg-background/80 rounded-full pl-1.5 pr-2 py-1.5 shadow active:scale-90 transition-transform">
+              <Heart className={`w-4 h-4 ${isFav(`custodite:${r.id}`) ? "text-destructive fill-destructive" : "text-muted-foreground"}`} />
+              {countOf(`custodite:${r.id}`) > 0 && <span data-testid={`custodite-fav-count-${r.id}`} className="text-[11px] font-bold text-destructive leading-none">{countOf(`custodite:${r.id}`)}</span>}
             </button>
           </div>
         ))}

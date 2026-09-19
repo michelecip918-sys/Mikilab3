@@ -8,9 +8,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 
 const VERDICT = {
-  ok: { c: "#6e9e85", lbl: (t) => t("Conforme", "Konform", "Pass", "Conforme", "Conforme", "تأیید") },
-  attenzione: { c: "#a4afbb", lbl: (t) => t("Attenzione", "Achtung", "Attention", "Atención", "Attention", "توجه") },
-  scarto: { c: "#b06e78", lbl: (t) => t("Scarto", "Ausschuss", "Reject", "Descarte", "Rebut", "ضایعات") },
+  ok: { c: "hsl(var(--accent))", lbl: (t) => t("Conforme", "Konform", "Pass", "Conforme", "Conforme", "تأیید") },
+  attenzione: { c: "hsl(var(--muted-foreground))", lbl: (t) => t("Attenzione", "Achtung", "Attention", "Atención", "Attention", "توجه") },
+  scarto: { c: "hsl(var(--mattone))", lbl: (t) => t("Scarto", "Ausschuss", "Reject", "Descarte", "Rebut", "ضایعات") },
 };
 
 // v14 · AI Computer Vision — Controllo Qualità Ottico all'uscita dei forni.
@@ -70,39 +70,39 @@ export default function OvenQC() {
 
   return (
     <div data-testid="oven-qc" className="space-y-3">
-      <label className="flex items-center gap-2 bg-[#0C1019] border border-[#64748B]/30 rounded-lg px-3 py-2">
-        <ScanEye className="w-4 h-4 text-[#64748B]" />
-        <input data-testid="qc-product-input" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto (es. Baguette)", "Produkt", "Product", "Producto", "Produit", "محصول")} className="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-[#4b6070]" />
+      <label className="flex items-center gap-2 bg-background border border-border/30 rounded-lg px-3 py-2">
+        <ScanEye className="w-4 h-4 text-muted-foreground" />
+        <input data-testid="qc-product-input" value={product} onChange={(e) => setProduct(e.target.value)} placeholder={tri("Prodotto (es. Baguette)", "Produkt", "Product", "Producto", "Produit", "محصول")} className="flex-1 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground" />
       </label>
 
       {cam ? (
-        <div className="relative w-full rounded-xl overflow-hidden border border-[#64748B]/40 bg-black" style={{ aspectRatio: "4 / 3" }}>
+        <div className="relative w-full rounded-xl overflow-hidden border border-border/40 bg-background" style={{ aspectRatio: "4 / 3" }}>
           <video ref={videoRef} playsInline muted className="w-full h-full object-cover" />
-          <button data-testid="qc-cam-close" onClick={stopCam} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-[#0b0f19]/90 border border-[#1e293b] flex items-center justify-center text-[#94A3B8]"><X className="w-4 h-4" /></button>
-          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#8a97a6] text-[#060A10] font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
+          <button data-testid="qc-cam-close" onClick={stopCam} className="absolute top-2 right-2 w-8 h-8 rounded-full bg-background/90 border border-border flex items-center justify-center text-muted-foreground"><X className="w-4 h-4" /></button>
+          <button data-testid="qc-shoot" onClick={shoot} className="absolute bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-muted text-foreground font-black text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Scansiona", "Scannen", "Scan", "Escanear", "Scanner", "اسکن")}</button>
         </div>
       ) : (
         <div className="flex gap-2">
-          <button data-testid="qc-open-cam" onClick={openCam} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#64748B]/15 border border-[#64748B]/50 text-[#9fc3dc] font-bold text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Fotocamera", "Kamera", "Camera", "Cámara", "Caméra", "دوربین")}</button>
-          <button data-testid="qc-open-file" onClick={() => fileRef.current?.click()} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-[#0C1019] border border-[#64748B]/40 text-[#9fc3dc] font-bold text-sm active:scale-95"><Upload className="w-4 h-4" /> {tri("Carica foto", "Foto laden", "Upload photo", "Subir foto", "Charger photo", "بارگذاری عکس")}</button>
+          <button data-testid="qc-open-cam" onClick={openCam} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-accent/15 border border-border/50 text-accent-foreground font-bold text-sm active:scale-95"><Camera className="w-4 h-4" /> {tri("Fotocamera", "Kamera", "Camera", "Cámara", "Caméra", "دوربین")}</button>
+          <button data-testid="qc-open-file" onClick={() => fileRef.current?.click()} className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-background border border-border/40 text-foreground font-bold text-sm active:scale-95"><Upload className="w-4 h-4" /> {tri("Carica foto", "Foto laden", "Upload photo", "Subir foto", "Charger photo", "بارگذاری عکس")}</button>
           <input ref={fileRef} data-testid="qc-file-input" type="file" accept="image/*" className="hidden" onChange={onFile} />
         </div>
       )}
 
-      {busy && <div className="py-6 text-center text-[#7d97ac] text-sm flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {tri("Analisi ottica in corso…", "Optische Analyse…", "Optical analysis…", "Análisis óptico…", "Analyse optique…", "تحلیل نوری…")}</div>}
+      {busy && <div className="py-6 text-center text-muted-foreground text-sm flex items-center justify-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> {tri("Analisi ottica in corso…", "Optische Analyse…", "Optical analysis…", "Análisis óptico…", "Analyse optique…", "تحلیل نوری…")}</div>}
 
       {res && V && (
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} data-testid="qc-result" className="rounded-xl border p-3" style={{ borderColor: `${V.c}55`, background: `${V.c}0d` }}>
           <div className="flex items-center gap-2">
             <span data-testid="qc-verdict" className="text-xs font-black uppercase tracking-wider px-2.5 py-1 rounded-full" style={{ color: V.c, border: `1px solid ${V.c}66` }}>{V.lbl(tri)}</span>
-            <span className="text-sm font-black text-white">{tri("Qualità", "Qualität", "Quality", "Calidad", "Qualité", "کیفیت")}: {res.score}%</span>
+            <span className="text-sm font-black text-foreground">{tri("Qualità", "Qualität", "Quality", "Calidad", "Qualité", "کیفیت")}: {res.score}%</span>
           </div>
           {(res.defects || []).length > 0 && (
             <ul className="mt-2 space-y-1 list-disc list-inside">
-              {res.defects.map((d, i) => (<li key={i} className="text-[12px] text-[#e6f6fa]">{d}</li>))}
+              {res.defects.map((d, i) => (<li key={i} className="text-[12px] text-foreground">{d}</li>))}
             </ul>
           )}
-          {res.notes && <p className="mt-2 text-[12px] text-[#94A3B8]">{res.notes}</p>}
+          {res.notes && <p className="mt-2 text-[12px] text-muted-foreground">{res.notes}</p>}
         </motion.div>
       )}
     </div>

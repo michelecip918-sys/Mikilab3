@@ -73,39 +73,39 @@ export default function LegalPage() {
     finally { setSending(false); }
   };
 
-  const card = "rounded-xl bg-[#0D1520]/80 border border-[#64748B]/25 p-5";
-  const h2cls = "font-cyber text-sm font-black text-white uppercase tracking-wider";
-  const pcl = "text-sm text-[#CBD5E1] mt-1.5 leading-relaxed";
+  const card = "rounded-xl bg-background/80 border border-border/25 p-5";
+  const h2cls = "font-display text-sm font-black text-white uppercase tracking-wider";
+  const pcl = "text-sm text-foreground mt-1.5 leading-relaxed";
 
   return (
     <div data-testid="legal-page" className="pb-4 space-y-4">
-      <div className="rounded-xl p-6 border border-[#8a97a6]/30 bg-gradient-to-br from-[#0D1520] to-[#060A10]">
-        <ShieldCheck className="w-7 h-7 mb-2 text-[#8a97a6]" />
-        <h1 className="font-cyber text-xl font-black text-white uppercase tracking-wider">{c.title}</h1>
-        <p className="text-[#94A3B8] text-sm mt-2 leading-relaxed">{c.intro}</p>
+      <div className="rounded-xl p-6 border border-border/30 bg-gradient-to-br from-background to-background">
+        <ShieldCheck className="w-7 h-7 mb-2 text-muted-foreground" />
+        <h1 className="font-display text-xl font-black text-foreground uppercase tracking-wider">{c.title}</h1>
+        <p className="text-muted-foreground text-sm mt-2 leading-relaxed">{c.intro}</p>
       </div>
 
       {/* Impressum (Germania) */}
       <div data-testid="impressum" className={card}>
-        <div className="flex items-center gap-2 mb-2"><Building2 className="w-5 h-5 text-[#8a97a6]" /><h2 className={h2cls}>Impressum</h2></div>
+        <div className="flex items-center gap-2 mb-2"><Building2 className="w-5 h-5 text-muted-foreground" /><h2 className={h2cls}>Impressum</h2></div>
         <p className={pcl}>{tr("Ai sensi del § 5 DDG (Digitale-Dienste-Gesetz, Germania):", "Angaben gemäß § 5 DDG:", "Information pursuant to § 5 DDG (Germany):")}</p>
         <div className={`${pcl} mt-2`}>
-          <p className="font-bold text-white">{OWNER}</p>
+          <p className="font-bold text-foreground">{OWNER}</p>
           <p>{tr("Panettiere", "Bäcker", "Baker", "Panadero", "Boulanger", "نانوا")}</p>
           <p>{STREET}</p>
           <p>{POSTAL}, Deutschland</p>
-          <p>E-Mail: <span className="text-[#9aa6b2]">{EMAIL}</span></p>
-          <p className="text-[#94A3B8]">{tr("Sito: mikilab.de", "Website: mikilab.de", "Website: mikilab.de")}</p>
+          <p>E-Mail: <span className="text-muted-foreground">{EMAIL}</span></p>
+          <p className="text-muted-foreground">{tr("Sito: mikilab.de", "Website: mikilab.de", "Website: mikilab.de")}</p>
         </div>
       </div>
 
       {/* Privacy sections */}
       <div className={card}>
-        <div className="flex items-center gap-2 mb-3"><ScrollText className="w-5 h-5 text-[#8a97a6]" /><h2 className={h2cls}>{tr("Informativa Privacy (GDPR)", "Datenschutzerklärung (DSGVO)", "Privacy Policy (GDPR)", "Privacidad (RGPD)")}</h2></div>
+        <div className="flex items-center gap-2 mb-3"><ScrollText className="w-5 h-5 text-muted-foreground" /><h2 className={h2cls}>{tr("Informativa Privacy (GDPR)", "Datenschutzerklärung (DSGVO)", "Privacy Policy (GDPR)", "Privacidad (RGPD)")}</h2></div>
         <div className="space-y-4">
           {c.sections.map((s, i) => (
-            <div key={i} className="border-l-2 border-[#8a97a6]/40 pl-3">
-              <h3 className="text-sm font-bold text-white">{s.h}</h3>
+            <div key={i} className="border-l-2 border-border/40 pl-3">
+              <h3 className="text-sm font-bold text-foreground">{s.h}</h3>
               <p className={pcl}>{s.b}</p>
             </div>
           ))}
@@ -114,7 +114,7 @@ export default function LegalPage() {
 
       {/* Cookie policy */}
       <div data-testid="cookie-policy" className={card}>
-        <div className="flex items-center gap-2 mb-2"><Cookie className="w-5 h-5 text-[#8a97a6]" /><h2 className={h2cls}>{tr("Cookie Policy", "Cookie-Richtlinie", "Cookie Policy", "Política de cookies")}</h2></div>
+        <div className="flex items-center gap-2 mb-2"><Cookie className="w-5 h-5 text-muted-foreground" /><h2 className={h2cls}>{tr("Cookie Policy", "Cookie-Richtlinie", "Cookie Policy", "Política de cookies")}</h2></div>
         <p className={pcl}>{tr(
           "Cookie tecnici usati: (1) sessione di accesso (mikilab_session) — necessario per restare connesso; (2) PIN gate (mikilab_gate) — necessario per l'accesso operatore; (3) preferenze in localStorage (lingua, volume) — restano solo sul tuo dispositivo. Durata: sessione o fino a cancellazione manuale. Nessun cookie di terze parti, tracciamento o profilazione.",
           "Verwendete technische Cookies: (1) Login-Sitzung (mikilab_session) — erforderlich, um angemeldet zu bleiben; (2) PIN-Gate (mikilab_gate) — erforderlich für den Bedienerzugang; (3) Einstellungen im localStorage (Sprache, Lautstärke) — bleiben nur auf deinem Gerät. Dauer: Sitzung oder bis zur manuellen Löschung. Keine Drittanbieter-, Tracking- oder Profiling-Cookies.",
@@ -123,21 +123,21 @@ export default function LegalPage() {
 
       {/* Modulo contatti */}
       <div data-testid="contact-form" className={card}>
-        <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-[#8a97a6]" /><h2 className={h2cls}>{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
+        <div className="flex items-center gap-2 mb-3"><Mail className="w-5 h-5 text-muted-foreground" /><h2 className={h2cls}>{tr("Contattaci", "Kontakt", "Contact us", "Contáctanos")}</h2></div>
         <input data-testid="contact-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={tr("Il tuo nome", "Dein Name", "Your name", "Tu nombre")}
-          className="w-full mb-2 bg-[#060A10] border border-[#64748B]/40 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#8a97a6] placeholder:text-[#64748B]" />
+          className="w-full mb-2 bg-background border border-border/40 rounded-lg px-3 py-2.5 text-sm text-foreground outline-none focus:border-border placeholder:text-muted-foreground" />
         <input data-testid="contact-email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" type="email"
-          className="w-full mb-2 bg-[#060A10] border border-[#64748B]/40 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#8a97a6] placeholder:text-[#64748B]" />
+          className="w-full mb-2 bg-background border border-border/40 rounded-lg px-3 py-2.5 text-sm text-foreground outline-none focus:border-border placeholder:text-muted-foreground" />
         <textarea data-testid="contact-message" value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} rows={4} placeholder={tr("Il tuo messaggio…", "Deine Nachricht…", "Your message…", "Tu mensaje…")}
-          className="w-full mb-3 bg-[#060A10] border border-[#64748B]/40 rounded-lg px-3 py-2.5 text-sm text-white outline-none focus:border-[#8a97a6] placeholder:text-[#64748B]" />
+          className="w-full mb-3 bg-background border border-border/40 rounded-lg px-3 py-2.5 text-sm text-foreground outline-none focus:border-border placeholder:text-muted-foreground" />
         <button data-testid="contact-send" onClick={submit} disabled={sending}
-          className="w-full inline-flex items-center justify-center gap-2 text-[#060A10] font-bold px-5 py-3 rounded-lg active:scale-95 disabled:opacity-60 transition-all" style={{ background: "linear-gradient(90deg,#8a97a6,#9aa6b2)" }}>
+          className="w-full inline-flex items-center justify-center gap-2 text-foreground font-bold px-5 py-3 rounded-lg active:scale-95 disabled:opacity-60 transition-all" style={{ background: "linear-gradient(90deg,hsl(var(--muted-foreground)),hsl(var(--muted-foreground)))" }}>
           {sending ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
           {tr("Invia messaggio", "Nachricht senden", "Send message", "Enviar mensaje")}
         </button>
       </div>
 
-      <p className="text-center text-xs text-[#64748B] italic">{c.note}</p>
+      <p className="text-center text-xs text-muted-foreground italic">{c.note}</p>
     </div>
   );
 }

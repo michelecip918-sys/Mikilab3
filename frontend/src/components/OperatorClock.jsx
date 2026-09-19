@@ -29,14 +29,14 @@ export default function OperatorClock() {
   return (
     <div data-testid="operator-clock" className="w-full holo-panel p-4 mb-4">
       <span className="holo-scan-top" />
-      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#8a97a6]/80 mb-2">{tri("Timbratura personale (PIN)", "Persönliche Stempelung (PIN)", "Personal clock-in (PIN)", "Fichaje personal (PIN)", "Pointage personnel (PIN)", "ثبت شخصی (پین)")}</p>
+      <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-muted-foreground/80 mb-2">{tri("Timbratura personale (PIN)", "Persönliche Stempelung (PIN)", "Personal clock-in (PIN)", "Fichaje personal (PIN)", "Pointage personnel (PIN)", "ثبت شخصی (پین)")}</p>
       <div className="flex flex-wrap items-center gap-2">
-        <input data-testid="clock-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN" className="w-24 bg-[#0C1019] border border-[#8a97a6]/30 rounded-lg px-3 py-2 text-sm text-white text-center tracking-[0.3em] focus:border-[#8a97a6] outline-none" />
-        <button data-testid="clock-in-btn" onClick={() => clock("in")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#9aa6b2]/15 border border-[#9aa6b2]/50 text-[#9aa6b2] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogIn className="w-4 h-4" /> {tri("Entrata", "Kommt", "In", "Entrada", "Entrée", "ورود")}</button>
-        <button data-testid="clock-break-btn" onClick={() => clock("break_start")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#a4afbb]/15 border border-[#a4afbb]/50 text-[#a4afbb] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><Coffee className="w-4 h-4" /> {tri("Pausa", "Pause", "Break", "Pausa", "Pause", "استراحت")}</button>
-        <button data-testid="clock-out-btn" onClick={() => clock("out")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-[#0C1019] border border-[#1e293b] text-[#94a3b8] font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogOut className="w-4 h-4" /> {tri("Uscita", "Geht", "Out", "Salida", "Sortie", "خروج")}</button>
+        <input data-testid="clock-pin-input" value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, "").slice(0, 4))} inputMode="numeric" placeholder="PIN" className="w-24 bg-background border border-border/30 rounded-lg px-3 py-2 text-sm text-foreground text-center tracking-[0.3em] focus:border-border outline-none" />
+        <button data-testid="clock-in-btn" onClick={() => clock("in")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted/15 border border-border/50 text-muted-foreground font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogIn className="w-4 h-4" /> {tri("Entrata", "Kommt", "In", "Entrada", "Entrée", "ورود")}</button>
+        <button data-testid="clock-break-btn" onClick={() => clock("break_start")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-muted/15 border border-border/50 text-muted-foreground font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><Coffee className="w-4 h-4" /> {tri("Pausa", "Pause", "Break", "Pausa", "Pause", "استراحت")}</button>
+        <button data-testid="clock-out-btn" onClick={() => clock("out")} disabled={pin.length !== 4} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-background border border-border text-muted-foreground font-bold text-sm disabled:opacity-40 active:scale-95 transition-all"><LogOut className="w-4 h-4" /> {tri("Uscita", "Geht", "Out", "Salida", "Sortie", "خروج")}</button>
       </div>
-      {msg && <p data-testid="clock-msg" className={`mt-2 text-sm font-bold ${msg.ok ? "text-[#9aa6b2]" : "text-[#bb8489]"}`}>{msg.text}</p>}
+      {msg && <p data-testid="clock-msg" className={`mt-2 text-sm font-bold ${msg.ok ? "text-muted-foreground" : "text-mattone"}`}>{msg.text}</p>}
     </div>
   );
 }
