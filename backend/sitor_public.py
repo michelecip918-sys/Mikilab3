@@ -374,4 +374,5 @@ async def technique_edit(slug: str, body: TechniqueEdit, admin: dict = Depends(r
     if body.verified is not None or body.hidden_images is not None:
         meta = {k: upd[k] for k in ("verified", "hidden_images") if k in upd}
         await db.technique_pages.update_many({"slug": slug}, {"$set": meta})
-    return {"ok": True}
+    doc = await db.technique_pages.find_one({"slug": slug}, {"_id": 0, "verified": 1})
+    return {"ok": True, "verified": bool((doc or {}).get("verified"))}

@@ -1,11 +1,15 @@
 import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/auth/AuthContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
 import { ChevronLeft, Wrench, AlertTriangle } from "lucide-react";
 
 export default function TecnichePage({ initialSlug, onBack }) {
   const { lang } = useLang();
+  const { user } = useAuth();
+  const isAdmin = !!(user && user.role === "admin");
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const li = (o) => (lang === "de" ? o.de : lang === "en" ? o.en : o.it);
   const [list, setList] = useState([]);
@@ -32,6 +36,18 @@ export default function TecnichePage({ initialSlug, onBack }) {
           <span data-testid="technique-verified" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${page?.verified ? "bg-accent/30 text-accent-foreground" : "bg-foreground/10 text-muted-foreground"}`}>
             {page?.verified ? tri("Verificato da Michele ✓", "Von Michele geprüft ✓", "Verified by Michele ✓") : tri("Bozza di Sitor", "Sitor-Entwurf", "Sitor draft")}
           </span>
+          {isAdmin && page && !page.error && (
+            <button data-testid="technique-verify-toggle" onClick={async () => {
+              try {
+                const r = await api.put(`/techniques/${slug}`, { verified: !page.verified });
+                setPage((p) => ({ ...p, verified: r.data.verified }));
+                setList((ls) => ls.map((t) => (t.slug === slug ? { ...t, verified: r.data.verified } : t)));
+                toast.success(r.data.verified ? tri("Tecnica verificata", "Technik geprüft", "Technique verified") : tri("Segnata come bozza", "Als Entwurf", "Set as draft"));
+              } catch { toast.error(tri("Errore", "Fehler", "Error")); }
+            }} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border active:scale-95 transition-all ${page.verified ? "border-mattone/50 text-mattone" : "border-accent/50 text-accent"}`}>
+              {page.verified ? tri("Rimuovi verifica", "Prüfung entfernen", "Unverify") : tri("Verifica ✓", "Prüfen ✓", "Verify ✓")}
+            </button>
+          )}
         </div>
         {loading && <p className="text-muted-foreground">{tri("Sitor sta scrivendo…", "Sitor schreibt…", "Sitor is writing…")}</p>}
         {b && (<>

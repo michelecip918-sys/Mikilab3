@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { X, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Mic, MicOff, ChefHat, AlertTriangle, Eye } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
+import { useAuth } from "@/auth/AuthContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
@@ -14,6 +15,8 @@ export default function CoursePlayer({ recipe, onClose }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const { addTimer } = useTimers();
+  const { user } = useAuth();
+  const isAdmin = !!(user && user.role === "admin");
   const voiceLang = mkTri(lang)("it-IT", "de-DE", "en-GB");
   const [mode, setMode] = useState(() => { try { return localStorage.getItem(MODE_KEY) === "esperto" ? "esperto" : "casa"; } catch { return "casa"; } });
 
@@ -153,6 +156,17 @@ export default function CoursePlayer({ recipe, onClose }) {
               <span data-testid="course-verified-label" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${data.verified ? "bg-accent/30 text-accent-foreground" : "bg-foreground/10 text-foreground/70"}`}>
                 {data.verified ? tri("Verificato da Michele ✓", "Von Michele geprüft ✓", "Verified by Michele ✓") : tri("Bozza di Sitor: verifica sempre segnali e temperature", "Sitor-Entwurf: prüfe immer Zeichen und Temperaturen", "Sitor draft: always check signals and temperatures")}
               </span>
+              {isAdmin && (
+                <button data-testid="course-verify-toggle" onClick={async () => {
+                  try {
+                    const r = await api.put(`/recipes/${recipe.id}/course-v2?lang=${lang}`, { verified: !data.verified });
+                    setData((d) => ({ ...d, verified: r.data.verified }));
+                    toast.success(r.data.verified ? tri("Corso verificato", "Kurs geprüft", "Course verified") : tri("Corso segnato come bozza", "Kurs als Entwurf", "Course set as draft"));
+                  } catch { toast.error(tri("Errore", "Fehler", "Error")); }
+                }} className={`text-[10px] font-bold px-2 py-0.5 rounded-full border active:scale-95 transition-all ${data.verified ? "border-mattone/50 text-mattone" : "border-accent/50 text-accent"}`}>
+                  {data.verified ? tri("Rimuovi verifica", "Prüfung entfernen", "Unverify") : tri("Verifica ✓", "Prüfen ✓", "Verify ✓")}
+                </button>
+              )}
             </div>
           </div>
 

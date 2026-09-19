@@ -1,3 +1,12 @@
+# ⚡ AGGIORNAMENTO (2026-09) — Panettoni luminosi + Toggle admin "verified"
+
+- **17 foto panettoni rigenerate** (`pan_*.webp`) in luce naturale luminosa e uniforme (stampo rosso su legno chiaro, sfondo bottega ariosa), coerenti con le nuove copertine. Sostituiti gli sfondi scuri/notturni (era il caso di tiramisù, classico). Serviti 200 OK come WebP (~100-114KB). Stessi slug → nessuna modifica DB.
+- **Toggle admin "Verificato da Michele" (P2 FATTO)**: gli endpoint backend esistevano già (`PUT /techniques/{slug}` e `PUT /recipes/{id}/course-v2`, entrambi `require_admin`). Aggiunto `verified` nella risposta di `technique_edit` per coerenza. Frontend: pulsante `technique-verify-toggle` in `TecnichePage` (accanto al badge) e `course-verify-toggle` in `CoursePlayer`, visibili solo se `user.role==="admin"` (via `useAuth`). Testato via curl: toggle on/off funzionante in entrambi, 401 per anonimi. UI toggle verificata a schermo (Michele loggato).
+- **Valutazione 6 guide Tecniche** (tutte tecnicamente corrette): baguette, pieghe, pirlatura, filone, panettone → PRONTE da marcare "Verificato". **croissant** → contiene placeholder "[da definire]" per le misure dei triangoli (Sitor per design non inventa misure): meglio che Michele inserisca le misure prima di verificarla.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-09) — Uniformazione visiva copertine
 
 - **baguette/1.webp rigenerata** in stile disegnato (comic/ink) coerente con le altre illustrazioni tecniche (era fotografica). Verificata in pagina Tecniche.
