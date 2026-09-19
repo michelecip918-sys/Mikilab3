@@ -20,23 +20,9 @@ const READY = [
   { code: "it", flag: "🇮🇹", label: "Italiano", native: "Italiano" },
   { code: "de", flag: "🇩🇪", label: "Deutsch", native: "German" },
   { code: "en", flag: "🇬🇧", label: "English", native: "English" },
-  { code: "es", flag: "🇪🇸", label: "Español", native: "Spanish" },
-  { code: "fr", flag: "🇫🇷", label: "Français", native: "French" },
-  { code: "fa", flag: "🇮🇷", label: "فارسی", native: "Persian" },
-  { code: "ar", flag: "🇸🇦", label: "العربية", native: "Arabic" },
-  { code: "tr", flag: "🇹🇷", label: "Türkçe", native: "Turkish" },
 ];
-// Predisposizione globale: mostrate come "in arrivo" (architettura espandibile).
-const SOON = [
-  { code: "pt", flag: "🇵🇹", label: "Português", native: "Portuguese" },
-  { code: "pl", flag: "🇵🇱", label: "Polski", native: "Polish" },
-  { code: "ro", flag: "🇷🇴", label: "Română", native: "Romanian" },
-  { code: "ru", flag: "🇷🇺", label: "Русский", native: "Russian" },
-  { code: "zh", flag: "🇨🇳", label: "中文", native: "Chinese" },
-  { code: "hi", flag: "🇮🇳", label: "हिन्दी", native: "Hindi" },
-  { code: "uk", flag: "🇺🇦", label: "Українська", native: "Ukrainian" },
-  { code: "nl", flag: "🇳🇱", label: "Nederlands", native: "Dutch" },
-];
+// Altre lingue: usa il traduttore del browser (nessuna traduzione integrata mostrata).
+const SOON = [];
 
 export default function LangSelector({ testid = "lang-selector" }) {
   const { lang, setLang, tri } = useLang();

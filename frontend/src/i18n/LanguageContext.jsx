@@ -5,19 +5,19 @@ import { applyMeta } from "@/i18n/meta";
 import { setTTSAppLang } from "@/lib/tts";
 
 const LanguageContext = createContext(null);
-const SUPPORTED = ["it", "de", "en", "es", "fr", "fa", "ar", "tr"];
+const SUPPORTED = ["it", "de", "en"];
 
 function initialLang() {
-  // 1) scelta salvata dall'utente: ha SEMPRE la priorità (resta stabile dopo il login e i reload)
+  // 1) scelta salvata dall'utente: ha SEMPRE la priorità (resta stabile dopo i reload)
   const saved = localStorage.getItem("mikilab_lang");
   if (SUPPORTED.includes(saved)) return saved;
-  // 2) prefisso lingua nell'URL (/it /de /en /es) → SEO / condivisione al primo accesso
+  // 2) prefisso lingua nell'URL (/it /de /en) → condivisione al primo accesso
   const seg = (window.location.pathname.split("/")[1] || "").toLowerCase();
   if (SUPPORTED.includes(seg)) return seg;
-  // 3) lingua del browser
-  const nav = (navigator.language || "it").slice(0, 2).toLowerCase();
-  if (SUPPORTED.includes(nav)) return nav;
-  return "it";
+  // 3) lingua del browser: it/de se disponibili, altrimenti EN
+  const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
+  if (nav === "it" || nav === "de") return nav;
+  return "en";
 }
 
 export function LanguageProvider({ children }) {
@@ -31,7 +31,7 @@ export function LanguageProvider({ children }) {
     setTTSAppLang(lang); // voce audio sempre allineata al testo
   }, [lang]);
 
-  const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "it"), []);
+const setLang = useCallback((l) => setLangState(SUPPORTED.includes(l) ? l : "en"), []);
 
   // t(key): lingua scelta → EN → IT → key. Così le lingue senza dizionario ricadono su EN.
   const t = useCallback(

@@ -24,10 +24,19 @@ import InstallApp from "@/components/InstallApp";
 import SplashScreen from "@/components/SplashScreen";
 import LangSelector from "@/components/LangSelector";
 import Ricette from "@/sections/Ricette";
+import HomeManuale from "@/components/HomeManuale";
+import LegalPlaceholder from "@/components/LegalPlaceholder";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
+
+function initialRoute() {
+  const p = (window.location.pathname || "").toLowerCase();
+  if (p.startsWith("/impressum")) return "impressum";
+  if (p.startsWith("/datenschutz")) return "datenschutz";
+  return "home";
+}
 
 export default function App() {
   const { lang } = useLang();
@@ -38,6 +47,7 @@ export default function App() {
   // Accesso admin riservato (nessun link pubblico): solo con ?admin=1 nell'URL.
   const [adminMode] = useState(() => new URLSearchParams(window.location.search).get("admin") === "1");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const [route, setRoute] = useState(initialRoute);
   const isAdmin = !!(user && user.role === "admin");
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
@@ -60,7 +70,7 @@ export default function App() {
         <div className="relative z-10 flex flex-col min-h-screen">
           <header data-testid="app-header" className="sticky top-0 z-50 border-b border-[#8a97a6]/15 bg-[#060A10]/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
             <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
-              <button data-testid="brand-home" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} className="flex items-center gap-2.5 min-w-0 shrink-0 active:scale-95 transition-transform">
+              <button data-testid="brand-home" onClick={() => { setRoute("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center gap-2.5 min-w-0 shrink-0 active:scale-95 transition-transform">
                 <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
                 <span className="text-left whitespace-nowrap">
                   <span className="block font-cyber text-lg sm:text-2xl font-black tracking-[0.14em] text-white uppercase">MikiLab</span>
@@ -95,10 +105,24 @@ export default function App() {
           </header>
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
-            <ErrorBoundary resetKey={`${lang}-${isAdmin ? "a" : "p"}`}>
-              <Ricette isMasterView={isAdmin} />
+            <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
+              {route === "home" && <HomeManuale onNav={(r) => { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
+              {route === "recipes" && <Ricette isMasterView={isAdmin} />}
+              {route === "impressum" && <LegalPlaceholder kind="impressum" onBack={() => setRoute("home")} />}
+              {route === "datenschutz" && <LegalPlaceholder kind="datenschutz" onBack={() => setRoute("home")} />}
             </ErrorBoundary>
           </main>
+
+          <footer data-testid="app-footer" className="border-t border-[#8a97a6]/12 bg-[#060A10]/70 px-4 py-6 mt-auto">
+            <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#94A3B8]">
+              <p>© MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
+              <div className="flex items-center gap-4">
+                <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">Impressum</button>
+                <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-white font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>
+              </div>
+              <p data-testid="footer-langs" className="text-[#64748B]">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
+            </div>
+          </footer>
         </div>
 
         <RadioFornaio />

@@ -1,21 +1,21 @@
 // Metadati SEO / Open Graph per lingua (aggiornati lato client + usati dall'endpoint /api/share).
 export const META = {
   it: {
-    title: "MikiLab — Panificazione, Pizzeria & Pasticceria | 100% gratis",
+    title: "MikiLab — Il Manuale di Sitor | ricette gratis per casa",
     description:
-      "MikiLab è il laboratorio completo del fornaio, 100% gratis: ricette col metodo di Michele, piani di produzione con l'IA, food cost e diagnosi dell'impasto. Panificazione, pizzeria e pasticceria in un'unica app.",
-    ogTitle: "MikiLab — Panificazione, Pizzeria & Pasticceria",
+      "Il Manuale di Sitor: le ricette di pane, pizza e dolci spiegate passo-passo per farle a casa. Dosi ricalcolate per il forno di casa e la guida di Sitor. Gratis.",
+    ogTitle: "MikiLab — Il Manuale di Sitor",
     ogDescription:
-      "Il laboratorio completo del fornaio: ricette, piani di produzione con l'IA e food cost. 100% gratis, nessun pagamento.",
+      "Ricette di pane, pizza e dolci spiegate passo-passo per la cucina di casa, con la guida di Sitor. Gratis.",
     locale: "it_IT",
   },
   en: {
-    title: "MikiLab — Bakery, Pizzeria & Pastry Lab | 100% free",
+    title: "MikiLab — Sitor's Manual | free home recipes",
     description:
-      "MikiLab is the baker's complete workshop, 100% free: recipes with Michele's method, AI production plans, food cost and dough diagnosis. Bakery, pizzeria and pastry in one app.",
-    ogTitle: "MikiLab — Bakery, Pizzeria & Pastry Lab",
+      "Sitor's Manual: bread, pizza and pastry recipes explained step-by-step to make at home. Doses recalculated for the home oven, guided by Sitor. Free.",
+    ogTitle: "MikiLab — Sitor's Manual",
     ogDescription:
-      "The baker's complete workshop: recipes, AI production plans and food cost. 100% free, no payment.",
+      "Bread, pizza and pastry recipes explained step-by-step for home cooking, guided by Sitor. Free.",
     locale: "en_US",
   },
   es: {
@@ -37,12 +37,12 @@ export const META = {
     locale: "fr_FR",
   },
   de: {
-    title: "MikiLab — Bäckerei, Pizzeria & Konditorei | 100% kostenlos",
+    title: "MikiLab — Sitors Handbuch | kostenlose Rezepte für zu Hause",
     description:
-      "MikiLab ist die komplette Backstube, 100% kostenlos: Rezepte nach Micheles Methode, KI-Produktionspläne, Food Cost und Teig-Diagnose. Bäckerei, Pizzeria und Konditorei in einer App.",
-    ogTitle: "MikiLab — Bäckerei, Pizzeria & Konditorei",
+      "Sitors Handbuch: Rezepte für Brot, Pizza und Süßes, Schritt für Schritt erklärt zum Nachmachen zu Hause. Mengen für den Hausofen umgerechnet, geführt von Sitor. Kostenlos.",
+    ogTitle: "MikiLab — Sitors Handbuch",
     ogDescription:
-      "Die komplette Backstube: Rezepte, KI-Produktionspläne und Food Cost. 100% kostenlos, keine Zahlung.",
+      "Rezepte für Brot, Pizza und Süßes, Schritt für Schritt für die Küche zu Hause, geführt von Sitor. Kostenlos.",
     locale: "de_DE",
   },
   fa: {

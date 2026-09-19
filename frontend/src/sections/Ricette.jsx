@@ -83,11 +83,11 @@ export default function Ricette() {
         </div>
         <div className="absolute bottom-0 left-0 p-5">
           <h1 className="font-display text-3xl font-bold text-white leading-tight" style={{ textShadow: "0 2px 10px rgba(0,0,0,.85)" }}>
-            {mkTri(lang)("Ricette del MikiLab", "MikiLab Rezepte", "MikiLab Recipes", "Recetas del MikiLab", "Recettes du MikiLab", "دستورهای میکی‌لب")}
+            {mkTri(lang)("Le ricette di Sitor", "Sitors Rezepte", "Sitor's recipes", "Las recetas de Sitor", "Les recettes de Sitor", "دستورهای سیتور")}
           </h1>
           <div className="h-1 w-12 rounded-full bg-[#D95200] mt-1.5 mb-1" />
           <p className="text-white/90 text-sm max-w-md" style={{ textShadow: "0 1px 6px rgba(0,0,0,.9)" }}>
-            {mkTri(lang)("Tutto il ricettario professionale: sfoglia, scala le dosi e adatta alla tua produzione.", "Das komplette Profi-Rezeptbuch: blättern, Mengen skalieren und an deine Produktion anpassen.", "The full professional recipe book: browse, scale doses and adapt to your production.", "Todo el recetario profesional: hojea, escala las dosis y adáptalo a tu producción.", "Tout le recettaire professionnel : feuillette, adapte les quantités à ta production.", "کل کتاب دستور حرفه‌ای: ورق بزن، مقادیر را تنظیم و با تولیدت هماهنگ کن.")}
+            {mkTri(lang)("Sfoglia le ricette e falle a casa: dosi ricalcolate per il forno di casa, spiegate passo-passo.", "Blättere durch die Rezepte und mach sie zu Hause: Mengen für den Hausofen umgerechnet, Schritt für Schritt erklärt.", "Browse the recipes and make them at home: doses recalculated for the home oven, explained step by step.", "Hojea las recetas y hazlas en casa: dosis recalculadas para el horno de casa, paso a paso.", "Feuillette les recettes et fais-les à la maison : quantités adaptées au four domestique, pas à pas.", "دستورها را ورق بزن و در خانه بپز: مقادیر برای فر خانگی، مرحله‌به‌مرحله.")}
           </p>
         </div>
       </div>

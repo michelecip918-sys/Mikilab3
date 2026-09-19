@@ -1,7 +1,7 @@
 {
   "short_name": "MikiLab",
-  "name": "MikiLab — Laboratorio del panettiere",
-  "description": "MikiLab: il laboratorio digitale del panettiere professionista. Ricette, produzione con l'IA e assistente vocale, a mani libere. In IT/DE/EN/ES/FR/FA.",
+  "name": "MikiLab — Il Manuale di Sitor",
+  "description": "Il Manuale di Sitor: ricette di pane, pizza e dolci spiegate passo-passo per farle a casa, con la guida di Sitor. In IT/DE/EN.",
   "lang": "it",
   "categories": ["food", "productivity", "business"],
   "icons": [
