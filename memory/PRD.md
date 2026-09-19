@@ -1,3 +1,19 @@
+# ⚡ AGGIORNAMENTO (2026-06, MESSAGGIO 3) — STADI 8→11
+
+- **Percorso a livelli** (`learning_path`): 6 livelli, attivi 1 e 2, gli altri "In arrivo". Nessun blocco: tutte le ricette restano in galleria. "Segna come fatta" salvato in `localStorage: mikilab_done`. `PercorsoPage.jsx` (barra progressi, spunta, "Livello completato! Vai al livello N"). Endpoint `GET /learning-path` (pubblico), `PUT /learning-path/{n}` (admin).
+- **Comincia da qui = Livello 1**: Panino al Latte per Hamburger, Panino alle Patate, Panino al Sesamo, Panino ai Semi di Papavero, Panino al Farro.
+- **Pagine sito** (`site_pages`, `PUT` admin, nascono `published=false`): "Perché ho creato MikiLab" (slug `perche`, IT/DE/EN, NON pubblicata). `PaginaSito.jsx`. Guide raggruppate sotto "Studia il mestiere · Non solo fare il pane: capirlo."
+- **TikTok + condivisione**: box TikTok nella scheda (copia hashtag / apri profilo, solo se `tiktok_handle` impostato; nessun embed). Pagina **Regala MikiLab** (`RegalaPage.jsx`): QR nel browser (`qrcode`), download PNG, copia testo, `navigator.share`, link TikTok. Footer con testo licenza + link Regala/Perché/Impressum/Datenschutz. OG image → `hero-ricette.jpg`.
+- **site_settings** estese: `hashtag` (#MikiLab), `site_url` (https://mikilab.de) — modificabili da `PUT /admin/site-settings`.
+- **Regole difficoltà**: focacce → FACILE (ignora idratazione) salvo lievito madre → MEDIA; >280°C → SFIDA. **Avviso frittura** (fritt/panzerotti/frittelle). Corso CASA: poolish come alternativa al lievito madre.
+- **Sicurezza (STADIO 11)**: allowlist anonimi estesa a `learning-path`, `site-pages` (solo published), `site-settings`. Scritture solo admin (401 per anonimi verificato).
+- Ricette visibili anonimo: **132** (invariate). Dati ricette non toccati (eccezioni pregresse Miglioratore/Verde Canapa restano).
+- **NON fatto**: STADIO 7 restyle (rimane da fare); immagini Tecniche; pagina guida "Il mio miglioratore"; WebP. Le 12 ricette "deboli" restano visibili con etichetta "Bozza di Sitor" (verified=false).
+- **Per andare online serve (admin)**: impostare `tiktok_handle` in site-settings; **pubblicare** la pagina "Perché" (e altre) da admin.
+
+---
+
+
 # ⚡ PIVOT (2026-06) — "MikiLab · Il Manuale di Sitor" (ricettario pubblico gratuito)
 
 MikiLab è stato convertito da OS aziendale a **ricettario pubblico gratuito guidato da Sitor** per chi cucina a casa.
