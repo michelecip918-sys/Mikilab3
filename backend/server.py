@@ -11444,8 +11444,13 @@ for _k in list(vars(_mod_recipe_extras)):  # noqa: E402
     if _k != '_core' and not _k.startswith('__') and _k not in globals():
         globals()[_k] = getattr(_mod_recipe_extras, _k)
 
+import sitor_public as _mod_sitor_public  # noqa: E402  corso v2 + chat pubblica di Sitor
+for _k in list(vars(_mod_sitor_public)):  # noqa: E402
+    if _k != '_core' and not _k.startswith('__') and _k not in globals():
+        globals()[_k] = getattr(_mod_sitor_public, _k)
+
 # --- Sync finale cross-modulo: ogni modulo vede TUTTI i simboli del core (indipendente dall'ordine di import) ---
-for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras):  # noqa: E402
+for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras, _mod_sitor_public):  # noqa: E402
     for _k, _v in list(globals().items()):
         if not _k.startswith('__') and _k not in _m.__dict__:
             _m.__dict__[_k] = _v

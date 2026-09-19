@@ -26,8 +26,9 @@ import LangSelector from "@/components/LangSelector";
 import Ricette from "@/sections/Ricette";
 import HomeManuale from "@/components/HomeManuale";
 import LegalPlaceholder from "@/components/LegalPlaceholder";
+import SitorChat from "@/components/SitorChat";
 import { mkTri } from "@/i18n/triMaps";
-import { ShieldCheck, LogOut } from "lucide-react";
+import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -48,6 +49,7 @@ export default function App() {
   const [adminMode] = useState(() => new URLSearchParams(window.location.search).get("admin") === "1");
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [route, setRoute] = useState(initialRoute);
+  const [chatOpen, setChatOpen] = useState(false);
   const isAdmin = !!(user && user.role === "admin");
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
@@ -106,7 +108,7 @@ export default function App() {
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
             <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
-              {route === "home" && <HomeManuale onNav={(r) => { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
+              {route === "home" && <HomeManuale onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "impressum" && <LegalPlaceholder kind="impressum" onBack={() => setRoute("home")} />}
               {route === "datenschutz" && <LegalPlaceholder kind="datenschutz" onBack={() => setRoute("home")} />}
@@ -126,6 +128,13 @@ export default function App() {
         </div>
 
         <RadioFornaio />
+        {chatOpen && <SitorChat onClose={() => setChatOpen(false)} />}
+        <button data-testid="sitor-chat-fab" onClick={() => setChatOpen(true)} aria-label="Chat Sitor"
+          className="fixed z-[60] bottom-5 right-5 flex items-center gap-2 pl-2 pr-4 py-2 rounded-full bg-[#A85A22] hover:bg-[#8F4A1B] text-[#FFFDF8] shadow-xl active:scale-95 transition-all">
+          <img src="/sitor_official.jpg" alt="" className="w-9 h-9 rounded-full object-cover border-2 border-[#E9A23B]" />
+          <span className="font-bold text-sm hidden sm:inline">{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}</span>
+          <MessageCircle className="w-4 h-4 sm:hidden" />
+        </button>
         <Toaster position="top-center" richColors />
       </div>
     </MachinesProvider></MixerTimersProvider></SoundFXProvider></TimerProvider></AmbientProvider></ProfileProvider>

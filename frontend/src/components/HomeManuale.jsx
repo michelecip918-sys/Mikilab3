@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -95,6 +95,12 @@ export default function HomeManuale({ onNav }) {
           <BookOpen className="w-6 h-6 text-[#D97736] mb-2" />
           <p className="font-black text-white">{tri("Guide", "Anleitungen", "Guides")}</p>
           <p className="text-xs text-[#94A3B8] mt-1">{tri("Enciclopedia, glossario, metodi, attrezzi.", "Lexikon, Glossar, Methoden, Geräte.", "Encyclopedia, glossary, methods, tools.")}</p>
+        </button>
+        <button data-testid="home-btn-chat" onClick={() => onNav("chat")}
+          className="group rounded-2xl border border-[#8a97a6]/30 bg-[#0b0f19]/70 p-5 text-left hover:border-[#D97736] active:scale-[0.98] transition-all">
+          <MessageCircle className="w-6 h-6 text-[#D97736] mb-2" />
+          <p className="font-black text-white">{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}</p>
+          <p className="text-xs text-[#94A3B8] mt-1">{tri("Domande su pane, pizza e dolci.", "Fragen zu Brot, Pizza und Süßem.", "Questions about bread, pizza and sweets.")}</p>
         </button>
       </section>
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import CoursePlayer from "@/components/CoursePlayer";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
@@ -35,6 +36,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   });
   const [flour, setFlour] = useState(500);
   const [saving, setSaving] = useState(false);
+  const [showCourse, setShowCourse] = useState(false);
 
   useEffect(() => {
     let stop = false;
@@ -89,6 +91,13 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
 
   return (
     <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4 no-print">
+      {showCourse && <CoursePlayer recipe={recipe} onClose={() => setShowCourse(false)} />}
+      {/* CUCINA CON SITOR */}
+      <button data-testid="cook-with-sitor" onClick={() => setShowCourse(true)}
+        className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-[#A85A22] hover:bg-[#8F4A1B] text-[#FFFDF8] font-bold text-[16px] active:scale-[0.98] transition-all shadow-lg">
+        <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
+      </button>
+
       {/* CASA / ESPERTO + difficoltà */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div data-testid="recipe-mode-toggle" className="inline-flex rounded-xl border border-[#2A3B49] overflow-hidden">
