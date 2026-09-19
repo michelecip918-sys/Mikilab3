@@ -439,3 +439,9 @@ STADI eseguiti: S, H, J, J2, P2, P3 (+ pannello admin). Rimandati sotto budget: 
 - **P3 — Calendario del pane** (`bread_calendar`): ~22 eventi bozza IT/DE/mondo, Pasqua via algoritmo di Gauss, "tra N giorni", "Che pane faccio oggi?" in cima. Approvazione per evento dall'admin.
 - **Admin**: pannello "Strumenti di Michele" (account menu) per bozze, aprire/chiudere test, pubblicare farine, pubblicare/nascondere eventi calendario.
 - **Sicurezza**: allowlist aggiornata; verifica anonima: tutte le rotte admin 2B → 404. 132 ricette visibili (dati ricette intatti).
+
+
+## Rifiniture 2B — giugno 2026
+- **Suggerimenti palato admin-editabili**: collezione `palato_tips` (GET pubblico `/palato-tips`, PUT admin), editor IT/DE/EN nel pannello "Strumenti di Michele"; il componente Palato li carica dall'API con fallback ai testi bozza.
+- **Ricette dal mondo dal pannello**: pulsanti rapidi Shokupan / Bao al vapore / Melon pan che generano bozze NASCOSTE via `sitor/draft-recipe`; la pagina "Dal mondo" le collega alla guida Farina cotta e nasconde le bozze non pubblicate (filtro hidden_public).
+- **Condividi il palato**: card canvas 1080x1080 con radar, criteri, #MikiLab e "Sitor · di MikiLab" (share nativo o download), come la mensola.
