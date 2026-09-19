@@ -1,3 +1,13 @@
+# ⚡ AGGIORNAMENTO (2026-09) — Croissant verificato + 5 corsi Start Here
+
+- **Croissant verificato**: rilette le 8 fasi (misure indicative complete, niente "[da definire]"), accurate → marcata "Verificato da Michele ✓". Ora TUTTE e 6 le tecniche sono verificate.
+- **5 corsi "Start Here" (Livello 1 - i più cliccati)** generati in IT e verificati: Panino al Latte per Hamburger, Panino alle Patate, Panino al Sesamo, Panino ai Semi di Papavero, Panino al Farro. Corsi ben strutturati (fasi con `do_casa`/`do_esperto`, `why`, `signals`, timer). ID salvati in /tmp/start_ids.json (Panino Latte=4fe0421b..., Patate=d6d7283d..., Sesamo=4654ee7d..., Papavero=301e9645..., Farro=b7314e74...).
+- Verificato a schermo: Course Player del Panino al Latte mostra badge "Verified by Michele ✓". Il flag si propaga a tutte le lingue (fix precedente).
+- **Learning path schema**: la collezione `learning_path` usa campi `n` (livello), `title` (tri), `active`, `recipes` (lista NOMI ricette). La Home "Start Here" mostra le 5 ricette del doc con `n:1`.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-09) — Tecniche verificate + Polipo MikiLab
 
 - **5 tecniche marcate "Verificato da Michele"** (baguette, pieghe, pirlatura, filone, panettone) via `PUT /api/techniques/{slug}`. Croissant lasciato bozza ma **guida rigenerata**: il prompt di `_gen_technique` ora inserisce misure classiche indicative (sfoglia 3-4mm, triangoli base 9-10cm, altezza 24-26cm) e invita a chiedere a Sitor in chat misure adatte — niente più "[da definire]". Cache croissant azzerata (si rigenera nelle altre lingue al primo accesso).
