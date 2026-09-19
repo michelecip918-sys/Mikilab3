@@ -33,9 +33,11 @@ export default function TecnichePage({ initialSlug, onBack }) {
         <button data-testid="technique-back" onClick={() => setSlug(null)} className="inline-flex items-center gap-1 text-sm font-bold text-muted-foreground hover:text-foreground"><ChevronLeft className="w-4 h-4" />{tri("Tutte le tecniche", "Alle Techniken", "All techniques")}</button>
         <div className="flex items-center gap-2 flex-wrap">
           <h1 className="font-display text-3xl font-black text-foreground">{page?.title || slug}</h1>
-          <span data-testid="technique-verified" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${page?.verified ? "bg-accent/30 text-accent-foreground" : "bg-foreground/10 text-muted-foreground"}`}>
-            {page?.verified ? tri("Verificato da Michele ✓", "Von Michele geprüft ✓", "Verified by Michele ✓") : tri("Bozza di Sitor", "Sitor-Entwurf", "Sitor draft")}
-          </span>
+          {page && !page.error && (
+            <span data-testid="technique-verified" className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${page.verified ? "bg-accent/30 text-accent-foreground" : "bg-foreground/10 text-muted-foreground"}`}>
+              {page.verified ? tri("Verificato da Michele ✓", "Von Michele geprüft ✓", "Verified by Michele ✓") : tri("Bozza di Sitor", "Sitor-Entwurf", "Sitor draft")}
+            </span>
+          )}
           {isAdmin && page && !page.error && (
             <button data-testid="technique-verify-toggle" onClick={async () => {
               try {

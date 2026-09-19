@@ -1,3 +1,12 @@
+# ⚡ AGGIORNAMENTO (2026-09) — Tecniche verificate + Polipo MikiLab
+
+- **5 tecniche marcate "Verificato da Michele"** (baguette, pieghe, pirlatura, filone, panettone) via `PUT /api/techniques/{slug}`. Croissant lasciato bozza ma **guida rigenerata**: il prompt di `_gen_technique` ora inserisce misure classiche indicative (sfoglia 3-4mm, triangoli base 9-10cm, altezza 24-26cm) e invita a chiedere a Sitor in chat misure adatte — niente più "[da definire]". Cache croissant azzerata (si rigenera nelle altre lingue al primo accesso).
+- **Tatuaggio polipo MikiLab esatto**: ritagliato il polipo (nero, tentacoli, occhi arancio-ambra) da `michele-avatar-real.jpg` in asset pubblico `tattoo-polipo-mikilab.png`; rigenerate in edit-mode le **12 illustrazioni tecniche con braccia visibili** sostituendo il tribale col polipo (baguette/3, filone/3, panettone/2-3 non hanno braccia, invariate). pirlatura/2 e filone/1 riprodotte da zero per conservare la scena singola.
+- **Fix flag verified multi-lingua**: tecniche — la lista e il GET ora usano "qualsiasi lingua verificata vince" (`techniques_list` aggrega per slug; meta preferisce doc con verified=True) e le nuove lingue ereditano il flag. Corsi — `course_v2_edit` propaga `verified` a TUTTE le lingue della ricetta (update_many) e le nuove generazioni ereditano il flag. Bug trovato e risolto: il doc EN di pieghe senza flag aveva "coperto" quello IT verificato nella lista.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-09) — Panettoni luminosi + Toggle admin "verified"
 
 - **17 foto panettoni rigenerate** (`pan_*.webp`) in luce naturale luminosa e uniforme (stampo rosso su legno chiaro, sfondo bottega ariosa), coerenti con le nuove copertine. Sostituiti gli sfondi scuri/notturni (era il caso di tiramisù, classico). Serviti 200 OK come WebP (~100-114KB). Stessi slug → nessuna modifica DB.

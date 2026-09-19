@@ -144,12 +144,14 @@ async def course_v2(recipe_id: str, lang: str = "it", user: _Opt[dict] = Depends
         course = await _generate_course(recipe, lang2)
         if not course:
             raise HTTPException(status_code=503, detail="course_unavailable")
+        # la verifica vale per la ricetta, non per la singola lingua
+        prev = await db.recipe_courses_v2.find_one({"recipe_id": recipe_id, "verified": True}, {"_id": 0, "verified": 1})
         await db.recipe_courses_v2.update_one(
             {"recipe_id": recipe_id, "lang": lang2},
             {"$set": {"recipe_id": recipe_id, "lang": lang2, "recipe_name": recipe.get("name", ""),
-                      "course": course, "verified": False, "generated_at": now_iso()}},
+                      "course": course, "verified": bool(prev), "generated_at": now_iso()}},
             upsert=True)
-        return {"ok": True, "cached": False, "course": course, "verified": False, "recipe_name": recipe.get("name", "")}
+        return {"ok": True, "cached": False, "course": course, "verified": bool(prev), "recipe_name": recipe.get("name", "")}
 
 
 class CourseVerifyReq(_BM):
@@ -161,14 +163,22 @@ class CourseVerifyReq(_BM):
 async def course_v2_edit(recipe_id: str, body: CourseVerifyReq, lang: str = "it", admin: dict = Depends(require_admin)):
     lang2 = _lang2(lang)
     upd = {}
-    if body.verified is not None:
-        upd["verified"] = bool(body.verified)
     if body.course is not None:
         upd["course"] = body.course
+    if body.verified is not None and body.course is None:
+        # solo flag: vale per tutte le lingue della ricetta
+        await db.recipe_courses_v2.update_many({"recipe_id": recipe_id},
+            {"$set": {"verified": bool(body.verified), "updated_at": now_iso()}})
+        return {"ok": True, "verified": bool(body.verified)}
+    if body.verified is not None:
+        upd["verified"] = bool(body.verified)
     if not upd:
         raise HTTPException(status_code=400, detail="nothing_to_update")
     upd["updated_at"] = now_iso()
     await db.recipe_courses_v2.update_one({"recipe_id": recipe_id, "lang": lang2}, {"$set": upd}, upsert=True)
+    if body.verified is not None:
+        await db.recipe_courses_v2.update_many({"recipe_id": recipe_id, "lang": {"$ne": lang2}},
+            {"$set": {"verified": bool(body.verified)}})
     doc = await db.recipe_courses_v2.find_one({"recipe_id": recipe_id, "lang": lang2}, {"_id": 0})
     return {"ok": True, "course": doc.get("course"), "verified": bool(doc.get("verified"))}
 
@@ -284,8 +294,11 @@ async def _gen_technique(slug: str, lang2: str) -> _Opt[dict]:
     langname = _SYS.get(lang2, "italiano")
     extra = ""
     if slug == "croissant":
-        extra = ("IMPORTANTE: NON inventare misure dei triangoli (base/altezza) né spessori: lascia quei valori come "
-                 "'[da definire]'. Descrivi solo i gesti: laminazione, stesura, taglio dei triangoli, incisione della base, arrotolamento.")
+        extra = ("Per le misure dei triangoli NON scrivere '[da definire]': dai le misure classiche indicative "
+                 "(sfoglia stesa a 3-4 mm di spessore, triangoli con base 9-10 cm e altezza 24-26 cm), "
+                 "segnalandole chiaramente come indicative, e invita il lettore a chiedere a Sitor nella chat "
+                 "le misure adatte al suo stampo o alla sua ricetta. "
+                 "Descrivi bene i gesti: laminazione, stesura, taglio dei triangoli, incisione della base, arrotolamento.")
     if slug == "panettone":
         extra = "Concentrati sul capovolgimento a testa in giù con i ferri/spiedi infilati alla base, e sul raffreddamento appeso."
     sysmsg = (
@@ -315,7 +328,13 @@ async def _gen_technique(slug: str, lang2: str) -> _Opt[dict]:
 
 @api_router.get("/techniques")
 async def techniques_list(user: _Opt[dict] = Depends(optional_user)):
-    stored = {d["slug"]: d async for d in db.technique_pages.find({}, {"_id": 0, "slug": 1, "verified": 1, "hidden_images": 1})}
+    stored = {}
+    async for d in db.technique_pages.find({}, {"_id": 0, "slug": 1, "verified": 1, "hidden_images": 1}):
+        s = d["slug"]
+        cur = stored.get(s) or {"verified": False, "hidden_images": []}
+        cur["verified"] = cur["verified"] or bool(d.get("verified"))
+        cur["hidden_images"] = d.get("hidden_images") or cur["hidden_images"]
+        stored[s] = cur
     return {"techniques": [{"slug": t["slug"], "it": t["it"], "de": t["de"], "en": t["en"],
                             "verified": bool(stored.get(t["slug"], {}).get("verified"))} for t in TECHNIQUES]}
 
@@ -328,7 +347,8 @@ async def technique_get(slug: str, lang: str = "it", user: _Opt[dict] = Depends(
     if lang2 not in _COURSE_LANGS:
         lang2 = "it"
     doc = await db.technique_pages.find_one({"slug": slug, "lang": lang2}, {"_id": 0})
-    meta = await db.technique_pages.find_one({"slug": slug}, {"_id": 0, "verified": 1, "hidden_images": 1}) or {}
+    meta = await db.technique_pages.find_one({"slug": slug, "verified": True}, {"_id": 0, "verified": 1, "hidden_images": 1}) \
+        or await db.technique_pages.find_one({"slug": slug}, {"_id": 0, "verified": 1, "hidden_images": 1}) or {}
     t = _TQ_BY_SLUG[slug]
     if doc and doc.get("body"):
         return {"ok": True, "slug": slug, "title": t[lang2], "body": doc["body"],
@@ -345,7 +365,7 @@ async def technique_get(slug: str, lang: str = "it", user: _Opt[dict] = Depends(
         if not body:
             raise HTTPException(status_code=503, detail="technique_unavailable")
         await db.technique_pages.update_one({"slug": slug, "lang": lang2},
-            {"$set": {"slug": slug, "lang": lang2, "body": body, "generated_at": now_iso()}}, upsert=True)
+            {"$set": {"slug": slug, "lang": lang2, "body": body, "verified": bool(meta.get("verified")), "generated_at": now_iso()}}, upsert=True)
         return {"ok": True, "slug": slug, "title": t[lang2], "body": body,
                 "verified": bool(meta.get("verified")), "hidden_images": meta.get("hidden_images") or []}
 
