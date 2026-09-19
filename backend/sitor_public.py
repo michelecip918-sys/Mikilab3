@@ -445,6 +445,90 @@ async def sitor_photo(body: PhotoReq, request: Request):
     obs = [str(o)[:220] for o in (parsed.get("observations") or [])][:3]
     corr = str(parsed.get("correction") or "")[:300]
     return {"ok": True, "is_bread": True, "observations": obs, "correction": corr}
+
+
+# ---------------------------------------------------------------------------
+# STADIO J2 (strumento admin) — "Bozza da Sitor": genera una ricetta nello stesso
+# schema, salvata come NUOVA ricetta NASCOSTA (hidden_public=true, status sitor_draft).
+# ---------------------------------------------------------------------------
+class DraftRecipeReq(_BM):
+    name: str
+    lang: str = "it"
+    hint: _Opt[str] = None
+
+
+@api_router.post("/sitor/draft-recipe")
+async def sitor_draft_recipe(body: DraftRecipeReq, admin: dict = Depends(require_admin)):
+    if not EMERGENT_LLM_KEY:
+        raise HTTPException(status_code=503, detail="llm_unavailable")
+    nm = (body.name or "").strip()[:120]
+    if not nm:
+        raise HTTPException(status_code=400, detail="no_name")
+    if not await _rate_limit("draft_recipe_daily", "all", COURSE_GEN_DAILY_CAP, 86400):
+        raise HTTPException(status_code=503, detail="draft_daily_cap")
+    sysmsg = (
+        "Sei Sitor, panettiere esperto. Scrivi una BOZZA di ricetta per il nome dato, nello schema JSON richiesto. "
+        "REGOLE: NON copiare testi o quantità da siti o libri. Ricava le proporzioni da principi generali e intervalli "
+        "tipici del mestiere. Nelle note segnala SEMPRE che è 'un punto di partenza da provare', mai un dato verificato. "
+        "Usa le percentuali del panettiere (sulla farina). Restituisci SOLO JSON valido: "
+        "{\"name\":\"..\",\"name_de\":\"..\",\"name_en\":\"..\",\"menu_category\":\"pane|panini|basi|panettoni\","
+        "\"dough_category\":\"..\",\"flour_type\":\"..\",\"hydration_percent\":0,\"flour_grams\":0,\"water_grams\":0,"
+        "\"salt_grams\":0,\"sourdough_grams\":0,\"preferment_type\":\"diretto|poolish|biga|lievito madre\","
+        "\"bulk_fermentation_hours\":0,\"proofing_hours\":0,\"mix_minutes\":0,\"bake_temp\":0,\"bake_minutes\":0,"
+        "\"extra_ingredients\":[{\"name\":\"..\",\"grams\":0}],\"procedure\":\"..\",\"procedure_de\":\"..\",\"procedure_en\":\"..\","
+        "\"notes\":\"..\",\"notes_de\":\"..\",\"notes_en\":\"..\"}. Numeri interi o decimali, 0 se non applicabile."
+    )
+    hint = f" Contesto: {body.hint[:200]}." if body.hint else ""
+    out = ""
+    try:
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"draft-{nm[:16]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2500)
+        async for ev in chat.stream_message(UserMessage(text=f"Scrivi la bozza di ricetta per: '{nm}'.{hint}")):
+            if isinstance(ev, TextDelta):
+                out += ev.content or ""
+        parsed = _core._parse_llm_json(out) if hasattr(_core, "_parse_llm_json") else {}
+        if not parsed:
+            m = _re.search(r"\{.*\}", out, _re.S)
+            parsed = _json.loads(m.group(0)) if m else {}
+    except Exception as e:
+        logging.getLogger(__name__).warning("draft recipe fail: %s", str(e)[:120])
+        raise HTTPException(status_code=503, detail="draft_unavailable")
+    if not parsed or not parsed.get("name"):
+        raise HTTPException(status_code=503, detail="draft_unavailable")
+
+    def _f(v):
+        try:
+            return float(v) if v not in (None, "") else None
+        except Exception:
+            return None
+    rid = uuid.uuid4().hex
+    doc = {
+        "id": rid, "collection_name": "mikilab", "organization_id": ORG_DEFAULT,
+        "name": str(parsed.get("name") or nm)[:120],
+        "name_de": (parsed.get("name_de") or None), "name_en": (parsed.get("name_en") or None),
+        "menu_category": (parsed.get("menu_category") or "pane"),
+        "dough_category": (parsed.get("dough_category") or None),
+        "flour_type": (parsed.get("flour_type") or ""),
+        "hydration_percent": _f(parsed.get("hydration_percent")),
+        "flour_grams": _f(parsed.get("flour_grams")), "water_grams": _f(parsed.get("water_grams")),
+        "salt_grams": _f(parsed.get("salt_grams")), "sourdough_grams": _f(parsed.get("sourdough_grams")),
+        "preferment_type": (parsed.get("preferment_type") or None),
+        "bulk_fermentation_hours": _f(parsed.get("bulk_fermentation_hours")),
+        "proofing_hours": _f(parsed.get("proofing_hours")), "mix_minutes": _f(parsed.get("mix_minutes")),
+        "bake_temp": _f(parsed.get("bake_temp")), "bake_minutes": _f(parsed.get("bake_minutes")),
+        "extra_ingredients": [{"name": str(x.get("name") or "")[:80], "grams": _f(x.get("grams"))} for x in (parsed.get("extra_ingredients") or []) if isinstance(x, dict)][:20],
+        "procedure": str(parsed.get("procedure") or "")[:6000],
+        "procedure_de": (parsed.get("procedure_de") or None), "procedure_en": (parsed.get("procedure_en") or None),
+        "notes": str(parsed.get("notes") or "")[:3000],
+        "notes_de": (parsed.get("notes_de") or None), "notes_en": (parsed.get("notes_en") or None),
+        "created_at": now_iso(), "updated_at": now_iso(),
+    }
+    await db.recipes.insert_one(dict(doc))
+    await db.recipe_extras.update_one({"recipe_id": rid},
+        {"$set": {"recipe_id": rid, "hidden_public": True, "status": "sitor_draft",
+                  "verified": False, "updated_at": now_iso()}}, upsert=True)
+    await _bump_usage("draft_recipes")
+    return {"ok": True, "recipe_id": rid, "name": doc["name"], "hidden_public": True, "status": "sitor_draft"}
+
 TECHNIQUES = [
     {"slug": "baguette", "it": "Baguette (formatura)", "de": "Baguette (Formen)", "en": "Baguette (shaping)"},
     {"slug": "croissant", "it": "Croissant e cornetti", "de": "Croissants und Hörnchen", "en": "Croissants"},

@@ -190,6 +190,17 @@ class ExtrasUpdate(_BM):
     verified: _Opt[bool] = None
     hidden_public: _Opt[bool] = None
     michele_tip: _Opt[dict] = None          # {it, de, en}
+    status: _Opt[str] = None                # sitor_draft | reviewed | tested
+
+
+def _recipe_status(stored: dict) -> str:
+    """J1: stato ricetta. 'tested' (provata da Michele) > 'reviewed' (verified) > 'sitor_draft'."""
+    st = (stored or {}).get("status")
+    if st == "tested":
+        return "tested"
+    if (stored or {}).get("verified"):
+        return "reviewed"
+    return "sitor_draft"
 
 
 def _extras_public(r: dict, stored: dict) -> dict:
@@ -210,6 +221,7 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "bake_temp": _bake_temp(r),
         "real_photo": bool(stored.get("real_photo")),
         "verified": bool(stored.get("verified")),
+        "status": _recipe_status(stored),
         "hidden_public": bool(stored.get("hidden_public")),
         "michele_tip": stored.get("michele_tip") or {},
         "kind": stored.get("kind") or "recipe",
@@ -239,6 +251,8 @@ async def recipe_extras_list(user: _Opt[dict] = Depends(optional_user)):
             "difficulty": s.get("difficulty") or auto_difficulty(r),
             "hidden_public": bool(s.get("hidden_public")),
             "real_photo": bool(s.get("real_photo")),
+            "status": _recipe_status(s),
+            "verified": bool(s.get("verified")),
         }
     return out
 
@@ -251,6 +265,8 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
     upd = {k: v for k, v in body.dict().items() if v is not None}
     if body.difficulty is not None and body.difficulty not in ("facile", "media", "sfida"):
         raise HTTPException(status_code=400, detail="difficulty_invalid")
+    if body.status is not None and body.status not in ("sitor_draft", "reviewed", "tested"):
+        raise HTTPException(status_code=400, detail="status_invalid")
     upd["recipe_id"] = recipe_id
     upd["updated_at"] = now_iso()
     await db.recipe_extras.update_one({"recipe_id": recipe_id}, {"$set": upd}, upsert=True)
