@@ -426,3 +426,16 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - PRIORITÀ 3 — Selettore ATTIVITÀ sempre in alto (header): Panificio/Pizzeria/Pasticceria, persistito in localStorage (mikilab_activity), cambiabile in ogni momento.
 - Testato: frontend compila, 5 gruppi presenti (piano/ordini/squadra/strumenti/sitor), selettore presente, titoli verificati via screenshot.
 - RESTANO da fare (dal documento): #2 Produzione = operatore vede SOLO il compito del giorno; #4 Home = ridurre a UNA sola spiegazione prima del PIN; #5 stile "multiverso" (avatar grandi rotanti, reattività al movimento) — già in parte presente.
+
+
+## STADIO 2B — giugno 2026 (COMANDO 2B)
+STADI eseguiti: S, H, J, J2, P2, P3 (+ pannello admin). Rimandati sotto budget: K, L, M completi e P1 (palato), P4 (pane di ieri), J3 (sezione "Dal mondo" + guida Farina cotta), J4/J5/J6.
+
+- **S — Identità di Sitor**: componente unico `SitorBadge` (avatar tondo + testo fisso "· di MikiLab", non accorciabile) su home, chat, corso, Live, footer. Pannello "Chi è Sitor?" (foglio dal basso) IT/DE/EN con link a "Perché ho creato MikiLab". Alt avatar "Avatar IA di Michele (Sitor)". Footer: frase due tipi di ricette + "Sitor è l'avatar IA di Michele". Card condivise: "Sitor · di MikiLab". Nota avatar sintetico in Datenschutz + LEGAL_DATA_MAP. Frase avatar aggiunta alla bozza "perche" (non pubblicata).
+- **H — "Com'è venuto?"**: `POST /api/sitor/photo` dietro `FEATURE_PHOTO_DIAG` (default SPENTO). Foto ridotta a 1024px e ricodificata JPEG nel browser (toglie EXIF), consenso ogni volta, 3/giorno per dispositivo (`vision_calls`), rispetta il livello di risparmio, immagine MAI salvata. Componente `PhotoDiag` nel diario (Cucina) e a fine corso.
+- **J — Stato ricette**: `recipe_extras.status` (sitor_draft/reviewed/tested) + toggle admin. Strumento "Bozza da Sitor" `POST /api/sitor/draft-recipe` (admin): genera ricetta NASCOSTA (hidden_public, sitor_draft) nello stesso schema; le 148 esistenti restano bozze.
+- **J2 — Test del mese** (`experiments`): pagina pubblica con voto a tocchi, dedup un voto/dispositivo, risultati solo con ≥30 voti, archivio + verdetto → "trucco di Michele". 3 test in bozza precaricati. Voti anonimi (solo scelte + giorno).
+- **P2 — Traduttore farine** (`flour_types`): pagina IT/DE/FR, righe bozza (18) pubblicabili dall'admin, avviso "cenere ≠ W".
+- **P3 — Calendario del pane** (`bread_calendar`): ~22 eventi bozza IT/DE/mondo, Pasqua via algoritmo di Gauss, "tra N giorni", "Che pane faccio oggi?" in cima. Approvazione per evento dall'admin.
+- **Admin**: pannello "Strumenti di Michele" (account menu) per bozze, aprire/chiudere test, pubblicare farine, pubblicare/nascondere eventi calendario.
+- **Sicurezza**: allowlist aggiornata; verifica anonima: tutte le rotte admin 2B → 404. 132 ricette visibili (dati ricette intatti).

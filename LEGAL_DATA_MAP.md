@@ -69,11 +69,35 @@ consegne, compliance, community, utenti). NON sono più raggiungibili da un visi
 
 
 - **DEFAULT DENY totale**: un anonimo può leggere solo l'allowlist pubblica (ricette, extras, tecniche,
-  equipment-guide, site-settings, auth/me, learning-path, site-pages, sitemap) e scrivere solo
-  `/sitor/chat`, `/auth/login`, `/auth/logout`, `/auth/forgot-password`, `/auth/reset-password`.
+  equipment-guide, site-settings, auth/me, learning-path, site-pages, sitemap, experiments, flour-types,
+  bread-calendar, time, live, features) e scrivere solo `/sitor/chat`, `/sitor/plan`, `/sitor/photo`,
+  `/live/ping`, `/done-ping`, `/experiments/vote`, `/auth/login`, `/auth/logout`,
+  `/auth/forgot-password`, `/auth/reset-password`.
   Ogni altra rotta (GET o scrittura) richiede sessione con `role == "admin"`, altrimenti **404**.
 - **Login solo admin**: gli account non-admin ricevono 403 (dopo verifica password, nessuna enumerazione).
   Brute-force: 5 tentativi falliti = blocco 15 min. Cookie `session_token`: Secure, HttpOnly, SameSite=Lax.
 - Verifica anonima (curl) su tutte le 443 rotte / 529 combinazioni metodo×path: **0 rotte fuori lista**
   rispondono 200/422/500 (solo 18 combinazioni pubbliche consentite).
+
+
+## 9. STADIO 2B — nuovi flussi (giugno 2026)
+- **Avatar di Sitor**: il volto di Sitor è una **rappresentazione sintetica del titolare del sito** (Michele)
+  trasformata in avatar IA. Nessuna voce/video imita Michele: la voce è quella sintetica del dispositivo.
+- **"Com'è venuto?" (analisi foto, `POST /sitor/photo`)**: attiva solo con l'interruttore `FEATURE_PHOTO_DIAG`.
+  La foto è **ridotta nel browser a max 1024px e ricodificata in JPEG** (toglie l'EXIF), inviata al servizio IA
+  (Anthropic Claude, vision) SOLO dopo consenso esplicito, usata per l'analisi e **subito scartata**:
+  NON viene scritta su disco né nel database. Limite 3 foto/giorno per dispositivo (contatore `vision_calls`).
+- **Stato ricette**: `recipe_extras.status` (sitor_draft / reviewed / tested) — solo etichette, nessun dato utente.
+- **Bozza da Sitor (admin)**: genera una ricetta NASCOSTA (hidden_public) da rivedere; nessun dato utente.
+- **Test del mese (`experiments`)**: voti **anonimi**, il documento del voto contiene SOLO le scelte a tocchi
+  e il giorno — nessun IP, nessun identificativo. L'hash dispositivo serve solo al limite (un voto) e NON è
+  salvato col voto. Risultati mostrati solo con ≥30 voti. Nessuna chiamata IA nel percorso pubblico del voto.
+- **Traduttore farine (`flour_types`)** e **Calendario del pane (`bread_calendar`)**: solo contenuti redazionali
+  (bozze approvate da Michele). Nessun dato personale. La data di Pasqua è calcolata localmente (algoritmo di Gauss).
+- **Contenuti personali sul dispositivo (localStorage)**: diario, "La mia cucina", correzione forno, piano
+  settimanale, mensola, promemoria `.ics` (generati nel browser), cache offline, voto del Test del mese.
+  Nessun account, nessuna registrazione, nessun contenuto degli utenti pubblicato sul sito.
+- **Rotte pubbliche aggiunte**: GET `experiments`, `flour-types`, `bread-calendar`; POST `sitor/photo`,
+  `experiments/vote/{slug}`. Tutte le rotte admin del 2B (draft-recipe, admin/experiments, PUT su
+  experiments/flour-types/bread-calendar) restano negate (404) agli anonimi.
 
