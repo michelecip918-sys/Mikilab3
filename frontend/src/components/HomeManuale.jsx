@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -108,6 +108,7 @@ export default function HomeManuale({ onNav }) {
       {/* Chip: Il verde di MikiLab · Tecniche · Attrezzi */}
       <div data-testid="home-chips" className="flex flex-wrap gap-2 mt-4">
         <button data-testid="home-chip-verde" onClick={() => onNav("verde")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent/15 border border-accent/40 text-accent-foreground text-sm font-bold hover:bg-accent/25 active:scale-95 transition-all"><Leaf className="w-4 h-4" />{tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")}</button>
+        <button data-testid="home-chip-miglioratore" onClick={() => onNav("miglioratore")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/15 border border-primary/40 text-foreground text-sm font-bold hover:bg-primary/25 active:scale-95 transition-all"><FlaskConical className="w-4 h-4 text-primary" />{tri("Il mio miglioratore", "Mein Verbesserer", "My improver")}</button>
         <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
         <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
       </div>

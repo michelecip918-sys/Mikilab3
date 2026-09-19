@@ -32,6 +32,7 @@ import VerdeMikiLab from "@/components/VerdeMikiLab";
 import PercorsoPage from "@/components/PercorsoPage";
 import RegalaPage from "@/components/RegalaPage";
 import PaginaSito from "@/components/PaginaSito";
+import MiglioratorePage from "@/components/MiglioratorePage";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -125,6 +126,7 @@ export default function App() {
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
+              {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}

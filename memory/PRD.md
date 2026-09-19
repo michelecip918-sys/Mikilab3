@@ -1,3 +1,14 @@
+# ⚡ AGGIORNAMENTO (2026-09) — P1/P2: Tecniche, Miglioratore, Hero, WebP
+
+- **Immagini Tecniche (P1 FATTO)**: generate 16 illustrazioni stile manuale tecnico (tatuaggio blackwork sul braccio SX) con Gemini Nano Banana, salvate come WebP in `frontend/public/tecniche/<slug>/N.webp`. Distribuzione: baguette 1-3, croissant 1-3, pieghe 1-2, pirlatura 1-2, filone 1-3, panettone 1-3. `TecnichePage` carica slot 1-4 con onError che nasconde i mancanti. Testo tecnica ancora generato live da Sitor (Claude).
+- **Pagina "Il mio miglioratore" (P2 FATTO)**: nuovo `components/MiglioratorePage.jsx` (hero + perché + 5 ingredienti con funzione + dosaggio 2-4% + CTA "Apri la ricetta completa"). Route `miglioratore` in `App.js`; chip `home-chip-miglioratore` nella Home. Trilingue IT/DE/EN.
+- **Hero Bottega (FATTO)**: sostituita `mikilab-ricette-hero.jpg` (+`hero-ricette.jpg`) con foto calda da bottega artigiana generata (bg cream/legno/ambra). Rimosso l'aspetto sci-fi.
+- **Ottimizzazione WebP (P2 FATTO)**: convertite tutte le 153 foto ricette JPG → WebP q80 (`/recipes/*.webp`): **127MB → 20MB (-84%)**. Aggiornati riferimenti in `mikilab_seed_data.json` (148), DB live `recipes`+`shop_products` (154 doc), rimossi i vecchi .jpg. SEED_VERSION → `2026-09-v70-webp` (re-sync verificato: 0 .jpg residui).
+- Verificato via screenshot: pagina Miglioratore, Tecniche (illustrazioni caricate), Home con chip, Ricette con nuovo hero e foto WebP. Nessun overflow.
+
+---
+
+
 # ⚡ AGGIORNAMENTO (2026-09) — STADIO 7 COMPLETATO: stile "La bottega di Michele"
 
 - **Tema chiaro di default** (bg `#F6F1E7`, card `#FFFDF8`, bordi `#D9CFBC`, testo `#2B2E33`, RAME `#A85A22` primario, AMBRA `#E9A23B`, SALVIA `#6E8F7A`, MATTONE `#A4472D`) + **tema scuro opzionale** (`#1F2124`/`#2A2D31`) con toggle utente `theme-toggle` nell'header (nuovo `components/ThemeToggle.jsx`, persistenza `localStorage: mikilab_theme`). `index.js` non forza più il dark.
