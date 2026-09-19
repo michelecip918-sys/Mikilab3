@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
+import SitorBadge from "@/components/SitorBadge";
 import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
@@ -53,7 +54,7 @@ export default function HomeManuale({ onNav, features }) {
       {/* Sitor accoglie */}
       <section className="rounded-3xl border border-border/25 bg-background/70 overflow-hidden">
         <div className="grid sm:grid-cols-[auto_1fr] gap-5 p-6 sm:p-8 items-center">
-          <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" data-testid="home-sitor-img"
+          <img src={`${PUB}/sitor_official.jpg`} alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} data-testid="home-sitor-img"
             className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover object-top border-2 border-primary/50 shadow-[0_0_28px_rgba(217,119,54,0.28)] mx-auto sm:mx-0" />
           <div className="text-center sm:text-left">
             <p className="font-mono-data text-[10px] tracking-[0.28em] text-primary uppercase mb-1">{tri("La tua guida", "Dein Begleiter", "Your guide")}</p>
@@ -66,6 +67,7 @@ export default function HomeManuale({ onNav, features }) {
             <p data-testid="home-ai-disclaimer" className="inline-flex items-center gap-1.5 mt-3 text-[11px] text-muted-foreground bg-background/60 border border-border rounded-full px-3 py-1">
               <Info className="w-3.5 h-3.5 text-muted-foreground" /> {tri("Sitor è un'intelligenza artificiale, non una persona.", "Sitor ist eine künstliche Intelligenz, keine Person.", "Sitor is an artificial intelligence, not a person.")}
             </p>
+            <div className="mt-3 flex justify-center sm:justify-start"><SitorBadge size={28} /></div>
           </div>
         </div>
       </section>
@@ -127,6 +129,8 @@ export default function HomeManuale({ onNav, features }) {
           <button data-testid="home-chip-live" onClick={() => onNav("live")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-mattone/15 border border-mattone/40 text-foreground text-sm font-bold hover:bg-mattone/25 active:scale-95 transition-all"><Radio className="w-4 h-4 text-mattone" />{tri("Impastiamo insieme", "Zusammen backen", "Bake together")}</button>
         )}
         <button data-testid="home-chip-mensola" onClick={() => onNav("mensola")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-salvia/20 border border-salvia/50 text-foreground text-sm font-bold hover:bg-salvia/30 active:scale-95 transition-all"><Award className="w-4 h-4 text-salvia" />{tri("La mia mensola", "Mein Regal", "My shelf")}</button>
+        <button data-testid="home-chip-cucina" onClick={() => onNav("cucina")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><Wrench className="w-4 h-4 text-muted-foreground" />{tri("La mia cucina", "Meine Küche", "My kitchen")}</button>
+        <button data-testid="home-chip-plan" onClick={() => onNav("plan")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><BookOpen className="w-4 h-4 text-muted-foreground" />{tri("Piano settimana", "Wochenplan", "Weekly plan")}</button>
         <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
         <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
       </div>

@@ -65,7 +65,8 @@ export default function Mensola({ onBack }) {
     lines.slice(0, 3).forEach((ln) => { ctx.fillText(ln.trim(), W / 2, y); y += 90; });
     ctx.fillStyle = rame; ctx.font = "bold 40px Georgia, serif"; ctx.fillText(tri("L'ho fatta!", "Geschafft!", "I made it!"), W / 2, y + 30);
     const handle = settings.tiktok_handle ? `@${settings.tiktok_handle}` : "";
-    ctx.fillStyle = photo ? "#fff" : ink; ctx.font = "500 34px Arial"; ctx.fillText(`#MikiLab  ${handle}`, W / 2, H - 70);
+    ctx.fillStyle = photo ? "#fff" : ink; ctx.font = "500 34px Arial"; ctx.fillText(`#MikiLab  ${handle}`, W / 2, H - 90);
+    ctx.fillStyle = rame; ctx.font = "600 28px Arial"; ctx.fillText("Sitor · di MikiLab", W / 2, H - 48);
   };
 
   useEffect(() => { if (cardFor) setTimeout(drawCard, 50); }, [cardFor, photo]); // eslint-disable-line

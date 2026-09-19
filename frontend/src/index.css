@@ -260,4 +260,10 @@ button:not(:disabled):not([class*="active:scale"]):active,
 }
 @media (prefers-reduced-motion: reduce) {
   button:not(:disabled):active, [role="button"]:not(:disabled):active { scale: 1; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

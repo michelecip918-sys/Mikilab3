@@ -37,6 +37,9 @@ import AdminCosts from "@/components/AdminCosts";
 import CosaFaccio from "@/components/CosaFaccio";
 import Live from "@/components/Live";
 import Mensola from "@/components/Mensola";
+import Cucina from "@/components/Cucina";
+import Plan from "@/components/Plan";
+import SitorBadge from "@/components/SitorBadge";
 import { useFeatures } from "@/lib/features";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
@@ -70,7 +73,9 @@ export default function App() {
     window.addEventListener("mikilab-open-technique", h);
     const hc = () => setChatOpen(true);
     window.addEventListener("mikilab-open-chat", hc);
-    return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); };
+    const hp = () => { setRoute("perche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    window.addEventListener("mikilab-open-perche", hp);
+    return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); window.removeEventListener("mikilab-open-perche", hp); };
   }, []);
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
@@ -143,6 +148,8 @@ export default function App() {
               {route === "cosa-faccio" && <CosaFaccio onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "live" && (!features || features.FEATURE_LIVE !== false) && <Live onBack={() => setRoute("home")} />}
               {route === "mensola" && <Mensola onBack={() => setRoute("home")} />}
+              {route === "cucina" && <Cucina onBack={() => setRoute("home")} />}
+              {route === "plan" && <Plan onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
@@ -159,6 +166,14 @@ export default function App() {
                 <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
                 <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">Impressum</button>
                 <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>
+              </div>
+              <div className="flex flex-col items-center gap-2 pt-1">
+                <p data-testid="footer-two-types" className="text-center max-w-3xl">{tri(
+                  "Le ricette sono di due tipi: quelle controllate o provate da Michele e le bozze scritte da Sitor, un'intelligenza artificiale basata sui modelli di Anthropic. Ogni ricetta dice chiaramente di quale tipo è.",
+                  "Die Rezepte sind von zwei Arten: die von Michele geprüften oder erprobten und die von Sitor geschriebenen Entwürfe, einer künstlichen Intelligenz auf Basis der Anthropic-Modelle. Jedes Rezept sagt klar, welcher Art es ist.",
+                  "Recipes are of two kinds: those checked or tested by Michele and the drafts written by Sitor, an artificial intelligence based on Anthropic models. Each recipe clearly states which kind it is.")}</p>
+                <p data-testid="footer-sitor-avatar" className="text-center font-bold text-foreground">{tri("Sitor è l'avatar IA di Michele.", "Sitor ist Micheles KI-Avatar.", "Sitor is Michele's AI avatar.")}</p>
+                <SitorBadge size={26} onOpenPerche={() => { setRoute("perche"); window.scrollTo(0, 0); }} />
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-border/10">
                 <p>© MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>

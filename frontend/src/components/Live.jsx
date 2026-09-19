@@ -3,6 +3,7 @@ import { ChevronLeft, Radio, Users, ExternalLink } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import SitorBadge from "@/components/SitorBadge";
 
 // G5: "Impastiamo insieme" — countdown sincronizzato sull'ora del server + conteggio partecipanti.
 export default function Live({ onBack }) {
@@ -57,6 +58,7 @@ export default function Live({ onBack }) {
   return (
     <div data-testid="live-page" className="max-w-2xl mx-auto px-4 py-6 space-y-5">
       <button data-testid="live-back" onClick={onBack} className="inline-flex items-center gap-1 text-muted-foreground text-sm font-bold"><ChevronLeft className="w-4 h-4" />{tri("Indietro", "Zurück", "Back")}</button>
+      <div className="flex justify-center"><SitorBadge size={24} /></div>
 
       <div>
         <h1 className="font-display text-3xl sm:text-4xl font-black text-foreground flex items-center gap-2"><Radio className="w-7 h-7 text-mattone" />{tri("Impastiamo insieme", "Backen wir zusammen", "Let's bake together")}</h1>

@@ -35,6 +35,10 @@ export default function LegalPlaceholder({ kind = "impressum", onBack }) {
               "Diese Seite nutzt nur funktionalen lokalen Speicher (Einstellungen und Favoriten auf deinem Gerät). Keine Statistik, kein Tracking.",
               "This site only uses functional local storage (preferences and favourites on your device). No analytics, no tracking.")}</p>
             <p>{tri("Titolare:", "Verantwortlicher:", "Controller:")} [NOME] — [INDIRIZZO]</p>
+            <p className="text-muted-foreground">{tri(
+              "L'avatar di Sitor è una rappresentazione sintetica del titolare del sito.",
+              "Der Avatar von Sitor ist eine synthetische Darstellung des Website-Inhabers.",
+              "Sitor's avatar is a synthetic representation of the site owner.")}</p>
             <p className="text-muted-foreground">{tri("Testo completo da compilare.", "Vollständiger Text auszufüllen.", "Full text to be completed.")}</p>
           </div>
         )}

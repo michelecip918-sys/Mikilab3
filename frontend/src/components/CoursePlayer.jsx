@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { X, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Mic, MicOff, ChefHat, AlertTriangle, Eye, Hand, HelpCircle, CalendarClock } from "lucide-react";
+import { X, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Mic, MicOff, ChefHat, AlertTriangle, Eye, Hand, HelpCircle, CalendarClock, Star } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { useAuth } from "@/auth/AuthContext";
+import { bumpOvenAdj, getOvenAdj, addDiary } from "@/lib/mycucina";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import SitorBadge from "@/components/SitorBadge";
 
 const MODE_KEY = "mikilab_recipe_mode";
 
@@ -32,6 +34,9 @@ export default function CoursePlayer({ recipe, onClose }) {
   const [endAt, setEndAt] = useState(null);       // C1: orario di fine ASSOLUTO (ms)
   const [nowMs, setNowMs] = useState(Date.now());
   const [expired, setExpired] = useState(false);
+  const [diaryRating, setDiaryRating] = useState(0);
+  const [diaryNote, setDiaryNote] = useState("");
+  const [diarySaved, setDiarySaved] = useState(false);
   const wlRef = useRef(null);
   const recRef = useRef(null);
   const ttsOnRef = useRef(true);
@@ -75,6 +80,17 @@ export default function CoursePlayer({ recipe, onClose }) {
     return () => { clearInterval(id); document.removeEventListener("visibilitychange", onVis); };
   }, [endAt]);
   useEffect(() => { if (expired) playAlarm(); }, [expired, playAlarm]);
+
+  // C5: tastiera — frecce e barra spaziatrice per avanti/indietro nel corso.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go((c) => c + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); go((c) => c - 1); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go]);
 
   useEffect(() => {
     let ok = true;
@@ -219,6 +235,7 @@ export default function CoursePlayer({ recipe, onClose }) {
         <div className="flex items-center gap-2 min-w-0">
           <ChefHat className="w-5 h-5 shrink-0 text-muted-foreground" />
           <p className="font-display font-bold truncate">{tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}</p>
+          <SitorBadge size={18} variant="avatar" className="shrink-0" />
         </div>
         <div className="flex items-center gap-2">
           <div className="inline-flex rounded-lg border border-foreground/20 overflow-hidden text-[11px] font-bold">
@@ -317,6 +334,30 @@ export default function CoursePlayer({ recipe, onClose }) {
                   ))}
                 </>)}
                 {course.storage && <div className="rounded-xl bg-foreground/6 p-3"><p className="font-bold text-accent">{tri("Conservazione", "Aufbewahrung", "Storage")}</p><p className="text-foreground/85 text-[15px] mt-1">{course.storage}</p></div>}
+
+                {/* C6: Il mio forno */}
+                <div data-testid="my-oven" className="rounded-xl border border-border p-3">
+                  <p className="font-bold text-sm mb-2">{tri("Com'è venuto?", "Wie ist es geworden?", "How did it turn out?")}</p>
+                  <div className="grid grid-cols-3 gap-2">
+                    <button data-testid="oven-dark" onClick={() => { const n = bumpOvenAdj(-10); toast.success(tri(`Forno: ${n}°C`, `Ofen: ${n}°C`, `Oven: ${n}°C`)); }} className="py-2 rounded-lg bg-mattone/15 text-mattone text-xs font-bold active:scale-95">{tri("Troppo scuro", "Zu dunkel", "Too dark")}</button>
+                    <button data-testid="oven-ok" onClick={() => toast.success(tri("Perfetto!", "Perfekt!", "Perfect!"))} className="py-2 rounded-lg bg-salvia/20 text-foreground text-xs font-bold active:scale-95">{tri("Giusto", "Genau richtig", "Just right")}</button>
+                    <button data-testid="oven-raw" onClick={() => { const n = bumpOvenAdj(10); toast.success(tri(`Forno: +${n}°C`, `Ofen: +${n}°C`, `Oven: +${n}°C`)); }} className="py-2 rounded-lg bg-ambra/20 text-foreground text-xs font-bold active:scale-95">{tri("Ancora crudo", "Noch roh", "Still raw")}</button>
+                  </div>
+                  {getOvenAdj() !== 0 && <p className="text-foreground/60 text-xs mt-2">{tri("Con il tuo forno", "Mit deinem Ofen", "With your oven")}: {getOvenAdj() > 0 ? "+" : ""}{getOvenAdj()} °C</p>}
+                </div>
+
+                {/* D2: Diario — voto + nota */}
+                <div data-testid="diary-add" className="rounded-xl border border-border p-3">
+                  <p className="font-bold text-sm mb-2">{tri("Diario del mio pane", "Mein Brot-Tagebuch", "My bread diary")}</p>
+                  <div className="flex gap-1 mb-2">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <button key={s} data-testid={`diary-star-${s}`} onClick={() => setDiaryRating(s)}><Star className={`w-6 h-6 ${s <= diaryRating ? "text-accent fill-accent" : "text-foreground/20"}`} /></button>
+                    ))}
+                  </div>
+                  <textarea data-testid="diary-note" value={diaryNote} onChange={(e) => setDiaryNote(e.target.value)} rows={2} placeholder={tri("Una nota per la prossima volta…", "Eine Notiz fürs nächste Mal…", "A note for next time…")} className="w-full text-sm p-2 rounded-lg bg-background border border-border outline-none focus:border-accent resize-none" />
+                  <button data-testid="diary-save" onClick={() => { if (!diaryRating && !diaryNote.trim()) return; addDiary({ recipe: recipe.name, rating: diaryRating, note: diaryNote.trim() }); setDiarySaved(true); toast.success(tri("Salvato nel diario", "Im Tagebuch gespeichert", "Saved to diary")); }} disabled={diarySaved} className="mt-2 w-full py-2 rounded-lg bg-accent text-accent-foreground text-sm font-bold active:scale-95 disabled:opacity-50">{diarySaved ? tri("Salvato ✓", "Gespeichert ✓", "Saved ✓") : tri("Salva nel diario", "Ins Tagebuch", "Save to diary")}</button>
+                </div>
+
                 <button onClick={onClose} className="w-full bg-muted py-4 rounded-2xl font-bold text-[17px] active:scale-95">{tri("Ho finito, grazie Sitor!", "Fertig, danke Sitor!", "Done, thanks Sitor!")}</button>
               </div>
             )}

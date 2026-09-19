@@ -118,6 +118,29 @@ export default function EspertoPro({ recipe, ex, settings }) {
 
   return (
     <div data-testid="esperto-pro" className="space-y-4">
+      {/* D1: IDRATAZIONE VERA (conta l'acqua di latte, uova, patata lessa) */}
+      {(() => {
+        const WC = { latte: 0.87, milk: 0.87, uov: 0.75, egg: 0.75, ei: 0.75, patat: 0.78, potato: 0.78, kartoffel: 0.78 };
+        const fg = Number(recipe.flour_grams) || 0;
+        if (!fg) return null;
+        let waterFromOthers = 0;
+        const src = [];
+        (recipe.extra_ingredients || []).forEach((it) => {
+          const nm = (it.name || "").toLowerCase();
+          const g = it.grams ? Number(it.grams) : (it.percent ? fg * Number(it.percent) / 100 : 0);
+          for (const k in WC) { if (nm.includes(k)) { waterFromOthers += g * WC[k]; src.push(it.name); break; } }
+        });
+        if (waterFromOthers <= 0) return null;
+        const classic = recipe.water_grams ? Math.round(Number(recipe.water_grams) / fg * 1000) / 10 : (recipe.hydration_percent || 0);
+        const real = Math.round(((Number(recipe.water_grams) || 0) + waterFromOthers) / fg * 1000) / 10;
+        return (
+          <div data-testid="true-hydration" className="rounded-2xl border border-border bg-background p-3.5">
+            <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-1">{tri("Idratazione vera (indicativa)", "Echte Hydration (Richtwert)", "True hydration (indicative)")}</p>
+            <p className="text-sm"><span className="text-muted-foreground">{tri("Classica", "Klassisch", "Classic")}:</span> <b>{classic}%</b> · <span className="text-muted-foreground">{tri("Vera", "Echt", "True")}:</span> <b className="text-primary">{real}%</b></p>
+            <p className="text-foreground/60 text-xs mt-1">{tri("Conta l'acqua di", "Zählt das Wasser aus", "Counts water from")}: {[...new Set(src)].join(", ")} — {tri("valori indicativi (latte 87%, uova 75%, patata 78%)", "Richtwerte (Milch 87%, Ei 75%, Kartoffel 78%)", "indicative (milk 87%, egg 75%, potato 78%)")}</p>
+          </div>
+        );
+      })()}
       {/* SCALA PROFESSIONALE */}
       <div className="rounded-2xl border border-border bg-background p-3.5">
         <p className="inline-flex items-center gap-1.5 text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-2"><Scale className="w-3.5 h-3.5" /> {tri("Scala", "Skalierung", "Scale")}</p>

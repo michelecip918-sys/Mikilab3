@@ -7,7 +7,7 @@ import EspertoPro from "@/components/EspertoPro";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
-import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, Music2, Copy } from "lucide-react";
+import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, Music2, Copy, CalendarClock } from "lucide-react";
 
 const MODE_KEY = "mikilab_recipe_mode"; // "casa" | "esperto"
 const DONE_KEY = "mikilab_done";
@@ -44,12 +44,20 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   const [settings, setSettings] = useState({});
   const [done, setDone] = useState(() => { try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")).has(recipe.id); } catch { return false; } });
   useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
+  const [doneCount, setDoneCount] = useState(0);
+  const [ktemp, setKtempState] = useState(() => { try { return Number(localStorage.getItem("mikilab_kitchen_temp")) || 22; } catch { return 22; } });
+  const setKtemp = (t) => { setKtempState(t); try { localStorage.setItem("mikilab_kitchen_temp", String(t)); } catch { /* */ } };
+  const round = (n) => Math.round(Number(n) || 0);
   const toggleDone = () => {
     let s; try { s = new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")); } catch { s = new Set(); }
-    s.has(recipe.id) ? s.delete(recipe.id) : s.add(recipe.id);
+    const wasDone = s.has(recipe.id);
+    wasDone ? s.delete(recipe.id) : s.add(recipe.id);
     localStorage.setItem(DONE_KEY, JSON.stringify([...s]));
     setDone(s.has(recipe.id));
     window.dispatchEvent(new CustomEvent("mikilab-done-changed"));
+    if (!wasDone) {  // G6: conta solo quando la SEGNI come fatta
+      api.post(`/done-ping`, { recipe_id: recipe.id }).then((r) => setDoneCount(r.data?.count || 0)).catch(() => {});
+    }
   };
   const handle = (settings.tiktok_handle || "").trim();
   const hashtag = settings.hashtag || "#MikiLab";
@@ -105,6 +113,43 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-sm active:scale-[0.98] transition-all border ${done ? "bg-accent border-accent text-white" : "bg-transparent border-border text-foreground hover:border-accent"}`}>
         <Check className="w-4 h-4" /> {done ? tri("Fatta ✓ (togli)", "Gemacht ✓ (entfernen)", "Done ✓ (undo)") : tri("Segna come fatta", "Als gemacht markieren", "Mark as done")}
       </button>
+      {doneCount >= 20 && <p data-testid="done-count" className="text-center text-xs text-muted-foreground">{tri(`${doneCount} persone l'hanno fatta questo mese`, `${doneCount} Personen haben es diesen Monat gemacht`, `${doneCount} people made it this month`)}</p>}
+      <button data-testid="add-to-plan" onClick={() => {
+        const scale = (Number(recipe.flour_grams) || 0) > 0 ? flour / Number(recipe.flour_grams) : 1;
+        const ing = [];
+        ing.push({ name: tri("Farina", "Mehl", "Flour"), g: flour });
+        if (recipe.water_grams) ing.push({ name: tri("Acqua", "Wasser", "Water"), g: Math.round(recipe.water_grams * scale) });
+        if (recipe.salt_grams) ing.push({ name: tri("Sale", "Salz", "Salt"), g: Math.round(recipe.salt_grams * scale) });
+        if (recipe.sourdough_grams) ing.push({ name: tri("Lievito madre", "Sauerteig", "Sourdough"), g: Math.round(recipe.sourdough_grams * scale) });
+        (recipe.extra_ingredients || []).forEach((it2) => { if (it2 && it2.name && it2.percent) ing.push({ name: it2.name, g: Math.round(flour * (Number(it2.percent) / 100)) }); });
+        let plan; try { plan = JSON.parse(localStorage.getItem("mikilab_plan") || "[]"); } catch { plan = []; }
+        plan.push({ id: recipe.id, name: recipe.name, flour, ing, day: 0 });
+        localStorage.setItem("mikilab_plan", JSON.stringify(plan));
+        window.dispatchEvent(new CustomEvent("mikilab-plan-changed"));
+        toast.success(tri("Aggiunta al piano", "Zum Plan hinzugefügt", "Added to plan"));
+      }} className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background border border-border text-foreground font-bold text-sm hover:border-accent/50 active:scale-95 transition-all">
+        <CalendarClock className="w-4 h-4" /> {tri("Aggiungi al piano", "Zum Plan hinzufügen", "Add to plan")} ({flour} g)
+      </button>
+      {((Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0)) > 0 && (
+        <div data-testid="kitchen-temp" className="rounded-2xl border border-border bg-background p-3.5">
+          <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-2">{tri("Tempo e temperatura", "Zeit & Temperatur", "Time & temperature")} <span className="text-foreground/40">({tri("stima", "Schätzung", "estimate")})</span></p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs text-muted-foreground">{tri("Temperatura della cucina", "Küchentemperatur", "Kitchen temperature")}:</span>
+            {[18, 22, 26, 30].map((t) => (
+              <button key={t} data-testid={`ktemp-${t}`} onClick={() => setKtemp(t)} className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${ktemp === t ? "bg-primary text-primary-foreground border-primary" : "text-muted-foreground border-border"}`}>{t}°C</button>
+            ))}
+          </div>
+          {(() => {
+            const base = (Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0);
+            if (!base) return null;
+            const label = ktemp <= 20 ? tri("Cucina fresca → più lento: verso il limite alto dei tempi.", "Kühle Küche → langsamer: eher am oberen Zeitende.", "Cool kitchen → slower: toward the longer times.")
+              : ktemp >= 26 ? tri("Cucina calda → più veloce: verso il limite basso dei tempi.", "Warme Küche → schneller: eher am unteren Zeitende.", "Warm kitchen → faster: toward the shorter times.")
+              : tri("Cucina tiepida → usa i tempi indicati.", "Milde Küche → nutze die angegebenen Zeiten.", "Mild kitchen → use the stated times.");
+            return <p className="text-foreground/70 text-sm mt-2">{tri("Lievitazione indicata", "Angegebene Gare", "Stated proof")}: ~{round(base)} h. {label}</p>;
+          })()}
+          <p className="text-foreground/45 text-[11px] mt-1">{tri("Più caldo = più veloce. Stima: i valori esatti li aggiunge Michele.", "Wärmer = schneller. Schätzung: genaue Werte fügt Michele hinzu.", "Warmer = faster. Estimate: exact values added by Michele.")}</p>
+        </div>
+      )}
 
       {/* CASA / ESPERTO + difficoltà */}
       <div className="flex flex-wrap items-center justify-between gap-2">

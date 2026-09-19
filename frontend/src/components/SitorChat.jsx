@@ -1,12 +1,14 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { X, Send, Volume2 } from "lucide-react";
+import { X, Send, Volume2, Mic, MicOff } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import { chatTools } from "@/lib/mycucina";
+import SitorBadge from "@/components/SitorBadge";
 
 const HIST_KEY = "mikilab_sitor_chat";
-const MYTOOLS_KEY = "mikilab_my_tools";
+const MYTOOLS_KEY = "mikilab_my_tools"; // eslint-disable-line no-unused-vars
 
 export default function SitorChat({ onClose }) {
   const { lang } = useLang();
@@ -15,23 +17,40 @@ export default function SitorChat({ onClose }) {
   const [msgs, setMsgs] = useState(() => { try { return JSON.parse(localStorage.getItem(HIST_KEY) || "[]"); } catch { return []; } });
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);
+  const [micOn, setMicOn] = useState(false);
   const scrollRef = useRef(null);
+  const recRef = useRef(null);
   const [path, setPath] = useState([]);
+  const isIOS = typeof navigator !== "undefined" && /iP(hone|ad|od)/.test(navigator.userAgent);
+  const SR = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
   useEffect(() => { api.get(`/learning-path`).then((r) => setPath(r.data?.levels || [])).catch(() => {}); }, []);
+
+  const startMic = () => {
+    if (!SR) return;
+    try {
+      const rec = new SR(); recRef.current = rec; rec.lang = voiceLang; rec.interimResults = false; rec.maxAlternatives = 1;
+      rec.onresult = (e) => { const t = e.results[0][0].transcript; setInput(t); setMicOn(false); setTimeout(() => send(t), 100); };
+      rec.onend = () => setMicOn(false);
+      rec.onerror = () => setMicOn(false);
+      rec.start(); setMicOn(true);
+    } catch { setMicOn(false); }
+  };
+  const stopMic = () => { try { recRef.current && recRef.current.stop(); } catch { /* */ } setMicOn(false); };
 
   useEffect(() => { try { localStorage.setItem(HIST_KEY, JSON.stringify(msgs.slice(-30))); } catch { /* */ } }, [msgs]);
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [msgs, busy]);
 
   const speak = (text) => { try { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; window.speechSynthesis.speak(u); } catch { /* */ } };
 
-  const send = async () => {
-    const q = input.trim();
+  const send = async (override) => {
+    const voiceMode = typeof override === "string";
+    const q = (voiceMode ? override : input).trim();
     if (!q || busy) return;
     setInput("");
     const next = [...msgs, { role: "user", content: q }];
     setMsgs(next); setBusy(true);
     let tools = {};
-    try { tools = JSON.parse(localStorage.getItem(MYTOOLS_KEY) || "{}"); } catch { /* */ }
+    try { tools = chatTools(); } catch { /* */ }
     try {
       const doneSet = new Set(JSON.parse(localStorage.getItem("mikilab_done") || "[]"));
       const fatte = [];
@@ -46,6 +65,7 @@ export default function SitorChat({ onClose }) {
       const r = await api.post(`/sitor/chat`, { messages: next.slice(-10), lang, tools, level });
       const reply = r.data?.reply || tri("Riprova tra poco.", "Versuch es gleich nochmal.", "Try again shortly.");
       setMsgs((m) => [...m, { role: "assistant", content: reply }]);
+      if (voiceMode) speak(reply);  // G1: in modalità voce leggi la risposta
     } catch {
       setMsgs((m) => [...m, { role: "assistant", content: tri("Scusa, ho avuto un intoppo. Riprova.", "Entschuldige, kleiner Fehler. Versuch erneut.", "Sorry, glitch. Try again.") }]);
     } finally { setBusy(false); }
@@ -55,10 +75,10 @@ export default function SitorChat({ onClose }) {
     <div data-testid="sitor-chat" className="fixed inset-0 z-[96] bg-background/50 flex items-end sm:items-center sm:justify-center" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-lg h-[85vh] sm:h-[80vh] bg-background sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl">
         <div className="flex items-center gap-3 px-4 py-3 bg-card shrink-0">
-          <img src="/sitor_official.jpg" alt="Sitor" className="w-10 h-10 rounded-full object-cover border-2 border-border" />
+          <img src="/sitor_official.jpg" alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} className="w-10 h-10 rounded-full object-cover border-2 border-border" />
           <div className="min-w-0 flex-1">
             <p className="font-display font-bold text-foreground leading-tight">Sitor</p>
-            <p className="text-[11px] text-foreground/50">{tri("Guida IA · panificazione", "KI-Guide · Backen", "AI guide · baking")}</p>
+            <SitorBadge size={18} className="mt-0.5" onOpenPerche={() => { onClose(); try { window.dispatchEvent(new CustomEvent("mikilab-open-perche")); } catch { /* */ } }} />
           </div>
           <button data-testid="sitor-chat-close" onClick={onClose} className="p-2 rounded-full bg-foreground/10 active:scale-90 text-foreground"><X className="w-5 h-5" /></button>
         </div>
@@ -84,12 +104,19 @@ export default function SitorChat({ onClose }) {
         <div className="px-3 pt-2 pb-3 bg-card shrink-0" style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}>
           <p data-testid="sitor-chat-disclaimer" className="text-[10px] text-foreground/40 text-center mb-2 px-2">{tri("Sitor è un'IA e può sbagliare. Non scrivere dati personali o di salute.", "Sitor ist eine KI und kann sich irren. Schreibe keine persönlichen oder Gesundheitsdaten.", "Sitor is an AI and can be wrong. Don't write personal or health data.")}</p>
           <div className="flex items-end gap-2">
+            {SR && !(isIOS && !SR) && (
+              <button data-testid="sitor-chat-mic" onClick={() => (micOn ? stopMic() : startMic())} aria-label="mic"
+                className={`p-3 rounded-2xl shrink-0 active:scale-90 ${micOn ? "bg-mattone text-white animate-pulse" : "bg-foreground/10 text-foreground"}`}>
+                {micOn ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </button>
+            )}
             <textarea data-testid="sitor-chat-input" value={input} onChange={(e) => setInput(e.target.value)} rows={1}
               onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
               placeholder={tri("Scrivi a Sitor…", "Schreib Sitor…", "Write to Sitor…")}
               className="flex-1 resize-none bg-background border border-foreground/15 rounded-2xl px-3.5 py-2.5 text-[15px] text-foreground outline-none focus:border-border max-h-28" />
-            <button data-testid="sitor-chat-send" onClick={send} disabled={busy || !input.trim()} className="p-3 rounded-2xl bg-muted text-foreground disabled:opacity-40 active:scale-90 shrink-0"><Send className="w-5 h-5" /></button>
+            <button data-testid="sitor-chat-send" onClick={() => send()} disabled={busy || !input.trim()} className="p-3 rounded-2xl bg-muted text-foreground disabled:opacity-40 active:scale-90 shrink-0"><Send className="w-5 h-5" /></button>
           </div>
+          {micOn && <p className="text-[10px] text-mattone text-center mt-1">🎙️ {tri("Ti ascolto… parla pure", "Ich höre zu… sprich", "Listening… go ahead")}</p>}
           <p className="text-[9px] text-foreground/30 text-center mt-1">{tri("Voce sintetica del tuo dispositivo.", "Synthetische Stimme deines Geräts.", "Your device's synthetic voice.")}</p>
         </div>
       </div>
