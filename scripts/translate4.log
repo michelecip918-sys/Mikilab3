@@ -1,0 +1,10 @@
+total=134 done=1725 todo=134
+batch 1/8 ok, missing_in_batch=0, total=1743
+batch 2/8 ok, missing_in_batch=0, total=1761
+batch 3/8 ok, missing_in_batch=0, total=1779
+batch 4/8 ok, missing_in_batch=0, total=1797
+batch 5/8 ok, missing_in_batch=0, total=1815
+batch 6/8 ok, missing_in_batch=0, total=1833
+batch 7/8 ok, missing_in_batch=0, total=1851
+batch 8/8 ok, missing_in_batch=0, total=1859
+DONE covered=1859/134 missing=0

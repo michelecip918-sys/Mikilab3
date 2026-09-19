@@ -8,7 +8,7 @@
 
 ## Fasi
 1. **Portale pubblico + restyling + Multiverso 3D**: mikilab.de vetrina hi-tech pubblica. Nuova identità visiva ovunque. Visitatori atterrano su scenario immersivo con nuovi avatar (guidati da Miki-Nexus, gestiti da Mike Mix) + plancia multiverso 3D live (panificio, pizzeria, pasticceria, magazzino, ceste) — NESSUNA interazione per estranei. [FATTO: PublicGate.jsx]
-2. **Muro del PIN + email autonoma**: click su dettagli/elementi protetti → richiesta PIN. Scritta fissa con email di contatto (gestita dal sistema, `accessi@mikilab.de`) per richiedere accesso/invito. Riconoscimento mail/credenziali MikiLab → privilegi assoluti. Rilascio PIN a terzi = controllo manuale del Capo. [FATTO: AdminGate PIN 198505 + email]
+2. **Muro del PIN + email autonoma**: click su dettagli/elementi protetti → richiesta PIN. Scritta fissa con email di contatto (gestita dal sistema, `accessi@mikilab.de`) per richiedere accesso/invito. Riconoscimento mail/credenziali MikiLab → privilegi assoluti. Rilascio PIN a terzi = controllo manuale del Capo. [FATTO: AdminGate PIN [RIMOSSO] + email]
 3. **Livelli di sblocco selettivo ospiti + Formazione nei Tempi Morti**: PIN fornito da MikiLab sblocca SOLO il livello autorizzato (operatività partner o moduli didattici). Mike Mix avvia formazione mirata/corsi interattivi nelle pause, su ogni ricetta (ricettario personale MikiLab + sistema). [DA FARE]
 4. **Barriera anti copia-incolla**: funzioni sub-molecolari/calcoli estremi/programmazione profonda (Miki-Nexus + Mike Mix) mai accessibili agli esterni; profilo ospite → accesso negato con notifica "richiesto profilo MikiLab". [PARZIALE: gating server-side esistente]
 5. **Nucleo Sintesi Enzimatica / chimica sub-molecolare** (Miki-Nexus): controllo fermentazioni/enzimi/legami molecolari. Visualizzare come dashboard olografica credibile. [DA FARE — visualizzazione]
@@ -23,7 +23,7 @@
 - Dark industrial: nero/acciaio/ciano/oro. **NO viola/purple**.
 - 3D: Vanilla three.js (NO @react-three/fiber).
 - Voci TTS: Mike Mix = voce operativa; Miki-Nexus = voce PROPRIA più profonda/autorevole (key `nexus`). Voice-key tecnici `bakemix`/`mikemix` KEPT.
-- Master PIN: 198505. Email accessi: accessi@mikilab.de.
+- Master PIN: [RIMOSSO]. Email accessi: accessi@mikilab.de.
 
 ## Avatar (public/)
 - avatar_miki.jpg = foto reale del Capo (image-1 (37)).

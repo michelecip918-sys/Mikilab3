@@ -1,0 +1,6 @@
+total=9 done=1998 todo=9
+batch 1/1 ok, missing_in_batch=0, total=2007
+DONE covered=2007/9 missing=0
+/root/.venv/lib/python3.11/site-packages/litellm/llms/custom_httpx/async_client_cleanup.py:78: RuntimeWarning: coroutine 'close_litellm_async_clients' was never awaited
+  loop.close()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback

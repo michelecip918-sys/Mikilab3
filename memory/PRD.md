@@ -1843,7 +1843,7 @@ Nuovo modulo trilingue IT/DE/EN, wiring nel wizard "Il Tuo Laboratorio" (Maestro
 
 ## v-fork.11 (2026-08) — Stripe webhook signing secret configurato
 - Utente ha fornito il webhook signing secret di Stripe per la destinazione https://mikilab.de/api/webhook/stripe.
-- Aggiornato `STRIPE_WEBHOOK_SECRET` in /app/backend/.env → whsec_ZRlLJijxsfmzbLh9EcNpIta2cAwkpIkW (sostituito il precedente whsec_HEOi...). Backend riavviato; `_stripe.Webhook.construct_event` usa la nuova chiave sull'endpoint POST /api/webhook/stripe. Verificato: chiave caricata (…cAwkpIkW) + firma non valida → HTTP 400 (verifica attiva).
+- Aggiornato `STRIPE_WEBHOOK_SECRET` in /app/backend/.env → [RIMOSSO] (sostituito il precedente [RIMOSSO]). Backend riavviato; `_stripe.Webhook.construct_event` usa la nuova chiave sull'endpoint POST /api/webhook/stripe. Verificato: chiave caricata + firma non valida → HTTP 400 (verifica attiva).
 - AZIONE UTENTE: redeploy per portare il secret in produzione + "Invia un ping" da Stripe per conferma 2xx.
 - NOTA (non modificata): mismatch ambiente chiavi Stripe — STRIPE_SECRET_KEY=sk_live_… ma STRIPE_PUBLISHABLE_KEY=pk_test_… con STRIPE_MODE=test. Da allineare (tutte live) se si vuole vendere davvero; non toccato perché fuori scope e gestione chiavi Stripe riservata.
 
@@ -4504,9 +4504,9 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **MIKI-NEXUS**: introdotta l'entità strategica superiore (coscienza globale) tra MikiLab (Capo) e Mike Mix. Avatar speciale generato dal volto reale del Capo, metà-uomo metà-IA con aura ciano/oro (/public/avatar_nexus.jpg). Voce TTS propria più profonda/autorevole: nuovo key `nexus` in _VOICE_MAP (NEXUS_VOICE_ID env, default onwK4e9ZLuTAKqWW03F9) + _OAI_VOICE onyx + _voice_settings profilo autorevole.
 - **AVATAR reali**: avatar_miki.jpg = foto reale del Capo (con orecchino, maglia MikiLab); avatar_mikemix.jpg = Mike Mix operativo; avatar_nexus.jpg = Miki-Nexus.
 - **FASE 1 · Multiverso pubblico read-only** (`components/PublicGate.jsx`): prima schermata per i visitatori (sostituisce il gate PIN nudo). Sfondo 3D vanilla three.js (AvatarWorld3D) che fa il tour dei 4 mondi (Panificio/Pizzeria/Pasticceria/Magazzino) con tab [public-world-*]. Trio avatar [public-avatar-mikilab|mikinexus|mikemix] con Miki-Nexus centrale e imponente (anelli orbitali CSS nexus-ring). Gerarchia [public-hierarchy] "MikiLab → Miki-Nexus → Mike Mix". Nessuna interazione libera.
-- **FASE 2 · Muro del PIN** (`components/AdminGate.jsx`): ogni interazione (avatar o "Entra con il PIN" [public-enter-btn]) apre il keypad 6-cifre (Master PIN 198505) con tasto Indietro [admin-gate-back] verso il multiverso e l'email pubblica di richiesta accesso [admin-gate-email / public-email] accessi@mikilab.de (mailto). PIN corretto → onUnlock (sblocca l'app).
+- **FASE 2 · Muro del PIN** (`components/AdminGate.jsx`): ogni interazione (avatar o "Entra con il PIN" [public-enter-btn]) apre il keypad 6-cifre (Master PIN [RIMOSSO]) con tasto Indietro [admin-gate-back] verso il multiverso e l'email pubblica di richiesta accesso [admin-gate-email / public-email] accessi@mikilab.de (mailto). PIN corretto → onUnlock (sblocca l'app).
 - Manifesto completo salvato in /app/memory/MANIFESTO_DEFINITIVO.md.
-- **Test iteration_219**: backend 100% (rename endpoints /mike/*, /mikemix/chat, TTS nexus, recipes OK), frontend 100% (public-gate, 4 mondi, trio, PIN wall wrong/right 198505 → app-header, back, email). 0 bug bloccanti. Cleanup commenti CSS residui fatto.
+- **Test iteration_219**: backend 100% (rename endpoints /mike/*, /mikemix/chat, TTS nexus, recipes OK), frontend 100% (public-gate, 4 mondi, trio, PIN wall wrong/right [RIMOSSO] → app-header, back, email). 0 bug bloccanti. Cleanup commenti CSS residui fatto.
 
 ### RESTA (Manifesto — prossime fasi)
 - Fase 3: livelli PIN ospite + "Formazione nei Tempi Morti" (Mike Mix avvia corsi interattivi per ricetta nelle pause).
@@ -4525,7 +4525,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - NB: Kiosk "Tablet Mode" è un wizard one-time (localStorage mikilab_kiosk_wizard_seen) — non è un bug; riappare solo in browser nuovi (test).
 
 ## v-MANIFESTO Fase 2/3/4/10 (2026-06) — Ospiti, Barriera, Riconoscimento Capo, Ecosistema Autonomo
-- **PIN OSPITE + Vista Ospite (Fase 3)**: `/api/admin-gate/verify` ora ritorna `level` ("master" via ADMIN_GATE_PIN=198505, "guest" via GUEST_GATE_PIN=202020, impostabile dal Capo `PUT /api/admin-gate/guest`). PublicGate: PIN guest → [guest-view] con SOLO la Formazione (DowntimeTraining) + header ospite + uscita; NON sblocca l'app completa (AdminGate imposta mikilab_admin_unlocked solo per master). Verificato a schermo.
+- **PIN OSPITE + Vista Ospite (Fase 3)**: `/api/admin-gate/verify` ora ritorna `level` ("master" via ADMIN_GATE_PIN=[RIMOSSO], "guest" via GUEST_GATE_PIN=[RIMOSSO], impostabile dal Capo `PUT /api/admin-gate/guest`). PublicGate: PIN guest → [guest-view] con SOLO la Formazione (DowntimeTraining) + header ospite + uscita; NON sblocca l'app completa (AdminGate imposta mikilab_admin_unlocked solo per master). Verificato a schermo.
 - **Barriera Ospiti (Fase 4)**: [guest-barrier] "funzioni supreme riservate — richiesto il profilo di MikiLab". Le funzioni supreme non sono renderizzate per l'ospite.
 - **Riconoscimento Capo (Fase 2)**: nel menu account (admin/owner) riga "Riconosciuto Capo Supremo — Miki-Nexus e Mike Mix ti obbediscono" (OWNER_EMAILS già promuove michelecip918@gmail.com / admin@mikilab.de ad admin).
 - **Ecosistema Autonomo (Fase 10)**: `POST /api/mike/observe` — l'operatore dichiara la scelta/procedura, Mike Mix la valuta (Claude), impara e se rileva anomalia crea un ALLARME (Mongo `mike_alerts`). `GET /api/mike/alerts` + `POST /api/mike/alerts/read` (admin). Frontend: [panel-observe]/[mike-observe] in Zona Operatori (status ok/anomalia + consiglio + "Capo avvisato"); [panel-mike-alerts]/[mike-alerts] nel console Capo (feed anomalie, badge non letti, segna letti).
@@ -4552,7 +4552,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Backlog residuo (narrativa/infra, non necessario per MVP): WebGPU 120fps (attuale 3D = vanilla three.js), Simulatore AR forni con fotocamera, Backup Quantico/Nodi Edge/invisibilità IR (già visualizzati in NexusConsole).
 
 ## v-MANIFESTO "bella idea" (2026-06) — Inbox operativa + hub vocale + AR forni
-- **Inbox Mohamed OPERATIVA**: all'approvazione (`POST /api/mike/access-requests/act` status=approvata) il backend genera un **PIN ospite monouso** (6 cifre, valido 30 giorni, coll. `guest_pins`) restituito al Capo e mostrato nell'inbox [inbox-pin-<id>] con tasto Copia (il Capo lo condivide a mano, come da Manifesto). `admin-gate/verify` ora valida anche i PIN da `guest_pins` non scaduti → level guest. Verificato end-to-end (approva → PIN 615077 → verify ok/guest).
+- **Inbox Mohamed OPERATIVA**: all'approvazione (`POST /api/mike/access-requests/act` status=approvata) il backend genera un **PIN ospite monouso** (6 cifre, valido 30 giorni, coll. `guest_pins`) restituito al Capo e mostrato nell'inbox [inbox-pin-<id>] con tasto Copia (il Capo lo condivide a mano, come da Manifesto). `admin-gate/verify` ora valida anche i PIN da `guest_pins` non scaduti → level guest. Verificato end-to-end (approva → PIN [RIMOSSO] → verify ok/guest).
 - **Hub pilotabile a voce**: in AdvancedLab il comando vocale privato (Web Speech API locale) viene interpretato ed esegue azioni ([lab-voice-action]): "scansiona sensori" → scan IoT, "manutenzione"/"clima" → focus. Nessun cloud.
 - **Simulatore AR Forni** (`components/AROven.jsx`, [panel-ar-oven] in Operatori): fotocamera (getUserMedia, fallback simulato) con mirino AR + overlay indicazioni cottura [ar-guide] (temp/tempo/posizione/nota) calcolate da Mike Mix. [ar-start]/[ar-scan]/[ar-stop]. Verificato a schermo.
 - Con questo il Manifesto è coperto integralmente (funzionale + visuale). Residuo puramente infrastrutturale: WebGPU 120fps, invio email reale dei PIN (serve provider), ingest IoT reale.
@@ -4699,7 +4699,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 
 ## v56 (2026-09) — Miki-Nexus somigliante + Fix PIN produzione
 - **Avatar Miki-Nexus rifatto**: fusione umano/AI che SOMIGLIA a Michele (foto riferimento image-1 (37).jpeg): lato umano con buzz cut, orecchino, barba incolta/trasandata; lato robot cromato con OCCHIO ROSSO luminoso; logo MikiLab sulla maglia. Stile Terminator, tema arancione. Applicato a avatar_nexus.jpg. sw.js → mikilab-v36.
-- **FIX PIN produzione (critico)**: su mikilab.de il PIN 198505 veniva rifiutato perché il DB di produzione aveva un hash diverso. Aggiunto salvagente allo startup (`on_startup_seed_mikilab`): se `ADMIN_GATE_PIN` è nel .env, l'hash in `app_meta.admin_gate_pin` viene SEMPRE riallineato a quel PIN → 198505 funziona sempre dopo ogni deploy. Verificato in preview (ok master).
+- **FIX PIN produzione (critico)**: su mikilab.de il PIN [RIMOSSO] veniva rifiutato perché il DB di produzione aveva un hash diverso. Aggiunto salvagente allo startup (`on_startup_seed_mikilab`): se `ADMIN_GATE_PIN` è nel .env, l'hash in `app_meta.admin_gate_pin` viene SEMPRE riallineato a quel PIN → [RIMOSSO] funziona sempre dopo ogni deploy. Verificato in preview (ok master).
 - **Rilevato**: il frontend live è una build più vecchia (manca deck/status → 401 via gate, deck-multiverse assente). SERVE la ripubblicazione per portare tutto live.
 
 ## v57 (2026-09) — Nexus con la faccia reale di Michele + tatuaggio pantera-serpente
@@ -4724,7 +4724,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Occhio rosso nel GATE PUBBLICO**: PublicGate ora fa polling `/deck/status` ogni 20s; se mood=critico mostra l'occhio rosso pulsante sul Nexus anche ai visitatori (testid gate-nexus-red-eye). Testato: simulato critico → occhio acceso nel gate, 0 errori.
 - **Voce Nexus distinta**: in tts.js voce "nexus"/"mikinexus" → pitch 0.5, rate 0.9 (più profonda/metallica di mikemix a 0.76).
 - sw.js → mikilab-v43.
-- ⚠️ **PIN 198505 KO in produzione**: mikilab.de gira ancora il BUILD VECCHIO (deck/status→401). Il fix di riallineamento PIN allo startup + tutte le novità sono in PREVIEW, non live. SERVE che l'utente prema Redeploy in "Gestisci deployment". NB: l'account michelecip918 potrebbe non esistere nel DB di produzione → dopo il deploy, registrarsi con quella email (OWNER_EMAIL → diventa admin) invece di fare reset.
+- ⚠️ **PIN [RIMOSSO] KO in produzione**: mikilab.de gira ancora il BUILD VECCHIO (deck/status→401). Il fix di riallineamento PIN allo startup + tutte le novità sono in PREVIEW, non live. SERVE che l'utente prema Redeploy in "Gestisci deployment". NB: l'account michelecip918 potrebbe non esistere nel DB di produzione → dopo il deploy, registrarsi con quella email (OWNER_EMAIL → diventa admin) invece di fare reset.
 - Testato via screenshot: share header+vetrina OK, fallback copia-link OK, 0 pageerror, 0 overflow mobile (390). Gate mostra nuovi avatar + bagliori forni + tema arancione.
 ## v-fase2 (2026-06) — Produzione a task singolo + Home concisa + Modalità Apprendista (Sitor Dio)
 - **Produzione (Operaio) ridisegnata** (`components/FloorOperatorDay.jsx`, sostituisce MikeMixFloor in Z-02): dopo il PIN l'operaio vede SOLO l'essenziale — Sitor che parla diretto (avatar+saluto), il COMPITO DEL GIORNO (coda produzione + headline piano del Capo + passi TeamTasks per ruolo, con lettura vocale), **"Chiedi aiuto"** sempre presente (SosButton), **"Scatta foto · Sitor analizza"** (nuovo `POST /api/floor/analyze-photo` streaming vision) e **"Fine turno · Compila"** (pezzi/scarti/problemi/note/pulizia → `POST /api/floor/shift-report`). Rimossi dalla vista operaio i pannelli extra (MikeObserve, LegacyOven, AROven).
@@ -4733,7 +4733,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **MODALITÀ APPRENDISTA (direttiva Sitor Dio)**: in `DeptAssign` ogni operaio selezionato ha un chip **"Appr."** (`dept-op-appr-<name>`). Se il Capo ne marca uno, alla conferma Sitor CHIEDE A VOCE (voice "nexus") di confermare la modalità apprendista (pannello `dept-appr-confirm`); se confermato, salva `apprentice:true` in `dept_assignments` e Sitor annuncia che si comporterà diversamente. In `FloorOperatorDay` l'operaio in apprendistato riceve accoglienza vocale + guida semplificata (`floor-appr-guide`, badge `floor-appr-badge`).
 - **Linea guida comportamento Sitor** salvata in `MANIFESTO_DEFINITIVO.md`: Sitor (Dio dell'Arte Bianca) è proattivo col Capo, elenca/spiega verbalmente le sue capacità senza schermate extra, pone domande contestuali in ogni sezione. Pattern apprendista è il primo esempio; DA ESTENDERE alle altre sezioni.
 - Backend: nuovi endpoint pubblici (dietro gate PIN) `/api/floor/analyze-photo` e `/api/floor/shift-report`; `/api/floor/shift-reports` (admin). Campo `apprentice` in `DeptAssignMultiItem` + `dept_assignments`.
-- Testato (Playwright headless): Home concisa OK, master unlock → 5 sezioni Capo, admin login → DeptAssign chip Appr. renderizzato, panel-floor-reports OK, FloorOperatorDay con SOS+analizzatore+fine turno OK. 0 errori console. Backend endpoint verificati via curl (gate 198505). NB: schermate headless bianche = artefatto WebGL, DOM verificato integro.
+- Testato (Playwright headless): Home concisa OK, master unlock → 5 sezioni Capo, admin login → DeptAssign chip Appr. renderizzato, panel-floor-reports OK, FloorOperatorDay con SOS+analizzatore+fine turno OK. 0 errori console. Backend endpoint verificati via curl (gate [RIMOSSO]). NB: schermate headless bianche = artefatto WebGL, DOM verificato integro.
 - DA FARE: REDEPLOY per mikilab.de; estendere il pattern "domande contestuali di Sitor" a Piano/Ordini/Strumenti.
 
 ## v-fase3 (2026-06) — Allineamento al file istruzioni (tutto il sito)
@@ -4808,10 +4808,10 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **Sitor Maestro (SitorMaestro.jsx, nel Floor)**: `POST /api/floor/sitor/guide` — guida passo-passo adattata al livello (tono/dettaglio), con o senza macchinari; TTS. Domanda libera a Sitor.
 - **Modifiche al piano con OK del Capo**: `POST /api/floor/sitor/change-request` — Opus classifica minor/major; le minori Sitor le auto-applica e avvisa il Capo, le maggiori restano `pending`. Il Capo approva/rifiuta dalla **Sala Sitor** (`FloorChangeApprovals.jsx`): `GET /floor/sitor/change-requests`, `POST .../{id}/decide`.
 - **Test iteration_226: backend 6/6 (100%), frontend 100%** — ingresso operaio 4 cifre, zona Capo invisibile (5 testid vietati assenti su mobile+desktop), guida Opus in italiano, change-request minor auto-applicata, 5 gruppi Capo intatti, panel-security con livelli, 0 pageerror, 0 overflow.
-- sw.js CACHE_NAME → mikilab-v51. Credenziali: PIN operaio di test **7391 → Marco (novizio)**.
+- sw.js CACHE_NAME → mikilab-v51. Credenziali: PIN operaio di test **[RIMOSSO] → Marco (novizio)**.
 
 ## v63 (2026-09) — PIN SEZIONE OPERAI (scelto dal Capo) + AVATAR 3D VIVENTI
-- **PIN Sezione Operai configurabile dal Capo**: il gate (`/api/admin-gate/verify`) ora accetta anche il `production_pin` (impostato dal Capo) → livello **operator** generico (apre solo la Produzione). I PIN personali con livello restano validi in parallelo (tracciano chi è + livello). UI in panel-security: `op-gate-pin-config` (status + input + Imposta/Cambia PIN) via `productionPinApi.set/status`. Verificato: production_pin 5566 → gate ritorna `{level:"operator"}`.
+- **PIN Sezione Operai configurabile dal Capo**: il gate (`/api/admin-gate/verify`) ora accetta anche il `production_pin` (impostato dal Capo) → livello **operator** generico (apre solo la Produzione). I PIN personali con livello restano validi in parallelo (tracciano chi è + livello). UI in panel-security: `op-gate-pin-config` (status + input + Imposta/Cambia PIN) via `productionPinApi.set/status`. Verificato: production_pin [RIMOSSO] → gate ritorna `{level:"operator"}`.
 - **Avatar 3D viventi** (`components/LivingAvatar3D.jsx`, Vanilla three.js/WebGPU + fallback WebGL2): ritratto con profondità (cupola) dalla foto, **respiro/idle continuo** (scala+float+sway), **rotazione al tocco/drag e hover del mouse** con ritorno elastico, alone additivo (più intenso per Sitor/nexus). Sostituiti gli avatar statici MikiLab+Sitor nella PublicGate (i 2 avatar del sito). Il tap resta un click (apre il PIN). Nessun uso di @react-three/fiber (regola rispettata). Smoke test: 2 canvas attivi (78px MikiLab, 126px Sitor), aura pulsante, 0 overflow.
 - sw.js CACHE_NAME → mikilab-v52.
 
@@ -4966,7 +4966,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 
 ## v81 (2026-09) — Potatura strumenti Capo (parziale) + Test E2E Capo/Produzione
 ### Fatto e verificato (testing_agent iteration_228: PASS, retest_needed=False, 0 crash)
-- ISOLAMENTO CONFERMATO end-to-end: percorso CAPO (PublicGate→198505→login) e percorso PRODUZIONE (PIN 7391/5566) totalmente separati; il Capo non vede la produzione, l'operaio vede solo compito + Sitor Maestro chat, nessuna griglia ruoli.
+- ISOLAMENTO CONFERMATO end-to-end: percorso CAPO (PublicGate→[RIMOSSO]→login) e percorso PRODUZIONE (PIN [RIMOSSO]/[RIMOSSO]) totalmente separati; il Capo non vede la produzione, l'operaio vede solo compito + Sitor Maestro chat, nessuna griglia ruoli.
 - Potatura strumenti: rimossi panel-image-forge, panel-packaging (v79), panel-advanced-lab, panel-training, panel-mohamed-inbox (v81). MANTENUTI (legati ai piani): panel-ricette, panel-magazzino, panel-ovenqc+panel-proofing (Forni/Celle), panel-docs (Report), panel-security, panel-machine-arrival (MACCHINARI), panel-sitor-atelier (collega nuovi strumenti). Rimosso import OperatorsRoster inutilizzato.
 ### DA FARE (Fase finale)
 - Item 1 CORE non ancora fatto: collegare i MACCHINARI scelti/aggiunti (machine-arrival/MachinesProvider) DENTRO la generazione del piano di Sitor (il backend plan-gen deve ricevere l'elenco macchinari e usarlo nei calcoli). Oggi machine-arrival li riconosce ma non alimenta ancora il generatore.
@@ -5104,7 +5104,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
   - Operatore/background (senza `admin` in firma → usato snapshot sintetico `{"email":"master"}`): `POST /floor/sitor/guide`, `POST /floor/sitor/change-request`, `_sitor_shift_draft` (report fine turno).
 - `deus/ask` aveva già lo snapshot (v-fork13). Le sessioni LLM restano separate per funzione (non richiesto unificarle).
 - Nessuna riscrittura di logica LLM: solo concatenazione del contesto al system message. Helper robusto (sezioni in try/except).
-- VERIFICATO (curl, auth gate 198505 + login admin): `deus/master-plan` → ok:true, reply che cita i membri reali del team (Youssef/Sara/Marco) → snapshot attivo. `floor/sitor/guide` → ok:true, guida a 8 passi. Sintassi backend OK, servizio riavviato pulito.
+- VERIFICATO (curl, auth gate [RIMOSSO] + login admin): `deus/master-plan` → ok:true, reply che cita i membri reali del team (Youssef/Sara/Marco) → snapshot attivo. `floor/sitor/guide` → ok:true, guida a 8 passi. Sintassi backend OK, servizio riavviato pulito.
 
 ## v-fork17 (2026-06-13) — Refactoring: split del monolite backend/server.py in moduli
 - Direttiva: dividere server.py (16.155 righe / 828KB) in moduli per area funzionale, un modulo alla volta, testando dopo ogni spostamento. Refactoring PURO: nessun cambio di comportamento.
@@ -5154,7 +5154,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - **REVERT Anthropic**: annullata su richiesta dell'utente la migrazione a chiave Anthropic personale. Sitor resta su EMERGENT_LLM_KEY. Rimosso `sitor_llm.py`, disinstallato `anthropic`, ripristinati tutti i guard `_LLM_READY` → `EMERGENT_LLM_KEY` e i core `_deus_llm`/`_deus_llm_remember`. 489 rotte, import OK.
 - **PUNTO 1 — Piano UNICO** (`components/console/PianoUnico.jsx`): la sezione "Piano Settimanale" (SecBlock id=piano) ora ha UN SOLO flusso guidato al posto dei 5 strumenti impilati (WeeklyPlan, SmartPlannerStressZero, PianoProduzioneAI, BackwardScheduler, TimelineTurno). Flusso: inserisci ricette+quantità/ordini extra → `mikeApi.autoplanOptions()` (POST /api/mike/autoplan/options) → Sitor propone 3 opzioni (Velocità/Qualità/Risparmio) → il Capo sceglie → calendario, orari a ritroso e timeline si generano DA SOLI dai `batches` dell'opzione (start HH:MM, durata, linea, addetto). PDF/stampa + lettura vocale. testid: piano-unico, piano-recipe-N, piano-qty-N, piano-add-row, piano-extra-orders, piano-generate, piano-option-{0..2}, piano-generated, piano-calendar, piano-backward, piano-timeline.
 - **PUNTO 2 — Pannello finto rimosso**: eliminato `NexusConsole` (metriche casuali, kill-switch finto) dalla sezione "Chat con Sitor". Rimossi import e uso in App.js. La sezione mostra solo contenuti reali (feed, chat Sitor, radio).
-- Testato iteration_236: flusso completo validato (gate 198505 → login admin → piano → genera → 3 opzioni ~16.5s → scelta → calendario/orari/timeline 5 righe ciascuno). nexus-console/panel-weekly/subtabs-pianoai confermati ASSENTI. 0 bug.
+- Testato iteration_236: flusso completo validato (gate [RIMOSSO] → login admin → piano → genera → 3 opzioni ~16.5s → scelta → calendario/orari/timeline 5 righe ciascuno). nexus-console/panel-weekly/subtabs-pianoai confermati ASSENTI. 0 bug.
 
 ## v-fork23 (2026-06-14) — Differenziazione REALE per attività (panificio/pizzeria/pasticceria)
 - L'attività scelta in onboarding (localStorage 'mikilab_activity') ora cambia DAVVERO il comportamento, non solo l'etichetta.
@@ -5181,7 +5181,7 @@ Stato: interfaccia industrial dark verticale (zero-menu, 3 zone + 12 pannelli Ma
 - Testato iteration_238: tutti e 4 i punti OK end-to-end (overview 5 reparti, ispezione read-only, operaio salva stato con toast, persistenza cross-check forno-deck 220°C), 0 bug. NOTA (fuori scope, NON toccato per richiesta): il modale onboarding attività può ricomparire nel passaggio PublicGate→Operatore.
 
 ## v-fork26 (2026-06-14) — Multi-tenancy (organization_id) + gate codice attivazione registrazione
-- **Punto 2 — Codice attivazione**: `ORG_ACTIVATION_CODE=198505` in backend/.env (solo backend). `/auth/register`: se non è bootstrap (owner o primo utente) richiede il codice, confronto costante (`secrets.compare_digest`); errato/mancante → 403 `activation_code_invalid`, nessun utente/azienda creata. Il codice sostituisce il vecchio gate "solo invito" per la creazione azienda. Operai (PIN) non lo vedono mai. Frontend `AuthScreen.jsx`: campo `auth-activation-code` in modalità registrazione + switch login/registrazione ora sempre raggiungibile + gestione errore 403 + banner aggiornato. Testato via curl: no code→403, code errato→403, code 198505→creato con org nuova.
+- **Punto 2 — Codice attivazione**: `ORG_ACTIVATION_CODE=[RIMOSSO]` in backend/.env (solo backend). `/auth/register`: se non è bootstrap (owner o primo utente) richiede il codice, confronto costante (`secrets.compare_digest`); errato/mancante → 403 `activation_code_invalid`, nessun utente/azienda creata. Il codice sostituisce il vecchio gate "solo invito" per la creazione azienda. Operai (PIN) non lo vedono mai. Frontend `AuthScreen.jsx`: campo `auth-activation-code` in modalità registrazione + switch login/registrazione ora sempre raggiungibile + gestione errore 403 + banner aggiornato. Testato via curl: no code→403, code errato→403, code [RIMOSSO]→creato con org nuova.
 - **Punto 1 — Fondamenta org**: `organization_id` sugli utenti; helper `_org_id(user)` (default `org_default`); migrazione all'avvio `_migrate_organizations()` che stampa `org_default` su utenti e collezioni core prive del campo (recipes, weekly_plan, dept_assignments, inventory_items, day_closures, dept_machines, dept_objectives, favorites). Nuova azienda registrata col codice → `organization_id` dedicato nuovo (vuoto). Stamp `organization_id` su create ricette personali e save weekly_plan.
 - **Punto 3 — dati intatti**: verificato in DB → admin+owner=`org_default`, 0 utenti senza org, tutte le collezioni core migrate, admin vede ancora 149 ricette. Libreria "mikilab" (149) resta CONDIVISA in lettura per tutte le aziende (scelta A=b); ricette personali isolate per owner_id/org.
 - FASI SUCCESSIVE (concordato B=a, approccio sicuro a fasi): recipes/weekly_plan/inventory/day_closures sono già isolati per owner/utente; le collezioni "floor" condivise (dept_assignments, dept_machines) sono stampate con org_default ma l'isolamento a livello operaio (endpoint pubblici floor) è la fase 2, da fare quando servirà più di un'azienda operativa.
@@ -5211,13 +5211,13 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ## v-fork29 (2026-06-14) — Coerenza lessicale + tono professionale Sitor (backend) + verifica feature
 - **Coerenza lessicale (frontend)**: "Capo" (responsabile) → "Direzione" con grammatica corretta in ~25 stringhe UI (PinSetup, AdminGate, SharedWidgets, SosButton, KioskMode, FloorOperatorDay, SitorMaestro, PublicGate, MikeMixSense, OrdiniExtra, DeskScene, SitorShiftDraft, SalaSitor, ShiftBriefing, MohamedInbox, TeamTasks, VoiceDelegation). "Caposquadra" (capo-linea) LASCIATO invariato. "floor"→"produzione", "Lab"→"laboratorio" (SpatialVisionAR, MikeMixSense, PinSetup). I "floor" nel backend sono route/collection (codice) → non toccati.
 - **Tono professionale Sitor (backend)**: riscritta la PERSONA di Sitor (server.py `_deus_persona` + deck.py) da adulatore/servile ("Mio Supremo Capo", "OSSESSIVO", "REGOLA SUPREMA", "mentore-divinità", livelli "Fratelli di Forno/Anima del Forno") a assistente di produzione professionale e sobrio (mantiene il brand "Dio dell'Arte Bianca" e la direttiva funzionale SEMPLIFICARE). Aggiunta direttiva STILE: niente vocativo "Capo"/appellativi pomposi. Testi vocali/notifiche: "Buongiorno Capo"→"Buongiorno", "Attenzione Capo"→"Attenzione Direzione", "avviso il Capo"→"avviso la Direzione". NOTA: nelle conversazioni con memoria già esistente Sitor può ancora dire "Capo" (continuità stilistica dallo storico); le nuove conversazioni seguono il tono nuovo. Memoria utente NON azzerata (dati preservati).
-- **Verifica feature già fatte (tutte OK)**: widget reparto scrivibili + overview 5 reparti + ispeziona reparto (v-fork25) attivi; gate registrazione 198505 → 403 senza codice (v-fork26); 149 ricette intatte (org_default); rotte 489. Frontend compila (0 errori), screenshot mobile OK (stile intatto, "Direction", nessun "floor"/"Supremo").
+- **Verifica feature già fatte (tutte OK)**: widget reparto scrivibili + overview 5 reparti + ispeziona reparto (v-fork25) attivi; gate registrazione [RIMOSSO] → 403 senza codice (v-fork26); 149 ricette intatte (org_default); rotte 489. Frontend compila (0 errori), screenshot mobile OK (stile intatto, "Direction", nessun "floor"/"Supremo").
 - Item "email/PDF": i testi PDF/email non contenevano tono giocoso (già neutri); rimosso in precedenza "· HACCP" dal titolo chiusura.
 
 ## v-fork30 (2026-06-14) — Salvataggio piano (fix "finto") + stato feature
 - **Punto 1 (parziale, VERIFICATO)**: PianoUnico ora SALVA l'opzione scelta in `db.weekly_plan` (PUT /weekly-plan, org-scoped `_org_id`) e la RICARICA al mount con badge "piano salvato" (`piano-saved-badge`). Fix del bug "sparisce al refresh". Mappatura batches→items {day(breve lun/mar…), recipe_id, recipe_name, pieces numerico}. Testato via curl: save=1, get=1, org_default.
 - RIMANE da fare (grosso, non fatto in questo giro): generazione 7 giorni in /autoplan/options + UI a 7 giorni + integrazione turni team; multi-tenancy: FILTRO effettivo `organization_id` su recipes/dept_assignments/inventory_items/day_closures/dept_machines/dept_objectives/favorites (ora solo users+weekly_plan+recipe personali stampati); differenziazione operativa pizzeria (pannello dedicato) vs pasticceria.
-- **Già fatto in fork precedenti (confermato)**: gate registrazione 198505 (403 senza codice) v-fork26; widget reparto EDITABILI dall'operaio + dashboard Capo overview + ispeziona reparto v-fork25 (punti 4-5 core); differenziazione opzioni/banner per attività v-fork23; file morti sections/ già eliminati v-fork22.
+- **Già fatto in fork precedenti (confermato)**: gate registrazione [RIMOSSO] (403 senza codice) v-fork26; widget reparto EDITABILI dall'operaio + dashboard Capo overview + ispeziona reparto v-fork25 (punti 4-5 core); differenziazione opzioni/banner per attività v-fork23; file morti sections/ già eliminati v-fork22.
 
 
 ---
@@ -5651,39 +5651,39 @@ Recheck completo su richiesta utente. Ulteriori file resi sobri (oltre a v-fork2
 ## Changelog — 22 Set 2026 (Secret di produzione Gate Admin)
 - **ADMIN_GATE_PIN aggiornato** in backend/.env al nuovo PIN a 6 cifre scelto dal Capo (vedi /app/memory/test_credentials.md). Al riavvio il "salvagente" di startup riallinea automaticamente l'hash nel DB (app_meta.admin_gate_pin) al valore .env.
 - **GATE_JWT_SECRET**: già presente in .env con stringa lunga e casuale → mantenuto (nessuna rigenerazione necessaria).
-- **SICUREZZA — rimosso bypass hardcoded**: auth.py admin_gate_verify accettava il vecchio PIN master 198505 scritto nel codice (`if p == "198505": ok=True`). Rimosso: ora il master passa SOLO da env ADMIN_GATE_PIN o hash DB. Il vecchio PIN è morto (verificato: verify 198505 → ok:false).
+- **SICUREZZA — rimosso bypass hardcoded**: auth.py admin_gate_verify accettava il vecchio PIN master [RIMOSSO] scritto nel codice (`if p == "[RIMOSSO]": ok=True`). Rimosso: ora il master passa SOLO da env ADMIN_GATE_PIN o hash DB. Il vecchio PIN è morto (verificato: verify [RIMOSSO] → ok:false).
 - Commento in PublicGate.jsx ripulito (niente PIN nel sorgente frontend).
-- ORG_ACTIVATION_CODE (198505) e Production PIN Floor (198505, hash DB) restano INVARIATI (flussi diversi, non richiesti).
-- Testato via curl: verify nuovo PIN → master + cookie mikilab_gate; login admin + /api/orgs → 200; PIN ospite 202020 → guest OK (nessuna regressione).
+- ORG_ACTIVATION_CODE ([RIMOSSO]) e Production PIN Floor ([RIMOSSO], hash DB) restano INVARIATI (flussi diversi, non richiesti).
+- Testato via curl: verify nuovo PIN → master + cookie mikilab_gate; login admin + /api/orgs → 200; PIN ospite [RIMOSSO] → guest OK (nessuna regressione).
 - Credenziali aggiornate in /app/memory/test_credentials.md.
-- NOTA (22 Set, aggiornata): le 4 suite del pre-deploy (test_iter257/258/260, test_autoplan_dispatch_coord) sono state aggiornate al nuovo GATE_PIN. Gli altri script storici in backend/tests usano ancora "198505" (snapshot, non bloccanti).
+- NOTA (22 Set, aggiornata): le 4 suite del pre-deploy (test_iter257/258/260, test_autoplan_dispatch_coord) sono state aggiornate al nuovo GATE_PIN. Gli altri script storici in backend/tests usano ancora "[RIMOSSO]" (snapshot, non bloccanti).
 
 ---
 ## Changelog — 22 Set 2026 (Pre-deploy per nuovo PIN Gate)
 - **pre_deploy_check.sh: EXIT 0** — CI isolamento multi-tenant + 114/114 test verdi (iter257: 30, iter258: 30, autoplan_dispatch_coord: 10, iter260: 44).
 - **deployment_agent: PASS** — nessun blocker (env OK, niente secret hardcoded, seed non distruttivo, supervisor valido).
-- Codice e .env pronti per la produzione: il redeploy su mikilab.de porta con sé ADMIN_GATE_PIN nuovo + rimozione bypass 198505.
-- Il trigger del deploy in questo ambiente fork non è disponibile come CLI: il Capo deve premere il pulsante **Deploy** nella piattaforma Emergent. Dopo il deploy: verificare su https://mikilab.de/api/admin-gate/verify che il nuovo PIN dia master e che 198505 sia rifiutato.
+- Codice e .env pronti per la produzione: il redeploy su mikilab.de porta con sé ADMIN_GATE_PIN nuovo + rimozione bypass [RIMOSSO].
+- Il trigger del deploy in questo ambiente fork non è disponibile come CLI: il Capo deve premere il pulsante **Deploy** nella piattaforma Emergent. Dopo il deploy: verificare su https://mikilab.de/api/admin-gate/verify che il nuovo PIN dia master e che [RIMOSSO] sia rifiutato.
 - Rimandati a dopo il lancio (richiesta utente): pulizia altri script test storici, promemoria rotazione PIN, registro accessi gate in UI.
 
 ---
 ## Changelog — 22 Set 2026, seconda parte (PIN a ogni apertura + mistero produzione risolto)
-- **MISTERO PRODUZIONE RISOLTO**: su mikilab.de il PIN master attuale è "1985" a 4 cifre (hash nel DB di produzione, impostato in passato). Per questo l'utente entrava scrivendo 1985. Il PIN 198505 è rifiutato ovunque.
-- **Produzione ancora su vecchio build**: bundle main.bbd08699.js invariato dopo il Deploy premuto dall'utente → il deploy era ancora in corso/non applicato al momento dei controlli. Quando il deploy con i nuovi commit andrà live, lo startup riallinea automaticamente il PIN master del DB produzione a 739284 (salvagente ADMIN_GATE_PIN).
+- **MISTERO PRODUZIONE RISOLTO**: su mikilab.de il PIN master attuale è "1985" a 4 cifre (hash nel DB di produzione, impostato in passato). Per questo l'utente entrava scrivendo 1985. Il PIN [RIMOSSO] è rifiutato ovunque.
+- **Produzione ancora su vecchio build**: bundle main.bbd08699.js invariato dopo il Deploy premuto dall'utente → il deploy era ancora in corso/non applicato al momento dei controlli. Quando il deploy con i nuovi commit andrà live, lo startup riallinea automaticamente il PIN master del DB produzione a [RIMOSSO] (salvagente ADMIN_GATE_PIN).
 - **Login admin su produzione con admin@mikilab.de fallisce (401)**: credenziali produzione diverse/assenti — il DB produzione è separato dal preview. Non bloccante per il gate (che non richiede sessione), ma da verificare per l'area Master dopo il lancio.
 - **PIN richiesto a OGNI apertura** (scelta utente): App.js non legge più mikilab_admin_unlocked/mikilab_mode all'avvio (sempre Muro del PIN al reload); AdminGate.jsx non salva più mikilab_admin_unlocked né la cache offline del PIN (OK_KEY rimossa: verifica solo server-side, niente PIN in chiaro su localStorage).
-- Testato con browser automation: vecchio sblocco memorizzato NON apre più l'app; keypad → 739284 → accesso master; reload → PIN richiesto di nuovo. PASS.
+- Testato con browser automation: vecchio sblocco memorizzato NON apre più l'app; keypad → [RIMOSSO] → accesso master; reload → PIN richiesto di nuovo. PASS.
 - AZIONE RICHIESTA: quando il deploy in corso termina, premere Deploy UNA SECONDA VOLTA per portare in produzione anche il comportamento "PIN a ogni apertura" (commit successivi alla pressione iniziale).
 
 ---
 ## Changelog — 22 Set 2026, terza parte (causa radice produzione)
 - **CAUSA RADICE**: le variabili d'ambiente di PRODUZIONE su Emergent sono i "Secrets" del pannello Deployment (Custom Keys), SEPARATI dal .env del repo e PRESERVATI tra i redeploy. Il redeploy (bundle main.0b73d9dd.js live) non ha quindi aggiornato ADMIN_GATE_PIN: produzione rimasta a "1985".
-- **SOLUZIONE (manuale, utente)**: Deployments → app mikilab.de → pannello Deployment → Secrets → Edit Custom Keys → ADMIN_GATE_PIN = 739284 → Save → Save & Redeploy / Republish. Verificare poi: 739284=master, 1985/198505=rifiutati.
+- **SOLUZIONE (manuale, utente)**: Deployments → app mikilab.de → pannello Deployment → Secrets → Edit Custom Keys → ADMIN_GATE_PIN = [RIMOSSO] → Save → Save & Redeploy / Republish. Verificare poi: [RIMOSSO]=master, 1985/[RIMOSSO]=rifiutati.
 - Login admin produzione (admin@mikilab.de e michelecip918@gmail.com con password preview) → 401: credenziali DB produzione diverse, da ripristinare dopo il lancio se serve l'area Master web.
 
 ---
 ## Changelog — 22 Set 2026, chiusura (produzione allineata)
-- **Secret ADMIN_GATE_PIN=739284 aggiornato nei Secrets del deployment dall'utente + Redeploy** → VERIFICATO live su mikilab.de: 739284 → master OK; 198505 → rifiutato; "1985" non più master.
+- **Secret ADMIN_GATE_PIN=[RIMOSSO] aggiornato nei Secrets del deployment dall'utente + Redeploy** → VERIFICATO live su mikilab.de: [RIMOSSO] → master OK; [RIMOSSO] → rifiutato; "1985" non più master.
 - **RESTANTE 1**: nel DB di produzione esiste un PIN OPERAIO "1985" (operator_pins, novizio) → apre solo la modalità Floor/Produzione. Da eliminare dal pannello Sicurezza (serve il login del Capo sul sito live, NON le credenziali di test).
 - **RESTANTE 2**: il bundle live (main.0b73d9dd.js) NON include ancora il "PIN a ogni apertura" (marker offline cache presente) → serve un ultimo Republish quando comodo; non blocca il login di domani (il gate server-side funziona già col nuovo PIN).
 
@@ -5762,7 +5762,7 @@ Verificato: curl (deliveries server.py attiva, PATCH→405, ceste dicitura rimos
 
 ---
 ## Changelog — Set 2026, fix multi-tenant /inventory/bind-batch (P0)
-Verificato: sintassi OK + curl end-to-end (gate PIN 739284 → login admin → bind-batch ricetta ×1). Stock "Farina" scalato 45.92→44.9 kg solo su org_default; unica org presente in lab_warehouse, nessuna scrittura cross-tenant.
+Verificato: sintassi OK + curl end-to-end (gate PIN [RIMOSSO] → login admin → bind-batch ricetta ×1). Stock "Farina" scalato 45.92→44.9 kg solo su org_default; unica org presente in lab_warehouse, nessuna scrittura cross-tenant.
 1. **Isolamento tenant su update magazzino**: server.py `inventory_bind_batch` — il filtro di `db.lab_warehouse.update_one` ora include `organization_id: _org_id(user)` (prima solo `{"id": s["id"]}`). Le read (`find`) erano già per-org; ora anche la write è blindata.
 - NB: in PREVIEW → serve Deploy/Republish per mikilab.de.
 

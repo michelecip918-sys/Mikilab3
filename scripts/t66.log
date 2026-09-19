@@ -1,0 +1,6 @@
+total=66 done=2007 todo=66
+batch 1/4 ok, missing_in_batch=0, total=2025
+batch 2/4 ok, missing_in_batch=0, total=2043
+batch 3/4 ok, missing_in_batch=0, total=2061
+batch 4/4 ok, missing_in_batch=0, total=2073
+DONE covered=2073/66 missing=0

@@ -1,0 +1,14 @@
+total=1461 done=1245 todo=216
+batch 1/12 ok, missing_in_batch=0, total=1263
+batch 2/12 ok, missing_in_batch=0, total=1281
+batch 3/12 ok, missing_in_batch=0, total=1299
+batch 4/12 ok, missing_in_batch=0, total=1317
+batch 5/12 ok, missing_in_batch=0, total=1335
+batch 6/12 ok, missing_in_batch=0, total=1353
+batch 7/12 ok, missing_in_batch=0, total=1371
+batch 8/12 ok, missing_in_batch=0, total=1389
+batch 9/12 ok, missing_in_batch=0, total=1407
+batch 10/12 ok, missing_in_batch=0, total=1425
+batch 11/12 ok, missing_in_batch=0, total=1443
+batch 12/12 ok, missing_in_batch=0, total=1461
+DONE covered=1461/1461 missing=0

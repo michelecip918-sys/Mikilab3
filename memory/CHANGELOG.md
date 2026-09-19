@@ -381,7 +381,7 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - **Lavagna di controllo live** in MikiLab (DeptAssign: barra done/target per reparto, polling 15s).
 - **Produzione dinamica** (DeptFocus): l'operaio vede solo il reparto assegnato, con obiettivo squadra + pulsanti rapidi +1/+5/+10 (voce di conferma) e ultimo inserimento con PIN.
 - Endpoint: /api/depts/objective (set), /api/depts/progress (per PIN, $inc+$push), /api/depts/board (live).
-- Verificato E2E via curl: catalog(5), objective(Pizzeria 100 teglie), progress +15 by PIN 7788 -> done 15, board 15/100. Compila pulito.
+- Verificato E2E via curl: catalog(5), objective(Pizzeria 100 teglie), progress +15 by PIN [RIMOSSO] -> done 15, board 15/100. Compila pulito.
 
 ## v64 (2026-06) — Scene 3D per reparto + collaudo 100%
 - AvatarWorld3D esteso: scene 3D immersive per ogni reparto (panificio/pizzeria/laugen = mondo produzione con accent dedicato; pasticceria/banco = mondo lab).
@@ -393,7 +393,7 @@ Sistema proattivo che OSSERVA lo stato condiviso del turno e ANTICIPA i problemi
 - Console Capo: 28+ pannelli raggruppati in 6 SEZIONI a fisarmonica (single-open): Oggi·Regia, Piani di Produzione, Ricette, Squadra & Turni, Impianto & Macchine, Magazzino/Costi/Report. Nuovo componente `CapoGroup.jsx`. Nessuna funzione eliminata (incorporate). CONSOLE_SECMAP rimappato a 6 gruppi; rimossa la vecchia logica force-visible.
 - Audio TTS: passato da `eleven_multilingual_v2` a `eleven_turbo_v2_5` con `language_code` forzato (fix "l'audio italiano parte in inglese"). Cache-key aggiornata (turbo+lang). Helper `_el_lang_code`.
 - Rimosso branding confuso "Mike Mix Deus"/"dio del forno" nel titolo OvenBrain → ora solo "Mike Mix" con descrizione chiara.
-- PIN Master 198505: verify ora dà priorità assoluta al valore hardcoded/`.env` (fix desync DB produzione). NB: richiede DEPLOY per applicarsi su mikilab.de.
+- PIN Master [RIMOSSO]: verify ora dà priorità assoluta al valore hardcoded/`.env` (fix desync DB produzione). NB: richiede DEPLOY per applicarsi su mikilab.de.
 
 ## 2026-06 — FUSIONE TOTALE: una sola entità AI (Miki-Nexus)
 - Richiesta utente: "Deve essere solo una persona, tutto in uno. Mike Mix incorporato dentro Miki-Nexus. Solo un avatar robotico oltre MikiLab."

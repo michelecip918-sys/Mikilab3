@@ -1,0 +1,9 @@
+total=110 done=2073 todo=110
+batch 1/7 ok, missing_in_batch=0, total=2091
+batch 2/7 ok, missing_in_batch=0, total=2109
+batch 3/7 ok, missing_in_batch=0, total=2127
+batch 4/7 ok, missing_in_batch=0, total=2145
+batch 5/7 ok, missing_in_batch=0, total=2163
+batch 6/7 ok, missing_in_batch=0, total=2181
+batch 7/7 ok, missing_in_batch=0, total=2183
+DONE covered=2183/110 missing=0
