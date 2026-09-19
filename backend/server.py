@@ -189,11 +189,48 @@ def gate_org(request) -> str:
     return "org_default"
 
 
+_PUBLIC_GET_ALLOW = (
+    "/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide",
+    "/api/site-settings", "/api/auth/me", "/api/health", "/api/sitemap",
+)
+
+
+async def _has_valid_session(request) -> bool:
+    token = request.cookies.get("session_token")
+    if not token:
+        auth = request.headers.get("Authorization", "")
+        if auth.startswith("Bearer "):
+            token = auth[7:]
+    if not token:
+        return False
+    try:
+        sess = await db.user_sessions.find_one({"session_token": token}, {"_id": 0, "expires_at": 1})
+        if not sess:
+            return False
+        exp = sess["expires_at"]
+        if isinstance(exp, str):
+            exp = datetime.fromisoformat(exp)
+        if exp.tzinfo is None:
+            exp = exp.replace(tzinfo=timezone.utc)
+        return exp >= datetime.now(timezone.utc)
+    except Exception:
+        return False
+
+
 class GateMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # Manuale pubblico di Sitor: nessun muro PIN. Le letture sono pubbliche;
-        # le scritture restano protette dai dipendenti di rotta (require_admin/current_user).
-        return await call_next(request)
+        # Manuale pubblico di Sitor — DEFAULT DENY sulle LETTURE (GET/HEAD):
+        # un anonimo può leggere SOLO le rotte dell'allowlist pubblica. Tutto il resto
+        # (dati aziendali: volti, turni, magazzino, coordinamento, community, utenti...) richiede
+        # una sessione valida. Le SCRITTURE restano protette dai dipendenti di rotta (require_admin).
+        path = request.url.path
+        if request.method in ("OPTIONS", "POST", "PUT", "PATCH", "DELETE") or not path.startswith("/api"):
+            return await call_next(request)
+        if path == "/api" or path == "/api/" or any(path == p or path.startswith(p + "/") or path.startswith(p + "?") for p in _PUBLIC_GET_ALLOW):
+            return await call_next(request)
+        if await _has_valid_session(request):
+            return await call_next(request)
+        return JSONResponse({"detail": "not_found"}, status_code=404)
 
 
 
