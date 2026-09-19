@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, Globe, Wheat } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
-import { recipesApi } from "@/lib/api";
+import { recipesApi, api } from "@/lib/api";
 
 // STADIO J3 — "Dal mondo e moderni": guida "Farina cotta" + ricette collegate.
 const WORLD_KEYS = ["kochst", "tangzhong", "yudane", "shokupan", "latte giappones", "bao", "melon", "curry pan", "cong you", "milk bread"];
@@ -13,9 +13,13 @@ export default function DalMondo({ onBack, onOpenRecipe }) {
   const [worldRecipes, setWorldRecipes] = useState([]);
 
   useEffect(() => {
-    recipesApi.list("mikilab").then((recs) => {
+    Promise.all([recipesApi.list("mikilab"), api.get(`/recipe-extras`).then((r) => r.data || {}).catch(() => ({}))]).then(([recs, extras]) => {
       if (!Array.isArray(recs)) return;
-      const found = recs.filter((r) => { const n = (r.name || "").toLowerCase(); return WORLD_KEYS.some((k) => n.includes(k)); });
+      const found = recs.filter((r) => {
+        const n = (r.name || "").toLowerCase();
+        const hidden = extras[r.id] && extras[r.id].hidden_public;
+        return !hidden && WORLD_KEYS.some((k) => n.includes(k));
+      });
       setWorldRecipes(found);
     }).catch(() => {});
   }, []);

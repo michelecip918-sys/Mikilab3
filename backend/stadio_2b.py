@@ -410,3 +410,60 @@ async def bread_calendar_edit(slug: str, body: CalEdit, admin: dict = Depends(re
     upd["updated_at"] = now_iso()
     await db.bread_calendar.update_one({"slug": slug}, {"$set": {"slug": slug, **upd}}, upsert=True)
     return {"ok": True}
+
+
+# ===========================================================================
+# P1 (admin) — Tabella suggerimenti "Il mio palato" (palato_tips), modificabile.
+# Testi BOZZA di Sitor finché Michele non li controlla. Nessuna IA, nessun dato utente.
+# ===========================================================================
+_PALATO_TIPS_SEED = {
+    "aspetto": {"it": "Cura la formatura e non cuocere troppo presto: fai crescere bene prima del forno.", "de": "Achte aufs Formen und back nicht zu früh: gut gehen lassen.", "en": "Mind shaping and don't bake too early: let it prove well."},
+    "crosta": {"it": "Più vapore all'inizio e forno ben caldo per una crosta sottile e croccante.", "de": "Mehr Dampf am Anfang und heißer Ofen für dünne, knusprige Kruste.", "en": "More steam at the start and a hot oven for a thin, crisp crust."},
+    "mollica": {"it": "Idrata di più e fai più pieghe per alveoli aperti; impasta bene per una mollica regolare.", "de": "Mehr Hydratation und mehr Falten für offene Poren; gut kneten für gleichmäßige Krume.", "en": "More hydration and folds for open holes; knead well for even crumb."},
+    "consistenza": {"it": "Non asciugare troppo in cottura: abbassa gli ultimi minuti o accorcia la cottura.", "de": "Nicht zu trocken backen: die letzten Minuten senken oder kürzer backen.", "en": "Don't over-dry: lower the last minutes or bake shorter."},
+    "profumo": {"it": "Allunga la lievitazione (anche in frigo) per più profumo di grano.", "de": "Verlängere die Gare (auch im Kühlschrank) für mehr Getreidearoma.", "en": "Extend fermentation (even in the fridge) for more wheat aroma."},
+    "sapore": {"it": "Ricontrolla il sale (circa 2% sulla farina) e allunga la fermentazione per più gusto.", "de": "Salz prüfen (~2% auf Mehl) und Gärung verlängern für mehr Geschmack.", "en": "Check salt (~2% of flour) and extend fermentation for more flavour."},
+    "freschezza": {"it": "Conserva in un sacchetto di stoffa; per durare di più prova un poolish o la farina cotta.", "de": "In einem Stoffbeutel lagern; für länger frisch ein Poolish oder Kochstück probieren.", "en": "Store in a cloth bag; for longer freshness try a poolish or cooked flour."},
+}
+_PALATO_ORDER = ["aspetto", "crosta", "mollica", "consistenza", "profumo", "sapore", "freschezza"]
+
+
+async def _seed_palato_tips():
+    if await db.palato_tips.count_documents({}) == 0:
+        for i, k in enumerate(_PALATO_ORDER):
+            await db.palato_tips.insert_one({"key": k, "text": _PALATO_TIPS_SEED[k], "order": i,
+                                             "draft_note": True, "created_at": now_iso()})
+
+
+@api_router.get("/palato-tips")
+async def palato_tips_get():
+    await _seed_palato_tips()
+    rows = await db.palato_tips.find({}, {"_id": 0}).sort("order", 1).to_list(50)
+    return {"tips": {r["key"]: r.get("text", {}) for r in rows},
+            "draft": {r["key"]: bool(r.get("draft_note")) for r in rows}}
+
+
+class PalatoTipEdit(_BM):
+    text: _Opt[dict] = None
+    draft_note: _Opt[bool] = None
+
+
+@api_router.get("/admin/palato-tips")
+async def admin_palato_tips(admin: dict = Depends(require_admin)):
+    await _seed_palato_tips()
+    rows = await db.palato_tips.find({}, {"_id": 0}).sort("order", 1).to_list(50)
+    return {"rows": rows}
+
+
+@api_router.put("/palato-tips/{key}")
+async def palato_tips_edit(key: str, body: PalatoTipEdit, admin: dict = Depends(require_admin)):
+    if key not in _PALATO_ORDER:
+        raise HTTPException(status_code=404, detail="tip_not_found")
+    upd = {"updated_at": now_iso()}
+    if body.text is not None:
+        upd["text"] = {k: str(v)[:400] for k, v in body.text.items() if k in ("it", "de", "en")}
+    if body.draft_note is not None:
+        upd["draft_note"] = bool(body.draft_note)
+    await db.palato_tips.update_one({"key": key}, {"$set": upd})
+    return {"ok": True}
+

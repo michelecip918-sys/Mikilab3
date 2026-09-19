@@ -194,7 +194,7 @@ _PUBLIC_GET_ALLOW = (
     "/api/site-settings", "/api/auth/me", "/api/health", "/api/sitemap",
     "/api/learning-path", "/api/site-pages",
     "/api/time", "/api/live", "/api/features",
-    "/api/experiments", "/api/flour-types", "/api/bread-calendar",
+    "/api/experiments", "/api/flour-types", "/api/bread-calendar", "/api/palato-tips",
 )
 
 
