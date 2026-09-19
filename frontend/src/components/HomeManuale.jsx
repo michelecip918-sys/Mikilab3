@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -104,7 +104,13 @@ export default function HomeManuale({ onNav }) {
         </button>
       </section>
 
-      {/* Comincia da qui: 5 ricette facili */}
+      {/* Chip: Il verde di MikiLab · Tecniche · Attrezzi */}
+      <div data-testid="home-chips" className="flex flex-wrap gap-2 mt-4">
+        <button data-testid="home-chip-verde" onClick={() => onNav("verde")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#6E8F7A]/15 border border-[#6E8F7A]/40 text-[#DDE8DF] text-sm font-bold hover:bg-[#6E8F7A]/25 active:scale-95 transition-all"><Leaf className="w-4 h-4" />{tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")}</button>
+        <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0b0f19]/70 border border-[#8a97a6]/30 text-white text-sm font-bold hover:border-[#D97736] active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
+        <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-[#0b0f19]/70 border border-[#8a97a6]/30 text-white text-sm font-bold hover:border-[#D97736] active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
+      </div>
+
       <section id="home-start-section" data-testid="home-start-section" className="mt-8 scroll-mt-24">
         <div className="flex items-center gap-2 mb-3">
           <Sparkles className="w-5 h-5 text-[#D97736]" />

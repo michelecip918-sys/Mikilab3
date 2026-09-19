@@ -5316,49 +5316,34 @@
     "dough_category": null,
     "extra_ingredients": [
       {
-        "name": "Malto diastasico puro in polvere",
-        "percent": 3,
-        "name_de": "Reines diastatisches Malzpulver",
-        "name_en": "Pure diastatic malt powder",
-        "name_es": "Malta diastásica pura en polvo",
-        "name_fr": "Malt diastasique pur en poudre",
-        "name_fa": "پودر مالت دیاستاتیک خالص"
-      },
-      {
-        "name": "Farina di lupino dolce",
-        "percent": 1,
-        "name_de": "Süßlupinenmehl",
-        "name_en": "Sweet lupin flour",
-        "name_es": "Harina de altramuz dulce",
-        "name_fr": "Farine de lupin doux",
-        "name_fa": "آرد ترمس شیرین"
-      },
-      {
-        "name": "Acerola in polvere (Vitamina C naturale)",
-        "percent": 0.3,
-        "name_de": "Acerolапulver (natürliches Vitamin C)",
-        "name_en": "Acerola powder (natural Vitamin C)",
-        "name_es": "Acerola en polvo (Vitamina C natural)",
-        "name_fr": "Acérola en poudre (Vitamine C naturelle)",
-        "name_fa": "پودر آسرولا (ویتامین C طبیعی)"
+        "name": "Malto diastatico in polvere",
+        "name_de": "Diastatisches Malzpulver",
+        "name_en": "Diastatic malt powder",
+        "percent": 44
       },
       {
         "name": "Farina di lino dorato",
-        "percent": 2,
-        "name_de": "Goldleinmehl",
-        "name_en": "Golden flaxseed flour",
-        "name_es": "Harina de lino dorado",
-        "name_fr": "Farine de lin doré",
-        "name_fa": "آرد دانه کتان طلایی"
+        "name_de": "Goldleinsamenmehl",
+        "name_en": "Golden flax flour",
+        "percent": 29
+      },
+      {
+        "name": "Farina di lupino dolce",
+        "name_de": "Süßlupinenmehl",
+        "name_en": "Sweet lupin flour",
+        "percent": 15
       },
       {
         "name": "Buccia di psillio",
-        "percent": 0.5,
         "name_de": "Flohsamenschalen",
         "name_en": "Psyllium husk",
-        "name_es": "Cáscara de psilio",
-        "name_fr": "Enveloppe de psyllium",
-        "name_fa": "پوسته اسفرزه"
+        "percent": 8
+      },
+      {
+        "name": "Acerola in polvere",
+        "name_de": "Acerola-Pulver",
+        "name_en": "Acerola powder",
+        "percent": 4
       }
     ],
     "flour_grams": null,
@@ -5372,12 +5357,12 @@
     "method_type": "diretto",
     "mix_minutes": null,
     "name_de": "Natürlicher Pro-Backmittel",
-    "notes": "Formula unica 100% naturale a 5 ingredienti (azione completa). Il MALTO usato è MALTO DIASTASICO PURO IN POLVERE (3%): nutre i lieviti, dona colore e croccantezza. La farina di lupino dolce e l'acerola (vitamina C naturale) rinforzano la maglia glutinica e la tenuta. La farina di lino dorato aggiunge struttura e omega. La buccia di psillio trattiene l'idratazione mantenendo il pane morbido più a lungo.\n\nDOSAGGIO: 2-4% sul peso della farina (indiretto 2-3%, diretto 3-4%).",
-    "notes_de": "Einzigartige, 100% natuerliche Formel mit 5 Zutaten (Rundum-Wirkung). Verwendetes MALZ: REINES DIASTATISCHES MALZPULVER (3%) - naehrt die Hefen, gibt Farbe und Kruste. Suesslupinenmehl und Acerola (natuerliches Vitamin C) staerken das Glutennetz und die Stabilitaet. Goldleinmehl gibt Struktur und Omega. Flohsamenschalen halten die Feuchtigkeit und das Brot laenger weich.\n\nDOSIERUNG: 2-4% auf das Mehl (indirekt 2-3%, direkt 3-4%).",
+    "notes": "Miglioratore FACOLTATIVO, a 5 ingredienti (proporzioni del mix su 100 g). Malto diastatico in polvere 44, farina di lino dorato 29, farina di lupino dolce 15, buccia di psillio 8, acerola in polvere 4. USO: 2% sul peso della farina per gli impasti indiretti, 3% per i diretti (es. su 500 g di farina: 10 g oppure 15 g). Parti sempre dalla dose bassa. Il malto deve essere DIASTATICO (attivo): le marche hanno forze diverse; se la mollica viene appiccicosa o troppo scura, riduci il malto. ALLERGENI: lupino (può dare reazioni a chi è allergico alle arachidi) e malto d'orzo (glutine). Conserva in un barattolo chiuso, al fresco e all'asciutto, per pochi mesi.",
+    "notes_de": "OPTIONALER Verbesserer aus 5 Zutaten (Anteile der Mischung auf 100 g). Diastatisches Malzpulver 44, Goldleinsamenmehl 29, Süßlupinenmehl 15, Flohsamenschalen 8, Acerola-Pulver 4. ANWENDUNG: 2% des Mehlgewichts bei indirekten Teigen, 3% bei direkten (z. B. auf 500 g Mehl: 10 g oder 15 g). Beginne mit der niedrigen Menge. Das Malz muss DIASTATISCH (aktiv) sein; Marken sind unterschiedlich stark; wird die Krume klebrig oder zu dunkel, reduziere das Malz. ALLERGENE: Lupine (kann bei Erdnussallergie Reaktionen auslösen) und Gerstenmalz (Gluten). In geschlossenem Glas, kühl und trocken, wenige Monate lagern.",
     "origin": null,
     "oven_type": null,
     "preferment_type": "diretto",
-    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa con precisione i 5 ingredienti: Malto diastasico puro in polvere 3% - Lupino dolce 1% - Acerola 0,3% - Lino dorato 2% - Psillio 0,5% (percentuali sul peso della farina della ricetta).\n2) Mescola bene a secco fino a polvere omogenea.\n3) Conserva in barattolo chiuso, al fresco e all'asciutto (validità alcuni mesi).\nUSO: aggiungi il mix alla farina all'inizio dell'impasto (2-4% totale). Con l'indiretto usa la dose minore, con il diretto la maggiore.",
+    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa i 5 ingredienti nelle proporzioni del mix su 100 g: malto diastatico 44 g, lino dorato 29 g, lupino dolce 15 g, psillio 8 g, acerola 4 g.\n2) Mescola bene e conserva in un barattolo chiuso, al fresco e all'asciutto.\n3) USO: 2% sul peso della farina per gli indiretti, 3% per i diretti. Parti dalla dose bassa e regola in base al risultato.",
     "procedure_de": "ZUBEREITUNG (Trockenmischung)\n1) Die 5 Zutaten genau abwiegen: reines diastatisches Malzpulver 3% - Suesslupine 1% - Acerola 0,3% - Goldlein 2% - Flohsamen 0,5% (Prozente auf das Mehl des Rezepts).\n2) Trocken gut zu einem homogenen Pulver mischen.\n3) In geschlossenem Glas kuehl und trocken lagern (mehrere Monate haltbar).\nVERWENDUNG: die Mischung zu Beginn des Knetens zum Mehl geben (2-4% gesamt). Indirekt die kleinere, direkt die groessere Dosis.",
     "proofing_hours": null,
     "real_name": "Miglioratore universale (5 ingredienti)",
@@ -5393,7 +5378,7 @@
     "hidden": false,
     "flour_type_en": "Universal (Direct and Indirect)",
     "name_en": "Natural Pro Improver",
-    "notes_en": "Unique 100% natural formula with 5 ingredients (complete action). The MALT used is PURE DIASTATIC MALT POWDER (3%): it feeds the yeast, enhances colour and crispness. Sweet lupin flour and acerola (natural vitamin C) strengthen the gluten network and dough stability. Golden flaxseed flour adds structure and omega. Psyllium husk retains hydration keeping the bread soft for longer.\n\nDOSAGE: 2-4% on flour weight (indirect 2-3%, direct 3-4%).",
+    "notes_en": "OPTIONAL improver, 5 ingredients (mix proportions per 100 g). Diastatic malt powder 44, golden flax flour 29, sweet lupin flour 15, psyllium husk 8, acerola powder 4. USE: 2% of flour weight for indirect doughs, 3% for direct (e.g. on 500 g flour: 10 g or 15 g). Always start from the low dose. The malt must be DIASTATIC (active): brands vary in strength; if the crumb turns sticky or too dark, reduce the malt. ALLERGENS: lupin (may trigger reactions in peanut-allergic people) and barley malt (gluten). Store in a closed jar, cool and dry, for a few months.",
     "procedure_en": "PREPARATION (dry mix)\n1) Weigh the 5 ingredients precisely: Pure diastatic malt powder 3% - Sweet lupin flour 1% - Acerola 0.3% - Golden flaxseed flour 2% - Psyllium 0.5% (percentages based on the flour weight in the recipe).\n2) Mix well dry until a homogeneous powder is obtained.\n3) Store in a sealed jar, in a cool and dry place (shelf life of several months).\nUSE: add the mix to the flour at the beginning of mixing (2-4% total). With indirect dough use the lower dose, with direct dough use the higher dose.",
     "real_name_en": "Universal improver (5 ingredients)",
     "flour_type_es": "Universal (Directo e Indirecto)",
@@ -5411,7 +5396,8 @@
     "real_name_fa": "بهبوددهنده جهانی (۵ ماده)",
     "flour_type_fa": "جهانی (مستقیم و غیرمستقیم)",
     "notes_fa": "فرمول منحصربه‌فرد ۱۰۰٪ طبیعی با ۵ ماده (عملکرد کامل). مالت مورد استفاده، مالت دیاستازی خالص پودری (۳٪) است: مخمرها را تغذیه می‌کند، رنگ و ترد‌ی می‌بخشد. آرد لوبیای شیرین و آسرولا (ویتامین C طبیعی) شبکه گلوتن و استحکام خمیر را تقویت می‌کنند. آرد دانه کتان طلایی ساختار و امگا اضافه می‌کند. پوسته پسیلیوم رطوبت را حفظ کرده و نان را دیرتر خشک نگه می‌دارد.\n\nدوز مصرف: ۲ تا ۴٪ از وزن آرد (غیرمستقیم ۲ تا ۳٪، مستقیم ۳ تا ۴٪).",
-    "procedure_fa": "آماده‌سازی (مخلوط خشک)\n۱) ۵ ماده را با دقت وزن کنید: مالت دیاستازی خالص پودری ۳٪ - آرد لوبیای شیرین ۱٪ - آسرولا ۰٫۳٪ - دانه کتان طلایی ۲٪ - پسیلیوم ۰٫۵٪ (درصدها بر اساس وزن آرد دستور).\n۲) همه را کاملاً به صورت خشک مخلوط کنید تا پودری یکنواخت به دست آید.\n۳) در ظرف دربسته، در جای خنک و خشک نگهداری کنید (ماندگاری چند ماه).\nنحوه استفاده: مخلوط را در ابتدای ورز دادن به آرد اضافه کنید (مجموعاً ۲ تا ۴٪). در روش غیرمستقیم از دوز کمتر و در روش مستقیم از دوز بیشتر استفاده کنید."
+    "procedure_fa": "آماده‌سازی (مخلوط خشک)\n۱) ۵ ماده را با دقت وزن کنید: مالت دیاستازی خالص پودری ۳٪ - آرد لوبیای شیرین ۱٪ - آسرولا ۰٫۳٪ - دانه کتان طلایی ۲٪ - پسیلیوم ۰٫۵٪ (درصدها بر اساس وزن آرد دستور).\n۲) همه را کاملاً به صورت خشک مخلوط کنید تا پودری یکنواخت به دست آید.\n۳) در ظرف دربسته، در جای خنک و خشک نگهداری کنید (ماندگاری چند ماه).\nنحوه استفاده: مخلوط را در ابتدای ورز دادن به آرد اضافه کنید (مجموعاً ۲ تا ۴٪). در روش غیرمستقیم از دوز کمتر و در روش مستقیم از دوز بیشتر استفاده کنید.",
+    "user_edited": true
   },
   {
     "id": "eb689d6e-1bb6-486c-b1f0-4a1bab7532eb",
@@ -10268,8 +10254,8 @@
     "method_type": "indiretto",
     "mix_minutes": null,
     "name_de": "Panettone Artigianale MikiLab — Hanf (Canapa)",
-    "notes": "Panettone alla CANAPA alimentare (semi decorticati + farina di canapa): nota erbacea e nocciolata, mollica soffice. Metodo 50/50 su due impasti. Canapa alimentare (0% THC).\nLievitazione a 24-28°C; raffreddamento capovolto (a testa in giù) per 12 h.",
-    "notes_de": "Panettone mit Speise-HANF (geschälte Samen + Hanfmehl): krautig-nussige Note, weiche Krume. Methode 50/50 in zwei Teigen. Speisehanf (0% THC).\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
+    "notes": "Panettone alla CANAPA alimentare (semi decorticati + farina di canapa): nota erbacea e nocciolata, mollica soffice. Metodo 50/50 su due impasti. Canapa alimentare senza effetto psicoattivo, nei limiti di legge.\nLievitazione a 24-28°C; raffreddamento capovolto (a testa in giù) per 12 h.",
+    "notes_de": "Panettone mit Speise-HANF (geschälte Samen + Hanfmehl): krautig-nussige Note, weiche Krume. Methode 50/50 in zwei Teigen. Speisehanf ohne psychoaktive Wirkung, im gesetzlichen Rahmen.\nGare bei 24-28°C; Abkühlen kopfüber für 12 Std.",
     "origin": "IT",
     "oven_type": "statico",
     "preferment_type": "lm",
@@ -10289,25 +10275,26 @@
     "hidden": false,
     "flour_type_en": "50/50 Method: 50% Manitoba W380 + 50% strong flour W330, with 8% hemp flour",
     "name_en": "Artisan Panettone MikiLab — Hemp Green",
-    "notes_en": "Hemp Panettone (hulled seeds + hemp flour): herbaceous and nutty notes, soft crumb. 50/50 method over two doughs. Food-grade hemp (0% THC).\nProofing at 24-28°C; upside-down cooling for 12 h.",
+    "notes_en": "Hemp Panettone (hulled seeds + hemp flour): herbaceous and nutty notes, soft crumb. 50/50 method over two doughs. Food-grade hemp no psychoactive effect, within legal limits.\nProofing at 24-28°C; upside-down cooling for 12 h.",
     "procedure_en": "50/50 METHOD (two doughs).\n1) FIRST DOUGH (evening): reinforced sourdough starter + 50% of the flours, water, egg yolks and softened butter, sugar. Develop to a smooth, strong gluten network.\n2) Proof for 18 hours at ~24°C: must triple in volume and reach the appropriate pH (~4.7-5.0).\n3) SECOND DOUGH (morning): remaining 50% of flours + 8% hemp flour, then INCREASE the eggs (more egg yolks). Add the HONEY ONLY ONCE, at the very end. Salt. Add the hulled hemp seeds last.\n4) Bulk fermentation, rounding, final proof until ~2 cm from the rim.\n5) Score (scarpatura) with butter, bake at 160°C static ~50 min (internal temperature 94°C).\n6) Flip and cool upside-down for at least 8 hours.\n\n— BAKER'S NOTE —\nWHY WATER ONLY IN THE 1ST DOUGH: In panettone, water goes only into the first dough, to hydrate the flour and build the gluten network together with the sourdough. In the second dough NO water is added: the liquids come from egg yolks, butter and honey, which enrich the dough without weakening it. Adding water to the second dough would dissolve the gluten network already formed, and the panettone would neither rise nor hold its dome.\nTEMPERATURE: keep the dough below 26°C at all times and develop the gluten well between each ingredient.",
     "real_name_en": "Hemp Panettone",
     "flour_type_es": "Método 50/50: 50% Manitoba W380 + 50% harina fuerte W330, con 8% harina de cáñamo",
     "name_es": "Panettone Artesanal MikiLab — Verde Cáñamo",
-    "notes_es": "Panettone de CÁÑAMO alimentario (semillas decorticadas + harina de cáñamo): nota herbácea y avellonada, miga suave. Método 50/50 en dos masas. Cáñamo alimentario (0% THC).\nFermentación a 24-28°C; enfriamiento invertido (boca abajo) durante 12 h.",
+    "notes_es": "Panettone de CÁÑAMO alimentario (semillas decorticadas + harina de cáñamo): nota herbácea y avellonada, miga suave. Método 50/50 en dos masas. Cáñamo alimentario senza effetto psicoattivo, nei limiti di legge.\nFermentación a 24-28°C; enfriamiento invertido (boca abajo) durante 12 h.",
     "procedure_es": "MÉTODO 50/50 (dos masas).\n1) PRIMERA MASA (tarde): Lievito Madre reforzado + 50% de las harinas, agua, yemas y mantequilla en pomada, azúcar. Amasar hasta obtener una masa lisa y bien desarrollada.\n2) Fermentación 18 horas a ~24°C: debe triplicar su volumen y alcanzar el pH adecuado (~4,7-5,0).\n3) SEGUNDA MASA (mañana): el 50% restante de harinas + 8% harina de cáñamo, luego AUMENTAR los huevos (más yemas). Añadir la MIEL UNA SOLA VEZ, solo al final. Sal. Por último, las semillas de cáñamo decorticadas.\n4) Reposo en bloque (puntata), pirlatura, fermentación final (appretto) hasta ~2 cm del borde.\n5) Scarpatura con mantequilla, cocción a 160°C estático ~50 min (corazón 94°C).\n6) Invertir y enfriar boca abajo al menos 8 horas.\n\n— NOTA DEL PANADERO —\nPOR QUÉ EL AGUA SOLO EN EL 1.er AMASADO: en el panettone el agua se añade únicamente en el primer amasado, para hidratar la harina y formar la red de gluten junto con la masa madre. En el segundo amasado NO se añade agua: los líquidos vienen de las yemas, la mantequilla y la miel, que enriquecen la masa sin debilitarla. Añadir agua en el segundo amasado disolvería la red de gluten ya formada y el panettone no subiría ni mantendría la cúpula.\nTEMPERATURA: mantén la masa siempre por debajo de 26°C y desarrolla bien el gluten entre cada ingrediente.",
     "label": null,
     "flour_type_fr": "Méthode 50/50 : 50% Manitoba W380 + 50% farine de force W330, avec 8% farine de chanvre",
     "name_fr": "Panettone Artisanal MikiLab — Vert Chanvre",
-    "notes_fr": "Panettone au CHANVRE alimentaire (graines décortiquées + farine de chanvre) : note herbacée et noisettée, mie moelleuse. Méthode 50/50 sur deux pâtes. Chanvre alimentaire (0% THC).\nFermentation à 24-28°C ; refroidissement à l'envers (tête en bas) pendant 12 h.",
+    "notes_fr": "Panettone au CHANVRE alimentaire (graines décortiquées + farine de chanvre) : note herbacée et noisettée, mie moelleuse. Méthode 50/50 sur deux pâtes. Chanvre alimentaire senza effetto psicoattivo, nei limiti di legge.\nFermentation à 24-28°C ; refroidissement à l'envers (tête en bas) pendant 12 h.",
     "procedure_fr": "MÉTHODE 50/50 (deux pâtes).\n1) PREMIÈRE PÂTE (soir) : Lievito Madre renforcé + 50% des farines, eau, jaunes d'œufs et beurre pommade, sucre. Pétrir jusqu'à obtenir une pâte lisse et bien développée.\n2) Fermentation 18 heures à ~24°C : la pâte doit tripler de volume et atteindre le pH adapté (~4,7-5,0).\n3) DEUXIÈME PÂTE (matin) : les 50% restants de farines + 8% farine de chanvre, puis AUGMENTER les œufs (davantage de jaunes). Ajouter le MIEL UNE SEULE FOIS, uniquement en fin de pétrissage. Sel. En dernier, les graines de chanvre décortiquées.\n4) Pointage, pirlatura, apprêt jusqu'à ~2 cm du bord.\n5) Scarpatura au beurre, cuisson à 160°C four statique ~50 min (cœur à 94°C).\n6) Retourner et refroidir à l'envers au moins 8 heures.\n\n— NOTE DU BOULANGER —\nPOURQUOI L'EAU UNIQUEMENT DANS LA 1re PÂTE : dans le panettone, l'eau ne s'ajoute que dans la première pâte, pour hydrater la farine et former le réseau de gluten avec le levain. Dans la deuxième pâte, on N'AJOUTE PAS d'eau : les liquides proviennent des jaunes, du beurre et du miel, qui enrichissent la pâte sans l'affaiblir. Ajouter de l'eau dans la deuxième pâte dissoudrait le réseau de gluten déjà formé et le panettone ne lèverait pas et ne tiendrait pas son dôme.\nTEMPÉRATURE : gardez la pâte toujours sous 26°C et développez bien le gluten entre chaque ingrédient.",
     "real_name_es": "Panettone de Cáñamo",
     "real_name_fr": "Panettone au Chanvre",
     "name_fa": "پانتونه آرتیژانال میکی‌لب — سبز کنف",
     "real_name_fa": "پانتونه کنف",
     "flour_type_fa": "روش ۵۰/۵۰: ۵۰٪ مانیتوبا W380 + ۵۰٪ آرد قوی W330، با ۸٪ آرد کنف",
-    "notes_fa": "پانتونه با کنف خوراکی (دانه‌های پوست‌کنده + آرد کنف): عطر گیاهی و فندقی، مغز نرم و لطیف. روش ۵۰/۵۰ در دو مرحله خمیر. کنف خوراکی (۰٪ THC).\nتخمیر در دمای ۲۴-۲۸ درجه سانتی‌گراد؛ خنک‌سازی به صورت وارونه (سر پایین) به مدت ۱۲ ساعت.",
-    "procedure_fa": "روش ۵۰/۵۰ (دو مرحله خمیر).\n۱) خمیر اول (شب): Lievito Madre تقویت‌شده + ۵۰٪ آردها، آب، زرده تخم‌مرغ و کره پماد، شکر. خمیر را تا رسیدن به بافت صاف و کشدار ورز دهید.\n۲) تخمیر ۱۸ ساعت در دمای ~۲۴ درجه سانتی‌گراد: حجم باید سه برابر شده و pH مناسب (~۴٫۷-۵٫۰) حاصل شود.\n۳) خمیر دوم (صبح): ۵۰٪ باقی‌مانده آردها + ۸٪ آرد کنف اضافه کنید، سپس تعداد تخم‌مرغ را افزایش دهید (زرده بیشتر). عسل را فقط یک بار و تنها در پایان اضافه کنید. نمک. در آخرین مرحله دانه‌های پوست‌کنده کنف را وارد کنید.\n۴) استراحت اولیه (پونتاتا)، پیرلاتورا، و استراحت نهایی (آپرتو) تا ~۲ سانتی‌متر زیر لبه قالب.\n۵) اسکارپاتورا با کره، پخت در دمای ۱۶۰ درجه سانتی‌گراد فر استاتیک به مدت ~۵۰ دقیقه (دمای مرکز ۹۴ درجه سانتی‌گراد).\n۶) بلافاصله وارونه کنید و حداقل ۸ ساعت به صورت سر پایین خنک کنید.\n\n— یادداشت نانوا —\nچرا آب فقط در خمیر اول: در پانتونه آب فقط به خمیر اول اضافه می‌شود تا آرد را هیدراته کند و همراه با خمیرمایه شبکهٔ گلوتن را بسازد. در خمیر دوم آب اضافه نمی‌شود: مایعات از زردهٔ تخم‌مرغ، کره و عسل تأمین می‌شوند که خمیر را غنی می‌کنند بدون اینکه ضعیفش کنند. افزودن آب به خمیر دوم شبکهٔ گلوتن ساخته‌شده را از بین می‌برد و پانتونه ور نمی‌آید و گنبدش را نگه نمی‌دارد.\nدما: خمیر را همیشه زیر ۲۶ درجه نگه دار و بین هر ماده گلوتن را خوب توسعه بده."
+    "notes_fa": "پانتونه با کنف خوراکی (دانه‌های پوست‌کنده + آرد کنف): عطر گیاهی و فندقی، مغز نرم و لطیف. روش ۵۰/۵۰ در دو مرحله خمیر. کنف خوراکی (بدون اثر روان‌گردان، در چارچوب قانونی).\nتخمیر در دمای ۲۴-۲۸ درجه سانتی‌گراد؛ خنک‌سازی به صورت وارونه (سر پایین) به مدت ۱۲ ساعت.",
+    "procedure_fa": "روش ۵۰/۵۰ (دو مرحله خمیر).\n۱) خمیر اول (شب): Lievito Madre تقویت‌شده + ۵۰٪ آردها، آب، زرده تخم‌مرغ و کره پماد، شکر. خمیر را تا رسیدن به بافت صاف و کشدار ورز دهید.\n۲) تخمیر ۱۸ ساعت در دمای ~۲۴ درجه سانتی‌گراد: حجم باید سه برابر شده و pH مناسب (~۴٫۷-۵٫۰) حاصل شود.\n۳) خمیر دوم (صبح): ۵۰٪ باقی‌مانده آردها + ۸٪ آرد کنف اضافه کنید، سپس تعداد تخم‌مرغ را افزایش دهید (زرده بیشتر). عسل را فقط یک بار و تنها در پایان اضافه کنید. نمک. در آخرین مرحله دانه‌های پوست‌کنده کنف را وارد کنید.\n۴) استراحت اولیه (پونتاتا)، پیرلاتورا، و استراحت نهایی (آپرتو) تا ~۲ سانتی‌متر زیر لبه قالب.\n۵) اسکارپاتورا با کره، پخت در دمای ۱۶۰ درجه سانتی‌گراد فر استاتیک به مدت ~۵۰ دقیقه (دمای مرکز ۹۴ درجه سانتی‌گراد).\n۶) بلافاصله وارونه کنید و حداقل ۸ ساعت به صورت سر پایین خنک کنید.\n\n— یادداشت نانوا —\nچرا آب فقط در خمیر اول: در پانتونه آب فقط به خمیر اول اضافه می‌شود تا آرد را هیدراته کند و همراه با خمیرمایه شبکهٔ گلوتن را بسازد. در خمیر دوم آب اضافه نمی‌شود: مایعات از زردهٔ تخم‌مرغ، کره و عسل تأمین می‌شوند که خمیر را غنی می‌کنند بدون اینکه ضعیفش کنند. افزودن آب به خمیر دوم شبکهٔ گلوتن ساخته‌شده را از بین می‌برد و پانتونه ور نمی‌آید و گنبدش را نگه نمی‌دارد.\nدما: خمیر را همیشه زیر ۲۶ درجه نگه دار و بین هر ماده گلوتن را خوب توسعه بده.",
+    "user_edited": true
   },
   {
     "collection_name": "mikilab",

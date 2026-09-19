@@ -27,6 +27,8 @@ import Ricette from "@/sections/Ricette";
 import HomeManuale from "@/components/HomeManuale";
 import LegalPlaceholder from "@/components/LegalPlaceholder";
 import SitorChat from "@/components/SitorChat";
+import TecnichePage from "@/components/TecnichePage";
+import VerdeMikiLab from "@/components/VerdeMikiLab";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 
@@ -50,7 +52,13 @@ export default function App() {
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [route, setRoute] = useState(initialRoute);
   const [chatOpen, setChatOpen] = useState(false);
+  const [techSlug, setTechSlug] = useState(null);
   const isAdmin = !!(user && user.role === "admin");
+  useEffect(() => {
+    const h = (e) => { setTechSlug(e?.detail?.slug || null); setRoute("tecniche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    window.addEventListener("mikilab-open-technique", h);
+    return () => window.removeEventListener("mikilab-open-technique", h);
+  }, []);
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
   useEffect(() => {
@@ -108,8 +116,10 @@ export default function App() {
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
             <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
-              {route === "home" && <HomeManuale onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
+              {route === "home" && <HomeManuale onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; } if (r === "tecniche") { setTechSlug(null); } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
+              {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
+              {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "impressum" && <LegalPlaceholder kind="impressum" onBack={() => setRoute("home")} />}
               {route === "datenschutz" && <LegalPlaceholder kind="datenschutz" onBack={() => setRoute("home")} />}
             </ErrorBoundary>

@@ -258,3 +258,118 @@ async def sitor_chat(body: PublicChatReq, request: Request):
               "en": "Sorry, small glitch. Please try again shortly."}
         return {"ok": False, "reply": fb.get(lang2, fb["it"])}
     return {"ok": True, "reply": reply}
+
+
+# ---------------------------------------------------------------------------
+# TECNICHE — collezione NUOVA `technique_pages`. Testo scritto da Sitor (bozza) fino a verified.
+# ---------------------------------------------------------------------------
+TECHNIQUES = [
+    {"slug": "baguette", "it": "Baguette (formatura)", "de": "Baguette (Formen)", "en": "Baguette (shaping)"},
+    {"slug": "croissant", "it": "Croissant e cornetti", "de": "Croissants und Hörnchen", "en": "Croissants"},
+    {"slug": "pieghe", "it": "Pieghe dell'impasto", "de": "Teig falten", "en": "Dough folds"},
+    {"slug": "pirlatura", "it": "Pirlatura", "de": "Rundwirken (Pirlatura)", "en": "Shaping into a ball"},
+    {"slug": "filone", "it": "Filone e pagnotta (tagli)", "de": "Laib und Brotlaib (Einschneiden)", "en": "Bâtard and loaf (scoring)"},
+    {"slug": "panettone", "it": "Panettone (capovolgere con i ferri)", "de": "Panettone (mit Spießen stürzen)", "en": "Panettone (flipping with skewers)"},
+]
+_TQ_BY_SLUG = {t["slug"]: t for t in TECHNIQUES}
+_tq_locks: dict = {}
+
+
+async def _gen_technique(slug: str, lang2: str) -> _Opt[dict]:
+    if not EMERGENT_LLM_KEY:
+        return None
+    t = _TQ_BY_SLUG[slug]
+    langname = _SYS.get(lang2, "italiano")
+    extra = ""
+    if slug == "croissant":
+        extra = ("IMPORTANTE: NON inventare misure dei triangoli (base/altezza) né spessori: lascia quei valori come "
+                 "'[da definire]'. Descrivi solo i gesti: laminazione, stesura, taglio dei triangoli, incisione della base, arrotolamento.")
+    if slug == "panettone":
+        extra = "Concentrati sul capovolgimento a testa in giù con i ferri/spiedi infilati alla base, e sul raffreddamento appeso."
+    sysmsg = (
+        f"Sei Sitor, guida di panificazione. Scrivi una pagina-guida sulla tecnica: '{t['it']}'. "
+        "Per chi cucina a casa: chiaro, pratico, senza gerghi inutili. NON inventare misure o pesi che non conosci. "
+        f"{extra} Rispondi in {langname}. Restituisci SOLO JSON valido: "
+        "{\"intro\":\"1-2 frasi\",\"steps\":[\"passo 1\",\"passo 2\", \"...\"],\"errors\":[\"errore comune 1\",\"errore comune 2\"]}. "
+        "Da 4 a 8 passi numerabili, da 2 a 5 errori comuni. Nessun testo fuori dal JSON."
+    )
+    out = ""
+    chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tq-{slug}-{lang2}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=2500)
+    async for ev in chat.stream_message(UserMessage(text=f"Scrivi la guida per la tecnica '{t['it']}'.")):
+        if isinstance(ev, TextDelta):
+            out += ev.content or ""
+    parsed = _core._parse_llm_json(out) if hasattr(_core, "_parse_llm_json") else {}
+    if not parsed:
+        m = _re.search(r"\{.*\}", out, _re.S)
+        parsed = _json.loads(m.group(0)) if m else {}
+    if not parsed.get("steps"):
+        return None
+    return {
+        "intro": (parsed.get("intro") or "")[:600],
+        "steps": [str(s)[:500] for s in (parsed.get("steps") or [])][:8],
+        "errors": [str(s)[:400] for s in (parsed.get("errors") or [])][:5],
+    }
+
+
+@api_router.get("/techniques")
+async def techniques_list(user: _Opt[dict] = Depends(optional_user)):
+    stored = {d["slug"]: d async for d in db.technique_pages.find({}, {"_id": 0, "slug": 1, "verified": 1, "hidden_images": 1})}
+    return {"techniques": [{"slug": t["slug"], "it": t["it"], "de": t["de"], "en": t["en"],
+                            "verified": bool(stored.get(t["slug"], {}).get("verified"))} for t in TECHNIQUES]}
+
+
+@api_router.get("/techniques/{slug}")
+async def technique_get(slug: str, lang: str = "it", user: _Opt[dict] = Depends(optional_user)):
+    if slug not in _TQ_BY_SLUG:
+        raise HTTPException(status_code=404, detail="technique_not_found")
+    lang2 = _lang2(lang)
+    if lang2 not in _COURSE_LANGS:
+        lang2 = "it"
+    doc = await db.technique_pages.find_one({"slug": slug, "lang": lang2}, {"_id": 0})
+    meta = await db.technique_pages.find_one({"slug": slug}, {"_id": 0, "verified": 1, "hidden_images": 1}) or {}
+    t = _TQ_BY_SLUG[slug]
+    if doc and doc.get("body"):
+        return {"ok": True, "slug": slug, "title": t[lang2], "body": doc["body"],
+                "verified": bool(meta.get("verified")), "hidden_images": meta.get("hidden_images") or []}
+    if not await _rate_limit("technique_gen_daily", "all", COURSE_GEN_DAILY_CAP, 86400):
+        raise HTTPException(status_code=503, detail="technique_daily_cap")
+    lk = _tq_locks.setdefault(f"{slug}:{lang2}", _asyncio.Lock())
+    async with lk:
+        doc = await db.technique_pages.find_one({"slug": slug, "lang": lang2}, {"_id": 0})
+        if doc and doc.get("body"):
+            return {"ok": True, "slug": slug, "title": t[lang2], "body": doc["body"],
+                    "verified": bool(meta.get("verified")), "hidden_images": meta.get("hidden_images") or []}
+        body = await _gen_technique(slug, lang2)
+        if not body:
+            raise HTTPException(status_code=503, detail="technique_unavailable")
+        await db.technique_pages.update_one({"slug": slug, "lang": lang2},
+            {"$set": {"slug": slug, "lang": lang2, "body": body, "generated_at": now_iso()}}, upsert=True)
+        return {"ok": True, "slug": slug, "title": t[lang2], "body": body,
+                "verified": bool(meta.get("verified")), "hidden_images": meta.get("hidden_images") or []}
+
+
+class TechniqueEdit(_BM):
+    verified: _Opt[bool] = None
+    body: _Opt[dict] = None
+    hidden_images: _Opt[_List[int]] = None
+    lang: str = "it"
+
+
+@api_router.put("/techniques/{slug}")
+async def technique_edit(slug: str, body: TechniqueEdit, admin: dict = Depends(require_admin)):
+    if slug not in _TQ_BY_SLUG:
+        raise HTTPException(status_code=404, detail="technique_not_found")
+    lang2 = _lang2(body.lang)
+    upd = {"slug": slug, "lang": lang2, "updated_at": now_iso()}
+    if body.body is not None:
+        upd["body"] = body.body
+    if body.verified is not None:
+        upd["verified"] = bool(body.verified)
+    if body.hidden_images is not None:
+        upd["hidden_images"] = [int(i) for i in body.hidden_images]
+    await db.technique_pages.update_one({"slug": slug, "lang": lang2}, {"$set": upd}, upsert=True)
+    # verified/hidden_images sono per-tecnica: applicali a tutte le lingue
+    if body.verified is not None or body.hidden_images is not None:
+        meta = {k: upd[k] for k in ("verified", "hidden_images") if k in upd}
+        await db.technique_pages.update_many({"slug": slug}, {"$set": meta})
+    return {"ok": True}
