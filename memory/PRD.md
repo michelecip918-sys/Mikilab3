@@ -101,3 +101,10 @@ Vedi `memory/test_credentials.md`.
 - Frontend: pagina `CenaSughi` (Panico da cena + Sughi nel mondo, tutto locale senza IA), `ImpressumAdmin`, comandi vocali «Ehi Sitor» e sostituzioni a voce in Mani in Pasta (`lib/voiceSubs.js`, con guardia anti-eco), tasto Home fisso nell'intestazione, chip Home secondari sotto «Altro».
 - Sicurezza: credenziali tolte da `test_reports/iteration_2.json` (restano nella cronologia git: ruotare la password e rimuovere `ADMIN_RESET_PASSWORD`).
 
+## Patch v77 + ripristino foto 6 ricette (20 settembre 2026)
+- Applicata patch v77 di Michele (zip) senza modifiche: SEED_VERSION era `2026-09-v77-controllo-ricette`.
+- La v77 aveva sovrascritto `mikilab_seed_data.json` riportando `image_url: null` sulle 6 ricette nuove (v74). Su scelta di Michele ("A") ricollegate: Colomba→col_classica, Pandoro→pandoro_classico, Stollen Classico→stollen_classico, Stollen Marzapane→stollen_marzapane, Pinsa→pinsa_romana, Panettone Salato→panettone_salato_speck (i .webp esistevano già in `public/recipes/`).
+- Attenzione hot-reload: il primo bump di SEED_VERSION è stato sincronizzato mentre il JSON aveva duplicati `null` (auto-segnato come in v76); risolto con secondo bump → SEED_VERSION = `2026-09-v77-foto-ripristinate-2` e restart backend.
+- Verifica self-test (no testing agent, preferenza Michele): DB con 6/6 image_url, API pubblica `/api/recipes` 6/6 OK (154 ricette totali), screenshot galleria: Colomba e Pinsa renderizzate (naturalWidth 1024/1264).
+- PROSSIMO PASSO DI MICHELE: premere **Publish** sulla dashboard Emergent per portare v77 + foto ripristinate in produzione (il sync avviene allo startup grazie al nuovo SEED_VERSION).
+
