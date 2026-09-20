@@ -23975,11 +23975,11 @@
 "ar": "الحالة: تم تعيين رمز PIN على الخادم ✓",
 "tr": "Durum: PIN Sunucuda Ayarlandı ✓"
 },
-"Stato: nessun PIN sul server — è attivo il default 1985": {
-"fr": "État : aucun PIN sur le serveur — le default 1985 est actif",
-"fa": "وضعیت: هیچ PIN روی سرور نیست — 1985 پیش‌فرض فعال است",
-"ar": "الحالة: لا يوجد PIN على الخادم — الافتراضي 1985 نشط",
-"tr": "Durum: Sunucuda PIN Yok — Varsayılan 1985 Etkin"
+"Stato: nessun PIN sul server — è attivo il default ····": {
+"fr": "État : aucun PIN sur le serveur — le default ···· est actif",
+"fa": "وضعیت: هیچ PIN روی سرور نیست — ···· پیش‌فرض فعال است",
+"ar": "الحالة: لا يوجد PIN على الخادم — الافتراضي ···· نشط",
+"tr": "Durum: Sunucuda PIN Yok — Varsayılan ···· Etkin"
 },
 "Sto ascoltando…": {
 "fr": "À l'écoute…",

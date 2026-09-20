@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { X, Mic, MicOff, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Timer as TimerIcon, Hand } from "lucide-react";
+import { MicNotice } from "@/components/MicNotice";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
 import { playTTS, stopTTS } from "@/lib/tts";
@@ -163,6 +164,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
           <button data-testid="handsfree-mic" onClick={toggleMic}
             className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-primary text-white animate-pulse" : "bg-foreground/12"}`}>{micOn ? <Mic className="w-5 h-5" /> : <MicOff className="w-5 h-5" />}{tri("Comandi", "Befehle", "Commands", "Comandos")}</button>
         </div>
+        <MicNotice className="text-center !text-foreground/50" />
       </div>
     </div>
   ), document.body);

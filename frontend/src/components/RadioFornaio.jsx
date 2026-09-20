@@ -2,6 +2,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { useRef, useState, useEffect } from "react";
 import { Radio, X, Play, Square, Loader2, Volume2, Flame, Mic, Star, RotateCcw, Search, Plus, Trash2 } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
+import { MicNotice } from "@/components/MicNotice";
 import { useAmbient } from "@/audio/AmbientContext";
 import { useSoundFX } from "@/audio/SoundFXContext";
 import { useBackClose } from "@/lib/backNav";
@@ -277,6 +278,7 @@ export default function RadioFornaio({ inline = false }) {
               </button>
               <button data-testid="radio-close" onClick={() => setOpen(false)} className="text-muted-foreground p-1"><X className="w-4 h-4" /></button>
             </div>
+            <MicNotice className="mb-2" />
 
             {/* Sottofondo d'ambiente: scoppiettio del forno */}
             <button

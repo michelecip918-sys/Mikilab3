@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X, Send, Volume2, Mic, MicOff } from "lucide-react";
+import { MicNotice } from "@/components/MicNotice";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
@@ -124,6 +125,7 @@ export default function SitorChat({ onClose }) {
             <button data-testid="sitor-chat-send" onClick={() => send()} disabled={busy || !input.trim()} className="p-3 rounded-2xl bg-muted text-foreground disabled:opacity-40 active:scale-90 shrink-0"><Send className="w-5 h-5" /></button>
           </div>
           {micOn && <p className="text-[10px] text-mattone text-center mt-1">🎙️ {tri("Ti ascolto… parla pure", "Ich höre zu… sprich", "Listening… go ahead")}</p>}
+          {SR && <MicNotice className="text-center mt-1" />}
           <p className="text-[9px] text-foreground/30 text-center mt-1">{tri("Voce sintetica del tuo dispositivo.", "Synthetische Stimme deines Geräts.", "Your device's synthetic voice.")}</p>
         </div>
       </div>

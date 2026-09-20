@@ -66,7 +66,8 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Live** (`GET /api/live`, `GET /api/time`, `POST /api/live/ping`): il ping usa un token casuale NON salvato in modo persistente (solo per contare i partecipanti dell'ultimo minuto; ping più vecchi di 10 min eliminati). Nessun identificativo personale.
 - **"Quanti l'hanno fatta"** (`POST /api/done-ping`): incrementa un contatore aggregato per ricetta/mese; l'hash dispositivo serve SOLO al limite 1/giorno. Mostrato solo se ≥ 20. Nessun dato personale.
 - **Offline (sw.js v63)**: copia offline (network-first, max 150 voci) delle GET già visitate di ricette, corso, tecniche, equipment-guide, learning-path, site-pages. MAI in cache `/sitor/*`, `/live*`, `/done-ping` né richieste POST.
-- **Voce (comandi vocali e chat vocale)**: il riconoscimento vocale avviene NEL BROWSER (Web Speech API del dispositivo); alla chat di Sitor arriva SOLO il testo riconosciuto, come se fosse digitato. La voce di risposta è la voce sintetica del dispositivo. Nessun audio lascia il dispositivo.
+- **Voce (comandi vocali e chat vocale)**: il riconoscimento vocale usa la funzione DEL BROWSER (Web Speech API). A seconda del browser (per esempio Chrome/Google o Safari/Apple) **l'audio può essere elaborato sui server del produttore del browser**. Il microfono parte solo dopo un tocco esplicito dell'utente e accanto a ogni pulsante microfono compare un avviso visibile. A Sitor arriva SOLO il testo riconosciuto, come se fosse digitato. La voce di risposta è la voce sintetica del dispositivo.
+- **Impressum e Datenschutz**: compilati con i testi di Michele (bozza, da verificare) in IT/DE/EN alle rotte `/impressum` e `/datenschutz` (link nel footer).
 
 
 - **DEFAULT DENY totale**: un anonimo può leggere solo l'allowlist pubblica (ricette, extras, tecniche,
