@@ -664,7 +664,8 @@ async def root():
 EMERGENT_SESSION_URL = "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data"
 SESSION_DAYS = 3650  # sessione permanente (~10 anni): chi si registra resta dentro, gratis, senza riloggarsi
 # Email PROPRIETARIO: sempre admin (accesso completo a tutto), a prescindere dall'ordine di registrazione.
-OWNER_EMAILS = {"michelecip918@gmail.com", "admin@mikilab.de"}
+OWNER_EMAILS = {"michelecip918@gmail.com"}
+LEGACY_ADMIN_EMAIL = "admin@mikilab.de"
 
 
 class RegisterReq(BaseModel):
@@ -11986,6 +11987,36 @@ async def on_startup_seed_mikilab():
                 logging.getLogger(__name__).info("Password admin inizializzata da ADMIN_INITIAL_PASSWORD")
     except Exception as e:
         logging.getLogger(__name__).error(f"Admin seed error: {e}")
+    try:
+        # RESET admin del proprietario: se ADMIN_RESET_PASSWORD e' impostata (env, mai nel codice),
+        # forza email+password dell'owner, sblocca i tentativi e disattiva l'admin legacy.
+        # Idempotente: si puo' lasciare la variabile e poi rimuoverla dopo l'accesso.
+        _owner_email = (os.environ.get("ADMIN_EMAIL") or "michelecip918@gmail.com").strip().lower()
+        _reset_pw = os.environ.get("ADMIN_RESET_PASSWORD")
+        if _reset_pw:
+            _acc = await db.users.find_one({"email": _owner_email})
+            if not _acc:
+                await db.users.insert_one({
+                    "user_id": f"user_{uuid.uuid4().hex[:12]}", "email": _owner_email,
+                    "name": "MikiLab", "picture": "", "role": "admin", "auth_provider": "email",
+                    "password_hash": _hash_pw(_reset_pw), "created_at": now_iso(),
+                    "email_verified": True, "organization_id": ORG_DEFAULT,
+                })
+                logging.getLogger(__name__).info("Owner admin creato da ADMIN_RESET_PASSWORD")
+            else:
+                await db.users.update_one({"email": _owner_email}, {"$set": {
+                    "password_hash": _hash_pw(_reset_pw), "role": "admin", "email_verified": True}})
+                logging.getLogger(__name__).info("Password owner reimpostata da ADMIN_RESET_PASSWORD")
+            # sblocca i tentativi di accesso per questa email (qualsiasi IP)
+            await db.login_attempts.delete_many({"identifier": {"$regex": f":{re.escape(_owner_email)}$"}})
+            # disattiva l'account admin legacy: role user, nessuna password valida (NON cancellato)
+            await db.users.update_one(
+                {"email": LEGACY_ADMIN_EMAIL},
+                {"$set": {"role": "user"}, "$unset": {"password_hash": ""}},
+            )
+            await db.login_attempts.delete_many({"identifier": {"$regex": f":{re.escape(LEGACY_ADMIN_EMAIL)}$"}})
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Admin reset error: {e}")
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")
