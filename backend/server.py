@@ -573,7 +573,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v71-panettoni6040"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v72-poolish-provati"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -12033,8 +12033,7 @@ async def on_startup_seed_mikilab():
     try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
-        _REVIEW_EXC = {"Carezza Dolce", "Treccia del Sole", "Panino alle Carote"}
-        # pane/panini/focacce → "Provata da Michele" (tested); 3 eccezioni → "Controllata" (reviewed)
+        # pane/panini/focacce → "Provata da Michele" (tested)
         async for _r in db.recipes.find(
             {"collection_name": "mikilab", "menu_category": {"$in": ["pane", "panini", "focacce"]}},
             {"_id": 0, "id": 1, "name": 1},
@@ -12042,12 +12041,21 @@ async def on_startup_seed_mikilab():
             _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "status": 1})
             if _ex and _ex.get("status"):
                 continue
-            _st = "reviewed" if _r.get("name") in _REVIEW_EXC else "tested"
             await db.recipe_extras.update_one(
                 {"recipe_id": _r["id"]},
-                {"$set": {"recipe_id": _r["id"], "status": _st, "verified": True, "updated_at": now_iso()}},
+                {"$set": {"recipe_id": _r["id"], "status": "tested", "verified": True, "updated_at": now_iso()}},
                 upsert=True,
             )
+        # Le 3 ricette con poolish sono state provate da Michele: forza "Provata" (idempotente,
+        # corregge anche la produzione se ha ancora "Controllata").
+        for _name in ("Carezza Dolce", "Treccia del Sole", "Panino alle Carote"):
+            _r = await db.recipes.find_one({"collection_name": "mikilab", "name": _name}, {"_id": 0, "id": 1})
+            if _r:
+                await db.recipe_extras.update_one(
+                    {"recipe_id": _r["id"]},
+                    {"$set": {"recipe_id": _r["id"], "status": "tested", "verified": True, "updated_at": now_iso()}},
+                    upsert=True,
+                )
         # 16 panettoni (tranne Verde Canapa) → "Controllata da Michele" (reviewed) + verified.
         # Inoltre TUTTI i panettoni tornano visibili: azzera hidden_public (idempotente).
         async for _r in db.recipes.find(
