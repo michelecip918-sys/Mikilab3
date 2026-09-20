@@ -295,6 +295,53 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
     return data
 
 
+@api_router.get("/admin/test-diary")
+async def admin_test_diary(admin: dict = Depends(require_admin)):
+    """Riepilogo Diario prove (solo admin): tutte le ricette non ancora 'Provata',
+    con data/esito dell'ultima prova, + la 'prossima da provare' consigliata da Sitor."""
+    stored = {d["recipe_id"]: d async for d in db.recipe_extras.find({}, {"_id": 0})}
+    items = []
+    tested = 0
+    async for r in db.recipes.find(
+        {"collection_name": "mikilab", "hidden": {"$ne": True}},
+        {"_id": 0, "id": 1, "name": 1, "menu_category": 1},
+    ):
+        rid = r.get("id")
+        s = stored.get(rid) or {}
+        st = _recipe_status(s)
+        if st == "tested":
+            tested += 1
+            continue
+        items.append({
+            "id": rid,
+            "name": r.get("name"),
+            "menu_category": r.get("menu_category") or "",
+            "status": st,
+            "test_date": s.get("test_date") or "",
+            "test_outcome": s.get("test_outcome") or "",
+            "test_notes": s.get("test_notes") or "",
+        })
+
+    def _rank(it):
+        if not it["test_date"]:
+            return 0                      # mai provate → priorità massima
+        if it["test_outcome"] == "da_rifare":
+            return 1                      # da rifare → poi
+        return 2
+
+    items.sort(key=lambda it: (_rank(it), (it["name"] or "").lower()))
+    nxt = items[0] if items else None
+    tip = None
+    if nxt:
+        nm = nxt["name"]
+        tip = {
+            "it": f"Ti consiglio di provare oggi «{nm}»: è tra le bozze che non hai ancora provato. Un passo alla volta e le finiamo tutte!",
+            "de": f"Ich empfehle dir, heute «{nm}» zu testen: einer der Entwürfe, die du noch nicht erprobt hast. Schritt für Schritt schaffen wir sie alle!",
+            "en": f"I suggest testing «{nm}» today: one of the drafts you haven't tried yet. One step at a time and we'll finish them all!",
+        }
+    return {"to_test": len(items), "tested": tested, "items": items, "next": nxt, "sitor_tip": tip}
+
+
 # Pagina guida "Attrezzi": elenco unico di tutti gli attrezzi dei modelli.
 @api_router.get("/equipment-guide")
 async def equipment_guide():

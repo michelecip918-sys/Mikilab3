@@ -46,6 +46,7 @@ import Calendario from "@/components/Calendario";
 import Admin2B from "@/components/Admin2B";
 import PuliziaDati from "@/components/PuliziaDati";
 import ChangePassword from "@/components/ChangePassword";import DalMondo from "@/components/DalMondo";
+import DiarioProve from "@/components/DiarioProve";
 import PaneDiIeri from "@/components/PaneDiIeri";
 import CreaLievito from "@/components/CreaLievito";
 import { useFeatures } from "@/lib/features";
@@ -141,6 +142,10 @@ export default function App() {
                           className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-primary/50 active:scale-95 transition-all">
                           {tri("Strumenti di Michele", "Micheles Werkzeuge", "Michele's tools")}
                         </button>
+                        <button data-testid="diario-link" onClick={() => { setRoute("admin-diario"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
+                          className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-primary/50 active:scale-95 transition-all">
+                          {tri("Diario prove", "Test-Tagebuch", "Test log")}
+                        </button>
                         <button data-testid="cleanup-link" onClick={() => { setRoute("admin-cleanup"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
                           className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-mattone/50 active:scale-95 transition-all">
                           {tri("Pulizia dati vecchi", "Alte Daten bereinigen", "Clean old data")}
@@ -170,6 +175,7 @@ export default function App() {
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
               {route === "admin-2b" && isAdmin && <Admin2B onBack={() => setRoute("home")} />}
+              {route === "admin-diario" && isAdmin && <DiarioProve onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-cleanup" && isAdmin && <PuliziaDati onBack={() => setRoute("home")} />}
               {route === "change-password" && isAdmin && <ChangePassword onBack={() => setRoute("home")} />}
               {route === "cosa-faccio" && <CosaFaccio onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
