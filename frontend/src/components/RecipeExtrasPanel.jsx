@@ -359,6 +359,33 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
             ))}
             <p className="inline-flex items-center gap-1 text-[10px] text-muted-foreground"><Save className="w-3 h-3" /> {tri("Salva automaticamente quando esci dal campo.", "Speichert automatisch beim Verlassen des Feldes.", "Auto-saves when you leave the field.")}</p>
           </div>
+          {/* Diario prove (privato): data + esito + note; stato con un tocco */}
+          <div data-testid="admin-diario" className="border-t border-border/50 pt-3 space-y-2">
+            <p className="text-[11px] font-black uppercase tracking-wide text-primary">{tri("Diario prova (solo tu)", "Test-Tagebuch (nur du)", "Test log (only you)")}</p>
+            <div className="flex flex-wrap items-center gap-2">
+              <input type="date" data-testid="admin-test-date" defaultValue={ex.test_date || ""}
+                onBlur={(e) => { if ((e.target.value || "") !== (ex.test_date || "")) saveAdmin({ test_date: e.target.value }); }}
+                className="bg-background border border-border rounded-lg text-xs text-foreground px-2 py-1.5 outline-none focus:border-primary" />
+              <select data-testid="admin-test-outcome" value={ex.test_outcome || ""} onChange={(e) => saveAdmin({ test_outcome: e.target.value })} disabled={saving}
+                className="bg-background border border-border rounded-lg text-xs text-foreground px-2 py-1.5 outline-none">
+                <option value="">{tri("— esito —", "— Ergebnis —", "— outcome —")}</option>
+                <option value="ok">{tri("Riuscita ✓", "Gelungen ✓", "Success ✓")}</option>
+                <option value="da_rifare">{tri("Da rifare", "Nochmal", "Redo")}</option>
+              </select>
+            </div>
+            <textarea data-testid="admin-test-notes" defaultValue={ex.test_notes || ""} rows={2}
+              onBlur={(e) => { if ((e.target.value || "") !== (ex.test_notes || "")) saveAdmin({ test_notes: e.target.value }); }}
+              placeholder={tri("Note della prova: impasto, cottura, gusto…", "Notizen zum Test: Teig, Backen, Geschmack…", "Test notes: dough, bake, taste…")}
+              className="w-full bg-background border border-border rounded-lg text-xs text-foreground px-2.5 py-1.5 outline-none focus:border-primary resize-none" />
+            <div className="flex flex-wrap items-center gap-2 pt-0.5">
+              <span className="text-[11px] text-muted-foreground">{tri("Stato", "Status", "Status")}:</span>
+              {[["sitor_draft", tri("Bozza", "Entwurf", "Draft")], ["reviewed", tri("Controllata", "Geprüft", "Checked")], ["tested", tri("Provata ✓", "Erprobt ✓", "Tested ✓")]].map(([st, lbl]) => (
+                <button key={st} data-testid={`admin-status-${st}`} disabled={saving}
+                  onClick={() => saveAdmin(st === "tested" ? { status: "tested", verified: true } : st === "reviewed" ? { status: "reviewed", verified: true } : { status: "sitor_draft", verified: false })}
+                  className={`px-2.5 py-1 rounded-lg text-xs font-bold active:scale-95 disabled:opacity-50 ${ex.status === st ? (st === "tested" ? "bg-accent text-white" : "bg-primary text-primary-foreground") : "bg-foreground/10 text-muted-foreground"}`}>{lbl}</button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

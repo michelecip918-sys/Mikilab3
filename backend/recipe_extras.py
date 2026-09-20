@@ -191,6 +191,9 @@ class ExtrasUpdate(_BM):
     hidden_public: _Opt[bool] = None
     michele_tip: _Opt[dict] = None          # {it, de, en}
     status: _Opt[str] = None                # sitor_draft | reviewed | tested
+    test_date: _Opt[str] = None             # Diario prove: data ISO della prova
+    test_outcome: _Opt[str] = None          # Diario prove: "" | ok | da_rifare
+    test_notes: _Opt[str] = None            # Diario prove: note private di Michele
 
 
 def _recipe_status(stored: dict) -> str:
@@ -230,13 +233,26 @@ def _extras_public(r: dict, stored: dict) -> dict:
     }
 
 
+def _diario_private(stored: dict) -> dict:
+    """Diario prove: campi PRIVATI (solo admin) da unire alla risposta pubblica."""
+    stored = stored or {}
+    return {
+        "test_date": stored.get("test_date") or "",
+        "test_outcome": stored.get("test_outcome") or "",
+        "test_notes": stored.get("test_notes") or "",
+    }
+
+
 @api_router.get("/recipe-extras/{recipe_id}")
 async def recipe_extras_get(recipe_id: str, user: _Opt[dict] = Depends(optional_user)):
     r = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
     if not r:
         raise HTTPException(status_code=404, detail="recipe_not_found")
     stored = await db.recipe_extras.find_one({"recipe_id": recipe_id}, {"_id": 0})
-    return _extras_public(r, stored)
+    data = _extras_public(r, stored)
+    if user and user.get("role") == "admin":
+        data.update(_diario_private(stored))
+    return data
 
 
 @api_router.get("/recipe-extras")
@@ -267,12 +283,16 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
         raise HTTPException(status_code=400, detail="difficulty_invalid")
     if body.status is not None and body.status not in ("sitor_draft", "reviewed", "tested"):
         raise HTTPException(status_code=400, detail="status_invalid")
+    if body.test_outcome is not None and body.test_outcome not in ("", "ok", "da_rifare"):
+        raise HTTPException(status_code=400, detail="test_outcome_invalid")
     upd["recipe_id"] = recipe_id
     upd["updated_at"] = now_iso()
     await db.recipe_extras.update_one({"recipe_id": recipe_id}, {"$set": upd}, upsert=True)
     stored = await db.recipe_extras.find_one({"recipe_id": recipe_id}, {"_id": 0})
     full = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
-    return _extras_public(full, stored)
+    data = _extras_public(full, stored)
+    data.update(_diario_private(stored))
+    return data
 
 
 # Pagina guida "Attrezzi": elenco unico di tutti gli attrezzi dei modelli.

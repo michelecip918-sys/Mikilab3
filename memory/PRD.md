@@ -48,6 +48,12 @@ Vedi `memory/test_credentials.md`.
 - Build frontend OK (solo warning eslint preesistente). Script di verifica (inalterato, UA iniettato a runtime) su anteprima: **TUTTO OK** (11/11: 148 ricette, 5 ricette complete, panettone con grammi, corsi IT/DE/EN da 7 fasi, stato bozza corretto).
 
 ## Verifica produzione post-publish v73 (20 settembre 2026)
+
+## Diario Prove + Foto Panettoni (20 settembre 2026)
+- **Diario Prove** (recipe_extras.py): campi PRIVATI `test_date`, `test_outcome` (""|ok|da_rifare), `test_notes` in `ExtrasUpdate`; restituiti SOLO all'admin (GET/PUT gated su `user.role=="admin"`), mai al pubblico (verificato via curl: pubblico = "ASSENTE"). UI in `RecipeExtrasPanel.jsx` blocco admin "Diario prova (solo tu)": data + esito + note (autosave) + pulsanti stato Bozza/Controllata/Provata✓ (data-testid: admin-diario, admin-test-date, admin-test-outcome, admin-test-notes, admin-status-*). Nessuna modifica auth.
+- **Foto Panettoni**: 17 foto rigenerate (Gemini) stile scuro elegante premium, panettone intero + fetta con farcitura specifica, salvate come webp in `/app/frontend/public/recipes/pan_*.webp` (sovrascritte, ~140-155KB). image_url del seed invariati. Verificate in galleria (anteprima). Al prossimo Publish il build le porta in produzione.
+- Verifica self-test (no testing agent, come preferenza Michele): curl backend + 2 screenshot frontend. TUTTO OK.
+- RESTA: pulizia DB produzione (149→148) da fare a mano da Michele.
 - Deploy v73 su mikilab.de CONFERMATO: script di verifica inalterato → **TUTTO OK** (11/11). Le 3 poolish risultano "tested" anche in produzione (forzatura startup v72 applicata).
 - Produzione mostra ancora 149 ricette (vs 148 anteprima): resta la pulizia del DB di produzione → Michele: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)". Poi provare le 61 bozze in cucina.
 - PROSSIMI PASSI DI MICHELE: 1) un solo click su **Publish**; 2) dopo il deploy eseguire/ripetere `python3 patch/verifica_dopo_deploy.py https://mikilab.de`; 3) su mikilab.de: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)"; 4) provare le bozze in cucina e segnarle "Provata".
