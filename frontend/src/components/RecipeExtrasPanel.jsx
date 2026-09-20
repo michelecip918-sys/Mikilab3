@@ -213,6 +213,13 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         </div>
       )}
 
+      {/* Panettoni base 60/40 in prova: riquadro giallo con la nota (sparisce quando lo stato non è più reviewed) */}
+      {recipe.menu_category === "panettoni" && ex.status === "reviewed" && !/Verde Canapa/.test(recipe.name || "") && (
+        <div data-testid="panettone-prova-notice" className="rounded-2xl border border-ambra/50 bg-ambra/10 p-3.5">
+          <p className="text-[12px] text-foreground leading-relaxed">{tri("Base MikiLab 60/40 in prova: dosi e tempi da confermare dopo la prima cottura.", "MikiLab-Basis 60/40 in Erprobung: Mengen und Zeiten nach dem ersten Backen zu bestätigen.", "MikiLab 60/40 base under testing: quantities and times to be confirmed after the first bake.")}</p>
+        </div>
+      )}
+
       {/* CASA: dosi per la tua farina */}
       {ex.kind !== "mix" && mode === "casa" && (
         <div data-testid="casa-doses" className="rounded-2xl border border-border bg-background p-3.5">

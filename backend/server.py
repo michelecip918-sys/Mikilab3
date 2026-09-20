@@ -573,7 +573,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v70-webp"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v71-panettoni6040"  # bump quando cambia mikilab_seed_data.json
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
     "Kochstück",
@@ -1858,24 +1858,21 @@ def _recipe_course_context(r: dict) -> str:
     return " ".join(parts)
 
 
-PANETTONI_PUBLIC_ALLOWED = "Panettone Artigianale MikiLab — Verde Canapa"
-
-
+# Panettoni: tutti visibili a tutti (resta nascosto solo hidden_public=true).
 def _panettone_public_blocked(doc: dict) -> bool:
-    return ((doc.get("menu_category") or "").strip().lower() == "panettoni"
-            and (doc.get("name") or "").strip() != PANETTONI_PUBLIC_ALLOWED)
+    return False
 
 
 @api_router.get("/recipes/{recipe_id}/course")
 async def recipe_course(recipe_id: str, lang: str = "it", user: Optional[dict] = Depends(optional_user)):
     lang2 = (lang or "it").split("-")[0][:2]
-    is_admin = bool(user and user.get("role") == "admin")
-    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
-    if not recipe or (not is_admin and _panettone_public_blocked(recipe)):
-        raise HTTPException(status_code=404, detail="Ricetta non trovata")
     existing = await db.recipe_courses.find_one({"recipe_id": recipe_id, "lang": lang2}, {"_id": 0})
     if existing and existing.get("course"):
         return {"ok": True, "cached": True, "course": existing["course"], "recipe_name": existing.get("recipe_name", "")}
+
+    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not recipe:
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
 
     course = None
     if EMERGENT_LLM_KEY:
@@ -3151,10 +3148,11 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
         # Accesso GRATUITO totale: nessuna ricetta bloccata.
         for d in docs:
             d["locked"] = False
-        # Nascondi al pubblico le ricette con recipe_extras.hidden_public=true e i panettoni non autorizzati.
+        # Nascondi al pubblico solo le ricette con recipe_extras.hidden_public=true (l'admin le vede).
         if not (user and user.get("role") == "admin"):
             hidden = {x["recipe_id"] async for x in db.recipe_extras.find({"hidden_public": True}, {"_id": 0, "recipe_id": 1})}
-            docs = [d for d in docs if d.get("id") not in hidden and not _panettone_public_blocked(d)]
+            if hidden:
+                docs = [d for d in docs if d.get("id") not in hidden]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
@@ -12027,6 +12025,48 @@ async def on_startup_seed_mikilab():
             await db.login_attempts.delete_many({"identifier": {"$regex": f":{re.escape(LEGACY_ADMIN_EMAIL)}$"}})
     except Exception as e:
         logging.getLogger(__name__).error(f"Admin reset error: {e}")
+    try:
+        # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
+        # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
+        _REVIEW_EXC = {"Carezza Dolce", "Treccia del Sole", "Panino alle Carote"}
+        # pane/panini/focacce → "Provata da Michele" (tested); 3 eccezioni → "Controllata" (reviewed)
+        async for _r in db.recipes.find(
+            {"collection_name": "mikilab", "menu_category": {"$in": ["pane", "panini", "focacce"]}},
+            {"_id": 0, "id": 1, "name": 1},
+        ):
+            _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "status": 1})
+            if _ex and _ex.get("status"):
+                continue
+            _st = "reviewed" if _r.get("name") in _REVIEW_EXC else "tested"
+            await db.recipe_extras.update_one(
+                {"recipe_id": _r["id"]},
+                {"$set": {"recipe_id": _r["id"], "status": _st, "verified": True, "updated_at": now_iso()}},
+                upsert=True,
+            )
+        # 16 panettoni (tranne Verde Canapa) → "Controllata da Michele" (reviewed) + verified.
+        # Inoltre TUTTI i panettoni tornano visibili: azzera hidden_public (idempotente).
+        async for _r in db.recipes.find(
+            {"collection_name": "mikilab", "menu_category": "panettoni"},
+            {"_id": 0, "id": 1, "name": 1},
+        ):
+            await db.recipe_extras.update_one(
+                {"recipe_id": _r["id"]},
+                {"$set": {"recipe_id": _r["id"], "hidden_public": False, "updated_at": now_iso()}},
+                upsert=True,
+            )
+            if "Verde Canapa" in (_r.get("name") or ""):
+                continue
+            _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "status": 1})
+            if _ex and _ex.get("status"):
+                continue
+            await db.recipe_extras.update_one(
+                {"recipe_id": _r["id"]},
+                {"$set": {"recipe_id": _r["id"], "status": "reviewed", "verified": True, "updated_at": now_iso()}},
+                upsert=True,
+            )
+    except Exception as e:
+        logging.getLogger(__name__).error(f"Recipe status seed error: {e}")
+
     try:
         init_storage()
         logging.getLogger(__name__).info("Archivio immagini inizializzato")

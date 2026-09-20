@@ -180,13 +180,15 @@ async def course_v2(recipe_id: str, lang: str = "it", user: _Opt[dict] = Depends
     if lang2 not in _COURSE_LANGS:
         raise HTTPException(status_code=400, detail="lang_not_supported")
     is_admin = bool(user and user.get("role") == "admin")
-    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
-    if not recipe or (not is_admin and (await _is_hidden(recipe_id) or _panettone_public_blocked(recipe))):
+    if not is_admin and await _is_hidden(recipe_id):
         raise HTTPException(status_code=404, detail="recipe_not_found")
     cached = await db.recipe_courses_v2.find_one({"recipe_id": recipe_id, "lang": lang2}, {"_id": 0})
     if cached and cached.get("course"):
         return {"ok": True, "cached": True, "course": cached["course"],
                 "verified": bool(cached.get("verified")), "recipe_name": cached.get("recipe_name", "")}
+    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not recipe:
+        raise HTTPException(status_code=404, detail="recipe_not_found")
     # Livello risparmio >=2: nessuna NUOVA generazione per il pubblico (solo corsi già salvati); admin sì.
     if not is_admin and await _savings_level() >= 2:
         raise HTTPException(status_code=503, detail="savings_no_new_course")
