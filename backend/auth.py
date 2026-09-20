@@ -147,6 +147,44 @@ async def reset_password(body: ResetReq):
     return {"ok": True}
 
 
+class ChangePwReq(BaseModel):
+    current_password: str
+    new_password: str
+    lang: Optional[str] = "it"
+
+
+@api_router.post("/auth/change-password")
+async def change_password(body: ChangePwReq, request: Request, admin: dict = Depends(require_admin)):
+    """Cambio password dall'interno dell'admin (reset email non configurato).
+    Solo admin (require_admin + non in allowlist pubblica → 404 per gli anonimi).
+    Verifica la password attuale, richiede min 14 caratteri, rifiuta nuova==attuale,
+    stesso hash bcrypt, limite ai tentativi. Le password NON vengono mai loggate."""
+    lang = body.lang if body.lang in ("it", "de", "en") else "it"
+    # limite tentativi: max 5 in 15 minuti per admin, per non abusare della verifica
+    if not await _rate_limit("change_pw", admin["user_id"], 5, 900):
+        raise HTTPException(status_code=429, detail="Troppi tentativi. Riprova tra qualche minuto.")
+    u = await db.users.find_one({"user_id": admin["user_id"]}, {"_id": 0})
+    if not u or not u.get("password_hash") or not _check_pw(body.current_password or "", u["password_hash"]):
+        msgs = {"it": "Password attuale errata.", "de": "Aktuelles Passwort falsch.", "en": "Current password is wrong."}
+        raise HTTPException(status_code=400, detail=msgs[lang])
+    new_pw = body.new_password or ""
+    if len(new_pw) < 14:
+        msgs = {"it": "La nuova password deve avere almeno 14 caratteri.",
+                "de": "Das neue Passwort muss mindestens 14 Zeichen haben.",
+                "en": "The new password must be at least 14 characters."}
+        raise HTTPException(status_code=400, detail=msgs[lang])
+    if _check_pw(new_pw, u["password_hash"]):
+        msgs = {"it": "La nuova password deve essere diversa da quella attuale.",
+                "de": "Das neue Passwort muss sich vom aktuellen unterscheiden.",
+                "en": "The new password must be different from the current one."}
+        raise HTTPException(status_code=400, detail=msgs[lang])
+    await db.users.update_one({"user_id": admin["user_id"]}, {"$set": {"password_hash": _hash_pw(new_pw)}})
+    # invalida le altre sessioni, mantieni quella corrente
+    keep = request.cookies.get("session_token")
+    await db.user_sessions.delete_many({"user_id": admin["user_id"], "session_token": {"$ne": keep}})
+    return {"ok": True}
+
+
 # ---------------------------------------------------------------------------
 # Scorte Freezer + avviso email (soglia minima) — per utente loggato
 # ---------------------------------------------------------------------------

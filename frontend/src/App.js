@@ -44,7 +44,7 @@ import TestMese from "@/components/TestMese";
 import Farine from "@/components/Farine";
 import Calendario from "@/components/Calendario";
 import Admin2B from "@/components/Admin2B";
-import DalMondo from "@/components/DalMondo";
+import ChangePassword from "@/components/ChangePassword";import DalMondo from "@/components/DalMondo";
 import PaneDiIeri from "@/components/PaneDiIeri";
 import CreaLievito from "@/components/CreaLievito";
 import { useFeatures } from "@/lib/features";
@@ -138,6 +138,10 @@ export default function App() {
                           className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-primary/50 active:scale-95 transition-all">
                           {tri("Strumenti di Michele", "Micheles Werkzeuge", "Michele's tools")}
                         </button>
+                        <button data-testid="change-pw-link" onClick={() => { setRoute("change-password"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
+                          className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-accent/50 active:scale-95 transition-all">
+                          {tri("Cambia password", "Passwort ändern", "Change password")}
+                        </button>
                         <button data-testid="logout-btn" onClick={async () => { await logout(); setShowAccountMenu(false); toast.success(tri("Sei uscito.", "Abgemeldet.", "Signed out.", "Has salido.", "Déconnecté.", "خارج شدی.")); }}
                           className="w-full inline-flex items-center justify-center gap-2 py-2 rounded-lg bg-background border border-border text-mattone font-bold text-xs hover:border-mattone/50 active:scale-95 transition-all">
                           <LogOut className="w-3.5 h-3.5" /> {tri("Esci", "Abmelden", "Sign out", "Salir", "Quitter", "خروج")}
@@ -159,6 +163,7 @@ export default function App() {
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
               {route === "admin-2b" && isAdmin && <Admin2B onBack={() => setRoute("home")} />}
+              {route === "change-password" && isAdmin && <ChangePassword onBack={() => setRoute("home")} />}
               {route === "cosa-faccio" && <CosaFaccio onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "live" && (!features || features.FEATURE_LIVE !== false) && <Live onBack={() => setRoute("home")} />}
               {route === "mensola" && <Mensola onBack={() => setRoute("home")} />}
