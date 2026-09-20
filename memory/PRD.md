@@ -76,5 +76,9 @@ Vedi `memory/test_credentials.md`.
 - Resta 149 vs 148 per UN solo duplicato legacy: **"Miglioratore Naturale Pro (Kopie)"** (vecchia copia tedesca della base, duplicata dalla UI anni fa; non fa parte delle collezioni storiche quindi la pulizia non la tocca). Eliminazione: admin su mikilab.de → aprire la ricetta → icona cestino (delete-recipe) → conferma. Non è nel seed: NON verrà ricreata. Dopo la cancellazione → 148.
 - Ricorda: Publish porta in produzione Diario prove + filtro + progressi + 65 foto nuove (il DB resta intatto).
 - Tutte le novità (foto, Diario, filtro, progressi) arrivano in produzione al prossimo Publish di Michele.
+
+## Produzione allineata — 148 ricette (20 settembre 2026)
+- Michele ha cancellato "Miglioratore Naturale Pro (Kopie)": mikilab.de ora mostra **148 ricette** come l'anteprima. Script: TUTTO OK, zero duplicati. DB produzione pulito e allineato.
+- ATTESA: l'ultimo Publish non è ancora avvenuto (le foto su mikilab.de risultano ancora quelle vecchie, dimensioni diverse dalle nuove). Al prossimo Publish vanno live: Diario prove + filtro + barra progressi + 65 foto rinnovate (panettoni, focacce, colorate, pizze). Il DB non viene toccato dal Publish.
 - Produzione mostra ancora 149 ricette (vs 148 anteprima): resta la pulizia del DB di produzione → Michele: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)". Poi provare le 61 bozze in cucina.
 - PROSSIMI PASSI DI MICHELE: 1) un solo click su **Publish**; 2) dopo il deploy eseguire/ripetere `python3 patch/verifica_dopo_deploy.py https://mikilab.de`; 3) su mikilab.de: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)"; 4) provare le bozze in cucina e segnarle "Provata".
