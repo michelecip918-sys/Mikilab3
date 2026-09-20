@@ -573,7 +573,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v73-ricette-complete"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v74-festivita-sezioni"  # bump quando cambia mikilab_seed_data.json
 # Ricette riscritte/completate da Sitor (IA): restano "bozza" finché Michele non le prova.
 V73_DRAFT_NAMES = ["Brioche Francese (col burro)", "Pain au Chocolat (Saccottino al Cioccolato)", "Saccottino alla Crema", "Danese alla Crema (Plunder)", "Girella all'Uvetta (Pain aux Raisins)", "Pan di Kristall (alta idratazione 95%)", "Pane da Hamburger (bun soffice)", "Veneziana (grande lievitato dolce)", "Pizza Napoletana (tonda)", "Pizza in Teglia alla Romana", "Pizza alla Pala", "Pizza al Taglio Contemporanea", "Pan di Spagna", "Crostata di Frutta (Pasta Frolla)", "Bignè (Pasta Choux)", "Crema Pasticcera", "Panzerotti Fritti Pugliesi", "Focaccia Barese", "Focaccia Dolce all'Uva (Schiacciata)", "Focaccia Genovese", "Focaccia Integrale ai Semi", "Focaccia ai Cereali e Miele", "Focaccia alla Cipolla di Tropea", "Focaccia alle Olive e Rosmarino", "Focaccia con Patate e Rosmarino", "Focaccia con Pomodorini Secchi e Origano", "Focaccia di Altamura", "Focaccia di Matera", "Focaccia Zucca e Rosmarino", "Focaccia Patate e Rosmarino", "Focaccia Cipolla di Tropea", "Focaccia Zucchine e Stracchino", "Focaccia Melanzane e Pomodorini", "Focaccia Peperoni Arrostiti", "Focaccia Pesto e Pomodorini", "Focaccia Gorgonzola e Noci", "Focaccia Mortadella e Pistacchio", "Focaccia Prosciutto Crudo e Stracchino", "Focaccia Friarielli", "Focaccia Funghi Porcini", "Focaccia Acciughe e Capperi", "Focaccia Fichi e Miele", "Focaccia Uvetta e Noci", "Focaccia Multi-Semi", "Focaccia alla Curcuma", "Focaccia Olive Verdi e Origano", "Focaccia Pere e Gorgonzola", "Focaccia Cipollotto e Speck", "Focaccia a Lievito Madre", "Pane agli Spinaci", "Pane alla Spirulina", "Panini Basilico e Pomodoro", "Pane Nero al Carbone Vegetale", "Pane alla Barbabietola", "Pane all'Nduja", "Pane alla Curcuma e Zenzero", "Pane allo Zafferano", "Cornetto Bicolore Cacao e Vaniglia", "Cornetto Bicolore Carbone e Vaniglia", "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia", "Cornetto Doppio Gusto Pistacchio e Cioccolato"]
 # Panettoni: cambia solo il procedimento (dosi e stato invariati); si azzerano solo i vecchi corsi in cache.
@@ -9041,17 +9041,18 @@ DEFAULT_SITE_SETTINGS = {
     "site_url": "https://mikilab.de",
     "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
     "folder_covers": {},    # {"pane": "<url>", "panettoni": "<url>", ...}
+    "impressum_address": "",  # V74: indirizzo mostrato in Impressum/Datenschutz (vuoto = testo predefinito nel frontend)
 }
 
 # Q1: SOLO questi campi sono restituiti dalla GET pubblica. MAI numeri di telefono,
 # social vecchi (WhatsApp/Facebook/Instagram) o altri dati personali.
-PUBLIC_SITE_KEYS = ("tiktok_handle", "hashtag", "site_url", "folder_covers")
+PUBLIC_SITE_KEYS = ("tiktok_handle", "hashtag", "site_url", "folder_covers", "impressum_address")
 
 
 def _merge_site_settings(doc):
     s = dict(DEFAULT_SITE_SETTINGS)
     if doc:
-        for k in ("tiktok_handle", "hashtag", "site_url", "avatar_bubbles", "folder_covers"):
+        for k in ("tiktok_handle", "hashtag", "site_url", "avatar_bubbles", "folder_covers", "impressum_address"):
             if doc.get(k) is not None:
                 s[k] = doc[k]
     return s
@@ -9086,6 +9087,7 @@ class SiteSettingsReq(BaseModel):
     site_url: Optional[str] = None
     avatar_bubbles: Optional[dict] = None
     folder_covers: Optional[dict] = None
+    impressum_address: Optional[str] = None
 
 
 @api_router.put("/admin/site-settings")
@@ -9108,6 +9110,10 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
         update["avatar_bubbles"] = body.avatar_bubbles
     if body.folder_covers is not None:
         update["folder_covers"] = body.folder_covers
+    if body.impressum_address is not None:
+        # max 6 righe, 120 caratteri per riga: niente HTML, solo testo semplice.
+        _lines = [re.sub(r"[<>]", "", ln).strip()[:120] for ln in body.impressum_address.replace("\r", "").split("\n")]
+        update["impressum_address"] = "\n".join([ln for ln in _lines if ln][:6])
     await db.app_meta.update_one({"_key": "site_settings"}, {"$set": update}, upsert=True)
     doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
     return _public_site_settings(doc)

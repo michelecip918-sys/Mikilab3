@@ -2244,7 +2244,7 @@
     "id": "ededd147-c21f-400d-9f68-b93b024a0816",
     "image_url": "/recipes/sn_croissant_salato.webp",
     "locked": null,
-    "menu_category": "snack",
+    "menu_category": "rosticceria",
     "method_type": "diretto",
     "mix_minutes": 8.0,
     "name_de": "Herzhaft gefülltes Croissant",
@@ -4719,7 +4719,7 @@
     "hydration_percent": 0.0,
     "id": "3d1c2147-8326-4690-aab1-179cb97a034c",
     "image_url": "/recipes/sn_quarkballchen.webp",
-    "menu_category": "snack",
+    "menu_category": "fritti",
     "method_type": "diretto",
     "mix_minutes": 6.0,
     "name_de": "Quarkbällchen",
@@ -12607,7 +12607,7 @@
     "hydration_percent": 50,
     "id": "a7ba8baa-7324-40a9-b102-c0afa2a47701",
     "image_url": "/recipes/sn_panzerotti.webp",
-    "menu_category": "snack",
+    "menu_category": "fritti",
     "method_type": "diretto",
     "mix_minutes": 12,
     "name_de": "Frittierte Panzerotti nach pugliese Art",
@@ -12715,7 +12715,7 @@
     "hydration_percent": 60.0,
     "id": "882888e6-1fb0-4a63-9f14-2f1ebab89eaa",
     "image_url": "/recipes/sn_pizzette.webp",
-    "menu_category": "snack",
+    "menu_category": "rosticceria",
     "method_type": "diretto",
     "mix_minutes": 12.0,
     "name_de": "Rote Pizzette aus der Rosticceria",
@@ -13110,7 +13110,7 @@
     "hydration_percent": 48.0,
     "id": "26664a3a-48b0-4eca-b284-93fd8de3ea44",
     "image_url": "/recipes/sn_rustici.webp",
-    "menu_category": "snack",
+    "menu_category": "rosticceria",
     "method_type": "sfogliato",
     "mix_minutes": 12.0,
     "name_de": "Rustici Sfogliati al Formaggio",
@@ -17045,5 +17045,575 @@
     "flour_type_de": "Speisestärke (Mais oder Reis)",
     "flour_type_en": "Cornstarch (or rice starch)",
     "biga": null
+  },
+  {
+    "id": "7890b3d2-10d9-4ed6-92b8-7b33cb28318f",
+    "collection_name": "mikilab",
+    "name": "Colomba Artigianale MikiLab — Classica alle Mandorle",
+    "name_de": "MikiLab Oster-Colomba — klassisch mit Mandelglasur",
+    "name_en": "MikiLab Easter Colomba — Classic with Almond Glaze",
+    "real_name": "Colomba Pasquale Classica",
+    "real_name_de": "Klassische Oster-Colomba",
+    "real_name_en": "Classic Easter Colomba",
+    "menu_category": "viennoiserie",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "flour_type_en": "High-strength flour W380 + sourdough starter",
+    "flour_grams": 500,
+    "sourdough_grams": 110,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 42.0,
+    "water_grams": 210,
+    "salt_grams": 9,
+    "bake_temp": 170,
+    "bake_minutes": 48,
+    "bulk_fermentation_hours": 12,
+    "proofing_hours": 7,
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 30,
+        "name_de": "Zucker",
+        "name_en": "Sugar"
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 29,
+        "name_de": "Eigelb",
+        "name_en": "Egg yolk"
+      },
+      {
+        "name": "Burro",
+        "percent": 35,
+        "name_de": "Butter",
+        "name_en": "Butter"
+      },
+      {
+        "name": "Miele",
+        "percent": 4,
+        "name_de": "Honig",
+        "name_en": "Honey"
+      },
+      {
+        "name": "Pasta d'arancia",
+        "percent": 3,
+        "name_de": "Orangenpaste",
+        "name_en": "Orange paste"
+      },
+      {
+        "name": "Vaniglia",
+        "percent": 0.6,
+        "name_de": "Vanille",
+        "name_en": "Vanilla"
+      },
+      {
+        "name": "Arancia candita a cubetti",
+        "percent": 50,
+        "name_de": "Kandierte Orangenschale, gewürfelt",
+        "name_en": "Diced candied orange peel"
+      }
+    ],
+    "notes": "La colomba pasquale con il metodo MikiLab 60/40: stessa base del panettone, ma solo arancia candita (niente uvetta) e glassa croccante di mandorle. Contiene glutine, uova, latte e frutta a guscio (mandorle). Si conserva ben chiusa a temperatura ambiente per circa 5 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Die Oster-Colomba nach der MikiLab-Methode 60/40: gleiche Basis wie der Panettone, aber nur kandierte Orangenschale (keine Rosinen) und knusprige Mandelglasur. Enthält Gluten, Eier, Milch und Schalenfrüchte (Mandeln). Hält sich gut verschlossen bei Raumtemperatur etwa 5 Tage.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The Easter colomba with the MikiLab 60/40 method: same base as the panettone, but only candied orange peel (no raisins) and a crunchy almond glaze. Contains gluten, eggs, milk and tree nuts (almonds). Keeps well closed at room temperature for about 5 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA CANDITI E GLASSA: taglia a cubetti 250 g di arancia candita. Glassa per 2 colombe: mescola (senza montare) 80 g di albumi, 90 g di zucchero, 70 g di farina di mandorle e 10 g di amido di riso; copri e tieni in frigo. Per la superficie prepara 30 g di mandorle intere, 20 g di granella di zucchero e un po' di zucchero a velo.\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 210 g di acqua, 68 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 45 g di tuorli e 74 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 82 g di zucchero e 100 g di tuorli a più riprese, 20 g di miele, 9 g di sale, 15 g di pasta d'arancia e 3 g di vaniglia; infine 101 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) CANDITI: a fine impasto, a bassa velocità e con poche pieghe, aggiungi i 250 g di arancia candita. Senza rompere la maglia.\n6) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 790 g, pirla e metti negli stampi da colomba da 750 g.\n7) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1 cm dal bordo dello stampo.\n8) GLASSA E COTTURA: spalma la glassa sulla superficie con un pennello, senza premere; cospargi con le mandorle e la granella e spolvera con zucchero a velo. Cuoci a 170 °C statico per circa 45-50 minuti, fino a 94 °C al cuore (termometro a sonda). Se la glassa scurisce troppo, copri con alluminio dopo 25 minuti.\n9) RAFFREDDAMENTO: lascia raffreddare in piedi su una griglia (di solito la colomba non si capovolge), poi conserva ben chiusa. È al meglio dopo 24 ore di riposo.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) CANDITI UND GLASUR VORBEREITEN: 250 g kandierte Orangenschale würfeln. Glasur für 2 Colombe: 80 g Eiweiß, 90 g Zucker, 70 g Mandelmehl und 10 g Reisstärke nur verrühren (nicht aufschlagen), abdecken und kalt stellen. Für die Oberfläche 30 g ganze Mandeln, 20 g Hagelzucker und etwas Puderzucker bereitlegen.\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 210 g Wasser, 68 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 45 g Eigelb und 74 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 82 g Zucker und 100 g Eigelb in mehreren Portionen, 20 g Honig, 9 g Salz, 15 g Orangenpaste und 3 g Vanille; zuletzt 101 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) CANDITI: Am Ende auf niedriger Stufe und mit wenigen Faltungen die 250 g kandierte Orangenschale unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 790 g teilen, rundwirken und in Colomba-Formen zu 750 g setzen.\n7) GARE: 6-8 Stunden bei 28-30 °C, bis 1 cm unter den Rand der Form.\n8) GLASUR UND BACKEN: Die Glasur mit einem Pinsel ohne Druck auftragen; mit den Mandeln und dem Hagelzucker bestreuen und mit Puderzucker bestäuben. Bei 170 °C Ober-/Unterhitze etwa 45-50 Minuten backen, bis 94 °C im Kern (Einstechthermometer). Wird die Glasur zu dunkel, nach 25 Minuten mit Alufolie abdecken.\n9) AUSKÜHLEN: Aufrecht auf einem Gitter auskühlen lassen (die Colomba wird in der Regel nicht kopfüber gehängt), dann gut verschlossen aufbewahren. Nach 24 Stunden Ruhe am besten.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE CANDIED PEEL AND GLAZE: dice 250 g candied orange peel. Glaze for 2 colombe: stir together (do not whip) 80 g egg whites, 90 g sugar, 70 g almond flour and 10 g rice starch; cover and keep in the fridge. For the top have ready 30 g whole almonds, 20 g pearl sugar and some icing sugar.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 210 g water, 68 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 74 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 82 g sugar and 100 g yolks in several additions, 20 g honey, 9 g salt, 15 g orange paste and 3 g vanilla; finally 101 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) CANDIED PEEL: at the end, on low speed and with few folds, add the 250 g candied orange peel. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 790 g, shape round and place in 750 g colomba moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) GLAZE AND BAKING: brush the glaze on top without pressing; sprinkle with the almonds and pearl sugar and dust with icing sugar. Bake at 170 °C static for about 45-50 minutes, to 94 °C at the core (probe thermometer). If the glaze darkens too much, cover with foil after 25 minutes.\n9) COOLING: let it cool upright on a rack (a colomba is usually not hung upside down), then store well closed. Best after 24 hours of rest."
+  },
+  {
+    "id": "0b5022e7-972f-4a30-9a66-782dae66a0fa",
+    "collection_name": "mikilab",
+    "name": "Pandoro Artigianale MikiLab — Classico Vanigliato",
+    "name_de": "MikiLab Pandoro — klassisch mit Vanille",
+    "name_en": "MikiLab Pandoro — Classic Vanilla",
+    "real_name": "Pandoro Classico",
+    "real_name_de": "Klassischer Pandoro",
+    "real_name_en": "Classic Pandoro",
+    "menu_category": "viennoiserie",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "flour_type_en": "High-strength flour W380 + sourdough starter",
+    "flour_grams": 500,
+    "sourdough_grams": 110,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 40.0,
+    "water_grams": 200,
+    "salt_grams": 9,
+    "bake_temp": 170,
+    "bake_minutes": 43,
+    "bulk_fermentation_hours": 12,
+    "proofing_hours": 7,
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 32,
+        "name_de": "Zucker",
+        "name_en": "Sugar"
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 27,
+        "name_de": "Eigelb",
+        "name_en": "Egg yolk"
+      },
+      {
+        "name": "Burro",
+        "percent": 55,
+        "name_de": "Butter",
+        "name_en": "Butter"
+      },
+      {
+        "name": "Miele",
+        "percent": 3,
+        "name_de": "Honig",
+        "name_en": "Honey"
+      },
+      {
+        "name": "Vaniglia (bacca o pasta)",
+        "percent": 1,
+        "name_de": "Vanille (Schote oder Paste)",
+        "name_en": "Vanilla (pod or paste)"
+      },
+      {
+        "name": "Scorza di limone",
+        "percent": 1,
+        "name_de": "Zitronenschale",
+        "name_en": "Lemon zest"
+      },
+      {
+        "name": "Zucchero a velo vanigliato (finitura)",
+        "percent": 6,
+        "name_de": "Vanille-Puderzucker (zum Bestäuben)",
+        "name_en": "Vanilla icing sugar (to finish)"
+      }
+    ],
+    "notes": "Il pandoro con il metodo MikiLab 60/40: niente frutta, molto burro (55%) e profumo di vaniglia e limone. Ricco di burro: tieni l'impasto fresco (25-26 °C) e incorpora il burro poco alla volta. Contiene glutine, uova e latte. Si conserva ben chiuso a temperatura ambiente per circa 5 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Der Pandoro nach der MikiLab-Methode 60/40: keine Früchte, viel Butter (55 %) und Duft nach Vanille und Zitrone. Butterreich: den Teig kühl halten (25-26 °C) und die Butter nach und nach einarbeiten. Enthält Gluten, Eier und Milch. Hält sich gut verschlossen bei Raumtemperatur etwa 5 Tage.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The pandoro with the MikiLab 60/40 method: no fruit, lots of butter (55%) and a scent of vanilla and lemon. Rich in butter: keep the dough cool (25-26 °C) and add the butter little by little. Contains gluten, eggs and milk. Keeps well closed at room temperature for about 5 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA GLI STAMPI: imburra abbondantemente (circa 15 g di burro morbido per stampo) due stampi da pandoro da 750 g e infarinali leggermente. Grattugia la scorza di 1 limone non trattato (5 g).\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 200 g di acqua, 70 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 45 g di tuorli e 90 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 90 g di zucchero e 90 g di tuorli a più riprese, 15 g di miele, 9 g di sale, 5 g di vaniglia e 5 g di scorza di limone; infine 185 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 705 g, pirla e metti negli stampi preparati, con la chiusura verso il basso.\n6) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1-2 cm dal bordo dello stampo.\n7) COTTURA: 170 °C statico per circa 40-45 minuti, fino a 92-94 °C al cuore (termometro a sonda). Se la superficie scurisce troppo, copri con alluminio dopo 25 minuti.\n8) RAFFREDDAMENTO: lascia riposare 20-30 minuti nello stampo, sforma e fai raffreddare in piedi su una griglia. Quando è completamente freddo spolvera con 30 g di zucchero a velo vanigliato. È al meglio dopo 24 ore di riposo.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) FORMEN VORBEREITEN: Zwei Pandoro-Formen zu 750 g großzügig einfetten (etwa 15 g weiche Butter pro Form) und leicht bemehlen. Die Schale von 1 unbehandelten Zitrone abreiben (5 g).\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 200 g Wasser, 70 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 45 g Eigelb und 90 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 90 g Zucker und 90 g Eigelb in mehreren Portionen, 15 g Honig, 9 g Salz, 5 g Vanille und 5 g Zitronenschale; zuletzt 185 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 705 g teilen, rundwirken und mit dem Schluss nach unten in die vorbereiteten Formen setzen.\n6) GARE: 6-8 Stunden bei 28-30 °C, bis 1-2 cm unter den Rand der Form.\n7) BACKEN: 170 °C Ober-/Unterhitze etwa 40-45 Minuten, bis 92-94 °C im Kern (Einstechthermometer). Wird die Oberfläche zu dunkel, nach 25 Minuten mit Alufolie abdecken.\n8) AUSKÜHLEN: 20-30 Minuten in der Form ruhen lassen, stürzen und aufrecht auf einem Gitter auskühlen lassen. Wenn er ganz kalt ist, mit 30 g Vanille-Puderzucker bestäuben. Nach 24 Stunden Ruhe am besten.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE MOULDS: generously butter (about 15 g soft butter per mould) two 750 g pandoro moulds and dust lightly with flour. Grate the zest of 1 unwaxed lemon (5 g).\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 70 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 90 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 90 g sugar and 90 g yolks in several additions, 15 g honey, 9 g salt, 5 g vanilla and 5 g lemon zest; finally 185 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 705 g, shape round and place seam side down in the prepared moulds.\n6) PROOF: 6-8 hours at 28-30 °C, until 1-2 cm below the rim of the mould.\n7) BAKING: 170 °C static for about 40-45 minutes, to 92-94 °C at the core (probe thermometer). If the surface darkens too much, cover with foil after 25 minutes.\n8) COOLING: rest 20-30 minutes in the mould, turn out and cool upright on a rack. When completely cold, dust with 30 g vanilla icing sugar. Best after 24 hours of rest."
+  },
+  {
+    "id": "3c1d07ea-9446-40b2-bf81-f4114596e46a",
+    "collection_name": "mikilab",
+    "name": "Stollen Artigianale MikiLab — Classico (Christstollen)",
+    "name_de": "MikiLab Christstollen — klassisch",
+    "name_en": "MikiLab Christmas Stollen — Classic",
+    "real_name": "Stollen Natalizio Classico",
+    "real_name_de": "Klassischer Christstollen",
+    "real_name_en": "Classic Christmas Stollen",
+    "menu_category": "viennoiserie",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "flour_type_en": "High-strength flour W380 + sourdough starter",
+    "flour_grams": 500,
+    "sourdough_grams": 110,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 26.0,
+    "water_grams": 130,
+    "salt_grams": 8,
+    "bake_temp": 170,
+    "bake_minutes": 55,
+    "bulk_fermentation_hours": 4.5,
+    "proofing_hours": 3.5,
+    "extra_ingredients": [
+      {
+        "name": "Zucchero (impasto)",
+        "percent": 12,
+        "name_de": "Zucker (Teig)",
+        "name_en": "Sugar (dough)"
+      },
+      {
+        "name": "Burro",
+        "percent": 50,
+        "name_de": "Butter",
+        "name_en": "Butter"
+      },
+      {
+        "name": "Uvetta sultanina",
+        "percent": 40,
+        "name_de": "Sultaninen",
+        "name_en": "Sultana raisins"
+      },
+      {
+        "name": "Canditi di cedro e arancia",
+        "percent": 15,
+        "name_de": "Zitronat und Orangeat",
+        "name_en": "Candied citron and orange peel"
+      },
+      {
+        "name": "Mandorle tritate",
+        "percent": 10,
+        "name_de": "Gehackte Mandeln",
+        "name_en": "Chopped almonds"
+      },
+      {
+        "name": "Rum (per macerare la frutta)",
+        "percent": 12,
+        "name_de": "Rum (zum Einlegen der Früchte)",
+        "name_en": "Rum (to soak the fruit)"
+      },
+      {
+        "name": "Spezie (cannella, cardamomo, noce moscata)",
+        "percent": 1,
+        "name_de": "Gewürze (Zimt, Kardamom, Muskat)",
+        "name_en": "Spices (cinnamon, cardamom, nutmeg)"
+      },
+      {
+        "name": "Scorza di limone",
+        "percent": 1,
+        "name_de": "Zitronenschale",
+        "name_en": "Lemon zest"
+      },
+      {
+        "name": "Vaniglia",
+        "percent": 1,
+        "name_de": "Vanille",
+        "name_en": "Vanilla"
+      },
+      {
+        "name": "Burro fuso (finitura)",
+        "percent": 20,
+        "name_de": "Flüssige Butter (Finish)",
+        "name_en": "Melted butter (finish)"
+      },
+      {
+        "name": "Zucchero semolato (finitura)",
+        "percent": 20,
+        "name_de": "Zucker (Finish)",
+        "name_en": "Caster sugar (finish)"
+      },
+      {
+        "name": "Zucchero a velo (finitura)",
+        "percent": 20,
+        "name_de": "Puderzucker (Finish)",
+        "name_en": "Icing sugar (finish)"
+      }
+    ],
+    "notes": "Lo Stollen natalizio tedesco nella versione classica, senza marzapane: burro, frutta secca macerata nel rum, spezie e una spessa copertura di burro e zucchero. Va lasciato maturare almeno una settimana. Contiene glutine, latte e frutta a guscio (mandorle); la frutta è macerata nel rum. Si conserva avvolto in un luogo fresco per 3-4 settimane.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Der deutsche Weihnachtsstollen in der klassischen Variante, ohne Marzipan: Butter, in Rum eingelegte Trockenfrüchte, Gewürze und eine dicke Hülle aus Butter und Zucker. Er sollte mindestens eine Woche reifen. Enthält Gluten, Milch und Schalenfrüchte (Mandeln); die Früchte werden in Rum eingelegt. Hält sich gut eingewickelt an einem kühlen Ort 3-4 Wochen.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The German Christmas stollen in its classic version, without marzipan: butter, dried fruit soaked in rum, spices and a thick coat of butter and sugar. Let it ripen for at least a week. Contains gluten, milk and tree nuts (almonds); the fruit is soaked in rum. Keeps for 3-4 weeks wrapped in a cool place.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) LA SERA PRIMA - FRUTTA: metti 200 g di uvetta sultanina, 75 g di canditi di cedro e arancia e 50 g di mandorle tritate in 60 g di rum; copri e lascia macerare tutta la notte. Il giorno dopo scola bene: la frutta deve essere asciutta.\n3) 1° IMPASTO: in planetaria mescola 130 g di latte tiepido, 20 g di zucchero, 110 g di lievito madre e 150 g di farina fino a un composto liscio. Lievita 4-5 ore a 26-28 °C, fino a raddoppiare.\n4) 2° IMPASTO: unisci il 1° impasto a 350 g di farina, 40 g di zucchero, 8 g di sale, 5 g di spezie (2 g di cannella, 2 g di cardamomo, 1 g di noce moscata), 5 g di scorza di limone e 5 g di vaniglia; impasta fino a incordare (10-12 minuti). Poi aggiungi 250 g di burro morbido in quattro volte, incordando ogni volta. Temperatura finale 24-26 °C.\n5) FRUTTA: a bassa velocità e con poche pieghe, aggiungi la frutta e le mandorle scolate. Senza rompere la maglia.\n6) RIPOSO: 30 minuti coperto.\n7) FORMATURA: dividi in due pezzi da circa 700 g. Stendi ogni pezzo a ovale di circa 22×28 cm. Con il mattarello premi una linea nel senso della lunghezza, appena fuori centro, e piega il lato più largo sopra il più stretto. Metti su una teglia con carta forno.\n8) LIEVITAZIONE: 3-4 ore a 28 °C, fino a un aumento di circa il 50% (l'impasto è ricco di burro e non raddoppia).\n9) COTTURA: 170 °C statico per circa 55 minuti, fino a 94 °C al cuore (termometro a sonda). Se scurisce troppo, copri con alluminio dopo 35 minuti.\n10) FINITURA: appena sfornato, spennella tutta la superficie con 100 g di burro fuso e cospargi con 100 g di zucchero semolato. Lascia raffreddare del tutto, poi spolvera con 100 g di zucchero a velo.\n11) MATURAZIONE: avvolgi in carta da forno e alluminio e conserva in un luogo fresco per almeno 1 settimana (meglio 2-3) prima di tagliarlo: il profumo e la morbidezza migliorano col riposo.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) AM VORABEND - FRÜCHTE: 200 g Sultaninen, 75 g Zitronat und Orangeat und 50 g gehackte Mandeln in 60 g Rum einlegen; abdecken und über Nacht ziehen lassen. Am nächsten Tag gut abtropfen lassen: die Früchte müssen trocken sein.\n3) 1. TEIG: In der Küchenmaschine 130 g lauwarme Milch, 20 g Zucker, 110 g Sauerteig und 150 g Mehl zu einer glatten Masse verrühren. 4-5 Stunden bei 26-28 °C gehen lassen, bis sich das Volumen verdoppelt.\n4) 2. TEIG: Den 1. Teig mit 350 g Mehl, 40 g Zucker, 8 g Salz, 5 g Gewürzen (2 g Zimt, 2 g Kardamom, 1 g Muskat), 5 g Zitronenschale und 5 g Vanille verkneten, bis er sich bindet (10-12 Minuten). Dann 250 g weiche Butter in vier Portionen zugeben, jeweils bis zur Bindung. Endtemperatur 24-26 °C.\n5) FRÜCHTE: Auf niedriger Stufe und mit wenigen Faltungen die abgetropften Früchte und Mandeln unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE: 30 Minuten abgedeckt.\n7) FORMEN: In zwei Stücke von etwa 700 g teilen. Jedes Stück zu einem Oval von etwa 22×28 cm ausrollen. Mit dem Nudelholz der Länge nach eine Vertiefung knapp neben der Mitte eindrücken und die breitere Seite über die schmalere klappen. Auf ein Blech mit Backpapier legen.\n8) GARE: 3-4 Stunden bei 28 °C, bis sich das Volumen um etwa 50 % vergrößert (der Teig ist butterreich und verdoppelt sich nicht).\n9) BACKEN: 170 °C Ober-/Unterhitze etwa 55 Minuten, bis 94 °C im Kern (Einstechthermometer). Wird er zu dunkel, nach 35 Minuten mit Alufolie abdecken.\n10) FINISH: Direkt nach dem Backen die ganze Oberfläche mit 100 g flüssiger Butter bestreichen und mit 100 g Zucker bestreuen. Vollständig auskühlen lassen, dann mit 100 g Puderzucker bestäuben.\n11) REIFUNG: In Backpapier und Alufolie wickeln und mindestens 1 Woche (besser 2-3) an einem kühlen Ort lagern, bevor er angeschnitten wird: Aroma und Saftigkeit verbessern sich mit der Ruhe.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. With a rolling pin press a line lengthwise, just off centre, and fold the wider side over the narrower one. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting."
+  },
+  {
+    "id": "6d8e9553-b3ae-418a-8c79-b6a9e0999330",
+    "collection_name": "mikilab",
+    "name": "Stollen Artigianale MikiLab — con Marzapane (Marzipanstollen)",
+    "name_de": "MikiLab Marzipanstollen — mit Marzipan",
+    "name_en": "MikiLab Christmas Stollen — with Marzipan",
+    "real_name": "Stollen al Marzapane",
+    "real_name_de": "Marzipanstollen",
+    "real_name_en": "Marzipan Stollen",
+    "menu_category": "viennoiserie",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "flour_type_en": "High-strength flour W380 + sourdough starter",
+    "flour_grams": 500,
+    "sourdough_grams": 110,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 26.0,
+    "water_grams": 130,
+    "salt_grams": 8,
+    "bake_temp": 170,
+    "bake_minutes": 55,
+    "bulk_fermentation_hours": 4.5,
+    "proofing_hours": 3.5,
+    "extra_ingredients": [
+      {
+        "name": "Zucchero (impasto)",
+        "percent": 12,
+        "name_de": "Zucker (Teig)",
+        "name_en": "Sugar (dough)"
+      },
+      {
+        "name": "Burro",
+        "percent": 50,
+        "name_de": "Butter",
+        "name_en": "Butter"
+      },
+      {
+        "name": "Uvetta sultanina",
+        "percent": 40,
+        "name_de": "Sultaninen",
+        "name_en": "Sultana raisins"
+      },
+      {
+        "name": "Canditi di cedro e arancia",
+        "percent": 15,
+        "name_de": "Zitronat und Orangeat",
+        "name_en": "Candied citron and orange peel"
+      },
+      {
+        "name": "Mandorle tritate",
+        "percent": 10,
+        "name_de": "Gehackte Mandeln",
+        "name_en": "Chopped almonds"
+      },
+      {
+        "name": "Rum (per macerare la frutta)",
+        "percent": 12,
+        "name_de": "Rum (zum Einlegen der Früchte)",
+        "name_en": "Rum (to soak the fruit)"
+      },
+      {
+        "name": "Spezie (cannella, cardamomo, noce moscata)",
+        "percent": 1,
+        "name_de": "Gewürze (Zimt, Kardamom, Muskat)",
+        "name_en": "Spices (cinnamon, cardamom, nutmeg)"
+      },
+      {
+        "name": "Scorza di limone",
+        "percent": 1,
+        "name_de": "Zitronenschale",
+        "name_en": "Lemon zest"
+      },
+      {
+        "name": "Vaniglia",
+        "percent": 1,
+        "name_de": "Vanille",
+        "name_en": "Vanilla"
+      },
+      {
+        "name": "Marzapane (almeno 50% mandorle)",
+        "percent": 40,
+        "name_de": "Marzipan (mind. 50 % Mandeln)",
+        "name_en": "Marzipan (at least 50% almonds)"
+      },
+      {
+        "name": "Burro fuso (finitura)",
+        "percent": 20,
+        "name_de": "Flüssige Butter (Finish)",
+        "name_en": "Melted butter (finish)"
+      },
+      {
+        "name": "Zucchero semolato (finitura)",
+        "percent": 20,
+        "name_de": "Zucker (Finish)",
+        "name_en": "Caster sugar (finish)"
+      },
+      {
+        "name": "Zucchero a velo (finitura)",
+        "percent": 20,
+        "name_de": "Puderzucker (Finish)",
+        "name_en": "Icing sugar (finish)"
+      }
+    ],
+    "notes": "Lo Stollen natalizio tedesco nella versione con marzapane: un cilindro di marzapane al centro, come nel Marzipanstollen. Scegli un marzapane di buona qualità (almeno il 50% di mandorle). Contiene glutine, latte e frutta a guscio (mandorle); la frutta è macerata nel rum. Si conserva avvolto in un luogo fresco per 3-4 settimane.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Der deutsche Weihnachtsstollen in der Variante mit Marzipan: eine Marzipanrolle in der Mitte, wie beim Marzipanstollen. Ein gutes Marzipan wählen (mindestens 50 % Mandeln). Enthält Gluten, Milch und Schalenfrüchte (Mandeln); die Früchte werden in Rum eingelegt. Hält sich gut eingewickelt an einem kühlen Ort 3-4 Wochen.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The German Christmas stollen with marzipan: a marzipan log in the centre, as in a Marzipanstollen. Choose a good-quality marzipan (at least 50% almonds). Contains gluten, milk and tree nuts (almonds); the fruit is soaked in rum. Keeps for 3-4 weeks wrapped in a cool place.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) LA SERA PRIMA - FRUTTA: metti 200 g di uvetta sultanina, 75 g di canditi di cedro e arancia e 50 g di mandorle tritate in 60 g di rum; copri e lascia macerare tutta la notte. Il giorno dopo scola bene: la frutta deve essere asciutta.\n3) 1° IMPASTO: in planetaria mescola 130 g di latte tiepido, 20 g di zucchero, 110 g di lievito madre e 150 g di farina fino a un composto liscio. Lievita 4-5 ore a 26-28 °C, fino a raddoppiare.\n4) 2° IMPASTO: unisci il 1° impasto a 350 g di farina, 40 g di zucchero, 8 g di sale, 5 g di spezie (2 g di cannella, 2 g di cardamomo, 1 g di noce moscata), 5 g di scorza di limone e 5 g di vaniglia; impasta fino a incordare (10-12 minuti). Poi aggiungi 250 g di burro morbido in quattro volte, incordando ogni volta. Temperatura finale 24-26 °C.\n5) FRUTTA: a bassa velocità e con poche pieghe, aggiungi la frutta e le mandorle scolate. Senza rompere la maglia.\n6) RIPOSO: 30 minuti coperto.\n7) FORMATURA: dividi in due pezzi da circa 700 g. Stendi ogni pezzo a ovale di circa 22×28 cm. Arrotola 100 g di marzapane (con almeno il 50% di mandorle) in un cilindro lungo quanto il lato corto e mettilo appena fuori centro; piega il lato più largo sul marzapane, sigillando bene i bordi. Metti su una teglia con carta forno.\n8) LIEVITAZIONE: 3-4 ore a 28 °C, fino a un aumento di circa il 50% (l'impasto è ricco di burro e non raddoppia).\n9) COTTURA: 170 °C statico per circa 55 minuti, fino a 94 °C al cuore (termometro a sonda). Se scurisce troppo, copri con alluminio dopo 35 minuti.\n10) FINITURA: appena sfornato, spennella tutta la superficie con 100 g di burro fuso e cospargi con 100 g di zucchero semolato. Lascia raffreddare del tutto, poi spolvera con 100 g di zucchero a velo.\n11) MATURAZIONE: avvolgi in carta da forno e alluminio e conserva in un luogo fresco per almeno 1 settimana (meglio 2-3) prima di tagliarlo: il profumo e la morbidezza migliorano col riposo.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) AM VORABEND - FRÜCHTE: 200 g Sultaninen, 75 g Zitronat und Orangeat und 50 g gehackte Mandeln in 60 g Rum einlegen; abdecken und über Nacht ziehen lassen. Am nächsten Tag gut abtropfen lassen: die Früchte müssen trocken sein.\n3) 1. TEIG: In der Küchenmaschine 130 g lauwarme Milch, 20 g Zucker, 110 g Sauerteig und 150 g Mehl zu einer glatten Masse verrühren. 4-5 Stunden bei 26-28 °C gehen lassen, bis sich das Volumen verdoppelt.\n4) 2. TEIG: Den 1. Teig mit 350 g Mehl, 40 g Zucker, 8 g Salz, 5 g Gewürzen (2 g Zimt, 2 g Kardamom, 1 g Muskat), 5 g Zitronenschale und 5 g Vanille verkneten, bis er sich bindet (10-12 Minuten). Dann 250 g weiche Butter in vier Portionen zugeben, jeweils bis zur Bindung. Endtemperatur 24-26 °C.\n5) FRÜCHTE: Auf niedriger Stufe und mit wenigen Faltungen die abgetropften Früchte und Mandeln unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE: 30 Minuten abgedeckt.\n7) FORMEN: In zwei Stücke von etwa 700 g teilen. Jedes Stück zu einem Oval von etwa 22×28 cm ausrollen. 100 g Marzipan (mit mindestens 50 % Mandeln) zu einer Rolle formen, die so lang ist wie die kurze Seite, und knapp neben der Mitte auflegen; die breitere Seite über das Marzipan klappen und die Ränder gut verschließen. Auf ein Blech mit Backpapier legen.\n8) GARE: 3-4 Stunden bei 28 °C, bis sich das Volumen um etwa 50 % vergrößert (der Teig ist butterreich und verdoppelt sich nicht).\n9) BACKEN: 170 °C Ober-/Unterhitze etwa 55 Minuten, bis 94 °C im Kern (Einstechthermometer). Wird er zu dunkel, nach 35 Minuten mit Alufolie abdecken.\n10) FINISH: Direkt nach dem Backen die ganze Oberfläche mit 100 g flüssiger Butter bestreichen und mit 100 g Zucker bestreuen. Vollständig auskühlen lassen, dann mit 100 g Puderzucker bestäuben.\n11) REIFUNG: In Backpapier und Alufolie wickeln und mindestens 1 Woche (besser 2-3) an einem kühlen Ort lagern, bevor er angeschnitten wird: Aroma und Saftigkeit verbessern sich mit der Ruhe.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. Roll 100 g marzipan (at least 50% almonds) into a log as long as the short side and place it just off centre; fold the wider side over the marzipan, sealing the edges well. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting."
+  },
+  {
+    "id": "ae136a09-816a-4be4-9377-0564bf9fd90d",
+    "collection_name": "mikilab",
+    "name": "Pinsa Romana MikiLab",
+    "name_de": "MikiLab Pinsa Romana",
+    "name_en": "MikiLab Pinsa Romana",
+    "real_name": "Pinsa Romana",
+    "real_name_de": "Pinsa Romana",
+    "real_name_en": "Pinsa Romana",
+    "menu_category": "pizza",
+    "flour_type": "Farina di grano tenero W300 (80%) + farina di riso (20%)",
+    "flour_type_de": "Weizenmehl W300 (80 %) + Reismehl (20 %)",
+    "flour_type_en": "Soft wheat flour W300 (80%) + rice flour (20%)",
+    "flour_grams": 1000,
+    "sourdough_grams": 100,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "Statico",
+    "origin": "it",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 80.0,
+    "water_grams": 800,
+    "salt_grams": 22,
+    "bake_temp": 250,
+    "bake_minutes": 9,
+    "bulk_fermentation_hours": 36,
+    "proofing_hours": 2,
+    "extra_ingredients": [
+      {
+        "name": "Olio extravergine d'oliva",
+        "percent": 2,
+        "name_de": "Natives Olivenöl extra",
+        "name_en": "Extra virgin olive oil"
+      },
+      {
+        "name": "Lievito di birra fresco",
+        "percent": 0.2,
+        "name_de": "Frische Hefe",
+        "name_en": "Fresh yeast"
+      }
+    ],
+    "notes": "La pinsa romana: base ovale, alta idratazione (80%), maturazione lunga in frigo per una crosta croccante e un cuore leggero. La farina di riso è compresa nei 1000 g di farina (800 g di grano + 200 g di riso). Nella pinsa tradizionale c'è anche un po' di farina di soia: qui non è usata, così l'impasto non contiene soia. Contiene glutine.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Die Pinsa Romana: ovaler Boden, hohe Hydration (80 %), lange Reifung im Kühlschrank für eine knusprige Kruste und eine leichte Krume. Das Reismehl ist in den 1000 g Mehl enthalten (800 g Weizen + 200 g Reis). In der traditionellen Pinsa ist auch etwas Sojamehl enthalten: hier wird es nicht verwendet, der Teig enthält also kein Soja. Enthält Gluten.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The Roman pinsa: oval base, high hydration (80%), long cold maturation for a crisp crust and a light crumb. The rice flour is included in the 1000 g of flour (800 g wheat + 200 g rice). Traditional pinsa also contains some soy flour: it is not used here, so the dough contains no soy. Contains gluten.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 2 volte, a circa 4 ore di distanza e a 28 °C, finché raddoppia. Usalo al picco.\n2) AUTOLISI: mescola 800 g di farina di grano tenero W300 e 200 g di farina di riso con 700 g di acqua fredda (12-14 °C). Riposo 30 minuti coperto.\n3) IMPASTO: aggiungi 100 g di lievito madre e 2 g di lievito di birra fresco sciolto in 100 g di acqua; dopo 3 minuti unisci 22 g di sale e, dopo altri 5 minuti, 20 g di olio extravergine. Impasta fino a un impasto liscio (T finale 22-24 °C). È molto morbido: aiutati con le pieghe, non aggiungere farina.\n4) PIEGHE: 3 serie di pieghe a 30 minuti l'una, a temperatura ambiente. Poi lascia riposare 1 ora.\n5) MATURAZIONE IN FRIGO: in un contenitore unto e coperto, in frigo a 4 °C per 24-48 ore.\n6) PEZZATURA: tira fuori l'impasto 1 ora prima. Dividi in 8 pezzi da circa 240 g, mettili in una cassetta cosparsa di farina di riso e lasciali 2 ore a temperatura ambiente.\n7) STENDI: allarga ogni pezzo con le dita, senza mattarello, in un ovale di circa 30×20 cm, mantenendo il bordo alto.\n8) COTTURA: forno al massimo (circa 250 °C) con pietra o teglia rovente, 8-10 minuti. Condisci a metà cottura o a fine cottura per non appesantire la base.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 2 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen, bis er sich verdoppelt. Auf dem Höhepunkt verwenden.\n2) AUTOLYSE: 800 g Weizenmehl W300 und 200 g Reismehl mit 700 g kaltem Wasser (12-14 °C) verrühren. 30 Minuten abgedeckt ruhen lassen.\n3) TEIG: 100 g Sauerteig und 2 g frische Hefe, in 100 g Wasser aufgelöst, zugeben; nach 3 Minuten 22 g Salz und nach weiteren 5 Minuten 20 g natives Olivenöl extra. Zu einem glatten Teig kneten (Endtemperatur 22-24 °C). Er ist sehr weich: mit Dehn- und Faltvorgängen arbeiten, kein Mehl zugeben.\n4) FALTEN: 3 Runden Dehnen und Falten im Abstand von 30 Minuten bei Raumtemperatur. Dann 1 Stunde ruhen lassen.\n5) REIFUNG IM KÜHLSCHRANK: In einem geölten, abgedeckten Behälter bei 4 °C für 24-48 Stunden.\n6) PORTIONIEREN: Den Teig 1 Stunde vorher herausnehmen. In 8 Stücke von etwa 240 g teilen, in eine mit Reismehl bestreute Box legen und 2 Stunden bei Raumtemperatur ruhen lassen.\n7) FORMEN: Jedes Stück mit den Fingern, ohne Nudelholz, zu einem Oval von etwa 30×20 cm auseinanderziehen, den Rand hoch lassen.\n8) BACKEN: Ofen auf höchster Stufe (etwa 250 °C) mit Stein oder heißem Blech, 8-10 Minuten. In der Mitte oder am Ende der Backzeit belegen, damit der Boden nicht zu schwer wird.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 2 times about 4 hours apart at 28 °C until it doubles. Use it at its peak.\n2) AUTOLYSE: mix 800 g soft wheat flour W300 and 200 g rice flour with 700 g cold water (12-14 °C). Rest 30 minutes covered.\n3) DOUGH: add 100 g sourdough and 2 g fresh yeast dissolved in 100 g water; after 3 minutes add 22 g salt and, after another 5 minutes, 20 g extra virgin olive oil. Mix until smooth (final temperature 22-24 °C). It is very soft: use stretch-and-folds, do not add flour.\n4) FOLDS: 3 rounds of folds 30 minutes apart at room temperature. Then rest 1 hour.\n5) COLD MATURATION: in an oiled, covered container in the fridge at 4 °C for 24-48 hours.\n6) DIVIDING: take the dough out 1 hour before. Divide into 8 pieces of about 240 g, place in a box dusted with rice flour and leave 2 hours at room temperature.\n7) STRETCHING: stretch each piece with your fingers, no rolling pin, into an oval of about 30×20 cm, keeping the rim high.\n8) BAKING: oven at maximum (about 250 °C) with a stone or a very hot tray, 8-10 minutes. Add toppings halfway or at the end so the base does not get heavy."
+  },
+  {
+    "id": "98e54c1d-55d1-4975-afa9-545fd5f086d1",
+    "collection_name": "mikilab",
+    "name": "Panettone Salato Artigianale MikiLab — Speck e Formaggio",
+    "name_de": "MikiLab Herzhafter Panettone — Speck und Käse",
+    "name_en": "MikiLab Savoury Panettone — Speck and Cheese",
+    "real_name": "Panettone Salato Gourmet",
+    "real_name_de": "Herzhafter Panettone",
+    "real_name_en": "Gourmet Savoury Panettone",
+    "menu_category": "rosticceria",
+    "flour_type": "Farina alta forza W380 + lievito madre",
+    "flour_type_de": "Starkes Mehl W380 + Lievito Madre",
+    "flour_type_en": "High-strength flour W380 + sourdough starter",
+    "flour_grams": 500,
+    "sourdough_grams": 110,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": null,
+    "mix_minutes": null,
+    "rest_minutes": null,
+    "water_temp_c": null,
+    "image_url": null,
+    "costing": null,
+    "label": null,
+    "biga": null,
+    "work_phases": null,
+    "locked": null,
+    "hidden": false,
+    "created_at": "2026-09-20T17:44:58.335661+00:00",
+    "updated_at": "2026-09-20T17:44:58.335661+00:00",
+    "hydration_percent": 40.0,
+    "water_grams": 200,
+    "salt_grams": 10,
+    "bake_temp": 170,
+    "bake_minutes": 45,
+    "bulk_fermentation_hours": 12,
+    "proofing_hours": 7,
+    "extra_ingredients": [
+      {
+        "name": "Zucchero",
+        "percent": 8,
+        "name_de": "Zucker",
+        "name_en": "Sugar"
+      },
+      {
+        "name": "Tuorlo",
+        "percent": 15,
+        "name_de": "Eigelb",
+        "name_en": "Egg yolk"
+      },
+      {
+        "name": "Burro",
+        "percent": 30,
+        "name_de": "Butter",
+        "name_en": "Butter"
+      },
+      {
+        "name": "Speck a dadini",
+        "percent": 30,
+        "name_de": "Speck, gewürfelt",
+        "name_en": "Diced speck"
+      },
+      {
+        "name": "Formaggio a pasta semidura (Emmental o Asiago)",
+        "percent": 30,
+        "name_de": "Halbfester Käse (Emmentaler oder Asiago)",
+        "name_en": "Semi-hard cheese (Emmental or Asiago)"
+      },
+      {
+        "name": "Pepe nero",
+        "percent": 0.4,
+        "name_de": "Schwarzer Pfeffer",
+        "name_en": "Black pepper"
+      }
+    ],
+    "notes": "Il panettone salato gourmet: stessa base MikiLab 60/40, ma con poco zucchero, speck e formaggio. Ottimo per antipasti e buffet. Contiene glutine, uova, latte e carne (speck). Conservalo in frigo e consumalo entro 3-4 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
+    "notes_de": "Der herzhafte Gourmet-Panettone: gleiche MikiLab-Basis 60/40, aber mit wenig Zucker, Speck und Käse. Ideal für Vorspeisen und Buffets. Enthält Gluten, Eier, Milch und Fleisch (Speck). Hält sich gekühlt 3-4 Tage.\n\nMikiLab-Basis in Erprobung (Entwurf von Sitor, KI): Mengen und Zeiten nach dem ersten Backen zu bestätigen.",
+    "notes_en": "The gourmet savoury panettone: same MikiLab 60/40 base, but with little sugar, speck and cheese. Great for starters and buffets. Contains gluten, eggs, milk and meat (speck). Keep it in the fridge and eat within 3-4 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
+    "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA LE SOSPENSIONI: taglia 150 g di speck a dadini e rosolalo 2 minuti in padella senza olio, poi lascialo raffreddare; taglia 150 g di formaggio a pasta semidura (Emmental o Asiago) a cubetti di 8 mm e tienili in frigo.\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 200 g di acqua, 20 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 25 g di tuorli e 40 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 20 g di zucchero e 50 g di tuorli a più riprese, 10 g di sale e 2 g di pepe nero; infine 110 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) SOSPENSIONI: a fine impasto, a bassa velocità e con poche pieghe, aggiungi 150 g di speck e 150 g di formaggio. Senza rompere la maglia.\n6) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 690 g, pirla e metti nei pirottini da 750 g.\n7) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1 cm dal bordo del pirottino.\n8) COTTURA: 170 °C statico per circa 45 minuti, fino a 92-94 °C al cuore (termometro a sonda). Infila due spiedi alla base e capovolgi subito.\n9) RAFFREDDAMENTO E SERVIZIO: lascia a testa in giù 4-6 ore. Al meglio dopo 12-24 ore, a fette, anche leggermente tostato. Contiene speck e formaggio: conservalo in frigo e consumalo entro 3-4 giorni.",
+    "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) EINLAGEN VORBEREITEN: 150 g Speck würfeln und 2 Minuten in einer Pfanne ohne Öl anbraten, dann abkühlen lassen; 150 g halbfesten Käse (Emmentaler oder Asiago) in 8-mm-Würfel schneiden und kalt stellen.\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 200 g Wasser, 20 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 25 g Eigelb und 40 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 20 g Zucker und 50 g Eigelb in mehreren Portionen, 10 g Salz und 2 g schwarzen Pfeffer; zuletzt 110 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) EINLAGEN: Am Ende auf niedriger Stufe und mit wenigen Faltungen 150 g Speck und 150 g Käse unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 690 g teilen, rundwirken und in Papierformen zu 750 g setzen.\n7) GARE: 6-8 Stunden bei 28-30 °C, bis 1 cm unter den Rand der Form.\n8) BACKEN: 170 °C Ober-/Unterhitze etwa 45 Minuten, bis 92-94 °C im Kern (Einstechthermometer). Zwei Spieße unten durchstecken und sofort umdrehen.\n9) AUSKÜHLEN UND SERVIEREN: 4-6 Stunden kopfüber hängen lassen. Nach 12-24 Stunden am besten, in Scheiben, gern leicht getoastet. Enthält Speck und Käse: im Kühlschrank aufbewahren und innerhalb von 3-4 Tagen verzehren.",
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE INCLUSIONS: dice 150 g speck and fry it 2 minutes in a dry pan, then let it cool; cut 150 g semi-hard cheese (Emmental or Asiago) into 8 mm cubes and keep them in the fridge.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 20 g sugar and 110 g sourdough; then 300 g flour; finally 25 g yolks and 40 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 20 g sugar and 50 g yolks in several additions, 10 g salt and 2 g black pepper; finally 110 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) INCLUSIONS: at the end, on low speed and with few folds, add 150 g speck and 150 g cheese. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 690 g, shape round and place in 750 g paper moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) BAKING: 170 °C static for about 45 minutes, to 92-94 °C at the core (probe thermometer). Push two skewers through the base and turn upside down immediately.\n9) COOLING AND SERVING: leave hanging upside down 4-6 hours. Best after 12-24 hours, sliced, even lightly toasted. It contains speck and cheese: keep it in the fridge and eat within 3-4 days."
   }
 ]

@@ -1,2 +1,0 @@
-frontend/src/components/ApprenticeCard.jsx
-frontend/src/lib/recipeExport.js

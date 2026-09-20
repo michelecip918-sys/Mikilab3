@@ -8,7 +8,7 @@ import { substitutes, fmtL } from "@/lib/improver";
 const YEAST_RE = /lievito di birra|hefe|yeast/i;
 const LM_RE = /lievito madre|sauerteig|sourdough|licoli/i;
 const IMPR_RE = /migliorator|backmittel|improver|verbesserer/i;
-const YEAST_CATS = ["pane", "panini", "pizza", "focacce", "snack"];
+const YEAST_CATS = ["pane", "panini", "pizza", "focacce", "snack", "rosticceria", "fritti"];
 
 export default function Sostituzioni({ r, target, f, farro }) {
   const { lang } = useLang();
