@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, Loader2, CheckCircle2, RotateCcw, CircleDashed, ArrowRight } from "lucide-react";
+import { ChevronLeft, Loader2, CheckCircle2, RotateCcw, CircleDashed, ArrowRight, PartyPopper, X } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import { toast } from "sonner";
+
+const MILESTONE_KEY = "mikilab_diario_milestone";
 
 const CAT_LABEL = {
   pane: ["Pane", "Brot", "Bread"],
@@ -25,9 +28,32 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [data, setData] = useState(null);
   const [cat, setCat] = useState("all");
+  const [celebrate, setCelebrate] = useState(null);
 
   const reload = () => { api.get(`/admin/test-diary`).then((r) => setData(r.data)).catch(() => setData({ items: [], next: null, to_test: 0, tested: 0 })); };
   useEffect(() => { reload(); }, []);
+
+  // Traguardi: festeggia il primo raggiungimento di 50/75/100% (persistente su localStorage).
+  useEffect(() => {
+    if (!data) return;
+    const tot = data.tested + data.to_test;
+    if (tot <= 0) return;
+    const pct = Math.round((data.tested / tot) * 100);
+    const reached = pct >= 100 ? 100 : pct >= 75 ? 75 : pct >= 50 ? 50 : 0;
+    if (reached <= 0) return;
+    let prev = 0;
+    try { prev = Number(localStorage.getItem(MILESTONE_KEY) || 0); } catch { /* */ }
+    if (reached > prev) {
+      try { localStorage.setItem(MILESTONE_KEY, String(reached)); } catch { /* */ }
+      setCelebrate(reached);
+      const msg = reached === 100
+        ? tri("Le hai provate tutte! 🏆", "Du hast alle getestet! 🏆", "You've tested them all! 🏆")
+        : reached === 75
+          ? tri("Ci sei quasi: 75% provate!", "Fast geschafft: 75% getestet!", "Almost there: 75% tested!")
+          : tri("Metà strada: 50% provate!", "Halbzeit: 50% getestet!", "Halfway: 50% tested!");
+      toast.success(msg);
+    }
+  }, [data]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const open = (id) => { if (onOpenRecipe) onOpenRecipe(id); };
   const catLabel = (c) => { const m = CAT_LABEL[c]; return m ? tri(m[0], m[1], m[2]) : c; };
@@ -60,6 +86,25 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
         ); })()}
       </div>
 
+      {/* Traguardo raggiunto: banner di festeggiamento */}
+      {celebrate && (
+        <div data-testid="diario-celebrate" className="rounded-2xl border border-accent/50 bg-accent/10 p-4 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-500">
+          <PartyPopper className="w-6 h-6 text-accent shrink-0 mt-0.5" />
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-black text-foreground">
+              {celebrate === 100
+                ? tri("Traguardo: tutte le ricette provate! 🏆", "Meilenstein: alle Rezepte erprobt! 🏆", "Milestone: all recipes tested! 🏆")
+                : tri(`Traguardo: ${celebrate}% provate!`, `Meilenstein: ${celebrate}% erprobt!`, `Milestone: ${celebrate}% tested!`)}
+            </p>
+            <p className="text-[12px] text-muted-foreground mt-0.5">
+              {celebrate === 100
+                ? tri("Che impresa, Michele! Il ricettario è tutto provato da te.", "Was für eine Leistung, Michele!", "What an achievement, Michele!")
+                : tri("Continua così, un passo alla volta!", "Weiter so, Schritt für Schritt!", "Keep going, one step at a time!")}
+            </p>
+          </div>
+          <button data-testid="diario-celebrate-close" onClick={() => setCelebrate(null)} className="text-muted-foreground hover:text-foreground shrink-0"><X className="w-4 h-4" /></button>
+        </div>
+      )}
       {/* Consiglio di Sitor: prossima da provare */}
       {data.next && (
         <div data-testid="diario-next" className="rounded-2xl border border-primary/40 bg-primary/8 p-4 space-y-3">

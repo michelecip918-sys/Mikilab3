@@ -92,6 +92,10 @@ Vedi `memory/test_credentials.md`.
 - Michele ha eseguito il Publish. Verifica produzione mikilab.de: **TUTTO OK** — 154 ricette pubbliche, 5 ricette campione complete, panettone con grammi, corsi IT/DE/EN 7 fasi, stato bozza corretto, nessun duplicato "Kopie". (Lo script `patch/verifica_dopo_deploy.py` non c'è più: cartella patch rimossa dalle patch successive; controllo equivalente eseguito inline.)
 
 ## PATCH V74 (20 settembre 2026)
+
+## Foto 6 nuove ricette + Traguardi Diario (20 settembre 2026)
+- **Foto 6 nuove ricette** (v74): generate stile scuro elegante e collegate — Colomba (col_classica), Pandoro (pandoro_classico), Stollen classico/marzapane, Pinsa Romana (pinsa_romana), Panettone Salato Speck (panettone_salato_speck). image_url aggiunti al seed JSON; SEED_VERSION → `2026-09-v77-foto-nuove` (nota: v76 si era auto-segnato durante l'hot-reload prima del salvataggio JSON, per questo il bump a v77). Verificato: API restituisce le 6 image_url, file 200, Pandoro visibile in galleria. Produzione riceverà foto al prossimo Publish (re-sync su SEED_VERSION nuovo).
+- **Traguardi Diario**: in DiarioProve.jsx festeggiamento al primo raggiungimento di 50/75/100% (persistito in localStorage `mikilab_diario_milestone`): toast sonner + banner dismissibile con icona PartyPopper (data-testid diario-celebrate, diario-celebrate-close). Verificato via intercettazione API a 56% → banner "Milestone: 50% tested!" + toast. Build frontend OK.
 - Seed `2026-09-v74-festivita-sezioni`: 154 ricette (+6: Colomba, Pandoro, Stollen classico e al marzapane, Pinsa Romana, Panettone Salato; tutte bozza di Sitor). Nuove categorie `rosticceria` e `fritti` (5 ricette spostate da `snack`).
 - `impressum_address` in `site-settings` (whitelist pubblica, scrittura solo admin): l'indirizzo di Impressum/Datenschutz si cambia da admin senza deploy.
 - Frontend: pagina `CenaSughi` (Panico da cena + Sughi nel mondo, tutto locale senza IA), `ImpressumAdmin`, comandi vocali «Ehi Sitor» e sostituzioni a voce in Mani in Pasta (`lib/voiceSubs.js`, con guardia anti-eco), tasto Home fisso nell'intestazione, chip Home secondari sotto «Altro».
