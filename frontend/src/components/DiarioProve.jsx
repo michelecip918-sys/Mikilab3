@@ -45,6 +45,17 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
         <p data-testid="diario-counts" className="text-sm text-muted-foreground mt-1">
           {tri(`${data.tested} provate · ${data.to_test} ancora da provare`, `${data.tested} erprobt · ${data.to_test} noch zu testen`, `${data.tested} tested · ${data.to_test} still to test`)}
         </p>
+        {(() => { const tot = data.tested + data.to_test; const pct = tot > 0 ? Math.round((data.tested / tot) * 100) : 0; return (
+          <div data-testid="diario-progress" className="mt-3">
+            <div className="flex items-center justify-between text-[11px] font-bold text-muted-foreground mb-1.5">
+              <span>{tri(`${data.tested}/${tot} provate`, `${data.tested}/${tot} erprobt`, `${data.tested}/${tot} tested`)}</span>
+              <span className="text-accent">{pct}%</span>
+            </div>
+            <div className="h-2.5 rounded-full bg-foreground/10 overflow-hidden">
+              <div className="h-full rounded-full bg-accent transition-[width] duration-700" style={{ width: `${pct}%` }} />
+            </div>
+          </div>
+        ); })()}
       </div>
 
       {/* Consiglio di Sitor: prossima da provare */}

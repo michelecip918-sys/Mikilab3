@@ -66,5 +66,10 @@ Vedi `memory/test_credentials.md`.
 - **Filtro Diario**: in `DiarioProve.jsx` chip per categoria generati dalle bozze presenti (data-testid: diario-filter, diario-filter-all, diario-filter-<categoria>), con conteggio per categoria; filtra la lista lato client. Aggiunte label per `basi`. Verificato: Focacce → 32 righe, nessun overflow.
 - **Foto Pani Colorati**: 12 foto rigenerate (Gemini) stile scuro elegante coerente: p_spinaci, p_spirulina, pn_basilico_pomodoro, p_carbone, p_barbabietola, p_nduja, p_curcuma_zenzero, p_zafferano, v_bicolore_cacao, v_bicolore_carbone, v_bicolore_rosa, v_doppio_pist_cioc → webp in `public/recipes/` (servite 200; Pane agli Spinaci verificato in galleria).
 - Copertura foto rinnovate: 17 panettoni + 32 focacce + 12 pani colorati/cornetti = 61 immagini nuove (esattamente le ricette riscritte v73). Produzione: ancora 149 ricette — Publish + "Pulisci tutto" restano azioni di Michele; dopo, rieseguire lo script per riconferma 148.
+
+## Foto Pizze + Progressi Diario (20 settembre 2026)
+- **Foto Pizze**: 4 foto rigenerate (Gemini) stile scuro elegante: pz_napoletana, pz_teglia_romana, pz_pala, pz_taglio → webp in `public/recipes/` (servite 200). Copertura rinnovata completa: 17 panettoni + 32 focacce + 12 colorate + 4 pizze = 65 immagini.
+- **Progressi Diario**: barra di avanzamento in cima al Diario prove ("48/148 provate · 32%", `data-testid="diario-progress"`), riempimento accent animato. Frontend-only, verificata via screenshot.
+- Tutte le novità (foto, Diario, filtro, progressi) arrivano in produzione al prossimo Publish di Michele.
 - Produzione mostra ancora 149 ricette (vs 148 anteprima): resta la pulizia del DB di produzione → Michele: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)". Poi provare le 61 bozze in cucina.
 - PROSSIMI PASSI DI MICHELE: 1) un solo click su **Publish**; 2) dopo il deploy eseguire/ripetere `python3 patch/verifica_dopo_deploy.py https://mikilab.de`; 3) su mikilab.de: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)"; 4) provare le bozze in cucina e segnarle "Provata".
