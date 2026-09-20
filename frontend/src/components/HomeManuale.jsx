@@ -5,6 +5,7 @@ import { recipesApi } from "@/lib/api";
 import { usePublicContent } from "@/lib/publicContent";
 import SitorBadge from "@/components/SitorBadge";
 import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker, Globe, Recycle, Sprout, Flame, Soup, ChevronDown } from "lucide-react";
+import { rLoc } from "@/lib/loc";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -170,7 +171,7 @@ export default function HomeManuale({ onNav, features }) {
                 {r.image_url && <img src={r.image_url} alt="" className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" loading="lazy" />}
                 <span className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-black flex items-center justify-center">{i + 1}</span>
               </div>
-              <p className="px-2.5 py-2 text-[12px] font-bold text-foreground leading-tight line-clamp-2">{r.name}</p>
+              <p className="px-2.5 py-2 text-[12px] font-bold text-foreground leading-tight line-clamp-2">{rLoc(r, "name", lang)}</p>
             </button>
           ))}
           {starts.length === 0 && <p className="text-sm text-muted-foreground col-span-full">{tri("Caricamento…", "Wird geladen…", "Loading…")}</p>}

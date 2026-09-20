@@ -4,7 +4,7 @@
  *  Ricettario pubblico e gratuito, guidato da Sitor, per chi cucina a casa.
  * ============================================================================
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
@@ -91,6 +91,27 @@ export default function App() {
     const hn = (e) => { const r = e?.detail?.route; if (r) { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); } };
     window.addEventListener("mikilab-nav", hn);
     return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); window.removeEventListener("mikilab-open-perche", hp); window.removeEventListener("mikilab-nav", hn); };
+  }, []);
+
+  // V75 — tasto "indietro" del telefono/browser: torna alla pagina precedente del sito invece di uscire.
+  const histFirst = useRef(true);
+  const histSkip = useRef(false);
+  useEffect(() => {
+    try {
+      if (histFirst.current) { histFirst.current = false; window.history.replaceState({ mlRoute: route }, ""); return; }
+      if (histSkip.current) { histSkip.current = false; return; }
+      if (!(window.history.state && window.history.state.mlRoute === route)) window.history.pushState({ mlRoute: route }, "");
+    } catch { /* */ }
+  }, [route]);
+  useEffect(() => {
+    const onPop = (e) => {
+      const next = (e && e.state && e.state.mlRoute) || "home";
+      // se la pagina non cambia, l'effetto sopra non parte: non lasciare il "salta" attivo
+      setRoute((cur) => { histSkip.current = cur !== next; return next; });
+      window.scrollTo({ top: 0 });
+    };
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
   }, []);
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).

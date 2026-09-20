@@ -573,7 +573,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v74-festivita-sezioni"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v75-nomi-tradotti"  # bump quando cambia mikilab_seed_data.json
 # Ricette riscritte/completate da Sitor (IA): restano "bozza" finché Michele non le prova.
 V73_DRAFT_NAMES = ["Brioche Francese (col burro)", "Pain au Chocolat (Saccottino al Cioccolato)", "Saccottino alla Crema", "Danese alla Crema (Plunder)", "Girella all'Uvetta (Pain aux Raisins)", "Pan di Kristall (alta idratazione 95%)", "Pane da Hamburger (bun soffice)", "Veneziana (grande lievitato dolce)", "Pizza Napoletana (tonda)", "Pizza in Teglia alla Romana", "Pizza alla Pala", "Pizza al Taglio Contemporanea", "Pan di Spagna", "Crostata di Frutta (Pasta Frolla)", "Bignè (Pasta Choux)", "Crema Pasticcera", "Panzerotti Fritti Pugliesi", "Focaccia Barese", "Focaccia Dolce all'Uva (Schiacciata)", "Focaccia Genovese", "Focaccia Integrale ai Semi", "Focaccia ai Cereali e Miele", "Focaccia alla Cipolla di Tropea", "Focaccia alle Olive e Rosmarino", "Focaccia con Patate e Rosmarino", "Focaccia con Pomodorini Secchi e Origano", "Focaccia di Altamura", "Focaccia di Matera", "Focaccia Zucca e Rosmarino", "Focaccia Patate e Rosmarino", "Focaccia Cipolla di Tropea", "Focaccia Zucchine e Stracchino", "Focaccia Melanzane e Pomodorini", "Focaccia Peperoni Arrostiti", "Focaccia Pesto e Pomodorini", "Focaccia Gorgonzola e Noci", "Focaccia Mortadella e Pistacchio", "Focaccia Prosciutto Crudo e Stracchino", "Focaccia Friarielli", "Focaccia Funghi Porcini", "Focaccia Acciughe e Capperi", "Focaccia Fichi e Miele", "Focaccia Uvetta e Noci", "Focaccia Multi-Semi", "Focaccia alla Curcuma", "Focaccia Olive Verdi e Origano", "Focaccia Pere e Gorgonzola", "Focaccia Cipollotto e Speck", "Focaccia a Lievito Madre", "Pane agli Spinaci", "Pane alla Spirulina", "Panini Basilico e Pomodoro", "Pane Nero al Carbone Vegetale", "Pane alla Barbabietola", "Pane all'Nduja", "Pane alla Curcuma e Zenzero", "Pane allo Zafferano", "Cornetto Bicolore Cacao e Vaniglia", "Cornetto Bicolore Carbone e Vaniglia", "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia", "Cornetto Doppio Gusto Pistacchio e Cioccolato"]
 # Panettoni: cambia solo il procedimento (dosi e stato invariati); si azzerano solo i vecchi corsi in cache.
@@ -7285,13 +7285,13 @@ async def _synth_tts_bytes(text: str, lang: str = "it", voice: str = "michele"):
             import inspect as _insp
             from emergentintegrations.llm.openai.text_to_speech import OpenAITextToSpeech
             oai_voice = _OAI_VOICE.get(vkey, "onyx")
-            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}".encode()).hexdigest()
+            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}|s110".encode()).hexdigest()
             cpatho = os.path.join(_TTS_CACHE_DIR, cko + ".mp3")
             if os.path.exists(cpatho):
                 with open(cpatho, "rb") as f:
                     return f.read()
             _tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
-            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.0)
+            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.1)
             audio = await res if _insp.isawaitable(res) else res
             if audio:
                 try:
@@ -7367,13 +7367,13 @@ async def tts_speak(payload: TTSReq):
             import inspect as _insp
             from emergentintegrations.llm.openai.text_to_speech import OpenAITextToSpeech
             oai_voice = _OAI_VOICE.get(vkey, "onyx")
-            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}".encode()).hexdigest()
+            cko = _hashlib.sha256(f"oai|{text}|{oai_voice}|s110".encode()).hexdigest()
             cpatho = os.path.join(_TTS_CACHE_DIR, cko + ".mp3")
             if os.path.exists(cpatho):
                 with open(cpatho, "rb") as f:
                     return Response(content=f.read(), media_type="audio/mpeg", headers={"Cache-Control": "public, max-age=86400", "X-TTS-Provider": "openai"})
             _tts = OpenAITextToSpeech(api_key=EMERGENT_LLM_KEY)
-            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.0)
+            res = _tts.generate_speech(text=text, model="tts-1", voice=oai_voice, speed=1.1)
             audio = await res if _insp.isawaitable(res) else res
             if audio:
                 try:
@@ -12015,6 +12015,11 @@ async def on_startup_seed_mikilab():
         _owner_email = (os.environ.get("ADMIN_EMAIL") or "michelecip918@gmail.com").strip().lower()
         _reset_pw = os.environ.get("ADMIN_RESET_PASSWORD")
         if _reset_pw:
+            # V75: la password si reimposta UNA SOLA VOLTA per ogni valore del segreto (impronta salvata nel DB).
+            # Così, se poi la cambi da admin, il cambio resta anche se il segreto è ancora impostato.
+            _fp = _hashlib.sha256(_reset_pw.encode("utf-8")).hexdigest()
+            _done = await db.app_meta.find_one({"_key": "admin_reset_done"}, {"_id": 0, "fp": 1})
+            _first = not (_done and _done.get("fp") == _fp)
             _acc = await db.users.find_one({"email": _owner_email})
             if not _acc:
                 await db.users.insert_one({
@@ -12024,10 +12029,16 @@ async def on_startup_seed_mikilab():
                     "email_verified": True, "organization_id": ORG_DEFAULT,
                 })
                 logging.getLogger(__name__).info("Owner admin creato da ADMIN_RESET_PASSWORD")
-            else:
+            elif _first:
                 await db.users.update_one({"email": _owner_email}, {"$set": {
                     "password_hash": _hash_pw(_reset_pw), "role": "admin", "email_verified": True}})
-                logging.getLogger(__name__).info("Password owner reimpostata da ADMIN_RESET_PASSWORD")
+                logging.getLogger(__name__).info("Password owner reimpostata da ADMIN_RESET_PASSWORD (una sola volta)")
+            else:
+                # già reimpostata in passato: NON toccare la password, solo garantire ruolo admin
+                await db.users.update_one({"email": _owner_email}, {"$set": {"role": "admin", "email_verified": True}})
+            if _first:
+                await db.app_meta.update_one({"_key": "admin_reset_done"},
+                    {"$set": {"_key": "admin_reset_done", "fp": _fp, "at": now_iso()}}, upsert=True)
             # sblocca i tentativi di accesso per questa email (qualsiasi IP)
             await db.login_attempts.delete_many({"identifier": {"$regex": f":{re.escape(_owner_email)}$"}})
             # disattiva l'account admin legacy: role user, nessuna password valida (NON cancellato)

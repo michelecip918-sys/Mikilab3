@@ -5,10 +5,12 @@ export const BASI_ORDER = ["Miglioratore Naturale Pro", "Lievito Madre Solido", 
 
 export const CATS = [
   { key: "basi", label: "cat_basi", icon: "✨" },
-  { key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" },
   { key: "pane", label: "cat_pane", icon: "🍞" },
+  { key: "panini", label: "cat_panini", icon: "🥖" },
   { key: "focacce", label: "cat_focacce", icon: "🫓" },
   { key: "pizza", label: "cat_pizza", icon: "🍕" },
+  { key: "panettoni", label: "cat_panettoni", icon: "🎄" },
+  { key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" },
   { key: "pasticceria", label: "cat_pasticceria", icon: "🧁" },
   { key: "snack", label: "cat_snack", icon: "🥨" },
   { key: "rosticceria", label: "cat_rosticceria", icon: "🥧" },
@@ -19,6 +21,8 @@ export const CATS = [
 export const CAT_COLORS = {
   basi: "hsl(var(--muted-foreground))",
   viennoiserie: "hsl(var(--muted-foreground))",
+  panini: "hsl(var(--muted-foreground))",
+  panettoni: "hsl(var(--muted-foreground))",
   pane: "hsl(var(--muted-foreground))",
   focacce: "hsl(var(--muted-foreground))",
   pizza: "hsl(var(--muted-foreground))",
@@ -31,6 +35,8 @@ export const CAT_COLORS = {
 // Parole chiave che identificano un prodotto di pasticceria lievitata / viennoiserie / grande lievitato dolce.
 const VIENNOISERIE_RE = /croissant|cornett|panettone|colomba|pandoro|veneziana|stollen|danish|plunder|brioche|sfogliat|pain au|kranz|zopf|treccia dolce|babka|maritozz|girella|saccottino|kipferl/i;
 
+const FESTIVE_RE = /panettone|colomba|pandoro|stollen|veneziana/i;
+
 export function recipeCategory(r) {
   const cat = r.menu_category;
   const name = (r.name || "").toLowerCase();
@@ -42,8 +48,12 @@ export function recipeCategory(r) {
   }
 
   // Categoria esplicita: ha priorità assoluta (rispetta la classificazione dell'admin)
-  if (cat === "viennoiserie" || cat === "panettoni") {
-    return { rank: 1, sub: /panettone|colomba|pandoro/.test(name) ? 1 : 0, key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" };
+  // V75: Panettoni e grandi lievitati delle feste (panettone, colomba, pandoro, stollen, veneziana) hanno una sezione tutta loro.
+  if (cat === "panettoni" || (cat === "viennoiserie" && FESTIVE_RE.test(name))) {
+    return { rank: 1.5, sub: /panettone/.test(name) ? 0 : 1, key: "panettoni", label: "cat_panettoni", icon: "🎄" };
+  }
+  if (cat === "viennoiserie") {
+    return { rank: 1, sub: 0, key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" };
   }
   if (cat === "focacce") return { rank: 3, sub: 0, key: "focacce", label: "cat_focacce", icon: "🫓" };
   if (cat === "pizza") return { rank: 5, sub: 0, key: "pizza", label: "cat_pizza", icon: "🍕" };
@@ -51,14 +61,18 @@ export function recipeCategory(r) {
   if (cat === "snack") return { rank: 4, sub: 0, key: "snack", label: "cat_snack", icon: "🥨" };
   if (cat === "rosticceria") return { rank: 4.1, sub: 0, key: "rosticceria", label: "cat_rosticceria", icon: "🥧" };
   if (cat === "fritti") return { rank: 4.2, sub: 0, key: "fritti", label: "cat_fritti", icon: "🍤" };
-  if (cat === "pane" || cat === "panini") {
+  if (cat === "panini") return { rank: 2.5, sub: 0, key: "panini", label: "cat_panini", icon: "🥖" };
+  if (cat === "pane") {
     const isBaguette = /baguette|filo di francia|ficelle|bacchett/.test(name);
     return { rank: 2, sub: isBaguette ? 0 : 1, key: "pane", label: "cat_pane", icon: "🍞" };
   }
 
   // Nessuna categoria: euristica sul nome. La viennoiserie dolce prevale.
+  if (FESTIVE_RE.test(name)) {
+    return { rank: 1.5, sub: /panettone/.test(name) ? 0 : 1, key: "panettoni", label: "cat_panettoni", icon: "🎄" };
+  }
   if (VIENNOISERIE_RE.test(name)) {
-    return { rank: 1, sub: /panettone|colomba|pandoro/.test(name) ? 1 : 0, key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" };
+    return { rank: 1, sub: 0, key: "viennoiserie", label: "cat_viennoiserie", icon: "🥐" };
   }
   const isBaguette = /baguette|filo di francia|ficelle|bacchett/.test(name);
   return { rank: 2, sub: isBaguette ? 0 : 1, key: "pane", label: "cat_pane", icon: "🍞" };
