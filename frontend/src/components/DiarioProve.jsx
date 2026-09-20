@@ -11,6 +11,10 @@ const CAT_LABEL = {
   panettoni: ["Panettoni", "Panettone", "Panettone"],
   pizza: ["Pizza", "Pizza", "Pizza"],
   dolci: ["Dolci", "Süßes", "Sweets"],
+  viennoiserie: ["Viennoiserie", "Viennoiserie", "Viennoiserie"],
+  pasticceria: ["Pasticceria", "Konditorei", "Pastry"],
+  snack: ["Snack", "Snack", "Snack"],
+  basi: ["Basi & Lieviti", "Grundlagen & Sauer", "Bases & Leavens"],
 };
 
 // Riepilogo Diario prove (solo admin): elenco bozze + consiglio di Sitor sulla prossima da provare.
@@ -18,6 +22,7 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [data, setData] = useState(null);
+  const [cat, setCat] = useState("all");
 
   const reload = () => { api.get(`/admin/test-diary`).then((r) => setData(r.data)).catch(() => setData({ items: [], next: null, to_test: 0, tested: 0 })); };
   useEffect(() => { reload(); }, []);
@@ -28,6 +33,8 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
   if (!data) return <div data-testid="diario-loading" className="max-w-2xl mx-auto px-4 py-10 flex justify-center"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
 
   const nextTip = data.sitor_tip ? (data.sitor_tip[lang] || data.sitor_tip.it) : "";
+  const cats = [...new Set(data.items.map((i) => i.menu_category || ""))].filter(Boolean);
+  const filteredItems = cat === "all" ? data.items : data.items.filter((it) => it.menu_category === cat);
 
   return (
     <div data-testid="diario-prove-page" className="max-w-2xl mx-auto px-4 py-6 space-y-5">
@@ -62,8 +69,22 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
           <p className="text-sm font-bold text-foreground">{tri("Le hai provate tutte! 🎉", "Du hast alle getestet! 🎉", "You've tested them all! 🎉")}</p>
         </div>
       ) : (
+        <>
+        {/* Filtro per categoria */}
+        <div data-testid="diario-filter" className="flex flex-wrap gap-2">
+          <button data-testid="diario-filter-all" onClick={() => setCat("all")}
+            className={`px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 ${cat === "all" ? "bg-primary text-primary-foreground" : "bg-foreground/10 text-muted-foreground"}`}>
+            {tri("Tutte", "Alle", "All")} ({data.items.length})
+          </button>
+          {cats.map((c) => (
+            <button key={c} data-testid={`diario-filter-${c}`} onClick={() => setCat(c)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold active:scale-95 ${cat === c ? "bg-primary text-primary-foreground" : "bg-foreground/10 text-muted-foreground"}`}>
+              {catLabel(c)} ({data.items.filter((i) => i.menu_category === c).length})
+            </button>
+          ))}
+        </div>
         <div data-testid="diario-list" className="rounded-2xl border border-border bg-background overflow-hidden">
-          {data.items.map((it) => (
+          {filteredItems.map((it) => (
             <button key={it.id} data-testid={`diario-row-${it.id}`} onClick={() => open(it.id)}
               className="w-full flex items-center gap-3 px-4 py-3 border-b border-border/40 last:border-0 text-left hover:bg-muted/40 active:scale-[0.995] transition-colors">
               <span className="shrink-0">
@@ -84,6 +105,7 @@ export default function DiarioProve({ onBack, onOpenRecipe }) {
             </button>
           ))}
         </div>
+        </>
       )}
     </div>
   );
