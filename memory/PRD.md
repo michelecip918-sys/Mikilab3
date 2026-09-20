@@ -12,7 +12,7 @@ Ricettario pubblico gratuito (pane, pizza, dolci) guidato dall'avatar IA **Sitor
 - IA con contatore + limite + interruttore: `savings_level` 0-3 e `FEATURE_PHOTO_DIAG/PLAN/LIVE/VOICE_CHAT` (admin → Costi).
 - Frontend pubblico: Home con chip (verde, miglioratore, cosa-faccio, live, mensola, cucina, piano, tecniche, calendario, farine, test del mese, dal mondo, pane di ieri, **crea il tuo lievito**, attrezzi), Course Player V2 (timer assoluti, mani libere, .ics), SitorChat con limiti, Palato (radar in localStorage), CreaLievito (percorso a giorni, tutto sul dispositivo).
 - COMANDO 5A: Q (privacy/correzioni) + Y (Crea il tuo lievito) + N — FATTI.
-- COMANDO 5B: K (pulizia) + L (traduzioni) + M (controlli tecnici) + N (chiusura).
+- COMANDO 5B: K (pulizia: 173 file frontend non raggiunti archiviati, 43 pacchetti npm rimossi, 12 dev-tools backend rimossi da requirements, 99 media orfani spostati, segreti scansionati) + L (traduzioni: 748 tri pulite, fix Sauerteig, report ricette) + M (build verde, header sicurezza, fix TDZ CoursePlayer, contrasto AA, audit) + N (0 leak su 553 rotte, 132 ricette, LEGAL_DATA_MAP) — FATTI. Report completo in chat.
 
 ## Credenziali test
 Vedi `memory/test_credentials.md`.
