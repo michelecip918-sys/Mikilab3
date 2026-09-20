@@ -202,6 +202,10 @@ export default function App() {
                   "Die Rezepte sind von zwei Arten: die von Michele geprüften oder erprobten und die von Sitor geschriebenen Entwürfe, einer künstlichen Intelligenz auf Basis der Anthropic-Modelle. Jedes Rezept sagt klar, welcher Art es ist.",
                   "Recipes are of two kinds: those checked or tested by Michele and the drafts written by Sitor, an artificial intelligence based on Anthropic models. Each recipe clearly states which kind it is.")}</p>
                 <p data-testid="footer-sitor-avatar" className="text-center font-bold text-foreground">{tri("Sitor è l'avatar IA di Michele.", "Sitor ist Micheles KI-Avatar.", "Sitor is Michele's AI avatar.")}</p>
+                <p data-testid="footer-copyright-usage" className="text-center max-w-3xl">{tri(
+                  "Ricette e testi © MikiLab. Gratis per uso personale. Le stampe e le condivisioni ufficiali riportano il logo MikiLab.",
+                  "Rezepte und Texte © MikiLab. Kostenlos für den privaten Gebrauch. Offizielle Ausdrucke und geteilte Inhalte tragen das MikiLab-Logo.",
+                  "Recipes and texts © MikiLab. Free for personal use. Official prints and shares carry the MikiLab logo.")}</p>
                 <SitorBadge size={26} onOpenPerche={() => { setRoute("perche"); window.scrollTo(0, 0); }} />
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-border/10">

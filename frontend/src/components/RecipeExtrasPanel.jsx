@@ -4,6 +4,7 @@ import CoursePlayer from "@/components/CoursePlayer";
 import CalendarReminder from "@/components/CalendarReminder";
 import MixPanel from "@/components/MixPanel";
 import EspertoPro from "@/components/EspertoPro";
+import RecipeShareActions from "@/components/RecipeShareActions";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
@@ -123,6 +124,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
         <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
       </button>
       {((Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0)) >= 4 && <CalendarReminder recipe={recipe} />}
+      <RecipeShareActions recipe={recipe} ex={ex} doses={doses} tri={tri} lang={lang} />
       <button data-testid="mark-done" onClick={toggleDone}
         className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-sm active:scale-[0.98] transition-all border ${done ? "bg-accent border-accent text-white" : "bg-transparent border-border text-foreground hover:border-accent"}`}>
         <Check className="w-4 h-4" /> {done ? tri("Fatta ✓ (togli)", "Gemacht ✓ (entfernen)", "Done ✓ (undo)") : tri("Segna come fatta", "Als gemacht markieren", "Mark as done")}
@@ -391,6 +393,13 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
           </div>
         </div>
       )}
+
+      {/* Copyright ricetta (STADIO 2c) */}
+      <p data-testid="recipe-copyright" className="text-center text-[11px] text-muted-foreground leading-relaxed pt-1 no-print">
+        {tri("Ricette e testi © MikiLab. Gratis per uso personale. Le stampe e le condivisioni ufficiali riportano il logo MikiLab.",
+          "Rezepte und Texte © MikiLab. Kostenlos für den privaten Gebrauch. Offizielle Ausdrucke und geteilte Inhalte tragen das MikiLab-Logo.",
+          "Recipes and texts © MikiLab. Free for personal use. Official prints and shares carry the MikiLab logo.")}
+      </p>
     </div>
   );
 }

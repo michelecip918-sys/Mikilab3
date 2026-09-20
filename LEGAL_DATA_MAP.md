@@ -113,3 +113,10 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
   salvataggio sul server). Etichetta "Bozza di Sitor: da verificare da Michele".
 - **Nessuna nuova rotta pubblica**: la pagina riusa la chat esistente e il generatore `.ics` lato browser.
 
+
+## STADIO 2 — Stampa/PDF e Condivisione (20 settembre 2026)
+- **Stampa / PDF ricetta**: genera lato browser una scheda dedicata (logo MikiLab, nome, dosi, procedimento,
+  temperature/tempi, allergeni, riga di copyright) tramite `window.print()` + `@media print`. Nessun dato inviato al server.
+- **Condividi**: crea nel browser (canvas 1080x1350) un'immagine con logo MikiLab, nome, tempo/difficoltà e il
+  link a mikilab.de (senza dosi né procedimento), poi `navigator.share` o download. Tutto sul dispositivo, nessun invio.
+- Nessuna modifica alla Privacy necessaria: le funzioni non raccolgono né trasmettono dati personali.
