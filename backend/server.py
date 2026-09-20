@@ -11553,8 +11553,13 @@ for _k in list(vars(_mod_stadio_2b)):  # noqa: E402
     if _k != '_core' and not _k.startswith('__') and _k not in globals():
         globals()[_k] = getattr(_mod_stadio_2b, _k)
 
+import data_cleanup as _mod_data_cleanup  # noqa: E402  STADIO 4 · pulizia dati vecchi (solo admin)
+for _k in list(vars(_mod_data_cleanup)):  # noqa: E402
+    if _k != '_core' and not _k.startswith('__') and _k not in globals():
+        globals()[_k] = getattr(_mod_data_cleanup, _k)
+
 # --- Sync finale cross-modulo: ogni modulo vede TUTTI i simboli del core (indipendente dall'ordine di import) ---
-for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras, _mod_sitor_public, _mod_manuale_pages, _mod_stadio_2b):  # noqa: E402
+for _m in (_mod_warehouse, _mod_community, _mod_operations, _mod_recipes, _mod_deck, _mod_auth, _mod_sitor_ai, _mod_coordination, _mod_orgs, _mod_recipe_extras, _mod_sitor_public, _mod_manuale_pages, _mod_stadio_2b, _mod_data_cleanup):  # noqa: E402
     for _k, _v in list(globals().items()):
         if not _k.startswith('__') and _k not in _m.__dict__:
             _m.__dict__[_k] = _v
