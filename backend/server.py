@@ -12014,6 +12014,9 @@ async def on_startup_seed_mikilab():
                 {"email": LEGACY_ADMIN_EMAIL},
                 {"$set": {"role": "user"}, "$unset": {"password_hash": ""}},
             )
+            await db.user_sessions.delete_many({"user_id": {"$in": [
+                u["user_id"] async for u in db.users.find({"email": LEGACY_ADMIN_EMAIL}, {"user_id": 1})
+            ]}})
             await db.login_attempts.delete_many({"identifier": {"$regex": f":{re.escape(LEGACY_ADMIN_EMAIL)}$"}})
     except Exception as e:
         logging.getLogger(__name__).error(f"Admin reset error: {e}")

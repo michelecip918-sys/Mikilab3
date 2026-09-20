@@ -1,0 +1,20 @@
+{
+  "summary": "Verified the ADMIN_RESET_PASSWORD fix on preview. Backend: 4/4 pytest cases passed - owner login OK (200, role=admin via /auth/me), wrong password returns 401, legacy admin@mikilab.de disabled (all attempts return 401), unauth /auth/me returns 401. Frontend: ?admin=1 shows simplified AuthScreen with only email/password (no Google/register/PIN/invite/forgot). After login with owner credentials the admin app renders and data-testid=account-btn appears (labeled 'MikiLab'). Login response 200. Fix works end-to-end.",
+  "backend_issues": {"critical": [], "minor": []},
+  "frontend_issues": {"ui_bugs": [], "integration_issues": [], "design_issues": []},
+  "test_report_links": ["/app/backend/tests/test_admin_login.py", "/app/test_reports/pytest/admin_login.xml"],
+  "action_items": [],
+  "critical_code_review_comments": [
+    "server.py is 12065 lines - should be modularized (auth reset, seed, routes into separate modules).",
+    "ADMIN_RESET_PASSWORD in .env should be rotated/removed after first admin login in production; owner already stated intent (idempotent, can be removed after access).",
+    "Legacy admin demotion uses $unset password_hash but does not clear other admin-only fields (e.g., stale sessions/tokens if any); currently OK since account has role=user, but consider invalidating outstanding sessions."
+  ],
+  "updated_files": ["/app/backend/tests/test_admin_login.py (new)"],
+  "success_rate": {"backend": "100%", "frontend": "100%"},
+  "test_credentials": "michelecip918@gmail.com / TestReset_9x!Kv2mQ (from ADMIN_RESET_PASSWORD env, per /app/memory/test_credentials.md)",
+  "seed_data_creation": "None. Reset logic in server.py startup used existing env var.",
+  "retest_needed": false,
+  "main_agent_can_self_test": true,
+  "context_for_next_testing_agent": "Backend regression tests at /app/backend/tests/test_admin_login.py. Note for UI testing: React controlled inputs on AuthScreen need page.keyboard.type() instead of page.fill() to reliably trigger onChange in Playwright; using fill() alone made the form submit-with-empty-state observation misleading in first iteration.",
+  "rca of the issue": "Original bug: OWNER_EMAILS included multiple entries and legacy admin@mikilab.de retained admin+password, blocking owner michelecip918@gmail.com. Fix in server.py startup: (1) OWNER_EMAILS restricted to only michelecip918@gmail.com; (2) on startup if ADMIN_RESET_PASSWORD env is set, upsert owner user with role=admin+hashed password, wipe login_attempts for owner, demote admin@mikilab.de to role=user and unset password_hash, wipe legacy login_attempts. Verified: owner login now 200, legacy login 401, /auth/me returns admin role."
+}
