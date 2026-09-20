@@ -87,6 +87,10 @@ Vedi `memory/test_credentials.md`.
 - Michele ha eseguito il Publish finale. Verifica su mikilab.de: **TUTTO OK** — 148 ricette, foto nuove live (dimensioni esatte: pan_classico 149178b, foc_barese 153036b, p_spinaci 148706b, pz_napoletana 106224b, v_bicolore_rosa 109318b), Diario prove presente nel bundle di produzione (`diario-prove-page`, `test-diary`, "Test-Tagebuch").
 - Stato finale: ricettario pubblico v73 online, DB produzione pulito (148 ricette, 0 storici, 0 duplicati), 65 foto stile scuro elegante, Diario prove + filtro + progressi + consiglio Sitor attivi per l'admin, corsi senza IA, chat su claude-sonnet-4-6, diagnosi foto attiva (3/giorno).
 
+## Patch v74+v75+v76 live (20 settembre 2026)
+- v74 (seed ricette → 154, +6 nuove), v75 (reset password una-sola-volta), v76 (solo frontend): applicate via zip da Google Drive, nessuna modifica manuale, anteprima verificata (backend pulito, 154 ricette, frontend 200).
+- Michele ha eseguito il Publish. Verifica produzione mikilab.de: **TUTTO OK** — 154 ricette pubbliche, 5 ricette campione complete, panettone con grammi, corsi IT/DE/EN 7 fasi, stato bozza corretto, nessun duplicato "Kopie". (Lo script `patch/verifica_dopo_deploy.py` non c'è più: cartella patch rimossa dalle patch successive; controllo equivalente eseguito inline.)
+
 ## PATCH V74 (20 settembre 2026)
 - Seed `2026-09-v74-festivita-sezioni`: 154 ricette (+6: Colomba, Pandoro, Stollen classico e al marzapane, Pinsa Romana, Panettone Salato; tutte bozza di Sitor). Nuove categorie `rosticceria` e `fritti` (5 ricette spostate da `snack`).
 - `impressum_address` in `site-settings` (whitelist pubblica, scrittura solo admin): l'indirizzo di Impressum/Datenschutz si cambia da admin senza deploy.
