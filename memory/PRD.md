@@ -20,6 +20,14 @@ Ricettario pubblico gratuito (pane, pizza, dolci) guidato dall'avatar IA **Sitor
 - Priorità sicurezza: cambiare subito la password da admin → “Cambia password”, poi rimuovere `ADMIN_RESET_PASSWORD` dai Secrets e fare redeploy.
 - Regola fissa backend (20/09): gli anonimi non vedono mai `menu_category="panettoni"` in ricette, extras e corsi; unica eccezione pubblica `Panettone Artigianale MikiLab — Verde Canapa`. Admin invariato. Richiede redeploy per la produzione.
 
+## MESSAGGIO UNICO FINALE (20 settembre 2026) — Stadi 1-5
+- **STADIO 1**: 16 panettoni riscritti sulla base MikiLab 60/40 (flour 500, water 210 o ridotta per Amarena 177/Caffè-Nocciola 195/Marron 192/Pistacchio 195, LM 110, sale 9, bake 170°C×45', bulk 12h, proof 7h, indiretto+lievito madre; sospensioni riscalate a 300 g; extra % fisse Zucchero30/Tuorlo29/Burro35/Miele4/Arancia3/Vaniglia0,6). Nuovo procedimento IT/DE/EN. Verde Canapa NON toccato tranne rimozione blocco "NOTE DEL FORNAIO". Frasi da corso (bagnetto, rinfreschi ravvicinati, 1:1:0,5, pH 4,1, NOTE DEL FORNAIO, riprendi corda) = 0 occorrenze nel seed. Regola fissa che nascondeva i panettoni RIMOSSA: tutti i 17 panettoni visibili (resta solo hidden_public). SEED_VERSION → `2026-09-v71-panettoni6040`.
+- **STADIO 2**: su ogni scheda ricetta "Stampa/PDF" (scheda dedicata con logo MikiLab via @media print) e "Condividi" (immagine canvas 1080×1350 con logo, nome, tempo/difficoltà, link mikilab.de; navigator.share o download; senza dosi/procedimento). Copyright su scheda e footer. LEGAL_DATA_MAP aggiornato (nessun dato inviato).
+- **STADIO 3**: stati ricette idempotenti allo startup (fill-missing) + update esplicito anteprima: pane/panini/focacce = "Provata da Michele" (tested); eccezioni Carezza Dolce, Treccia del Sole, Panino alle Carote = "Controllata" (reviewed) con nota poolish; 16 panettoni = reviewed + riquadro giallo 60/40. Correzioni testi: Focaccia Barese (poolish→lievito madre), Carezza/Treccia (biga→poolish 100/100/0,5g, 12-16h), Panino alle Carote (passo 2 poolish). IT/DE/EN.
+- **STADIO 4**: strumento admin "Pulizia dati vecchi" (rotte `/api/admin/data-cleanup/{scan,backup,execute}`, solo admin → 404 anonimo). Backup gzip obbligatorio nella sessione + parola CANCELLA per cancellare. Non esegue nulla all'avvio.
+- **STADIO 5**: controlli passati — 0 frasi da corso; 17 panettoni visibili da anonimo; rotte private → 404; site-settings solo whitelist; /impressum e /datenschutz 200; ?admin=1 solo email+password; stampa con logo OK. Non è possibile pubblicare da qui: **PRONTO PER PUBBLICARE (Michele preme Publish)**; dopo il publish la produzione riceve seed v71 e stati via startup idempotente.
+- Nota Dal mondo: le 4 ricette "Kochstück" (Farina Cotta, Pan Latte in Cassetta, Pane Morbido ai Cereali, Panini al Latte) sono ricette MikiLab e restano nel ricettario; non esistono voci "cinesi/dal mondo" separate da nascondere.
+
 ## Credenziali test
 Vedi `memory/test_credentials.md`.
 
