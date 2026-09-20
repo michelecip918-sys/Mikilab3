@@ -46,15 +46,20 @@ export function MachinesProvider({ children }) {
   const histLoaded = useRef(false);
 
   // Carica storico allarmi dal backend all'avvio (fallback: localStorage)
+  // M2: se il server risponde 404 (sito pubblico senza allarmi), disattiva sync e polling.
+  const dead = useRef(false);
   useEffect(() => {
-    fetch(`${API}/api/alarms`).then((r) => r.json()).then((d) => {
-      if (Array.isArray(d.items) && d.items.length) setHistory(d.items);
+    fetch(`${API}/api/alarms`).then((r) => {
+      if (r.status === 404 || r.status === 401) { dead.current = true; return null; }
+      return r.json();
+    }).then((d) => {
+      if (d && Array.isArray(d.items) && d.items.length) setHistory(d.items);
     }).catch(() => {}).finally(() => { histLoaded.current = true; });
   }, []);
 
   // Sincronizza storico allarmi sul backend quando cambia (dopo il primo load)
   useEffect(() => {
-    if (!histLoaded.current) return;
+    if (!histLoaded.current || dead.current) return;
     const t = setTimeout(() => {
       fetch(`${API}/api/alarms`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: history }) }).catch(() => {});
     }, 800);
@@ -63,9 +68,13 @@ export function MachinesProvider({ children }) {
 
   // Polling letture sensori reali (device IoT che spinge su /api/sensors/reading)
   useEffect(() => {
-    const poll = () => fetch(`${API}/api/sensors/latest`).then((r) => r.json()).then((d) => { realRef.current = d.readings || {}; }).catch(() => {});
+    let iv = null;
+    const poll = () => fetch(`${API}/api/sensors/latest`).then((r) => {
+      if (r.status === 404 || r.status === 401) { dead.current = true; if (iv) clearInterval(iv); return null; }
+      return r.json();
+    }).then((d) => { if (d) realRef.current = d.readings || {}; }).catch(() => {});
     poll();
-    const iv = setInterval(poll, 5000);
+    iv = setInterval(poll, 5000);
     return () => clearInterval(iv);
   }, []);
 

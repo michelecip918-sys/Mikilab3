@@ -83,17 +83,6 @@ export default function CoursePlayer({ recipe, onClose }) {
   }, [endAt]);
   useEffect(() => { if (expired) playAlarm(); }, [expired, playAlarm]);
 
-  // C5: tastiera — frecce e barra spaziatrice per avanti/indietro nel corso.
-  useEffect(() => {
-    const onKey = (e) => {
-      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go((c) => c + 1); }
-      else if (e.key === "ArrowLeft") { e.preventDefault(); go((c) => c - 1); }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [go]);
-
   useEffect(() => {
     let ok = true;
     setLoading(true); setErr("");
@@ -150,6 +139,17 @@ export default function CoursePlayer({ recipe, onClose }) {
   const go = useCallback((next) => {
     setIdx((c) => Math.max(0, Math.min(total - 1, next(c))));
   }, [total]);
+
+  // C5: tastiera — frecce e barra spaziatrice per avanti/indietro nel corso.
+  useEffect(() => {
+    const onKey = (e) => {
+      if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); go((c) => c + 1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); go((c) => c - 1); }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [go]);
 
   const doTimer = useCallback((mins) => {
     if (!mins || mins <= 0) { toast.info(tri("Nessun timer per questo passo.", "Kein Timer für diesen Schritt.", "No timer for this step.")); return; }

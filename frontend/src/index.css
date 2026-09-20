@@ -41,13 +41,13 @@ html[lang="fa"] textarea {
         --card-foreground: 218 9% 18%;
         --popover: 43 100% 99%;
         --popover-foreground: 218 9% 18%;
-        --primary: 25 66% 40%;             /* RAME #A85A22 */
+        --primary: 25 66% 38%;             /* RAME #A15621 (AA) */
         --primary-foreground: 43 100% 98%;
         --secondary: 40 30% 90%;
         --secondary-foreground: 218 9% 18%;
         --muted: 39 24% 89%;
         --muted-foreground: 218 6% 38%;    /* #5B5F66 */
-        --accent: 142 13% 50%;             /* SALVIA #6E8F7A */
+        --accent: 142 13% 40%;             /* SALVIA #597362 (AA) */
         --accent-foreground: 43 100% 98%;
         --destructive: 13 57% 41%;         /* MATTONE #A4472D */
         --destructive-foreground: 43 100% 98%;

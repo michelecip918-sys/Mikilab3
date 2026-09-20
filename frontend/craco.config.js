@@ -30,6 +30,10 @@ function makeDevServerV5Compatible(devServerConfig) {
   compatibleConfig.headers = {
     ...compatibleConfig.headers,
     "Cross-Origin-Resource-Policy": "same-origin",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Frame-Options": "DENY",
+    "Permissions-Policy": "microphone=(self), camera=(self)",
   };
 
   if (onBeforeSetupMiddleware || setupMiddlewares) {

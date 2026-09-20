@@ -24,13 +24,18 @@ export function toggleFavId(id) {
 }
 
 let countsCache = null;
+// M2: il sito pubblico non ha account: se il server risponde 401/404 una volta,
+// non richiamare più gli endpoint account (niente rumore in console).
+let serverDead = false;
+const markDead = (err) => { if (err && err.response && (err.response.status === 401 || err.response.status === 403 || err.response.status === 404)) serverDead = true; };
 
 // Idrata i preferiti dell'account nel localStorage (da chiamare al bootstrap/login,
 // così la categoria "Preferite" è disponibile ovunque, non solo nella tab Ricette).
 export function hydrateFavs() {
+  if (serverDead) return Promise.resolve();
   return favApi.sync([...getFavs()])
     .then((serverIds) => { if (Array.isArray(serverIds)) writeLocal(new Set(serverIds)); })
-    .catch(() => {});
+    .catch((e) => { markDead(e); });
 }
 
 export function useFavRecipes() {
@@ -47,6 +52,7 @@ export function useFavRecipes() {
   // Al mount: unisci i preferiti locali con quelli dell'account (se loggato) + carica i conteggi pubblici.
   useEffect(() => {
     let alive = true;
+    if (serverDead) return () => { alive = false; };
     favApi.sync([...getFavs()])
       .then((serverIds) => {
         if (!alive || !Array.isArray(serverIds)) return;
@@ -54,15 +60,15 @@ export function useFavRecipes() {
         writeLocal(merged);
         setFavs(merged);
       })
-      .catch(() => { /* ospite: resta il locale */ });
-    favApi.counts().then((c) => { if (alive && c) { countsCache = c; setCounts(c); } }).catch(() => {});
+      .catch((e) => { markDead(e); /* ospite: resta il locale */ });
+    if (!serverDead) favApi.counts().then((c) => { if (alive && c) { countsCache = c; setCounts(c); } }).catch((e) => { markDead(e); });
     return () => { alive = false; };
   }, []);
 
   const toggle = useCallback((id) => {
     setFavs(toggleFavId(id));
     // aggiorna il conteggio pubblico dopo un attimo
-    setTimeout(() => favApi.counts().then((c) => { if (c) { countsCache = c; setCounts(c); } }).catch(() => {}), 400);
+    if (!serverDead) setTimeout(() => favApi.counts().then((c) => { if (c) { countsCache = c; setCounts(c); } }).catch((e) => { markDead(e); }), 400);
   }, []);
 
   return { favs, toggle, isFav: (id) => favs.has(id), counts, countOf: (id) => counts[id] || 0 };

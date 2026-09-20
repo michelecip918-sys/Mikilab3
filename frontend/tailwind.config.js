@@ -15,9 +15,9 @@ module.exports = {
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-        rame: '#A85A22',
+        rame: '#A15621',
         ambra: '#E9A23B',
-        salvia: '#6E8F7A',
+        salvia: '#597362',
         mattone: '#A4472D',
         card: {
           DEFAULT: 'hsl(var(--card))',

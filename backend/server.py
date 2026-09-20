@@ -150,6 +150,17 @@ app = FastAPI()
 api_router = APIRouter(prefix="/api")
 
 
+# M5 — intestazioni di sicurezza su ogni risposta API. Nessuna CSP restrittiva.
+@app.middleware("http")
+async def security_headers(request: Request, call_next):
+    resp = await call_next(request)
+    resp.headers["X-Content-Type-Options"] = "nosniff"
+    resp.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    resp.headers["X-Frame-Options"] = "DENY"
+    resp.headers["Permissions-Policy"] = "microphone=(self), camera=(self)"
+    return resp
+
+
 # ---------------------------------------------------------------------------
 # CANCELLO SERVER "HARD": token firmato (JWT HS256) rilasciato SOLO dopo il PIN
 # Master corretto. Senza questo cookie firmato ogni /api (tranne whitelist) è 401,

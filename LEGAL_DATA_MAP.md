@@ -54,11 +54,9 @@ Restano nel database dati aziendali di versioni precedenti (volti squadra, opera
 consegne, compliance, community, utenti). NON sono più raggiungibili da un visitatore anonimo
 (vedi STADIO 6b e STADIO A: DEFAULT DENY su letture E scritture). Andranno cancellati in una fase separata dedicata.
 
-## 10. Contatti e newsletter — RIMOSSI dall'interfaccia (STADIO A4)
-- Il **modulo contatti** (era dentro la vecchia pagina legale, ora archiviata) e l'**iscrizione newsletter**
-  NON sono più presenti nell'interfaccia. Nessun nuovo dato di contatto/iscrizione può essere raccolto.
-- Dati storici ancora nel DB (solo NUMERI, mai le email): messaggi di contatto = **0**; iscritti newsletter = **1**.
-  Da cancellare in una fase separata dedicata.
+## 10. Contatti e newsletter
+Rimossi dall'interfaccia e da questa mappa (COMANDO 5B): nessun modulo contatti né iscrizione
+newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga email dei visitatori.
 
 ## 12. Nuovi flussi COMANDO 2A (STADI F, G — backend) + C8 offline
 - **Contatori anonimi** (`usage_daily`): solo numeri per giorno (chat, corsi, tecniche, piano, foto, ping live, done). Nessun dato personale.
@@ -67,7 +65,8 @@ consegne, compliance, community, utenti). NON sono più raggiungibili da un visi
 - **"Cosa faccio"** (`POST /api/sitor/plan`): il browser invia solo il testo libero (max 300); il server passa al modello l'elenco delle ricette VISIBILI e accetta SOLO id esistenti e non nascosti (Sitor non inventa). Limite 3/giorno (2 in risparmio).
 - **Live** (`GET /api/live`, `GET /api/time`, `POST /api/live/ping`): il ping usa un token casuale NON salvato in modo persistente (solo per contare i partecipanti dell'ultimo minuto; ping più vecchi di 10 min eliminati). Nessun identificativo personale.
 - **"Quanti l'hanno fatta"** (`POST /api/done-ping`): incrementa un contatore aggregato per ricetta/mese; l'hash dispositivo serve SOLO al limite 1/giorno. Mostrato solo se ≥ 20. Nessun dato personale.
-- **Offline (sw.js v62)**: copia offline (network-first, max 150 voci) delle GET già visitate di ricette, corso, tecniche, equipment-guide, learning-path, site-pages. MAI in cache `/sitor/*`, `/live*`, `/done-ping` né richieste POST.
+- **Offline (sw.js v63)**: copia offline (network-first, max 150 voci) delle GET già visitate di ricette, corso, tecniche, equipment-guide, learning-path, site-pages. MAI in cache `/sitor/*`, `/live*`, `/done-ping` né richieste POST.
+- **Voce (comandi vocali e chat vocale)**: il riconoscimento vocale avviene NEL BROWSER (Web Speech API del dispositivo); alla chat di Sitor arriva SOLO il testo riconosciuto, come se fosse digitato. La voce di risposta è la voce sintetica del dispositivo. Nessun audio lascia il dispositivo.
 
 
 - **DEFAULT DENY totale**: un anonimo può leggere solo l'allowlist pubblica (ricette, extras, tecniche,

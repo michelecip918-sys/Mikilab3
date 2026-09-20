@@ -4,7 +4,7 @@ const API_CACHE_MAX = 150;
 // GET API cui è consentita la copia offline (network-first). MAI /sitor/*, /live*, POST.
 const API_OFFLINE_ALLOW = ["/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide", "/api/learning-path", "/api/site-pages"];
 // App shell essenziale: precache così l'app si apre anche senza rete (backstube senza Wi-Fi).
-const SHELL = ["/", "/index.html", "/logo.webp", "/manifest.json", "/wheat-bg.webp"];
+const SHELL = ["/", "/index.html", "/logo.webp", "/manifest.json"];
 
 async function trimCache(name, max) {
   try {

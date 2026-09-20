@@ -635,8 +635,16 @@ export const coordinationApi = {
 };
 
 // SITOR APPRENDISTA — due info pratiche per ricetta (pezzi per teglia + come formare).
+// M2: sito pubblico senza account → dopo il primo 404 non richiamare più l'endpoint.
+let _apprenticeDead = false;
 export const apprenticeApi = {
-  get: (recipeId) => api.get(`/apprentice/recipe/${recipeId}`).then((r) => r.data).catch(() => ({ has_info: false })),
+  get: (recipeId) => {
+    if (_apprenticeDead) return Promise.resolve({ has_info: false });
+    return api.get(`/apprentice/recipe/${recipeId}`).then((r) => r.data).catch((e) => {
+      if (e && e.response && (e.response.status === 404 || e.response.status === 401)) _apprenticeDead = true;
+      return { has_info: false };
+    });
+  },
   set: (recipeId, payload) => api.put(`/apprentice/recipe/${recipeId}`, payload).then((r) => r.data),
 };
 
