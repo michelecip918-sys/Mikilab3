@@ -43,7 +43,7 @@ export default function FloorInviteLanding({ token, onEnter }) {
       <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
         className="relative z-10 w-full max-w-sm rounded-3xl border border-primary/25 bg-background/90 backdrop-blur-xl p-7 shadow-2xl">
         <div className="flex flex-col items-center text-center mb-5">
-          <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" data-keepcolor className="w-14 h-14 rounded-xl object-contain mb-3" />
+          <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" data-keepcolor className="w-14 h-14 rounded-xl object-contain mb-3" />
           <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-accent/15 border border-accent/40 text-accent text-[10px] font-bold uppercase tracking-wider mb-2">
             <HardHat className="w-3.5 h-3.5" /> {tri("Ingresso Produzione", "Produktions-Zugang", "Production entry", "Acceso Producción", "Accès Production", "ورود تولید")}
           </div>

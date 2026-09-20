@@ -126,7 +126,7 @@ export default function PublicGate({ onUnlock }) {
 
   const AVATARS = [
     { img: "avatar_miki.jpg", c: "hsl(var(--primary))", n: "MikiLab" },
-    { img: "sitor_official.jpg", c: "hsl(var(--muted-foreground))", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
+    { img: "sitor_official.webp", c: "hsl(var(--muted-foreground))", n: "Sitor", r: tri("Dio dell'Arte Bianca", "Gott der Backkunst", "God of the White Art", "Dios del Arte Blanco", "Dieu de l'Art Blanc", "خدای هنر نان"), nexus: true },
   ];
 
   if (showPin) return <AdminGate onUnlock={handleUnlock} role={gateRole} onBack={() => { setShowPin(false); setGateRole(null); }} />;
@@ -136,7 +136,7 @@ export default function PublicGate({ onUnlock }) {
       <div data-testid="guest-view" className="relative min-h-screen bg-background text-foreground">
         <header className="sticky top-0 z-20 flex items-center justify-between px-4 py-3 border-b border-border/15 bg-background/85 backdrop-blur-xl">
           <div className="flex items-center gap-2.5">
-            <span className="w-9 h-9 rounded-xl overflow-hidden border border-border/40 bg-background"><img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-cover" /></span>
+            <span className="w-9 h-9 rounded-xl overflow-hidden border border-border/40 bg-background"><img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-full h-full object-cover" /></span>
             <span className="leading-tight"><span className="block font-black tracking-[0.16em] text-base uppercase">MikiLab<span className="text-muted-foreground"> · Ospite</span></span><span className="block font-mono text-[8px] tracking-[0.28em] text-muted-foreground/70 uppercase">Guest Access · Training</span></span>
           </div>
           <div className="flex items-center gap-2">
@@ -181,7 +181,7 @@ export default function PublicGate({ onUnlock }) {
       <header className="relative z-20 flex flex-wrap items-center justify-between gap-y-2 px-4 py-3">
         <div className="flex items-center gap-2.5 shrink-0">
           <span className="w-10 h-10 rounded-xl overflow-hidden border border-border/40 shadow-[0_0_16px_rgba(138,151,166,0.25)] bg-background">
-            <img src={`${PUB}/logo-emblem.png`} alt="MikiLab Pro" className="w-full h-full object-cover" />
+            <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab Pro" className="w-full h-full object-cover" />
           </span>
           <span className="leading-tight">
             <span className="block font-black tracking-[0.1em] sm:tracking-[0.18em] text-lg sm:text-xl uppercase whitespace-nowrap">MikiLab<span className="text-muted-foreground"> Pro</span></span>

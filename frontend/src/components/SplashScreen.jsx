@@ -35,7 +35,7 @@ export default function SplashScreen() {
           <span className="splash-ring" style={{ animationDelay: "1.4s" }} />
           {/* Logo con glow ciano che respira */}
           <div className="splash-logo relative w-24 h-24 rounded-3xl overflow-hidden border border-border/40 bg-background">
-            <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
+            <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-full h-full object-contain" />
           </div>
         </div>
 

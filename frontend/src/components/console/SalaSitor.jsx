@@ -173,7 +173,7 @@ export default function SalaSitor() {
           <div className="relative w-14 h-14 shrink-0">
             <span className="absolute -inset-1.5 rounded-full blur-md" style={{ background: "radial-gradient(circle, rgba(126,154,130,0.55), rgba(126,154,130,0.28) 60%, transparent 72%)" }} />
             <div className="relative w-14 h-14 rounded-full overflow-hidden border-2 border-accent/70">
-              <img src="/sitor_official.jpg" alt="Sitor" className="w-full h-full object-cover" />
+              <img src="/sitor_official.webp" alt="Sitor" className="w-full h-full object-cover" />
             </div>
           </div>
           <div className="min-w-0 flex-1">

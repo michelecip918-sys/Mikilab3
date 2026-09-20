@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 // Nessuna sezione accademica: solo identità operativa per report, briefing e passaggi di consegna.
 const OPERATORI = [
   { id: "michele", name: "Michele", role: "Capo · Lab Control", img: "avatar_miki.jpg", accent: "hsl(var(--primary))" },
-  { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "sitor_official.jpg", accent: "hsl(var(--muted-foreground))" },
+  { id: "mikemix", name: "Sitor", role: "Reparto Produzione · Fornaio", img: "sitor_official.webp", accent: "hsl(var(--muted-foreground))" },
 ];
 
 export default function OperatoreSelect({ current, onSelect, onClose }) {
@@ -17,7 +17,7 @@ export default function OperatoreSelect({ current, onSelect, onClose }) {
           </button>
         )}
         <div className="text-center mb-8">
-          <img src={`${process.env.PUBLIC_URL}/logo-emblem.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-primary/40 object-cover bg-background" />
+          <img src={`${process.env.PUBLIC_URL}/logo-emblem.webp`} alt="MikiLab" className="w-16 h-16 rounded-2xl mx-auto mb-3 border border-primary/40 object-cover bg-background" />
           <h1 className="text-2xl font-black text-foreground uppercase tracking-wider">Chi è in laboratorio?</h1>
           <p className="text-sm text-muted-foreground mt-1.5">Seleziona l'operatore attivo del turno. Puoi cambiarlo quando vuoi.</p>
         </div>

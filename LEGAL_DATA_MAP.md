@@ -43,6 +43,8 @@ Salvati SOLO nel browser (localStorage), mai inviati al server:
 - **Progressi del percorso** ("Segna come fatta"): salvati SOLO nel browser (`localStorage: mikilab_done`). Non inviati al server.
 - **Chat "cosa faccio dopo?"**: il browser invia a Sitor (Anthropic) solo i NOMI delle ricette segnate come fatte e i titoli dei livelli attivi. Nessun salvataggio sul server.
 - **TikTok**: solo un LINK al profilo (`https://www.tiktok.com/@<handle>`), aperto in nuova scheda al clic. Nessun embed/script/iframe/pixel. L'IP arriva a TikTok solo al clic.
+- **Nessun numero di telefono pubblico** (STADIO Q1): rimosso ogni numero WhatsApp dai valori di default nel codice. `GET /api/site-settings` (pubblico) restituisce SOLO una lista bianca di campi: `tiktok_handle`, `hashtag`, `site_url`, `folder_covers`. Mai numeri di telefono, social vecchi (WhatsApp/Facebook/Instagram) o dati personali. Se un numero fosse presente nel DB da configurazioni precedenti, NON viene esposto pubblicamente.
+- **Condivisione ricette** (STADIO Q3): "Condividi" usa `navigator.share`; in fallback copia il link/testo negli appunti locali. Nessun link o logo a WhatsApp o Facebook.
 - **Regala MikiLab**: QR generato nel browser (libreria `qrcode`), nessun servizio esterno. "Condividi" usa `navigator.share` (o copia link). Copia hashtag/testo usano la clipboard locale.
 - **Anteprima link (Open Graph)**: immagine `hero-ricette.jpg`; rimosso l'uso della vecchia og-image sci-fi.
 - Nessuna nuova statistica, nessun pixel, nessun cookie nuovo.
@@ -92,6 +94,8 @@ consegne, compliance, community, utenti). NON sono più raggiungibili da un visi
 - **Test del mese (`experiments`)**: voti **anonimi**, il documento del voto contiene SOLO le scelte a tocchi
   e il giorno — nessun IP, nessun identificativo. L'hash dispositivo serve solo al limite (un voto) e NON è
   salvato col voto. Risultati mostrati solo con ≥30 voti. Nessuna chiamata IA nel percorso pubblico del voto.
+  (STADIO Q4) Il parametro `reveal` è stato RIMOSSO: i risultati dell'esperimento aperto arrivano SOLO nella
+  risposta al proprio voto (decisione lato server), o nell'archivio dei test chiusi con ≥30 voti.
 - **Traduttore farine (`flour_types`)** e **Calendario del pane (`bread_calendar`)**: solo contenuti redazionali
   (bozze approvate da Michele). Nessun dato personale. La data di Pasqua è calcolata localmente (algoritmo di Gauss).
 - **Contenuti personali sul dispositivo (localStorage)**: diario, "La mia cucina", correzione forno, piano
@@ -100,4 +104,12 @@ consegne, compliance, community, utenti). NON sono più raggiungibili da un visi
 - **Rotte pubbliche aggiunte**: GET `experiments`, `flour-types`, `bread-calendar`; POST `sitor/photo`,
   `experiments/vote/{slug}`. Tutte le rotte admin del 2B (draft-recipe, admin/experiments, PUT su
   experiments/flour-types/bread-calendar) restano negate (404) agli anonimi.
+
+## 10. STADIO Y — "Crea il tuo lievito" (COMANDO 5A, giugno 2026)
+- Guida per creare licoli/lievito madre di grano e Sauerteig di segale DA ZERO, percorso a giorni.
+- **Tutto sul dispositivo (localStorage)**: giorni completati (`mikilab_lievito_<variante>`), promemoria `.ics`
+  generati nel browser (un evento al giorno con allarme). Nessun dato lascia il dispositivo.
+- **"Come va?"** a tocchi: causa/rimedio statici, senza IA. "Chiedi a Sitor" apre la chat pubblica (nessun
+  salvataggio sul server). Etichetta "Bozza di Sitor: da verificare da Michele".
+- **Nessuna nuova rotta pubblica**: la pagina riusa la chat esistente e il generatore `.ics` lato browser.
 

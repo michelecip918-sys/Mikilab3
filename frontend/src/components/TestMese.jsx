@@ -16,12 +16,13 @@ export default function TestMese({ onBack }) {
   const [data, setData] = useState(null);
   const [choices, setChoices] = useState({});
   const [voted, setVoted] = useState(false);
+  const [voteRes, setVoteRes] = useState(null); // risultati SOLO dalla risposta al proprio voto
 
-  const load = (reveal) => api.get(`/experiments${reveal ? "?reveal=1" : ""}`).then((r) => setData(r.data)).catch(() => setData({ open: null, archive: [] }));
-  useEffect(() => { load(false); }, []); // eslint-disable-line
+  const load = () => api.get(`/experiments`).then((r) => setData(r.data)).catch(() => setData({ open: null, archive: [] }));
+  useEffect(() => { load(); }, []); // eslint-disable-line
 
   useEffect(() => {
-    if (data && data.open && getVoted()[data.open.slug]) { setVoted(true); load(true).then(() => {}); }
+    if (data && data.open && getVoted()[data.open.slug]) setVoted(true);
   }, [data && data.open && data.open.slug]); // eslint-disable-line
 
   const open = data && data.open;
@@ -35,9 +36,9 @@ export default function TestMese({ onBack }) {
   const submit = async () => {
     if (!open) return;
     try {
-      await api.post(`/experiments/vote/${open.slug}`, { choices });
+      const r = await api.post(`/experiments/vote/${open.slug}`, { choices });
       setVotedSlug(open.slug); setVoted(true);
-      load(true);
+      setVoteRes(r.data || null);
     } catch { /* */ }
   };
 
@@ -46,7 +47,8 @@ export default function TestMese({ onBack }) {
     const tot = c.A + c.B + c.same + c.nocompare; if (!tot) return 0;
     return Math.round((c[k] / tot) * 100);
   };
-  const revealResults = (exp) => (voted || (exp && exp.status === "closed")) && exp && exp.enough && exp.results && Object.keys(exp.results).length;
+  // I risultati dell'esperimento aperto arrivano SOLO dalla risposta al proprio voto (voteRes).
+  const openResults = voteRes && voteRes.enough && voteRes.results && Object.keys(voteRes.results).length ? voteRes.results : null;
 
   return (
     <div data-testid="testmese-page" className="max-w-2xl mx-auto px-4 py-6 space-y-5">
@@ -88,20 +90,20 @@ export default function TestMese({ onBack }) {
           </>) : (
             <div data-testid="testmese-results" className="space-y-3">
               <p className="inline-flex items-center gap-1.5 text-sm font-bold text-salvia"><Check className="w-4 h-4" />{tri("Grazie per aver partecipato!", "Danke fürs Mitmachen!", "Thanks for taking part!")}</p>
-              {revealResults(open) ? (
+              {openResults ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-muted-foreground">{open.total_votes} {tri("partecipanti", "Teilnehmer", "participants")}</p>
+                  <p className="text-xs text-muted-foreground">{voteRes.total_votes} {tri("partecipanti", "Teilnehmer", "participants")}</p>
                   {open.evaluates.map((crit) => (
                     <div key={crit} className="rounded-lg bg-background border border-border p-2">
                       <p className="text-xs font-bold text-foreground mb-1">{(open.eval_labels[crit] && (open.eval_labels[crit][lang] || open.eval_labels[crit].it)) || crit}</p>
                       <div className="flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-muted-foreground">
-                        {OPTS.map((o) => <span key={o.k}>{o.l}: <b className="text-foreground">{pct(open.results, crit, o.k)}%</b></span>)}
+                        {OPTS.map((o) => <span key={o.k}>{o.l}: <b className="text-foreground">{pct(openResults, crit, o.k)}%</b></span>)}
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
-                <p className="text-sm text-muted-foreground">{tri("Stiamo ancora raccogliendo i dati.", "Wir sammeln noch Daten.", "We're still collecting data.")}</p>
+                <p className="text-sm text-muted-foreground">{tri("Stiamo ancora raccogliendo i dati. I risultati compaiono quando abbastanza persone hanno partecipato.", "Wir sammeln noch Daten. Ergebnisse erscheinen, wenn genug Leute mitgemacht haben.", "We're still collecting data. Results appear once enough people have taken part.")}</p>
               )}
             </div>
           )}

@@ -52,7 +52,7 @@ export default function ShiftBriefing({ onClose }) {
       {data && <p className="relative font-mono-data text-[11px] tracking-widest uppercase mb-8" style={{ color: stressColor }}>{tri("Stato impianto", "Anlagenstatus", "Plant status", "Estado planta", "État usine", "وضعیت")}: {data.level} · {data.stats.workers} op · {data.stats.leaders} {tri("linee","Linien","lines","líneas","lignes","خط")} · {data.stats.low_stock} {tri("scorte basse","niedrig","low stock","stock bajo","stock bas","کم")}</p>}
 
       <div className="relative flex items-end justify-center gap-4 sm:gap-8 mb-8">
-        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "sitor_official.jpg" }, { avatar: "sitor_official.jpg" }]).map((ln, i) => {
+        {(data?.lines || [{ avatar: "avatar_miki.jpg" }, { avatar: "sitor_official.webp" }, { avatar: "sitor_official.webp" }]).map((ln, i) => {
           const on = active === i;
           const c = ln.accent || "hsl(var(--muted-foreground))";
           return (

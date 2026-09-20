@@ -47,7 +47,7 @@ export default function RecipeAuditMatrix({ onClose }) {
         <div className="flex items-center gap-3 my-3 rounded-2xl border p-3" style={{ borderColor: goldState ? "#f59e0b66" : "hsl(var(--card))", background: goldState ? "#f59e0b12" : "hsl(var(--card))" }}>
           <div className="relative">
             {goldState && <span className="absolute inset-0 rounded-full bg-muted/50 blur-md animate-pulse" />}
-            <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "hsl(var(--muted-foreground))" : "hsl(var(--primary))" }} />
+            <img src={`${PUB}/sitor_official.webp`} alt="Sitor" className="relative w-12 h-12 rounded-full object-cover border-2" style={{ borderColor: goldState ? "hsl(var(--muted-foreground))" : "hsl(var(--primary))" }} />
           </div>
           <p className="text-[12px] text-foreground flex-1">{audit ? audit.mike_note : tri("Scegli una ricetta: la analizzo come Master Baker.", "Wähle ein Rezept: ich prüfe es als Master Baker.", "Pick a recipe: I'll audit it as Master Baker.", "Elige una receta: la audito como Master Baker.", "Choisis une recette : je l'audite en Master Baker.", "دستوری انتخاب کن تا مثل استاد نان بررسی کنم.")}</p>
         </div>

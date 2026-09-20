@@ -84,7 +84,7 @@ export default function GuidaMikiLab({ open, onClose }) {
       .head img{width:56px;height:56px;border-radius:12px;object-fit:cover}h1{font-size:26px;margin:0;letter-spacing:.5px}.sub{color:#777;font-size:13px;margin-top:2px}
       section{margin:0 0 20px;page-break-inside:avoid}h2{font-size:17px;margin:0 0 6px}p{margin:0 0 8px;color:#333}ul{margin:0;padding-left:20px}li{margin:3px 0;color:#222}
       .foot{margin-top:26px;border-top:1px solid #ddd;padding-top:10px;color:#999;font-size:11px;text-align:center}</style></head><body>
-      <div class="head"><img src="${window.location.origin}${PUB}/logo-emblem.png"/><div><h1>MIKILAB PRO</h1><div class="sub">MikiLab &amp; Sitor · Guida / Guide</div></div></div>
+      <div class="head"><img src="${window.location.origin}${PUB}/logo-emblem.webp"/><div><h1>MIKILAB PRO</h1><div class="sub">MikiLab &amp; Sitor · Guida / Guide</div></div></div>
       ${rows}<div class="foot">MikiLab Pro &amp; Sitor — ${new Date().toLocaleDateString()}</div></body></html>`;
     const w = window.open("", "_blank");
     if (!w) return;
@@ -109,7 +109,7 @@ export default function GuidaMikiLab({ open, onClose }) {
           data-testid="guida-mikilab" dir={isRtl ? "rtl" : "ltr"} className="fixed inset-0 z-[200] bg-background/95 backdrop-blur-md overflow-y-auto">
           <div className="min-h-screen px-4 py-6 sm:px-6 sm:py-10 max-w-3xl mx-auto">
             <div className="flex items-center gap-3 mb-6 sticky top-0 z-10 bg-background/90 backdrop-blur py-2 -mx-2 px-2">
-              <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-11 h-11 rounded-xl object-cover border border-border/50" />
+              <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-11 h-11 rounded-xl object-cover border border-border/50" />
               <div className="flex-1 min-w-0">
                 <h1 className="font-display text-lg sm:text-xl font-black text-foreground uppercase tracking-wider">{label.title}</h1>
                 <p className="text-[11px] text-muted-foreground">{label.sub}</p>

@@ -3,7 +3,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import SitorBadge from "@/components/SitorBadge";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker, Globe, Recycle } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker, Globe, Recycle, Sprout } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -54,7 +54,7 @@ export default function HomeManuale({ onNav, features }) {
       {/* Sitor accoglie */}
       <section className="rounded-3xl border border-border/25 bg-background/70 overflow-hidden">
         <div className="grid sm:grid-cols-[auto_1fr] gap-5 p-6 sm:p-8 items-center">
-          <img src={`${PUB}/sitor_official.jpg`} alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} data-testid="home-sitor-img"
+          <img src={`${PUB}/sitor_official.webp`} alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} data-testid="home-sitor-img"
             className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover object-top border-2 border-primary/50 shadow-[0_0_28px_rgba(217,119,54,0.28)] mx-auto sm:mx-0" />
           <div className="text-center sm:text-left">
             <p className="font-mono-data text-[10px] tracking-[0.28em] text-primary uppercase mb-1">{tri("La tua guida", "Dein Begleiter", "Your guide")}</p>
@@ -137,6 +137,7 @@ export default function HomeManuale({ onNav, features }) {
         <button data-testid="home-chip-testmese" onClick={() => onNav("testmese")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Beaker className="w-4 h-4 text-mattone" />{tri("Test del mese", "Test des Monats", "Test of the month")}</button>
         <button data-testid="home-chip-dalmondo" onClick={() => onNav("dalmondo")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Globe className="w-4 h-4 text-primary" />{tri("Dal mondo", "Aus aller Welt", "From the world")}</button>
         <button data-testid="home-chip-paneieri" onClick={() => onNav("paneieri")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Recycle className="w-4 h-4 text-salvia" />{tri("Pane di ieri", "Brot von gestern", "Yesterday's bread")}</button>
+        <button data-testid="home-chip-crealievito" onClick={() => onNav("crealievito")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Sprout className="w-4 h-4 text-salvia" />{tri("Crea il tuo lievito", "Sauerteig erschaffen", "Create your starter")}</button>
         <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
       </div>
 

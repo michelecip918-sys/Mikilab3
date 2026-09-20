@@ -117,7 +117,7 @@ export default function AuthScreen({ onClose, initialMode = "login" }) {
           </button>
         )}
         <div className="text-center mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-primary/70 shadow-lg mx-auto mb-3" />
+          <img src={`${process.env.PUBLIC_URL}/logo.webp`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-primary/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-foreground dark:text-foreground">{T.title}</h1>
           <p className="text-sm text-muted-foreground mt-1">{T.sub} 🇮🇹 🇩🇪</p>
         </div>

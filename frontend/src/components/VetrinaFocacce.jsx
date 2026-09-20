@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Loader2, X, Wheat, BookOpen, Share2 } from "lucide-react";
+import { toast } from "sonner";
 import { recipesApi } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
 import { useLang } from "@/i18n/LanguageContext";
@@ -62,8 +63,13 @@ export default function VetrinaFocacce({ initialCat = "focacce", onOpenRecipe })
     } catch { /* fall through */ }
     // 2) fallback: condividi il link della foto
     try { if (navigator.share) { await navigator.share({ title, text, url: img }); return; } } catch { return; }
-    // 3) ultimo fallback: WhatsApp web
-    window.open(`https://wa.me/?text=${encodeURIComponent(text + " " + img)}`, "_blank");
+    // 3) ultimo fallback: copia il link negli appunti
+    try {
+      await navigator.clipboard.writeText(`${text} ${img}`);
+      toast.success(tri("Link copiato", "Link kopiert", "Link copied", "Enlace copiado", "Lien copié", "لینک کپی شد"));
+    } catch {
+      toast.error(tri("Copia non riuscita", "Kopieren fehlgeschlagen", "Copy failed", "No se pudo copiar", "Échec de la copie", "کپی ناموفق بود"));
+    }
   };
 
   return (

@@ -1,3 +1,28 @@
+# ⚡ AGGIORNAMENTO (2026-06) — COMANDO 5A: STADI Q (correzioni) + Y ("Crea il tuo lievito") + N
+
+## STADIO Q — CORREZIONI (privacy + pulizia)
+- **Q1 Privacy site-settings**: rimosso il numero WhatsApp hardcoded dai default in `server.py`. `GET /api/site-settings` ora restituisce SOLO una lista bianca (`_public_site_settings`): `tiktok_handle`, `hashtag`, `site_url`, `folder_covers`. Mai numeri di telefono/social vecchi. Il numero eventualmente già nel DB NON viene cancellato né esposto.
+- **Q2 GATE_SECRET**: rimosso il fallback `"mikilab-gate-dev"`; se manca `GATE_JWT_SECRET`/`INBOUND_SHARED_SECRET` l'avvio fallisce con errore chiaro (il gate PIN è ancora importato da auth.py/orgs.py, quindi il codice resta).
+- **Q3 WhatsApp**: rimossi i link `wa.me` da `VetrinaFocacce.jsx` e `sections/RicetteCustodite.jsx` → fallback su `navigator.share` + copia link/testo negli appunti. Nessun logo/link WhatsApp o Facebook.
+- **Q4 Test del mese**: rimosso il parametro `reveal` da `GET /api/experiments`. I risultati dell'esperimento aperto arrivano SOLO nella risposta al proprio voto (`TestMese.jsx` usa `voteRes`); archivio chiuso visibile con ≥30 voti.
+- **Q5 Immagini**: create versioni WebP ottimizzate (originali archiviati in `_archivio_non_pubblico/images_orig/`): `sitor_official.webp` 800px **62 KB**, `logo-emblem.webp` 256px **13 KB**, `logo.webp` 256px **11 KB**, `hero-ricette.webp` 1200px **117 KB**. Aggiornati tutti i riferimenti in `src/` (+ `sw.js` cache v63). Home ben sotto 1 MB.
+- **Q6 Verified**: recipe_extras e recipe_courses_v2 → NESSUN flag `verified=true` (i flag di prova erano già stati azzerati in uno stadio precedente). technique_pages con `verified=true`: **baguette, pieghe, pirlatura, filone, panettone** (verifiche reali di Michele, lasciate invariate).
+- **Q7 MixPanel**: tutto il testo UI è già dentro `tri()` (IT/DE/EN); solo commenti di codice in italiano (innocui).
+
+## STADIO Y — "Crea il tuo lievito" (`components/CreaLievito.jsx`, route `crealievito`)
+- Tre percorsi: **licoli di grano (100%)**, **lievito madre solido di grano (50%)**, **Sauerteig di segale**. Percorso a giorni (10 grano / 7 segale) con: cosa fare (grammi), cosa vedi/annusi, cosa è normale, cosa NON fare. IT/DE/EN.
+- "Ho fatto oggi" (localStorage `mikilab_lievito_<variante>`), barra progressi, promemoria `.ics` (un evento/giorno con allarme, da oggi). "Come va?" a tocchi (5 casi, senza IA) + "Chiedi a Sitor" (apre chat con il giorno). Nota finale + etichetta "Bozza di Sitor: da verificare da Michele".
+- Link: home chip, "Studia il mestiere", schede "Controllo del lievito/licoli", livello 5 del percorso, e "Ho già un lievito → salta". Evento globale `mikilab-nav` aggiunto in App.js.
+- Nessuna nuova rotta pubblica (riusa chat + `.ics` lato browser).
+
+## STADIO N — CHIUSURA
+- N1: `LEGAL_DATA_MAP.md` aggiornato (nessun numero pubblico; Q3/Q4/Y).
+- N2: prova anonima su **553 rotte** (GET+POST+PUT+PATCH+DELETE) → **0 leak** (nessuna rotta fuori lista con 200/422/500). `GET /api/site-settings` = solo lista bianca.
+- N3: home (tema chiaro di default), Test del mese (senza reveal), "Crea il tuo lievito" (3 percorsi) verificati a schermo; nessuna immagine rotta.
+- N4: **132 ricette visibili**, nessun dato ricetta modificato. Numero di telefono nel DB: **SÌ presente** (non esposto, non cancellato).
+
+---
+
 # ⚡ AGGIORNAMENTO (2026-09) — COMANDO 4A: FRONTEND (Z, G2, G5, G4)
 
 ## STADIO Z — correzioni visibili

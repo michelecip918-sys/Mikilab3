@@ -58,6 +58,12 @@ export default function PercorsoPage({ onBack, onOpenRecipe, onNav }) {
               <span className="text-xs font-bold text-muted-foreground">{doneCount}/{lv.recipes.length}</span>
             </div>
             <div className="h-2 rounded-full bg-foreground/10 overflow-hidden mb-3"><div className="h-full bg-accent transition-all" style={{ width: `${pct}%` }} /></div>
+            {lv.n === 5 && (
+              <button data-testid="level5-crealievito" onClick={() => onNav("crealievito")} className="w-full text-left rounded-xl border border-salvia/40 bg-salvia/10 p-3 mb-3 hover:border-salvia active:scale-[0.99] transition-all">
+                <p className="text-sm font-bold text-foreground">🌱 {tri("Prima crea il tuo lievito", "Erschaffe zuerst deinen Sauerteig", "First create your starter")}</p>
+                <p className="text-[12px] text-muted-foreground mt-0.5">{tri("Questo livello usa il lievito madre: se non ce l'hai, imparalo a fare da zero.", "Dieses Level nutzt Sauerteig: hast du keinen, lerne ihn von Grund auf zu machen.", "This level uses sourdough: if you don't have one, learn to make it from scratch.")}</p>
+              </button>
+            )}
             <div className="space-y-1.5">
               {lv.recipes.map((r) => (
                 <div key={r.id} className="flex items-center gap-2">

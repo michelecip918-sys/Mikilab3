@@ -668,8 +668,9 @@ export default function RicetteCustodite({ initialId = null }) {
   const doShare = async () => {
     try {
       if (navigator.share) { await navigator.share({ title: "MikiLab", text: shareText }); return; }
-    } catch { /* */ }
-    window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, "_blank");
+    } catch { return; }
+    // fallback: copia il testo negli appunti (nessun WhatsApp/Facebook)
+    copyText();
   };
   const copyText = async () => {
     const ok = L({ it: "Copiata!", de: "Kopiert!", en: "Copied!", es: "¡Copiada!", fr: "Copiée !" });
@@ -842,7 +843,7 @@ export default function RicetteCustodite({ initialId = null }) {
 
   return (
     <div className="pb-40" data-testid="custodite-list">
-      <SectionHero testid="custodite-hero" image="hero-ricette.jpg" position="50% 35%"
+      <SectionHero testid="custodite-hero" image="hero-ricette.webp" position="50% 35%"
         title={L({ it: "📜 Le Ricette Custodite", de: "📜 Bewahrte Rezepte", en: "📜 Treasured Recipes", es: "📜 Recetas Custodiadas", fr: "📜 Les Recettes Gardées", fa: "📜 دستورهای محافظت‌شده" })}
         subtitle={L({ it: "Sud Italia · Germania · Innovazioni — adattate alle tue dosi + QR", de: "Süditalien · Deutschland · Innovationen + QR", en: "Southern Italy · Germany · Innovations + QR", es: "Sur de Italia · Alemania · Innovaciones + QR", fr: "Sud de l'Italie · Allemagne · Innovations + QR", fa: "جنوب ایتالیا · آلمان · نوآوری‌ها + QR" })} />
 

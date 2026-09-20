@@ -195,7 +195,7 @@ export default function KioskMode() {
             <div className="flex items-center justify-between mb-1">
               <div className="flex items-center gap-2.5">
                 <span className="w-10 h-10 rounded-xl overflow-hidden border border-border/40 bg-background shrink-0">
-                  <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-contain" />
+                  <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-full h-full object-contain" />
                 </span>
                 <h3 className="font-display text-lg font-black tracking-wide text-foreground uppercase">{tri("Modalità Tablet", "Tablet-Modus", "Tablet Mode", "Modo Tablet", "Mode Tablette", "حالت تبلت")}</h3>
               </div>

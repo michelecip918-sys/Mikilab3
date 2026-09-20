@@ -433,7 +433,7 @@ export default function FloorOperatorDay({ superviseDept = "", superviseDeptName
         <button type="button" data-testid="sitor-card-open" onClick={() => setShowSitorCard(true)}
           className="w-14 h-14 rounded-xl overflow-hidden border-2 border-amber-500/60 shrink-0 active:scale-95 transition-transform"
           aria-label={tri("Apri la scheda di Sitor", "Sitor-Karte öffnen", "Open Sitor's card", "Abrir ficha de Sitor", "Ouvrir la fiche de Sitor", "کارت سیتور را باز کن")}>
-          <LivingAvatar3D src={`${PUB}/sitor_official.jpg`} accent="hsl(var(--muted-foreground))" nexus className="w-full h-full" />
+          <LivingAvatar3D src={`${PUB}/sitor_official.webp`} accent="hsl(var(--muted-foreground))" nexus className="w-full h-full" />
         </button>
         <div className="min-w-0">
           <p className="text-sm font-black text-foreground uppercase tracking-wide flex items-center gap-2">Sitor

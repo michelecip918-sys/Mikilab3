@@ -34,7 +34,7 @@ export default function OnboardingActivity({ onChoose, onClose }) {
 
   return (
     <div data-testid="onboarding-activity" className="fixed inset-0 z-[900] bg-background/96 backdrop-blur-md flex flex-col items-center justify-center px-5 py-8 overflow-auto">
-      <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-16 h-16 rounded-2xl object-cover object-top border-2 border-amber-500/60 mb-3" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+      <img src={`${PUB}/sitor_official.webp`} alt="Sitor" className="w-16 h-16 rounded-2xl object-cover object-top border-2 border-amber-500/60 mb-3" onError={(e) => { e.currentTarget.style.display = "none"; }} />
       <p className="font-mono-data text-[10px] tracking-[0.28em] uppercase text-amber-400 mb-1">Sitor</p>
       <h2 className="font-display text-xl sm:text-2xl font-black text-foreground uppercase tracking-wide text-center max-w-md">{tri(
         "Che tipo di attività gestisci?", "Welche Art von Betrieb?", "What kind of business do you run?", "¿Qué tipo de actividad?", "Quel type d'activité ?", "چه نوع کسب‌وکاری؟")}</h2>

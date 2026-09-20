@@ -35,7 +35,7 @@ export default function PinLock({ onUnlock }) {
   return (
     <div data-testid="pin-lock" className="fixed inset-0 z-[1000] flex flex-col items-center justify-center px-6"
       style={{ background: "radial-gradient(120% 60% at 50% -10%, hsl(var(--card)) 0%, hsl(var(--card)) 55%)", color: "hsl(var(--foreground))" }}>
-      <img src={`${process.env.PUBLIC_URL}/logo.png`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover ring-2 ring-border/60 mb-4" />
+      <img src={`${process.env.PUBLIC_URL}/logo.webp`} alt="MikiLab" className="w-16 h-16 rounded-2xl object-cover ring-2 ring-border/60 mb-4" />
       <div className="flex items-center gap-2 mb-1">
         <Lock className="w-5 h-5" style={{ color: "hsl(var(--muted-foreground))" }} />
         <h1 className="font-display font-extrabold" style={{ fontSize: "22px", color: "hsl(var(--muted-foreground))" }}>MikiLab</h1>

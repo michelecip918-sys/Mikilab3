@@ -35,7 +35,7 @@ export default function SitorBadge({ size = 32, variant = "full", className = ""
         className={`inline-flex items-center gap-2 rounded-full bg-background/70 border border-primary/30 pl-1 pr-3 py-1 active:scale-95 transition-transform hover:border-primary ${className}`}
       >
         <img
-          src={`${PUB}/sitor_official.jpg`}
+          src={`${PUB}/sitor_official.webp`}
           alt={alt}
           width={size}
           height={size}
@@ -53,7 +53,7 @@ export default function SitorBadge({ size = 32, variant = "full", className = ""
             onClick={(e) => e.stopPropagation()}
             className="w-full max-w-md rounded-3xl overflow-hidden border border-primary/40 bg-background shadow-2xl max-h-[85vh] overflow-y-auto">
             <div className="flex items-center gap-3 px-4 py-3 border-b border-border/40">
-              <img src={`${PUB}/sitor_official.jpg`} alt={alt} className="w-11 h-11 rounded-full object-cover object-top border border-primary/40" />
+              <img src={`${PUB}/sitor_official.webp`} alt={alt} className="w-11 h-11 rounded-full object-cover object-top border border-primary/40" />
               <div className="flex-1 min-w-0">
                 <p className="font-display font-black text-foreground leading-tight">{tri("Chi è Sitor?", "Wer ist Sitor?", "Who is Sitor?")}</p>
                 <p className="text-[11px] font-bold text-primary">{label}</p>

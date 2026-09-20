@@ -80,7 +80,7 @@ export default function SitorChat({ onClose }) {
     <div data-testid="sitor-chat" className="fixed inset-0 z-[96] bg-background/50 flex items-end sm:items-center sm:justify-center" onClick={onClose}>
       <div onClick={(e) => e.stopPropagation()} className="w-full sm:max-w-lg h-[85vh] sm:h-[80vh] bg-background sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl">
         <div className="flex items-center gap-3 px-4 py-3 bg-card shrink-0">
-          <img src="/sitor_official.jpg" alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} className="w-10 h-10 rounded-full object-cover border-2 border-border" />
+          <img src="/sitor_official.webp" alt={tri("Avatar IA di Michele (Sitor)", "KI-Avatar von Michele (Sitor)", "AI avatar of Michele (Sitor)")} className="w-10 h-10 rounded-full object-cover border-2 border-border" />
           <div className="min-w-0 flex-1">
             <p className="font-display font-bold text-foreground leading-tight">Sitor</p>
             <SitorBadge size={18} className="mt-0.5" onOpenPerche={() => { onClose(); try { window.dispatchEvent(new CustomEvent("mikilab-open-perche")); } catch { /* */ } }} />

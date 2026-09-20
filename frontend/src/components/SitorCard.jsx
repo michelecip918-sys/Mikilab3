@@ -20,7 +20,7 @@ export default function SitorCard({ tri, onClose }) {
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md rounded-3xl overflow-hidden border border-primary/40 bg-background shadow-2xl">
         <div className="relative">
-          <img src={`${PUB}/sitor_official.jpg`} alt="Sitor" className="w-full h-56 object-cover object-top" />
+          <img src={`${PUB}/sitor_official.webp`} alt="Sitor" className="w-full h-56 object-cover object-top" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/30 to-transparent" />
           <button data-testid="sitor-card-close" onClick={onClose}
             className="absolute top-3 right-3 w-9 h-9 rounded-full bg-background/50 border border-foreground/20 text-foreground flex items-center justify-center active:scale-90 transition-transform">

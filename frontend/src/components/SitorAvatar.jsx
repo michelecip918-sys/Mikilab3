@@ -1,6 +1,6 @@
 // Rappresentazione UFFICIALE e UNICA di Sitor (Michele dal futuro, divisa da fornaio moderna).
 // Un solo volto, un solo stile, usato ovunque nel sito.
-const OFFICIAL_SRC = `${process.env.PUBLIC_URL || ""}/sitor_official.jpg`;
+const OFFICIAL_SRC = `${process.env.PUBLIC_URL || ""}/sitor_official.webp`;
 
 export default function SitorAvatar({ size = null, className = "", round = true, speaking = false, ring = true, alt = "Sitor" }) {
   const dim = typeof size === "number" ? { width: size, height: size } : {};

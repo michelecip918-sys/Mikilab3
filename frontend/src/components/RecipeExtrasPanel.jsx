@@ -243,6 +243,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
             ].map((s, i) => <li key={i}>{li(s)}</li>)}
           </ol>
           <p className="text-[12px] text-muted-foreground mt-2">{tri("Prima di un panettone il lievito deve essere già stabile (rinfrescato con regolarità per settimane). Chi non ce l'ha può chiedere un pezzetto a un panificio o usare lievito madre secco da riattivare (circa una settimana).", "Vor einem Panettone muss der Sauerteig stabil sein (wochenlang regelmäßig aufgefrischt). Wer keinen hat, kann in einer Bäckerei ein Stück erbitten oder Trockensauerteig reaktivieren (ca. eine Woche).", "Before a panettone the starter must be stable (regularly refreshed for weeks). If you don't have one, ask a bakery for a piece or reactivate dried sourdough (about a week).")}</p>
+          <button data-testid="control-lm-crealievito" onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "crealievito" } }))} className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-primary">🌱 {tri("Non hai ancora un lievito? Crealo da zero", "Noch keinen Sauerteig? Erschaffe ihn von Grund auf", "No starter yet? Create one from scratch")}</button>
         </div>
       )}
       {mode === "casa" && ex.leaven_kind === "licoli" && (
@@ -259,6 +260,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
               ["Il licoli è al 100% di idratazione: quando lo usi al posto del lievito solido, scomputa dall'acqua della ricetta la metà del suo peso.", "LiCoLi hat 100% Hydration: ersetzt du festen Sauerteig, ziehe die Hälfte seines Gewichts vom Rezeptwasser ab.", "LiCoLi is at 100% hydration: when replacing stiff starter, subtract half its weight from the recipe water."],
             ].map((s, i) => <li key={i}>{li(s)}</li>)}
           </ol>
+          <button data-testid="control-licoli-crealievito" onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "crealievito" } }))} className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-primary">🌱 {tri("Non hai ancora un licoli? Crealo da zero", "Noch keinen LiCoLi? Erschaffe ihn von Grund auf", "No licoli yet? Create one from scratch")}</button>
         </div>
       )}
 

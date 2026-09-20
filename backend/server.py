@@ -156,7 +156,9 @@ api_router = APIRouter(prefix="/api")
 # anche da browser modificato: MikiLab resta invisibile a chi non ha il PIN iniziale.
 # Il Production PIN (operatori) NON è in whitelist → passa comunque dal cancello Master.
 # ---------------------------------------------------------------------------
-GATE_SECRET = os.environ.get("GATE_JWT_SECRET") or os.environ.get("INBOUND_SHARED_SECRET") or "mikilab-gate-dev"
+GATE_SECRET = os.environ.get("GATE_JWT_SECRET") or os.environ.get("INBOUND_SHARED_SECRET")
+if not GATE_SECRET:
+    raise RuntimeError("GATE_JWT_SECRET (o INBOUND_SHARED_SECRET) non impostato: imposta il segreto del gate nelle variabili d'ambiente.")
 GATE_COOKIE = "mikilab_gate"
 GATE_TTL = int(os.environ.get("GATE_TTL_SECONDS", str(30 * 86400)))
 _GATE_PUBLIC_PREFIXES = ("/api/health", "/api/auth/", "/api/admin-gate", "/api/inbound/", "/api/webhook/", "/api/public/", "/api/compliance/privacy")
@@ -9012,24 +9014,31 @@ async def share_preview(request: Request, lang: str = "it"):
 # copertine delle cartelle ricette. Lettura pubblica, scrittura solo admin.
 # ---------------------------------------------------------------------------
 DEFAULT_SITE_SETTINGS = {
-    "whatsapp_number": "491601253378",
     "tiktok_handle": "mikilab.de",  # senza @, usato per https://www.tiktok.com/@<handle>
     "hashtag": "#MikiLab",
     "site_url": "https://mikilab.de",
-    "instagram_url": "",            # URL completo, vuoto = pulsante nascosto
-    "facebook_url": "",             # URL completo, vuoto = pulsante nascosto
     "avatar_bubbles": {},   # override keyed "impara.michele" -> {"it": "...", "de": "..."}
     "folder_covers": {},    # {"pane": "<url>", "panettoni": "<url>", ...}
 }
+
+# Q1: SOLO questi campi sono restituiti dalla GET pubblica. MAI numeri di telefono,
+# social vecchi (WhatsApp/Facebook/Instagram) o altri dati personali.
+PUBLIC_SITE_KEYS = ("tiktok_handle", "hashtag", "site_url", "folder_covers")
 
 
 def _merge_site_settings(doc):
     s = dict(DEFAULT_SITE_SETTINGS)
     if doc:
-        for k in ("whatsapp_number", "tiktok_handle", "hashtag", "site_url", "instagram_url", "facebook_url", "avatar_bubbles", "folder_covers"):
+        for k in ("tiktok_handle", "hashtag", "site_url", "avatar_bubbles", "folder_covers"):
             if doc.get(k) is not None:
                 s[k] = doc[k]
     return s
+
+
+def _public_site_settings(doc):
+    """Lista bianca pubblica: solo i campi sicuri per l'interfaccia."""
+    merged = _merge_site_settings(doc)
+    return {k: merged.get(k) for k in PUBLIC_SITE_KEYS}
 
 
 def _normalize_social_url(val, base):
@@ -9046,16 +9055,13 @@ def _normalize_social_url(val, base):
 @api_router.get("/site-settings")
 async def get_site_settings():
     doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
-    return _merge_site_settings(doc)
+    return _public_site_settings(doc)
 
 
 class SiteSettingsReq(BaseModel):
-    whatsapp_number: Optional[str] = None
     tiktok_handle: Optional[str] = None
     hashtag: Optional[str] = None
     site_url: Optional[str] = None
-    instagram_url: Optional[str] = None
-    facebook_url: Optional[str] = None
     avatar_bubbles: Optional[dict] = None
     folder_covers: Optional[dict] = None
 
@@ -9063,11 +9069,6 @@ class SiteSettingsReq(BaseModel):
 @api_router.put("/admin/site-settings")
 async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(require_admin)):
     update = {"_key": "site_settings"}
-    if body.whatsapp_number is not None:
-        num = "".join(ch for ch in body.whatsapp_number if ch.isdigit())
-        if num.startswith("00"):
-            num = num[2:]  # 0049... -> 49... (prefisso internazionale per wa.me)
-        update["whatsapp_number"] = num
     if body.tiktok_handle is not None:
         h = body.tiktok_handle.strip().lstrip("@").strip()
         # accetta anche URL completo: estrai la parte dopo @
@@ -9081,17 +9082,13 @@ async def admin_site_settings_set(body: SiteSettingsReq, admin: dict = Depends(r
         update["hashtag"] = hh
     if body.site_url is not None:
         update["site_url"] = body.site_url.strip()
-    if body.instagram_url is not None:
-        update["instagram_url"] = _normalize_social_url(body.instagram_url, "https://instagram.com/")
-    if body.facebook_url is not None:
-        update["facebook_url"] = _normalize_social_url(body.facebook_url, "https://facebook.com/")
     if body.avatar_bubbles is not None:
         update["avatar_bubbles"] = body.avatar_bubbles
     if body.folder_covers is not None:
         update["folder_covers"] = body.folder_covers
     await db.app_meta.update_one({"_key": "site_settings"}, {"$set": update}, upsert=True)
     doc = await db.app_meta.find_one({"_key": "site_settings"}, {"_id": 0, "_key": 0})
-    return _merge_site_settings(doc)
+    return _public_site_settings(doc)
 
 
 

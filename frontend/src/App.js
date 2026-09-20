@@ -46,6 +46,7 @@ import Calendario from "@/components/Calendario";
 import Admin2B from "@/components/Admin2B";
 import DalMondo from "@/components/DalMondo";
 import PaneDiIeri from "@/components/PaneDiIeri";
+import CreaLievito from "@/components/CreaLievito";
 import { useFeatures } from "@/lib/features";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
@@ -81,7 +82,9 @@ export default function App() {
     window.addEventListener("mikilab-open-chat", hc);
     const hp = () => { setRoute("perche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
     window.addEventListener("mikilab-open-perche", hp);
-    return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); window.removeEventListener("mikilab-open-perche", hp); };
+    const hn = (e) => { const r = e?.detail?.route; if (r) { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+    window.addEventListener("mikilab-nav", hn);
+    return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); window.removeEventListener("mikilab-open-perche", hp); window.removeEventListener("mikilab-nav", hn); };
   }, []);
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
@@ -105,7 +108,7 @@ export default function App() {
           <header data-testid="app-header" className="sticky top-0 z-50 border-b border-border/15 bg-background/85 backdrop-blur-xl px-3 sm:px-4 py-2.5">
             <div className="max-w-6xl mx-auto flex items-center justify-between gap-2">
               <button data-testid="brand-home" onClick={() => { setRoute("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center gap-2.5 min-w-0 shrink-0 active:scale-95 transition-transform">
-                <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
+                <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
                 <span className="text-left whitespace-nowrap">
                   <span className="block font-display text-lg sm:text-2xl font-black tracking-[0.14em] text-foreground uppercase">MikiLab</span>
                   <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.28em] text-muted-foreground/70 uppercase">Il Manuale di Sitor</span>
@@ -166,6 +169,7 @@ export default function App() {
               {route === "calendario" && <Calendario onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "dalmondo" && <DalMondo onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "paneieri" && <PaneDiIeri onBack={() => setRoute("home")} />}
+              {route === "crealievito" && <CreaLievito onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "regala" && <RegalaPage onBack={() => setRoute("home")} />}
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
@@ -203,7 +207,7 @@ export default function App() {
         {chatOpen && <SitorChat onClose={() => setChatOpen(false)} />}
         <button data-testid="sitor-chat-fab" onClick={() => setChatOpen(true)} aria-label="Chat Sitor"
           className="fixed z-[60] bottom-5 right-5 flex items-center gap-2 pl-2 pr-4 py-2 rounded-full bg-muted hover:bg-muted text-foreground shadow-xl active:scale-95 transition-all">
-          <img src="/sitor_official.jpg" alt="" className="w-9 h-9 rounded-full object-cover border-2 border-border" />
+          <img src="/sitor_official.webp" alt="" className="w-9 h-9 rounded-full object-cover border-2 border-border" />
           <span className="font-bold text-sm hidden sm:inline">{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}</span>
           <MessageCircle className="w-4 h-4 sm:hidden" />
         </button>

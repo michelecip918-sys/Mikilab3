@@ -55,7 +55,7 @@ export default function AdminGate({ onUnlock, onBack, role }) {
       )}
       <div className="relative z-10 w-full max-w-xs text-center">
         <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden border border-primary/40 shadow-lg shadow-primary/20 bg-background mb-4">
-          <img src={`${PUB}/logo-emblem.png`} alt="MikiLab" className="w-full h-full object-cover" />
+          <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-full h-full object-cover" />
         </div>
         <h1 className="font-black tracking-[0.15em] text-2xl uppercase">{isOp ? tri("PRODUZIONE", "PRODUKTION", "PRODUCTION", "PRODUCCIÓN", "PRODUCTION", "تولید") : "MIKILAB"}</h1>
         <p className="mt-2 text-sm text-muted-foreground flex items-center justify-center gap-1.5"><ShieldCheck className="w-4 h-4 text-primary" /> {isOp

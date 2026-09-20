@@ -97,7 +97,7 @@ def _exp_public(e: dict, evals=True) -> dict:
 
 
 @api_router.get("/experiments")
-async def experiments_get(reveal: int = 0):
+async def experiments_get():
     await _seed_experiments()
     op = await db.experiments.find_one({"status": "open"}, {"_id": 0})
     open_out = None
@@ -106,8 +106,8 @@ async def experiments_get(reveal: int = 0):
         res = await _exp_results(op["slug"])
         open_out["total_votes"] = res["total"]
         open_out["enough"] = res["total"] >= _MIN_VOTES
-        if (reveal and res["total"] >= _MIN_VOTES):
-            open_out["results"] = res["counts"]
+        # Q4: i risultati dell'esperimento APERTO NON si vedono qui — solo nella
+        # risposta al proprio voto (POST /experiments/vote). Il server decide.
     archive = []
     for e in await db.experiments.find({"status": "closed"}, {"_id": 0}).sort("created_at", -1).to_list(30):
         a = _exp_public(e)
