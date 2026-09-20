@@ -1,6 +1,3 @@
-import fr from "./fr.js";
-import fa from "./fa.js";
-
 export const translations = {
   it: {
     // Header
@@ -2807,6 +2804,4 @@ export const translations = {
     news_region_germania: "Germany",
     news_region_italia: "Italy",
   },
-  fr,
-  fa,
 };

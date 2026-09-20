@@ -103,6 +103,16 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   return (
     <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4">
       {showCourse && <CoursePlayer recipe={recipe} onClose={() => setShowCourse(false)} />}
+      {/* Stato ricetta (V1): "Provata da Michele" / "Controllata da Michele" / bozza */}
+      <p data-testid="recipe-status-badge" className="text-center">
+        <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${ex.status === "tested" ? "bg-accent/15 text-accent" : ex.status === "reviewed" ? "bg-primary/15 text-primary" : "bg-foreground/10 text-muted-foreground"}`}>
+          {ex.status === "tested"
+            ? tri("Provata da Michele", "Von Michele erprobt", "Tested by Michele")
+            : ex.status === "reviewed"
+              ? tri("Controllata da Michele", "Von Michele geprüft", "Checked by Michele")
+              : tri("Bozza di Sitor", "Sitor-Entwurf", "Sitor draft")}
+        </span>
+      </p>
       {/* CUCINA CON SITOR */}
       <button data-testid="cook-with-sitor" onClick={() => setShowCourse(true)}
         className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-muted hover:bg-muted text-foreground font-bold text-[16px] active:scale-[0.98] transition-all shadow-lg">
