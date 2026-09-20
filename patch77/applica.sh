@@ -18,4 +18,7 @@ for f in ("frontend/src/components/RecipeScheme.jsx", "frontend/src/components/C
     open(f, encoding="utf-8").read()
 print("Seed ricette:", len(d))
 PY
+if [ ! -f frontend/public/logo-emblem.webp ]; then
+  echo "ATTENZIONE: frontend/public/logo-emblem.webp non trovato: lo schema mostrerà il testo MikiLab senza il logo."
+fi
 echo "OK: v77 applicata. Ora un solo commit e un solo deploy."

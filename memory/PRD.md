@@ -108,3 +108,10 @@ Vedi `memory/test_credentials.md`.
 - Verifica self-test (no testing agent, preferenza Michele): DB con 6/6 image_url, API pubblica `/api/recipes` 6/6 OK (154 ricette totali), screenshot galleria: Colomba e Pinsa renderizzate (naturalWidth 1024/1264).
 - PROSSIMO PASSO DI MICHELE: premere **Publish** sulla dashboard Emergent per portare v77 + foto ripristinate in produzione (il sync avviene allo startup grazie al nuovo SEED_VERSION).
 
+## Patch v77 FINALE + secondo ripristino foto (20 settembre 2026)
+- Applicato `mikilab_v77_finale.zip` (da Google Drive) esattamente come da istruzioni: estratto in radice, `sh patch77/applica.sh` → output: "Seed ricette: 154" + "OK: v77 applicata. Ora un solo commit e un solo deploy." (nessun avviso logo-emblem). La patch sovrascrive: `backend/server.py`, `backend/mikilab_seed_data.json`, `frontend/src/components/{RecipeList,CasaLab,RecipeScheme}.jsx`; rimuove la cartella patch76.
+- Lo zip (creato prima del ripristino precedente) aveva di nuovo le 6 image_url a null: su scelta di Michele ("A") ricollegate subito dopo l'applicazione (stesso mapping: col_classica, pandoro_classico, stollen_classico, stollen_marzapane, pinsa_romana, panettone_salato_speck).
+- Ordine corretto stavolta: prima il JSON, poi il bump SEED_VERSION → `2026-09-v77-finale-foto` (niente corsa con l'hot-reload; sync avvenuto col JSON già corretto).
+- Verifica self-test: API pubblica 6/6 image_url OK su 154 ricette, screenshot galleria: Colomba renderizzata (w=1024). Backend senza errori. (Nota: /api/health risponde 404 — endpoint con altro path; /api/recipes conferma backend sano.)
+- PROSSIMO PASSO DI MICHELE: un solo **Publish** sulla dashboard → in produzione arrivano v77 finale + le 6 foto (sync automatico allo startup).
+
