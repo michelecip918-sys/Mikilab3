@@ -103,3 +103,6 @@ frontend/node_modules/.cache/default-development/1.pack
 frontend/node_modules/.cache/default-development/4.pack
 frontend/node_modules/.cache/default-development/7.pack
 frontend/node_modules/.cache/default-development/9.pack
+
+# Backup storici (fuori repo, rete di sicurezza)
+mikilab_backup_storici_*/
