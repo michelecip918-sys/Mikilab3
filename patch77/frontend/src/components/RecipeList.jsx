@@ -8,6 +8,8 @@ import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
 import ScaleDialog from "@/components/ScaleDialog";
 import RecipeExtrasPanel from "@/components/RecipeExtrasPanel";
+import RecipeScheme from "@/components/RecipeScheme";
+import CasaLab from "@/components/CasaLab";
 import PrintHeader from "@/components/PrintHeader";
 import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
@@ -775,6 +777,8 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
         </div>
 
         <RecipeExtrasPanel recipe={r} isAdmin={canEdit} scaleG={target} />
+        <RecipeScheme recipe={r} />
+        <CasaLab recipe={r} />
 
         <div className="flex gap-1.5 no-print flex-wrap">
           <ActionBtn testid={`fav-recipe-${r.id}`} onClick={() => toggleFav(r.id)} color={isFav(r.id) ? "hsl(var(--destructive))" : "hsl(var(--muted-foreground))"} label={isFav(r.id) ? tri("Nei preferiti", "In Favoriten", "In favourites") : tri("Aggiungi ai preferiti", "Zu Favoriten", "Add to favourites")}>
