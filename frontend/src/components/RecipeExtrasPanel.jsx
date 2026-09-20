@@ -80,7 +80,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
     rows.push([tri("Farina", "Mehl", "Flour"), flour]);
     if (recipe.water_grams) rows.push([tri("Acqua", "Wasser", "Water"), (Number(recipe.water_grams) || 0) * factor]);
     else if (recipe.hydration_percent) rows.push([tri("Acqua", "Wasser", "Water"), flour * (Number(recipe.hydration_percent) / 100)]);
-    if (recipe.sourdough_grams) rows.push([tri("Lievito madre", "Lievito madre", "Sourdough"), (Number(recipe.sourdough_grams) || 0) * factor]);
+    if (recipe.sourdough_grams) rows.push([tri("Lievito madre", "Sauerteig", "Sourdough"), (Number(recipe.sourdough_grams) || 0) * factor]);
     if (recipe.salt_grams) rows.push([tri("Sale", "Salz", "Salt"), (Number(recipe.salt_grams) || 0) * factor]);
     (recipe.extra_ingredients || []).forEach((it2) => {
       if (it2 && it2.name && it2.percent) rows.push([it2.name, flour * (Number(it2.percent) / 100)]);
