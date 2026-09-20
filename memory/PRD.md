@@ -70,6 +70,11 @@ Vedi `memory/test_credentials.md`.
 ## Foto Pizze + Progressi Diario (20 settembre 2026)
 - **Foto Pizze**: 4 foto rigenerate (Gemini) stile scuro elegante: pz_napoletana, pz_teglia_romana, pz_pala, pz_taglio → webp in `public/recipes/` (servite 200). Copertura rinnovata completa: 17 panettoni + 32 focacce + 12 colorate + 4 pizze = 65 immagini.
 - **Progressi Diario**: barra di avanzamento in cima al Diario prove ("48/148 provate · 32%", `data-testid="diario-progress"`), riempimento accent animato. Frontend-only, verificata via screenshot.
+
+## Pulizia produzione eseguita da Michele (20 settembre 2026)
+- Michele ha eseguito "Pulisci tutto" su mikilab.de. Script di verifica: **TUTTO OK** (11/11).
+- Resta 149 vs 148 per UN solo duplicato legacy: **"Miglioratore Naturale Pro (Kopie)"** (vecchia copia tedesca della base, duplicata dalla UI anni fa; non fa parte delle collezioni storiche quindi la pulizia non la tocca). Eliminazione: admin su mikilab.de → aprire la ricetta → icona cestino (delete-recipe) → conferma. Non è nel seed: NON verrà ricreata. Dopo la cancellazione → 148.
+- Ricorda: Publish porta in produzione Diario prove + filtro + progressi + 65 foto nuove (il DB resta intatto).
 - Tutte le novità (foto, Diario, filtro, progressi) arrivano in produzione al prossimo Publish di Michele.
 - Produzione mostra ancora 149 ricette (vs 148 anteprima): resta la pulizia del DB di produzione → Michele: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)". Poi provare le 61 bozze in cucina.
 - PROSSIMI PASSI DI MICHELE: 1) un solo click su **Publish**; 2) dopo il deploy eseguire/ripetere `python3 patch/verifica_dopo_deploy.py https://mikilab.de`; 3) su mikilab.de: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)"; 4) provare le bozze in cucina e segnarle "Provata".
