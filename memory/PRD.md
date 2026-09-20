@@ -82,3 +82,7 @@ Vedi `memory/test_credentials.md`.
 - ATTESA: l'ultimo Publish non è ancora avvenuto (le foto su mikilab.de risultano ancora quelle vecchie, dimensioni diverse dalle nuove). Al prossimo Publish vanno live: Diario prove + filtro + barra progressi + 65 foto rinnovate (panettoni, focacce, colorate, pizze). Il DB non viene toccato dal Publish.
 - Produzione mostra ancora 149 ricette (vs 148 anteprima): resta la pulizia del DB di produzione → Michele: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)". Poi provare le 61 bozze in cucina.
 - PROSSIMI PASSI DI MICHELE: 1) un solo click su **Publish**; 2) dopo il deploy eseguire/ripetere `python3 patch/verifica_dopo_deploy.py https://mikilab.de`; 3) su mikilab.de: admin → "Pulizia dati vecchi" → "Pulisci tutto (backup + cancella)"; 4) provare le bozze in cucina e segnarle "Provata".
+
+## LANCIO COMPLETO (20 settembre 2026)
+- Michele ha eseguito il Publish finale. Verifica su mikilab.de: **TUTTO OK** — 148 ricette, foto nuove live (dimensioni esatte: pan_classico 149178b, foc_barese 153036b, p_spinaci 148706b, pz_napoletana 106224b, v_bicolore_rosa 109318b), Diario prove presente nel bundle di produzione (`diario-prove-page`, `test-diary`, "Test-Tagebuch").
+- Stato finale: ricettario pubblico v73 online, DB produzione pulito (148 ricette, 0 storici, 0 duplicati), 65 foto stile scuro elegante, Diario prove + filtro + progressi + consiglio Sitor attivi per l'admin, corsi senza IA, chat su claude-sonnet-4-6, diagnosi foto attiva (3/giorno).
