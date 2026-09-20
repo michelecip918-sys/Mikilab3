@@ -233,7 +233,8 @@ def _extras_public(r: dict, stored: dict) -> dict:
 @api_router.get("/recipe-extras/{recipe_id}")
 async def recipe_extras_get(recipe_id: str, user: _Opt[dict] = Depends(optional_user)):
     r = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
-    if not r:
+    is_admin = bool(user and user.get("role") == "admin")
+    if not r or (not is_admin and _panettone_public_blocked(r)):
         raise HTTPException(status_code=404, detail="recipe_not_found")
     stored = await db.recipe_extras.find_one({"recipe_id": recipe_id}, {"_id": 0})
     return _extras_public(r, stored)
@@ -243,8 +244,11 @@ async def recipe_extras_get(recipe_id: str, user: _Opt[dict] = Depends(optional_
 async def recipe_extras_list(user: _Opt[dict] = Depends(optional_user)):
     """Mappa leggera per la galleria: difficoltà + hidden_public per ogni ricetta."""
     stored = {d["recipe_id"]: d async for d in db.recipe_extras.find({}, {"_id": 0})}
+    is_admin = bool(user and user.get("role") == "admin")
     out = {}
     async for r in db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0, "id": 1, "name": 1, "preferment_type": 1, "method_type": 1, "dough_category": 1, "menu_category": 1, "procedure": 1, "notes": 1, "flour_type": 1, "hydration_percent": 1}):
+        if not is_admin and _panettone_public_blocked(r):
+            continue
         rid = r.get("id")
         s = stored.get(rid) or {}
         out[rid] = {

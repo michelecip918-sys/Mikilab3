@@ -18,6 +18,7 @@ Ricettario pubblico gratuito (pane, pizza, dolci) guidato dall'avatar IA **Sitor
 - Login admin su `https://mikilab.de` verificato end-to-end con il valore effettivo di `ADMIN_RESET_PASSWORD`: API `POST /api/auth/login` 200, `/api/auth/me` 200 con ruolo `admin`, rotte admin di controllo 200, UI `?admin=1` superata fino ad `account-btn`.
 - Nessuna password, hash o token è stato scritto nei report. Il database pubblico di produzione risponde ancora con 149 ricette contro 132 in anteprima: la pulizia dati del COMANDO 8 resta da rieseguire sul DB di produzione dopo il prossimo publish.
 - Priorità sicurezza: cambiare subito la password da admin → “Cambia password”, poi rimuovere `ADMIN_RESET_PASSWORD` dai Secrets e fare redeploy.
+- Regola fissa backend (20/09): gli anonimi non vedono mai `menu_category="panettoni"` in ricette, extras e corsi; unica eccezione pubblica `Panettone Artigianale MikiLab — Verde Canapa`. Admin invariato. Richiede redeploy per la produzione.
 
 ## Credenziali test
 Vedi `memory/test_credentials.md`.

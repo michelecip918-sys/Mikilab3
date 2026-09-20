@@ -1858,16 +1858,24 @@ def _recipe_course_context(r: dict) -> str:
     return " ".join(parts)
 
 
+PANETTONI_PUBLIC_ALLOWED = "Panettone Artigianale MikiLab — Verde Canapa"
+
+
+def _panettone_public_blocked(doc: dict) -> bool:
+    return ((doc.get("menu_category") or "").strip().lower() == "panettoni"
+            and (doc.get("name") or "").strip() != PANETTONI_PUBLIC_ALLOWED)
+
+
 @api_router.get("/recipes/{recipe_id}/course")
 async def recipe_course(recipe_id: str, lang: str = "it", user: Optional[dict] = Depends(optional_user)):
     lang2 = (lang or "it").split("-")[0][:2]
+    is_admin = bool(user and user.get("role") == "admin")
+    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
+    if not recipe or (not is_admin and _panettone_public_blocked(recipe)):
+        raise HTTPException(status_code=404, detail="Ricetta non trovata")
     existing = await db.recipe_courses.find_one({"recipe_id": recipe_id, "lang": lang2}, {"_id": 0})
     if existing and existing.get("course"):
         return {"ok": True, "cached": True, "course": existing["course"], "recipe_name": existing.get("recipe_name", "")}
-
-    recipe = await db.recipes.find_one({"id": recipe_id}, {"_id": 0})
-    if not recipe:
-        raise HTTPException(status_code=404, detail="Ricetta non trovata")
 
     course = None
     if EMERGENT_LLM_KEY:
@@ -3143,11 +3151,10 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
         # Accesso GRATUITO totale: nessuna ricetta bloccata.
         for d in docs:
             d["locked"] = False
-        # Nascondi al pubblico le ricette con recipe_extras.hidden_public=true (solo l'admin le vede).
+        # Nascondi al pubblico le ricette con recipe_extras.hidden_public=true e i panettoni non autorizzati.
         if not (user and user.get("role") == "admin"):
             hidden = {x["recipe_id"] async for x in db.recipe_extras.find({"hidden_public": True}, {"_id": 0, "recipe_id": 1})}
-            if hidden:
-                docs = [d for d in docs if d.get("id") not in hidden]
+            docs = [d for d in docs if d.get("id") not in hidden and not _panettone_public_blocked(d)]
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
