@@ -2,9 +2,8 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
-import { usePublicContent } from "@/lib/publicContent";
 import SitorBadge from "@/components/SitorBadge";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker, Globe, Recycle, Sprout, Flame, Soup, ChevronDown } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Settings, Flame, Soup } from "lucide-react";
 import { rLoc } from "@/lib/loc";
 
 const PUB = process.env.PUBLIC_URL;
@@ -21,13 +20,11 @@ const START_NAMES = [
 
 export const SKILL_KEY = "mikilab_skill"; // "learning" | "expert"
 
-export default function HomeManuale({ onNav, features }) {
+export default function HomeManuale({ onNav }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [starts, setStarts] = useState([]);
   const [skill, setSkill] = useState(() => { try { return localStorage.getItem(SKILL_KEY) || ""; } catch { return ""; } });
-  const pub = usePublicContent(); // null finché non caricato
-  const [moreChips, setMoreChips] = useState(false); // V74: "Pochi tasti, tutto dentro": i chip meno usati stanno sotto "Altro"
 
   useEffect(() => {
     let stop = false;
@@ -55,6 +52,35 @@ export default function HomeManuale({ onNav, features }) {
 
   return (
     <div data-testid="home-manuale" className="pt-4">
+      {/* V76 — Prima di tutto: cos'è MikiLab, chi è Sitor e cosa possono fare */}
+      <section data-testid="home-about" className="rounded-3xl border border-border/25 bg-background/70 p-5 sm:p-6 mb-4">
+        <h2 className="font-display text-xl font-black text-foreground mb-2">{tri("Cos'è MikiLab e chi è Sitor", "Was ist MikiLab und wer ist Sitor", "What MikiLab is and who Sitor is")}</h2>
+        <p className="text-[14px] text-foreground/90 leading-relaxed">
+          {tri(
+            "MikiLab è il ricettario gratuito di Michele, panettiere a Stoccarda: pane, pizza, focacce, lievitati e dolci, spiegati passo per passo per farli a casa.",
+            "MikiLab ist das kostenlose Rezeptbuch von Michele, Bäcker in Stuttgart: Brot, Pizza, Focaccia, Hefegebäck und Süßes, Schritt für Schritt erklärt, damit du es zu Hause backen kannst.",
+            "MikiLab is the free recipe book of Michele, a baker in Stuttgart: bread, pizza, focaccia, leavened bakes and sweets, explained step by step so you can make them at home.")}
+        </p>
+        <p className="text-[14px] text-foreground/90 leading-relaxed mt-2">
+          {tri(
+            "Sitor è l'avatar IA di Michele: un'intelligenza artificiale, non una persona. Ti accompagna nelle ricette, legge i passi a voce, risponde alle domande e ti dà idee veloci per cena.",
+            "Sitor ist Micheles KI-Avatar: eine künstliche Intelligenz, keine Person. Er begleitet dich durch die Rezepte, liest die Schritte vor, beantwortet Fragen und gibt dir schnelle Ideen fürs Abendessen.",
+            "Sitor is Michele's AI avatar: an artificial intelligence, not a person. It guides you through the recipes, reads the steps aloud, answers questions and gives you quick dinner ideas.")}
+        </p>
+        <ul className="mt-3 space-y-1 text-[13px] text-foreground/85">
+          <li>• {tri("Cerca le ricette e adatta le dosi al tuo forno", "Suche Rezepte und passe die Mengen an deinen Ofen an", "Find recipes and adapt the quantities to your oven")}</li>
+          <li>• {tri("Fatti guidare a voce con le mani in pasta", "Lass dich per Sprache anleiten, während du knetest", "Get voice guidance with your hands in the dough")}</li>
+          <li>• {tri("Capisci farine, lieviti e tecniche prima di iniziare", "Verstehe Mehle, Triebmittel und Techniken, bevor du anfängst", "Understand flours, starters and techniques before you begin")}</li>
+          <li>• {tri("Trova un'idea veloce quando non sai cosa cucinare", "Finde eine schnelle Idee, wenn du nicht weißt, was du kochen sollst", "Find a quick idea when you don't know what to cook")}</li>
+        </ul>
+        <p className="text-[12px] text-muted-foreground mt-3">
+          {tri(
+            "Le ricette sono di due tipi: quelle provate da Michele e le bozze scritte da Sitor. Ogni ricetta dice chiaramente quale è.",
+            "Die Rezepte sind von zwei Arten: von Michele erprobte und von Sitor geschriebene Entwürfe. Jedes Rezept sagt klar, welche Art es ist.",
+            "Recipes are of two kinds: those tested by Michele and drafts written by Sitor. Each recipe clearly says which one it is.")}
+        </p>
+      </section>
+
       {/* Sitor accoglie */}
       <section className="rounded-3xl border border-border/25 bg-background/70 overflow-hidden">
         <div className="grid sm:grid-cols-[auto_1fr] gap-5 p-6 sm:p-8 items-center">
@@ -122,40 +148,12 @@ export default function HomeManuale({ onNav, features }) {
         </button>
       </section>
 
-      {/* Chip: Il verde di MikiLab · Tecniche · Attrezzi */}
+      {/* V76 — "Pochi tasti, tutto dentro": prima le informazioni, poi la pratica, e gli strumenti in un solo posto */}
       <div data-testid="home-chips" className="flex flex-wrap gap-2 mt-4">
-        <button data-testid="home-chip-verde" onClick={() => onNav("verde")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-accent/15 border border-accent/40 text-accent-foreground text-sm font-bold hover:bg-accent/25 active:scale-95 transition-all"><Leaf className="w-4 h-4" />{tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")}</button>
-        <button data-testid="home-chip-miglioratore" onClick={() => onNav("miglioratore")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/15 border border-primary/40 text-foreground text-sm font-bold hover:bg-primary/25 active:scale-95 transition-all"><FlaskConical className="w-4 h-4 text-primary" />{tri("Il mio miglioratore", "Mein Verbesserer", "My improver")}</button>
-        {(!features || features.FEATURE_PLAN !== false) && (
-          <button data-testid="home-chip-cosa-faccio" onClick={() => onNav("cosa-faccio")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Sparkles className="w-4 h-4 text-ambra" />{tri("Cosa faccio?", "Was mache ich?", "What can I make?")}</button>
-        )}
+        <button data-testid="home-chip-prima" onClick={() => onNav("inizia")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/15 border border-primary/40 text-foreground text-sm font-bold hover:bg-primary/25 active:scale-95 transition-all"><GraduationCap className="w-4 h-4 text-primary" />{tri("Prima di iniziare", "Bevor du anfängst", "Before you start")}</button>
         <button data-testid="home-chip-panico" onClick={() => onNav("panico")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Flame className="w-4 h-4 text-ambra" />{tri("Panico da cena", "Abendessen-Panik", "Dinner panic")}</button>
         <button data-testid="home-chip-sughi" onClick={() => onNav("sughi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Soup className="w-4 h-4 text-primary" />{tri("Sughi nel mondo", "Soßen der Welt", "Sauces of the world")}</button>
-        {moreChips && (<>
-        {(!features || features.FEATURE_LIVE !== false) && pub?.hasLive && (
-          <button data-testid="home-chip-live" onClick={() => onNav("live")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-mattone/15 border border-mattone/40 text-foreground text-sm font-bold hover:bg-mattone/25 active:scale-95 transition-all"><Radio className="w-4 h-4 text-mattone" />{tri("Impastiamo insieme", "Zusammen backen", "Bake together")}</button>
-        )}
-        <button data-testid="home-chip-mensola" onClick={() => onNav("mensola")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-salvia/20 border border-salvia/50 text-foreground text-sm font-bold hover:bg-salvia/30 active:scale-95 transition-all"><Award className="w-4 h-4 text-salvia" />{tri("La mia mensola", "Mein Regal", "My shelf")}</button>
-        <button data-testid="home-chip-cucina" onClick={() => onNav("cucina")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><Wrench className="w-4 h-4 text-muted-foreground" />{tri("La mia cucina", "Meine Küche", "My kitchen")}</button>
-        <button data-testid="home-chip-plan" onClick={() => onNav("plan")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><BookOpen className="w-4 h-4 text-muted-foreground" />{tri("Piano settimana", "Wochenplan", "Weekly plan")}</button>
-        </>)}
-        <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
-        {moreChips && (<>
-        {pub?.hasCalendario && (
-          <button data-testid="home-chip-calendario" onClick={() => onNav("calendario")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><CalendarDays className="w-4 h-4 text-primary" />{tri("Calendario", "Kalender", "Calendar")}</button>
-        )}
-        {pub?.hasFarine && (
-          <button data-testid="home-chip-farine" onClick={() => onNav("farine")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wheat className="w-4 h-4 text-ambra" />{tri("Farine", "Mehle", "Flours")}</button>
-        )}
-        {pub?.hasTestMese && (
-          <button data-testid="home-chip-testmese" onClick={() => onNav("testmese")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Beaker className="w-4 h-4 text-mattone" />{tri("Test del mese", "Test des Monats", "Test of the month")}</button>
-        )}
-        <button data-testid="home-chip-dalmondo" onClick={() => onNav("dalmondo")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Globe className="w-4 h-4 text-primary" />{tri("Dal mondo", "Aus aller Welt", "From the world")}</button>
-        <button data-testid="home-chip-paneieri" onClick={() => onNav("paneieri")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Recycle className="w-4 h-4 text-salvia" />{tri("Pane di ieri", "Brot von gestern", "Yesterday's bread")}</button>
-        <button data-testid="home-chip-crealievito" onClick={() => onNav("crealievito")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Sprout className="w-4 h-4 text-salvia" />{tri("Crea il tuo lievito", "Sauerteig erschaffen", "Create your starter")}</button>
-        </>)}
-        <button data-testid="home-chip-attrezzi" onClick={() => onNav("attrezzi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Attrezzi", "Geräte", "Tools")}</button>
-        <button data-testid="home-chip-altro" onClick={() => setMoreChips((v) => !v)} aria-expanded={moreChips} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><ChevronDown className={`w-4 h-4 transition-transform ${moreChips ? "rotate-180" : ""}`} />{moreChips ? tri("Meno", "Weniger", "Less") : tri("Altro", "Mehr", "More")}</button>
+        <button data-testid="home-chip-strumenti" onClick={() => onNav("strumenti")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Strumenti", "Werkzeuge", "Tools")}</button>
       </div>
 
       <section id="home-start-section" data-testid="home-start-section" className="mt-8 scroll-mt-24">

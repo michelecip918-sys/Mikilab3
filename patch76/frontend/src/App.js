@@ -50,6 +50,9 @@ import DiarioProve from "@/components/DiarioProve";
 import PaneDiIeri from "@/components/PaneDiIeri";
 import CreaLievito from "@/components/CreaLievito";
 import CenaSughi from "@/components/CenaSughi";
+import PrimaDiIniziare from "@/components/PrimaDiIniziare";
+import Strumenti from "@/components/Strumenti";
+import { consumeBack } from "@/lib/backNav";
 import ImpressumAdmin from "@/components/ImpressumAdmin";
 import { useFeatures } from "@/lib/features";
 import { usePublicContent } from "@/lib/publicContent";
@@ -105,6 +108,9 @@ export default function App() {
   }, [route]);
   useEffect(() => {
     const onPop = (e) => {
+      // 1) se c'è una finestra o una vista aperta (scheda ricetta, strumento, radio…), il tasto indietro chiude quella
+      if (consumeBack()) { histSkip.current = false; return; }
+      // 2) altrimenti torna alla pagina precedente del sito
       const next = (e && e.state && e.state.mlRoute) || "home";
       // se la pagina non cambia, l'effetto sopra non parte: non lasciare il "salta" attivo
       setRoute((cur) => { histSkip.current = cur !== next; return next; });
@@ -113,6 +119,17 @@ export default function App() {
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+
+  // Navigazione dai pulsanti di Home / Prima di iniziare / Strumenti.
+  // "ricette-view:X" apre una vista delle Ricette (farine, guida…), "ricette-cat:X" filtra il ricettario per categoria.
+  const navFromHome = (r) => {
+    if (r === "chat") { setChatOpen(true); return; }
+    if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; }
+    if (typeof r === "string" && r.startsWith("ricette-view:")) { const v = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: v } })), 150); return; }
+    if (typeof r === "string" && r.startsWith("ricette-cat:")) { const c = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-recipes-cat", { detail: { cat: c } })), 250); return; }
+    if (r === "tecniche") { setTechSlug(null); }
+    setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
   useEffect(() => {
@@ -203,7 +220,7 @@ export default function App() {
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
             <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
-              {route === "home" && <HomeManuale features={features} onNav={(r) => { if (r === "chat") { setChatOpen(true); return; } if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; } if (r === "tecniche") { setTechSlug(null); } setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); }} />}
+              {route === "home" && <HomeManuale features={features} onNav={navFromHome} />}
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
@@ -225,6 +242,8 @@ export default function App() {
               {route === "dalmondo" && <DalMondo onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "paneieri" && <PaneDiIeri onBack={() => setRoute("home")} />}
               {route === "crealievito" && <CreaLievito onBack={() => setRoute("home")} />}
+              {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
+              {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "panico" && <CenaSughi initialTab="panico" onBack={() => setRoute("home")} />}
               {route === "sughi" && <CenaSughi initialTab="sughi" onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
