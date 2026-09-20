@@ -60,7 +60,7 @@ export default function Calendario({ onBack, onOpenRecipe }) {
             <p className="text-[13px] text-foreground/80 mt-0.5">{e.text[lang] || e.text.it}</p>
           </div>
         ))}
-        {shown.length === 0 && <p className="text-sm text-muted-foreground">{tri("Il calendario sarà presto disponibile.", "Der Kalender ist bald verfügbar.", "The calendar will be available soon.")}</p>}
+        {shown.length === 0 && <p data-testid="calendario-empty" className="text-sm text-muted-foreground">{tri("Presto qui troverai le ricorrenze del pane.", "Hier findest du bald die Brot-Anlässe.", "Bread occasions will appear here soon.")}</p>}
       </div>
     </div>
   );

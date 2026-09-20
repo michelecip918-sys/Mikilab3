@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
+import { usePublicContent } from "@/lib/publicContent";
 import SitorBadge from "@/components/SitorBadge";
 import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Leaf, Wrench, Settings, FlaskConical, Radio, Award, CalendarDays, Wheat, Beaker, Globe, Recycle, Sprout } from "lucide-react";
 
@@ -24,6 +25,7 @@ export default function HomeManuale({ onNav, features }) {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [starts, setStarts] = useState([]);
   const [skill, setSkill] = useState(() => { try { return localStorage.getItem(SKILL_KEY) || ""; } catch { return ""; } });
+  const pub = usePublicContent(); // null finché non caricato
 
   useEffect(() => {
     let stop = false;
@@ -125,16 +127,22 @@ export default function HomeManuale({ onNav, features }) {
         {(!features || features.FEATURE_PLAN !== false) && (
           <button data-testid="home-chip-cosa-faccio" onClick={() => onNav("cosa-faccio")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Sparkles className="w-4 h-4 text-ambra" />{tri("Cosa faccio?", "Was mache ich?", "What can I make?")}</button>
         )}
-        {(!features || features.FEATURE_LIVE !== false) && (
+        {(!features || features.FEATURE_LIVE !== false) && pub?.hasLive && (
           <button data-testid="home-chip-live" onClick={() => onNav("live")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-mattone/15 border border-mattone/40 text-foreground text-sm font-bold hover:bg-mattone/25 active:scale-95 transition-all"><Radio className="w-4 h-4 text-mattone" />{tri("Impastiamo insieme", "Zusammen backen", "Bake together")}</button>
         )}
         <button data-testid="home-chip-mensola" onClick={() => onNav("mensola")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-salvia/20 border border-salvia/50 text-foreground text-sm font-bold hover:bg-salvia/30 active:scale-95 transition-all"><Award className="w-4 h-4 text-salvia" />{tri("La mia mensola", "Mein Regal", "My shelf")}</button>
         <button data-testid="home-chip-cucina" onClick={() => onNav("cucina")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><Wrench className="w-4 h-4 text-muted-foreground" />{tri("La mia cucina", "Meine Küche", "My kitchen")}</button>
         <button data-testid="home-chip-plan" onClick={() => onNav("plan")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-foreground/8 border border-border text-foreground text-sm font-bold hover:bg-foreground/12 active:scale-95 transition-all"><BookOpen className="w-4 h-4 text-muted-foreground" />{tri("Piano settimana", "Wochenplan", "Weekly plan")}</button>
         <button data-testid="home-chip-tecniche" onClick={() => onNav("tecniche")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wrench className="w-4 h-4" />{tri("Tecniche", "Techniken", "Techniques")}</button>
-        <button data-testid="home-chip-calendario" onClick={() => onNav("calendario")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><CalendarDays className="w-4 h-4 text-primary" />{tri("Calendario", "Kalender", "Calendar")}</button>
-        <button data-testid="home-chip-farine" onClick={() => onNav("farine")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wheat className="w-4 h-4 text-ambra" />{tri("Farine", "Mehle", "Flours")}</button>
-        <button data-testid="home-chip-testmese" onClick={() => onNav("testmese")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Beaker className="w-4 h-4 text-mattone" />{tri("Test del mese", "Test des Monats", "Test of the month")}</button>
+        {pub?.hasCalendario && (
+          <button data-testid="home-chip-calendario" onClick={() => onNav("calendario")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><CalendarDays className="w-4 h-4 text-primary" />{tri("Calendario", "Kalender", "Calendar")}</button>
+        )}
+        {pub?.hasFarine && (
+          <button data-testid="home-chip-farine" onClick={() => onNav("farine")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Wheat className="w-4 h-4 text-ambra" />{tri("Farine", "Mehle", "Flours")}</button>
+        )}
+        {pub?.hasTestMese && (
+          <button data-testid="home-chip-testmese" onClick={() => onNav("testmese")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Beaker className="w-4 h-4 text-mattone" />{tri("Test del mese", "Test des Monats", "Test of the month")}</button>
+        )}
         <button data-testid="home-chip-dalmondo" onClick={() => onNav("dalmondo")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Globe className="w-4 h-4 text-primary" />{tri("Dal mondo", "Aus aller Welt", "From the world")}</button>
         <button data-testid="home-chip-paneieri" onClick={() => onNav("paneieri")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Recycle className="w-4 h-4 text-salvia" />{tri("Pane di ieri", "Brot von gestern", "Yesterday's bread")}</button>
         <button data-testid="home-chip-crealievito" onClick={() => onNav("crealievito")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Sprout className="w-4 h-4 text-salvia" />{tri("Crea il tuo lievito", "Sauerteig erschaffen", "Create your starter")}</button>

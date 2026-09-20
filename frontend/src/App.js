@@ -48,6 +48,7 @@ import ChangePassword from "@/components/ChangePassword";import DalMondo from "@
 import PaneDiIeri from "@/components/PaneDiIeri";
 import CreaLievito from "@/components/CreaLievito";
 import { useFeatures } from "@/lib/features";
+import { usePublicContent } from "@/lib/publicContent";
 import { mkTri } from "@/i18n/triMaps";
 import { ShieldCheck, LogOut, MessageCircle } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -74,6 +75,7 @@ export default function App() {
   const [route, setRoute] = useState(initialRoute);
   const [chatOpen, setChatOpen] = useState(false);
   const [techSlug, setTechSlug] = useState(null);
+  const pubContent = usePublicContent(); // null finché non caricato
   const isAdmin = !!(user && user.role === "admin");
   useEffect(() => {
     const h = (e) => { setTechSlug(e?.detail?.slug || null); setRoute("tecniche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
@@ -188,7 +190,9 @@ export default function App() {
               <p className="text-center text-foreground">{tri("Gratis per uso personale. Vietato riprodurre o vendere ricette e testi. I link sono benvenuti.", "Kostenlos für den privaten Gebrauch. Rezepte und Texte dürfen nicht reproduziert oder verkauft werden. Links sind willkommen.", "Free for personal use. Reproducing or selling recipes and texts is forbidden. Links are welcome.")}</p>
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
                 <button data-testid="footer-regala" onClick={() => { setRoute("regala"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Regala MikiLab", "MikiLab verschenken", "Gift MikiLab")}</button>
-                <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
+                {pubContent?.hasPerche && (
+                  <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
+                )}
                 <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">Impressum</button>
                 <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>
               </div>
