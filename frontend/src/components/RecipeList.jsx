@@ -609,7 +609,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     setViewing(up); load();
                     toast.success(triM("Ricetta tradotta ✓", "Rezept übersetzt ✓", "Recipe translated ✓"));
                   } catch (e) {
-                    toast.error(e?.response?.status === 403 ? triM("Funzione PRO", "PRO-Funktion", "PRO feature") : triM("Traduzione non riuscita", "Übersetzung fehlgeschlagen", "Translation failed"));
+                    toast.error(e?.response?.status === 403 ? triM("Riservato all'amministratore", "Nur für den Administrator", "Admin only") : triM("Traduzione non riuscita", "Übersetzung fehlgeschlagen", "Translation failed"));
                   } finally { setTranslating(false); }
                 }}
                 className="mr-auto text-[11px] font-bold px-2.5 py-1 rounded-lg bg-primary text-white disabled:opacity-60 active:scale-95 transition-all">

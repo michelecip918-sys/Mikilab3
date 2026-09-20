@@ -1,19 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Globe, Check, Search, Clock, Volume2 } from "lucide-react";
+import { Globe, Check, Search, Clock } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
-import { playTTS } from "@/lib/tts";
-
-// Frase-esempio per ascoltare la voce di Sitor in ogni lingua.
-const SAMPLE = {
-  it: "Salve Mio Supremo Capo, sono Sitor, al vostro servizio.",
-  de: "Guten Tag, mein erhabener Chef, ich bin Sitor, zu Ihren Diensten.",
-  en: "Hello Capo, I am Sitor, at your service.",
-  es: "Hola Mi Supremo Jefe, soy Sitor, a su servicio.",
-  fr: "Bonjour Mon Illustre Commandant, je suis Sitor, à votre service.",
-  fa: "سلام فرمانده، من بوکومیکس هستم، در خدمت شما.",
-  ar: "مرحباً أيها القائد، أنا مايك ميكس، في خدمتك.",
-  tr: "Merhaba Şefim, ben Sitor, hizmetinizdeyim.",
-};
 
 // Lingue ATTIVE (dizionari completi) + set globale predisposto all'espansione.
 const READY = [
@@ -71,11 +58,6 @@ export default function LangSelector({ testid = "lang-selector" }) {
                 className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm transition-all ${l.code === lang ? "bg-primary/15 text-primary font-bold" : "text-foreground hover:bg-background"}`}>
                 <span className="text-base leading-none">{l.flag}</span>
                 <span className="flex-1 text-left">{l.label}</span>
-                <span data-testid={`${testid}-preview-${l.code}`} role="button" tabIndex={0}
-                  onClick={(e) => { e.stopPropagation(); try { playTTS(SAMPLE[l.code] || SAMPLE.en, { lang: l.code, voice: "bakemix" }); } catch { /* */ } }}
-                  className="shrink-0 p-1 rounded-md hover:bg-primary/20 text-primary" title={tri("Ascolta un esempio", "Beispiel anhören", "Listen to a sample", "Escuchar ejemplo", "Écouter un exemple", "شنیدن نمونه")}>
-                  <Volume2 className="w-3.5 h-3.5" />
-                </span>
                 {l.code === lang && <Check className="w-4 h-4" />}
               </button>
             ))}

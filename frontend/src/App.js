@@ -96,7 +96,7 @@ export default function App() {
 
   // Schermata di accesso admin: visibile SOLO via ?admin=1 e solo se non autenticato.
   if (adminMode && !user) {
-    return <div className="fixed inset-0 z-[70] bg-background overflow-auto"><AuthScreen onClose={() => { try { const u = new URL(window.location.href); u.searchParams.delete("admin"); window.location.href = u.toString(); } catch { window.location.href = "/"; } }} initialMode="login" /></div>;
+    return <div className="fixed inset-0 z-[70] bg-background overflow-auto"><AuthScreen onClose={() => { try { const u = new URL(window.location.href); u.searchParams.delete("admin"); window.location.href = u.toString(); } catch { window.location.href = "/"; } }} initialMode="login" /><Toaster position="top-center" richColors /></div>;
   }
 
   return (
