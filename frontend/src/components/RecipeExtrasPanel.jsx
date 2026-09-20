@@ -99,6 +99,10 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
   const dcfg = DIFF[ex.difficulty] || DIFF.facile;
   const tip = ex.michele_tip || {};
   const tipText = li([tip.it, tip.de, tip.en]) || tip.it || tip.de || tip.en || "";
+  // Z1: grandi lievitati (panettone & co.) — frasi specifiche solo per loro
+  const grandeLievitato = recipe.menu_category === "panettoni" || /panettone|veneziana|colomba|pandoro|stollen/i.test(recipe.name || "");
+  // Z2: focacce in revisione (metodo di Michele in arrivo) — l'avviso sparisce quando verified torna true
+  const focacciaInRevisione = recipe.menu_category === "focacce" && ex.status !== "tested" && ex.status !== "reviewed";
 
   return (
     <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4">
@@ -202,6 +206,13 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
       {/* Z1-Z4: ricette MISCELA (kind=mix) — non sono pane */}
       {ex.kind === "mix" && <MixPanel ex={ex} mode={mode} />}
 
+      {/* Z2: avviso onesto per le focacce in revisione (sparisce quando verified torna true) */}
+      {focacciaInRevisione && (
+        <div data-testid="focaccia-revision-notice" className="rounded-2xl border border-ambra/50 bg-ambra/10 p-3.5">
+          <p className="text-[12px] text-foreground leading-relaxed">{tri("Ricetta in revisione: Michele la sta aggiornando con il suo metodo (biga o poolish, patata lessa schiacciata, un filo d'olio a chiudere l'impasto, in teglia). Per ora usa il testo come guida, non come ricetta definitiva.", "Rezept in Überarbeitung: Michele aktualisiert es mit seiner Methode (Biga oder Poolish, gekochte zerdrückte Kartoffel, ein Schuss Öl zum Schließen des Teigs, im Blech). Nutze den Text vorerst als Anleitung, nicht als endgültiges Rezept.", "Recipe under review: Michele is updating it with his method (biga or poolish, mashed boiled potato, a drizzle of oil to close the dough, in a tray). For now, use the text as a guide, not as a final recipe.")}</p>
+        </div>
+      )}
+
       {/* CASA: dosi per la tua farina */}
       {ex.kind !== "mix" && mode === "casa" && (
         <div data-testid="casa-doses" className="rounded-2xl border border-border bg-background p-3.5">
@@ -244,7 +255,9 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
           <ol className="text-[13px] text-foreground space-y-1.5 list-decimal pl-4">
             {[
               ["Metti il lievito in un barattolo di vetro dritto e trasparente, segna il livello con un elastico e annota l'ora.", "Gib den Sauerteig in ein gerades, durchsichtiges Glas, markiere den Stand mit einem Gummiband und notiere die Uhrzeit.", "Put the starter in a straight clear glass jar, mark the level with a rubber band and note the time."],
-              ["È pronto quando è raddoppiato (per il panettone: al volume indicato dalla ricetta) con la superficie bombata a cupola.", "Fertig, wenn er sich verdoppelt hat (beim Panettone: auf das im Rezept angegebene Volumen) mit gewölbter Kuppel.", "Ready when doubled (for panettone: to the volume in the recipe) with a domed top."],
+              grandeLievitato
+                ? ["È pronto quando è raddoppiato, con la superficie bombata a cupola (per il panettone: al volume indicato dalla ricetta).", "Fertig, wenn er sich verdoppelt hat, mit gewölbter Kuppel (beim Panettone: auf das im Rezept angegebene Volumen).", "Ready when doubled, with a domed top (for panettone: to the volume in the recipe)."]
+                : ["È pronto quando è raddoppiato, con la superficie bombata a cupola.", "Fertig, wenn er sich verdoppelt hat, mit gewölbter Kuppel.", "Ready when doubled, with a domed top."],
               ["Segni buoni: bolle visibili contro il vetro, profumo di yogurt o latte dolce.", "Gute Zeichen: sichtbare Blasen am Glas, Duft nach Joghurt oder süßer Milch.", "Good signs: bubbles against the glass, smell of yogurt or sweet milk."],
               ["Cupola afflosciata e odore pungente (aceto, solvente) = «passato»: rinfrescalo di nuovo prima di usarlo.", "Eingefallene Kuppel und stechender Geruch (Essig, Lösungsmittel) = «über den Punkt»: vor Gebrauch erneut auffrischen.", "Collapsed dome and sharp smell (vinegar, solvent) = «over-proofed»: refresh again before use."],
               ["Da buttare: muffa a peluria, strisce rosa o arancioni.", "Wegwerfen: pelziger Schimmel, rosa oder orange Streifen.", "Discard: fuzzy mould, pink or orange streaks."],
@@ -252,7 +265,11 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false }) {
               ["Annota quante ore ci mette a raddoppiare: se a ogni rinfresco ci mette meno, si sta rinforzando.", "Notiere, wie lange er zum Verdoppeln braucht: wird es bei jeder Auffrischung kürzer, wird er stärker.", "Note how many hours it takes to double: if it gets faster each refresh, it's getting stronger."],
             ].map((s, i) => <li key={i}>{li(s)}</li>)}
           </ol>
-          <p className="text-[12px] text-muted-foreground mt-2">{tri("Prima di un panettone il lievito deve essere già stabile (rinfrescato con regolarità per settimane). Chi non ce l'ha può chiedere un pezzetto a un panificio o usare lievito madre secco da riattivare (circa una settimana).", "Vor einem Panettone muss der Sauerteig stabil sein (wochenlang regelmäßig aufgefrischt). Wer keinen hat, kann in einer Bäckerei ein Stück erbitten oder Trockensauerteig reaktivieren (ca. eine Woche).", "Before a panettone the starter must be stable (regularly refreshed for weeks). If you don't have one, ask a bakery for a piece or reactivate dried sourdough (about a week).")}</p>
+          {grandeLievitato ? (
+            <p className="text-[12px] text-muted-foreground mt-2">{tri("Prima di un panettone il lievito deve essere già stabile (rinfrescato con regolarità per settimane). Chi non ce l'ha può chiedere un pezzetto a un panificio o usare lievito madre secco da riattivare (circa una settimana).", "Vor einem Panettone muss der Sauerteig stabil sein (wochenlang regelmäßig aufgefrischt). Wer keinen hat, kann in einer Bäckerei ein Stück erbitten oder Trockensauerteig reaktivieren (ca. eine Woche).", "Before a panettone the starter must be stable (regularly refreshed for weeks). If you don't have one, ask a bakery for a piece or reactivate dried sourdough (about a week).")}</p>
+          ) : (
+            <p className="text-[12px] text-muted-foreground mt-2">{tri("Usalo quando è attivo e stabile: raddoppia con regolarità dopo il rinfresco. Se non hai un lievito madre, chiedine un pezzetto a un panificio o usa lievito madre secco da riattivare (circa una settimana).", "Nutze ihn, wenn er aktiv und stabil ist: Er verdoppelt sich nach dem Auffrischen regelmäßig. Hast du keinen Sauerteig, frag in einer Bäckerei nach einem Stück oder nimm getrockneten Sauerteig zum Reaktivieren (etwa eine Woche).", "Use it when it is active and stable: it doubles regularly after a refresh. If you have no starter, ask a bakery for a piece or use dried starter to reactivate (about a week).")}</p>
+          )}
           <button data-testid="control-lm-crealievito" onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "crealievito" } }))} className="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-primary">🌱 {tri("Non hai ancora un lievito? Crealo da zero", "Noch keinen Sauerteig? Erschaffe ihn von Grund auf", "No starter yet? Create one from scratch")}</button>
         </div>
       )}
