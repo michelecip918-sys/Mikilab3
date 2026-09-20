@@ -40,10 +40,10 @@ export default function SplashScreen() {
         </div>
 
         <h1 className="splash-title mt-7 font-display text-3xl sm:text-4xl font-black tracking-[0.18em] text-foreground uppercase">
-          MIKILAB<span className="text-muted-foreground"> PRO</span>
+          MIKILAB
         </h1>
         <p className="font-mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.38em] text-muted-foreground/70 mt-2.5">
-          Holographic Command OS
+          Il Manuale di Sitor
         </p>
       </div>
     </div>
