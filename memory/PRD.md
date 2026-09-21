@@ -146,3 +146,7 @@ Vedi `memory/test_credentials.md`.
 - Rigenerate TUTTE le 24 illustrazioni tecniche (6 tecniche × 4): stesso stile storybook, ma ora OGNI immagine mostra mani e avambracci; tatuaggio identico dalle foto `patch80/riferimento_tatuaggio` (modello, NON copiate in public): braccio **SINISTRO** (correzione di Michele, prima indicato destro), esterno avambraccio gomito→polso, grande polpo nero-grigio, testa a metà avambraccio, due occhi giallo-ambra con bordo rosso, tentacoli verso gomito e polso, ventose a puntini chiari; braccio destro senza tatuaggi. Stesso blocco di descrizione in tutti i 24 prompt per coerenza.
 - Sovrascritti i file `tecniche/{baguette,croissant,filone,panettone,pieghe,pirlatura}/{1..4}.webp` (183-317KB). Verifica: 24/24 servite 200, pagina Panettone 4/4 con polpo nitido, HTML senza tracciamento. In produzione al prossimo **Publish** di Michele.
 
+## Firma del polpo estesa (21 settembre 2026)
+- Su richiesta di Michele ("Firma Altrove"): footer (`App.js`, riga copyright) ora mostra icona `polpo-firma.svg` + "© MikiLab — Il Manuale di Sitor · Fatto con le mani di Michele" IT/DE/EN (`data-testid="footer-polpo-firma"`); pagina lista Tecniche (`TecnichePage.jsx`) mostra la card `TattooSignature` sotto l'intestazione (`data-testid="tecniche-signature"`).
+- Verifica: entrambe presenti via screenshot desktop, nessun overflow a 390px. In produzione al prossimo **Publish**.
+

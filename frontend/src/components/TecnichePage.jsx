@@ -5,6 +5,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { ChevronLeft, Wrench, AlertTriangle } from "lucide-react";
+import { TattooSignature } from "@/components/TattooSignature";
 
 export default function TecnichePage({ initialSlug, onBack }) {
   const { lang } = useLang();
@@ -85,6 +86,7 @@ export default function TecnichePage({ initialSlug, onBack }) {
         <h1 className="font-display text-3xl font-black text-foreground flex items-center gap-2"><Wrench className="w-6 h-6 text-muted-foreground" />{tri("Tecniche", "Techniken", "Techniques")}</h1>
         <p className="text-muted-foreground mt-1">{tri("I gesti del mestiere, spiegati da Sitor.", "Die Handgriffe, von Sitor erklärt.", "The craft's gestures, explained by Sitor.")}</p>
       </div>
+      <TattooSignature testid="tecniche-signature" />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {list.map((t) => (
           <button key={t.slug} data-testid={`technique-card-${t.slug}`} onClick={() => setSlug(t.slug)}

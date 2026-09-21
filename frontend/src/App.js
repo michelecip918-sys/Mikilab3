@@ -278,7 +278,10 @@ export default function App() {
                 <SitorBadge size={26} onOpenPerche={() => { setRoute("perche"); window.scrollTo(0, 0); }} />
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-border/10">
-                <p>© MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
+                <p className="flex items-center gap-2">
+                  <img src={`${process.env.PUBLIC_URL || ""}/polpo-firma.svg`} alt="" loading="lazy" draggable={false} className="w-6 h-6 opacity-80" data-testid="footer-polpo-firma" />
+                  © MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")} · {tri("Fatto con le mani di Michele", "Mit Micheles Händen gemacht", "Made with Michele's hands")}
+                </p>
                 <p data-testid="footer-langs" className="text-muted-foreground">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
               </div>
             </div>
