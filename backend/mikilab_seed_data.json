@@ -17090,43 +17090,57 @@
         "name": "Zucchero",
         "percent": 30,
         "name_de": "Zucker",
-        "name_en": "Sugar"
+        "name_en": "Sugar",
+        "name_es": "Azúcar",
+        "name_fr": "Sucre"
       },
       {
         "name": "Tuorlo",
         "percent": 29,
         "name_de": "Eigelb",
-        "name_en": "Egg yolk"
+        "name_en": "Egg yolk",
+        "name_es": "Yema de huevo",
+        "name_fr": "Jaune d'œuf"
       },
       {
         "name": "Burro",
         "percent": 35,
         "name_de": "Butter",
-        "name_en": "Butter"
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
       },
       {
         "name": "Miele",
         "percent": 4,
         "name_de": "Honig",
-        "name_en": "Honey"
+        "name_en": "Honey",
+        "name_es": "Miel",
+        "name_fr": "Miel"
       },
       {
         "name": "Pasta d'arancia",
         "percent": 3,
         "name_de": "Orangenpaste",
-        "name_en": "Orange paste"
+        "name_en": "Orange paste",
+        "name_es": "Pasta de naranja",
+        "name_fr": "Pâte d'orange"
       },
       {
         "name": "Vaniglia",
         "percent": 0.6,
         "name_de": "Vanille",
-        "name_en": "Vanilla"
+        "name_en": "Vanilla",
+        "name_es": "Vainilla",
+        "name_fr": "Vanille"
       },
       {
         "name": "Arancia candita a cubetti",
         "percent": 50,
         "name_de": "Kandierte Orangenschale, gewürfelt",
-        "name_en": "Diced candied orange peel"
+        "name_en": "Diced candied orange peel",
+        "name_es": "Naranja confitada en dados",
+        "name_fr": "Orange confite en dés"
       }
     ],
     "notes": "La colomba pasquale con il metodo MikiLab 60/40: stessa base del panettone, ma solo arancia candita (niente uvetta) e glassa croccante di mandorle. Contiene glutine, uova, latte e frutta a guscio (mandorle). Si conserva ben chiusa a temperatura ambiente per circa 5 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17134,7 +17148,14 @@
     "notes_en": "The Easter colomba with the MikiLab 60/40 method: same base as the panettone, but only candied orange peel (no raisins) and a crunchy almond glaze. Contains gluten, eggs, milk and tree nuts (almonds). Keeps well closed at room temperature for about 5 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA CANDITI E GLASSA: taglia a cubetti 250 g di arancia candita. Glassa per 2 colombe: mescola (senza montare) 80 g di albumi, 90 g di zucchero, 70 g di farina di mandorle e 10 g di amido di riso; copri e tieni in frigo. Per la superficie prepara 30 g di mandorle intere, 20 g di granella di zucchero e un po' di zucchero a velo.\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 210 g di acqua, 68 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 45 g di tuorli e 74 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 82 g di zucchero e 100 g di tuorli a più riprese, 20 g di miele, 9 g di sale, 15 g di pasta d'arancia e 3 g di vaniglia; infine 101 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) CANDITI: a fine impasto, a bassa velocità e con poche pieghe, aggiungi i 250 g di arancia candita. Senza rompere la maglia.\n6) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 790 g, pirla e metti negli stampi da colomba da 750 g.\n7) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1 cm dal bordo dello stampo.\n8) GLASSA E COTTURA: spalma la glassa sulla superficie con un pennello, senza premere; cospargi con le mandorle e la granella e spolvera con zucchero a velo. Cuoci a 170 °C statico per circa 45-50 minuti, fino a 94 °C al cuore (termometro a sonda). Se la glassa scurisce troppo, copri con alluminio dopo 25 minuti.\n9) RAFFREDDAMENTO: lascia raffreddare in piedi su una griglia (di solito la colomba non si capovolge), poi conserva ben chiusa. È al meglio dopo 24 ore di riposo.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) CANDITI UND GLASUR VORBEREITEN: 250 g kandierte Orangenschale würfeln. Glasur für 2 Colombe: 80 g Eiweiß, 90 g Zucker, 70 g Mandelmehl und 10 g Reisstärke nur verrühren (nicht aufschlagen), abdecken und kalt stellen. Für die Oberfläche 30 g ganze Mandeln, 20 g Hagelzucker und etwas Puderzucker bereitlegen.\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 210 g Wasser, 68 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 45 g Eigelb und 74 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 82 g Zucker und 100 g Eigelb in mehreren Portionen, 20 g Honig, 9 g Salz, 15 g Orangenpaste und 3 g Vanille; zuletzt 101 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) CANDITI: Am Ende auf niedriger Stufe und mit wenigen Faltungen die 250 g kandierte Orangenschale unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 790 g teilen, rundwirken und in Colomba-Formen zu 750 g setzen.\n7) GARE: 6-8 Stunden bei 28-30 °C, bis 1 cm unter den Rand der Form.\n8) GLASUR UND BACKEN: Die Glasur mit einem Pinsel ohne Druck auftragen; mit den Mandeln und dem Hagelzucker bestreuen und mit Puderzucker bestäuben. Bei 170 °C Ober-/Unterhitze etwa 45-50 Minuten backen, bis 94 °C im Kern (Einstechthermometer). Wird die Glasur zu dunkel, nach 25 Minuten mit Alufolie abdecken.\n9) AUSKÜHLEN: Aufrecht auf einem Gitter auskühlen lassen (die Colomba wird in der Regel nicht kopfüber gehängt), dann gut verschlossen aufbewahren. Nach 24 Stunden Ruhe am besten.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE CANDIED PEEL AND GLAZE: dice 250 g candied orange peel. Glaze for 2 colombe: stir together (do not whip) 80 g egg whites, 90 g sugar, 70 g almond flour and 10 g rice starch; cover and keep in the fridge. For the top have ready 30 g whole almonds, 20 g pearl sugar and some icing sugar.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 210 g water, 68 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 74 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 82 g sugar and 100 g yolks in several additions, 20 g honey, 9 g salt, 15 g orange paste and 3 g vanilla; finally 101 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) CANDIED PEEL: at the end, on low speed and with few folds, add the 250 g candied orange peel. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 790 g, shape round and place in 750 g colomba moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) GLAZE AND BAKING: brush the glaze on top without pressing; sprinkle with the almonds and pearl sugar and dust with icing sugar. Bake at 170 °C static for about 45-50 minutes, to 94 °C at the core (probe thermometer). If the glaze darkens too much, cover with foil after 25 minutes.\n9) COOLING: let it cool upright on a rack (a colomba is usually not hung upside down), then store well closed. Best after 24 hours of rest."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE CANDIED PEEL AND GLAZE: dice 250 g candied orange peel. Glaze for 2 colombe: stir together (do not whip) 80 g egg whites, 90 g sugar, 70 g almond flour and 10 g rice starch; cover and keep in the fridge. For the top have ready 30 g whole almonds, 20 g pearl sugar and some icing sugar.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 210 g water, 68 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 74 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 82 g sugar and 100 g yolks in several additions, 20 g honey, 9 g salt, 15 g orange paste and 3 g vanilla; finally 101 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) CANDIED PEEL: at the end, on low speed and with few folds, add the 250 g candied orange peel. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 790 g, shape round and place in 750 g colomba moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) GLAZE AND BAKING: brush the glaze on top without pressing; sprinkle with the almonds and pearl sugar and dust with icing sugar. Bake at 170 °C static for about 45-50 minutes, to 94 °C at the core (probe thermometer). If the glaze darkens too much, cover with foil after 25 minutes.\n9) COOLING: let it cool upright on a rack (a colomba is usually not hung upside down), then store well closed. Best after 24 hours of rest.",
+    "name_es": "Colomba Artesanal MikiLab — Clásica con Almendras",
+    "name_fr": "Colomba Artisanale MikiLab — Classique aux Amandes",
+    "name_fa": "کولومبا صنعتگرانه میکی‌لب — کلاسیک با بادام",
+    "real_name_es": "Colomba Pascual Clásica",
+    "real_name_fr": "Colomba Pascale Classique",
+    "flour_type_es": "Harina de alta fuerza W380 + masa madre",
+    "flour_type_fr": "Farine de haute force W380 + levain"
   },
   {
     "id": "0b5022e7-972f-4a30-9a66-782dae66a0fa",
@@ -17180,43 +17201,57 @@
         "name": "Zucchero",
         "percent": 32,
         "name_de": "Zucker",
-        "name_en": "Sugar"
+        "name_en": "Sugar",
+        "name_es": "Azúcar",
+        "name_fr": "Sucre"
       },
       {
         "name": "Tuorlo",
         "percent": 27,
         "name_de": "Eigelb",
-        "name_en": "Egg yolk"
+        "name_en": "Egg yolk",
+        "name_es": "Yema de huevo",
+        "name_fr": "Jaune d'œuf"
       },
       {
         "name": "Burro",
         "percent": 55,
         "name_de": "Butter",
-        "name_en": "Butter"
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
       },
       {
         "name": "Miele",
         "percent": 3,
         "name_de": "Honig",
-        "name_en": "Honey"
+        "name_en": "Honey",
+        "name_es": "Miel",
+        "name_fr": "Miel"
       },
       {
         "name": "Vaniglia (bacca o pasta)",
         "percent": 1,
         "name_de": "Vanille (Schote oder Paste)",
-        "name_en": "Vanilla (pod or paste)"
+        "name_en": "Vanilla (pod or paste)",
+        "name_es": "Vainilla (vaina o pasta)",
+        "name_fr": "Vanille (gousse ou pâte)"
       },
       {
         "name": "Scorza di limone",
         "percent": 1,
         "name_de": "Zitronenschale",
-        "name_en": "Lemon zest"
+        "name_en": "Lemon zest",
+        "name_es": "Ralladura de limón",
+        "name_fr": "Zeste de citron"
       },
       {
         "name": "Zucchero a velo vanigliato (finitura)",
         "percent": 6,
         "name_de": "Vanille-Puderzucker (zum Bestäuben)",
-        "name_en": "Vanilla icing sugar (to finish)"
+        "name_en": "Vanilla icing sugar (to finish)",
+        "name_es": "Azúcar glas avainillado (acabado)",
+        "name_fr": "Sucre glace vanillé (finition)"
       }
     ],
     "notes": "Il pandoro con il metodo MikiLab 60/40: niente frutta, molto burro (55%) e profumo di vaniglia e limone. Ricco di burro: tieni l'impasto fresco (25-26 °C) e incorpora il burro poco alla volta. Contiene glutine, uova e latte. Si conserva ben chiuso a temperatura ambiente per circa 5 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17224,7 +17259,14 @@
     "notes_en": "The pandoro with the MikiLab 60/40 method: no fruit, lots of butter (55%) and a scent of vanilla and lemon. Rich in butter: keep the dough cool (25-26 °C) and add the butter little by little. Contains gluten, eggs and milk. Keeps well closed at room temperature for about 5 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA GLI STAMPI: imburra abbondantemente (circa 15 g di burro morbido per stampo) due stampi da pandoro da 750 g e infarinali leggermente. Grattugia la scorza di 1 limone non trattato (5 g).\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 200 g di acqua, 70 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 45 g di tuorli e 90 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 90 g di zucchero e 90 g di tuorli a più riprese, 15 g di miele, 9 g di sale, 5 g di vaniglia e 5 g di scorza di limone; infine 185 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 705 g, pirla e metti negli stampi preparati, con la chiusura verso il basso.\n6) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1-2 cm dal bordo dello stampo.\n7) COTTURA: 170 °C statico per circa 40-45 minuti, fino a 92-94 °C al cuore (termometro a sonda). Se la superficie scurisce troppo, copri con alluminio dopo 25 minuti.\n8) RAFFREDDAMENTO: lascia riposare 20-30 minuti nello stampo, sforma e fai raffreddare in piedi su una griglia. Quando è completamente freddo spolvera con 30 g di zucchero a velo vanigliato. È al meglio dopo 24 ore di riposo.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) FORMEN VORBEREITEN: Zwei Pandoro-Formen zu 750 g großzügig einfetten (etwa 15 g weiche Butter pro Form) und leicht bemehlen. Die Schale von 1 unbehandelten Zitrone abreiben (5 g).\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 200 g Wasser, 70 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 45 g Eigelb und 90 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 90 g Zucker und 90 g Eigelb in mehreren Portionen, 15 g Honig, 9 g Salz, 5 g Vanille und 5 g Zitronenschale; zuletzt 185 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 705 g teilen, rundwirken und mit dem Schluss nach unten in die vorbereiteten Formen setzen.\n6) GARE: 6-8 Stunden bei 28-30 °C, bis 1-2 cm unter den Rand der Form.\n7) BACKEN: 170 °C Ober-/Unterhitze etwa 40-45 Minuten, bis 92-94 °C im Kern (Einstechthermometer). Wird die Oberfläche zu dunkel, nach 25 Minuten mit Alufolie abdecken.\n8) AUSKÜHLEN: 20-30 Minuten in der Form ruhen lassen, stürzen und aufrecht auf einem Gitter auskühlen lassen. Wenn er ganz kalt ist, mit 30 g Vanille-Puderzucker bestäuben. Nach 24 Stunden Ruhe am besten.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE MOULDS: generously butter (about 15 g soft butter per mould) two 750 g pandoro moulds and dust lightly with flour. Grate the zest of 1 unwaxed lemon (5 g).\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 70 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 90 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 90 g sugar and 90 g yolks in several additions, 15 g honey, 9 g salt, 5 g vanilla and 5 g lemon zest; finally 185 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 705 g, shape round and place seam side down in the prepared moulds.\n6) PROOF: 6-8 hours at 28-30 °C, until 1-2 cm below the rim of the mould.\n7) BAKING: 170 °C static for about 40-45 minutes, to 92-94 °C at the core (probe thermometer). If the surface darkens too much, cover with foil after 25 minutes.\n8) COOLING: rest 20-30 minutes in the mould, turn out and cool upright on a rack. When completely cold, dust with 30 g vanilla icing sugar. Best after 24 hours of rest."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE MOULDS: generously butter (about 15 g soft butter per mould) two 750 g pandoro moulds and dust lightly with flour. Grate the zest of 1 unwaxed lemon (5 g).\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 70 g sugar and 110 g sourdough; then 300 g flour; finally 45 g yolks and 90 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 90 g sugar and 90 g yolks in several additions, 15 g honey, 9 g salt, 5 g vanilla and 5 g lemon zest; finally 185 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 705 g, shape round and place seam side down in the prepared moulds.\n6) PROOF: 6-8 hours at 28-30 °C, until 1-2 cm below the rim of the mould.\n7) BAKING: 170 °C static for about 40-45 minutes, to 92-94 °C at the core (probe thermometer). If the surface darkens too much, cover with foil after 25 minutes.\n8) COOLING: rest 20-30 minutes in the mould, turn out and cool upright on a rack. When completely cold, dust with 30 g vanilla icing sugar. Best after 24 hours of rest.",
+    "name_es": "Pandoro Artesanal MikiLab — Clásico con Vainilla",
+    "name_fr": "Pandoro Artisanal MikiLab — Classique à la Vanille",
+    "name_fa": "پاندورو صنعتگرانه میکی‌لب — کلاسیک وانیلی",
+    "real_name_es": "Pandoro Clásico",
+    "real_name_fr": "Pandoro Classique",
+    "flour_type_es": "Harina de alta fuerza W380 + masa madre",
+    "flour_type_fr": "Farine de haute force W380 + levain"
   },
   {
     "id": "3c1d07ea-9446-40b2-bf81-f4114596e46a",
@@ -17270,73 +17312,97 @@
         "name": "Zucchero (impasto)",
         "percent": 12,
         "name_de": "Zucker (Teig)",
-        "name_en": "Sugar (dough)"
+        "name_en": "Sugar (dough)",
+        "name_es": "Azúcar (masa)",
+        "name_fr": "Sucre (pâte)"
       },
       {
         "name": "Burro",
         "percent": 50,
         "name_de": "Butter",
-        "name_en": "Butter"
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
       },
       {
         "name": "Uvetta sultanina",
         "percent": 40,
         "name_de": "Sultaninen",
-        "name_en": "Sultana raisins"
+        "name_en": "Sultana raisins",
+        "name_es": "Pasas sultanas",
+        "name_fr": "Raisins secs sultanines"
       },
       {
         "name": "Canditi di cedro e arancia",
         "percent": 15,
         "name_de": "Zitronat und Orangeat",
-        "name_en": "Candied citron and orange peel"
+        "name_en": "Candied citron and orange peel",
+        "name_es": "Cidra y naranja confitadas",
+        "name_fr": "Cédrat et orange confits"
       },
       {
         "name": "Mandorle tritate",
         "percent": 10,
         "name_de": "Gehackte Mandeln",
-        "name_en": "Chopped almonds"
+        "name_en": "Chopped almonds",
+        "name_es": "Almendras picadas",
+        "name_fr": "Amandes hachées"
       },
       {
         "name": "Rum (per macerare la frutta)",
         "percent": 12,
         "name_de": "Rum (zum Einlegen der Früchte)",
-        "name_en": "Rum (to soak the fruit)"
+        "name_en": "Rum (to soak the fruit)",
+        "name_es": "Ron (para macerar la fruta)",
+        "name_fr": "Rhum (pour macérer les fruits)"
       },
       {
         "name": "Spezie (cannella, cardamomo, noce moscata)",
         "percent": 1,
         "name_de": "Gewürze (Zimt, Kardamom, Muskat)",
-        "name_en": "Spices (cinnamon, cardamom, nutmeg)"
+        "name_en": "Spices (cinnamon, cardamom, nutmeg)",
+        "name_es": "Especias (canela, cardamomo, nuez moscada)",
+        "name_fr": "Épices (cannelle, cardamome, noix de muscade)"
       },
       {
         "name": "Scorza di limone",
         "percent": 1,
         "name_de": "Zitronenschale",
-        "name_en": "Lemon zest"
+        "name_en": "Lemon zest",
+        "name_es": "Ralladura de limón",
+        "name_fr": "Zeste de citron"
       },
       {
         "name": "Vaniglia",
         "percent": 1,
         "name_de": "Vanille",
-        "name_en": "Vanilla"
+        "name_en": "Vanilla",
+        "name_es": "Vainilla",
+        "name_fr": "Vanille"
       },
       {
         "name": "Burro fuso (finitura)",
         "percent": 20,
         "name_de": "Flüssige Butter (Finish)",
-        "name_en": "Melted butter (finish)"
+        "name_en": "Melted butter (finish)",
+        "name_es": "Mantequilla fundida (acabado)",
+        "name_fr": "Beurre fondu (finition)"
       },
       {
         "name": "Zucchero semolato (finitura)",
         "percent": 20,
         "name_de": "Zucker (Finish)",
-        "name_en": "Caster sugar (finish)"
+        "name_en": "Caster sugar (finish)",
+        "name_es": "Azúcar granulado (acabado)",
+        "name_fr": "Sucre semoule (finition)"
       },
       {
         "name": "Zucchero a velo (finitura)",
         "percent": 20,
         "name_de": "Puderzucker (Finish)",
-        "name_en": "Icing sugar (finish)"
+        "name_en": "Icing sugar (finish)",
+        "name_es": "Azúcar glas (acabado)",
+        "name_fr": "Sucre glace (finition)"
       }
     ],
     "notes": "Lo Stollen natalizio tedesco nella versione classica, senza marzapane: burro, frutta secca macerata nel rum, spezie e una spessa copertura di burro e zucchero. Va lasciato maturare almeno una settimana. Contiene glutine, latte e frutta a guscio (mandorle); la frutta è macerata nel rum. Si conserva avvolto in un luogo fresco per 3-4 settimane.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17344,7 +17410,14 @@
     "notes_en": "The German Christmas stollen in its classic version, without marzipan: butter, dried fruit soaked in rum, spices and a thick coat of butter and sugar. Let it ripen for at least a week. Contains gluten, milk and tree nuts (almonds); the fruit is soaked in rum. Keeps for 3-4 weeks wrapped in a cool place.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) LA SERA PRIMA - FRUTTA: metti 200 g di uvetta sultanina, 75 g di canditi di cedro e arancia e 50 g di mandorle tritate in 60 g di rum; copri e lascia macerare tutta la notte. Il giorno dopo scola bene: la frutta deve essere asciutta.\n3) 1° IMPASTO: in planetaria mescola 130 g di latte tiepido, 20 g di zucchero, 110 g di lievito madre e 150 g di farina fino a un composto liscio. Lievita 4-5 ore a 26-28 °C, fino a raddoppiare.\n4) 2° IMPASTO: unisci il 1° impasto a 350 g di farina, 40 g di zucchero, 8 g di sale, 5 g di spezie (2 g di cannella, 2 g di cardamomo, 1 g di noce moscata), 5 g di scorza di limone e 5 g di vaniglia; impasta fino a incordare (10-12 minuti). Poi aggiungi 250 g di burro morbido in quattro volte, incordando ogni volta. Temperatura finale 24-26 °C.\n5) FRUTTA: a bassa velocità e con poche pieghe, aggiungi la frutta e le mandorle scolate. Senza rompere la maglia.\n6) RIPOSO: 30 minuti coperto.\n7) FORMATURA: dividi in due pezzi da circa 700 g. Stendi ogni pezzo a ovale di circa 22×28 cm. Con il mattarello premi una linea nel senso della lunghezza, appena fuori centro, e piega il lato più largo sopra il più stretto. Metti su una teglia con carta forno.\n8) LIEVITAZIONE: 3-4 ore a 28 °C, fino a un aumento di circa il 50% (l'impasto è ricco di burro e non raddoppia).\n9) COTTURA: 170 °C statico per circa 55 minuti, fino a 94 °C al cuore (termometro a sonda). Se scurisce troppo, copri con alluminio dopo 35 minuti.\n10) FINITURA: appena sfornato, spennella tutta la superficie con 100 g di burro fuso e cospargi con 100 g di zucchero semolato. Lascia raffreddare del tutto, poi spolvera con 100 g di zucchero a velo.\n11) MATURAZIONE: avvolgi in carta da forno e alluminio e conserva in un luogo fresco per almeno 1 settimana (meglio 2-3) prima di tagliarlo: il profumo e la morbidezza migliorano col riposo.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) AM VORABEND - FRÜCHTE: 200 g Sultaninen, 75 g Zitronat und Orangeat und 50 g gehackte Mandeln in 60 g Rum einlegen; abdecken und über Nacht ziehen lassen. Am nächsten Tag gut abtropfen lassen: die Früchte müssen trocken sein.\n3) 1. TEIG: In der Küchenmaschine 130 g lauwarme Milch, 20 g Zucker, 110 g Sauerteig und 150 g Mehl zu einer glatten Masse verrühren. 4-5 Stunden bei 26-28 °C gehen lassen, bis sich das Volumen verdoppelt.\n4) 2. TEIG: Den 1. Teig mit 350 g Mehl, 40 g Zucker, 8 g Salz, 5 g Gewürzen (2 g Zimt, 2 g Kardamom, 1 g Muskat), 5 g Zitronenschale und 5 g Vanille verkneten, bis er sich bindet (10-12 Minuten). Dann 250 g weiche Butter in vier Portionen zugeben, jeweils bis zur Bindung. Endtemperatur 24-26 °C.\n5) FRÜCHTE: Auf niedriger Stufe und mit wenigen Faltungen die abgetropften Früchte und Mandeln unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE: 30 Minuten abgedeckt.\n7) FORMEN: In zwei Stücke von etwa 700 g teilen. Jedes Stück zu einem Oval von etwa 22×28 cm ausrollen. Mit dem Nudelholz der Länge nach eine Vertiefung knapp neben der Mitte eindrücken und die breitere Seite über die schmalere klappen. Auf ein Blech mit Backpapier legen.\n8) GARE: 3-4 Stunden bei 28 °C, bis sich das Volumen um etwa 50 % vergrößert (der Teig ist butterreich und verdoppelt sich nicht).\n9) BACKEN: 170 °C Ober-/Unterhitze etwa 55 Minuten, bis 94 °C im Kern (Einstechthermometer). Wird er zu dunkel, nach 35 Minuten mit Alufolie abdecken.\n10) FINISH: Direkt nach dem Backen die ganze Oberfläche mit 100 g flüssiger Butter bestreichen und mit 100 g Zucker bestreuen. Vollständig auskühlen lassen, dann mit 100 g Puderzucker bestäuben.\n11) REIFUNG: In Backpapier und Alufolie wickeln und mindestens 1 Woche (besser 2-3) an einem kühlen Ort lagern, bevor er angeschnitten wird: Aroma und Saftigkeit verbessern sich mit der Ruhe.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. With a rolling pin press a line lengthwise, just off centre, and fold the wider side over the narrower one. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. With a rolling pin press a line lengthwise, just off centre, and fold the wider side over the narrower one. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting.",
+    "name_es": "Stollen Artesanal MikiLab — Clásico (Christstollen)",
+    "name_fr": "Stollen Artisanal MikiLab — Classique (Christstollen)",
+    "name_fa": "اشتولن صنعتگرانه میکی‌لب — کلاسیک (Christstollen)",
+    "real_name_es": "Stollen Navideño Clásico",
+    "real_name_fr": "Stollen de Noël Classique",
+    "flour_type_es": "Harina de alta fuerza W380 + masa madre",
+    "flour_type_fr": "Farine de haute force W380 + levain"
   },
   {
     "id": "6d8e9553-b3ae-418a-8c79-b6a9e0999330",
@@ -17390,79 +17463,105 @@
         "name": "Zucchero (impasto)",
         "percent": 12,
         "name_de": "Zucker (Teig)",
-        "name_en": "Sugar (dough)"
+        "name_en": "Sugar (dough)",
+        "name_es": "Azúcar (masa)",
+        "name_fr": "Sucre (pâte)"
       },
       {
         "name": "Burro",
         "percent": 50,
         "name_de": "Butter",
-        "name_en": "Butter"
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
       },
       {
         "name": "Uvetta sultanina",
         "percent": 40,
         "name_de": "Sultaninen",
-        "name_en": "Sultana raisins"
+        "name_en": "Sultana raisins",
+        "name_es": "Pasas sultanas",
+        "name_fr": "Raisins secs sultanines"
       },
       {
         "name": "Canditi di cedro e arancia",
         "percent": 15,
         "name_de": "Zitronat und Orangeat",
-        "name_en": "Candied citron and orange peel"
+        "name_en": "Candied citron and orange peel",
+        "name_es": "Cidra y naranja confitadas",
+        "name_fr": "Cédrat et orange confits"
       },
       {
         "name": "Mandorle tritate",
         "percent": 10,
         "name_de": "Gehackte Mandeln",
-        "name_en": "Chopped almonds"
+        "name_en": "Chopped almonds",
+        "name_es": "Almendras picadas",
+        "name_fr": "Amandes hachées"
       },
       {
         "name": "Rum (per macerare la frutta)",
         "percent": 12,
         "name_de": "Rum (zum Einlegen der Früchte)",
-        "name_en": "Rum (to soak the fruit)"
+        "name_en": "Rum (to soak the fruit)",
+        "name_es": "Ron (para macerar la fruta)",
+        "name_fr": "Rhum (pour macérer les fruits)"
       },
       {
         "name": "Spezie (cannella, cardamomo, noce moscata)",
         "percent": 1,
         "name_de": "Gewürze (Zimt, Kardamom, Muskat)",
-        "name_en": "Spices (cinnamon, cardamom, nutmeg)"
+        "name_en": "Spices (cinnamon, cardamom, nutmeg)",
+        "name_es": "Especias (canela, cardamomo, nuez moscada)",
+        "name_fr": "Épices (cannelle, cardamome, noix de muscade)"
       },
       {
         "name": "Scorza di limone",
         "percent": 1,
         "name_de": "Zitronenschale",
-        "name_en": "Lemon zest"
+        "name_en": "Lemon zest",
+        "name_es": "Ralladura de limón",
+        "name_fr": "Zeste de citron"
       },
       {
         "name": "Vaniglia",
         "percent": 1,
         "name_de": "Vanille",
-        "name_en": "Vanilla"
+        "name_en": "Vanilla",
+        "name_es": "Vainilla",
+        "name_fr": "Vanille"
       },
       {
         "name": "Marzapane (almeno 50% mandorle)",
         "percent": 40,
         "name_de": "Marzipan (mind. 50 % Mandeln)",
-        "name_en": "Marzipan (at least 50% almonds)"
+        "name_en": "Marzipan (at least 50% almonds)",
+        "name_es": "Mazapán (al menos 50 % de almendras)",
+        "name_fr": "Pâte d'amandes (au moins 50 % d'amandes)"
       },
       {
         "name": "Burro fuso (finitura)",
         "percent": 20,
         "name_de": "Flüssige Butter (Finish)",
-        "name_en": "Melted butter (finish)"
+        "name_en": "Melted butter (finish)",
+        "name_es": "Mantequilla fundida (acabado)",
+        "name_fr": "Beurre fondu (finition)"
       },
       {
         "name": "Zucchero semolato (finitura)",
         "percent": 20,
         "name_de": "Zucker (Finish)",
-        "name_en": "Caster sugar (finish)"
+        "name_en": "Caster sugar (finish)",
+        "name_es": "Azúcar granulado (acabado)",
+        "name_fr": "Sucre semoule (finition)"
       },
       {
         "name": "Zucchero a velo (finitura)",
         "percent": 20,
         "name_de": "Puderzucker (Finish)",
-        "name_en": "Icing sugar (finish)"
+        "name_en": "Icing sugar (finish)",
+        "name_es": "Azúcar glas (acabado)",
+        "name_fr": "Sucre glace (finition)"
       }
     ],
     "notes": "Lo Stollen natalizio tedesco nella versione con marzapane: un cilindro di marzapane al centro, come nel Marzipanstollen. Scegli un marzapane di buona qualità (almeno il 50% di mandorle). Contiene glutine, latte e frutta a guscio (mandorle); la frutta è macerata nel rum. Si conserva avvolto in un luogo fresco per 3-4 settimane.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17470,7 +17569,14 @@
     "notes_en": "The German Christmas stollen with marzipan: a marzipan log in the centre, as in a Marzipanstollen. Choose a good-quality marzipan (at least 50% almonds). Contains gluten, milk and tree nuts (almonds); the fruit is soaked in rum. Keeps for 3-4 weeks wrapped in a cool place.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) LA SERA PRIMA - FRUTTA: metti 200 g di uvetta sultanina, 75 g di canditi di cedro e arancia e 50 g di mandorle tritate in 60 g di rum; copri e lascia macerare tutta la notte. Il giorno dopo scola bene: la frutta deve essere asciutta.\n3) 1° IMPASTO: in planetaria mescola 130 g di latte tiepido, 20 g di zucchero, 110 g di lievito madre e 150 g di farina fino a un composto liscio. Lievita 4-5 ore a 26-28 °C, fino a raddoppiare.\n4) 2° IMPASTO: unisci il 1° impasto a 350 g di farina, 40 g di zucchero, 8 g di sale, 5 g di spezie (2 g di cannella, 2 g di cardamomo, 1 g di noce moscata), 5 g di scorza di limone e 5 g di vaniglia; impasta fino a incordare (10-12 minuti). Poi aggiungi 250 g di burro morbido in quattro volte, incordando ogni volta. Temperatura finale 24-26 °C.\n5) FRUTTA: a bassa velocità e con poche pieghe, aggiungi la frutta e le mandorle scolate. Senza rompere la maglia.\n6) RIPOSO: 30 minuti coperto.\n7) FORMATURA: dividi in due pezzi da circa 700 g. Stendi ogni pezzo a ovale di circa 22×28 cm. Arrotola 100 g di marzapane (con almeno il 50% di mandorle) in un cilindro lungo quanto il lato corto e mettilo appena fuori centro; piega il lato più largo sul marzapane, sigillando bene i bordi. Metti su una teglia con carta forno.\n8) LIEVITAZIONE: 3-4 ore a 28 °C, fino a un aumento di circa il 50% (l'impasto è ricco di burro e non raddoppia).\n9) COTTURA: 170 °C statico per circa 55 minuti, fino a 94 °C al cuore (termometro a sonda). Se scurisce troppo, copri con alluminio dopo 35 minuti.\n10) FINITURA: appena sfornato, spennella tutta la superficie con 100 g di burro fuso e cospargi con 100 g di zucchero semolato. Lascia raffreddare del tutto, poi spolvera con 100 g di zucchero a velo.\n11) MATURAZIONE: avvolgi in carta da forno e alluminio e conserva in un luogo fresco per almeno 1 settimana (meglio 2-3) prima di tagliarlo: il profumo e la morbidezza migliorano col riposo.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) AM VORABEND - FRÜCHTE: 200 g Sultaninen, 75 g Zitronat und Orangeat und 50 g gehackte Mandeln in 60 g Rum einlegen; abdecken und über Nacht ziehen lassen. Am nächsten Tag gut abtropfen lassen: die Früchte müssen trocken sein.\n3) 1. TEIG: In der Küchenmaschine 130 g lauwarme Milch, 20 g Zucker, 110 g Sauerteig und 150 g Mehl zu einer glatten Masse verrühren. 4-5 Stunden bei 26-28 °C gehen lassen, bis sich das Volumen verdoppelt.\n4) 2. TEIG: Den 1. Teig mit 350 g Mehl, 40 g Zucker, 8 g Salz, 5 g Gewürzen (2 g Zimt, 2 g Kardamom, 1 g Muskat), 5 g Zitronenschale und 5 g Vanille verkneten, bis er sich bindet (10-12 Minuten). Dann 250 g weiche Butter in vier Portionen zugeben, jeweils bis zur Bindung. Endtemperatur 24-26 °C.\n5) FRÜCHTE: Auf niedriger Stufe und mit wenigen Faltungen die abgetropften Früchte und Mandeln unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE: 30 Minuten abgedeckt.\n7) FORMEN: In zwei Stücke von etwa 700 g teilen. Jedes Stück zu einem Oval von etwa 22×28 cm ausrollen. 100 g Marzipan (mit mindestens 50 % Mandeln) zu einer Rolle formen, die so lang ist wie die kurze Seite, und knapp neben der Mitte auflegen; die breitere Seite über das Marzipan klappen und die Ränder gut verschließen. Auf ein Blech mit Backpapier legen.\n8) GARE: 3-4 Stunden bei 28 °C, bis sich das Volumen um etwa 50 % vergrößert (der Teig ist butterreich und verdoppelt sich nicht).\n9) BACKEN: 170 °C Ober-/Unterhitze etwa 55 Minuten, bis 94 °C im Kern (Einstechthermometer). Wird er zu dunkel, nach 35 Minuten mit Alufolie abdecken.\n10) FINISH: Direkt nach dem Backen die ganze Oberfläche mit 100 g flüssiger Butter bestreichen und mit 100 g Zucker bestreuen. Vollständig auskühlen lassen, dann mit 100 g Puderzucker bestäuben.\n11) REIFUNG: In Backpapier und Alufolie wickeln und mindestens 1 Woche (besser 2-3) an einem kühlen Ort lagern, bevor er angeschnitten wird: Aroma und Saftigkeit verbessern sich mit der Ruhe.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. Roll 100 g marzipan (at least 50% almonds) into a log as long as the short side and place it just off centre; fold the wider side over the marzipan, sealing the edges well. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) THE NIGHT BEFORE - FRUIT: put 200 g sultana raisins, 75 g candied citron and orange peel and 50 g chopped almonds in 60 g rum; cover and soak overnight. The next day drain well: the fruit must be dry.\n3) 1st DOUGH: in a stand mixer mix 130 g lukewarm milk, 20 g sugar, 110 g sourdough and 150 g flour until smooth. Rise 4-5 hours at 26-28 °C, until doubled.\n4) 2nd DOUGH: combine the 1st dough with 350 g flour, 40 g sugar, 8 g salt, 5 g spices (2 g cinnamon, 2 g cardamom, 1 g nutmeg), 5 g lemon zest and 5 g vanilla; knead until it forms strands (10-12 minutes). Then add 250 g soft butter in four additions, developing the dough each time. Final temperature 24-26 °C.\n5) FRUIT: on low speed and with few folds, add the drained fruit and almonds. Without breaking the gluten network.\n6) REST: 30 minutes covered.\n7) SHAPING: divide into two pieces of about 700 g. Roll each piece into an oval of about 22×28 cm. Roll 100 g marzipan (at least 50% almonds) into a log as long as the short side and place it just off centre; fold the wider side over the marzipan, sealing the edges well. Place on a tray lined with baking paper.\n8) PROOF: 3-4 hours at 28 °C, until it has grown by about 50% (the dough is rich in butter and does not double).\n9) BAKING: 170 °C static for about 55 minutes, to 94 °C at the core (probe thermometer). If it darkens too much, cover with foil after 35 minutes.\n10) FINISHING: right out of the oven, brush the whole surface with 100 g melted butter and sprinkle with 100 g caster sugar. Let it cool completely, then dust with 100 g icing sugar.\n11) RIPENING: wrap in baking paper and foil and keep in a cool place for at least 1 week (better 2-3) before cutting: aroma and softness improve with resting.",
+    "name_es": "Stollen Artesanal MikiLab — con Mazapán (Marzipanstollen)",
+    "name_fr": "Stollen Artisanal MikiLab — à la Pâte d'Amandes (Marzipanstollen)",
+    "name_fa": "اشتولن صنعتگرانه میکی‌لب — با مارزیپان (Marzipanstollen)",
+    "real_name_es": "Stollen Navideño con Mazapán",
+    "real_name_fr": "Stollen de Noël à la Pâte d'Amandes",
+    "flour_type_es": "Harina de alta fuerza W380 + masa madre",
+    "flour_type_fr": "Farine de haute force W380 + levain"
   },
   {
     "id": "ae136a09-816a-4be4-9377-0564bf9fd90d",
@@ -17516,13 +17622,17 @@
         "name": "Olio extravergine d'oliva",
         "percent": 2,
         "name_de": "Natives Olivenöl extra",
-        "name_en": "Extra virgin olive oil"
+        "name_en": "Extra virgin olive oil",
+        "name_es": "Aceite de oliva virgen extra",
+        "name_fr": "Huile d'olive extra vierge"
       },
       {
         "name": "Lievito di birra fresco",
         "percent": 0.2,
         "name_de": "Frische Hefe",
-        "name_en": "Fresh yeast"
+        "name_en": "Fresh yeast",
+        "name_es": "Levadura fresca de panadería",
+        "name_fr": "Levure fraîche de boulanger"
       }
     ],
     "notes": "La pinsa romana: base ovale, alta idratazione (80%), maturazione lunga in frigo per una crosta croccante e un cuore leggero. La farina di riso è compresa nei 1000 g di farina (800 g di grano + 200 g di riso). Nella pinsa tradizionale c'è anche un po' di farina di soia: qui non è usata, così l'impasto non contiene soia. Contiene glutine.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17530,7 +17640,14 @@
     "notes_en": "The Roman pinsa: oval base, high hydration (80%), long cold maturation for a crisp crust and a light crumb. The rice flour is included in the 1000 g of flour (800 g wheat + 200 g rice). Traditional pinsa also contains some soy flour: it is not used here, so the dough contains no soy. Contains gluten.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 2 volte, a circa 4 ore di distanza e a 28 °C, finché raddoppia. Usalo al picco.\n2) AUTOLISI: mescola 800 g di farina di grano tenero W300 e 200 g di farina di riso con 700 g di acqua fredda (12-14 °C). Riposo 30 minuti coperto.\n3) IMPASTO: aggiungi 100 g di lievito madre e 2 g di lievito di birra fresco sciolto in 100 g di acqua; dopo 3 minuti unisci 22 g di sale e, dopo altri 5 minuti, 20 g di olio extravergine. Impasta fino a un impasto liscio (T finale 22-24 °C). È molto morbido: aiutati con le pieghe, non aggiungere farina.\n4) PIEGHE: 3 serie di pieghe a 30 minuti l'una, a temperatura ambiente. Poi lascia riposare 1 ora.\n5) MATURAZIONE IN FRIGO: in un contenitore unto e coperto, in frigo a 4 °C per 24-48 ore.\n6) PEZZATURA: tira fuori l'impasto 1 ora prima. Dividi in 8 pezzi da circa 240 g, mettili in una cassetta cosparsa di farina di riso e lasciali 2 ore a temperatura ambiente.\n7) STENDI: allarga ogni pezzo con le dita, senza mattarello, in un ovale di circa 30×20 cm, mantenendo il bordo alto.\n8) COTTURA: forno al massimo (circa 250 °C) con pietra o teglia rovente, 8-10 minuti. Condisci a metà cottura o a fine cottura per non appesantire la base.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 2 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen, bis er sich verdoppelt. Auf dem Höhepunkt verwenden.\n2) AUTOLYSE: 800 g Weizenmehl W300 und 200 g Reismehl mit 700 g kaltem Wasser (12-14 °C) verrühren. 30 Minuten abgedeckt ruhen lassen.\n3) TEIG: 100 g Sauerteig und 2 g frische Hefe, in 100 g Wasser aufgelöst, zugeben; nach 3 Minuten 22 g Salz und nach weiteren 5 Minuten 20 g natives Olivenöl extra. Zu einem glatten Teig kneten (Endtemperatur 22-24 °C). Er ist sehr weich: mit Dehn- und Faltvorgängen arbeiten, kein Mehl zugeben.\n4) FALTEN: 3 Runden Dehnen und Falten im Abstand von 30 Minuten bei Raumtemperatur. Dann 1 Stunde ruhen lassen.\n5) REIFUNG IM KÜHLSCHRANK: In einem geölten, abgedeckten Behälter bei 4 °C für 24-48 Stunden.\n6) PORTIONIEREN: Den Teig 1 Stunde vorher herausnehmen. In 8 Stücke von etwa 240 g teilen, in eine mit Reismehl bestreute Box legen und 2 Stunden bei Raumtemperatur ruhen lassen.\n7) FORMEN: Jedes Stück mit den Fingern, ohne Nudelholz, zu einem Oval von etwa 30×20 cm auseinanderziehen, den Rand hoch lassen.\n8) BACKEN: Ofen auf höchster Stufe (etwa 250 °C) mit Stein oder heißem Blech, 8-10 Minuten. In der Mitte oder am Ende der Backzeit belegen, damit der Boden nicht zu schwer wird.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 2 times about 4 hours apart at 28 °C until it doubles. Use it at its peak.\n2) AUTOLYSE: mix 800 g soft wheat flour W300 and 200 g rice flour with 700 g cold water (12-14 °C). Rest 30 minutes covered.\n3) DOUGH: add 100 g sourdough and 2 g fresh yeast dissolved in 100 g water; after 3 minutes add 22 g salt and, after another 5 minutes, 20 g extra virgin olive oil. Mix until smooth (final temperature 22-24 °C). It is very soft: use stretch-and-folds, do not add flour.\n4) FOLDS: 3 rounds of folds 30 minutes apart at room temperature. Then rest 1 hour.\n5) COLD MATURATION: in an oiled, covered container in the fridge at 4 °C for 24-48 hours.\n6) DIVIDING: take the dough out 1 hour before. Divide into 8 pieces of about 240 g, place in a box dusted with rice flour and leave 2 hours at room temperature.\n7) STRETCHING: stretch each piece with your fingers, no rolling pin, into an oval of about 30×20 cm, keeping the rim high.\n8) BAKING: oven at maximum (about 250 °C) with a stone or a very hot tray, 8-10 minutes. Add toppings halfway or at the end so the base does not get heavy."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 2 times about 4 hours apart at 28 °C until it doubles. Use it at its peak.\n2) AUTOLYSE: mix 800 g soft wheat flour W300 and 200 g rice flour with 700 g cold water (12-14 °C). Rest 30 minutes covered.\n3) DOUGH: add 100 g sourdough and 2 g fresh yeast dissolved in 100 g water; after 3 minutes add 22 g salt and, after another 5 minutes, 20 g extra virgin olive oil. Mix until smooth (final temperature 22-24 °C). It is very soft: use stretch-and-folds, do not add flour.\n4) FOLDS: 3 rounds of folds 30 minutes apart at room temperature. Then rest 1 hour.\n5) COLD MATURATION: in an oiled, covered container in the fridge at 4 °C for 24-48 hours.\n6) DIVIDING: take the dough out 1 hour before. Divide into 8 pieces of about 240 g, place in a box dusted with rice flour and leave 2 hours at room temperature.\n7) STRETCHING: stretch each piece with your fingers, no rolling pin, into an oval of about 30×20 cm, keeping the rim high.\n8) BAKING: oven at maximum (about 250 °C) with a stone or a very hot tray, 8-10 minutes. Add toppings halfway or at the end so the base does not get heavy.",
+    "name_es": "Pinsa Romana MikiLab",
+    "name_fr": "Pinsa Romana MikiLab",
+    "name_fa": "پینسا رومانا MikiLab",
+    "real_name_es": "Pinsa Romana",
+    "real_name_fr": "Pinsa Romana",
+    "flour_type_es": "Harina de trigo blando W300 (80 %) + harina de arroz (20 %)",
+    "flour_type_fr": "Farine de blé tendre W300 (80 %) + farine de riz (20 %)"
   },
   {
     "id": "98e54c1d-55d1-4975-afa9-545fd5f086d1",
@@ -17576,37 +17693,49 @@
         "name": "Zucchero",
         "percent": 8,
         "name_de": "Zucker",
-        "name_en": "Sugar"
+        "name_en": "Sugar",
+        "name_es": "Azúcar",
+        "name_fr": "Sucre"
       },
       {
         "name": "Tuorlo",
         "percent": 15,
         "name_de": "Eigelb",
-        "name_en": "Egg yolk"
+        "name_en": "Egg yolk",
+        "name_es": "Yema de huevo",
+        "name_fr": "Jaune d'œuf"
       },
       {
         "name": "Burro",
         "percent": 30,
         "name_de": "Butter",
-        "name_en": "Butter"
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
       },
       {
         "name": "Speck a dadini",
         "percent": 30,
         "name_de": "Speck, gewürfelt",
-        "name_en": "Diced speck"
+        "name_en": "Diced speck",
+        "name_es": "Speck en dados",
+        "name_fr": "Speck en dés"
       },
       {
         "name": "Formaggio a pasta semidura (Emmental o Asiago)",
         "percent": 30,
         "name_de": "Halbfester Käse (Emmentaler oder Asiago)",
-        "name_en": "Semi-hard cheese (Emmental or Asiago)"
+        "name_en": "Semi-hard cheese (Emmental or Asiago)",
+        "name_es": "Queso de pasta semidura (Emmental o Asiago)",
+        "name_fr": "Fromage à pâte demi-dure (Emmental ou Asiago)"
       },
       {
         "name": "Pepe nero",
         "percent": 0.4,
         "name_de": "Schwarzer Pfeffer",
-        "name_en": "Black pepper"
+        "name_en": "Black pepper",
+        "name_es": "Pimienta negra",
+        "name_fr": "Poivre noir"
       }
     ],
     "notes": "Il panettone salato gourmet: stessa base MikiLab 60/40, ma con poco zucchero, speck e formaggio. Ottimo per antipasti e buffet. Contiene glutine, uova, latte e carne (speck). Conservalo in frigo e consumalo entro 3-4 giorni.\n\nBase MikiLab in prova (bozza di Sitor, IA): dosi e tempi da confermare dopo la prima cottura.",
@@ -17614,6 +17743,918 @@
     "notes_en": "The gourmet savoury panettone: same MikiLab 60/40 base, but with little sugar, speck and cheese. Great for starters and buffets. Contains gluten, eggs, milk and meat (speck). Keep it in the fridge and eat within 3-4 days.\n\nMikiLab base under testing (draft by Sitor, AI): quantities and times to be confirmed after the first bake.",
     "procedure": "1) LIEVITO MADRE: rinfrescalo 3 volte, a circa 4 ore di distanza e a 28 °C (1:1:0,5), finché raddoppia in 3-4 ore. Usalo al picco, il giorno stesso del 1° impasto.\n2) PREPARA LE SOSPENSIONI: taglia 150 g di speck a dadini e rosolalo 2 minuti in padella senza olio, poi lascialo raffreddare; taglia 150 g di formaggio a pasta semidura (Emmental o Asiago) a cubetti di 8 mm e tienili in frigo.\n3) 1° IMPASTO (60% della farina, sera): in planetaria metti 200 g di acqua, 20 g di zucchero e 110 g di lievito madre; poi 300 g di farina; infine 25 g di tuorli e 40 g di burro a filo. Impasto liscio, non incordato (T finale 25-26 °C). Lievita 12 ore a 24-26 °C fino a triplicare.\n4) 2° IMPASTO (40% della farina, mattina): il 1° impasto con 200 g di farina e fino a incordare; poi 20 g di zucchero e 50 g di tuorli a più riprese, 10 g di sale e 2 g di pepe nero; infine 110 g di burro in tre volte, incordando ogni volta. Temperatura finale 25-26 °C.\n5) SOSPENSIONI: a fine impasto, a bassa velocità e con poche pieghe, aggiungi 150 g di speck e 150 g di formaggio. Senza rompere la maglia.\n6) RIPOSO E FORMATURA: 30 minuti coperto. Dividi in due pezzi da circa 690 g, pirla e metti nei pirottini da 750 g.\n7) LIEVITAZIONE: 6-8 ore a 28-30 °C, fino a 1 cm dal bordo del pirottino.\n8) COTTURA: 170 °C statico per circa 45 minuti, fino a 92-94 °C al cuore (termometro a sonda). Infila due spiedi alla base e capovolgi subito.\n9) RAFFREDDAMENTO E SERVIZIO: lascia a testa in giù 4-6 ore. Al meglio dopo 12-24 ore, a fette, anche leggermente tostato. Contiene speck e formaggio: conservalo in frigo e consumalo entro 3-4 giorni.",
     "procedure_de": "1) SAUERTEIG (Lievito Madre): 3 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen (1:1:0,5), bis er sich in 3-4 Stunden verdoppelt. Auf dem Höhepunkt verwenden, am selben Tag wie den 1. Teig.\n2) EINLAGEN VORBEREITEN: 150 g Speck würfeln und 2 Minuten in einer Pfanne ohne Öl anbraten, dann abkühlen lassen; 150 g halbfesten Käse (Emmentaler oder Asiago) in 8-mm-Würfel schneiden und kalt stellen.\n3) 1. TEIG (60 % des Mehls, abends): In der Küchenmaschine 200 g Wasser, 20 g Zucker und 110 g Sauerteig mischen; dann 300 g Mehl; zuletzt 25 g Eigelb und 40 g Butter nach und nach. Glatter, nicht gebundener Teig (Endtemperatur 25-26 °C). 12 Stunden bei 24-26 °C gehen lassen, bis er sich verdreifacht.\n4) 2. TEIG (40 % des Mehls, morgens): Den 1. Teig mit 200 g Mehl bis zur Bindung kneten; dann 20 g Zucker und 50 g Eigelb in mehreren Portionen, 10 g Salz und 2 g schwarzen Pfeffer; zuletzt 110 g Butter in drei Portionen, jeweils bis zur Bindung. Endtemperatur 25-26 °C.\n5) EINLAGEN: Am Ende auf niedriger Stufe und mit wenigen Faltungen 150 g Speck und 150 g Käse unterarbeiten. Das Glutennetz nicht zerbrechen.\n6) RUHE UND FORMEN: 30 Minuten abgedeckt. In zwei Stücke von etwa 690 g teilen, rundwirken und in Papierformen zu 750 g setzen.\n7) GARE: 6-8 Stunden bei 28-30 °C, bis 1 cm unter den Rand der Form.\n8) BACKEN: 170 °C Ober-/Unterhitze etwa 45 Minuten, bis 92-94 °C im Kern (Einstechthermometer). Zwei Spieße unten durchstecken und sofort umdrehen.\n9) AUSKÜHLEN UND SERVIEREN: 4-6 Stunden kopfüber hängen lassen. Nach 12-24 Stunden am besten, in Scheiben, gern leicht getoastet. Enthält Speck und Käse: im Kühlschrank aufbewahren und innerhalb von 3-4 Tagen verzehren.",
-    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE INCLUSIONS: dice 150 g speck and fry it 2 minutes in a dry pan, then let it cool; cut 150 g semi-hard cheese (Emmental or Asiago) into 8 mm cubes and keep them in the fridge.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 20 g sugar and 110 g sourdough; then 300 g flour; finally 25 g yolks and 40 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 20 g sugar and 50 g yolks in several additions, 10 g salt and 2 g black pepper; finally 110 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) INCLUSIONS: at the end, on low speed and with few folds, add 150 g speck and 150 g cheese. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 690 g, shape round and place in 750 g paper moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) BAKING: 170 °C static for about 45 minutes, to 92-94 °C at the core (probe thermometer). Push two skewers through the base and turn upside down immediately.\n9) COOLING AND SERVING: leave hanging upside down 4-6 hours. Best after 12-24 hours, sliced, even lightly toasted. It contains speck and cheese: keep it in the fridge and eat within 3-4 days."
+    "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 3 times about 4 hours apart at 28 °C (1:1:0.5) until it doubles in 3-4 hours. Use it at its peak, on the same day as the 1st dough.\n2) PREPARE THE INCLUSIONS: dice 150 g speck and fry it 2 minutes in a dry pan, then let it cool; cut 150 g semi-hard cheese (Emmental or Asiago) into 8 mm cubes and keep them in the fridge.\n3) 1st DOUGH (60% of the flour, evening): in a stand mixer put 200 g water, 20 g sugar and 110 g sourdough; then 300 g flour; finally 25 g yolks and 40 g butter gradually. Smooth, not fully developed dough (final temperature 25-26 °C). Rise 12 hours at 24-26 °C until tripled.\n4) 2nd DOUGH (40% of the flour, morning): the 1st dough with 200 g flour until it forms strands; then 20 g sugar and 50 g yolks in several additions, 10 g salt and 2 g black pepper; finally 110 g butter in three additions, developing the dough each time. Final temperature 25-26 °C.\n5) INCLUSIONS: at the end, on low speed and with few folds, add 150 g speck and 150 g cheese. Without breaking the gluten network.\n6) REST AND SHAPING: 30 minutes covered. Divide into two pieces of about 690 g, shape round and place in 750 g paper moulds.\n7) PROOF: 6-8 hours at 28-30 °C, until 1 cm below the rim of the mould.\n8) BAKING: 170 °C static for about 45 minutes, to 92-94 °C at the core (probe thermometer). Push two skewers through the base and turn upside down immediately.\n9) COOLING AND SERVING: leave hanging upside down 4-6 hours. Best after 12-24 hours, sliced, even lightly toasted. It contains speck and cheese: keep it in the fridge and eat within 3-4 days.",
+    "name_es": "Panettone Salado Artesanal MikiLab — Speck y Queso",
+    "name_fr": "Panettone Salé Artisanal MikiLab — Speck et Fromage",
+    "name_fa": "پانتونه شور صنعتگرانه MikiLab — اسپک و پنیر",
+    "real_name_es": "Panettone Salado (speck y queso)",
+    "real_name_fr": "Panettone Salé (speck et fromage)",
+    "flour_type_es": "Harina de alta fuerza W380 + masa madre",
+    "flour_type_fr": "Farine de haute force W380 + levain"
+  },
+  {
+    "id": "646f4c62-1492-55c9-b5d0-fabbff5c5de1",
+    "collection_name": "mikilab",
+    "name": "Pane Lucano di Grano Duro",
+    "name_de": "Lukanisches Hartweizenbrot",
+    "name_en": "Lucanian Durum Bread",
+    "name_es": "Pan Lucano de Trigo Duro",
+    "name_fr": "Pain Lucanien au Blé Dur",
+    "menu_category": "pane",
+    "flour_type": "Semola rimacinata di grano duro",
+    "flour_type_de": "Hartweizengrieß (fein)",
+    "flour_type_en": "Fine durum semolina",
+    "flour_type_es": "Sémola remolida de trigo duro",
+    "flour_type_fr": "Semoule de blé dur remoulue",
+    "flour_grams": 1000,
+    "sourdough_grams": 200.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "IT",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 72.0,
+    "water_grams": 720.0,
+    "salt_grams": 22.0,
+    "bake_temp": 210,
+    "bake_minutes": 60,
+    "bulk_fermentation_hours": 3,
+    "proofing_hours": 1.5,
+    "extra_ingredients": [
+      {
+        "name": "Biga (18h)",
+        "percent": 40,
+        "name_de": "Biga (18h)",
+        "name_en": "Biga (18h)",
+        "name_es": "Biga (18h)",
+        "name_fr": "Biga (18h)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      }
+    ],
+    "notes": "Rustico lucano con Biga e Lievito Madre: crosta scura, lunga conservazione. Il Miglioratore Naturale è la mia firma.",
+    "procedure": "1) Prepara la Biga 18h.\n2) Autolisi 40 min.\n3) Impasta con Biga, LM, Miglioratore Naturale MikiLab e sale.\n4) Puntata 3 h con 2 pieghe.\n5) Forma, appretto 1,5 h.\n6) Cuoci 250°C vapore, poi 210°C 60 min.",
+    "notes_de": "Rustikal mit Biga und Sauerteig: dunkle Kruste, lange haltbar. Der natürliche Verbesserer ist meine Handschrift.",
+    "procedure_de": "1) Biga 18h.\n2) Autolyse 40 Min.\n3) Kneten mit Biga, Sauerteig, MikiLab-Verbesserer, Salz.\n4) Stockgare 3 h, 2 Faltungen.\n5) Formen, 1,5 h.\n6) 250°C Dampf, dann 210°C 60 Min.",
+    "notes_en": "Rustic with Biga and sourdough: dark crust, keeps for days. The Natural Improver is my signature.",
+    "procedure_en": "1) Biga 18h.\n2) Autolyse 40 min.\n3) Mix with Biga, sourdough, MikiLab Natural Improver, salt.\n4) Bulk 3 h, 2 folds.\n5) Shape, 1.5 h.\n6) Bake 250°C steam, then 210°C 60 min.",
+    "notes_es": "Rústico con Biga y masa madre: corteza oscura, larga conservación. El Mejorador Natural es mi firma.",
+    "procedure_es": "1) Biga 18h.\n2) Autólisis 40 min.\n3) Amasa con Biga, masa madre, Mejorador MikiLab, sal.\n4) Fermenta 3 h, 2 pliegues.\n5) Forma, 1,5 h.\n6) Hornea 250°C vapor, luego 210°C 60 min.",
+    "notes_fr": "Rustique avec Biga et levain : croûte foncée, longue conservation. L'Améliorant Naturel est ma signature.",
+    "procedure_fr": "1) Biga 18h.\n2) Autolyse 40 min.\n3) Pétris avec Biga, levain, Améliorant MikiLab, sel.\n4) Pointage 3 h, 2 rabats.\n5) Façonne, 1,5 h.\n6) Cuisson 250°C vapeur, puis 210°C 60 min."
+  },
+  {
+    "id": "64914c19-5362-5f47-9806-f7dfe5c9f4f7",
+    "collection_name": "mikilab",
+    "name": "Pane di Patate Lucano",
+    "name_de": "Lukanisches Kartoffelbrot",
+    "name_en": "Lucanian Potato Bread",
+    "name_es": "Pan de Patata Lucano",
+    "name_fr": "Pain de Pommes de Terre Lucanien",
+    "menu_category": "pane",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 150.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "IT",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 55.0,
+    "water_grams": 550.0,
+    "salt_grams": 20.0,
+    "bake_temp": 220,
+    "bake_minutes": 40,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1,
+    "extra_ingredients": [
+      {
+        "name": "Patata lessa schiacciata",
+        "percent": 25,
+        "name_de": "Gekochte Kartoffel",
+        "name_en": "Boiled mashed potato",
+        "name_es": "Patata cocida",
+        "name_fr": "Pomme de terre écrasée"
+      },
+      {
+        "name": "Biga (18h)",
+        "percent": 30,
+        "name_de": "Biga (18h)",
+        "name_en": "Biga (18h)",
+        "name_es": "Biga (18h)",
+        "name_fr": "Biga (18h)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Olio extravergine",
+        "percent": 4,
+        "name_de": "Olivenöl",
+        "name_en": "Olive oil",
+        "name_es": "Aceite de oliva",
+        "name_fr": "Huile d'olive"
+      }
+    ],
+    "notes": "Morbidissimo grazie alla patata, con Biga e Lievito Madre. Umido per giorni, il Miglioratore fa la differenza.",
+    "procedure": "1) Lessa e schiaccia la patata.\n2) Impasta farina, acqua, patata, Biga, LM.\n3) Aggiungi Miglioratore Naturale MikiLab, olio e sale — senza di lui non resta soffice.\n4) Puntata 2 h.\n5) Forma, appretto 1 h.\n6) Cuoci 220°C 40 min.",
+    "notes_de": "Sehr weich dank Kartoffel, mit Biga und Sauerteig. Der Verbesserer macht den Unterschied.",
+    "procedure_de": "1) Kartoffel kochen, zerdrücken.\n2) Mehl, Wasser, Kartoffel, Biga, Sauerteig kneten.\n3) MikiLab-Verbesserer, Öl, Salz zugeben.\n4) 2 h Gare.\n5) Formen, 1 h.\n6) 220°C 40 Min.",
+    "notes_en": "Very soft thanks to potato, with Biga and sourdough. The Improver makes the difference.",
+    "procedure_en": "1) Boil and mash potato.\n2) Mix flour, water, potato, Biga, sourdough.\n3) Add MikiLab Improver, oil, salt — without it it won't stay soft.\n4) Bulk 2 h.\n5) Shape, 1 h.\n6) Bake 220°C 40 min.",
+    "notes_es": "Muy blando por la patata, con Biga y masa madre. El Mejorador marca la diferencia.",
+    "procedure_es": "1) Cuece y tritura la patata.\n2) Amasa harina, agua, patata, Biga, masa madre.\n3) Añade Mejorador MikiLab, aceite, sal.\n4) 2 h.\n5) Forma, 1 h.\n6) Hornea 220°C 40 min.",
+    "notes_fr": "Très moelleux grâce à la pomme de terre, avec Biga et levain. L'Améliorant fait la différence.",
+    "procedure_fr": "1) Cuis et écrase la pomme de terre.\n2) Pétris farine, eau, pomme de terre, Biga, levain.\n3) Ajoute l'Améliorant MikiLab, l'huile, le sel — sans lui il ne reste pas moelleux.\n4) Pointage 2 h.\n5) Façonne, 1 h.\n6) Cuisson 220°C 40 min."
+  },
+  {
+    "id": "0cc18e32-bd6e-5dbe-bfaa-0b4ae1cd2e8d",
+    "collection_name": "mikilab",
+    "name": "Pane Cafone Lucano",
+    "name_de": "Lukanisches Bauernbrot",
+    "name_en": "Lucanian Country Bread",
+    "name_es": "Pan de Pueblo Lucano",
+    "name_fr": "Pain de Campagne Lucanien",
+    "menu_category": "pane",
+    "flour_type": "Farina 0 (media forza) 70% + Semola rimacinata di grano duro 30%",
+    "flour_type_de": "Mehl Typ 550 70% + Hartweizengrieß (fein) 30%",
+    "flour_type_en": "Bread flour 70% + Fine durum semolina 30%",
+    "flour_type_es": "Harina de fuerza media 70% + Sémola remolida de trigo duro 30%",
+    "flour_type_fr": "Farine T65 70% + Semoule de blé dur remoulue 30%",
+    "flour_grams": 1000,
+    "sourdough_grams": 300.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "IT",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 75.0,
+    "water_grams": 750.0,
+    "salt_grams": 22.0,
+    "bake_temp": 220,
+    "bake_minutes": 55,
+    "bulk_fermentation_hours": 4,
+    "proofing_hours": 12,
+    "extra_ingredients": [
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      }
+    ],
+    "notes": "Pane contadino a lunga lievitazione con solo Lievito Madre. Crosta croccante, cuore acidulo e Miglioratore MikiLab.",
+    "procedure": "1) Rinfresca il Lievito Madre.\n2) Autolisi 1 h.\n3) Impasta con LM, Miglioratore Naturale MikiLab e sale.\n4) Puntata 4 h con 3 pieghe.\n5) Frigo 12 h.\n6) Forma e cuoci 250°C vapore, poi 220°C 55 min.",
+    "notes_de": "Bäuerliches Brot, lange Gare, nur Sauerteig. Knusprige Kruste, MikiLab-Verbesserer.",
+    "procedure_de": "1) Sauerteig auffrischen.\n2) Autolyse 1 h.\n3) Kneten mit Sauerteig, MikiLab-Verbesserer, Salz.\n4) Stockgare 4 h, 3 Faltungen.\n5) Kühlschrank 12 h.\n6) Formen, 250°C Dampf, dann 220°C 55 Min.",
+    "notes_en": "Long-fermented country bread, sourdough only. Crunchy crust, MikiLab Improver.",
+    "procedure_en": "1) Refresh sourdough.\n2) Autolyse 1 h.\n3) Mix with sourdough, MikiLab Improver, salt.\n4) Bulk 4 h, 3 folds.\n5) Fridge 12 h.\n6) Shape, bake 250°C steam, then 220°C 55 min.",
+    "notes_es": "Pan campesino de larga fermentación, solo masa madre. Corteza crujiente, Mejorador MikiLab.",
+    "procedure_es": "1) Refresca la masa madre.\n2) Autólisis 1 h.\n3) Amasa con masa madre, Mejorador MikiLab, sal.\n4) Fermenta 4 h, 3 pliegues.\n5) Nevera 12 h.\n6) Forma, hornea 250°C vapor, luego 220°C 55 min.",
+    "notes_fr": "Pain paysan longue fermentation, levain seul. Croûte croustillante, Améliorant MikiLab.",
+    "procedure_fr": "1) Rafraîchis le levain.\n2) Autolyse 1 h.\n3) Pétris avec levain, Améliorant MikiLab, sel.\n4) Pointage 4 h, 3 rabats.\n5) Frigo 12 h.\n6) Façonne, cuisson 250°C vapeur, puis 220°C 55 min."
+  },
+  {
+    "id": "40168004-188e-5d42-83e0-3ed0075e1f05",
+    "collection_name": "mikilab",
+    "name": "Focaccia Lucana ai Peperoni Cruschi",
+    "name_de": "Lukanische Focaccia mit Cruschi",
+    "name_en": "Lucanian Focaccia with Cruschi",
+    "name_es": "Focaccia Lucana con Cruschi",
+    "name_fr": "Focaccia Lucanienne aux Cruschi",
+    "menu_category": "focacce",
+    "flour_type": "Farina 0 (media forza) 70% + Semola rimacinata di grano duro 30%",
+    "flour_type_de": "Mehl Typ 550 70% + Hartweizengrieß (fein) 30%",
+    "flour_type_en": "Bread flour 70% + Fine durum semolina 30%",
+    "flour_type_es": "Harina de fuerza media 70% + Sémola remolida de trigo duro 30%",
+    "flour_type_fr": "Farine T65 70% + Semoule de blé dur remoulue 30%",
+    "flour_grams": 1000,
+    "sourdough_grams": 0.0,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "IT",
+    "dough_category": "pre",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 78.0,
+    "water_grams": 780.0,
+    "salt_grams": 22.0,
+    "bake_temp": 230,
+    "bake_minutes": 22,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 0.75,
+    "extra_ingredients": [
+      {
+        "name": "Poolish (12h)",
+        "percent": 40,
+        "name_de": "Poolish (12h)",
+        "name_en": "Poolish (12h)",
+        "name_es": "Poolish (12h)",
+        "name_fr": "Poolish (12h)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Olio extravergine",
+        "percent": 5,
+        "name_de": "Olivenöl",
+        "name_en": "Olive oil",
+        "name_es": "Aceite de oliva",
+        "name_fr": "Huile d'olive"
+      },
+      {
+        "name": "Peperoni cruschi di Senise",
+        "percent": 8,
+        "name_de": "Cruschi-Paprika (Senise)",
+        "name_en": "Crispy Senise peppers",
+        "name_es": "Pimientos cruschi de Senise",
+        "name_fr": "Piments cruschi de Senise"
+      }
+    ],
+    "notes": "Soffice, con Poolish e i famosi peperoni cruschi di Senise croccanti in superficie.",
+    "procedure": "1) Poolish 12h.\n2) Impasta con Miglioratore Naturale MikiLab, puntata 2 h.\n3) Stendi in teglia oliata, fossette.\n4) Peperoni cruschi, olio, sale.\n5) Appretto 45 min.\n6) Cuoci 230°C 22 min.",
+    "notes_de": "Weich, mit Poolish und knusprigen Senise-Paprika.",
+    "procedure_de": "1) Poolish 12h.\n2) Kneten mit MikiLab-Verbesserer, 2 h Gare.\n3) In geölte Form ziehen, Mulden.\n4) Cruschi-Paprika, Öl, Salz.\n5) 45 Min.\n6) 230°C 22 Min.",
+    "notes_en": "Soft, with Poolish and crispy Senise peppers on top.",
+    "procedure_en": "1) Poolish 12h.\n2) Mix with MikiLab Improver, bulk 2 h.\n3) Spread in oiled pan, dimple.\n4) Cruschi peppers, oil, salt.\n5) Proof 45 min.\n6) Bake 230°C 22 min.",
+    "notes_es": "Blanda, con Poolish y crujientes pimientos de Senise.",
+    "procedure_es": "1) Poolish 12h.\n2) Amasa con Mejorador MikiLab, 2 h.\n3) Extiende en molde aceitado, hoyuelos.\n4) Pimientos cruschi, aceite, sal.\n5) 45 min.\n6) Hornea 230°C 22 min.",
+    "notes_fr": "Moelleuse, avec Poolish et piments croustillants de Senise.",
+    "procedure_fr": "1) Poolish 12h.\n2) Pétris avec l'Améliorant MikiLab, pointage 2 h.\n3) Étale en plaque huilée, fais des creux.\n4) Piments cruschi, huile, sel.\n5) Apprêt 45 min.\n6) Cuisson 230°C 22 min."
+  },
+  {
+    "id": "4c71123b-0623-5d66-86ee-2a4b4ca8502d",
+    "collection_name": "mikilab",
+    "name": "Pane Arcobaleno Naturale",
+    "name_de": "Natürliches Regenbogenbrot",
+    "name_en": "Natural Rainbow Bread",
+    "name_es": "Pan Arcoíris Natural",
+    "name_fr": "Pain Arc-en-ciel Naturel",
+    "menu_category": "pane",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 200.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 60.0,
+    "water_grams": 600.0,
+    "salt_grams": 20.0,
+    "bake_temp": 230,
+    "bake_minutes": 35,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1.5,
+    "extra_ingredients": [
+      {
+        "name": "Purea colorante (barbabietola/curcuma/spinaci)",
+        "percent": 12,
+        "name_de": "Färbepüree (Rote Bete/Kurkuma/Spinat)",
+        "name_en": "Colour purée (beet/turmeric/spinach)",
+        "name_es": "Puré colorante (remolacha/cúrcuma/espinaca)",
+        "name_fr": "Purée colorante (betterave/curcuma/épinard)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      }
+    ],
+    "notes": "Tre impasti colorati con barbabietola, curcuma e spinaci. Zero coloranti: solo Lievito Madre e Miglioratore MikiLab.",
+    "procedure": "1) Dividi la base in 3 e colora con le puree naturali.\n2) Aggiungi Miglioratore Naturale MikiLab a ogni parte.\n3) Puntata 2 h.\n4) Sovrapponi e arrotola gli strati.\n5) Appretto 1,5 h.\n6) Cuoci 230°C vapore 35 min.",
+    "notes_de": "Drei Teige mit Rote Bete, Kurkuma, Spinat. Keine Farbstoffe.",
+    "procedure_de": "1) Basis in 3 teilen, färben.\n2) MikiLab-Verbesserer zugeben.\n3) 2 h.\n4) Schichten & rollen.\n5) 1,5 h.\n6) 230°C Dampf 35 Min.",
+    "notes_en": "Three doughs coloured with beet, turmeric, spinach. No dyes.",
+    "procedure_en": "1) Split base in 3, colour with natural purées.\n2) Add MikiLab Improver to each.\n3) Bulk 2 h.\n4) Layer & roll.\n5) Proof 1.5 h.\n6) Bake 230°C steam 35 min.",
+    "notes_es": "Tres masas con remolacha, cúrcuma, espinaca. Sin colorantes.",
+    "procedure_es": "1) Divide en 3 y colorea.\n2) Añade Mejorador MikiLab.\n3) 2 h.\n4) Apila y enrolla.\n5) 1,5 h.\n6) Hornea 230°C vapor 35 min.",
+    "notes_fr": "Trois pâtes colorées à la betterave, curcuma, épinard. Aucun colorant.",
+    "procedure_fr": "1) Divise la base en 3 et colore avec les purées naturelles.\n2) Ajoute l'Améliorant MikiLab à chaque part.\n3) Pointage 2 h.\n4) Superpose et roule les couches.\n5) Apprêt 1,5 h.\n6) Cuisson 230°C vapeur 35 min."
+  },
+  {
+    "id": "36218c42-175c-5b60-91fa-60936d2967e3",
+    "collection_name": "mikilab",
+    "name": "Baguette Colorata (Innovazione)",
+    "name_de": "Bunte Baguette (Innovation)",
+    "name_en": "Coloured Baguette (Innovation)",
+    "name_es": "Baguette de Color (Innovación)",
+    "name_fr": "Baguette Colorée (Innovation)",
+    "menu_category": "pane",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 0.0,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": "pre",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 72.0,
+    "water_grams": 720.0,
+    "salt_grams": 20.0,
+    "bake_temp": 240,
+    "bake_minutes": 20,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 0.75,
+    "extra_ingredients": [
+      {
+        "name": "Poolish (12h)",
+        "percent": 35,
+        "name_de": "Poolish (12h)",
+        "name_en": "Poolish (12h)",
+        "name_es": "Poolish (12h)",
+        "name_fr": "Poolish (12h)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Purea colorante (barbabietola/curcuma/spinaci)",
+        "percent": 8,
+        "name_de": "Färbepüree (Rote Bete/Kurkuma/Spinat)",
+        "name_en": "Colour purée (beet/turmeric/spinach)",
+        "name_es": "Puré colorante (remolacha/cúrcuma/espinaca)",
+        "name_fr": "Purée colorante (betterave/curcuma/épinard)"
+      }
+    ],
+    "notes": "Baguette croccante con mollica screziata di colore naturale. Poolish e Miglioratore MikiLab per l'alveolatura selvaggia.",
+    "procedure": "1) Poolish 12h.\n2) Impasta e dividi: metà naturale, metà colorata con purea.\n3) Aggiungi Miglioratore Naturale MikiLab e sale.\n4) Puntata 2 h con pieghe.\n5) Forma baguette marmorizzate.\n6) Appretto 45 min, cuoci 240°C vapore 20 min.",
+    "notes_de": "Knusprige Baguette mit bunter Krume. Poolish und Verbesserer.",
+    "procedure_de": "1) Poolish 12h.\n2) Teilen: halb natur, halb gefärbt.\n3) Verbesserer und Salz.\n4) 2 h mit Faltungen.\n5) Marmorierte Baguettes formen.\n6) 45 Min, 240°C Dampf 20 Min.",
+    "notes_en": "Crunchy baguette with naturally-marbled crumb. Poolish and Improver for wild alveoli.",
+    "procedure_en": "1) Poolish 12h.\n2) Mix and split: half plain, half coloured.\n3) Add MikiLab Improver and salt.\n4) Bulk 2 h with folds.\n5) Shape marbled baguettes.\n6) Proof 45 min, bake 240°C steam 20 min.",
+    "notes_es": "Baguette crujiente con miga jaspeada natural. Poolish y Mejorador.",
+    "procedure_es": "1) Poolish 12h.\n2) Divide: mitad natural, mitad de color.\n3) Añade Mejorador y sal.\n4) 2 h con pliegues.\n5) Forma baguettes jaspeadas.\n6) 45 min, hornea 240°C vapor 20 min.",
+    "notes_fr": "Baguette croustillante à la mie marbrée naturelle. Poolish et Améliorant pour un alvéolage sauvage.",
+    "procedure_fr": "1) Poolish 12h.\n2) Pétris et divise : moitié nature, moitié colorée à la purée.\n3) Ajoute l'Améliorant MikiLab et le sel.\n4) Pointage 2 h avec rabats.\n5) Façonne des baguettes marbrées.\n6) Apprêt 45 min, cuisson 240°C vapeur 20 min."
+  },
+  {
+    "id": "f1844351-c25a-5f67-b0ed-d141cfb83706",
+    "collection_name": "mikilab",
+    "name": "Pane alla Zucca",
+    "name_de": "Kürbisbrot",
+    "name_en": "Pumpkin Bread",
+    "name_es": "Pan de Calabaza",
+    "name_fr": "Pain au Potiron",
+    "menu_category": "pane",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 100.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 45.0,
+    "water_grams": 450.0,
+    "salt_grams": 20.0,
+    "bake_temp": 220,
+    "bake_minutes": 35,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1,
+    "extra_ingredients": [
+      {
+        "name": "Purea di zucca",
+        "percent": 30,
+        "name_de": "Kürbispüree",
+        "name_en": "Pumpkin purée",
+        "name_es": "Puré de calabaza",
+        "name_fr": "Purée de potiron"
+      },
+      {
+        "name": "Poolish (12h)",
+        "percent": 30,
+        "name_de": "Poolish (12h)",
+        "name_en": "Poolish (12h)",
+        "name_es": "Poolish (12h)",
+        "name_fr": "Poolish (12h)"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Olio extravergine",
+        "percent": 4,
+        "name_de": "Olivenöl",
+        "name_en": "Olive oil",
+        "name_es": "Aceite de oliva",
+        "name_fr": "Huile d'olive"
+      }
+    ],
+    "notes": "Arancione naturale, dolce e morbido. Poolish, Lievito Madre e Miglioratore MikiLab.",
+    "procedure": "1) Poolish 12h + purea di zucca.\n2) Impasta con LM, Miglioratore Naturale MikiLab, olio e sale.\n3) Puntata 2 h.\n4) Forma, appretto 1 h.\n5) Cuoci 220°C 35 min.",
+    "notes_de": "Natürlich orange, süß und weich. Poolish, Sauerteig, Verbesserer.",
+    "procedure_de": "1) Poolish 12h + Kürbis.\n2) Kneten mit Sauerteig, Verbesserer, Öl, Salz.\n3) 2 h.\n4) Formen, 1 h.\n5) 220°C 35 Min.",
+    "notes_en": "Naturally orange, sweet and soft. Poolish, sourdough, Improver.",
+    "procedure_en": "1) Poolish 12h + pumpkin purée.\n2) Mix with sourdough, MikiLab Improver, oil, salt.\n3) Bulk 2 h.\n4) Shape, 1 h.\n5) Bake 220°C 35 min.",
+    "notes_es": "Naranja natural, dulce y suave. Poolish, masa madre, Mejorador.",
+    "procedure_es": "1) Poolish 12h + calabaza.\n2) Amasa con masa madre, Mejorador, aceite, sal.\n3) 2 h.\n4) Forma, 1 h.\n5) Hornea 220°C 35 min.",
+    "notes_fr": "Orange naturel, doux et moelleux. Poolish, levain, Améliorant.",
+    "procedure_fr": "1) Poolish 12h + purée de potiron.\n2) Pétris avec levain, Améliorant MikiLab, huile, sel.\n3) Pointage 2 h.\n4) Façonne, 1 h.\n5) Cuisson 220°C 35 min."
+  },
+  {
+    "id": "b81e9056-9e70-51c1-b984-e4d8e23efccf",
+    "collection_name": "mikilab",
+    "name": "Roggenbrot (Pane di Segale)",
+    "name_de": "Roggenbrot",
+    "name_en": "Rye Bread",
+    "name_es": "Pan de Centeno",
+    "name_fr": "Pain de Seigle",
+    "menu_category": "pane",
+    "flour_type": "Farina di segale 70% + Farina 0 (media forza) 30%",
+    "flour_type_de": "Roggenmehl 70% + Mehl Typ 550 30%",
+    "flour_type_en": "Rye flour 70% + Bread flour 30%",
+    "flour_type_es": "Harina de centeno 70% + Harina de fuerza media 30%",
+    "flour_type_fr": "Farine de seigle 70% + Farine T65 30%",
+    "flour_grams": 1000,
+    "sourdough_grams": 300.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 78.0,
+    "water_grams": 780.0,
+    "salt_grams": 20.0,
+    "bake_temp": 200,
+    "bake_minutes": 60,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 1.5,
+    "extra_ingredients": [
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Semi di cumino",
+        "percent": 1,
+        "name_de": "Kümmel",
+        "name_en": "Caraway seeds",
+        "name_es": "Comino",
+        "name_fr": "Graines de carvi"
+      }
+    ],
+    "notes": "Pane di segale a lievitazione naturale, denso e aromatico. Lievito Madre di segale e Miglioratore MikiLab.",
+    "procedure": "1) Rinfresca il Lievito Madre di segale.\n2) Impasta con Miglioratore Naturale MikiLab, sale e cumino.\n3) Puntata 2 h (impasto colloso).\n4) In stampo, appretto 1,5 h.\n5) Cuoci 250°C vapore, poi 200°C 60 min.",
+    "notes_de": "Roggen-Sauerteigbrot, dicht und aromatisch. Sauerteig und Verbesserer.",
+    "procedure_de": "1) Roggen-Sauerteig auffrischen.\n2) Kneten mit Verbesserer, Salz, Kümmel.\n3) 2 h.\n4) Im Kasten 1,5 h.\n5) 250°C Dampf, dann 200°C 60 Min.",
+    "notes_en": "Rye sourdough bread, dense and aromatic. Rye sourdough and Improver.",
+    "procedure_en": "1) Refresh rye sourdough.\n2) Mix with MikiLab Improver, salt, caraway.\n3) Bulk 2 h (sticky dough).\n4) In tin, proof 1.5 h.\n5) Bake 250°C steam, then 200°C 60 min.",
+    "notes_es": "Pan de centeno con masa madre, denso y aromático. Mejorador.",
+    "procedure_es": "1) Refresca la masa madre de centeno.\n2) Amasa con Mejorador, sal, comino.\n3) 2 h.\n4) En molde, 1,5 h.\n5) Hornea 250°C vapor, luego 200°C 60 min.",
+    "notes_fr": "Pain de seigle au levain, dense et aromatique. Levain de seigle et Améliorant.",
+    "procedure_fr": "1) Rafraîchis le levain de seigle.\n2) Pétris avec l'Améliorant MikiLab, sel, carvi.\n3) Pointage 2 h (pâte collante).\n4) En moule, apprêt 1,5 h.\n5) Cuisson 250°C vapeur, puis 200°C 60 min."
+  },
+  {
+    "id": "23b7b648-fa60-5721-8c3d-1dceed110a28",
+    "collection_name": "mikilab",
+    "name": "Vollkornbrot (Pane Integrale ai Semi)",
+    "name_de": "Vollkornbrot",
+    "name_en": "Wholegrain Seed Bread",
+    "name_es": "Pan Integral de Semillas",
+    "name_fr": "Pain Complet aux Graines",
+    "menu_category": "pane",
+    "flour_type": "Farina integrale 80% + Farina di segale 20%",
+    "flour_type_de": "Vollkornmehl 80% + Roggenmehl 20%",
+    "flour_type_en": "Wholemeal flour 80% + Rye flour 20%",
+    "flour_type_es": "Harina integral 80% + Harina de centeno 20%",
+    "flour_type_fr": "Farine complète 80% + Farine de seigle 20%",
+    "flour_grams": 1000,
+    "sourdough_grams": 300.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": "lm",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 80.0,
+    "water_grams": 800.0,
+    "salt_grams": 20.0,
+    "bake_temp": 200,
+    "bake_minutes": 55,
+    "bulk_fermentation_hours": 2,
+    "proofing_hours": 2,
+    "extra_ingredients": [
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Semi di cumino",
+        "percent": 1,
+        "name_de": "Kümmel",
+        "name_en": "Caraway seeds",
+        "name_es": "Comino",
+        "name_fr": "Graines de carvi"
+      }
+    ],
+    "notes": "Pane integrale tedesco carico di semi, nutriente e a lunga conservazione. Lievito Madre e Miglioratore MikiLab.",
+    "procedure": "1) Rinfresca il Lievito Madre.\n2) Impasta con semi misti, Miglioratore Naturale MikiLab e sale.\n3) Puntata 2 h.\n4) In stampo, appretto 2 h.\n5) Cuoci 230°C vapore, poi 200°C 55 min.",
+    "notes_de": "Deutsches Vollkornbrot mit Saaten. Sauerteig und Verbesserer.",
+    "procedure_de": "1) Sauerteig auffrischen.\n2) Kneten mit Saaten, Verbesserer, Salz.\n3) 2 h.\n4) Im Kasten 2 h.\n5) 230°C Dampf, dann 200°C 55 Min.",
+    "notes_en": "German wholegrain bread loaded with seeds. Sourdough and Improver.",
+    "procedure_en": "1) Refresh sourdough.\n2) Mix with mixed seeds, MikiLab Improver, salt.\n3) Bulk 2 h.\n4) In tin, proof 2 h.\n5) Bake 230°C steam, then 200°C 55 min.",
+    "notes_es": "Pan integral alemán con semillas. Masa madre y Mejorador.",
+    "procedure_es": "1) Refresca la masa madre.\n2) Amasa con semillas, Mejorador, sal.\n3) 2 h.\n4) En molde, 2 h.\n5) Hornea 230°C vapor, luego 200°C 55 min.",
+    "notes_fr": "Pain complet allemand chargé de graines. Levain et Améliorant.",
+    "procedure_fr": "1) Rafraîchis le levain.\n2) Pétris avec graines mélangées, Améliorant MikiLab, sel.\n3) Pointage 2 h.\n4) En moule, apprêt 2 h.\n5) Cuisson 230°C vapeur, puis 200°C 55 min."
+  },
+  {
+    "id": "2ff25e68-94bb-582b-952f-4169ce53e202",
+    "collection_name": "mikilab",
+    "name": "Laugenbrötchen (Panini di Laugen)",
+    "name_de": "Laugenbrötchen",
+    "name_en": "Laugen Rolls",
+    "name_es": "Panecillos Laugen",
+    "name_fr": "Petits Pains Laugen",
+    "menu_category": "panini",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 0.0,
+    "preferment_type": "biga",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": "pre",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 55.0,
+    "water_grams": 550.0,
+    "salt_grams": 20.0,
+    "bake_temp": 220,
+    "bake_minutes": 16,
+    "bulk_fermentation_hours": 1,
+    "proofing_hours": 1,
+    "extra_ingredients": [
+      {
+        "name": "Biga (18h)",
+        "percent": 30,
+        "name_de": "Biga (18h)",
+        "name_en": "Biga (18h)",
+        "name_es": "Biga (18h)",
+        "name_fr": "Biga (18h)"
+      },
+      {
+        "name": "Burro",
+        "percent": 5,
+        "name_de": "Butter",
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      }
+    ],
+    "notes": "Panini lucidi in soluzione alcalina, crosta ambrata e mollica soffice. Biga e Miglioratore MikiLab.",
+    "procedure": "1) Biga + impasto con Miglioratore Naturale MikiLab, puntata 1 h.\n2) Forma i panini.\n3) Frigo 1 h.\n4) Bagna in bicarbonato bollente.\n5) Incidi a croce, sale grosso.\n6) Cuoci 220°C 16 min.",
+    "notes_de": "Glänzende Laugenbrötchen, weiche Krume. Biga und Verbesserer.",
+    "procedure_de": "1) Biga + Teig mit Verbesserer, 1 h.\n2) Brötchen formen.\n3) 1 h kühlen.\n4) In Lauge tauchen.\n5) Einschneiden, Salz.\n6) 220°C 16 Min.",
+    "notes_en": "Shiny lye rolls, amber crust, soft crumb. Biga and Improver.",
+    "procedure_en": "1) Biga + dough with MikiLab Improver, bulk 1 h.\n2) Shape rolls.\n3) Fridge 1 h.\n4) Dip in boiling soda.\n5) Cross-score, salt.\n6) Bake 220°C 16 min.",
+    "notes_es": "Panecillos brillantes de sosa, miga suave. Biga y Mejorador.",
+    "procedure_es": "1) Biga + masa con Mejorador, 1 h.\n2) Forma panecillos.\n3) Nevera 1 h.\n4) Baño de sosa.\n5) Corta, sal.\n6) Hornea 220°C 16 min.",
+    "notes_fr": "Petits pains brillants au bain alcalin, mie moelleuse. Biga et Améliorant.",
+    "procedure_fr": "1) Biga + pâte avec l'Améliorant MikiLab, pointage 1 h.\n2) Façonne les petits pains.\n3) Frigo 1 h.\n4) Trempe dans le bicarbonate bouillant.\n5) Incise en croix, gros sel.\n6) Cuisson 220°C 16 min."
+  },
+  {
+    "id": "d735a6c5-8c43-5fed-8dda-c918d02622d3",
+    "collection_name": "mikilab",
+    "name": "Kaisersemmel (Panino Kaiser)",
+    "name_de": "Kaisersemmel",
+    "name_en": "Kaiser Roll",
+    "name_es": "Panecillo Kaiser",
+    "name_fr": "Petit Pain Kaiser",
+    "menu_category": "panini",
+    "flour_type": "Farina 0 (media forza)",
+    "flour_type_de": "Mehl Typ 550",
+    "flour_type_en": "Bread flour",
+    "flour_type_es": "Harina de fuerza media",
+    "flour_type_fr": "Farine T65",
+    "flour_grams": 1000,
+    "sourdough_grams": 0.0,
+    "preferment_type": "poolish",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "de",
+    "dough_category": "pre",
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": 58.0,
+    "water_grams": 580.0,
+    "salt_grams": 20.0,
+    "bake_temp": 230,
+    "bake_minutes": 18,
+    "bulk_fermentation_hours": 1.5,
+    "proofing_hours": 0.75,
+    "extra_ingredients": [
+      {
+        "name": "Poolish (12h)",
+        "percent": 30,
+        "name_de": "Poolish (12h)",
+        "name_en": "Poolish (12h)",
+        "name_es": "Poolish (12h)",
+        "name_fr": "Poolish (12h)"
+      },
+      {
+        "name": "Malto d'orzo",
+        "percent": 1,
+        "name_de": "Gerstenmalz",
+        "name_en": "Barley malt",
+        "name_es": "Malta de cebada",
+        "name_fr": "Malt d'orge"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      }
+    ],
+    "notes": "Il panino a stella con crosta croccante e mollica leggera. Poolish e Miglioratore MikiLab.",
+    "procedure": "1) Poolish 12h.\n2) Impasta con Miglioratore Naturale MikiLab, malto e sale.\n3) Puntata 1,5 h.\n4) Forma le palline e imprimi la stella.\n5) Appretto 45 min a testa in giù.\n6) Cuoci 230°C vapore 18 min.",
+    "notes_de": "Sternförmiges Brötchen, knusprig, leichte Krume. Poolish und Verbesserer.",
+    "procedure_de": "1) Poolish 12h.\n2) Kneten mit Verbesserer, Malz, Salz.\n3) 1,5 h.\n4) Kugeln, Stern prägen.\n5) 45 Min kopfüber.\n6) 230°C Dampf 18 Min.",
+    "notes_en": "Star-stamped roll, crunchy crust, light crumb. Poolish and Improver.",
+    "procedure_en": "1) Poolish 12h.\n2) Mix with MikiLab Improver, malt, salt.\n3) Bulk 1.5 h.\n4) Shape balls, stamp star.\n5) Proof 45 min upside down.\n6) Bake 230°C steam 18 min.",
+    "notes_es": "Panecillo en estrella, corteza crujiente. Poolish y Mejorador.",
+    "procedure_es": "1) Poolish 12h.\n2) Amasa con Mejorador, malta, sal.\n3) 1,5 h.\n4) Bolas, marca estrella.\n5) 45 min boca abajo.\n6) Hornea 230°C vapor 18 min.",
+    "notes_fr": "Petit pain en étoile, croûte croustillante, mie légère. Poolish et Améliorant.",
+    "procedure_fr": "1) Poolish 12h.\n2) Pétris avec l'Améliorant MikiLab, malt, sel.\n3) Pointage 1,5 h.\n4) Façonne les boules, imprime l'étoile.\n5) Apprêt 45 min à l'envers.\n6) Cuisson 230°C vapeur 18 min."
+  },
+  {
+    "id": "f6cf2513-cc0e-568c-b47f-fb7f9c992b13",
+    "collection_name": "mikilab",
+    "name": "Panettone al Cioccolato",
+    "name_de": "Schoko-Panettone",
+    "name_en": "Chocolate Panettone",
+    "name_es": "Panettone de Chocolate",
+    "name_fr": "Panettone au Chocolat",
+    "menu_category": "panettoni",
+    "flour_type": "Farina forte W380",
+    "flour_type_de": "Starkes Mehl W380",
+    "flour_type_en": "Strong flour W380",
+    "flour_type_es": "Harina de fuerza W380",
+    "flour_type_fr": "Farine de force W380",
+    "flour_grams": 1000,
+    "sourdough_grams": 300.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": null,
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": null,
+    "water_grams": null,
+    "salt_grams": null,
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "bulk_fermentation_hours": 12,
+    "proofing_hours": 7,
+    "extra_ingredients": [
+      {
+        "name": "Tuorli",
+        "percent": 30,
+        "name_de": "Eigelb",
+        "name_en": "Egg yolks",
+        "name_es": "Yemas",
+        "name_fr": "Jaunes d'œuf"
+      },
+      {
+        "name": "Burro",
+        "percent": 40,
+        "name_de": "Butter",
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
+      },
+      {
+        "name": "Zucchero",
+        "percent": 32,
+        "name_de": "Zucker",
+        "name_en": "Sugar",
+        "name_es": "Azúcar",
+        "name_fr": "Sucre"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Gocce di cioccolato",
+        "percent": 45,
+        "name_de": "Schokostückchen",
+        "name_en": "Chocolate chips",
+        "name_es": "Gotas de chocolate",
+        "name_fr": "Pépites de chocolat"
+      }
+    ],
+    "notes": "Versione golosa con gocce di cioccolato fondente. Lievito Madre e Miglioratore MikiLab per 48 ore di sviluppo.",
+    "procedure": "1) Primo impasto, lievita 12 h.\n2) Secondo impasto con burro, Miglioratore Naturale MikiLab e gocce di cioccolato.\n3) Pirlatura, appretto 6-8 h.\n4) Taglio a croce, fiocco di burro.\n5) Cuoci 165°C 50 min.\n6) Capovolgi 12 h.",
+    "notes_de": "Schokoladige Version. Sauerteig und Verbesserer, 48 Stunden.",
+    "procedure_de": "1) Erster Teig 12 h.\n2) Zweiter Teig mit Butter, Verbesserer, Schoko.\n3) 6-8 h.\n4) Kreuzschnitt.\n5) 165°C 50 Min.\n6) 12 h wenden.",
+    "notes_en": "Indulgent chocolate-chip version. Sourdough and Improver, 48 hours.",
+    "procedure_en": "1) First dough 12 h.\n2) Second dough with butter, MikiLab Improver, chocolate.\n3) Proof 6-8 h.\n4) Cross-cut, butter.\n5) Bake 165°C 50 min.\n6) Hang 12 h.",
+    "notes_es": "Versión con chocolate. Masa madre y Mejorador, 48 horas.",
+    "procedure_es": "1) Primera masa 12 h.\n2) Segunda con mantequilla, Mejorador, chocolate.\n3) 6-8 h.\n4) Corte en cruz.\n5) Hornea 165°C 50 min.\n6) Cuelga 12 h.",
+    "notes_fr": "Version gourmande aux pépites de chocolat. Levain et Améliorant, 48 heures.",
+    "procedure_fr": "1) Première pâte 12 h.\n2) Deuxième pâte avec beurre, Améliorant MikiLab, chocolat.\n3) Apprêt 6-8 h.\n4) Grigne en croix, beurre.\n5) Cuisson 165°C 50 min.\n6) Suspends 12 h."
+  },
+  {
+    "id": "12930706-fcf4-5b5f-bef5-ba995a4a1b2b",
+    "collection_name": "mikilab",
+    "name": "Panettone Colorato (Innovazione)",
+    "name_de": "Bunter Panettone (Innovation)",
+    "name_en": "Coloured Panettone (Innovation)",
+    "name_es": "Panettone de Colores (Innovación)",
+    "name_fr": "Panettone Coloré (Innovation)",
+    "menu_category": "panettoni",
+    "flour_type": "Farina forte W380",
+    "flour_type_de": "Starkes Mehl W380",
+    "flour_type_en": "Strong flour W380",
+    "flour_type_es": "Harina de fuerza W380",
+    "flour_type_fr": "Farine de force W380",
+    "flour_grams": 1000,
+    "sourdough_grams": 300.0,
+    "preferment_type": "lievito madre",
+    "method_type": "indiretto",
+    "oven_type": "statico",
+    "origin": "it",
+    "dough_category": null,
+    "image_url": null,
+    "hidden": false,
+    "created_at": "2026-09-20T22:00:00.000000+00:00",
+    "updated_at": "2026-09-20T22:00:00.000000+00:00",
+    "hydration_percent": null,
+    "water_grams": null,
+    "salt_grams": null,
+    "bake_temp": 165,
+    "bake_minutes": 50,
+    "bulk_fermentation_hours": 12,
+    "proofing_hours": 7,
+    "extra_ingredients": [
+      {
+        "name": "Tuorli",
+        "percent": 28,
+        "name_de": "Eigelb",
+        "name_en": "Egg yolks",
+        "name_es": "Yemas",
+        "name_fr": "Jaunes d'œuf"
+      },
+      {
+        "name": "Burro",
+        "percent": 40,
+        "name_de": "Butter",
+        "name_en": "Butter",
+        "name_es": "Mantequilla",
+        "name_fr": "Beurre"
+      },
+      {
+        "name": "Zucchero",
+        "percent": 30,
+        "name_de": "Zucker",
+        "name_en": "Sugar",
+        "name_es": "Azúcar",
+        "name_fr": "Sucre"
+      },
+      {
+        "name": "Miglioratore Naturale MikiLab",
+        "percent": 2,
+        "name_de": "Natürlicher MikiLab-Verbesserer",
+        "name_en": "MikiLab Natural Improver",
+        "name_es": "Mejorador Natural MikiLab",
+        "name_fr": "Améliorant Naturel MikiLab"
+      },
+      {
+        "name": "Purea colorante (barbabietola/curcuma/spinaci)",
+        "percent": 8,
+        "name_de": "Färbepüree (Rote Bete/Kurkuma/Spinat)",
+        "name_en": "Colour purée (beet/turmeric/spinach)",
+        "name_es": "Puré colorante (remolacha/cúrcuma/espinaca)",
+        "name_fr": "Purée colorante (betterave/curcuma/épinard)"
+      }
+    ],
+    "notes": "Il panettone che nessuno ha mai visto: impasti a spirale colorati al naturale. Lievito Madre e Miglioratore MikiLab, 48 ore.",
+    "procedure": "1) Primo impasto, lievita 12 h.\n2) Secondo impasto con burro e Miglioratore Naturale MikiLab.\n3) Dividi e colora al naturale, arrotola a spirale.\n4) In pirottino, appretto 6-8 h.\n5) Cuoci 165°C 50 min.\n6) Capovolgi 12 h.",
+    "notes_de": "Panettone in bunter Spirale, natürlich gefärbt. Sauerteig und Verbesserer.",
+    "procedure_de": "1) Erster Teig 12 h.\n2) Zweiter Teig mit Butter, Verbesserer.\n3) Teilen, färben, Spirale rollen.\n4) 6-8 h.\n5) 165°C 50 Min.\n6) 12 h wenden.",
+    "notes_en": "A panettone no one has ever seen: naturally-coloured spiral doughs. Sourdough and Improver, 48 hours.",
+    "procedure_en": "1) First dough 12 h.\n2) Second dough with butter, MikiLab Improver.\n3) Split, colour naturally, roll a spiral.\n4) Proof 6-8 h.\n5) Bake 165°C 50 min.\n6) Hang 12 h.",
+    "notes_es": "Un panettone nunca visto: masas en espiral de color natural. Masa madre y Mejorador.",
+    "procedure_es": "1) Primera masa 12 h.\n2) Segunda con mantequilla, Mejorador.\n3) Divide, colorea, enrolla en espiral.\n4) 6-8 h.\n5) Hornea 165°C 50 min.\n6) Cuelga 12 h.",
+    "notes_fr": "Le panettone que personne n'a jamais vu : pâtes en spirale colorées au naturel. Levain et Améliorant, 48 heures.",
+    "procedure_fr": "1) Première pâte 12 h.\n2) Deuxième pâte avec beurre, Améliorant MikiLab.\n3) Divise, colore au naturel, roule en spirale.\n4) Apprêt 6-8 h.\n5) Cuisson 165°C 50 min.\n6) Suspends 12 h."
   }
 ]

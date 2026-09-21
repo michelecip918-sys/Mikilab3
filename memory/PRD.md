@@ -115,3 +115,11 @@ Vedi `memory/test_credentials.md`.
 - Verifica self-test: API pubblica 6/6 image_url OK su 154 ricette, screenshot galleria: Colomba renderizzata (w=1024). Backend senza errori. (Nota: /api/health risponde 404 — endpoint con altro path; /api/recipes conferma backend sano.)
 - PROSSIMO PASSO DI MICHELE: un solo **Publish** sulla dashboard → in produzione arrivano v77 finale + le 6 foto (sync automatico allo startup).
 
+## Patch v78 riordino (21 settembre 2026)
+- Applicato `mikilab_v78_riordino.zip` (Google Drive) esattamente come da istruzioni: `sh patch78/applica.sh` → output: "Seed ricette: 167 | senza foto (da generare): 13" + "OK: v78 applicata. Ora un solo commit e un solo deploy." Nessun avviso "foto non trovate".
+- Contenuto: seed **154 → 167 ricette** (+13 nuove SENZA foto: 4 lucane, Pane Arcobaleno, Baguette Colorata, Pane alla Zucca, 4 pani tedeschi, 2 panettoni nuovi — foto da generare in futuro, NON ora per scelta di Michele), nuovo `server.py` (SEED_VERSION `2026-09-v78-riordino`, V78_DRAFT_NAMES), nuovi componenti/sezioni frontend (VetrineReparti, VetrinaFocacce, sezioni Ricette/SaporiCasa/RicetteCustodite, lib/coloredRecipes.js). Rimossa cartella patch77.
+- Le 6 image_url delle ricette v74 erano GIÀ incluse nello zip (creato dopo il ripristino): nessun intervento necessario.
+- Verifica self-test: API 167 ricette, 6/6 foto v74 OK, 13 senza foto (le nuove, atteso), 0 immagini rotte, frontend compila (no overlay errori), galleria mostra "167 recipes".
+- Bug PREESISTENTE non bloccante (non toccato per volontà di Michele): `community.py` usa `logger` mai definito (riga 251 e altre) → NameError solo quando il loop bakealong va in eccezione. File del 16/09, non introdotto da v78.
+- PROSSIMO PASSO DI MICHELE: un solo **Publish** → produzione con 167 ricette + nuovo layout vetrine.
+

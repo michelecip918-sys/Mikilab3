@@ -573,11 +573,14 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v77-finale-foto"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v78-riordino"  # bump quando cambia mikilab_seed_data.json
 # Ricette riscritte/completate da Sitor (IA): restano "bozza" finché Michele non le prova.
 V73_DRAFT_NAMES = ["Brioche Francese (col burro)", "Pain au Chocolat (Saccottino al Cioccolato)", "Saccottino alla Crema", "Danese alla Crema (Plunder)", "Girella all'Uvetta (Pain aux Raisins)", "Pan di Kristall (alta idratazione 95%)", "Pane da Hamburger (bun soffice)", "Veneziana (grande lievitato dolce)", "Pizza Napoletana (tonda)", "Pizza in Teglia alla Romana", "Pizza alla Pala", "Pizza al Taglio Contemporanea", "Pan di Spagna", "Crostata di Frutta (Pasta Frolla)", "Bignè (Pasta Choux)", "Crema Pasticcera", "Panzerotti Fritti Pugliesi", "Focaccia Barese", "Focaccia Dolce all'Uva (Schiacciata)", "Focaccia Genovese", "Focaccia Integrale ai Semi", "Focaccia ai Cereali e Miele", "Focaccia alla Cipolla di Tropea", "Focaccia alle Olive e Rosmarino", "Focaccia con Patate e Rosmarino", "Focaccia con Pomodorini Secchi e Origano", "Focaccia di Altamura", "Focaccia di Matera", "Focaccia Zucca e Rosmarino", "Focaccia Patate e Rosmarino", "Focaccia Cipolla di Tropea", "Focaccia Zucchine e Stracchino", "Focaccia Melanzane e Pomodorini", "Focaccia Peperoni Arrostiti", "Focaccia Pesto e Pomodorini", "Focaccia Gorgonzola e Noci", "Focaccia Mortadella e Pistacchio", "Focaccia Prosciutto Crudo e Stracchino", "Focaccia Friarielli", "Focaccia Funghi Porcini", "Focaccia Acciughe e Capperi", "Focaccia Fichi e Miele", "Focaccia Uvetta e Noci", "Focaccia Multi-Semi", "Focaccia alla Curcuma", "Focaccia Olive Verdi e Origano", "Focaccia Pere e Gorgonzola", "Focaccia Cipollotto e Speck", "Focaccia a Lievito Madre", "Pane agli Spinaci", "Pane alla Spirulina", "Panini Basilico e Pomodoro", "Pane Nero al Carbone Vegetale", "Pane alla Barbabietola", "Pane all'Nduja", "Pane alla Curcuma e Zenzero", "Pane allo Zafferano", "Cornetto Bicolore Cacao e Vaniglia", "Cornetto Bicolore Carbone e Vaniglia", "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia", "Cornetto Doppio Gusto Pistacchio e Cioccolato"]
 # Panettoni: cambia solo il procedimento (dosi e stato invariati); si azzerano solo i vecchi corsi in cache.
 V73_PROC_NAMES = ["Panettone Artigianale MikiLab — Albicocca e Cioccolato", "Panettone Artigianale MikiLab — Amarena e Cioccolato", "Panettone Artigianale MikiLab — Arancia e Cioccolato Fondente", "Panettone Artigianale MikiLab — Caffè e Nocciola", "Panettone Artigianale MikiLab — Cioccolato e Noci", "Panettone Artigianale MikiLab — Cocco e Cioccolato", "Panettone Artigianale MikiLab — Fichi e Mandorle", "Panettone Artigianale MikiLab — Frutti di Bosco", "Panettone Artigianale MikiLab — Limoncello", "Panettone Artigianale MikiLab — Marron Glacé (Castagne)", "Panettone Artigianale MikiLab — Mela e Cannella", "Panettone Artigianale MikiLab — Pere e Cioccolato", "Panettone Artigianale MikiLab — Pistacchio e Cioccolato Bianco", "Panettone Artigianale MikiLab — Tiramisù", "Panettone Artigianale MikiLab — Uvetta e Canditi (Classico)", "Panettone Artigianale MikiLab — Zafferano"]
+
+# V78 — ricette delle "Ricette Custodite" portate nel ricettario: restano "Bozza" finché Michele non le prova.
+V78_DRAFT_NAMES = ["Pane Lucano di Grano Duro", "Pane di Patate Lucano", "Pane Cafone Lucano", "Focaccia Lucana ai Peperoni Cruschi", "Pane Arcobaleno Naturale", "Baguette Colorata (Innovazione)", "Pane alla Zucca", "Roggenbrot (Pane di Segale)", "Vollkornbrot (Pane Integrale ai Semi)", "Laugenbrötchen (Panini di Laugen)", "Kaisersemmel (Panino Kaiser)", "Panettone al Cioccolato", "Panettone Colorato (Innovazione)"]
 
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
@@ -12072,6 +12075,22 @@ async def on_startup_seed_mikilab():
             await db.app_meta.update_one({"_key": "v73_drafts"}, {"$set": {"_key": "v73_drafts", "done_at": now_iso()}}, upsert=True)
     except Exception as e:
         logging.getLogger(__name__).error(f"V73 drafts error: {e}")
+    try:
+        # V78 — le ricette custodite entrate nel ricettario partono come "Bozza" (mai "Provata" in automatico).
+        # Idempotente: imposta lo stato SOLO dove manca, quindi non tocca mai una scelta fatta da Michele.
+        for _nm in V78_DRAFT_NAMES:
+            _r = await db.recipes.find_one({"collection_name": "mikilab", "name": _nm}, {"_id": 0, "id": 1})
+            if not _r:
+                continue
+            _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "status": 1})
+            if _ex and _ex.get("status"):
+                continue
+            await db.recipe_extras.update_one(
+                {"recipe_id": _r["id"]},
+                {"$set": {"recipe_id": _r["id"], "status": "sitor_draft", "verified": False, "updated_at": now_iso()}},
+                upsert=True)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V78 drafts error: {e}")
     try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
