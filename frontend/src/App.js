@@ -40,6 +40,7 @@ import Mensola from "@/components/Mensola";
 import Cucina from "@/components/Cucina";
 import Plan from "@/components/Plan";
 import SitorBadge from "@/components/SitorBadge";
+import { PolpoFooter } from "@/components/PolpoFooter";
 import TestMese from "@/components/TestMese";
 import Farine from "@/components/Farine";
 import Calendario from "@/components/Calendario";
@@ -279,7 +280,7 @@ export default function App() {
               </div>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-border/10">
                 <p className="flex items-center gap-2">
-                  <img src={`${process.env.PUBLIC_URL || ""}/polpo-firma.svg`} alt="" loading="lazy" draggable={false} className="w-6 h-6 opacity-80" data-testid="footer-polpo-firma" />
+                  <PolpoFooter />
                   © MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")} · {tri("Fatto con le mani di Michele", "Mit Micheles Händen gemacht", "Made with Michele's hands")}
                 </p>
                 <p data-testid="footer-langs" className="text-muted-foreground">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>

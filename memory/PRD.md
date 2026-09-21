@@ -150,3 +150,7 @@ Vedi `memory/test_credentials.md`.
 - Su richiesta di Michele ("Firma Altrove"): footer (`App.js`, riga copyright) ora mostra icona `polpo-firma.svg` + "© MikiLab — Il Manuale di Sitor · Fatto con le mani di Michele" IT/DE/EN (`data-testid="footer-polpo-firma"`); pagina lista Tecniche (`TecnichePage.jsx`) mostra la card `TattooSignature` sotto l'intestazione (`data-testid="tecniche-signature"`).
 - Verifica: entrambe presenti via screenshot desktop, nessun overflow a 390px. In produzione al prossimo **Publish**.
 
+## Polpo del footer animato (21 settembre 2026)
+- Nuovo `PolpoFooter.jsx`: l'SVG del polpo inline (generato da `polpo-firma.svg`, che resta invariato per TattooSignature/stampe), gli 8 tentacoli marcati alternati `pf-tent-a`/`pf-tent-b`; CSS nel componente con `transform-box: fill-box`, sway ±2.5° sfalsato (1.7s/2.1s) SOLO in `:hover`, disattivato con `prefers-reduced-motion`. Tooltip "Il polpo di Michele ti saluta". Stesso `data-testid="footer-polpo-firma"`.
+- Verifica automatica: animazione assente a riposo, attiva in hover (computed style `pf-sway-a`/`pf-sway-b`), nessun overflow mobile.
+
