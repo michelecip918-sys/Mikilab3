@@ -135,3 +135,9 @@ Vedi `memory/test_credentials.md`.
 - Salvate webp (200-300KB) nelle rispettive cartelle. Verifica: 8/8 servite 200, pagina Pirlatura mostra 4/4 immagini coerenti. Nessuna modifica a codice o seed (asset statici). In produzione al prossimo **Publish** di Michele.
 - Nota navigazione: la pagina tecniche si apre via evento `mikilab-open-technique` (detail.slug opzionale); la vista "guida" da home-btn-guide apre il glossario, non le tecniche.
 
+## Patch v79 privacy + procedimenti (21 settembre 2026)
+- Applicata `patch79` da Google Drive: `sh patch79/applica.sh` → "Controlli v79: tutto OK (167 ricette, nessun tracciamento, nessuna immagine esterna). OK: v79 applicata."
+- Contenuto: nuovo `index.html` PULITO (rimossi PostHog + emergent-main.js — coerente con la Datenschutz: niente statistiche né tracciamento; lo script di verifica della patch stessa asserisce l'assenza di "posthog"/"emergent"/"notranslate"), `RicetteCustodite.jsx` senza Unsplash, `LegalPlaceholder.jsx` senza "United Radio", seed con procedimenti completati (asserzione: nessun procedimento <440 caratteri fuori dalle basi), SEED_VERSION → `2026-09-v79-procedimenti`. Rimossi patch78 e `lib/planPdf.js`.
+- Le 13+6 foto fatte da noi erano già nel seed v79 (0 senza foto, 0 file mancanti): nessun intervento.
+- Verifica self-test: API 167 ricette 0 senza foto, HTML servito senza script di tracciamento (grep=0), home renderizza. PROSSIMO PASSO: Michele preme **Publish** (l'index.html pulito va in produzione col build).
+

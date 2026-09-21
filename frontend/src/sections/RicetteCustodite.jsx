@@ -20,28 +20,6 @@ function renderProcWithImprover(text) {
 }
 
 // ── Immagini ──────────────────────────────────────────────
-const IMG = {
-  matera: "https://images.unsplash.com/photo-1590301157172-7ba48dd1c2b2?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  altamura: "https://images.unsplash.com/photo-1549413468-cd78edb7e75c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  rustic1: "https://images.unsplash.com/photo-1598616068594-93ef7202a8ca?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  rustic2: "https://images.unsplash.com/photo-1613396874083-2d5fbe59ae79?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  rustic3: "https://images.unsplash.com/photo-1559811814-e2c57b5e69df?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  baguette: "https://images.unsplash.com/photo-1559811814-e2c57b5e69df?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  foc1: "https://images.unsplash.com/photo-1784822109223-20ceba260902?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  foc2: "https://images.unsplash.com/photo-1744988278657-5c1674813ade?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  foc3: "https://images.unsplash.com/photo-1767065888111-7ca2b12d4944?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  foc4: "https://images.unsplash.com/photo-1765172526530-916823d3efc9?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  panettone: "https://images.unsplash.com/photo-1567270744868-0ceaaa42021f?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  panettone2: "https://images.unsplash.com/photo-1606589121362-2de49373c497?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  col1: "https://images.unsplash.com/photo-1712723247649-35dda2670f1c?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  col2: "https://images.unsplash.com/photo-1712723246709-3d6d3fdbf4aa?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  col3: "https://images.unsplash.com/photo-1668253738427-a72dda5b257b?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  col4: "https://images.unsplash.com/photo-1712723246850-64d8c05dd46d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  ger1: "https://images.unsplash.com/photo-1509957879660-dd8846a0b43d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  ger2: "https://images.unsplash.com/photo-1629320119721-5a2aa9ce9dbf?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  ger3: "https://images.unsplash.com/photo-1623725151449-dd0bd5aa213d?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-  ger4: "https://images.unsplash.com/photo-1678646142939-31a5a9e91f91?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200",
-};
 
 // ── Ingredienti condivisi (multilingua) ──────────────────────
 const ING = {
@@ -110,7 +88,7 @@ const PLACE = {
 const RECIPES = [
   // ═══════════ BASILICATA ═══════════
   {
-    id: "matera", region: "basilicata", flag: "🇮🇹", img: IMG.matera, place: PLACE.matera,
+    id: "matera", region: "basilicata", flag: "🇮🇹", place: PLACE.matera,
     name: { it: "Pane di Matera IGP", de: "Materaner Brot", en: "Bread of Matera", es: "Pan de Matera", fr: "Pain de Matera" },
     story: {
       it: "Forma a cornetto, crosta spessa e mollica gialla e alveolata di sola semola rimacinata. Un pane che Matera custodisce da secoli: lo porto avanti con Lievito Madre e il mio Miglioratore Naturale.",
@@ -129,7 +107,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pane_basilicata", region: "basilicata", flag: "🇮🇹", img: IMG.rustic1, place: PLACE.basilicata,
+    id: "pane_basilicata", region: "basilicata", flag: "🇮🇹", place: PLACE.basilicata,
     name: { it: "Pane Lucano di Grano Duro", de: "Lukanisches Hartweizenbrot", en: "Lucanian Durum Bread", es: "Pan Lucano de Trigo Duro", fr: "Pain Lucanien au Blé Dur" },
     story: {
       it: "Rustico lucano con Biga e Lievito Madre: crosta scura, lunga conservazione. Il Miglioratore Naturale è la mia firma.",
@@ -148,7 +126,7 @@ const RECIPES = [
     },
   },
   {
-    id: "focaccia_lucana", region: "basilicata", flag: "🇮🇹", img: IMG.foc2, place: PLACE.basilicata,
+    id: "focaccia_lucana", region: "basilicata", flag: "🇮🇹", place: PLACE.basilicata,
     name: { it: "Focaccia Lucana ai Peperoni Cruschi", de: "Lukanische Focaccia mit Cruschi", en: "Lucanian Focaccia with Cruschi", es: "Focaccia Lucana con Cruschi", fr: "Focaccia Lucanienne aux Cruschi" },
     story: {
       it: "Soffice, con Poolish e i famosi peperoni cruschi di Senise croccanti in superficie.",
@@ -167,7 +145,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pane_patate_lucano", region: "basilicata", flag: "🇮🇹", img: IMG.rustic2, place: PLACE.basilicata,
+    id: "pane_patate_lucano", region: "basilicata", flag: "🇮🇹", place: PLACE.basilicata,
     name: { it: "Pane di Patate Lucano", de: "Lukanisches Kartoffelbrot", en: "Lucanian Potato Bread", es: "Pan de Patata Lucano", fr: "Pain de Pommes de Terre Lucanien" },
     story: {
       it: "Morbidissimo grazie alla patata, con Biga e Lievito Madre. Umido per giorni, il Miglioratore fa la differenza.",
@@ -186,7 +164,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pane_cafone_lucano", region: "basilicata", flag: "🇮🇹", img: IMG.rustic3, place: PLACE.basilicata,
+    id: "pane_cafone_lucano", region: "basilicata", flag: "🇮🇹", place: PLACE.basilicata,
     name: { it: "Pane Cafone Lucano", de: "Lukanisches Bauernbrot", en: "Lucanian Country Bread", es: "Pan de Pueblo Lucano", fr: "Pain de Campagne Lucanien" },
     story: {
       it: "Pane contadino a lunga lievitazione con solo Lievito Madre. Crosta croccante, cuore acidulo e Miglioratore MikiLab.",
@@ -207,7 +185,7 @@ const RECIPES = [
 
   // ═══════════ PUGLIA ═══════════
   {
-    id: "altamura", region: "puglia", flag: "🇮🇹", img: IMG.altamura, place: PLACE.altamura,
+    id: "altamura", region: "puglia", flag: "🇮🇹", place: PLACE.altamura,
     name: { it: "Pane di Altamura DOP", de: "Altamura-Brot DOP", en: "Altamura Bread DOP", es: "Pan de Altamura DOP", fr: "Pain d'Altamura DOP" },
     story: {
       it: "L'unico pane DOP d'Europa. Crosta spessa, si conserva per giorni, semola delle Murge e Miglioratore MikiLab.",
@@ -226,7 +204,7 @@ const RECIPES = [
     },
   },
   {
-    id: "focaccia_barese", region: "puglia", flag: "🇮🇹", img: IMG.foc1, place: PLACE.bari,
+    id: "focaccia_barese", region: "puglia", flag: "🇮🇹", place: PLACE.bari,
     name: { it: "Focaccia Barese", de: "Focaccia aus Bari", en: "Bari Focaccia", es: "Focaccia de Bari", fr: "Focaccia de Bari" },
     story: {
       it: "Soffice e alta, con pomodorini e olive. La patata e il Miglioratore MikiLab la tengono umida per giorni.",
@@ -245,7 +223,7 @@ const RECIPES = [
     },
   },
   {
-    id: "taralli", region: "puglia", flag: "🇮🇹", img: IMG.rustic3, place: PLACE.puglia,
+    id: "taralli", region: "puglia", flag: "🇮🇹", place: PLACE.puglia,
     name: { it: "Taralli Pugliesi", de: "Apulische Taralli", en: "Apulian Taralli", es: "Taralli de Apulia", fr: "Taralli des Pouilles" },
     story: {
       it: "Croccanti, sbollentati e poi cotti: il metodo del Sud. Con Poolish, semi di finocchio e Miglioratore MikiLab.",
@@ -264,7 +242,7 @@ const RECIPES = [
     },
   },
   {
-    id: "friselle", region: "puglia", flag: "🇮🇹", img: IMG.rustic1, place: PLACE.puglia,
+    id: "friselle", region: "puglia", flag: "🇮🇹", place: PLACE.puglia,
     name: { it: "Friselle Pugliesi", de: "Apulische Friselle", en: "Apulian Friselle", es: "Friselle de Apulia", fr: "Friselle des Pouilles" },
     story: {
       it: "Ciambelle biscottate due volte, da bagnare e condire. Con Biga e Miglioratore MikiLab restano fragranti a lungo.",
@@ -283,7 +261,7 @@ const RECIPES = [
     },
   },
   {
-    id: "puccia", region: "puglia", flag: "🇮🇹", img: IMG.rustic2, place: PLACE.salento,
+    id: "puccia", region: "puglia", flag: "🇮🇹", place: PLACE.salento,
     name: { it: "Puccia Salentina", de: "Puccia aus dem Salento", en: "Salento Puccia", es: "Puccia del Salento", fr: "Puccia du Salento" },
     story: {
       it: "Panino tondo e vuoto dentro, perfetto da farcire. Lievito Madre e Miglioratore MikiLab per una mollica leggera.",
@@ -304,7 +282,7 @@ const RECIPES = [
 
   // ═══════════ GRANDI LIEVITATI ═══════════
   {
-    id: "panettone_classico", region: "lievitati", flag: "🇮🇹", img: IMG.panettone, place: PLACE.lievitati,
+    id: "panettone_classico", region: "lievitati", flag: "🇮🇹", place: PLACE.lievitati,
     name: { it: "Panettone Classico MikiLab", de: "Klassischer MikiLab-Panettone", en: "MikiLab Classic Panettone", es: "Panettone Clásico MikiLab", fr: "Panettone Classique MikiLab" },
     story: {
       it: "Due impasti, Lievito Madre, Miglioratore Naturale e 48 ore. Il re dei lievitati col mio metodo.",
@@ -323,7 +301,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pandoro", region: "lievitati", flag: "🇮🇹", img: IMG.panettone2, place: PLACE.lievitati,
+    id: "pandoro", region: "lievitati", flag: "🇮🇹", place: PLACE.lievitati,
     name: { it: "Pandoro di Verona", de: "Pandoro aus Verona", en: "Pandoro of Verona", es: "Pandoro de Verona", fr: "Pandoro de Vérone" },
     story: {
       it: "Stella dorata, burrosa e vanigliata. Lievito Madre, tanto burro e Miglioratore MikiLab per lo sviluppo.",
@@ -342,7 +320,7 @@ const RECIPES = [
     },
   },
   {
-    id: "colomba", region: "lievitati", flag: "🇮🇹", img: IMG.panettone2, place: PLACE.lievitati,
+    id: "colomba", region: "lievitati", flag: "🇮🇹", place: PLACE.lievitati,
     name: { it: "Colomba Pasquale", de: "Oster-Colomba", en: "Easter Colomba", es: "Colomba de Pascua", fr: "Colombe de Pâques" },
     story: {
       it: "Forma a colomba, glassa di mandorle e canditi d'arancia. Lievito Madre e Miglioratore MikiLab.",
@@ -361,7 +339,7 @@ const RECIPES = [
     },
   },
   {
-    id: "panettone_cioccolato", region: "lievitati", flag: "🇮🇹", img: IMG.panettone, place: PLACE.lievitati,
+    id: "panettone_cioccolato", region: "lievitati", flag: "🇮🇹", place: PLACE.lievitati,
     name: { it: "Panettone al Cioccolato", de: "Schoko-Panettone", en: "Chocolate Panettone", es: "Panettone de Chocolate", fr: "Panettone au Chocolat" },
     story: {
       it: "Versione golosa con gocce di cioccolato fondente. Lievito Madre e Miglioratore MikiLab per 48 ore di sviluppo.",
@@ -380,7 +358,7 @@ const RECIPES = [
     },
   },
   {
-    id: "veneziana_salata", region: "lievitati", flag: "🇮🇹", img: IMG.panettone2, place: PLACE.lievitati,
+    id: "veneziana_salata", region: "lievitati", flag: "🇮🇹", place: PLACE.lievitati,
     name: { it: "Panettone Gastronomico Salato", de: "Herzhafter Panettone", en: "Savoury Panettone", es: "Panettone Salado", fr: "Panettone Salé" },
     story: {
       it: "Soffice pan brioche salato da farcire a strati con salumi e formaggi. Lievito Madre e Miglioratore MikiLab.",
@@ -401,7 +379,7 @@ const RECIPES = [
 
   // ═══════════ PANI COLORATI / SPECIALI (INNOVAZIONE) ═══════════
   {
-    id: "pane_colorato", region: "colorati", flag: "🌈", img: IMG.col3, place: PLACE.speciali,
+    id: "pane_colorato", region: "colorati", flag: "🌈", place: PLACE.speciali,
     name: { it: "Pane Arcobaleno Naturale", de: "Natürliches Regenbogenbrot", en: "Natural Rainbow Bread", es: "Pan Arcoíris Natural", fr: "Pain Arc-en-ciel Naturel" },
     story: {
       it: "Tre impasti colorati con barbabietola, curcuma e spinaci. Zero coloranti: solo Lievito Madre e Miglioratore MikiLab.",
@@ -420,7 +398,7 @@ const RECIPES = [
     },
   },
   {
-    id: "cornetti_colorati", region: "colorati", flag: "🌈", img: IMG.col1, place: PLACE.speciali,
+    id: "cornetti_colorati", region: "colorati", flag: "🌈", place: PLACE.speciali,
     name: { it: "Cornetti Colorati (Innovazione)", de: "Bunte Croissants (Innovation)", en: "Coloured Croissants (Innovation)", es: "Cruasanes de Colores (Innovación)", fr: "Croissants Colorés (Innovation)" },
     story: {
       it: "Sfoglia laminata con velo colorato naturale che disegna venature uniche. Poolish, Lievito Madre e Miglioratore MikiLab: nessuno li fa così.",
@@ -439,7 +417,7 @@ const RECIPES = [
     },
   },
   {
-    id: "baguette_colorata", region: "colorati", flag: "🌈", img: IMG.baguette, place: PLACE.speciali,
+    id: "baguette_colorata", region: "colorati", flag: "🌈", place: PLACE.speciali,
     name: { it: "Baguette Colorata (Innovazione)", de: "Bunte Baguette (Innovation)", en: "Coloured Baguette (Innovation)", es: "Baguette de Color (Innovación)", fr: "Baguette Colorée (Innovation)" },
     story: {
       it: "Baguette croccante con mollica screziata di colore naturale. Poolish e Miglioratore MikiLab per l'alveolatura selvaggia.",
@@ -458,7 +436,7 @@ const RECIPES = [
     },
   },
   {
-    id: "panettone_colorato", region: "colorati", flag: "🌈", img: IMG.col2, place: PLACE.speciali,
+    id: "panettone_colorato", region: "colorati", flag: "🌈", place: PLACE.speciali,
     name: { it: "Panettone Colorato (Innovazione)", de: "Bunter Panettone (Innovation)", en: "Coloured Panettone (Innovation)", es: "Panettone de Colores (Innovación)", fr: "Panettone Coloré (Innovation)" },
     story: {
       it: "Il panettone che nessuno ha mai visto: impasti a spirale colorati al naturale. Lievito Madre e Miglioratore MikiLab, 48 ore.",
@@ -477,7 +455,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pane_carbone", region: "colorati", flag: "⚫", img: IMG.rustic1, place: PLACE.speciali,
+    id: "pane_carbone", region: "colorati", flag: "⚫", place: PLACE.speciali,
     name: { it: "Pane Nero al Carbone Vegetale", de: "Schwarzbrot mit Aktivkohle", en: "Black Charcoal Bread", es: "Pan Negro de Carbón Vegetal", fr: "Pain Noir au Charbon Végétal" },
     story: {
       it: "Nero intenso e digeribile grazie al carbone vegetale. Biga e Miglioratore MikiLab per una mollica setosa.",
@@ -496,7 +474,7 @@ const RECIPES = [
     },
   },
   {
-    id: "pane_zucca", region: "colorati", flag: "🟠", img: IMG.foc3, place: PLACE.speciali,
+    id: "pane_zucca", region: "colorati", flag: "🟠", place: PLACE.speciali,
     name: { it: "Pane alla Zucca", de: "Kürbisbrot", en: "Pumpkin Bread", es: "Pan de Calabaza", fr: "Pain au Potiron" },
     story: {
       it: "Arancione naturale, dolce e morbido. Poolish, Lievito Madre e Miglioratore MikiLab.",
@@ -517,7 +495,7 @@ const RECIPES = [
 
   // ═══════════ GERMANIA ═══════════
   {
-    id: "brezel", region: "germania", flag: "🇩🇪", img: IMG.ger1, place: PLACE.germania,
+    id: "brezel", region: "germania", flag: "🇩🇪", place: PLACE.germania,
     name: { it: "Brezel", de: "Brezel", en: "Brezel (Pretzel)", es: "Brezel", fr: "Bretzel" },
     story: {
       it: "Il mio omaggio alla Germania che mi ha accolto: lucida in soluzione alcalina, con Biga e Miglioratore MikiLab.",
@@ -536,7 +514,7 @@ const RECIPES = [
     },
   },
   {
-    id: "laugenbroetchen", region: "germania", flag: "🇩🇪", img: IMG.ger2, place: PLACE.germania,
+    id: "laugenbroetchen", region: "germania", flag: "🇩🇪", place: PLACE.germania,
     name: { it: "Laugenbrötchen (Panini di Laugen)", de: "Laugenbrötchen", en: "Laugen Rolls", es: "Panecillos Laugen", fr: "Petits Pains Laugen" },
     story: {
       it: "Panini lucidi in soluzione alcalina, crosta ambrata e mollica soffice. Biga e Miglioratore MikiLab.",
@@ -555,7 +533,7 @@ const RECIPES = [
     },
   },
   {
-    id: "roggenbrot", region: "germania", flag: "🇩🇪", img: IMG.ger3, place: PLACE.germania,
+    id: "roggenbrot", region: "germania", flag: "🇩🇪", place: PLACE.germania,
     name: { it: "Roggenbrot (Pane di Segale)", de: "Roggenbrot", en: "Rye Bread", es: "Pan de Centeno", fr: "Pain de Seigle" },
     story: {
       it: "Pane di segale a lievitazione naturale, denso e aromatico. Lievito Madre di segale e Miglioratore MikiLab.",
@@ -574,7 +552,7 @@ const RECIPES = [
     },
   },
   {
-    id: "vollkornbrot", region: "germania", flag: "🇩🇪", img: IMG.ger4, place: PLACE.germania,
+    id: "vollkornbrot", region: "germania", flag: "🇩🇪", place: PLACE.germania,
     name: { it: "Vollkornbrot (Pane Integrale ai Semi)", de: "Vollkornbrot", en: "Wholegrain Seed Bread", es: "Pan Integral de Semillas", fr: "Pain Complet aux Graines" },
     story: {
       it: "Pane integrale tedesco carico di semi, nutriente e a lunga conservazione. Lievito Madre e Miglioratore MikiLab.",
@@ -593,7 +571,7 @@ const RECIPES = [
     },
   },
   {
-    id: "kaisersemmel", region: "germania", flag: "🇩🇪", img: IMG.ger2, place: PLACE.germania,
+    id: "kaisersemmel", region: "germania", flag: "🇩🇪", place: PLACE.germania,
     name: { it: "Kaisersemmel (Panino Kaiser)", de: "Kaisersemmel", en: "Kaiser Roll", es: "Panecillo Kaiser", fr: "Petit Pain Kaiser" },
     story: {
       it: "Il panino a stella con crosta croccante e mollica leggera. Poolish e Miglioratore MikiLab.",
@@ -632,8 +610,37 @@ export const CUSTODITE_SEED_NAME = {
 // Solo la foto (nel ricettario ci sono i cornetti in versioni precise, non "Cornetti colorati" generici).
 const CUSTODITE_IMG_ONLY = { cornetti_colorati: "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia" };
 
-const FALLBACK_IMG = "https://images.unsplash.com/photo-1509440159596-0249088772ff?crop=entropy&cs=srgb&fm=jpg&q=85&w=1200";
-const onImgErr = (e) => { if (e.currentTarget.src !== FALLBACK_IMG) e.currentTarget.src = FALLBACK_IMG; };
+// V79 — solo foto del nostro server: nessuna immagine da siti esterni.
+const CUSTODITE_LOCAL_IMG = {
+  matera: "/recipes/r_matera.webp",
+  pane_basilicata: "/recipes/pane_lucano_grano_duro.webp",
+  focaccia_lucana: "/recipes/foc_lucana_cruschi.webp",
+  pane_patate_lucano: "/recipes/pane_patate_lucano.webp",
+  pane_cafone_lucano: "/recipes/pane_cafone_lucano.webp",
+  altamura: "/recipes/r_altamura.webp",
+  focaccia_barese: "/recipes/foc_barese.webp",
+  taralli: "/recipes/r_taralli.webp",
+  friselle: "/recipes/r_friselle.webp",
+  puccia: "/recipes/r_puccia.webp",
+  panettone_classico: "/recipes/pan_classico.webp",
+  pandoro: "/recipes/pandoro_classico.webp",
+  colomba: "/recipes/col_classica.webp",
+  panettone_cioccolato: "/recipes/pan_cioccolato.webp",
+  veneziana_salata: "/recipes/panettone_salato_speck.webp",
+  pane_colorato: "/recipes/pane_arcobaleno.webp",
+  baguette_colorata: "/recipes/baguette_colorata.webp",
+  panettone_colorato: "/recipes/pan_colorato.webp",
+  pane_carbone: "/recipes/p_carbone.webp",
+  pane_zucca: "/recipes/pane_zucca.webp",
+  brezel: "/recipes/r_bretzel.webp",
+  laugenbroetchen: "/recipes/laugenbrotchen.webp",
+  roggenbrot: "/recipes/roggenbrot.webp",
+  vollkornbrot: "/recipes/vollkornbrot.webp",
+  kaisersemmel: "/recipes/kaisersemmel.webp",
+  cornetti_colorati: "/recipes/v_bicolore_rosa.webp",
+};
+const FALLBACK_IMG = "/hero-ricette.webp";
+const onImgErr = (e) => { if (!e.currentTarget.src.endsWith(FALLBACK_IMG)) e.currentTarget.src = FALLBACK_IMG; };
 
 export default function RicetteCustodite({ initialId = null, onOpenRecipe = null }) {
   const { lang } = useLang();
@@ -665,7 +672,7 @@ export default function RicetteCustodite({ initialId = null, onOpenRecipe = null
     }).catch(() => {});
     return () => { alive = false; };
   }, []);
-  const imgOf = (r) => (seedBy[r.id] && seedBy[r.id].image_url) || r.img;
+  const imgOf = (r) => (seedBy[r.id] && seedBy[r.id].image_url) || CUSTODITE_LOCAL_IMG[r.id] || FALLBACK_IMG;
 
   // Sistema didascalia Miglioratore Naturale: frasi su salute e naturalezza (ruotano).
   const MIGL_PHRASES = [

@@ -573,7 +573,7 @@ class CapoLastPlan(BaseModel):
 # Seed data for Mikilab (insert-only, non destructive)
 # ---------------------------------------------------------------------------
 SEED_FILE = ROOT_DIR / "mikilab_seed_data.json"
-SEED_VERSION = "2026-09-v78-foto"  # bump quando cambia mikilab_seed_data.json
+SEED_VERSION = "2026-09-v79-procedimenti"  # bump quando cambia mikilab_seed_data.json
 # Ricette riscritte/completate da Sitor (IA): restano "bozza" finché Michele non le prova.
 V73_DRAFT_NAMES = ["Brioche Francese (col burro)", "Pain au Chocolat (Saccottino al Cioccolato)", "Saccottino alla Crema", "Danese alla Crema (Plunder)", "Girella all'Uvetta (Pain aux Raisins)", "Pan di Kristall (alta idratazione 95%)", "Pane da Hamburger (bun soffice)", "Veneziana (grande lievitato dolce)", "Pizza Napoletana (tonda)", "Pizza in Teglia alla Romana", "Pizza alla Pala", "Pizza al Taglio Contemporanea", "Pan di Spagna", "Crostata di Frutta (Pasta Frolla)", "Bignè (Pasta Choux)", "Crema Pasticcera", "Panzerotti Fritti Pugliesi", "Focaccia Barese", "Focaccia Dolce all'Uva (Schiacciata)", "Focaccia Genovese", "Focaccia Integrale ai Semi", "Focaccia ai Cereali e Miele", "Focaccia alla Cipolla di Tropea", "Focaccia alle Olive e Rosmarino", "Focaccia con Patate e Rosmarino", "Focaccia con Pomodorini Secchi e Origano", "Focaccia di Altamura", "Focaccia di Matera", "Focaccia Zucca e Rosmarino", "Focaccia Patate e Rosmarino", "Focaccia Cipolla di Tropea", "Focaccia Zucchine e Stracchino", "Focaccia Melanzane e Pomodorini", "Focaccia Peperoni Arrostiti", "Focaccia Pesto e Pomodorini", "Focaccia Gorgonzola e Noci", "Focaccia Mortadella e Pistacchio", "Focaccia Prosciutto Crudo e Stracchino", "Focaccia Friarielli", "Focaccia Funghi Porcini", "Focaccia Acciughe e Capperi", "Focaccia Fichi e Miele", "Focaccia Uvetta e Noci", "Focaccia Multi-Semi", "Focaccia alla Curcuma", "Focaccia Olive Verdi e Origano", "Focaccia Pere e Gorgonzola", "Focaccia Cipollotto e Speck", "Focaccia a Lievito Madre", "Pane agli Spinaci", "Pane alla Spirulina", "Panini Basilico e Pomodoro", "Pane Nero al Carbone Vegetale", "Pane alla Barbabietola", "Pane all'Nduja", "Pane alla Curcuma e Zenzero", "Pane allo Zafferano", "Cornetto Bicolore Cacao e Vaniglia", "Cornetto Bicolore Carbone e Vaniglia", "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia", "Cornetto Doppio Gusto Pistacchio e Cioccolato"]
 # Panettoni: cambia solo il procedimento (dosi e stato invariati); si azzerano solo i vecchi corsi in cache.
@@ -581,6 +581,9 @@ V73_PROC_NAMES = ["Panettone Artigianale MikiLab — Albicocca e Cioccolato", "P
 
 # V78 — ricette delle "Ricette Custodite" portate nel ricettario: restano "Bozza" finché Michele non le prova.
 V78_DRAFT_NAMES = ["Pane Lucano di Grano Duro", "Pane di Patate Lucano", "Pane Cafone Lucano", "Focaccia Lucana ai Peperoni Cruschi", "Pane Arcobaleno Naturale", "Baguette Colorata (Innovazione)", "Pane alla Zucca", "Roggenbrot (Pane di Segale)", "Vollkornbrot (Pane Integrale ai Semi)", "Laugenbrötchen (Panini di Laugen)", "Kaisersemmel (Panino Kaiser)", "Panettone al Cioccolato", "Panettone Colorato (Innovazione)"]
+
+# V79 — procedimenti riscritti per esteso: i vecchi corsi salvati di queste ricette si rigenerano (una volta sola).
+V79_PROC_NAMES = ["Pane Lucano di Grano Duro", "Pane di Patate Lucano", "Pane Cafone Lucano", "Focaccia Lucana ai Peperoni Cruschi", "Pane Arcobaleno Naturale", "Baguette Colorata (Innovazione)", "Pane alla Zucca", "Roggenbrot (Pane di Segale)", "Vollkornbrot (Pane Integrale ai Semi)", "Laugenbrötchen (Panini di Laugen)", "Kaisersemmel (Panino Kaiser)", "Panettone al Cioccolato", "Panettone Colorato (Innovazione)"]
 
 # Vecchie schede da rimuovere alla sincronizzazione (solo se non modificate a mano).
 SEED_RETIRED_NAMES = [
@@ -12091,6 +12094,17 @@ async def on_startup_seed_mikilab():
                 upsert=True)
     except Exception as e:
         logging.getLogger(__name__).error(f"V78 drafts error: {e}")
+    try:
+        # V79 — procedimenti riscritti: azzera UNA SOLA VOLTA i corsi salvati di queste ricette (lo stato non si tocca).
+        _m79 = await db.app_meta.find_one({"_key": "v79_procs"}, {"_id": 0})
+        if not _m79:
+            for _nm in V79_PROC_NAMES:
+                _r = await db.recipes.find_one({"collection_name": "mikilab", "name": _nm}, {"_id": 0, "id": 1})
+                if _r:
+                    await db.recipe_courses_v2.delete_many({"recipe_id": _r["id"]})
+            await db.app_meta.update_one({"_key": "v79_procs"}, {"$set": {"_key": "v79_procs", "done_at": now_iso()}}, upsert=True)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V79 procs error: {e}")
     try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
