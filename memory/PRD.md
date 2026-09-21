@@ -129,3 +129,9 @@ Vedi `memory/test_credentials.md`.
 - Seed: 13 image_url impostati (ricerca per nome esatto, nessun'altra ricetta toccata) → 167/167 ricette con foto. SEED_VERSION → `2026-09-v78-foto`.
 - Verifica: API 167 ricette 0 senza foto, file serviti 200, galleria renderizza le lucane. PROSSIMO PASSO: Michele preme **Publish**.
 
+## Illustrazioni Tecniche completate (21 settembre 2026)
+- La pagina Tecniche (`TecnichePage.jsx`) tenta sempre 4 immagini per tecnica (`/tecniche/{slug}/{1..4}.webp`, onError nasconde le mancanti). Mancavano 8 illustrazioni: baguette/4, croissant/4, filone/4, panettone/4, pieghe/3-4, pirlatura/3-4.
+- Generate 8 illustrazioni (Gemini) nello stesso stile storybook caldo delle esistenti (verificato contro pirlatura/1-2 e pieghe/2): dove compaiono mani c'è SEMPRE il tatuaggio serpente-polpo nero con occhi arancioni sull'avambraccio, nessun volto, nessun testo. Soggetti: rolling baguette, arrotolamento croissant, tagli con lametta, panettone capovolto sui ferri, piega in ciotola, impasto coperto a riposo, rotazione pirlatura, palline in lievitazione.
+- Salvate webp (200-300KB) nelle rispettive cartelle. Verifica: 8/8 servite 200, pagina Pirlatura mostra 4/4 immagini coerenti. Nessuna modifica a codice o seed (asset statici). In produzione al prossimo **Publish** di Michele.
+- Nota navigazione: la pagina tecniche si apre via evento `mikilab-open-technique` (detail.slug opzionale); la vista "guida" da home-btn-guide apre il glossario, non le tecniche.
+
