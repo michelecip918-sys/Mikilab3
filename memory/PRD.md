@@ -123,3 +123,9 @@ Vedi `memory/test_credentials.md`.
 - Bug PREESISTENTE non bloccante (non toccato per volontà di Michele): `community.py` usa `logger` mai definito (riga 251 e altre) → NameError solo quando il loop bakealong va in eccezione. File del 16/09, non introdotto da v78.
 - PROSSIMO PASSO DI MICHELE: un solo **Publish** → produzione con 167 ricette + nuovo layout vetrine.
 
+## Foto 13 nuove ricette v78 (21 settembre 2026)
+- Generate 13 foto (Gemini, stile scuro elegante coerente con le 65 precedenti, verificato contro pan_classico.webp; nessuna mano/persona → tatuaggio non applicabile): pani lucani ×3, focaccia cruschi, arcobaleno, baguette colorata, zucca, roggenbrot, vollkornbrot, laugenbrötchen, kaisersemmel, panettone cioccolato, panettone colorato (quest'ultimo riuscito al 2° tentativo dopo un 503 del servizio).
+- Salvate webp (90-172KB) in `frontend/public/recipes/`: pane_lucano_grano_duro, pane_patate_lucano, pane_cafone_lucano, foc_lucana_cruschi, pane_arcobaleno, baguette_colorata, pane_zucca, roggenbrot, vollkornbrot, laugenbrotchen, kaisersemmel, pan_cioccolato, pan_colorato.
+- Seed: 13 image_url impostati (ricerca per nome esatto, nessun'altra ricetta toccata) → 167/167 ricette con foto. SEED_VERSION → `2026-09-v78-foto`.
+- Verifica: API 167 ricette 0 senza foto, file serviti 200, galleria renderizza le lucane. PROSSIMO PASSO: Michele preme **Publish**.
+
