@@ -141,3 +141,8 @@ Vedi `memory/test_credentials.md`.
 - Le 13+6 foto fatte da noi erano già nel seed v79 (0 senza foto, 0 file mancanti): nessun intervento.
 - Verifica self-test: API 167 ricette 0 senza foto, HTML servito senza script di tracciamento (grep=0), home renderizza. PROSSIMO PASSO: Michele preme **Publish** (l'index.html pulito va in produzione col build).
 
+## Patch v80 + 24 illustrazioni tecniche col tatuaggio (21 settembre 2026)
+- Applicata `patch80`: "OK: v80 applicata" — firma del polpo (`polpo-firma.svg` in public, referenziata da RecipeScheme/PrintHeader/TattooSignature); index.html resta SENZA posthog/emergent/notranslate (asserito dallo script). Solo frontend; rimossa patch79.
+- Rigenerate TUTTE le 24 illustrazioni tecniche (6 tecniche × 4): stesso stile storybook, ma ora OGNI immagine mostra mani e avambracci; tatuaggio identico dalle foto `patch80/riferimento_tatuaggio` (modello, NON copiate in public): braccio **SINISTRO** (correzione di Michele, prima indicato destro), esterno avambraccio gomito→polso, grande polpo nero-grigio, testa a metà avambraccio, due occhi giallo-ambra con bordo rosso, tentacoli verso gomito e polso, ventose a puntini chiari; braccio destro senza tatuaggi. Stesso blocco di descrizione in tutti i 24 prompt per coerenza.
+- Sovrascritti i file `tecniche/{baguette,croissant,filone,panettone,pieghe,pirlatura}/{1..4}.webp` (183-317KB). Verifica: 24/24 servite 200, pagina Panettone 4/4 con polpo nitido, HTML senza tracciamento. In produzione al prossimo **Publish** di Michele.
+
