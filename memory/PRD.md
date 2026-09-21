@@ -158,3 +158,8 @@ Vedi `memory/test_credentials.md`.
 - Creato `frontend/public/googlea308a6dc1717156d.html` con la sola riga `google-site-verification: googlea308a6dc1717156d.html` (54 byte). Verificato: URL servita 200 text/html con quella riga (NON la home). Va in produzione col prossimo **Publish**; poi Michele completa la verifica su Search Console.
 - Controllo pre-volo deploy (deployment_agent): build OK, nessun segreto, nessun tracciamento; le 8 note su operazioni MongoDB all'avvio sono le migrazioni una-tantum delle patch di Michele (v73/v79, TTL compliance, reset admin) — intenzionali, già pubblicate con v73, non toccate per sua scelta.
 
+## Patch v81 Verde Canapa 60/40 (21 settembre 2026)
+- Applicata `patch81` (solo script Python): "Controlli v81: OK (tutti i 19 panettoni sono a 60/40, dosi invariate). OK: v81 applicata."
+- Verde Canapa riscritto al metodo 60/40 IT/DE/EN (dosi invariate, assert nel patch), varianti ES/FR/FA svuotate, note 50/50→60/40; migrazione una-tantum `app_meta/v81_canapa` in server.py (aggiorna la scheda che è user_edited e azzera il corso in cache; gira solo se il testo contiene ancora "50/50"). SEED_VERSION → `2026-09-v81-canapa-6040`. Rimossa cartella patch80 (le foto riferimento tatuaggio non servono più).
+- Verifica: API 167 ricette 0 senza foto, Verde Canapa 60/40 live e 50/50 sparito, file Google intatto, index.html senza tracciamento, nessun errore v81 nei log. In produzione al prossimo **Publish**.
+
