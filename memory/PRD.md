@@ -154,3 +154,7 @@ Vedi `memory/test_credentials.md`.
 - Nuovo `PolpoFooter.jsx`: l'SVG del polpo inline (generato da `polpo-firma.svg`, che resta invariato per TattooSignature/stampe), gli 8 tentacoli marcati alternati `pf-tent-a`/`pf-tent-b`; CSS nel componente con `transform-box: fill-box`, sway ±2.5° sfalsato (1.7s/2.1s) SOLO in `:hover`, disattivato con `prefers-reduced-motion`. Tooltip "Il polpo di Michele ti saluta". Stesso `data-testid="footer-polpo-firma"`.
 - Verifica automatica: animazione assente a riposo, attiva in hover (computed style `pf-sway-a`/`pf-sway-b`), nessun overflow mobile.
 
+## File verifica Google Search Console (21 settembre 2026)
+- Creato `frontend/public/googlea308a6dc1717156d.html` con la sola riga `google-site-verification: googlea308a6dc1717156d.html` (54 byte). Verificato: URL servita 200 text/html con quella riga (NON la home). Va in produzione col prossimo **Publish**; poi Michele completa la verifica su Search Console.
+- Controllo pre-volo deploy (deployment_agent): build OK, nessun segreto, nessun tracciamento; le 8 note su operazioni MongoDB all'avvio sono le migrazioni una-tantum delle patch di Michele (v73/v79, TTL compliance, reset admin) — intenzionali, già pubblicate con v73, non toccate per sua scelta.
+
