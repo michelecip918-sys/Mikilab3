@@ -152,3 +152,8 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **La tua bottega** (`LaTuaBottega.jsx`, `lib/bottega.js`): nome facoltativo in `localStorage` (`mikilab_nome`, cancellabile con un tocco dallo stesso blocco), ultima ricetta aperta (`mikilab_last_recipe`), pane della settimana scelto (`mikilab_pane_settimana`). Legge, senza scriverli, il lievito (`mikilab_lievito_figlio`), le ricette fatte (`mikilab_done`) e il quaderno del forno (IndexedDB `mioforno`). Il pane della settimana è calcolato dal numero della settimana: nessun server. Nulla viene inviato; il nome NON entra nella chat di Sitor.
 ## 18. V89 — Da Miglionico a Stoccarda
 - **Dedica** (`Dedica.jsx`, `mikilab.de/miglionico`): pagina statica con il testo di Michele. Nessun dato raccolto. I nomi eventualmente elencati sono inseriti da Michele nel codice (persone che ha scelto di ringraziare); nessun dato di visitatori.
+## 19. V90 — Il gusto di giocare (festa, medaglie, sorprendimi, Sitor dice)
+- **Medaglie** (`lib/medaglie.js`, `LeMieMedaglie.jsx`): 18 traguardi salvati SOLO in `localStorage` (`mikilab_medaglie`); nessuna classifica, nessun invio, nessun confronto tra persone. "Fornaio di notte" guarda solo l'ora del dispositivo.
+- **Festa** (`Festa.jsx`): animazione locale (farina) quando si segna un pane come fatto o si prende una medaglia. Nessun suono (il sito resta muto per scelta), nessun dato.
+- **Sorprendimi** (`Sorprendimi.jsx`): scelta casuale tra le ricette già pubbliche. **Sitor dice** (`SitorDice.jsx`): frasi statiche, bozze di Sitor (IA).
+- Nessun cookie nuovo, nessuna statistica, nessun servizio esterno.
