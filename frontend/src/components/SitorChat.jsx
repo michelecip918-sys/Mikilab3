@@ -8,7 +8,7 @@ import { api } from "@/lib/api";
 import { chatTools } from "@/lib/mycucina";
 import SitorBadge from "@/components/SitorBadge";
 import { recipesApi } from "@/lib/api"; // V93
-import { bottegaAnswer } from "@/lib/bottega"; // V93
+import { bottegaAnswer } from "@/lib/sitorBottega"; // V93b
 
 const HIST_KEY = "mikilab_sitor_chat";
 
