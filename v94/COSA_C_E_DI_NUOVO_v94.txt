@@ -1,0 +1,27 @@
+MIKILAB v94 — IN PAROLE SEMPLICI
+
+CONTROLLO DALLA A ALLA Z DELLO ZIP _60_
+ • v93 e v93b applicate bene: tutti i file uguali a quelli delle patch, righe aggiunte al posto giusto, backend compilato,
+   bottega.js originale rimesso a posto.
+ • Ho controllato tutti i 168 file del frontend: ogni "import" trova il suo file e la sua funzione (zero mancanti); tutte le
+   45 chiamate del frontend al backend hanno un endpoint che risponde; tutti i bottoni di navigazione portano a una pagina
+   che esiste… tranne uno: il bottone "Miglionico" nella scheda Basilicata di "Il pane del mio paese" chiamava una pagina
+   con il nome sbagliato e non faceva niente. Corretto in questa patch: ora apre la dedica.
+ • Sitemap: aggiunte le tre pagine nuove (/laboratorio, /primopane, /sommelier), così Google le trova.
+
+IL SOMMELIER DEL PANE (idea tua, fatto a modo mio)
+ Si assaggia un pane come un sommelier assaggia un vino, con cinque sensi: occhio (colore della crosta, taglio), orecchio
+ (crosta che scricchiola, suono cavo sotto), naso (tostato, nocciola, yogurt, aceto, alcol, burro, miele, campo, bruciato),
+ mano (mollica elastica/umida/gommosa, alveoli, crosta sottile/spessa), bocca (dolce, sale, acidità, amaro, finale lungo).
+ Tocchi le parole giuste e MikiLab:
+   - scrive la scheda di degustazione e dà al pane un "carattere" (Rustico e schietto, Gentile da colazione, Carattere forte…);
+   - fa parlare Sitor: cosa raccontano quei segni (l'aceto nel naso = lievito madre affamato; la crosta muta = poco calore
+     alla fine; la mollica gommosa = tagliato caldo…) e cosa cambiare;
+   - propone gli abbinamenti a tavola (formaggi stagionati con l'acidità del lievito madre, olio e pomodoro con la crosta
+     scura, confetture con il pane burroso… e la cialledda lucana con la mollica aperta).
+ La scheda si condivide come testo e si salva nel "quaderno degli assaggi" (nel telefono).
+ Dove: Strumenti → Il sommelier del pane; card nell'Officina del Ricettario; bottone "Assaggialo da sommelier" nella scheda
+ di ogni ricetta (porta il nome della ricetta già scritto); anche mikilab.de/sommelier.
+
+COME SI APPLICA: MikiLab_patch94.zip su Drive → link in COMANDO_EMERGENT_v94.txt → a Emergent → poi la risposta a me.
+Poi leggi MikiLab_cosa_manca.md: è la lista di quello che resta da fare quando abbiamo finito.

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import { Thermometer, Clock, Ruler, Scale, Euro, Calendar, Gift, Layers, Scissors, ChevronDown, BookOpen, AlertTriangle } from "lucide-react";
+import { Thermometer, Clock, Ruler, Scale, Euro, Calendar, Gift, Layers, Scissors, ChevronDown, BookOpen, AlertTriangle, Wine } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { rLoc } from "@/lib/loc";
+import { LS } from "@/lib/sitorTools"; // V94
 import { computeDough, recipeKind, num } from "@/lib/sitorTools";
 import AcquaGiusta from "@/components/officina/AcquaGiusta";
 import LievitazioneACasa from "@/components/officina/LievitazioneACasa";
@@ -42,6 +44,7 @@ export default function StrumentiRicetta({ r, t, target, scaleVal, onScaleChange
     ...(kind === "pane" || kind === "panini" ? [{ k: "taglio", I: Scissors, l: tri("Disegna il taglio", "Zeichne den Schnitt", "Draw the score"), C: () => <DisegnaIlTaglio r={r} lang={lang} /> }] : []),
   ];
   const cur = tools.find((x) => x.k === openTool);
+  const goSommelier = () => { LS.set("mikilab_sommelier_recipe", { id: r.id, name: rLoc(r, "name", lang) }); window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "sommelier" } })); }; // V94
 
   return (
     <section data-testid={`strumenti-ricetta-${r.id}`} className="no-print rounded-2xl border border-primary/30 bg-primary/5 p-3.5">
@@ -61,6 +64,7 @@ export default function StrumentiRicetta({ r, t, target, scaleVal, onScaleChange
                 <x.I className="w-3.5 h-3.5" />{x.l}
               </button>
             ))}
+            <button data-testid="strumento-sommelier" onClick={goSommelier} className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border bg-salvia/10 text-foreground border-salvia/40 active:scale-95 transition-all"><Wine className="w-3.5 h-3.5 text-salvia" />{tri("Assaggialo da sommelier", "Als Sommelier verkosten", "Taste it like a sommelier")}</button>
           </div>
           {cur && (
             <div data-testid={`strumento-panel-${cur.k}`} className="mt-3 rounded-xl border border-border bg-background p-3">
