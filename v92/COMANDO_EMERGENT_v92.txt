@@ -1,0 +1,12 @@
+Applica la patch v92 di MikiLab ("L'Officina di Sitor"). Segui ESATTAMENTE questi passi, senza inventare né modificare nulla oltre a quanto indicato.
+
+1) Scarica lo zip da questo link Drive: [INCOLLA QUI IL LINK]
+   Decomprimilo nella radice del progetto: deve comparire la cartella patch92/ accanto a backend/ e frontend/.
+2) Dalla radice del progetto esegui:  sh patch92/applica.sh
+   Deve finire con "OK: v92 applicata". Se dà un ERRORE o un ATTENZIONE, fermati e riportamelo testualmente (lo script non lascia modifiche a metà).
+3) Esegui la build di prova:  cd frontend && yarn build
+   Deve riuscire senza errori. Se fallisce, riportami l'errore completo, NON correggere da solo.
+4) Non toccare backend, database, ricette, Sitor, .env, il file frontend/public/googlea308a6dc1717156d.html.
+   Non riscrivere RecipeList.jsx: lo script vi aggiunge solo poche righe.
+5) Un solo commit ("v92: l'Officina di Sitor") e un solo deploy.
+6) Alla fine rispondimi con: l'output dello script, l'esito della build e l'esito del deploy. Nient'altro.

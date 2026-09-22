@@ -1,0 +1,30 @@
+MikiLab v92 — L'OFFICINA DI SITOR: 13 attrezzi interattivi, tutti originali, tutti nel browser
+Da applicare DOPO la v90. Contiene anche la v91 (Etichetta MikiLab): va bene sia che la v91 sia già applicata, sia che non lo sia.
+
+COME SI APPLICA (Emergent): dalla radice del progetto  sh patch92/applica.sh
+ - copia i file nuovi (files/ rispecchia il progetto);
+ - patch_recipelist.js aggiunge 5 righe a RecipeList.jsx senza sovrascriverlo (import + 3 inserimenti). Se un'ancora manca, si ferma
+   con ERRORE e non tocca niente: in quel caso mandare l'output a Michele;
+ - aggiorna sw.js (cache v72) e LEGAL_DATA_MAP.md (sezioni 20 e 21, solo se mancano).
+
+DOVE SI TROVANO
+A) Ricettario mikilab, striscia "L'Officina di Sitor" sopra la barra di ricerca (OfficinaSitor.jsx):
+   1. Cosa posso fare adesso?  – tempo, lievito, dispensa → le ricette fattibili oggi e cosa manca
+   2. Metti a confronto        – due ricette fianco a fianco, differenze evidenziate, spiegazione di Sitor
+   3. L'occhio di Sitor        – foto alla crosta/fetta letta nel telefono: colore, alveolatura, buchi enormi, cottura non uniforme
+   4. Pronto soccorso          – 18 sintomi: perché, cosa fare adesso, la prossima volta
+   5. Disegna il taglio        – forme e schemi di taglio, angolo lametta, "mostra come si apre"
+B) Scheda ricetta, sezione "Gli attrezzi di Sitor" dopo gli ingredienti (StrumentiRicetta.jsx), con le dosi della ricetta:
+   6. Acqua giusta             – temperatura dell'acqua (formula del panettiere, ghiaccio se serve)
+   7. Lievitazione a casa tua  – tempi adattati alla temperatura della cucina, con orari
+   8. Lo stampo giusto         – quanto impasto per teglia/cassetta/pentola/cestino, scala la ricetta
+   9. Righello della ciotola   – crescita in %, stima dell'ora in cui è pronto
+  10. Pesa tutto in una ciotola – pesata cumulativa senza tara, correzione errori, voce
+  11. Quanto ti costa          – costo reale (ingredienti + corrente), per pezzo, vs panetteria
+  12. Il pane in agenda        – conto alla rovescia dall'ora in cui lo vuoi pronto, file .ics
+  13. La cartolina del pane    – cartolina e bigliettino regalo con "contiene" (immagini generate nel browser)
+   (+ Disegna il taglio anche nella scheda, solo per pane e panini)
+
+FILE: NUOVI  src/components/OfficinaSitor.jsx, StrumentiRicetta.jsx, EtichettaMikiLab.jsx (v91), officina/*.jsx (13), src/lib/sitorTools.js
+      MODIFICATI  RecipeList.jsx (5 righe, via script), public/sw.js (cache v72), LEGAL_DATA_MAP.md (sez. 20-21)
+REGOLE RISPETTATE: nessun server, nessun tracciamento, dosi intoccabili (solo lette), Sitor sempre guida, IT/DE/EN.

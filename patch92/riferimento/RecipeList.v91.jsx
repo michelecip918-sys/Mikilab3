@@ -25,10 +25,8 @@ import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
 import { applyRecipeSeo, clearRecipeSeo } from "@/lib/recipeSeo"; // V87: indirizzo vero + SEO per ogni ricetta
-import { renderProcedureWithImprover } from "@/lib/improverText";
-import StrumentiRicetta from "@/components/StrumentiRicetta"; // V92
-import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
+import { renderProcedureWithImprover } from "@/lib/improverText";
 import { useFavRecipes } from "@/lib/favorites";
 import { useDept, matchDept, deptLabel, deptIcon, setDept } from "@/lib/dept";
 import { flagEmoji, countryColors, countryName } from "@/lib/countries";
@@ -445,7 +443,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </button>
               </div>
             )}
-            {collectionName === "mikilab" && <OfficinaSitor recipes={recipes} t={t} />} {/* V92 */}
             {/* Barra di ricerca */}
             <div className="relative mb-3">
               <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
@@ -942,7 +939,6 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </>
         ) : null}
 
-        {!r.locked && <StrumentiRicetta r={r} t={t} target={target} scaleVal={scaleVal} onScaleChange={onScaleChange} />} {/* V92 */}
         {isPro && !isPanettone && !r.locked && flourG > 0 && (() => {
           let raw = 0;
           raw += Number(g(r.flour_grams)) || 0;
