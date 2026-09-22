@@ -12,3 +12,8 @@ e porta alla dedica; sitemap con /miglionico.
 
 File toccati: NUOVO Dedica.jsx. MODIFICATI: App.js, HomeManuale.jsx (1 riga), PaneDelPaese.jsx, public/sitemap.xml,
 public/sw.js (cache v69). LEGAL_DATA_MAP.md: sezione 18.
+
+CORREZIONE (22/9, pomeriggio): in App.js il componente Dedica era importato due volte (build fallita) e in Home c'erano
+due blocchi di saluto simili (La tua cucina + La tua bottega). Tolto il doppio import e il blocco doppio: resta
+"La tua cucina" (con "Dal banco di Michele"). Applicando questo zip sopra alla v89 già corretta da Emergent, il risultato è pulito.
+Lo script cancella anche la cartella frontend/src/src (copie non usate finite lì per errore con la v88): non serve a nulla.

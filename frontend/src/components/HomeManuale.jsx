@@ -5,7 +5,6 @@ import { recipesApi } from "@/lib/api";
 import SitorBadge from "@/components/SitorBadge";
 import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Settings, Flame, Soup, Compass } from "lucide-react";
 import { rLoc } from "@/lib/loc";
-import LaTuaBottega from "@/components/LaTuaBottega"; // V88
 // V88 — la Home che ti riconosce + la nota di Michele
 import LaTuaCucina, { getName } from "@/components/LaTuaCucina";
 import { BancoNota } from "@/components/BancoMichele";
@@ -114,9 +113,6 @@ export default function HomeManuale({ onNav }) {
           </div>
         </div>
       </section>
-
-      {/* V88 — La tua bottega: il sito riconosce chi torna (solo dal telefono) */}
-      <LaTuaBottega onNav={onNav} onOpenRecipe={openRecipe} />
 
       {/* Domanda al primo accesso: livello */}
       {!skill && (

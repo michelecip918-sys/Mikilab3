@@ -79,8 +79,6 @@ import FestaLancio, { festaIsToday } from "@/components/FestaLancio";
 import Volantino from "@/components/Volantino";
 import { recipeIdFromLocation } from "@/lib/recipeSeo";
 import Dedica from "@/components/Dedica"; // V89 — Da Miglionico a Stoccarda
-// V89 — dedica a Miglionico, libretto dei 5 panini
-import Dedica from "@/components/Dedica";
 import Libretto from "@/components/Libretto";
 // V88 — editor "Dal banco di Michele" (solo admin)
 import BancoEditor from "@/components/BancoMichele";
@@ -92,7 +90,6 @@ function initialRoute() {
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
   if (p.startsWith("/miglionico")) return "dedica";
-  if (p.startsWith("/miglionico")) return "miglionico";
   if (p.startsWith("/libretto")) return "libretto";
   if (p.startsWith("/impressum")) return "impressum";
   if (p.startsWith("/datenschutz")) return "datenschutz";
@@ -319,7 +316,6 @@ export default function App() {
               {route === "curalievito" && <CuraLievito onBack={() => setRoute("strumenti")} onNav={navFromHome} />}
               {route === "volantino" && <Volantino onBack={() => setRoute("home")} />}
               {route === "dedica" && <Dedica onBack={() => setRoute("home")} onNav={navFromHome} />}
-              {route === "miglionico" && <Dedica onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "libretto" && <Libretto onBack={() => setRoute("strumenti")} />}
               {route === "panico" && <CenaSughi initialTab="panico" onBack={() => setRoute("home")} />}
               {route === "sughi" && <CenaSughi initialTab="sughi" onBack={() => setRoute("home")} />}
@@ -339,7 +335,6 @@ export default function App() {
                 {pubContent?.hasPerche && (
                   <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
                 )}
-                <button data-testid="footer-miglionico" onClick={() => { setRoute("miglionico"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Miglionico", "Miglionico", "Miglionico")}</button>
                 <button data-testid="footer-dedica" onClick={() => { setRoute("dedica"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Da Miglionico", "Aus Miglionico", "From Miglionico")}</button>
                 <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">Impressum</button>
                 <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>

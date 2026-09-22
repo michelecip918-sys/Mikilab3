@@ -29,8 +29,11 @@
 - **Volantino** (`Volantino.jsx`): QR generato nel browser che porta solo a mikilab.de.
 - Nessun cookie nuovo, nessuna statistica, nessun servizio esterno.
 
-## 17. V88 — La tua bottega
-- **La tua bottega** (`LaTuaBottega.jsx`, `lib/bottega.js`): nome facoltativo in `localStorage` (`mikilab_nome`, cancellabile con un tocco dallo stesso blocco), ultima ricetta aperta (`mikilab_last_recipe`), pane della settimana scelto (`mikilab_pane_settimana`). Legge, senza scriverli, il lievito (`mikilab_lievito_figlio`), le ricette fatte (`mikilab_done`) e il quaderno del forno (IndexedDB `mioforno`). Il pane della settimana è calcolato dal numero della settimana: nessun server. Nulla viene inviato; il nome NON entra nella chat di Sitor.
+## 17. V88 — La tua cucina, Dal banco di Michele, Il libretto dei 5 panini
+- **La tua cucina** (`LaTuaCucina.jsx`): nome facoltativo in `localStorage` (`mikilab_nome`, con "salta"), saluto e consigli costruiti SOLO da dati già nel telefono (lievito, quaderno del forno, ricette fatte, livello). Nulla inviato; il nome non entra nella chat di Sitor.
+- **Dal banco di Michele** (`BancoMichele.jsx`): due righe scritte da Michele (admin) nella pagina del sito con slug "banco" (GET pubblico, PUT solo admin, rotte già esistenti). Nessun dato di visitatori.
+- **Il libretto dei 5 panini** (`Libretto.jsx`): stampa locale delle 5 ricette di partenza con logo. Nessun dato.
+- `lib/bottega.js` + `recipeSeo.js`: ultima ricetta aperta in `localStorage` (`mikilab_last_recipe`).
 
 ## 18. V89 — Da Miglionico a Stoccarda
 - **Dedica** (`Dedica.jsx`, `mikilab.de/miglionico`): pagina statica con il testo di Michele. Nessun dato raccolto. I nomi eventualmente elencati sono inseriti da Michele nel codice (persone che ha scelto di ringraziare); nessun dato di visitatori.
