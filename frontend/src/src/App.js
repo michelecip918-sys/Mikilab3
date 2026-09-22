@@ -78,8 +78,6 @@ import { isNightMode, applyNightMode } from "@/lib/notte";
 import FestaLancio, { festaIsToday } from "@/components/FestaLancio";
 import Volantino from "@/components/Volantino";
 import { recipeIdFromLocation } from "@/lib/recipeSeo";
-// V88 — editor "Dal banco di Michele" (solo admin)
-import BancoEditor from "@/components/BancoMichele";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -237,10 +235,6 @@ export default function App() {
                           className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-accent/50 active:scale-95 transition-all">
                           {tri("Costi & Risparmio", "Kosten & Sparen", "Costs & Savings")}
                         </button>
-                        <button data-testid="banco-link" onClick={() => { setRoute("admin-banco"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
-                          className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-primary/15 border border-primary/40 text-foreground font-bold text-xs hover:border-primary active:scale-95 transition-all">
-                          {tri("Dal banco di Michele", "Von Micheles Backtisch", "From Michele's bench")}
-                        </button>
                         <button data-testid="admin2b-link" onClick={() => { setRoute("admin-2b"); setShowAccountMenu(false); window.scrollTo(0, 0); }}
                           className="w-full inline-flex items-center justify-center gap-2 py-2 mb-2 rounded-lg bg-background border border-border text-foreground font-bold text-xs hover:border-primary/50 active:scale-95 transition-all">
                           {tri("Strumenti di Michele", "Micheles Werkzeuge", "Michele's tools")}
@@ -287,7 +281,6 @@ export default function App() {
               {route === "admin-cleanup" && isAdmin && <PuliziaDati onBack={() => setRoute("home")} />}
               {route === "change-password" && isAdmin && <ChangePassword onBack={() => setRoute("home")} />}
               {route === "admin-impressum" && isAdmin && <ImpressumAdmin onBack={() => setRoute("home")} />}
-              {route === "admin-banco" && isAdmin && <BancoEditor onBack={() => setRoute("home")} />}
               {route === "cosa-faccio" && <CosaFaccio onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "live" && (!features || features.FEATURE_LIVE !== false) && <Live onBack={() => setRoute("home")} />}
               {route === "mensola" && <Mensola onBack={() => setRoute("home")} />}

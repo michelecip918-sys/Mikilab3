@@ -5,10 +5,6 @@ import { recipesApi } from "@/lib/api";
 import SitorBadge from "@/components/SitorBadge";
 import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Settings, Flame, Soup, Compass } from "lucide-react";
 import { rLoc } from "@/lib/loc";
-import LaTuaBottega from "@/components/LaTuaBottega"; // V88
-// V88 — la Home che ti riconosce + la nota di Michele
-import LaTuaCucina, { getName } from "@/components/LaTuaCucina";
-import { BancoNota } from "@/components/BancoMichele";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -28,16 +24,12 @@ export default function HomeManuale({ onNav }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [starts, setStarts] = useState([]);
-  const [all, setAll] = useState([]);
-  // Chi ha già una storia col sito vede prima la sua cucina; chi è nuovo vede prima cos'è MikiLab.
-  const [known] = useState(() => { try { return !!getName() || JSON.parse(localStorage.getItem("mikilab_done") || "[]").length > 0 || !!localStorage.getItem("mikilab_lievito_figlio"); } catch { return false; } });
   const [skill, setSkill] = useState(() => { try { return localStorage.getItem(SKILL_KEY) || ""; } catch { return ""; } });
 
   useEffect(() => {
     let stop = false;
     recipesApi.list("mikilab").then((recs) => {
       if (stop || !Array.isArray(recs)) return;
-      setAll(recs);
       const by = {}; recs.forEach((r) => { if (r && r.name) by[r.name] = r; });
       setStarts(START_NAMES.map((n) => by[n]).filter(Boolean));
     }).catch(() => { /* */ });
@@ -60,8 +52,6 @@ export default function HomeManuale({ onNav }) {
 
   return (
     <div data-testid="home-manuale" className="pt-4">
-      {known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
-      {known && <BancoNota />}
       {/* V76 — Prima di tutto: cos'è MikiLab, chi è Sitor e cosa possono fare */}
       <section data-testid="home-about" className="rounded-3xl border border-border/25 bg-background/70 p-5 sm:p-6 mb-4">
         <h2 className="font-display text-xl font-black text-foreground mb-2">{tri("Cos'è MikiLab e chi è Sitor", "Was ist MikiLab und wer ist Sitor", "What MikiLab is and who Sitor is")}</h2>
@@ -91,9 +81,6 @@ export default function HomeManuale({ onNav }) {
         </p>
       </section>
 
-      {!known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
-      {!known && <BancoNota />}
-
       {/* Sitor accoglie */}
       <section className="rounded-3xl border border-border/25 bg-background/70 overflow-hidden">
         <div className="grid sm:grid-cols-[auto_1fr] gap-5 p-6 sm:p-8 items-center">
@@ -114,9 +101,6 @@ export default function HomeManuale({ onNav }) {
           </div>
         </div>
       </section>
-
-      {/* V88 — La tua bottega: il sito riconosce chi torna (solo dal telefono) */}
-      <LaTuaBottega onNav={onNav} onOpenRecipe={openRecipe} />
 
       {/* Domanda al primo accesso: livello */}
       {!skill && (

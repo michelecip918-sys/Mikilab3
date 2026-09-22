@@ -1,0 +1,18 @@
+MikiLab v88 — La tua bottega (il sito riconosce chi torna)
+Contiene anche tutti i file di v84, v85, v86 e v87: si applica in ogni caso. Solo frontend.
+
+LA TUA BOTTEGA — src/components/LaTuaBottega.jsx + src/lib/bottega.js, mostrata in Home sotto il saluto di Sitor.
+Alla prima visita: una riga sola, "Vuoi che la bottega ti riconosca quando torni? Dimmi come ti chiami" (facoltativo).
+Dalla seconda visita il blocco dice:
+ - "Buongiorno, Maria. 🥖 Apprendista · 3 settimane di fila col forno acceso" (titolo dal quaderno + ricette fatte;
+   settimane di fila dal quaderno "Il mio forno");
+ - "Ricomincia da dove eri": l'ultima ricetta aperta, un tocco e si riapre;
+ - "Il tuo lievito": Nino sta bene / ha fame · 41 giorni (dal Mio lievito madre), colorato se ha fame;
+ - "Il pane della settimana, per tutta la bottega": la stessa ricetta per tutti i visitatori in quella settimana
+   (scelta dal numero della settimana, tra pane/panini/focacce/pizza, panettoni a nov-dic). "Lo faccio domenica" →
+   diventa "Il tuo pane della domenica: tra 3 giorni. Hai comprato tutto?" con Apri ricetta e Sveglia del panettiere;
+ - per chi non ha ancora fatto nulla: "Il prossimo passo: fai il primo dei 5 panini facili".
+Nome e dati restano nel telefono; "Dimentica il mio nome" in un tocco. Il nome non viene mai mandato a Sitor.
+
+File toccati: NUOVI LaTuaBottega.jsx, lib/bottega.js. MODIFICATI: HomeManuale.jsx (2 righe), lib/recipeSeo.js (1 riga:
+salva l'ultima ricetta aperta), public/sw.js (cache v68). LEGAL_DATA_MAP.md: sezione 17.

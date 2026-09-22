@@ -148,3 +148,5 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Festa del 16 ottobre** (`FestaLancio.jsx`): il nome scritto per il certificato NON viene salvato né inviato (vive solo nello stato della pagina); il certificato è un'immagine creata nel browser. `localStorage` `mikilab_festa_vista`. La voce di benvenuto è la voce sintetica del dispositivo (già dichiarata).
 - **Volantino** (`Volantino.jsx`): QR generato nel browser che porta solo a mikilab.de.
 - Nessun cookie nuovo, nessuna statistica, nessun servizio esterno.
+## 17. V88 — La tua bottega
+- **La tua bottega** (`LaTuaBottega.jsx`, `lib/bottega.js`): nome facoltativo in `localStorage` (`mikilab_nome`, cancellabile con un tocco dallo stesso blocco), ultima ricetta aperta (`mikilab_last_recipe`), pane della settimana scelto (`mikilab_pane_settimana`). Legge, senza scriverli, il lievito (`mikilab_lievito_figlio`), le ricette fatte (`mikilab_done`) e il quaderno del forno (IndexedDB `mioforno`). Il pane della settimana è calcolato dal numero della settimana: nessun server. Nulla viene inviato; il nome NON entra nella chat di Sitor.

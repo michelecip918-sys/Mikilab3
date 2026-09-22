@@ -5,7 +5,6 @@
 // nei risultati. Tutto lato client, nessun dato al server.
 import { applyMeta } from "@/i18n/meta";
 import { rLoc } from "@/lib/loc";
-import { setLastRecipe } from "@/lib/bottega";
 
 export function recipeSlug(name) {
   return String(name || "ricetta").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "ricetta";
@@ -44,7 +43,6 @@ export function applyRecipeSeo(recipe, lang) {
     const img = recipe.image_url ? (recipe.image_url.startsWith("http") ? recipe.image_url : origin + recipe.image_url) : `${origin}/hero-ricette.jpg`;
     const url = origin + recipePath(recipe, lang);
     document.title = `${name} — MikiLab`;
-    setLastRecipe({ id: recipe.id, name, ts: Date.now() }); // V88: "ricomincia da dove eri"
     setMeta('meta[name="description"]', "content", desc);
     setMeta('meta[property="og:title"]', "content", `${name} — MikiLab`);
     setMeta('meta[property="og:description"]', "content", desc);
