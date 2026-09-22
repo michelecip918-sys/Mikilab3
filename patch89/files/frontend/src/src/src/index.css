@@ -1,0 +1,330 @@
+/*
+ * MikiLab · Il Manuale di Sitor — PROPRIETARY & CONFIDENTIAL
+ * (c) 2026 MikiLab — Tutti i diritti riservati.
+ * STADIO 7: tema "La bottega di Michele" — chiaro caldo di default, scuro opzionale.
+ */
+/* Font self-hosted in /public/fonts/fonts.css, caricati via <link> in index.html (GDPR: nessuna richiesta a Google). */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Protezione contenuti: niente selezione testo/immagini, ma consenti nei campi */
+body { -webkit-user-select: none; -ms-user-select: none; user-select: none; -webkit-touch-callout: none; }
+input, textarea, [contenteditable="true"] { -webkit-user-select: text; -ms-user-select: text; user-select: text; }
+img { -webkit-user-drag: none; user-drag: none; }
+
+/* Tipografia: Playfair Display per i titoli, Manrope per il corpo */
+.font-display { font-family: 'Playfair Display', 'Cormorant Garamond', serif; letter-spacing: .02em; }
+.font-tech { font-family: 'Manrope', sans-serif; letter-spacing: .02em; }
+.font-mono-data { font-family: 'JetBrains Mono', monospace; }
+
+/* Persiano/Farsi: usa Vazirmatn (shaping arabo corretto) per tutte le famiglie */
+html[lang="fa"] body,
+html[lang="fa"] .font-display,
+html[lang="fa"] .font-mono-data,
+html[lang="fa"] button,
+html[lang="fa"] input,
+html[lang="fa"] textarea {
+  font-family: 'Vazirmatn', 'Manrope', sans-serif !important;
+}
+
+/* Firma MikiLab: nastro tricolore Italia + Germania */
+.it-de-ribbon { display: none; }
+
+@layer base {
+    :root {
+        /* Palette chiara "Bottega" */
+        --background: 40 46% 94%;          /* #F6F1E7 */
+        --foreground: 218 9% 18%;          /* #2B2E33 */
+        --card: 43 100% 99%;               /* #FFFDF8 */
+        --card-foreground: 218 9% 18%;
+        --popover: 43 100% 99%;
+        --popover-foreground: 218 9% 18%;
+        --primary: 25 66% 38%;             /* RAME #A15621 (AA) */
+        --primary-foreground: 43 100% 98%;
+        --secondary: 40 30% 90%;
+        --secondary-foreground: 218 9% 18%;
+        --muted: 39 24% 89%;
+        --muted-foreground: 218 6% 38%;    /* #5B5F66 */
+        --accent: 142 13% 40%;             /* SALVIA #597362 (AA) */
+        --accent-foreground: 43 100% 98%;
+        --destructive: 13 57% 41%;         /* MATTONE #A4472D */
+        --destructive-foreground: 43 100% 98%;
+        --border: 39 28% 79%;              /* #D9CFBC */
+        --input: 39 28% 79%;
+        --ring: 25 66% 40%;
+        --radius: 0.85rem;
+    }
+    .dark {
+        /* Palette scura "Notte in bottega" */
+        --background: 220 7% 13%;          /* #1F2124 */
+        --foreground: 40 46% 94%;          /* #F6F1E7 */
+        --card: 216 8% 18%;                /* #2A2D31 */
+        --card-foreground: 40 46% 94%;
+        --popover: 216 8% 18%;
+        --popover-foreground: 40 46% 94%;
+        --primary: 36 80% 57%;             /* AMBRA #E9A23B (più leggibile sullo scuro) */
+        --primary-foreground: 220 7% 13%;
+        --secondary: 216 8% 22%;
+        --secondary-foreground: 40 46% 94%;
+        --muted: 216 8% 22%;
+        --muted-foreground: 40 12% 68%;
+        --accent: 142 14% 56%;             /* salvia schiarita */
+        --accent-foreground: 220 7% 13%;
+        --destructive: 13 60% 52%;
+        --destructive-foreground: 40 46% 94%;
+        --border: 216 7% 27%;
+        --input: 216 7% 27%;
+        --ring: 36 80% 57%;
+    }
+}
+
+@layer base {
+    * { @apply border-border; }
+    body { @apply bg-background text-foreground; }
+}
+
+body {
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================================================
+   SUPERFICI "BOTTEGA" — alias ereditati dalla vecchia console (holo-*),
+   ora resi caldi e artigianali. Niente neon, niente ologrammi.
+   ========================================================================== */
+.holo-root { background: hsl(var(--background)); color: hsl(var(--foreground)); scroll-behavior: smooth; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+.holo-canvas {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+  background:
+    radial-gradient(95% 65% at 50% -10%, rgba(233,162,59,.10), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(110,143,122,.07), transparent 60%),
+    linear-gradient(180deg, #F6F1E7 0%, #F1EADA 100%);
+}
+.dark .holo-canvas {
+  background:
+    radial-gradient(95% 65% at 50% -10%, rgba(233,162,59,.06), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(110,143,122,.05), transparent 60%),
+    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,.42) 100%),
+    linear-gradient(180deg, #1F2124 0%, #1A1C1F 100%);
+}
+/* Grana di farina appena percettibile */
+.holo-canvas::after {
+  content: ""; position: absolute; inset: 0; opacity: .05;
+  background: radial-gradient(rgba(120,88,40,.5) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+.dark .holo-canvas::after {
+  background: radial-gradient(rgba(255,246,226,.5) 1px, transparent 1px);
+  background-size: 4px 4px;
+}
+
+.holo-panel {
+  position: relative; border-radius: 16px; isolation: isolate;
+  background: #FFFDF8;
+  border: 1px solid #D9CFBC;
+  box-shadow: 0 2px 10px rgba(90,66,32,.08), inset 0 1px 0 rgba(255,255,255,.6);
+  transition: border-color .25s ease, box-shadow .25s ease, transform .2s cubic-bezier(.2,.7,.2,1);
+}
+.holo-panel > * { position: relative; z-index: 1; }
+.holo-panel:hover { border-color: #C8B99C; box-shadow: 0 10px 26px rgba(90,66,32,.14); transform: translate3d(0,-1px,0); }
+.dark .holo-panel { background: #2A2D31; border-color: #3A3F45; box-shadow: 0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04); }
+.dark .holo-panel:hover { border-color: #4A5057; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+
+.holo-section-title {
+  display: flex; align-items: center; gap: .5rem;
+  font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .2em; margin-bottom: 1rem;
+}
+.holo-zone { scroll-margin-top: 88px; }
+
+/* Texture artigianale: grana di farina riutilizzabile */
+.grain-overlay::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .06; mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Scrollbar calda + selezione ambra */
+.holo-root ::-webkit-scrollbar { width: 10px; height: 10px; }
+.holo-root ::-webkit-scrollbar-track { background: transparent; }
+.holo-root ::-webkit-scrollbar-thumb { background: rgba(168,90,34,.28); border-radius: 8px; }
+.holo-root ::-webkit-scrollbar-thumb:hover { background: rgba(168,90,34,.45); }
+.holo-root ::selection { background: rgba(233,162,59,.35); color: #2B2E33; }
+.dark .holo-root ::selection { background: rgba(233,162,59,.35); color: #1F2124; }
+
+/* Custom scrollbar per chat */
+.thin-scroll::-webkit-scrollbar { width: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: rgba(168,90,34,.25); border-radius: 8px; }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Vapore (animazione usata dalle pagine ricette) */
+.steam { animation: steamRise 3s ease-in-out infinite; }
+@keyframes steamRise { 0%,100% { opacity:.25; transform: translateY(0) scale(1);} 50% { opacity:.6; transform: translateY(-6px) scale(1.05);} }
+
+/* Markdown rendering per l'output AI */
+.markdown-body { overflow-wrap: anywhere; word-break: break-word; }
+.markdown-body > *:first-child { margin-top: 0; }
+.markdown-body > *:last-child { margin-bottom: 0; }
+.markdown-body h1, .markdown-body h2, .markdown-body h3 { font-weight: 700; margin: 0.6em 0 0.3em; line-height: 1.3; }
+.markdown-body h1 { font-size: 1.15em; }
+.markdown-body h2 { font-size: 1.08em; }
+.markdown-body h3 { font-size: 1em; }
+.markdown-body p { margin: 0.4em 0; }
+.markdown-body ul, .markdown-body ol { margin: 0.4em 0; padding-left: 1.25em; }
+.markdown-body li { margin: 0.2em 0; }
+.markdown-body ul { list-style: disc; }
+.markdown-body ol { list-style: decimal; }
+.markdown-body strong { font-weight: 700; }
+.markdown-body code { font-family: 'JetBrains Mono', monospace; font-size: 0.9em; background: rgba(168,90,34,.10); padding: 0.05em 0.35em; border-radius: 4px; }
+.markdown-body table { width: 100%; border-collapse: collapse; margin: 0.5em 0; font-size: 0.92em; display: block; overflow-x: auto; }
+.markdown-body th, .markdown-body td { border: 1px solid #D9CFBC; padding: 6px 8px; text-align: left; }
+.dark .markdown-body th, .dark .markdown-body td { border-color: #3A3F45; }
+.markdown-body th { background: rgba(110,143,122,.15); }
+.markdown-body a { color: #A85A22; text-decoration: underline; }
+.dark .markdown-body a { color: #E9A23B; }
+
+/* Stampa etichette: mostra solo l'area etichette */
+@media print {
+  body * { visibility: hidden !important; }
+  .print-area, .print-area * { visibility: visible !important; }
+  .print-area { position: absolute; top: 0; left: 0; width: 100%; }
+  .no-print { display: none !important; }
+  .print-only { display: block !important; visibility: visible !important; }
+  .print-only * { visibility: visible !important; }
+}
+@media print {
+  .print-area [data-testid="recipe-machine-scheda"] { background:#fff !important; border:1px solid #cfd8d2 !important; }
+}
+.print-only { display: none; }
+
+/* STADIO 2 — Scheda ricetta dedicata alla stampa/PDF (solo in stampa, con logo MikiLab) */
+.print-recipe-card { display: none; }
+@media print {
+  body * { visibility: hidden !important; }
+  .print-recipe-card, .print-recipe-card * { visibility: visible !important; }
+  .print-recipe-card {
+    display: block !important; position: absolute; top: 0; left: 0; width: 100%;
+    padding: 24px 28px; color: #1a1a1a; background: #fff; font-family: Georgia, serif;
+  }
+  .print-recipe-card .prc-head { display: flex; align-items: center; gap: 12px; border-bottom: 3px solid #173029; padding-bottom: 10px; margin-bottom: 14px; }
+  .print-recipe-card .prc-logo { height: 46px; width: auto; }
+  .print-recipe-card .prc-brand { font-weight: 800; font-size: 22px; color: #173029; }
+  .print-recipe-card .prc-sub { font-size: 12px; color: #7a6a3a; }
+  .print-recipe-card .prc-title { font-size: 26px; font-weight: 800; margin: 6px 0 4px; color: #12211c; }
+  .print-recipe-card .prc-meta { font-size: 12px; color: #555; margin-bottom: 12px; }
+  .print-recipe-card .prc-table { width: 100%; border-collapse: collapse; margin: 8px 0 12px; font-family: Arial, sans-serif; }
+  .print-recipe-card .prc-table td { border-bottom: 1px solid #e6e0d4; padding: 5px 2px; font-size: 13px; }
+  .print-recipe-card .prc-table td:last-child { text-align: right; font-weight: 700; }
+  .print-recipe-card .prc-line { font-size: 13px; margin: 6px 0; font-family: Arial, sans-serif; }
+  .print-recipe-card .prc-proc { font-size: 13px; margin: 10px 0; font-family: Arial, sans-serif; }
+  .print-recipe-card .prc-proc p { white-space: pre-line; margin-top: 4px; line-height: 1.5; }
+  .print-recipe-card .prc-foot { margin-top: 18px; padding-top: 8px; border-top: 1px solid #ccc; font-size: 10px; color: #666; font-family: Arial, sans-serif; }
+}
+@media print {
+  .print-table { background: #fff !important; border: 1px solid #cfd8d2; border-radius: 6px; }
+  .print-table .space-y-1 > div { border-bottom: 1px solid #eee; padding: 4px 2px; }
+  .print-table .space-y-1 > div:last-child { border-bottom: none; }
+}
+
+/* --- RTL (Persiano / Farsi) --- */
+html[dir="rtl"] body { text-align: right; }
+html[dir="rtl"] .font-mono-data,
+html[dir="rtl"] [data-num],
+html[dir="rtl"] input[type="number"] { direction: ltr; unicode-bidi: plaintext; }
+html[dir="rtl"] table th,
+html[dir="rtl"] table td { text-align: right; }
+html[dir="rtl"] table td.num,
+html[dir="rtl"] table th.num { text-align: left; direction: ltr; }
+html[dir="rtl"] ol,
+html[dir="rtl"] ul { padding-right: 1.1rem; padding-left: 0; }
+html[dir="rtl"] nav,
+html[dir="rtl"] [data-keep-ltr] { direction: ltr; }
+
+/* Modalità operativa "Braccio": zero-scroll ma la barra inferiore resta sempre visibile */
+body.braccio-mode [data-testid="page-footer"] { display: none !important; }
+body.braccio-mode main { padding-bottom: 7rem !important; }
+/* Header e barra inferiore sempre fissi e in primo piano su ogni schermata */
+header[data-testid="app-header"] { position: sticky !important; top: 0 !important; z-index: 60 !important; }
+header[data-testid="app-header"] button,
+header[data-testid="app-header"] .lang-selector,
+header[data-testid="app-header"] select { white-space: nowrap !important; flex-shrink: 0; }
+@media (max-width: 640px) {
+  header[data-testid="app-header"] { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+  header[data-testid="app-header"] [data-testid="brand-home"] .font-display { letter-spacing: 0.08em !important; }
+  header[data-testid="app-header"] > div { row-gap: 0.375rem; }
+}
+nav[data-testid="bottom-nav"] { position: fixed !important; bottom: 0 !important; z-index: 55 !important; }
+
+/* Responsive smartphone: evita testo tagliato/overflow orizzontale senza toccare il desktop */
+@media (max-width: 640px) {
+  body { overflow-x: hidden; overflow-wrap: break-word; word-break: break-word; }
+  main { overflow-x: hidden; }
+  table { max-width: 100%; }
+  .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+}
+
+/* ==========================================================================
+   Gerarchia visiva e feedback tattile
+   ========================================================================== */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  transition-property: scale, filter, background-color, border-color, box-shadow, opacity, color;
+  transition-duration: .18s; transition-timing-function: ease;
+}
+button:not(:disabled):not([class*="active:scale"]):active,
+[role="button"]:not(:disabled):not([class*="active:scale"]):active { scale: .965; filter: brightness(1.08); }
+/* Anello di focus visibile e coerente col primario (rame) */
+:is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid rgba(168,90,34,.55); outline-offset: 2px; border-radius: 8px;
+}
+@media (prefers-reduced-motion: reduce) {
+  button:not(:disabled):active, [role="button"]:not(:disabled):active { scale: 1; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* V85 — Modo grande: scritte e pulsanti più grandi per chi vede meno (interruttore in Strumenti). */
+html.ml-big { zoom: 1.18; }
+
+/* V86 — Modo notte del fornaio: tema scuro forzato, luce calda e bassa, tutto più grande. */
+html.ml-notte { zoom: 1.12; }
+html.ml-notte {
+        /* Palette scura "Notte in bottega" */
+        --background: 220 7% 13%;          /* #1F2124 */
+        --foreground: 40 46% 94%;          /* #F6F1E7 */
+        --card: 216 8% 18%;                /* #2A2D31 */
+        --card-foreground: 40 46% 94%;
+        --popover: 216 8% 18%;
+        --popover-foreground: 40 46% 94%;
+        --primary: 36 80% 57%;             /* AMBRA #E9A23B (più leggibile sullo scuro) */
+        --primary-foreground: 220 7% 13%;
+        --secondary: 216 8% 22%;
+        --secondary-foreground: 40 46% 94%;
+        --muted: 216 8% 22%;
+        --muted-foreground: 40 12% 68%;
+        --accent: 142 14% 56%;             /* salvia schiarita */
+        --accent-foreground: 220 7% 13%;
+        --destructive: 13 60% 52%;
+        --destructive-foreground: 40 46% 94%;
+        --border: 216 7% 27%;
+        --input: 216 7% 27%;
+        --ring: 36 80% 57%;
+    }
+html.ml-notte .holo-canvas {
+  background:
+    radial-gradient(95% 65% at 50% -10%, rgba(233,162,59,.06), transparent 62%),
+    radial-gradient(60% 45% at 10% 28%, rgba(110,143,122,.05), transparent 60%),
+    radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(0,0,0,.42) 100%),
+    linear-gradient(180deg, #1F2124 0%, #1A1C1F 100%);
+}
+html.ml-notte .holo-root { filter: sepia(0.35) saturate(0.8) brightness(0.82); }
+html.ml-notte.ml-big { zoom: 1.28; }

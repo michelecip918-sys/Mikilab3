@@ -1,0 +1,14 @@
+MikiLab v89 — Da Miglionico a Stoccarda (la dedica di Michele)
+Contiene anche tutti i file da v84 a v88: si applica in ogni caso. Solo frontend.
+
+LA DEDICA — src/components/Dedica.jsx, su mikilab.de/miglionico, nel footer ("Da Miglionico") e dalla scheda Basilicata
+di "Il pane del mio paese". Sei paragrafi in IT/DE/EN: il paese, perché è nato MikiLab, per chi è rimasto e chi è partito,
+la famiglia, i maestri (i panettieri di Miglionico), "questo forno è acceso anche per te". Disegno delle colline con Miglionico e
+Stuttgart uniti da una linea, firma con il polpo e il tatuaggio, bottoni verso i pani della Basilicata e le ricette.
+I NOMI di famiglia e maestri: c'è una lista NOMI vuota in cima al file. Michele manda i nomi a Claude e la prossima patch
+li mette; finché è vuota, la sezione "Grazie a" non compare.
+In più: in Home "Michele, panettiere a Stoccarda, nato a Matera e cresciuto a Miglionico"; la scheda Basilicata cita Miglionico
+e porta alla dedica; sitemap con /miglionico.
+
+File toccati: NUOVO Dedica.jsx. MODIFICATI: App.js, HomeManuale.jsx (1 riga), PaneDelPaese.jsx, public/sitemap.xml,
+public/sw.js (cache v69). LEGAL_DATA_MAP.md: sezione 18.
