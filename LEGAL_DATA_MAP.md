@@ -142,3 +142,9 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Curare il lievito madre** (`CuraLievito.jsx`): guida statica, bozza di Sitor (IA).
 - **Modo notte** (`lib/notte.js`, `tts.js`): `localStorage` `mikilab_modo_notte`; abbassa il volume della voce sintetica del dispositivo.
 - Nessun cookie nuovo, nessuna statistica, nessun servizio esterno.
+## 16. V87 — indirizzi delle ricette, festa del 16 ottobre, volantino
+- **Indirizzi delle ricette** (`lib/recipeSeo.js`): quando si apre una scheda l'indirizzo diventa `mikilab.de/ricetta/<id>/<nome>` (solo lato client, `history.replaceState`), il titolo e i meta Open Graph mostrano nome e foto della ricetta, e un blocco JSON-LD schema.org/Recipe (nome, foto, tempi, ingredienti base, autore "Michele (MikiLab)") aiuta Google. Nessun dato personale, nessuna richiesta nuova.
+- **Sitemap** (`public/sitemap.xml`): elenca la Home, Impressum, Datenschutz, il volantino e le ricette pubbliche.
+- **Festa del 16 ottobre** (`FestaLancio.jsx`): il nome scritto per il certificato NON viene salvato né inviato (vive solo nello stato della pagina); il certificato è un'immagine creata nel browser. `localStorage` `mikilab_festa_vista`. La voce di benvenuto è la voce sintetica del dispositivo (già dichiarata).
+- **Volantino** (`Volantino.jsx`): QR generato nel browser che porta solo a mikilab.de.
+- Nessun cookie nuovo, nessuna statistica, nessun servizio esterno.
