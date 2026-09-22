@@ -1,0 +1,37 @@
+MikiLab v93 — IL LABORATORIO, IL PRIMO PANE, LA BOTTEGA RISPONDE, VOCE GRATIS
+Da applicare DOPO la v92 (controlla OfficinaSitor.jsx). Uso dalla radice:  sh patch93/applica.sh
+
+COSA FA LO SCRIPT
+ - patch_frontend.js: aggiunge righe (mai sovrascrive) a App.js, Strumenti.jsx, SitorChat.jsx, lib/tts.js, lib/features.js,
+   AdminCosts.jsx. Se un'ancora manca si ferma con ERRORE senza toccare nulla.
+ - patch_backend.py: aggiunge l'interruttore FEATURE_VOICE_SERVER (sitor_public.py) e in server.py: TTS rifiutato (424) se
+   l'interruttore è spento, traduzione pre-voce solo su richiesta e con il modello economico. Poi py_compile.
+ - copia i file nuovi (files/), aggiorna sw.js (cache v73) e LEGAL_DATA_MAP.md (sezione 22).
+ - cancella le cartelle patch83…patch92 e v92 (patch già applicate, non fanno parte del sito).
+
+SITOR QUASI A COSTO ZERO
+ 1. Voce: di serie parla il telefono (gratis, IT/DE/EN). La voce del server (OpenAI/ElevenLabs, a pagamento) è SPENTA:
+    si accende dalla pagina Costi (VOICE_SERVER). Testi italiani non tradotti letti in DE/EN → voce italiana, non tedesco che legge italiano.
+ 2. Niente più traduzione con Opus prima di parlare.
+ 3. La bottega risponde prima (lib/bottega.js + lib/glossario.js): domande su parole del mestiere, sintomi (18 del pronto
+    soccorso), dati della ricetta aperta (acqua, sale, tempi, forno, lievito, farina) e "dove trovo…" ricevono una risposta
+    dal sito, senza IA. Sotto la risposta: "Chiedi a Sitor IA →" per avere comunque l'IA. Le domande libere vanno all'IA come prima.
+
+IL LABORATORIO (Strumenti → Il laboratorio, /laboratorio, e card nell'Officina)
+ - Foglio di produzione: più ricette, in kg di farina o pezzi × peso, totali per ingrediente, sacchi, stampa, copia.
+ - Programmazione a freddo: dall'ora di infornata a ritroso, cella dopo la forma o in massa, ripresa calcolata, .ics.
+ - Conversioni: diretto / biga 40 % / poolish 30 % / lievito madre 25 % a parità di farina e acqua; TA; calo e resa; costo lotto e pezzo.
+ - Carico del forno: infornate, orari entrata/uscita, fine produzione, di quanto sfalsare la forma; più forni.
+
+IL TUO PRIMO PANE IN 7 GIORNI (Strumenti → Il tuo primo pane, /primopane, e card nell'Officina)
+ - Spesa e attrezzi → pane in cassetta → pieghe e focaccia → il forno → la biga la sera → il pane con la biga → tirare le somme.
+ - Ogni giorno: passi, frase di Sitor, link agli attrezzi e alla ricetta (cercata per nome nel ricettario), spunta "Fatto".
+
+NELLA SCHEDA RICETTA (Gli attrezzi di Sitor): Prima che succeda (i 3 errori più probabili con quella ricetta) e
+ Le parole della ricetta (i termini del mestiere trovati nel procedimento, spiegati in una riga; 31 voci IT/DE/EN).
+
+FILE NUOVI: Laboratorio.jsx, PrimoPane.jsx, laboratorio/{FoglioProduzione,Freddo,Conversioni,CaricoForno}.jsx,
+ officina/{ParoleRicetta,PrimaCheSucceda}.jsx, lib/bottega.js, lib/glossario.js.
+AGGIORNATI (sostituiti): OfficinaSitor.jsx, StrumentiRicetta.jsx, officina/ProntoSoccorso.jsx (export dei sintomi), public/sw.js.
+MODIFICATI (righe aggiunte): App.js, Strumenti.jsx, SitorChat.jsx, lib/tts.js, lib/features.js, AdminCosts.jsx, backend/server.py, backend/sitor_public.py.
+REGOLE: nessun server nuovo, nessun tracciamento, dosi intoccabili, Sitor sempre IA, IT/DE/EN.

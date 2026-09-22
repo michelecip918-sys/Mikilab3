@@ -869,6 +869,7 @@ class TTSReq(BaseModel):
     lang: str = "it"
     voice: str = "momy"
     voice_id: Optional[str] = None
+    translate: bool = False  # V93: traduzione prima della voce solo su richiesta
 
 
 # ---- OpenAI TTS (voce MASCHILE: onyx/echo) — chiave OpenAI personalizzata o Universal Key ----
@@ -927,7 +928,7 @@ async def _translate_for_tts(text: str, lang: str) -> str:
         sysmsg = (f"You are a professional translator for a bakery production app. Translate the user's text into {target}. "
                   f"If it is already in {target}, return it unchanged. Keep numbers, times, units and proper names (Michele, Sitor, MikeMix, MikiLab). "
                   f"Return ONLY the translated text, with no quotes and no explanations.")
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_BRAIN).with_params(max_tokens=800)
+        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"tts-tr-{ck[:8]}", system_message=sysmsg).with_model("anthropic", SITOR_FAST).with_params(max_tokens=800)
         out = ""
         async for ev in chat.stream_message(UserMessage(text=text)):
             if isinstance(ev, TextDelta):
@@ -954,7 +955,16 @@ async def tts_speak(payload: TTSReq):
     if not text:
         raise HTTPException(status_code=400, detail="Testo vuoto")
     # Traduci nella lingua scelta PRIMA di sintetizzare (audio davvero tradotto, non solo accento).
-    text = _clean_for_tts(await _translate_for_tts(text, payload.lang))[:2000]
+    # V93: la voce del server costa crediti: si usa solo se accesa dall'admin (pagina Costi). Altrimenti parla il telefono.
+    try:
+        _vs = await db.site_settings.find_one({}, {"_id": 0, "FEATURE_VOICE_SERVER": 1}) or {}
+        _voice_on = bool(_vs.get("FEATURE_VOICE_SERVER", False))
+    except Exception:
+        _voice_on = False
+    if not _voice_on:
+        raise HTTPException(status_code=424, detail="Voce server spenta: usa voce dispositivo")
+    if payload.translate:  # V93: i testi arrivano gia' nella lingua giusta; traduzione solo se richiesta
+        text = _clean_for_tts(await _translate_for_tts(text, payload.lang))[:2000]
     vkey = (payload.voice or "michele").lower()
 
     if _eleven_client and time.time() >= _eleven_cooldown_until:

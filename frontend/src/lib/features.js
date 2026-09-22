@@ -8,7 +8,7 @@ let _promise = null;
 export function loadFeatures() {
   if (_cache) return Promise.resolve(_cache);
   if (!_promise) {
-    _promise = api.get("/features").then((r) => { _cache = r.data || {}; return _cache; })
+    _promise = api.get("/features").then((r) => { _cache = r.data || {}; try { window.__mikilabFeatures = _cache; } catch { /* */ } return _cache; }) // V93
       .catch(() => ({ FEATURE_PHOTO_DIAG: false, FEATURE_PLAN: true, FEATURE_LIVE: true, FEATURE_VOICE_CHAT: true, savings_level: 0 }));
   }
   return _promise;

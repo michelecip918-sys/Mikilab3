@@ -5,7 +5,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
-const FEATS = ["FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT"];
+const FEATS = ["FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT", "FEATURE_VOICE_SERVER"]; // V93: VOICE_SERVER = voce a pagamento (spenta: parla il telefono, gratis)
 const COLS = ["chat_calls", "course_gens", "technique_gens", "plan_calls", "vision_calls", "live_pings", "done_pings"];
 
 // U1b: pagina admin "Costi" (nessun link pubblico). Legge/scrive GET/PUT /api/admin/costs.

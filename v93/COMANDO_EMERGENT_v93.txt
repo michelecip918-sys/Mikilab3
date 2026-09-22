@@ -1,0 +1,13 @@
+Applica la patch v93 di MikiLab ("Il laboratorio, il primo pane, la bottega risponde, voce gratis"). Segui ESATTAMENTE questi passi, senza inventare né modificare nulla oltre a quanto indicato.
+
+1) Scarica lo zip da questo link Drive: [INCOLLA QUI IL LINK]
+   Decomprimilo nella radice del progetto: deve comparire la cartella patch93/ accanto a backend/ e frontend/.
+2) Dalla radice del progetto esegui:  sh patch93/applica.sh
+   Deve finire con "OK: v93 applicata". Se dà un ERRORE o un ATTENZIONE, fermati e riportamelo testualmente (lo script non lascia modifiche a metà).
+   Lo script cancella da solo le vecchie cartelle patch83…patch92 e v92: è voluto.
+3) Riavvia il backend del preview (es. sudo supervisorctl restart backend) e verifica che risponda: GET /api/features deve contenere "FEATURE_VOICE_SERVER": false.
+4) Esegui la build di prova:  cd frontend && yarn build
+   Deve riuscire senza errori. Se fallisce, riportami l'errore completo, NON correggere da solo.
+5) Non toccare database, ricette, Sitor, .env, il file frontend/public/googlea308a6dc1717156d.html. Non riscrivere i file che lo script modifica: aggiunge solo righe.
+6) Un solo commit ("v93: laboratorio, primo pane, bottega, voce gratis") e un solo deploy.
+7) Alla fine rispondimi con: l'output dello script, l'esito del riavvio del backend, l'esito della build e del deploy. Nient'altro.

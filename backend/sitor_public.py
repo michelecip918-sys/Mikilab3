@@ -788,7 +788,8 @@ async def admin_costs(admin: dict = Depends(require_admin)):
             "features": {"FEATURE_PHOTO_DIAG": bool(s.get("FEATURE_PHOTO_DIAG", True)),
                          "FEATURE_PLAN": bool(s.get("FEATURE_PLAN", True)),
                          "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
-                         "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True))},
+                         "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True)),
+                         "FEATURE_VOICE_SERVER": bool(s.get("FEATURE_VOICE_SERVER", False))},  # V93
             "limits": {"SITOR_USER_DAILY": SITOR_USER_DAILY, "SITOR_GLOBAL_DAILY": SITOR_GLOBAL_DAILY, "COURSE_GEN_DAILY_CAP": COURSE_GEN_DAILY_CAP},
             "alerts_over_80pct": over80}
 
@@ -799,6 +800,7 @@ class SavingsReq(_BM):
     FEATURE_PLAN: _Opt[bool] = None
     FEATURE_LIVE: _Opt[bool] = None
     FEATURE_VOICE_CHAT: _Opt[bool] = None
+    FEATURE_VOICE_SERVER: _Opt[bool] = None  # V93: voce del server (a pagamento), spenta di default
 
 
 @api_router.put("/admin/costs")
@@ -806,7 +808,7 @@ async def admin_costs_set(body: SavingsReq, admin: dict = Depends(require_admin)
     upd = {}
     if body.savings_level is not None:
         upd["savings_level"] = max(0, min(int(body.savings_level), 3))
-    for f in ("FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT"):
+    for f in ("FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT", "FEATURE_VOICE_SERVER"):  # V93
         v = getattr(body, f)
         if v is not None:
             upd[f] = bool(v)
@@ -823,6 +825,7 @@ async def public_features():
             "FEATURE_PLAN": bool(s.get("FEATURE_PLAN", True)),
             "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
             "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True)),
+            "FEATURE_VOICE_SERVER": bool(s.get("FEATURE_VOICE_SERVER", False)),  # V93
             "savings_level": int(s.get("savings_level") or 0)}
 
 

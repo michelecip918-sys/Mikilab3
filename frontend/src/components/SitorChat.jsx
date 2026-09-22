@@ -7,6 +7,8 @@ import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { chatTools } from "@/lib/mycucina";
 import SitorBadge from "@/components/SitorBadge";
+import { recipesApi } from "@/lib/api"; // V93
+import { bottegaAnswer } from "@/lib/bottega"; // V93
 
 const HIST_KEY = "mikilab_sitor_chat";
 
@@ -21,9 +23,11 @@ export default function SitorChat({ onClose }) {
   const scrollRef = useRef(null);
   const recRef = useRef(null);
   const [path, setPath] = useState([]);
+  const [recs, setRecs] = useState([]); // V93
   const isIOS = typeof navigator !== "undefined" && /iP(hone|ad|od)/.test(navigator.userAgent);
   const SR = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
   useEffect(() => { api.get(`/learning-path`).then((r) => setPath(r.data?.levels || [])).catch(() => {}); }, []);
+  useEffect(() => { recipesApi.list("mikilab").then((d) => setRecs(d || [])).catch(() => {}); }, []); // V93
   useEffect(() => {
     const h = (e) => { const t = e?.detail?.text; if (t) setInput(t); };
     window.addEventListener("mikilab-chat-prefill", h);
@@ -47,13 +51,18 @@ export default function SitorChat({ onClose }) {
 
   const speak = (text) => { try { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; window.speechSynthesis.speak(u); } catch { /* */ } };
 
-  const send = async (override) => {
-    const voiceMode = typeof override === "string";
+  const send = async (override, opts = {}) => { // V93: opts.ai = salta la bottega, vai all'IA
+    const voiceMode = typeof override === "string" && !opts.ai;
     const q = (voiceMode ? override : input).trim();
     if (!q || busy) return;
     setInput("");
-    const next = [...msgs, { role: "user", content: q }];
+    const next = opts.ai ? [...msgs] : [...msgs, { role: "user", content: q }];
     setMsgs(next); setBusy(true);
+    if (!opts.ai) { // V93: prima risponde la bottega (glossario, pronto soccorso, dati della ricetta), senza IA e senza crediti
+      const curId = ((typeof window !== "undefined" && window.__mkCur) || {}).id;
+      const local = bottegaAnswer(q, lang, { recipe: recs.find((x) => x && x.id === curId) });
+      if (local) { setMsgs((m) => [...m, { role: "assistant", content: local, bottega: true, q }]); if (voiceMode) speak(local); setBusy(false); return; }
+    }
     let tools = {};
     try { tools = chatTools(); } catch { /* */ }
     try {
@@ -68,7 +77,7 @@ export default function SitorChat({ onClose }) {
       let level = "casa";
       try { level = localStorage.getItem("mikilab_recipe_mode") || (localStorage.getItem("mikilab_skill") === "expert" ? "esperto" : "casa"); } catch { /* */ }
       const cur = (typeof window !== "undefined" && window.__mkCur) || {};
-      const r = await api.post(`/sitor/chat`, { messages: next.slice(-10), lang, tools, level, recipe_id: cur.id || undefined, farro: !!cur.farro });
+      const r = await api.post(`/sitor/chat`, { messages: next.filter((m) => !m.bottega).slice(-10), lang, tools, level, recipe_id: cur.id || undefined, farro: !!cur.farro });
       const reply = r.data?.reply || tri("Riprova tra poco.", "Versuch es gleich nochmal.", "Try again shortly.");
       setMsgs((m) => [...m, { role: "assistant", content: reply }]);
       if (voiceMode) speak(reply);  // G1: in modalità voce leggi la risposta
@@ -103,6 +112,7 @@ export default function SitorChat({ onClose }) {
               <div data-testid={`chat-msg-${m.role}`} className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[15px] whitespace-pre-wrap ${m.role === "user" ? "bg-muted text-foreground" : "bg-foreground/8 text-foreground"}`}>
                 {m.content}
                 {m.role === "assistant" && <button onClick={() => speak(m.content)} className="ml-2 text-foreground/40 hover:text-muted-foreground align-middle"><Volume2 className="w-3.5 h-3.5 inline" /></button>}
+                {m.bottega && <span className="block mt-1.5 text-[10.5px] text-salvia">{tri("Dalla bottega, senza IA.", "Aus der Werkstatt, ohne KI.", "From the workshop, no AI.")} <button data-testid="chat-ask-ai" disabled={busy} onClick={() => send(m.q, { ai: true })} className="underline decoration-dotted font-bold disabled:opacity-40">{tri("Chiedi a Sitor IA →", "Sitor KI fragen →", "Ask Sitor AI →")}</button></span>}
               </div>
             </div>
           ))}

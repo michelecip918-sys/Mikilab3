@@ -1,4 +1,5 @@
 import { ChevronLeft, Sparkles, Radio, BookOpen, ChefHat, CalendarDays, Beaker, Globe, Recycle, Sprout, Settings, Flame, Soup, FlaskConical, Camera, Compass, ZoomIn, Ear, AlarmClock, MapPin, Scale, BookOpen as BookOpenIcon, Moon, Printer, Award, Dices } from "lucide-react";
+import { Factory as FactoryIcon, Footprints as FootprintsIcon } from "lucide-react"; // V93
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { usePublicContent } from "@/lib/publicContent";
@@ -13,6 +14,8 @@ export default function Strumenti({ onBack, onNav, features }) {
     { route: "panico", Icon: Flame, show: true, t: tri("Panico da cena", "Abendessen-Panik", "Dinner panic"), d: tri("Idee veloci per stasera", "Schnelle Ideen für heute Abend", "Quick ideas for tonight") },
     { route: "sughi", Icon: Soup, show: true, t: tri("Sopra la focaccia", "Auf die Focaccia", "On the focaccia"), d: tri("Condimenti per focacce, pizze e pane", "Beläge für Focaccia, Pizza und Brot", "Toppings for focaccia, pizza and bread") },
     { route: "cosa-faccio", Icon: Sparkles, show: !features || features.FEATURE_PLAN !== false, t: tri("Cosa faccio?", "Was mache ich?", "What can I make?"), d: tri("Cosa posso fare con quello che ho", "Was ich mit dem machen kann, was ich habe", "What I can make with what I have") },
+    { route: "primopane", Icon: FootprintsIcon, show: true, t: tri("Il tuo primo pane", "Dein erstes Brot", "Your first bread"), d: tri("7 giorni, un passo al giorno, con Sitor accanto", "7 Tage, ein Schritt pro Tag, mit Sitor an der Seite", "7 days, one step a day, with Sitor beside you") }, // V93
+    { route: "laboratorio", Icon: FactoryIcon, show: true, t: tri("Il laboratorio", "Die Backstube", "The bakery"), d: tri("Foglio di produzione, cella, conversioni, carico del forno: per chi panifica di mestiere", "Produktionsblatt, Kühlzelle, Umrechnungen, Ofenbelegung: für alle, die beruflich backen", "Production sheet, cold room, conversions, oven loading: for those who bake for a living") }, // V93
     { route: "banco", Icon: FlaskConical, show: true, t: tri("Il banco delle prove", "Die Prüfbank", "The test bench"), d: tri("Prova del dito, della finestra, del lievito e il tempo di oggi", "Finger-, Fenster-, Schwimmprobe und das Wetter von heute", "Poke, windowpane, float test and today's weather") },
     { route: "mioforno", Icon: Camera, show: true, t: tri("Il mio forno", "Mein Ofen", "My oven"), d: tri("Foto e note dei tuoi pani, solo sul tuo telefono", "Fotos und Notizen deiner Brote, nur auf deinem Handy", "Photos and notes of your bakes, only on your phone") },
     { route: "mensola", Icon: BookOpen, show: true, t: tri("La mia mensola", "Mein Regal", "My shelf"), d: tri("Le tue ricette salvate", "Deine gespeicherten Rezepte", "Your saved recipes") },

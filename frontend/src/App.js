@@ -62,6 +62,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 // V84 — segreto del 16 ottobre, banco delle prove, il mio forno
 import LancioSegreto, { LancioBanner, LAUNCH_KEY } from "@/components/LancioSegreto";
 import BancoProve from "@/components/BancoProve";
+import PrimoPane from "@/components/PrimoPane"; // V93
+import Laboratorio from "@/components/Laboratorio"; // V93
 import MioForno from "@/components/MioForno";
 // V85 — primo giro con Sitor + modo grande, lievito madre come un figlio, mappa del forno
 import PrimoGiro, { GIRO_KEY, isBigMode, applyBigMode } from "@/components/PrimoGiro";
@@ -94,6 +96,8 @@ function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase();
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
+  if (p.startsWith("/primopane")) return "primopane"; // V93
+  if (p.startsWith("/laboratorio")) return "laboratorio"; // V93
   if (p.startsWith("/miglionico")) return "dedica";
   if (p.startsWith("/libretto")) return "libretto";
   if (p.startsWith("/impressum")) return "impressum";
@@ -320,6 +324,8 @@ export default function App() {
               {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "banco" && <BancoProve onBack={() => setRoute("strumenti")} />}
+              {route === "primopane" && <PrimoPane onBack={() => setRoute("strumenti")} />} {/* V93 */}
+              {route === "laboratorio" && <Laboratorio onBack={() => setRoute("strumenti")} />} {/* V93 */}
               {route === "mioforno" && <MioForno onBack={() => setRoute("strumenti")} onOpenRecipe={openRecipeFromTool} />}
               {route === "miolievito" && <MioLievito onBack={() => setRoute("strumenti")} onNav={navFromHome} />}
               {route === "mappaforno" && <MappaForno onBack={() => setRoute("strumenti")} />}

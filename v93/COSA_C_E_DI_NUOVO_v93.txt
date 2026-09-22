@@ -1,0 +1,35 @@
+MIKILAB v93 — IN PAROLE SEMPLICI
+
+1) SITOR QUASI GRATIS
+ • La voce ora è quella del telefono: gratis, in italiano, tedesco e inglese. La voce "bella" del server (che costa crediti)
+   è spenta. Se un giorno la vuoi, la accendi tu dalla pagina Costi (bottone VOICE_SERVER). Finché è spenta, il server
+   non spende niente, nemmeno se qualcuno ci prova.
+ • È sparita la traduzione con il modello caro prima di parlare.
+ • Quando uno scrive a Sitor, prima risponde "la bottega": parole del mestiere (cos'è l'autolisi, la biga, l'appretto…),
+   problemi (non cresce, è pallido, sa di lievito…), numeri della ricetta aperta (quanta acqua, quanto sale, quante ore,
+   a che temperatura), e "dove trovo…". Zero crediti. Sotto la risposta c'è "Chiedi a Sitor IA →" per chi vuole l'IA.
+   Le domande vere (consigli, ricette da inventare, chiacchiere) vanno all'IA come prima, con i limiti di sempre.
+
+2) IL LABORATORIO (per chi ha scelto "So già panificare"): in Strumenti e nell'Officina del Ricettario, anche mikilab.de/laboratorio
+ • Foglio di produzione: metti insieme le ricette del giorno, in kg di farina o in pezzi, e hai i totali di tutto, i sacchi
+   e l'impasto complessivo. Si stampa e si copia.
+ • Programmazione a freddo: dici a che ora inforni e quante ore di cella: ti dice quando impastare, formare, mettere in
+   cella, tirare fuori, e quando fare la biga. Va nel calendario del telefono.
+ • Conversioni: la stessa ricetta fatta diretta, con biga, con poolish o con lievito madre, senza cambiare farina e acqua
+   totali; TA, calo di cottura, peso cotto per pezzo, costo per lotto e per pezzo.
+ • Carico del forno: quante infornate, a che ora entrano ed escono, quando finisci, e di quanti minuti sfalsare la forma.
+
+3) IL TUO PRIMO PANE IN 7 GIORNI (per chi ha scelto "Sto imparando"): in Strumenti e nell'Officina, anche mikilab.de/primopane
+ • Un passo al giorno: spesa e attrezzi, pane in cassetta, pieghe e focaccia, conoscere il forno, la biga la sera,
+   il pane con la biga, tirare le somme. Ogni giorno apre la ricetta giusta e l'attrezzo giusto. Con la spunta "Fatto".
+
+4) NELLA SCHEDA RICETTA, tra gli attrezzi di Sitor:
+ • Prima che succeda: i tre errori più probabili con quella ricetta, e come evitarli, prima di iniziare.
+ • Le parole della ricetta: i termini del mestiere trovati nel procedimento, spiegati in una riga.
+
+5) PULIZIA: la patch cancella dal progetto le vecchie cartelle patch83…patch92 e v92 (non servivano a niente).
+
+COME SI APPLICA: carica MikiLab_patch93.zip su Drive, prendi il link, incollalo in COMANDO_EMERGENT_v93.txt e manda il
+comando a Emergent. Poi mandami la risposta di Emergent (o lo zip) e controllo.
+Provata: tutti i file compilano; ogni pagina e attrezzo renderizzati in IT/DE/EN su ricette di prova; script provato due
+volte sulla copia del tuo progetto (_59_); backend compilato; 24 domande di prova alla bottega.

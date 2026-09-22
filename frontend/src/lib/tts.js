@@ -100,8 +100,19 @@ export function stopTTS() {
 // Voce nativa del dispositivo (fallback): UNICA voce di Sitor, sempre maschile.
 // Se il dispositivo NON ha alcuna voce maschile reale, NON parla (solo testo a schermo):
 // non si ripiega MAI su una voce femminile.
+// V93: la voce del server (a pagamento) si usa solo se accesa dall'admin nella pagina Costi (FEATURE_VOICE_SERVER).
+function serverVoiceOn() { try { return !!(window.__mikilabFeatures && window.__mikilabFeatures.FEATURE_VOICE_SERVER); } catch { return false; } }
+// V93: testo ancora in italiano (ricetta non tradotta) con app in DE/EN → meglio la voce italiana che un tedesco che legge italiano.
+function guessLang(text, lang) {
+  if (lang === "it") return lang;
+  const n = ` ${String(text).toLowerCase()} `;
+  const it = [" il ", " la ", " di ", " che ", " con ", " per ", " una ", " gli ", " nel ", " dell", " farina ", " impasto ", " lievito "].filter((w) => n.includes(w)).length;
+  const other = (lang === "de" ? [" der ", " die ", " und ", " mit ", " den ", " ist ", " nicht ", " mehl ", " teig "] : [" the ", " and ", " with ", " is ", " of ", " to ", " flour ", " dough "]).filter((w) => n.includes(w)).length;
+  return it >= 3 && it > other * 2 ? "it" : lang;
+}
 function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   try {
+    lang = guessLang(clean, lang); // V93
     const v = pickVoice(lang);
     if (!v) { ttsSignalEnd(); if (onEnded) onEnded(); return; } // nessuna voce maschile → muti
     const u = new SpeechSynthesisUtterance(clean);
@@ -132,7 +143,7 @@ export function playTTS(text, { lang, voice, onStart, onEnded } = {}) {
   if (isTTSMuted()) { if (onEnded) onEnded(); return; } // Mute: solo testo a schermo
   const vEff = SITOR_VOICE; // voce unica, ignora `voice`
 
-  if (!API) { nativeSpeak(clean, L, vEff, onStart, onEnded); return; }
+  if (!API || !serverVoiceOn()) { nativeSpeak(clean, L, vEff, onStart, onEnded); return; } // V93: gratis di default
 
   let started = false;
   fetch(`${API}/api/tts/speak`, {
