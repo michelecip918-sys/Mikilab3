@@ -1,0 +1,17 @@
+MikiLab v83 — pulizia della vecchia app aziendale (sostituisce la v82, che NON va applicata)
+
+Tolto:
+- 497 rotte del server della vecchia app (turni, magazzino, silos, coordinamento, multi-azienda,
+  community, consegne, pagamenti Stripe, abbonamenti, newsletter, enterprise, websocket). Restano 68 rotte, tutte usate dal sito.
+- 7 processi in background all'avvio (email prova gratuita, riepiloghi scorte, digest community,
+  allarmi reparti, turni, monitor uptime, follow-up) + seed negozio/post community + migrazione aziende.
+- 7 moduli backend vuoti; stripe da requirements; font PDF inutilizzati.
+- Frontend: parco macchine simulato, timer impastatrici, coda offline turni, login Google,
+  verifica email, piano produzione, API morte; file Capacitor non usati; vecchi report di test; cartella patch81.
+
+NON toccato: ricette e database, ricettario, Sitor (chat, corso, foto, piano), tecniche, farine,
+calendario, test del mese, palato, live, costi, diario prove, pulizia dati, Impressum/Datenschutz,
+login admin (?admin=1), file di verifica Google.
+
+Controlli fatti: tutti i file Python compilano, nessun nome mancante, import del server riuscito,
+build di prova del frontend riuscita.

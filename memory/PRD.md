@@ -163,3 +163,9 @@ Vedi `memory/test_credentials.md`.
 - Verde Canapa riscritto al metodo 60/40 IT/DE/EN (dosi invariate, assert nel patch), varianti ES/FR/FA svuotate, note 50/50→60/40; migrazione una-tantum `app_meta/v81_canapa` in server.py (aggiorna la scheda che è user_edited e azzera il corso in cache; gira solo se il testo contiene ancora "50/50"). SEED_VERSION → `2026-09-v81-canapa-6040`. Rimossa cartella patch80 (le foto riferimento tatuaggio non servono più).
 - Verifica: API 167 ricette 0 senza foto, Verde Canapa 60/40 live e 50/50 sparito, file Google intatto, index.html senza tracciamento, nessun errore v81 nei log. In produzione al prossimo **Publish**.
 
+## Patch v83 — pulizia vecchia app aziendale (22 settembre 2026)
+- Applicata `patch83` (sostituisce la v82, MAI applicata): "OK: v83 applicata". Rimossi 497 rotte vecchie (turni/magazzino/silos/multi-azienda/community/Stripe/newsletter…), 7 processi background, moduli community/coordination/deck/operations/orgs/sitor_ai/warehouse, stripe da requirements, file Capacitor, `test_reports`, patch81/82. server.py 640KB→73KB + auth.py + recipes.py; i moduli esistenti (recipe_extras, sitor_public, manuale_pages, stadio_2b, data_cleanup) restano. La mia firma polpo nel footer era già inclusa nell'App.js della patch.
+- Verifica completa post-riavvio (backend+frontend): home OK, galleria 167 ricette 0 senza foto, corso Sitor passo-passo si apre (player Step 1/6, timer, voce), chat Sitor risponde via API (`messages[]`, reply reale IT), login admin ?admin=1 UI OK (account-btn, ruolo admin), Diario Prove intatto (48/119), `yarn build` OK (21s), file Google intatto, index.html senza tracciamento.
+- Nota: login API ora restituisce `session_token` (non `token`). Il bug del logger in community.py sparisce col modulo.
+- NON pubblicato: il Publish lo fa Michele.
+
