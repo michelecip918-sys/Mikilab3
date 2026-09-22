@@ -123,8 +123,8 @@ export default function FestaLancio({ onClose, onNav }) {
         {step === 2 && (
           <div data-testid="festa-cert">
             <h2 className="font-display text-xl font-black leading-tight mt-1 flex items-center gap-2"><Award className="w-5 h-5 text-[#E9A23B]" />{tri("Il certificato del primo giorno", "Die Urkunde des ersten Tages", "The first-day certificate")}</h2>
-            <p className="text-[13px] text-[#F6F1E7]/80 mt-1">{tri("Chi c'era il primo giorno, c'era. Scrivi il tuo nome (resta nel tuo telefono) e portati via il ricordo.", "Wer am ersten Tag da war, war da. Schreib deinen Namen (bleibt auf deinem Handy) und nimm die Erinnerung mit.", "Those who were there on day one, were there. Write your name (it stays on your phone) and take the memory with you.")}</p>
-            <input data-testid="festa-name" value={name} onChange={(e) => setName(e.target.value.slice(0, 28))} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="mt-3 w-full rounded-xl border border-white/20 bg-[#1F2124] px-3 py-2 text-sm text-[#F6F1E7]" />
+            <p className="text-[13px] text-[#F6F1E7]/80 mt-1">{tri("Chi c'era il primo giorno, c'era. Scrivi il tuo soprannome (resta nel tuo telefono) e portati via il ricordo.", "Wer am ersten Tag da war, war da. Schreib deinen Spitznamen (bleibt auf deinem Handy) und nimm die Erinnerung mit.", "Those who were there on day one, were there. Write your nickname (it stays on your phone) and take the memory with you.")}</p>
+            <input data-testid="festa-name" value={name} onChange={(e) => setName(e.target.value.slice(0, 28))} placeholder={tri("Il tuo soprannome", "Dein Spitzname", "Your nickname")} className="mt-3 w-full rounded-xl border border-white/20 bg-[#1F2124] px-3 py-2 text-sm text-[#F6F1E7]" />
             <svg ref={certRef} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" className="w-full rounded-xl mt-3 border border-white/10" role="img" aria-label="certificato">
               <rect width="1080" height="1080" fill="#F6F1E7" />
               <rect x="40" y="40" width="1000" height="1000" rx="30" fill="none" stroke="#A15621" strokeWidth="8" />

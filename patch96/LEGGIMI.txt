@@ -1,0 +1,6 @@
+MikiLab v96 — Il tuo anno da fornaio · soprannome al posto del nome · privacy aggiornata. Da applicare DOPO la v95. Solo frontend.
+ - AnnoDaFornaio.jsx (/anno, Strumenti, Officina): pani fatti, preferiti, medaglie, lievito e rinfreschi, assaggi, giorni del primo pane,
+   giorni con MikiLab; frase di Sitor; manifesto 1080×1350 da condividere. Tutto letto dal localStorage.
+ - Soprannome: LaTuaCucina.jsx, CartolinaDelPane.jsx, FestaLancio.jsx (righe sostituite), Attestato.jsx (file sostituito).
+ - LegalPlaceholder.jsx: sezione 10 della Datenschutzerklärung in IT/DE/EN (attrezzi nel browser, foto locali, file generati, soprannome, voce).
+ - OfficinaSitor.jsx sostituito (card Anno), sitemap +/anno, sw.js cache v76, LEGAL_DATA_MAP sezione 25. Cancellate patch95, v95.

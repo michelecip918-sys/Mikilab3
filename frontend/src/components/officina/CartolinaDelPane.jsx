@@ -133,7 +133,7 @@ export default function CartolinaDelPane({ r, dough, lang }) {
         {[["cartolina", tri("Cartolina", "Postkarte", "Postcard"), Share2], ["bigliettino", tri("Bigliettino da regalo", "Geschenkkarte", "Gift tag"), Gift]].map(([k, l, Icon]) => (
           <button key={k} data-testid={`cp-mode-${k}`} onClick={() => setMode(k)} className={`inline-flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-full border active:scale-95 ${mode === k ? "bg-primary text-white border-primary" : "bg-card text-muted-foreground border-border"}`}><Icon className="w-3.5 h-3.5" /> {l}</button>
         ))}
-        <input data-testid="cp-name" value={name} onChange={(e) => setName(e.target.value.slice(0, 40))} placeholder={tri("Il tuo nome (facoltativo)", "Dein Name (optional)", "Your name (optional)")} className="flex-1 min-w-[10rem] text-sm text-foreground bg-card border border-border rounded-xl px-3 py-1.5 outline-none focus:border-primary" />
+        <input data-testid="cp-name" value={name} onChange={(e) => setName(e.target.value.slice(0, 40))} placeholder={tri("Il tuo soprannome (facoltativo)", "Dein Spitzname (optional)", "Your nickname (optional)")} className="flex-1 min-w-[10rem] text-sm text-foreground bg-card border border-border rounded-xl px-3 py-1.5 outline-none focus:border-primary" />
       </div>
       {mode === "cartolina" && (
         <label className="inline-flex items-center gap-2 text-[12.5px] font-semibold text-foreground bg-card border border-border rounded-xl px-3 py-2 cursor-pointer active:scale-95">

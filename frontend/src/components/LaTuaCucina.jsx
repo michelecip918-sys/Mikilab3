@@ -99,9 +99,9 @@ export default function LaTuaCucina({ recipes, starts, onNav, onOpenRecipe }) {
 
       {askName && (
         <div data-testid="cucina-nome" className="mt-3 rounded-2xl border border-border bg-background p-3">
-          <p className="text-[13px] font-bold text-foreground">{tri("Come ti chiami? Così ti saluto per nome. Resta solo nel tuo telefono.", "Wie heißt du? Dann begrüße ich dich mit Namen. Bleibt nur auf deinem Handy.", "What's your name? So I can greet you by name. It stays only on your phone.")}</p>
+          <p className="text-[13px] font-bold text-foreground">{tri("Come vuoi che ti chiami? Un soprannome basta: resta solo nel tuo telefono.", "Wie soll ich dich nennen? Ein Spitzname reicht: bleibt nur auf deinem Handy.", "What should I call you? A nickname is enough: it stays only on your phone.")}</p>
           <div className="flex gap-2 mt-2">
-            <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && saveName()} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground" />
+            <input value={draft} onChange={(e) => setDraft(e.target.value)} onKeyDown={(e) => e.key === "Enter" && saveName()} placeholder={tri("Il tuo soprannome", "Dein Spitzname", "Your nickname")} className="flex-1 rounded-xl border border-border bg-background px-3 py-2 text-sm text-foreground" />
             <button onClick={saveName} className="px-3 py-2 rounded-xl bg-primary text-primary-foreground text-sm font-bold active:scale-95">{tri("Ok", "Ok", "Ok")}</button>
             <button onClick={skipName} className="px-3 py-2 rounded-xl border border-border text-sm font-bold text-muted-foreground active:scale-95">{tri("No", "Nein", "No")}</button>
           </div>

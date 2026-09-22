@@ -40,10 +40,10 @@ export default function Attestato({ lang, title }) {
   const share = async () => { if (!url) return; const blob = await (await fetch(url)).blob(); const res = await shareOrDownload(blob, "mikilab-attestato.png", "MikiLab"); if (res === "failed") toast.error(tri("Non riesco a condividere.", "Teilen nicht möglich.", "Can't share.")); };
   return (
     <div data-testid="attestato" className="space-y-2.5">
-      <input data-testid="att-name" value={name} onChange={(e) => { setName(e.target.value.slice(0, 40)); LS.set("mikilab_cartolina_nome", e.target.value.slice(0, 40)); }} placeholder={tri("Il tuo nome", "Dein Name", "Your name")} className="w-full text-[13px] bg-card text-foreground border border-border rounded-xl px-3 py-2 outline-none focus:border-primary" />
+      <input data-testid="att-name" value={name} onChange={(e) => { setName(e.target.value.slice(0, 40)); LS.set("mikilab_cartolina_nome", e.target.value.slice(0, 40)); }} placeholder={tri("Il tuo soprannome (facoltativo)", "Dein Spitzname (optional)", "Your nickname (optional)")} className="w-full text-[13px] bg-card text-foreground border border-border rounded-xl px-3 py-2 outline-none focus:border-primary" />
       {url ? <img ref={ref} data-testid="att-img" src={url} alt="" className="w-full rounded-xl border border-border shadow-md" /> : <p className="text-[12px] text-muted-foreground">{tri("Sto scrivendo…", "Ich schreibe…", "Writing…")}</p>}
       <button data-testid="att-share" onClick={share} className="inline-flex items-center gap-1.5 text-[12px] font-bold px-3 py-2 rounded-xl bg-primary text-white active:scale-95"><Share2 className="w-4 h-4" />{tri("Condividi o salva", "Teilen oder speichern", "Share or save")}</button>
-      <p className="text-[10.5px] text-muted-foreground flex items-center gap-1"><Award className="w-3 h-3" />{tri("Disegnato nel tuo telefono. Il nome resta solo qui.", "Auf deinem Handy gezeichnet. Der Name bleibt nur hier.", "Drawn on your phone. The name stays only here.")}</p>
+      <p className="text-[10.5px] text-muted-foreground flex items-center gap-1"><Award className="w-3 h-3" />{tri("Disegnato nel tuo telefono. Meglio un soprannome che il nome vero: resta solo qui, e nessuno deve sapere chi sei per dirti bravo.", "Auf deinem Handy gezeichnet. Lieber ein Spitzname als der echte Name: bleibt nur hier, und niemand muss wissen, wer du bist, um dich zu loben.", "Drawn on your phone. A nickname is better than your real name: it stays only here, and nobody needs to know who you are to say well done.")}</p>
     </div>
   );
 }

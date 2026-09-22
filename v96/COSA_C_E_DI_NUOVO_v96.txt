@@ -1,0 +1,17 @@
+MIKILAB v96 — IN PAROLE SEMPLICI
+
+CONTROLLO DELLO ZIP _61_: v95 applicata bene (9 file identici alla patch, righe al posto giusto, cache v75).
+CONTROLLO "LEGGI":
+ • Impressum: § 5 DDG (la legge giusta dal 2024), nome, indirizzo, email. Va bene.
+ • Datenschutz: c'era già tutto il grosso (hosting Emergent, log, localStorage, Sitor e fornitore IA, foto con consenso,
+   microfono, contatori, radio, diritti, minori). Mancava una parte per le cose nuove: ho aggiunto la sezione 10
+   "Attrezzi nel browser" in tre lingue: calcoli solo nel telefono, foto mai inviate, file .ics/cartoline/carte creati sul
+   dispositivo, soprannome facoltativo, voce del telefono e voce del server spenta.
+ • Font: già ospitati sul tuo server (niente Google Fonts): giusto per la Germania.
+ • Niente cookie di tracciamento, niente statistiche, niente pubblicità: confermato nel codice.
+SOPRANNOME AL POSTO DEL NOME (hai ragione, è meglio): in La tua cucina, nella cartolina, nell'attestato e nella festa del
+ 16 ottobre il sito chiede "il tuo soprannome" e spiega che non serve il nome vero. Resta nel telefono.
+IL TUO ANNO DA FORNAIO: pani fatti, ricette nel cuore, medaglie, età del lievito e rinfreschi, assaggi da sommelier,
+ giorni del primo pane, giorni con MikiLab: i tuoi numeri e una frase di Sitor, in un manifesto elegante da condividere.
+ Strumenti, Officina, mikilab.de/anno. Legge solo i dati del telefono.
+Come sempre: zip su Drive → link nel comando → Emergent → risposta a me.

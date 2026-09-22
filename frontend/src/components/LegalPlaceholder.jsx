@@ -57,7 +57,10 @@ Die Radiofunktion lädt Audio erst, wenn Sie auf Play drücken. Dann verbindet s
 Sie haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Widerspruch und Datenübertragbarkeit sowie das Recht, erteilte Einwilligungen zu widerrufen. Kontakt: michelecip918@gmail.com. Sie können sich außerdem bei einer Aufsichtsbehörde beschweren, zum Beispiel beim Landesbeauftragten für den Datenschutz und die Informationsfreiheit Baden-Württemberg in Stuttgart.
 
 9. Kinder
-Das Angebot richtet sich an alle, die Backen lernen möchten. Wir erheben keine Angaben zur Person. Bitte geben Sie in den Chat keine persönlichen Daten ein.`,
+Das Angebot richtet sich an alle, die Backen lernen möchten. Wir erheben keine Angaben zur Person. Bitte geben Sie in den Chat keine persönlichen Daten ein.
+
+10. Werkzeuge im Browser
+Die Werkzeuge der Seite (Werkstatt, Werkzeuge im Rezept, Backstube, Brot-Sommelier, Gäste, Brotkarte, Urkunde, Jahr als Bäcker) rechnen ausschließlich in Ihrem Browser. Fotos für „Sitors Auge" werden nur auf Ihrem Gerät ausgewertet und weder gespeichert noch gesendet. Kalenderdateien (.ics), Postkarten, Karten, Schilder und Plakate werden auf Ihrem Gerät erzeugt und nur über das Teilen-Menü Ihres Geräts weitergegeben. Ein optionaler Spitzname (kein echter Name nötig) bleibt im localStorage Ihres Geräts. Die Stimme von Sitor ist die Sprachsynthese Ihres Geräts; eine Server-Stimme ist standardmäßig abgeschaltet und würde nur den vorzulesenden Text an den Anbieter übermitteln, falls der Betreiber sie einschaltet.`,
   it: `Aggiornata a settembre 2026
 
 1. Titolare
@@ -87,7 +90,10 @@ La radio carica l'audio solo quando premi play. Allora il tuo browser si collega
 Hai diritto di accesso, rettifica, cancellazione, limitazione, opposizione e portabilità, e di revocare i consensi dati. Contatto: michelecip918@gmail.com. Puoi anche presentare reclamo a un'autorità di controllo, per esempio il Landesbeauftragter für den Datenschutz und die Informationsfreiheit Baden-Württemberg a Stoccarda.
 
 9. Minori
-Il sito è per chiunque voglia imparare a fare il pane. Non raccogliamo dati personali. Non inserire dati personali nella chat.`,
+Il sito è per chiunque voglia imparare a fare il pane. Non raccogliamo dati personali. Non inserire dati personali nella chat.
+
+10. Attrezzi nel browser
+Gli attrezzi del sito (Officina, attrezzi nella ricetta, Laboratorio, Sommelier del pane, Ospiti, Carta dei pani, Attestato, Anno da fornaio) calcolano solo nel tuo browser. Le foto per "L'occhio di Sitor" vengono lette solo sul tuo dispositivo, mai salvate né inviate. File calendario (.ics), cartoline, carte, cartellini e manifesti vengono creati sul tuo dispositivo e condivisi solo tramite il menu di condivisione del telefono. Un soprannome facoltativo (non serve il nome vero) resta nel localStorage del dispositivo. La voce di Sitor è la sintesi vocale del tuo dispositivo; una voce del server è spenta di default e, se il gestore la accendesse, trasmetterebbe al fornitore solo il testo da leggere.`,
   en: `Last updated: September 2026
 
 1. Controller
@@ -117,7 +123,10 @@ The radio loads audio only when you press play. Your browser then connects direc
 You have the right of access, rectification, erasure, restriction, objection and data portability, and to withdraw consent. Contact: michelecip918@gmail.com. You may also complain to a supervisory authority, for example the State Commissioner for Data Protection and Freedom of Information of Baden-Württemberg in Stuttgart.
 
 9. Children
-The site is for anyone who wants to learn to bake. We do not collect personal details. Please do not enter personal data in the chat.`,
+The site is for anyone who wants to learn to bake. We do not collect personal details. Please do not enter personal data in the chat.
+
+10. Tools in the browser
+The site's tools (Workshop, tools inside recipes, Bakery, Bread sommelier, Guests, Bread menu, Certificate, Year as a baker) compute only in your browser. Photos for "Sitor's eye" are read only on your device, never stored or sent. Calendar files (.ics), postcards, menus, tags and posters are created on your device and shared only through your phone's share menu. An optional nickname (no real name needed) stays in your device's localStorage. Sitor's voice is your device's speech synthesis; a server voice is off by default and, if the operator switched it on, would send only the text to be read to the provider.`,
 };
 
 const PRIVACY_TITLE = {

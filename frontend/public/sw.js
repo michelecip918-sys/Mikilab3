@@ -1,4 +1,4 @@
-const CACHE_NAME = "mikilab-v75";
+const CACHE_NAME = "mikilab-v76";
 const API_CACHE = "mikilab-api-v62";
 const API_CACHE_MAX = 150;
 // GET API cui è consentita la copia offline (network-first). MAI /sitor/*, /live*, POST.

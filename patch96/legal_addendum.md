@@ -1,0 +1,4 @@
+## 25. V96 — Il tuo anno da fornaio, soprannome, privacy aggiornata
+- **Il tuo anno da fornaio** (`AnnoDaFornaio.jsx`, /anno): riepilogo calcolato dai soli dati locali del dispositivo (pani fatti, preferiti, medaglie, lievito, assaggi, giorni); manifesto disegnato su canvas e condiviso solo dal menu del telefono; data della prima visita in localStorage (`mikilab_prima_visita`). Nessun dato inviato.
+- **Soprannome al posto del nome**: in La tua cucina, cartolina, attestato e festa del 16 ottobre il sito chiede un soprannome facoltativo (minimizzazione dei dati); resta in localStorage.
+- **Datenschutzerklärung**: aggiunta la sezione 10 "Attrezzi nel browser" (IT/DE/EN): calcoli locali, foto mai inviate, file generati sul dispositivo, soprannome, voce del dispositivo e voce del server spenta di default. Cartelle `patch95`, `v95` rimosse.
