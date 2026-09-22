@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine } from "lucide-react";
+import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -31,6 +31,8 @@ export default function OfficinaSitor({ recipes, t }) {
   const nav = (route) => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route } })); // V93
   const pages = [
     { k: "primopane", I: Footprints, route: "primopane", l: tri("Il tuo primo pane", "Dein erstes Brot", "Your first bread"), s: tri("7 giorni, un passo al giorno", "7 Tage, ein Schritt pro Tag", "7 days, one step a day") },
+    { k: "ospiti", I: Users, route: "ospiti", l: tri("Stasera ho ospiti", "Heute kommen Gäste", "Guests tonight"), s: tri("pani, dosi a persona, orari, spesa", "Brote, Mengen pro Person, Zeiten, Einkauf", "breads, per-person amounts, times, shopping") },
+    { k: "carta", I: ScrollText, route: "carta", l: tri("La carta dei pani", "Die Brotkarte", "The bread menu"), s: tri("un menu elegante da stampare", "eine elegante Karte zum Drucken", "an elegant menu to print") },
     { k: "sommelier", I: Wine, route: "sommelier", l: tri("Il sommelier del pane", "Der Brot-Sommelier", "The bread sommelier"), s: tri("assaggia con cinque sensi", "mit fünf Sinnen verkosten", "taste with five senses") },
     { k: "laboratorio", I: Factory, route: "laboratorio", l: tri("Il laboratorio", "Die Backstube", "The bakery"), s: tri("produzione, cella, conversioni, forno", "Produktion, Kühlzelle, Umrechnung, Ofen", "production, cold room, conversions, oven") },
   ];

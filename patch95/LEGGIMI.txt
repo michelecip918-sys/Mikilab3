@@ -1,0 +1,10 @@
+MikiLab v95 — IL TOCCO DI CLASSE: Stasera ho ospiti, La carta dei pani, I cartellini del banco, L'attestato del fornaio di casa
+Da applicare DOPO la v94. Solo frontend. Uso dalla radice:  sh patch95/applica.sh
+ - Stasera ho ospiti (Ospiti.jsx, /ospiti, Strumenti + Officina): occasione, persone, ora in tavola → pani del sito che ci stanno
+   nel tempo, scalati a persona (g a testa per occasione), ora di inizio e forno acceso per ognuno, spesa totale, .ics.
+ - La carta dei pani (CartaDeiPani.jsx, /carta, Strumenti + Officina): menu elegante da stampare/PDF, descrizioni dalle ricette,
+   prezzi opzionali, note. Usa .print-area del sito.
+ - Cartellini del banco (laboratorio/Cartellini.jsx, quinta scheda del Laboratorio): cartellini con nome, peso, prezzo, "contiene".
+ - Attestato del fornaio di casa (officina/Attestato.jsx): in fondo a "Il tuo primo pane" quando i 7 giorni sono fatti; canvas 1400×990.
+FILE: NUOVI Ospiti.jsx, CartaDeiPani.jsx, laboratorio/Cartellini.jsx, officina/Attestato.jsx. SOSTITUITI Laboratorio.jsx, PrimoPane.jsx,
+ OfficinaSitor.jsx, public/sitemap.xml, public/sw.js (cache v75). RIGHE AGGIUNTE App.js, Strumenti.jsx. LEGAL: sezione 24. Cancellate patch94, v94.

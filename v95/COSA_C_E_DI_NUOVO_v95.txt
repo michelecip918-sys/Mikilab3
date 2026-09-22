@@ -1,0 +1,17 @@
+MIKILAB v95 — IL TOCCO DI CLASSE (in parole semplici)
+
+• STASERA HO OSPITI — il maggiordomo di MikiLab. Dici l'occasione (colazione, aperitivo, cena, brunch, festa), quanti siete
+  e a che ora si va in tavola. Ti propone i pani del sito che ci stanno nel tempo che hai, li scala a persona (90-150 g a testa
+  secondo l'occasione), ti dice per ognuno a che ora iniziare e accendere il forno, cosa metterci accanto, e ti scrive la spesa.
+  Gli orari vanno nel calendario del telefono. Strumenti, Officina, mikilab.de/ospiti.
+• LA CARTA DEI PANI — come la carta dei vini, ma per il pane. Scegli i pani, un titolo, una data, se vuoi i prezzi e una nota:
+  esce una carta elegante (Playfair, filetti rame, logo) da stampare o salvare in PDF. Per la cena, per un regalo, per il banco.
+  Le descrizioni le legge dalle ricette (lievito madre, ore di lievitazione, farina). Strumenti, Officina, mikilab.de/carta.
+• I CARTELLINI DEL BANCO — quinta scheda del Laboratorio: nome, peso, prezzo e "contiene" per ogni prodotto, in una pagina
+  da stampare e ritagliare. Con l'avvertenza che non sostituiscono l'etichetta obbligatoria.
+• L'ATTESTATO DEL FORNAIO DI CASA — quando uno finisce i 7 giorni de "Il tuo primo pane", compare l'attestato con il suo nome,
+  la data e la firma di MikiLab, da condividere o appendere in cucina.
+
+Tutto nel telefono, niente sul server, dosi intoccabili. Provato: script applicato due volte sulla copia del progetto,
+173 file del frontend con tutti gli import a posto, ogni pagina nuova renderizzata in IT/DE/EN.
+Leggi anche MikiLab_manuale_del_capo.md (come funziona tutto il sito e come si manda avanti da soli) e MikiLab_cosa_manca.md.

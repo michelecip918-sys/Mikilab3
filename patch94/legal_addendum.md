@@ -1,3 +1,0 @@
-## 23. V94 — Il sommelier del pane, correzioni
-- **Il sommelier del pane** (`Sommelier.jsx`, /sommelier): degustazione guidata (occhio, orecchio, naso, mano, bocca) con parole scelte dall'utente; scheda, verdetto tecnico e abbinamenti generati nel browser; schede salvate solo in localStorage (`mikilab_sommelier`); condivisione come testo tramite il menu del telefono. Nessun dato inviato, nessun claim salutistico.
-- Correzione: il bottone "Miglionico" nella scheda Basilicata di "Il pane del mio paese" apriva una pagina inesistente; ora apre la dedica. Sitemap: aggiunte /laboratorio, /primopane, /sommelier. Cartelle `patch93`, `patch93b`, `v93` rimosse dal repository.
