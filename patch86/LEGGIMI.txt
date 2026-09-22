@@ -1,0 +1,39 @@
+MikiLab v86 — Il pane parla · La sveglia del panettiere · Il pane del mio paese · Il lievito viaggia (QR) · Pane senza bilancia · Modo notte del fornaio · Curare il lievito madre
+Contiene anche tutti i file della v84 e della v85: si applica sia dopo di loro, sia al loro posto. Solo frontend.
+
+1) IL PANE PARLA — src/components/AscoltaCrosta.jsx (Strumenti)
+   Si batte con le nocche sul fondo del pane con il telefono vicino: il sito ascolta (Web Audio, tutto nel browser, niente
+   registrato né inviato) e dice "suona cavo: è cotto" / "quasi" / "sordo: ancora 8-10 minuti", con nota e risonanza misurate.
+   Dichiarato esperimento di Sitor: stecchino e termometro (94-98 °C) restano le prove sicure.
+
+2) LA SVEGLIA DEL PANETTIERE — src/components/SvegliaPanettiere.jsx (Strumenti)
+   Scegli la ricetta e l'ora in cui vuoi il pane pronto: programma a ritroso su TUTTE le fasi del corso, passi di notte
+   segnalati con la luna (consiglio frigo), .ics con una sveglia 5 minuti prima di ogni passo, copia del programma.
+
+3) IL PANE DEL MIO PAESE — src/components/PaneDelPaese.jsx (Strumenti)
+   15 regioni (Basilicata, Puglia, Campania, Calabria, Sicilia, Liguria, Toscana, Lazio, Piemonte, Lombardia/Veneto,
+   Baviera, Svevia/Stoccarda, Germania, Francia, Austria) con due righe di storia (BOZZE di Sitor, da riscrivere da Michele)
+   e le ricette del sito abbinate per parole chiave nel nome. La regione resta nel telefono.
+
+4) IL LIEVITO VIAGGIA — dentro src/components/MioLievito.jsx
+   Sezione con QR e link: chi riceve un pezzo di "Nino" apre il link e nel suo telefono nasce un figlio di Nino con la
+   stessa età (mikilab.de/?lievito=...). Nel QR solo nome, data e tipo del lievito. Aggiunto anche il bottone
+   "Come si cura e si fa crescere" verso la guida.
+
+5) PANE SENZA BILANCIA — src/components/SenzaBilancia.jsx (Strumenti)
+   Grammi → tazze (240 ml) o bicchieri (200 ml) + cucchiai + cucchiaini per 10 ingredienti. Le dosi delle ricette NON cambiano.
+
+6) MODO NOTTE DEL FORNAIO — src/lib/notte.js, index.css, tts.js (interruttore in Strumenti)
+   Palette scura, luce calda e bassa, tutto più grande, Sitor parla a volume 55%. Indipendente dal tema chiaro/scuro.
+
+7) CURARE IL LIEVITO MADRE — src/components/CuraLievito.jsx (Strumenti, e da Il mio lievito madre)
+   Guida in 9 capitoli: cos'è, il rinfresco (proporzioni solido/licoli/segale), dove vive e ogni quanto mangia, quando è
+   pronto, svegliarlo dopo il frigo (3 rinfreschi per i grandi lievitati, bagnetto per il solido), vacanze (frigo,
+   essiccazione, regalo), i segnali (bene/attenzione/butta), gli errori di tutti, solido↔licoli. BOZZA di Sitor.
+
+Tolte dalla lista perché già coperte: "Che farina ho in mano?" (c'è già il traduttore delle farine) e "La sfida del mese"
+(c'è Test del mese + Il mio forno).
+
+File toccati: NUOVI AscoltaCrosta, SvegliaPanettiere, PaneDelPaese, SenzaBilancia, CuraLievito, lib/notte.js.
+MODIFICATI: App.js, Strumenti.jsx, MioLievito.jsx, lib/tts.js (volume notte), index.css, public/sw.js (cache v66).
+LEGAL_DATA_MAP.md: sezioni 13, 14, 15. Controlli: sintassi verificata, nessun import rotto, nessuna chiamata nuova al server.
