@@ -62,6 +62,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 // V84 — segreto del 16 ottobre, banco delle prove, il mio forno
 import LancioSegreto, { LancioBanner, LAUNCH_KEY } from "@/components/LancioSegreto";
 import BancoProve from "@/components/BancoProve";
+import PastaDiCasa from "@/components/PastaDiCasa"; // V102
 import Almanacco from "@/components/Almanacco"; // V101
 import Mappa from "@/components/Mappa"; // V100
 import LibroDiPane from "@/components/LibroDiPane"; // V97
@@ -104,6 +105,7 @@ function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase();
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
+  if (p.startsWith("/pasta")) return "pasta"; // V102
   if (p.startsWith("/oggi")) return "oggi"; // V101
   if (p.startsWith("/mappa")) return "mappa"; // V100
   if (p.startsWith("/libro")) return "libro"; // V97
@@ -340,6 +342,7 @@ export default function App() {
               {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "banco" && <BancoProve onBack={() => setRoute("strumenti")} />}
+              {route === "pasta" && <PastaDiCasa onBack={() => setRoute("recipes")} />} {/* V102 */}
               {route === "oggi" && <Almanacco onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V101 */}
               {route === "mappa" && <Mappa onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V100 */}
               {route === "libro" && <LibroDiPane onBack={() => setRoute("strumenti")} />} {/* V97 */}
