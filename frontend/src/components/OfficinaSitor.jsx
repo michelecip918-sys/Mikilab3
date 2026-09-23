@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText, BookOpen, Briefcase, Map, Sun, Wheat, Baby } from "lucide-react";
+import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText, BookOpen, Briefcase, Map, Sun, Wheat, Baby, LifeBuoy } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -34,6 +34,7 @@ export default function OfficinaSitor({ recipes, t }) {
     { k: "ospiti", I: Users, route: "ospiti", l: tri("Stasera ho ospiti", "Heute kommen Gäste", "Guests tonight"), s: tri("pani, dosi a persona, orari, spesa", "Brote, Mengen pro Person, Zeiten, Einkauf", "breads, per-person amounts, times, shopping") },
     { k: "carta", I: ScrollText, route: "carta", l: tri("La carta dei pani", "Die Brotkarte", "The bread menu"), s: tri("un menu elegante da stampare", "eine elegante Karte zum Drucken", "an elegant menu to print") },
     { k: "sommelier", I: Wine, route: "sommelier", l: tri("Il sommelier del pane", "Der Brot-Sommelier", "The bread sommelier"), s: tri("assaggia con cinque sensi", "mit fünf Sinnen verkosten", "taste with five senses") },
+    { k: "salva", I: LifeBuoy, route: "salva", l: tri("Il pane che salva", "Das Brot, das rettet", "The bread that saves"), s: tri("senza lievito, forno, bilancia, corrente", "ohne Hefe, Ofen, Waage, Strom", "no yeast, oven, scale, power") },
     { k: "pasta", I: Wheat, route: "pasta", l: tri("Le mani in pasta", "Die Hände im Teig", "Hands in the dough"), s: tri("la pasta di casa, dodici forme (di Sitor)", "hausgemachte Pasta, zwölf Formen (von Sitor)", "homemade pasta, twelve shapes (by Sitor)") },
     { k: "piccoli", I: Baby, route: "piccoli", l: tri("Il pane dei piccoli", "Das Brot der Kleinen", "Bread for little ones"), s: tri("fare il pane con i bambini (di Sitor)", "Brot backen mit Kindern (von Sitor)", "baking bread with children (by Sitor)") },
     { k: "oggi", I: Sun, route: "oggi", l: tri("L'almanacco del fornaio", "Der Almanach des Bäckers", "The baker's almanac"), s: tri("ogni giorno una pagina nuova", "jeden Tag eine neue Seite", "a new page every day") },

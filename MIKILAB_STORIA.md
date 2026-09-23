@@ -14,5 +14,7 @@ Il Manuale di Sitor: ricettario pubblico di Michele Signorella, panettiere a Sto
 - **v103** Il pane dei piccoli: fare il pane con i bambini (impasto facile, sei forme, cinque regole, il diploma), scritto da Sitor.
 - **v104** I filetti d'oro (la striscia in cima e le righe sotto i titoli) e la lettera al fornaio che sarai, che si apre da sola il giorno scelto.
 - **v105** Sitor maestro: il sapere del maestro panettiere nel cervello di Sitor, i numeri della ricetta aperta calcolati per lui, il metodo di risposta da bottega, e l'interruttore per il modello grande.
+- **v106** I dati strutturati delle ricette completi per Google.
+- **v107** Il benvenuto in Home (cos'è MikiLab in trenta secondi, a chi serve: a tutti, e sei porte) e Il pane che salva (senza lievito, senza forno, senza bilancia, senza corrente, conservare, la dispensa di scorta), scritto da Sitor.
 
 Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuovi; niente pubblicità; il pane si fa con le mani.
