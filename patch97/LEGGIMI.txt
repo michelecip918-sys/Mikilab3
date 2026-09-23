@@ -1,5 +1,0 @@
-MikiLab v97 — La valigia della bottega · Il mio libro di pane · pulizia. Da applicare DOPO la v96. Solo frontend.
- - Valigia.jsx (/valigia): esporta tutte le chiavi mikilab_* (+ mioforno) in mikilab-valigia-<data>.json; importa con anteprima, poi ricarica.
- - LibroDiPane.jsx (/libro): i preferiti impaginati (copertina + una ricetta per pagina, dosi originali, procedimento), print-area.
- - OfficinaSitor.jsx sostituito (due card), App.js e Strumenti.jsx (righe aggiunte), sitemap +/valigia +/libro, sw.js v77, LEGAL sez. 26.
- - Cancellate: capacitor-plugins (plugin nativo mai usato, nessun riferimento nel codice), patch96, v96.

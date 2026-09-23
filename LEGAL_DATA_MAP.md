@@ -188,3 +188,7 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **La valigia della bottega** (`Valigia.jsx`, /valigia): esporta in un file JSON, creato sul dispositivo e consegnato solo al menu di condivisione/salvataggio del telefono, le chiavi localStorage del sito (impostazioni, preferiti, lievito, medaglie, note, attrezzi; escluso lo sblocco admin e le cache); importa un file dello stesso tipo scelto dall'utente. Nessun server coinvolto; è l'esercizio pratico del diritto alla portabilità dei dati locali.
 - **Il mio libro di pane** (`LibroDiPane.jsx`, /libro): pagina di stampa delle ricette preferite (dosi originali, procedimento), generata nel browser; soprannome facoltativo in copertina.
 - Rimosse dal repository le cartelle `capacitor-plugins` (plugin nativo non usato), `patch96` e `v96`.
+## 27. V98 — I miei appunti, tazze e once, da evitare
+- **I miei appunti** (`officina/MieiAppunti.jsx`): stelle, date in cui la ricetta è stata fatta e testo libero dell'utente, salvati solo in localStorage (`mikilab_appunti_<id>`); inclusi nella valigia e stampati nel libro di pane. Nessun invio.
+- **In tazze e once** (`officina/TazzeOnce.jsx`): conversione delle dosi con densità per ingrediente; le dosi in grammi restano quelle della ricetta.
+- **Da evitare** (in Cosa posso fare adesso?): filtro locale per latte/burro, uova, frutta a guscio, sesamo, soia, zucchero, carne, dedotto dagli ingredienti della ricetta con invito a verificare le etichette; non è un'indicazione medica. Cartelle `patch97`, `v97` rimosse.

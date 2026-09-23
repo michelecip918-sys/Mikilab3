@@ -1,0 +1,5 @@
+MikiLab v98 — I miei appunti · In tazze e once · Da evitare. Da applicare DOPO la v97. Solo frontend; nessuna riga modificata a mano:
+ NUOVI officina/MieiAppunti.jsx (stelle, "l'ho fatta oggi", testo; chiave mikilab_appunti_<id>), officina/TazzeOnce.jsx (cups/tbsp/tsp/oz con densità).
+ SOSTITUITI StrumentiRicetta.jsx (+2 attrezzi: I miei appunti in cima, In tazze e once), LibroDiPane.jsx (stampa gli appunti),
+ officina/CosaPossoFare.jsx (chip "Da evitare": latte/burro, uova, frutta a guscio, sesamo, soia, zucchero, carne), public/sw.js (v78).
+ LEGAL sezione 27. Cancellate patch97, v97.

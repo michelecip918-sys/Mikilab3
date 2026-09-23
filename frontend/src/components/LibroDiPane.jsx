@@ -7,6 +7,7 @@ import { rLoc } from "@/lib/loc";
 import { getFavs } from "@/lib/favorites";
 import { getName } from "@/lib/bottega";
 import { computeDough, itemLabel, num, fmtDateLong } from "@/lib/sitorTools";
+import { getAppunti } from "@/components/officina/MieiAppunti"; // V98
 
 // V97 — IL MIO LIBRO DI PANE. Le ricette che hai messo nel cuore, impaginate come un libretto da stampare (o PDF):
 // copertina con il tuo soprannome, una ricetta per pagina, dosi originali, procedimento. Il ricettario di casa, su carta.
@@ -42,6 +43,7 @@ export default function LibroDiPane({ onBack }) {
           {recipes.map((r, idx) => {
             const d = num(r.flour_grams) > 0 ? computeDough(r, r.flour_grams) : null;
             const proc = rLoc(r, "procedure", lang) || r.procedure || "";
+            const ap = getAppunti(r.id); // V98
             return (
               <article key={r.id} data-testid={`libro-ricetta-${idx}`} className="rounded-2xl border border-border bg-background px-6 py-6" style={{ pageBreakAfter: "always", breakInside: "avoid" }}>
                 <p className="font-mono-data text-[10px] tracking-[0.3em] uppercase text-muted-foreground">{idx + 1} / {recipes.length}</p>
@@ -56,6 +58,12 @@ export default function LibroDiPane({ onBack }) {
                 )}
                 {(num(r.bake_temp) > 0 || num(r.bulk_fermentation_hours) > 0) && <p className="text-[12px] text-muted-foreground mt-2">{num(r.bulk_fermentation_hours) > 0 ? `${tri("Massa", "Stockgare", "Bulk")} ${r.bulk_fermentation_hours} h · ` : ""}{num(r.proofing_hours) > 0 ? `${tri("Forma", "Stückgare", "Proof")} ${r.proofing_hours} h · ` : ""}{num(r.bake_temp) > 0 ? `${tri("Forno", "Ofen", "Oven")} ${r.bake_temp} °C${num(r.bake_minutes) > 0 ? ` · ${r.bake_minutes} min` : ""}` : ""}</p>}
                 {proc && <p className="text-[12.5px] text-foreground/90 leading-relaxed whitespace-pre-line mt-3">{proc}</p>}
+                {(ap.text || ap.stars > 0 || ap.made.length > 0) && (
+                  <div className="mt-3 rounded-xl border border-border bg-muted/30 p-3">
+                    <p className="text-[10.5px] font-bold uppercase tracking-wide text-muted-foreground">{tri("I miei appunti", "Meine Notizen", "My notes")}{ap.stars > 0 ? ` · ${"★".repeat(ap.stars)}` : ""}{ap.made.length > 0 ? ` · ${tri(`fatta ${ap.made.length} volte`, `${ap.made.length} Mal gebacken`, `made ${ap.made.length} times`)}` : ""}</p>
+                    {ap.text && <p className="text-[12px] text-foreground/90 whitespace-pre-line mt-1">{ap.text}</p>}
+                  </div>
+                )}
                 <p className="text-[10px] text-muted-foreground mt-4">mikilab.de/ricetta/{r.id}</p>
               </article>
             );
