@@ -1,0 +1,2 @@
+## 28. V99 — Comodità d'uso
+- Nessuna funzione nuova che tratti dati: testi degli attrezzi un gradino più grandi, tabelle riorganizzate per gli schermi stretti (confronto, tazze e once, totali), card dell'Officina più larghe. In Strumenti: casella di ricerca e "usati di recente" (chiave localStorage `mikilab_recenti`, solo i nomi delle pagine aperte, nel dispositivo). Cartelle `patch98`, `v98` rimosse.

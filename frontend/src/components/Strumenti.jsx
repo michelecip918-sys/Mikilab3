@@ -1,3 +1,4 @@
+import { useState } from "react"; // V99 react
 import { ChevronLeft, Sparkles, Radio, BookOpen, ChefHat, CalendarDays, Beaker, Globe, Recycle, Sprout, Settings, Flame, Soup, FlaskConical, Camera, Compass, ZoomIn, Ear, AlarmClock, MapPin, Scale, BookOpen as BookOpenIcon, Moon, Printer, Award, Dices } from "lucide-react";
 import { Briefcase as BriefcaseIcon, BookOpen as BookIcon } from "lucide-react"; // V97
 import { Users as UsersIcon, ScrollText as ScrollIcon } from "lucide-react"; // V95
@@ -52,6 +53,13 @@ export default function Strumenti({ onBack, onNav, features }) {
     { route: "notte", Icon: Moon, show: true, t: tri("Modo notte del fornaio", "Nachtmodus des Bäckers", "Baker's night mode"), d: tri("Schermo caldo e scuro, tutto più grande, Sitor sussurra (accendi/spegni)", "Warmer, dunkler Bildschirm, alles größer, Sitor flüstert (an/aus)", "Warm dark screen, everything bigger, Sitor whispers (on/off)") },
     { route: "grande", Icon: ZoomIn, show: true, t: tri("Modo grande", "Großmodus", "Big mode"), d: tri("Scritte e pulsanti più grandi (accendi/spegni)", "Größere Schrift und Knöpfe (an/aus)", "Bigger text and buttons (on/off)") },
   ].filter((x) => x.show);
+  // V99: cerca un attrezzo per nome e ritrova quelli usati di recente
+  const [q, setQ] = useState("");
+  const norm = (v) => String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const shown = q.trim() ? all.filter((x) => norm(x.t + " " + x.d).includes(norm(q))) : all;
+  const readRecent = () => { try { return JSON.parse(localStorage.getItem("mikilab_recenti") || "[]"); } catch { return []; } };
+  const recent = readRecent().map((r) => all.find((x) => x.route === r)).filter(Boolean).slice(0, 4);
+  const go = (route) => { try { localStorage.setItem("mikilab_recenti", JSON.stringify([route, ...readRecent().filter((r) => r !== route)].slice(0, 8))); } catch { /* */ } onNav(route); };
 
   return (
     <div data-testid="strumenti-page" className="max-w-2xl mx-auto px-4 py-6 space-y-5">
@@ -62,9 +70,17 @@ export default function Strumenti({ onBack, onNav, features }) {
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Strumenti", "Werkzeuge", "Tools")}</h1>
         <p className="text-sm text-muted-foreground mt-1">{tri("Tutto quello che ti aiuta in cucina, in un solo posto.", "Alles, was dir in der Küche hilft, an einem Ort.", "Everything that helps you in the kitchen, in one place.")}</p>
       </div>
+      <input data-testid="strumenti-cerca" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca un attrezzo… (es. lievito, forno, stampa)", "Werkzeug suchen… (z. B. Sauerteig, Ofen, Drucken)", "Search a tool… (e.g. starter, oven, print)")} className="w-full text-[14px] bg-card text-foreground border border-border rounded-xl px-3 py-2.5 outline-none focus:border-primary" />
+      {!q.trim() && recent.length > 0 && (
+        <div data-testid="strumenti-recenti">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground mb-1.5">{tri("Usati di recente", "Zuletzt benutzt", "Recently used")}</p>
+          <div className="flex flex-wrap gap-1.5">{recent.map((x) => <button key={x.route} data-testid={`recente-${x.route}`} onClick={() => go(x.route)} className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold px-3 py-1.5 rounded-full border border-primary/40 bg-primary/8 text-foreground active:scale-95"><x.Icon className="w-3.5 h-3.5 text-primary" />{x.t}</button>)}</div>
+        </div>
+      )}
+      {shown.length === 0 && <p className="text-[13px] text-muted-foreground">{tri("Nessun attrezzo con questo nome. Prova con un'altra parola.", "Kein Werkzeug mit diesem Namen. Versuch ein anderes Wort.", "No tool with that name. Try another word.")}</p>}
       <div className="grid grid-cols-2 gap-2.5" data-testid="strumenti-grid">
-        {all.map((x) => (
-          <button key={x.route} data-testid={`strumenti-${x.route}`} onClick={() => onNav(x.route)}
+        {shown.map((x) => (
+          <button key={x.route} data-testid={`strumenti-${x.route}`} onClick={() => go(x.route)}
             className="flex flex-col items-start gap-1.5 text-left rounded-2xl border border-border bg-background p-3.5 active:scale-[0.98] hover:border-primary/60 transition-all min-w-0">
             <span className="w-9 h-9 rounded-xl bg-primary/15 border border-primary/30 flex items-center justify-center"><x.Icon className="w-5 h-5 text-primary" /></span>
             <span className="font-bold text-foreground text-[14px] leading-tight">{x.t}</span>

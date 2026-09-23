@@ -1,0 +1,8 @@
+MikiLab v99 — COMODITÀ D'USO. Da applicare DOPO la v98. Solo frontend.
+ - Strumenti.jsx (righe aggiunte): casella "Cerca un attrezzo…" e "Usati di recente" (4 chip, localStorage mikilab_recenti).
+ - Tutti i componenti dell'Officina/attrezzi/Laboratorio/pagine v92-v98 sostituiti con testi un gradino più grandi
+   (10,5→11, 11,5→12, 12→12,5, 12,5→13 px; il Modo grande li ingrandisce ancora).
+ - Metti a confronto: righe a blocchi (etichetta sopra, i due valori sotto) invece di tre colonne strette che spezzavano le parole
+   in verticale, soprattutto in tedesco. In tazze e once: 3 colonne (g·oz insieme). Card dell'Officina 164 px con altezza minima.
+   Totali del Foglio di produzione e della spesa Ospiti in una colonna sul telefono.
+ - sw.js cache v79, LEGAL sezione 28. Cancellate patch98, v98.

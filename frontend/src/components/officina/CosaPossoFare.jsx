@@ -69,29 +69,29 @@ export default function CosaPossoFare({ recipes, lang, t, onOpen }) {
 
   return (
     <div data-testid="cosa-posso-fare" className="space-y-3">
-      <p className="text-[12.5px] text-foreground/85 leading-snug">{tri("Rispondi a tre domande e ti dico cosa puoi impastare adesso, con quello che hai.", "Beantworte drei Fragen und ich sage dir, was du jetzt kneten kannst, mit dem, was du hast.", "Answer three questions and I'll tell you what you can knead right now, with what you have.")}</p>
+      <p className="text-[13px] text-foreground/85 leading-snug">{tri("Rispondi a tre domande e ti dico cosa puoi impastare adesso, con quello che hai.", "Beantworte drei Fragen und ich sage dir, was du jetzt kneten kannst, mit dem, was du hast.", "Answer three questions and I'll tell you what you can knead right now, with what you have.")}</p>
       <div className="rounded-xl border border-border bg-card p-3 space-y-3">
         <div>
-          <p className="text-[12px] font-semibold text-foreground mb-1.5 flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-primary" /> {tri("Quanto tempo hai?", "Wie viel Zeit hast du?", "How much time do you have?")}</p>
-          <div className="flex flex-wrap gap-1.5">{TIMES.map((x) => <button key={x.k} data-testid={`cpf-time-${x.k}`} onClick={() => setTime(x.k)} className={`text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${time === x.k ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
+          <p className="text-[12.5px] font-semibold text-foreground mb-1.5 flex items-center gap-1"><Clock className="w-3.5 h-3.5 text-primary" /> {tri("Quanto tempo hai?", "Wie viel Zeit hast du?", "How much time do you have?")}</p>
+          <div className="flex flex-wrap gap-1.5">{TIMES.map((x) => <button key={x.k} data-testid={`cpf-time-${x.k}`} onClick={() => setTime(x.k)} className={`text-[12px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${time === x.k ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
         </div>
         <div>
-          <p className="text-[12px] font-semibold text-foreground mb-1.5 flex items-center gap-1"><Wheat className="w-3.5 h-3.5 text-primary" /> {tri("Con cosa fai lievitare?", "Womit lässt du gehen?", "What do you leaven with?")}</p>
-          <div className="flex flex-wrap gap-1.5">{LEAVEN.map((x) => <button key={x.k} data-testid={`cpf-leaven-${x.k}`} onClick={() => setLeaven(x.k)} className={`text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${leaven === x.k ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
+          <p className="text-[12.5px] font-semibold text-foreground mb-1.5 flex items-center gap-1"><Wheat className="w-3.5 h-3.5 text-primary" /> {tri("Con cosa fai lievitare?", "Womit lässt du gehen?", "What do you leaven with?")}</p>
+          <div className="flex flex-wrap gap-1.5">{LEAVEN.map((x) => <button key={x.k} data-testid={`cpf-leaven-${x.k}`} onClick={() => setLeaven(x.k)} className={`text-[12px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${leaven === x.k ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
         </div>
         <div>
-          <p className="text-[12px] font-semibold text-foreground mb-1.5">{tri("Oltre a farina, acqua, sale, olio e zucchero, in casa hai…", "Außer Mehl, Wasser, Salz, Öl und Zucker hast du zu Hause…", "Besides flour, water, salt, oil and sugar, at home you have…")}</p>
-          <div className="flex flex-wrap gap-1.5">{PANTRY.map((x) => <button key={x.k} data-testid={`cpf-have-${x.k}`} onClick={() => toggle(x.k)} className={`text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${have.has(x.k) ? "bg-salvia text-white border-salvia" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
+          <p className="text-[12.5px] font-semibold text-foreground mb-1.5">{tri("Oltre a farina, acqua, sale, olio e zucchero, in casa hai…", "Außer Mehl, Wasser, Salz, Öl und Zucker hast du zu Hause…", "Besides flour, water, salt, oil and sugar, at home you have…")}</p>
+          <div className="flex flex-wrap gap-1.5">{PANTRY.map((x) => <button key={x.k} data-testid={`cpf-have-${x.k}`} onClick={() => toggle(x.k)} className={`text-[12px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${have.has(x.k) ? "bg-salvia text-white border-salvia" : "bg-background text-muted-foreground border-border"}`}>{L(x)}</button>)}</div>
         </div>
         <div>
-          <p className="text-[12px] font-semibold text-foreground mb-1.5">{tri("Da evitare (per chi mangia con te)", "Zu vermeiden (für die, die mitessen)", "To avoid (for those eating with you)")}</p>
-          <div className="flex flex-wrap gap-1.5">{AVOID.map((x) => <button key={x.k} data-testid={`cpf-avoid-${x.k}`} onClick={() => toggleAvoid(x.k)} className={`text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${avoid.has(x.k) ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{avoid.has(x.k) ? "✕ " : ""}{L(x)}</button>)}</div>
-          {avoid.size > 0 && <p className="text-[10.5px] text-muted-foreground mt-1">{tri("Letto dagli ingredienti della ricetta: controlla sempre le etichette di quello che usi.", "Aus den Rezeptzutaten gelesen: prüfe immer die Etiketten deiner Zutaten.", "Read from the recipe ingredients: always check the labels of what you use.")}</p>}
+          <p className="text-[12.5px] font-semibold text-foreground mb-1.5">{tri("Da evitare (per chi mangia con te)", "Zu vermeiden (für die, die mitessen)", "To avoid (for those eating with you)")}</p>
+          <div className="flex flex-wrap gap-1.5">{AVOID.map((x) => <button key={x.k} data-testid={`cpf-avoid-${x.k}`} onClick={() => toggleAvoid(x.k)} className={`text-[12px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 ${avoid.has(x.k) ? "bg-primary text-white border-primary" : "bg-background text-muted-foreground border-border"}`}>{avoid.has(x.k) ? "✕ " : ""}{L(x)}</button>)}</div>
+          {avoid.size > 0 && <p className="text-[11px] text-muted-foreground mt-1">{tri("Letto dagli ingredienti della ricetta: controlla sempre le etichette di quello che usi.", "Aus den Rezeptzutaten gelesen: prüfe immer die Etiketten deiner Zutaten.", "Read from the recipe ingredients: always check the labels of what you use.")}</p>}
         </div>
       </div>
       <div data-testid="cpf-results" className="space-y-1.5">
         {scored.length === 0 ? (
-          <p className="text-[12.5px] text-muted-foreground rounded-xl border border-border bg-card p-3">{tri("Con questi limiti non trovo niente: dai un po' più di tempo, o cambia lievito.", "Mit diesen Grenzen finde ich nichts: gib etwas mehr Zeit oder wechsle das Triebmittel.", "With these limits I find nothing: allow a bit more time, or change the leavening.")}</p>
+          <p className="text-[13px] text-muted-foreground rounded-xl border border-border bg-card p-3">{tri("Con questi limiti non trovo niente: dai un po' più di tempo, o cambia lievito.", "Mit diesen Grenzen finde ich nichts: gib etwas mehr Zeit oder wechsle das Triebmittel.", "With these limits I find nothing: allow a bit more time, or change the leavening.")}</p>
         ) : scored.map(({ r, F, total, missing }) => {
           const c = recipeCategory(r); const col = CAT_COLORS[c.key] || "hsl(var(--primary))";
           return (
@@ -109,7 +109,7 @@ export default function CosaPossoFare({ recipes, lang, t, onOpen }) {
           );
         })}
       </div>
-      <p className="text-[12px] text-salvia leading-snug">
+      <p className="text-[12.5px] text-salvia leading-snug">
         {tri("Sitor: se hai poco tempo, non scegliere la ricetta più bella: scegli quella che finisci. Il pane buono è quello che esce dal forno.",
           "Sitor: Hast du wenig Zeit, nimm nicht das schönste Rezept, sondern das, das du zu Ende bringst. Gutes Brot ist das, das aus dem Ofen kommt.",
           "Sitor: if you're short on time, don't pick the prettiest recipe: pick the one you'll finish. Good bread is the one that comes out of the oven.")}

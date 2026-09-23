@@ -55,7 +55,7 @@ export default function StrumentiRicetta({ r, t, target, scaleVal, onScaleChange
       <button data-testid="strumenti-toggle" onClick={() => setCollapsed((c) => !c)} className="w-full flex items-center justify-between gap-2 text-left">
         <div>
           <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary">{tri("Gli attrezzi di Sitor", "Sitors Werkzeuge", "Sitor's tools")}</p>
-          <p className="text-[12px] text-muted-foreground">{tri("per questa ricetta, con le tue dosi", "für dieses Rezept, mit deinen Mengen", "for this recipe, with your quantities")}</p>
+          <p className="text-[12.5px] text-muted-foreground">{tri("per questa ricetta, con le tue dosi", "für dieses Rezept, mit deinen Mengen", "for this recipe, with your quantities")}</p>
         </div>
         <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${collapsed ? "" : "rotate-180"}`} />
       </button>
@@ -64,11 +64,11 @@ export default function StrumentiRicetta({ r, t, target, scaleVal, onScaleChange
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             {tools.map((x) => (
               <button key={x.k} data-testid={`strumento-${x.k}`} onClick={() => setOpenTool(openTool === x.k ? null : x.k)}
-                className={`inline-flex items-center gap-1.5 text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 transition-all ${openTool === x.k ? "bg-primary text-white border-primary" : "bg-card text-foreground border-border hover:border-primary/60"}`}>
+                className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full border active:scale-95 transition-all ${openTool === x.k ? "bg-primary text-white border-primary" : "bg-card text-foreground border-border hover:border-primary/60"}`}>
                 <x.I className="w-3.5 h-3.5" />{x.l}
               </button>
             ))}
-            <button data-testid="strumento-sommelier" onClick={goSommelier} className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold px-2.5 py-1.5 rounded-full border bg-salvia/10 text-foreground border-salvia/40 active:scale-95 transition-all"><Wine className="w-3.5 h-3.5 text-salvia" />{tri("Assaggialo da sommelier", "Als Sommelier verkosten", "Taste it like a sommelier")}</button>
+            <button data-testid="strumento-sommelier" onClick={goSommelier} className="inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full border bg-salvia/10 text-foreground border-salvia/40 active:scale-95 transition-all"><Wine className="w-3.5 h-3.5 text-salvia" />{tri("Assaggialo da sommelier", "Als Sommelier verkosten", "Taste it like a sommelier")}</button>
           </div>
           {cur && (
             <div data-testid={`strumento-panel-${cur.k}`} className="mt-3 rounded-xl border border-border bg-background p-3">
