@@ -10,6 +10,7 @@ import LaTuaCucina, { getName } from "@/components/LaTuaCucina";
 import { BancoNota } from "@/components/BancoMichele";
 import SitorDice from "@/components/SitorDice"; // V90
 import BenvenutoMikiLab from "@/components/BenvenutoMikiLab"; // V107
+import ScuolaInHome from "@/ScuolaInHome"; // V110
 import OggiInBottega from "@/components/OggiInBottega"; // V101
 import { Dices, ChevronDown } from "lucide-react";
 
@@ -65,6 +66,7 @@ export default function HomeManuale({ onNav }) {
   return (
     <div data-testid="home-manuale" className="pt-4">
     <BenvenutoMikiLab onNav={onNav} /> {/* V107 */}
+      <ScuolaInHome /> {/* V110 */}
       {known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
       {known && <BancoNota />}
       <OggiInBottega onNav={onNav} /> {/* V101 */}
