@@ -1,0 +1,4 @@
+## 26. V97 — La valigia della bottega, il libro di pane, pulizia
+- **La valigia della bottega** (`Valigia.jsx`, /valigia): esporta in un file JSON, creato sul dispositivo e consegnato solo al menu di condivisione/salvataggio del telefono, le chiavi localStorage del sito (impostazioni, preferiti, lievito, medaglie, note, attrezzi; escluso lo sblocco admin e le cache); importa un file dello stesso tipo scelto dall'utente. Nessun server coinvolto; è l'esercizio pratico del diritto alla portabilità dei dati locali.
+- **Il mio libro di pane** (`LibroDiPane.jsx`, /libro): pagina di stampa delle ricette preferite (dosi originali, procedimento), generata nel browser; soprannome facoltativo in copertina.
+- Rimosse dal repository le cartelle `capacitor-plugins` (plugin nativo non usato), `patch96` e `v96`.

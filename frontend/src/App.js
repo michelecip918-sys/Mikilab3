@@ -62,6 +62,8 @@ import ThemeToggle from "@/components/ThemeToggle";
 // V84 — segreto del 16 ottobre, banco delle prove, il mio forno
 import LancioSegreto, { LancioBanner, LAUNCH_KEY } from "@/components/LancioSegreto";
 import BancoProve from "@/components/BancoProve";
+import LibroDiPane from "@/components/LibroDiPane"; // V97
+import Valigia from "@/components/Valigia"; // V97
 import AnnoDaFornaio from "@/components/AnnoDaFornaio"; // V96
 import CartaDeiPani from "@/components/CartaDeiPani"; // V95
 import Ospiti from "@/components/Ospiti"; // V95
@@ -100,6 +102,8 @@ function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase();
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
+  if (p.startsWith("/libro")) return "libro"; // V97
+  if (p.startsWith("/valigia")) return "valigia"; // V97
   if (p.startsWith("/anno")) return "anno"; // V96
   if (p.startsWith("/carta")) return "carta"; // V95
   if (p.startsWith("/ospiti")) return "ospiti"; // V95
@@ -332,6 +336,8 @@ export default function App() {
               {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "banco" && <BancoProve onBack={() => setRoute("strumenti")} />}
+              {route === "libro" && <LibroDiPane onBack={() => setRoute("strumenti")} />} {/* V97 */}
+              {route === "valigia" && <Valigia onBack={() => setRoute("strumenti")} />} {/* V97 */}
               {route === "anno" && <AnnoDaFornaio onBack={() => setRoute("strumenti")} />} {/* V96 */}
               {route === "carta" && <CartaDeiPani onBack={() => setRoute("strumenti")} />} {/* V95 */}
               {route === "ospiti" && <Ospiti onBack={() => setRoute("strumenti")} />} {/* V95 */}

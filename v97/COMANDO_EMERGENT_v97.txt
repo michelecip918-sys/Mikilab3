@@ -1,0 +1,11 @@
+Applica la patch v97 di MikiLab ("La valigia della bottega, il libro di pane, pulizia"). Segui ESATTAMENTE questi passi, senza inventare né modificare nulla oltre a quanto indicato.
+
+1) Scarica lo zip da questo link Drive: [INCOLLA QUI IL LINK]
+   Decomprimilo nella radice del progetto: deve comparire la cartella patch97/ accanto a backend/ e frontend/.
+2) Dalla radice esegui:  sh patch97/applica.sh
+   Deve finire con "OK: v97 applicata". Se dà ERRORE o ATTENZIONE, fermati e riportamelo testualmente. Lo script cancella patch96, v96 e capacitor-plugins: è voluto.
+3) Esegui la build:  cd frontend && yarn build
+   Deve riuscire. Se fallisce, riportami l'errore completo, NON correggere da solo.
+4) Non toccare backend, database, ricette, Sitor, .env, il file frontend/public/googlea308a6dc1717156d.html.
+5) Un solo commit ("v97: valigia della bottega, libro di pane, pulizia") e un solo deploy.
+6) Alla fine rispondimi con: l'output dello script, l'esito della build e del deploy. Nient'altro.

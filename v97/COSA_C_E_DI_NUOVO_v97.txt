@@ -1,0 +1,20 @@
+MIKILAB v97 — LE ULTIME DUE IDEE CHE CHIUDONO IL CERCHIO
+
+Tutto quello che il sito sa di chi lo usa vive nel suo telefono: è la regola che ci siamo dati (niente server, niente tracciamento).
+Ha un prezzo: chi cambia telefono perde preferiti, lievito, medaglie, forno, note. Ecco le due cose che mancavano.
+
+• LA VALIGIA DELLA BOTTEGA (Strumenti, Officina, mikilab.de/valigia)
+  Un bottone crea un file (mikilab-valigia-<data>.json) con tutto: preferiti, lievito madre e rinfreschi, medaglie, il mio forno,
+  banco delle prove, mensola, piano, attrezzi, prezzi, assaggi, primo pane, soprannome. Lo mandi a te stesso o lo salvi.
+  Sul telefono nuovo: apri mikilab.de → La valigia → scegli il file → "Riapri qui": tutto torna al suo posto.
+  Non c'è un server in mezzo: il file lo tieni tu. (Esclusi: lo sblocco admin e le cache.)
+
+• IL MIO LIBRO DI PANE (Strumenti, Officina, mikilab.de/libro)
+  Le ricette con il cuore diventano un libretto: copertina con il tuo soprannome, una ricetta per pagina con dosi originali,
+  tempi, forno e procedimento, e in fondo l'indirizzo della ricetta sul sito. Stampa o "Salva come PDF" dal telefono.
+  Il ricettario di casa, su carta, da tenere in cucina o da regalare con il pane.
+
+• PULIZIA: cancellate dal progetto la cartella capacitor-plugins (un plugin per app nativa mai usato, nessun riferimento nel
+  codice) e le cartelle della v96. Il progetto resta pulito: backend, frontend, note legali, documenti.
+
+Come sempre: zip su Drive → link nel comando → Emergent → risposta a me.
