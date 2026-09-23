@@ -70,6 +70,24 @@ export function applyRecipeSeo(recipe, lang) {
       keywords: ["pane", "lievito madre", "focaccia", "pizza", "MikiLab", "Sitor"].join(", "),
       recipeIngredient: ing, isAccessibleForFree: true,
     };
+    // V106: ingredienti extra in grammi, istruzioni passo per passo, resa, tempo di preparazione (campi che Google chiede)
+    try {
+      const fg = Number(recipe.flour_grams) || 0;
+      for (const e of (recipe.extra_ingredients || [])) {
+        if (!e || !e.name) continue;
+        const nm = (lang === "de" && e.name_de) || (lang === "en" && e.name_en) || e.name;
+        const g = e.percent != null && fg > 0 ? Math.round(fg * Number(e.percent) / 100) : null;
+        ing.push(g ? `${g} g ${nm}` : String(nm));
+      }
+      const proc = String((lang === "de" && recipe.procedure_de) || (lang === "en" && recipe.procedure_en) || recipe.procedure || "");
+      const steps = proc.split(/\n+|(?<=[.!?])\s+(?=[A-ZÀ-ÜÄÖÜ0-9])/).map((t) => t.replace(/^\s*(\d+[.)]|[-•*])\s*/, "").trim()).filter((t) => t.length > 12).slice(0, 25);
+      if (steps.length) ld.recipeInstructions = steps.map((t, i) => ({ "@type": "HowToStep", position: i + 1, text: t.slice(0, 400) }));
+      const tot = fg + (Number(recipe.water_grams) || 0) + (Number(recipe.salt_grams) || 0) + (Number(recipe.sourdough_grams) || 0) + (recipe.extra_ingredients || []).reduce((acc, e) => acc + (e && e.percent != null ? fg * Number(e.percent) / 100 : 0), 0);
+      if (tot > 0) ld.recipeYield = lang === "de" ? `ca. ${Math.round(tot)} g Teig` : lang === "en" ? `about ${Math.round(tot)} g of dough` : `circa ${Math.round(tot)} g di impasto`;
+      const prep = (Number(recipe.mix_minutes) || 0) + (Number(recipe.rest_minutes) || 0);
+      if (prep > 0) ld.prepTime = `PT${prep}M`;
+      ld.datePublished = recipe.created_at ? String(recipe.created_at).slice(0, 10) : "2026-09-01";
+    } catch { /* */ }
     if (totMin > 0) ld.totalTime = `PT${totMin}M`;
     if (recipe.bake_minutes) ld.cookTime = `PT${recipe.bake_minutes}M`;
     let s = document.getElementById(LD_ID);
