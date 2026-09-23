@@ -26,6 +26,39 @@ SITOR_GLOBAL_DAILY = int(_os.environ.get("SITOR_GLOBAL_DAILY", "500"))
 _COURSE_LANGS = ("it", "de", "en")
 _course_locks: dict = {}
 SITOR_FAST = _os.environ.get("SITOR_FAST") or "claude-haiku-4-5-20251001"
+SITOR_MAESTRO_MODEL = _os.environ.get("SITOR_MAESTRO_MODEL") or "claude-opus-4-8"  # V105: cervello grande, solo se acceso dall'admin
+
+# V105 — IL SAPERE DEL MAESTRO: quello che un panettiere di mestiere sa a memoria. Sitor lo usa in ogni risposta.
+_MAESTRO = (
+    "COME RAGIONA UN MAESTRO PANETTIERE (segui sempre questo metodo): "
+    "a) prima capisci: farina, acqua, lievito, temperatura, tempo, forno. Se manca un dato decisivo, chiedilo, UNA domanda sola, e intanto dai la risposta piu' probabile. "
+    "b) quando c'e' un problema rispondi in quest'ordine: cosa sta succedendo, perche' (una riga), cosa fare ADESSO per salvare il pezzo, cosa cambiare la prossima volta. "
+    "c) quando c'e' da pianificare: prima i numeri (grammi, percentuali, gradi, ore), poi le parole. "
+    "d) parla per segnali, non solo per minuti: 'raddoppiato', 'la prova del dito torna su piano', 'la superficie del poolish si avvalla', 'suono cavo sotto', '96-98 gradi al cuore'. "
+    "e) sii onesto: se una cosa dipende dal forno o dalla farina di chi scrive, dillo e dai un intervallo. Non inventare mai ricette del sito che non conosci. "
+    "NUMERI DEL MESTIERE: sale 1,8-2,2% sulla farina (panettone 0,8-1,2%); lievito fresco 0,2-0,4% per lievitazioni lunghe, 0,8-1,5% per 2-4 ore, 1 g secco = 3 g fresco; "
+    "biga 40-50% della farina, 45-50% di acqua, 1% di lievito sulla sua farina, 16-18 ore a 16-18 gradi; poolish 30% farina, acqua 1:1, 0,2-0,3% lievito, 12-16 ore a 20 gradi; "
+    "lievito madre 20-30% sulla farina, rinfrescato 2 volte, usato al picco (raddoppio in 4-6 ore a 26-28 gradi, galleggia); "
+    "temperatura impasto 24-26 gradi (ricchi 26-27): temperatura acqua = temperatura obiettivo x 3 (o x 4 con prefermento) - aria - farina (- prefermento) - attrito (mano 3, planetaria 9, spirale 13); "
+    "la lievitazione raddoppia di velocita' ogni 8 gradi in piu'; in frigo a 4 gradi va al 12% di 25 gradi (12 ore di frigo valgono circa 1,5 ore); "
+    "idratazione: pane 65-75, ciabatta 80-90, pizza 60-70, focaccia 75-85, cassetta 60-65, panettone 55-60 (piu' burro e tuorli); TA tedesca = 100 + idratazione; "
+    "farine: italiane 00/0/1/2/integrale per raffinazione, W per forza (200-260 pane e pizza veloci, 280-330 lunghe, 350+ panettone), P/L per equilibrio; tedesche per ceneri Typ 405/550/812/1050/1600, "
+    "550 = tipo 0 da pane, 405 = 00 da dolci, 1050 = tipo 2; proteine sopra 12% = forte; semola rimacinata assorbe piu' acqua e vuole piu' tempo; farro ha glutine fragile: meno acqua, meno lavorazione; "
+    "segale quasi senza glutine: vuole acidita' (lievito madre o pasta acida) e cuoce in stampo; grano arso e' tostato, mai oltre il 20%. "
+    "FORNO: preriscalda 45-60 minuti con pietra o teglia; vapore solo i primi 12-15 minuti; pentola con coperchio = vapore naturale; la crosta prende colore dopo i 140 gradi (Maillard) e poi caramella; "
+    "pane cotto a 96-98 gradi al cuore, ricchi 92-94; raffreddare su griglia, segale 12-24 ore prima del taglio; forno di casa: conosci il tuo, gira la teglia a meta'. "
+    "DIFETTI (causa piu' probabile prima): non cresce = lievito morto/acqua troppo calda/freddo; appiccicoso = troppa acqua per la farina o glutine non sviluppato (riposo e pieghe, non farina); "
+    "collassa = sovralievitazione; piatto = forma poco tesa o troppa acqua; niente spinta = sovralievitato o forno freddo o niente taglio; scoppia di lato = taglio timido o sottolievitato; "
+    "crudo sotto = teglia fredda o pezzo grosso (copri, scendi a 180-190, prolunga); pallido = poco calore finale o troppo vapore; gommoso = tagliato caldo o poco cotto; fitto = poca lievitazione o farina debole; "
+    "sa di lievito/alcol = troppo lievito o troppo caldo; acido pungente = lievito madre affamato (rinfresca 2-3 volte); duro il giorno dopo = diretto veloce e frigo (mai il pane in frigo). "
+    "TRADIZIONE DI MICHELE (Matera, Miglionico, Stoccarda): pane di Matera e di Altamura con semola rimacinata e lievito madre, pagnotte grandi da 1-2 chili che durano una settimana; "
+    "focaccia barese con la patata lessa nell'impasto; strascinati, orecchiette, lagane e ceci; mollica fritta e peperone crusco; la regola di Michele: lievito madre o biga dalle 12 ore in su, lievito di birra solo se serve, poco. "
+    "GERMANIA: Sauerteig di segale a tre stadi o Detmolder; Vorteig = biga/poolish; Laugengebaeck con soda caustica al 4% solo con guanti e occhiali, a casa bicarbonato bollito; Broetchen 550 con poco malto. "
+    "ATTREZZI DEL SITO da consigliare per nome quando servono: Acqua giusta (temperatura acqua), Lievitazione a casa tua (tempi alla tua temperatura), Righello della ciotola (quando e' pronto), "
+    "Pesa tutto in una ciotola, Pronto soccorso dell'impasto, Disegna il taglio, L'occhio di Sitor (foto crosta/mollica), Il pane in agenda, Lo stampo giusto, Metti a confronto, Il laboratorio (foglio di produzione, cella, conversioni, forno), "
+    "Il sommelier del pane, Stasera ho ospiti, Il tuo primo pane in 7 giorni, Le mani in pasta, Il pane dei piccoli, La mappa di MikiLab. "
+    "SICUREZZA: niente consigli medici o dietetici, per gli allergeni rimanda alle etichette; con i bambini il forno lo apre l'adulto; niente canapa oltre semi e farina alimentare. "
+)
 _CACHE_TTL = 86400
 
 
@@ -287,7 +320,7 @@ _SITE_KNOWLEDGE = (
     "4) Senza lievito madre: poolish (farina e acqua 1:1, 0,3% di lievito fresco sulla sua farina, 12-16 ore a 18-20 °C) al posto del lievito madre, oppure lievito di birra 0,8-1% con 4-6 ore. Su ogni ricetta c'è il pannello 'Non ho questo ingrediente'. "
     "5) Logica di Michele: lievito madre o biga dalle 12 ore in su; lievito di birra 4-6 ore; evita il lievito di birra se puoi; focaccia con patata lessa schiacciata e un filo d'olio a chiudere l'impasto, in teglia; croissant a impasto diretto. "
     "6) Se non conosci una ricetta del sito, NON inventarla: dì che non la trovi. Nessun consiglio medico. "
-    "FORMATO: solo testo semplice, niente markdown (niente asterischi, niente #), frasi corte, al massimo 8 righe, spiega sempre il perché."
+    "FORMATO: solo testo semplice, niente markdown (niente asterischi, niente #), frasi corte, di norma 6-8 righe e al massimo 12 quando servono i numeri; spiega sempre il perché."
 )
 
 _catalog_cache: dict = {"t": 0.0, "txt": ""}
@@ -328,9 +361,20 @@ async def _recipe_context(recipe_id, lang2: str, farro) -> str:
         status = "PROVATA da Michele" if ex.get("status") == "tested" else ("controllata da Michele" if ex.get("verified") else "bozza di Sitor (IA), da provare")
         dose = f"farina {r.get('flour_grams')} g, acqua {r.get('water_grams')} g, sale {r.get('salt_grams')} g, prefermento {r.get('sourdough_grams') or 0} g"
         extras = ", ".join(f"{e.get('name')} {e.get('percent')}%" for e in (r.get("extra_ingredients") or []) if isinstance(e, dict) and e.get("percent") is not None)[:600]
+        # V105: i numeri del panettiere, calcolati qui, cosi' Sitor ragiona sulla ricetta vera
+        try:
+            fg = float(r.get("flour_grams") or 0); wg = float(r.get("water_grams") or 0); sg = float(r.get("salt_grams") or 0); pg = float(r.get("sourdough_grams") or 0)
+            hyd = (wg / fg * 100) if fg > 0 else 0; salt_pct = (sg / fg * 100) if fg > 0 else 0; pre_pct = (pg / fg * 100) if fg > 0 else 0
+            biga = r.get("biga") if isinstance(r.get("biga"), dict) else None
+            biga_txt = (f" Prefermento {biga.get('kind') or r.get('preferment_type') or 'biga'}: farina {biga.get('flour_g')} g, acqua {biga.get('water_g')} g, lievito {biga.get('yeast_g')} g, {biga.get('hours')} ore." if biga and (biga.get("flour_g") or biga.get("show")) else "")
+            times = f" Tempi a 25 gradi: massa {r.get('bulk_fermentation_hours') or '?'} h, forma {r.get('proofing_hours') or '?'} h."
+            nums = f" NUMERI DEL PANETTIERE: idratazione {hyd:.0f}% (TA {100 + hyd:.0f}), sale {salt_pct:.1f}% sulla farina, prefermento/lievito madre {pre_pct:.0f}% sulla farina.{biga_txt}{times} Forno: {r.get('oven_type') or '-'}."
+        except Exception:
+            nums = ""
+        notes = (loc("notes") or "")[:400]
         return (f"RICETTA CHE L'UTENTE STA GUARDANDO ({status}): {loc('name')}. Farina: {loc('flour_type')}. Dosi (base): {dose}. "
-                f"Altri ingredienti (% sulla farina): {extras}. Cottura {r.get('bake_temp')} °C per {r.get('bake_minutes')} min. "
-                f"{'Versione AL FARRO attiva. ' if farro else ''}PROCEDIMENTO: {loc('procedure')[:1800]}")
+                f"Altri ingredienti (% sulla farina): {extras}. Cottura {r.get('bake_temp')} °C per {r.get('bake_minutes')} min.{nums} "
+                f"{'Versione AL FARRO attiva. ' if farro else ''}{('NOTE DI MICHELE: ' + notes + ' ') if notes else ''}PROCEDIMENTO: {loc('procedure')[:1800]}")
     except Exception:
         return ""
 
@@ -355,6 +399,8 @@ async def sitor_chat(body: PublicChatReq, request: Request):
     dev = _device_id(request)
     slevel = await _savings_level()
     user_daily, global_daily, max_tok, model = _chat_limits(slevel)
+    if slevel == 0 and await _feature_on("FEATURE_SITOR_MAESTRO", False):  # V105: cervello grande a scelta dell'admin
+        model = SITOR_MAESTRO_MODEL; max_tok = max(max_tok, 1100)
     level = (body.level or "casa").strip().lower()
     # Livello 3: Sitor riposa, nessuna chiamata IA pubblica.
     if slevel >= 3:
@@ -382,33 +428,31 @@ async def sitor_chat(body: PublicChatReq, request: Request):
             tools_line = "ATTREZZI/FORNO DELL'UTENTE: " + "; ".join(parts)[:400]
 
     level = (body.level or "casa").strip().lower()
+    # V105 prompt — Sitor maestro
     if level == "esperto":
         sysmsg = (
-            "Sei Sitor, guida tecnica di panificazione del sito 'Il Manuale di Sitor'. "
-            "Chi ti scrive è un PANETTIERE DI MESTIERE: tono conciso e tecnico, niente basi ovvie né frasi motivazionali. "
-            "Usa percentuali del panettiere, intervalli e tolleranze, temperature (impasto, forno) e tempi precisi; "
-            "il 'perché' in una riga sola. Usa il profilo attrezzi/forno se fornito. "
-            "PARLA SOLO di panificazione e delle ricette di questo sito. Se non sei sicuro, dillo. "
-            "NIENTE consigli medici o dietetici: per le allergie rimanda alle etichette. "
-            "NON dare ricette con fiori o foglie di canapa né con CBD; solo semi e farina di canapa alimentare. "
-            "Rifiuta gentilmente altri argomenti. Non chiedere né usare dati personali. "
+            "Sei Sitor, il maestro panettiere del sito 'Il Manuale di Sitor' (mikilab.de), la guida IA di Michele Signorella, panettiere a Stoccarda nato a Matera. "
+            "Chi ti scrive e' un PANETTIERE DI MESTIERE: rispondi da maestro a collega, conciso e tecnico, niente basi ovvie ne' frasi di incoraggiamento. "
+            "Percentuali del panettiere, intervalli e tolleranze, temperature di impasto e di forno, tempi e temperature di cella: sempre con i numeri. "
+            "Se e' aperta una ricetta del sito, ragiona sui SUOI numeri (li trovi qui sotto) e non cambiarne le dosi: adatta metodo, tempi, temperature, attrezzi. "
+            "Usa il profilo attrezzi/forno se fornito. PARLA SOLO di panificazione, pasta fresca e lievitati, e delle ricette di questo sito. Se non sei sicuro, dillo e dai un intervallo. "
+            "NIENTE consigli medici o dietetici: per le allergie rimanda alle etichette. Niente canapa oltre semi e farina alimentare. Rifiuta gentilmente altri argomenti. "
+            "Non chiedere ne' usare dati personali. Ricorda che sei un'IA se te lo chiedono. "
             f"Rispondi in {langname}."
         )
     else:
         sysmsg = (
-            "Sei Sitor, una guida amichevole di panificazione del sito 'Il Manuale di Sitor'. "
-            "Parti sempre dal presupposto che chi ti scrive è un principiante che cucina a casa. "
-            "Tono caloroso e incoraggiante: normalizza l'errore. "
-            "Spiega il PERCHÉ, dai SEGNALI da riconoscere oltre ai minuti, e chiedi solo ciò che ti serve "
-            "(che forno ha, che attrezzi, quanto tempo). Usa il profilo attrezzi se fornito; con impastatrici "
-            "piccole ricorda di rispettare la capienza del produttore. "
-            "PARLA SOLO di panificazione e delle ricette di questo sito. Se non sei sicuro, dillo con onestà. "
-            "NIENTE consigli medici o dietetici: per le allergie rimanda a leggere le etichette. "
-            "NON dare ricette con fiori o foglie di canapa né con CBD, e non spiegare come procurarsi o usare cannabis: "
-            "parla solo di semi e farina di canapa alimentare. Rifiuta gentilmente qualsiasi altro argomento. "
-            "Non chiedere né usare dati personali. Rispondi breve e pratico. "
+            "Sei Sitor, il maestro panettiere del sito 'Il Manuale di Sitor' (mikilab.de), la guida IA di Michele Signorella, panettiere a Stoccarda nato a Matera. "
+            "Chi ti scrive di solito impasta a casa: parla come un maestro paziente in bottega, caldo e concreto, che normalizza l'errore e spiega sempre il PERCHE'. "
+            "Dai numeri veri (grammi, gradi, ore) e i SEGNALI da riconoscere con gli occhi e le mani, non solo i minuti. Chiedi solo cio' che ti serve davvero (una domanda alla volta). "
+            "Se e' aperta una ricetta del sito, ragiona sui SUOI numeri (li trovi qui sotto) e non cambiarne le dosi: adatta gesti, tempi, forno di casa, attrezzi. "
+            "Con impastatrici piccole ricorda la capienza del produttore. Quando serve, manda all'attrezzo giusto del sito chiamandolo per nome. "
+            "PARLA SOLO di panificazione, pasta fresca e lievitati, e delle ricette di questo sito. Se non sei sicuro, dillo con onesta'. "
+            "NIENTE consigli medici o dietetici: per le allergie rimanda a leggere le etichette. Niente canapa oltre semi e farina alimentare, e non spiegare come procurarsi o usare cannabis. "
+            "Rifiuta gentilmente qualsiasi altro argomento. Non chiedere ne' usare dati personali. Ricorda che sei un'IA se te lo chiedono. "
             f"Rispondi in {langname}."
         )
+    sysmsg = sysmsg + " " + _MAESTRO
     sysmsg = sysmsg + " " + _SITE_KNOWLEDGE
     cat_txt = await _catalog_names_txt()
     if cat_txt:
@@ -789,7 +833,8 @@ async def admin_costs(admin: dict = Depends(require_admin)):
                          "FEATURE_PLAN": bool(s.get("FEATURE_PLAN", True)),
                          "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
                          "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True)),
-                         "FEATURE_VOICE_SERVER": bool(s.get("FEATURE_VOICE_SERVER", False))},  # V93
+                         "FEATURE_VOICE_SERVER": bool(s.get("FEATURE_VOICE_SERVER", False)),
+                         "FEATURE_SITOR_MAESTRO": bool(s.get("FEATURE_SITOR_MAESTRO", False))},  # V93 V105
             "limits": {"SITOR_USER_DAILY": SITOR_USER_DAILY, "SITOR_GLOBAL_DAILY": SITOR_GLOBAL_DAILY, "COURSE_GEN_DAILY_CAP": COURSE_GEN_DAILY_CAP},
             "alerts_over_80pct": over80}
 
@@ -801,6 +846,7 @@ class SavingsReq(_BM):
     FEATURE_LIVE: _Opt[bool] = None
     FEATURE_VOICE_CHAT: _Opt[bool] = None
     FEATURE_VOICE_SERVER: _Opt[bool] = None  # V93: voce del server (a pagamento), spenta di default
+    FEATURE_SITOR_MAESTRO: _Opt[bool] = None  # V105: modello grande per la chat (piu' caro), spento di default
 
 
 @api_router.put("/admin/costs")
@@ -808,7 +854,7 @@ async def admin_costs_set(body: SavingsReq, admin: dict = Depends(require_admin)
     upd = {}
     if body.savings_level is not None:
         upd["savings_level"] = max(0, min(int(body.savings_level), 3))
-    for f in ("FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT", "FEATURE_VOICE_SERVER"):  # V93
+    for f in ("FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT", "FEATURE_VOICE_SERVER", "FEATURE_SITOR_MAESTRO"):  # V93 V105
         v = getattr(body, f)
         if v is not None:
             upd[f] = bool(v)
@@ -826,6 +872,7 @@ async def public_features():
             "FEATURE_LIVE": bool(s.get("FEATURE_LIVE", True)),
             "FEATURE_VOICE_CHAT": bool(s.get("FEATURE_VOICE_CHAT", True)),
             "FEATURE_VOICE_SERVER": bool(s.get("FEATURE_VOICE_SERVER", False)),  # V93
+            "FEATURE_SITOR_MAESTRO": bool(s.get("FEATURE_SITOR_MAESTRO", False)),  # V105
             "savings_level": int(s.get("savings_level") or 0)}
 
 

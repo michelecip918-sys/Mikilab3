@@ -205,3 +205,5 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - La sezione della pasta cambia nome in "Le mani in pasta" (nessuna modifica di funzionamento).
 ## 33. V104 — I filetti d'oro, la lettera al fornaio che sarai
 - Modifiche solo grafiche (CSS: striscia dorata in cima e righe sotto i titoli). **La lettera al fornaio che sarai** (nell'almanacco): testo scritto dall'utente, con la data di apertura scelta, salvato solo in localStorage (`mikilab_lettera`) e mostrato solo su quel dispositivo dal giorno scelto; nessun invio. È inclusa nella valigia come ogni altra chiave `mikilab_*`.
+## 34. V105 — Sitor maestro
+- Solo istruzioni al modello (prompt di sistema) e contesto della ricetta calcolato sul server dai dati già pubblici della ricetta: nessun dato nuovo raccolto, stessi limiti giornalieri, stessa cache. Nuovo interruttore admin `FEATURE_SITOR_MAESTRO` (spento di default): usa un modello più grande per la chat; il fornitore riceve gli stessi dati di prima (domanda, ricetta aperta, profilo attrezzi facoltativo).
