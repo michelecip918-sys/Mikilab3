@@ -62,6 +62,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 // V84 — segreto del 16 ottobre, banco delle prove, il mio forno
 import LancioSegreto, { LancioBanner, LAUNCH_KEY } from "@/components/LancioSegreto";
 import BancoProve from "@/components/BancoProve";
+import Domande from "@/components/Domande"; // V108
+import Collezioni from "@/components/Collezioni"; // V108
+import Cerca from "@/components/Cerca"; // V108
 import PaneCheSalva from "@/components/PaneCheSalva"; // V107
 import PaneDeiPiccoli from "@/components/PaneDeiPiccoli"; // V103
 import PastaDiCasa from "@/components/PastaDiCasa"; // V102
@@ -107,6 +110,9 @@ function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase();
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
+  if (p.startsWith("/domande")) return "domande"; // V108
+  if (p.startsWith("/collezioni")) return "collezioni"; // V108
+  if (p.startsWith("/cerca")) return "cerca"; // V108
   if (p.startsWith("/salva")) return "salva"; // V107
   if (p.startsWith("/piccoli")) return "piccoli"; // V103
   if (p.startsWith("/pasta")) return "pasta"; // V102
@@ -346,6 +352,9 @@ export default function App() {
               {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
               {route === "banco" && <BancoProve onBack={() => setRoute("strumenti")} />}
+              {route === "domande" && <Domande onBack={() => setRoute("strumenti")} onNav={navFromHome} />} {/* V108 */}
+              {route === "collezioni" && <Collezioni onBack={() => setRoute("recipes")} onNav={navFromHome} />} {/* V108 */}
+              {route === "cerca" && <Cerca onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V108 */}
               {route === "salva" && <PaneCheSalva onBack={() => setRoute("home")} />} {/* V107 */}
               {route === "piccoli" && <PaneDeiPiccoli onBack={() => setRoute("strumenti")} />} {/* V103 */}
               {route === "pasta" && <PastaDiCasa onBack={() => setRoute("recipes")} />} {/* V102 */}

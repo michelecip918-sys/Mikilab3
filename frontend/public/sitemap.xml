@@ -18,6 +18,8 @@
 <url><loc>https://mikilab.de/pasta</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/piccoli</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/salva</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+<url><loc>https://mikilab.de/collezioni</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+<url><loc>https://mikilab.de/domande</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/ricetta/b3db8e20-8b7b-423a-9f0f-1c5f51fcb7b8/anima-integrale</loc><changefreq>monthly</changefreq><priority>0.8</priority><xhtml:link rel="alternate" hreflang="de" href="https://mikilab.de/ricetta/b3db8e20-8b7b-423a-9f0f-1c5f51fcb7b8/vollkornseele"/></url>
 <url><loc>https://mikilab.de/ricetta/18ec13d5-dbd5-41bf-a478-1f3ed65dba46/baguette-a-lievito-madre</loc><changefreq>monthly</changefreq><priority>0.8</priority><xhtml:link rel="alternate" hreflang="de" href="https://mikilab.de/ricetta/18ec13d5-dbd5-41bf-a478-1f3ed65dba46/baguette-mit-sauerteig"/></url>
 <url><loc>https://mikilab.de/ricetta/e5e6fa92-d9db-4ed6-af88-089340ab3a40/baguette-con-poolish</loc><changefreq>monthly</changefreq><priority>0.8</priority><xhtml:link rel="alternate" hreflang="de" href="https://mikilab.de/ricetta/e5e6fa92-d9db-4ed6-af88-089340ab3a40/baguette-mit-poolish"/></url>
