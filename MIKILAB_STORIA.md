@@ -17,5 +17,6 @@ Il Manuale di Sitor: ricettario pubblico di Michele Signorella, panettiere a Sto
 - **v106** I dati strutturati delle ricette completi per Google.
 - **v107** Il benvenuto in Home (cos'è MikiLab in trenta secondi, a chi serve: a tutti, e sei porte) e Il pane che salva (senza lievito, senza forno, senza bilancia, senza corrente, conservare, la dispensa di scorta), scritto da Sitor.
 - **v108** Cerca in tutto MikiLab (una casella per tutto), Le collezioni (le ricette per come si usano), Le domande del fornaio (49 risposte pronte con i dati FAQ per Google), il forno in °F.
+- **v109-v111** Per i bambini e per la scuola: Il pane dei piccoli a cinque schede (dodici forme, la storia del pane, la notte del fornaio, il gioco del lievito con la medaglia Piccolo fornaio, un'ora in classe) e MikiLab a scuola (il programma dall'asilo alla quinta: 36 schede IT/DE lette da Sitor, agenda, poster, giochi, disegni da colorare, la filastrocca, le parole del pane, il quaderno della classe, la guida per chi insegna, l'attestato di fine anno). Una card sola in Home.
 
 Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuovi; niente pubblicità; il pane si fa con le mani.

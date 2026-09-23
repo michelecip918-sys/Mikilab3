@@ -1,4 +1,4 @@
-// MikiLab a scuola — contenuti statici (v110, con Asilo)
+// V111 — MikiLab a scuola: contenuti statici (asilo + cinque classi, giochi, parole, guida, lettera, filastrocca)
 // Testi scritti da Sitor (IA) sul metodo di Michele Signorella, dichiarati come tali nella pagina.
 // Nessun dato personale, nessuna chiamata di rete: tutto vive nel browser.
 
@@ -178,6 +178,36 @@ export const UI = {
     scaricaTutto: "Das Heft reist mit dem „Koffer der Backstube“ mit.",
     schedaDi: "Stundenblatt",
     classeDelPane: "Brotklasse",
+  },
+  en: {
+    titolo: "MikiLab at school",
+    sotto: "The bread programme from kindergarten to fifth grade, for teachers. Free, no sign-up.",
+    sezioni: { programma: "The programme", giochi: "Games", colora: "Colouring", parole: "The words of bread", quaderno: "Class notebook", guida: "For teachers", attestato: "End-of-year certificate" },
+    stampaDisegno: "Print the drawing",
+    coloraNota: "Five drawings to print, one per sheet, with space for the nickname. From kindergarten up.",
+    filastrocca: "The bread rhyme",
+    filastroccaNota: "A starting point, not a rule: change it, extend it, sing it to your own rhythm.",
+    stampaFilastrocca: "Print the rhyme",
+    ioSono: "I am: ______________________",
+    classe: "Class", anni: "years", lezione: "Lesson", minuti: "min", materie: "Subjects", impara: "What they learn", materiali: "Materials", passi: "How it goes", domanda: "Sitor's question", casa: "At home", attrezzo: "On MikiLab", sicurezza: "Careful",
+    stampa: "Print the sheet", stampaLettera: "Print the letter", stampaAttestato: "Print the certificate", fatta: "Done", daFare: "Mark as done", apri: "Open", chiudi: "Close",
+    sitor: "The sheets are written by Sitor, MikiLab's AI guide, on Michele Signorella's method. Teachers adapt them to their class: a starting point, not a rule.",
+    en: "The lesson contents are in Italian and German for now: switch the site language to Italiano or Deutsch to read them in full.",
+    quizTitolo: "Guess the bread", vfTitolo: "True or false at the bakery", sensiTitolo: "The five senses game", vero: "True", falso: "False", punteggio: "Score", ricomincia: "Start again", avanti: "Next",
+    risultato: (p, t) => p === t ? "All correct: real little bakers!" : p >= t / 2 ? "Well done! Bread is learned one lesson at a time." : "That's fine: yeast needs time, so do you.",
+    quadernoIntro: "The notebook stays only on this device. No children's names: use a nickname for the class.",
+    soprannome: "Class nickname", soprannomeEs: "e.g. The bakers of 3B", bambini: "How many children", annoScol: "School year", annoEs: "e.g. 2026/27", lievitoNome: "Name of the class sourdough", lievitoEs: "e.g. Pip", lievitoData: "Sourdough's birthday",
+    giorniVita: (g) => g === 1 ? "is 1 day old" : `is ${g} days old`,
+    appunti: "Class notes", appuntiEs: "What happened, what you discovered, what you would do again.", timbri: "The lesson stamps", completata: "Class completed",
+    lezioniFatte: (f, t) => `${f} of ${t} lessons done`, svuota: "Delete the notebook", svuotaConferma: "Delete the whole class notebook from this device?", salvato: "The notebook saves itself.",
+    guidaKit: "The class kit", guidaSicurezza: "Five safety rules", guidaAllergie: "Allergies and coeliac disease", guidaSenzaForno: "No oven at school", guidaMaterie: "The subjects bread touches", guidaLettera: "The letter to parents", comeSiUsa: "How to use it",
+    attestatoIntro: "For classes that finish the six sheets of a level. It fills in from the class notebook and prints on one sheet. The diploma for a single hour is in Il pane dei piccoli.",
+    attTitolo: "Bread class certificate",
+    attTesto: (nome, classe, tema) => `The class ${nome || "____________"} has completed the programme "${classe}: ${tema}" of MikiLab at school.`,
+    attAnno: "School year", attData: "Date", attFirma: "Teacher", attFirmaMiki: "MikiLab — Michele Signorella, baker, and Sitor",
+    perBambini: "Are you a child? Go to", paneDeiPiccoli: "Il pane dei piccoli", indietro: "Back", scaricaTutto: "The notebook travels with the workshop suitcase.", schedaDi: "Sheet", classeDelPane: "bread class",
+    leggi: "Sitor reads", ferma: "Stop", agenda: "Put the lessons in the calendar", primaLezione: "Date of the first lesson", agendaNota: "Six dates, one every four weeks, as a calendar file for your phone (.ics). The file is created on the device: nothing is sent.",
+    poster: "Print the programme poster", posterTitolo: "The bread programme, from kindergarten to fifth grade", posterSotto: "One level per year, six lessons per level. mikilab.de/scuola", attivita: "Activity",
   },
 };
 
@@ -879,26 +909,3 @@ export const FILASTROCCA = {
 
 export const SCUOLA = { UI, INTRO, COME_SI_USA, CLASSI, GIOCHI, PAROLE, GUIDA, LETTERA, DISEGNI_TITOLI, FILASTROCCA };
 export default SCUOLA;
-
-// Lingua: prima la scelta fatta in questa sezione, poi la lingua del sito, poi il browser.
-export function guessLang() {
-  try {
-    const mia = localStorage.getItem("mikilab_scuola_lang");
-    if (mia === "it" || mia === "de") return mia;
-    const chiavi = ["mikilab_lang", "mikilab_lingua", "mikilab_language", "lang", "lingua", "language", "i18nextLng", "locale"];
-    for (const k of chiavi) {
-      const v = (localStorage.getItem(k) || "").toLowerCase();
-      if (v.startsWith("de")) return "de";
-      if (v.startsWith("it")) return "it";
-      if (v.startsWith("en")) return "en";
-    }
-    const h = (document.documentElement.lang || "").toLowerCase();
-    if (h.startsWith("de")) return "de";
-    if (h.startsWith("en")) return "en";
-    if (h.startsWith("it")) return "it";
-    const n = (navigator.language || "").toLowerCase();
-    if (n.startsWith("de")) return "de";
-    if (n.startsWith("en")) return "en";
-  } catch (e) { /* niente: si resta in italiano */ }
-  return "it";
-}

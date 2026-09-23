@@ -24,6 +24,7 @@ export const MEDAGLIE = [
   { id: "primo_giorno", icon: "🎉", t: T("C'ero il primo giorno", "Ich war am ersten Tag dabei", "I was there on day one"), how: T("La festa del 16 ottobre", "Die Feier am 16. Oktober", "The 16 October party") },
   { id: "sette_giorni", icon: "📅", t: T("Sette giorni in bottega", "Sieben Tage in der Backstube", "Seven days in the workshop"), how: T("Lascia il timbro nell'almanacco per sette giorni, anche non di fila", "Setz an sieben Tagen den Stempel im Almanach, auch nicht in Folge", "Leave the stamp in the almanac on seven days, not necessarily in a row") }, // V101
   { id: "sorpresa", icon: "🎲", t: T("Mi fido di Sitor", "Ich vertraue Sitor", "I trust Sitor"), how: T("Apri una ricetta a sorpresa", "Öffne ein Überraschungsrezept", "Open a surprise recipe") },
+  { id: "piccolo_fornaio", icon: "🧒", t: T("Piccolo fornaio", "Kleiner Bäcker", "Little baker"), how: T("Finisci il gioco del lievito ne Il pane dei piccoli", "Beende das Hefespiel in Das Brot der Kleinen", "Finish the yeast game in Bread for little ones") }, // V111
 ];
 
 export const getMedaglie = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch { return {}; } };

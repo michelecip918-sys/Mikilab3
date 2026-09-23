@@ -3,6 +3,7 @@ import { cleanForSpeech } from "@/lib/voice";
 // TTS: voce MASCHILE OpenAI (onyx/echo) dal backend; fallback alla voce nativa del
 // dispositivo se l'API non risponde, così la voce non va MAI in blocco.
 const API = process.env.REACT_APP_BACKEND_URL;
+let _longToken = 0; // V111: lettura lunga (schede di scuola), si azzera con stopTTS
 const SR_LANG = { it: "it-IT", de: "de-DE", en: "en-US", es: "es-ES", fr: "fr-FR", fa: "fa-IR", ar: "ar-SA", tr: "tr-TR" };
 
 // Normalizza qualunque codice lingua (it, de-DE, EN_us…) nel BCP-47 nativo corretto per la
@@ -92,6 +93,7 @@ function ttsSignalStart() { if (_ttsActive) return; _ttsActive = true; try { win
 function ttsSignalEnd() { if (!_ttsActive) return; _ttsActive = false; try { window.dispatchEvent(new Event("mikilab-tts-end")); } catch { /* */ } }
 
 export function stopTTS() {
+  _longToken++; // V111: ferma anche la lettura lunga
   try { if (_audio) { _audio.pause(); _audio.src = ""; _audio = null; } } catch { /* */ }
   try { window.speechSynthesis.cancel(); } catch { /* */ }
   ttsSignalEnd();
@@ -163,4 +165,23 @@ export function playTTS(text, { lang, voice, onStart, onEnded } = {}) {
       a.play().catch(() => { if (!started) nativeSpeak(clean, L, vEff, onStart, onEnded); });
     })
     .catch(() => nativeSpeak(clean, L, vEff, onStart, onEnded));
+}
+
+// V111 — LETTURA LUNGA (schede di MikiLab a scuola, capitoli de Il pane dei piccoli): testo intero, a pezzi, con la voce
+// nativa del dispositivo e le stesse regole di Sitor (voce maschile o muto, mute, modo notte). Mai il server: zero crediti.
+export function playTTSLong(text, { lang, onStart, onEnded } = {}) {
+  stopTTS();
+  const L = lang || _appLang || "it";
+  const full = cleanForSpeech(text);
+  if (!full || isTTSMuted()) { if (onEnded) onEnded(); return; }
+  _lastText = full.slice(0, 180);
+  const parts = full.split(/(?<=[.!?…:;])\s+/).reduce((acc, p) => { const last = acc[acc.length - 1]; if (last && (last.length + p.length) < 220) acc[acc.length - 1] = last + " " + p; else acc.push(p); return acc; }, []);
+  const token = ++_longToken;
+  let started = false;
+  const next = (i) => {
+    if (token !== _longToken) return; // fermata da stopTTS o da un'altra lettura
+    if (i >= parts.length) { if (onEnded) onEnded(); return; }
+    nativeSpeak(parts[i], L, SITOR_VOICE, () => { if (!started) { started = true; if (onStart) onStart(); } }, () => next(i + 1));
+  };
+  next(0);
 }

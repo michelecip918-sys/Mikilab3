@@ -67,7 +67,7 @@ import Collezioni from "@/components/Collezioni"; // V108
 import Cerca from "@/components/Cerca"; // V108
 import PaneCheSalva from "@/components/PaneCheSalva"; // V107
 import PaneDeiPiccoli from "@/components/PaneDeiPiccoli"; // V103
-import Scuola from "@/Scuola"; // V110
+import Scuola from "@/components/Scuola"; // V111
 import PastaDiCasa from "@/components/PastaDiCasa"; // V102
 import Almanacco from "@/components/Almanacco"; // V101
 import Mappa from "@/components/Mappa"; // V100
@@ -359,7 +359,7 @@ export default function App() {
               {route === "cerca" && <Cerca onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V108 */}
               {route === "salva" && <PaneCheSalva onBack={() => setRoute("home")} />} {/* V107 */}
               {route === "piccoli" && <PaneDeiPiccoli onBack={() => setRoute("strumenti")} />} {/* V103 */}
-              {route === "scuola" && <Scuola />} {/* V110 */}
+              {route === "scuola" && <Scuola onBack={() => setRoute("strumenti")} />} {/* V111 */}
               {route === "pasta" && <PastaDiCasa onBack={() => setRoute("recipes")} />} {/* V102 */}
               {route === "oggi" && <Almanacco onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V101 */}
               {route === "mappa" && <Mappa onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V100 */}
