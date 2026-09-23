@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText, BookOpen, Briefcase, Map } from "lucide-react";
+import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText, BookOpen, Briefcase, Map, Sun } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
@@ -34,6 +34,7 @@ export default function OfficinaSitor({ recipes, t }) {
     { k: "ospiti", I: Users, route: "ospiti", l: tri("Stasera ho ospiti", "Heute kommen Gäste", "Guests tonight"), s: tri("pani, dosi a persona, orari, spesa", "Brote, Mengen pro Person, Zeiten, Einkauf", "breads, per-person amounts, times, shopping") },
     { k: "carta", I: ScrollText, route: "carta", l: tri("La carta dei pani", "Die Brotkarte", "The bread menu"), s: tri("un menu elegante da stampare", "eine elegante Karte zum Drucken", "an elegant menu to print") },
     { k: "sommelier", I: Wine, route: "sommelier", l: tri("Il sommelier del pane", "Der Brot-Sommelier", "The bread sommelier"), s: tri("assaggia con cinque sensi", "mit fünf Sinnen verkosten", "taste with five senses") },
+    { k: "oggi", I: Sun, route: "oggi", l: tri("L'almanacco del fornaio", "Der Almanach des Bäckers", "The baker's almanac"), s: tri("ogni giorno una pagina nuova", "jeden Tag eine neue Seite", "a new page every day") },
     { k: "mappa", I: Map, route: "mappa", l: tri("La mappa di MikiLab", "Die Karte von MikiLab", "The map of MikiLab"), s: tri("tutto il sito in una pagina", "die ganze Seite auf einer Seite", "the whole site on one page") },
     { k: "libro", I: BookOpen, route: "libro", l: tri("Il mio libro di pane", "Mein Brotbuch", "My bread book"), s: tri("i preferiti, stampati come un libro", "die Favoriten, gedruckt wie ein Buch", "favourites, printed like a book") },
     { k: "valigia", I: Briefcase, route: "valigia", l: tri("La valigia della bottega", "Der Koffer der Bottega", "The bottega suitcase"), s: tri("porta i tuoi dati sul nuovo telefono", "nimm deine Daten aufs neue Handy mit", "take your data to a new phone") },

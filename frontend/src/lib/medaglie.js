@@ -22,6 +22,7 @@ export const MEDAGLIE = [
   { id: "fornaio_notte", icon: "🌙", t: T("Fornaio di notte", "Nachtbäcker", "Night baker"), how: T("Apri MikiLab tra le 4 e le 6 del mattino", "Öffne MikiLab zwischen 4 und 6 Uhr morgens", "Open MikiLab between 4 and 6 a.m.") },
   { id: "segreto", icon: "🐙", t: T("Il segreto del polpo", "Das Geheimnis des Kraken", "The octopus secret"), how: T("Trova il segreto", "Finde das Geheimnis", "Find the secret") },
   { id: "primo_giorno", icon: "🎉", t: T("C'ero il primo giorno", "Ich war am ersten Tag dabei", "I was there on day one"), how: T("La festa del 16 ottobre", "Die Feier am 16. Oktober", "The 16 October party") },
+  { id: "sette_giorni", icon: "📅", t: T("Sette giorni in bottega", "Sieben Tage in der Backstube", "Seven days in the workshop"), how: T("Lascia il timbro nell'almanacco per sette giorni, anche non di fila", "Setz an sieben Tagen den Stempel im Almanach, auch nicht in Folge", "Leave the stamp in the almanac on seven days, not necessarily in a row") }, // V101
   { id: "sorpresa", icon: "🎲", t: T("Mi fido di Sitor", "Ich vertraue Sitor", "I trust Sitor"), how: T("Apri una ricetta a sorpresa", "Öffne ein Überraschungsrezept", "Open a surprise recipe") },
 ];
 

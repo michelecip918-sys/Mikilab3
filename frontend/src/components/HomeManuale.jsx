@@ -9,6 +9,7 @@ import { rLoc } from "@/lib/loc";
 import LaTuaCucina, { getName } from "@/components/LaTuaCucina";
 import { BancoNota } from "@/components/BancoMichele";
 import SitorDice from "@/components/SitorDice"; // V90
+import OggiInBottega from "@/components/OggiInBottega"; // V101
 import { Dices, ChevronDown } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
@@ -64,6 +65,7 @@ export default function HomeManuale({ onNav }) {
     <div data-testid="home-manuale" className="pt-4">
       {known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
       {known && <BancoNota />}
+      <OggiInBottega onNav={onNav} /> {/* V101 */}
       {/* V76 — Prima di tutto: cos'è MikiLab, chi è Sitor e cosa possono fare */}
       <section data-testid="home-about" className="rounded-3xl border border-border/25 bg-background/70 p-5 sm:p-6 mb-4">
         <button data-testid="home-about-toggle" onClick={() => setAboutOpen((v) => !v)} className="w-full flex items-center justify-between gap-2 text-left">

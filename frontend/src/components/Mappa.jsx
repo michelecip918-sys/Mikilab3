@@ -12,6 +12,7 @@ const openChat = () => window.dispatchEvent(new CustomEvent("mikilab-open-chat")
 
 const GROUPS = [
   { k: "inizio", t: { it: "Per cominciare", de: "Zum Anfangen", en: "To start" }, items: [
+    { r: "oggi", t: { it: "L'almanacco del fornaio", de: "Der Almanach des Bäckers", en: "The baker's almanac" }, d: { it: "ogni giorno: la festa, il proverbio, un gesto, il pane di oggi, il timbro", de: "jeden Tag: das Fest, das Sprichwort, ein Handgriff, das Brot des Tages, der Stempel", en: "every day: the feast, the proverb, a gesture, today's bread, the stamp" } },
     { r: "primopane", t: { it: "Il tuo primo pane in 7 giorni", de: "Dein erstes Brot in 7 Tagen", en: "Your first bread in 7 days" }, d: { it: "un passo al giorno, dalla spesa al pane con la biga, con attestato", de: "ein Schritt pro Tag, vom Einkauf bis zum Biga-Brot, mit Urkunde", en: "one step a day, from shopping to a biga loaf, with a certificate" } },
     { r: "giro", t: { it: "Il primo giro con Sitor", de: "Die erste Runde mit Sitor", en: "The first tour with Sitor" }, d: { it: "come funziona il sito, in un minuto", de: "wie die Seite funktioniert, in einer Minute", en: "how the site works, in a minute" } },
     { r: "inizia", t: { it: "Prima di iniziare", de: "Bevor du anfängst", en: "Before you start" }, d: { it: "le basi: farina, acqua, sale, lievito, tempo", de: "die Grundlagen: Mehl, Wasser, Salz, Hefe, Zeit", en: "the basics: flour, water, salt, yeast, time" } },
