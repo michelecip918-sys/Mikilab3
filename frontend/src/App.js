@@ -95,6 +95,7 @@ import { isNightMode, applyNightMode } from "@/lib/notte";
 import FestaLancio, { festaIsToday } from "@/components/FestaLancio";
 import Volantino from "@/components/Volantino";
 import { recipeIdFromLocation } from "@/lib/recipeSeo";
+import { pathForRoute, applyPageMeta } from "@/lib/pagine"; // V112
 import Dedica from "@/components/Dedica"; // V89 — Da Miglionico a Stoccarda
 // V90 — il gusto di giocare: festa, medaglie, sorprendimi
 import Festa from "@/components/Festa";
@@ -202,9 +203,10 @@ export default function App() {
     try {
       if (histFirst.current) { histFirst.current = false; window.history.replaceState({ mlRoute: route }, ""); return; }
       if (histSkip.current) { histSkip.current = false; return; }
-      if (!(window.history.state && window.history.state.mlRoute === route)) window.history.pushState({ mlRoute: route }, "");
+      if (!(window.history.state && window.history.state.mlRoute === route)) { const u = pathForRoute(route); if (u && u !== window.location.pathname) window.history.pushState({ mlRoute: route }, "", u + (adminMode ? "?admin=1" : "")); else window.history.pushState({ mlRoute: route }, ""); } // V112: la barra degli indirizzi segue la pagina (mikilab.de/scuola, /piccoli…)
     } catch { /* */ }
   }, [route]);
+  useEffect(() => { applyPageMeta(route, lang); }, [route, lang]); // V112: titolo, descrizione e canonical della pagina
   useEffect(() => {
     const onPop = (e) => {
       // 1) se c'è una finestra o una vista aperta (scheda ricetta, strumento, radio…), il tasto indietro chiude quella

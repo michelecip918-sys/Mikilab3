@@ -7,6 +7,7 @@ import { rLoc } from "@/lib/loc";
 import { GROUPS } from "@/components/Mappa";
 import { GLOSSARIO, glossEntry, normText } from "@/lib/glossario";
 import { PASTA } from "@/lib/pastaDiCasa";
+import { CLASSI as SCUOLA_CLASSI } from "@/lib/scuolaDiPane"; // V112
 import { SEZIONI } from "@/lib/paneCheSalva";
 import { TRADIZIONI } from "@/components/Almanacco";
 import { S as SOCCORSO } from "@/components/officina/ProntoSoccorso";
@@ -36,9 +37,10 @@ export default function Cerca({ onBack, onNav }) {
     const words = GLOSSARIO.filter((g) => hit(glossEntry(g, lang).title) || g.kw.some((k) => hit(k)) || hit(glossEntry(g, lang).body)).slice(0, 6);
     const pasta = PASTA.filter((p) => hit(L(p.name)) || hit(L(p.reg)) || hit(L(p.sauce))).slice(0, 6);
     const salva = []; SEZIONI.forEach((s) => s.items.forEach((it) => { if (hit(L(it.t)) || hit(L(it.how))) salva.push({ s, it }); }));
+    const scuola = []; SCUOLA_CLASSI.forEach((c) => c.lezioni.forEach((l, i) => { const tt = l.titolo[lang] || l.titolo.it; const im = l.impara[lang] || l.impara.it; if (hit(tt) || hit(im)) scuola.push({ c, l, i, tt }); })); // V112
     const feste = TRADIZIONI.filter((t) => hit(L(t))).slice(0, 4);
     const socc = SOCCORSO.filter((s) => hit(L(s.t)) || hit(L(s.why))).slice(0, 5);
-    return { rec, tools: tools.slice(0, 8), words, pasta, salva: salva.slice(0, 5), feste, socc, total: rec.length + tools.length + words.length + pasta.length + salva.length + feste.length + socc.length };
+    return { rec, tools: tools.slice(0, 8), words, pasta, salva: salva.slice(0, 5), scuola: scuola.slice(0, 6), feste, socc, total: rec.length + tools.length + words.length + pasta.length + salva.length + scuola.length + feste.length + socc.length };
   }, [q, recipes, lang]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const Row = ({ testid, onClick, title, sub }) => (
@@ -63,6 +65,7 @@ export default function Cerca({ onBack, onNav }) {
       {res && res.socc.length > 0 && <Block k="soccorso" title={tri("Pronto soccorso dell'impasto", "Erste Hilfe für den Teig", "Dough first aid")}>{res.socc.map((s) => <Row key={s.k} testid={`cerca-s-${s.k}`} onClick={() => go("recipes")} title={L(s.t)} sub={L(s.now)} />)}</Block>}
       {res && res.pasta.length > 0 && <Block k="pasta" title={tri("Le mani in pasta", "Die Hände im Teig", "Hands in the dough")}>{res.pasta.map((p) => <Row key={p.k} testid={`cerca-p-${p.k}`} onClick={() => go("pasta")} title={L(p.name)} sub={`${L(p.reg)} · ${L(p.sauce)}`} />)}</Block>}
       {res && res.salva.length > 0 && <Block k="salva" title={tri("Il pane che salva", "Das Brot, das rettet", "The bread that saves")}>{res.salva.map(({ s, it }, i) => <Row key={i} testid={`cerca-v-${s.k}-${i}`} onClick={() => go("salva")} title={L(it.t)} sub={L(s.t)} />)}</Block>}
+      {res && res.scuola.length > 0 && <Block k="scuola" title={tri("MikiLab a scuola", "MikiLab in der Schule", "MikiLab at school")}>{res.scuola.map(({ c, i, tt }) => <Row key={`${c.n}-${i}`} testid={`cerca-s-${c.n}-${i}`} onClick={() => go("scuola")} title={tt} sub={`${c.nome[lang] || c.nome.it} · ${c.tema[lang] || c.tema.it}`} />)}</Block>} {/* V112 */}
       {res && res.feste.length > 0 && <Block k="feste" title={tri("Nell'almanacco", "Im Almanach", "In the almanac")}>{res.feste.map((t, i) => <Row key={i} testid={`cerca-f-${i}`} onClick={() => go("oggi")} title={`${String(t.d).padStart(2, "0")}/${String(t.m).padStart(2, "0")}`} sub={L(t)} />)}</Block>}
       <p className="text-[11px] text-muted-foreground">{tri("La ricerca legge tutto nel telefono: niente viene inviato.", "Die Suche liest alles im Handy: nichts wird gesendet.", "The search reads everything on your phone: nothing is sent.")}</p>
     </div>

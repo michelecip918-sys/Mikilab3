@@ -188,4 +188,5 @@
 <url><loc>https://mikilab.de/ricetta/f6cf2513-cc0e-568c-b47f-fb7f9c992b13/panettone-al-cioccolato</loc><changefreq>monthly</changefreq><priority>0.8</priority><xhtml:link rel="alternate" hreflang="de" href="https://mikilab.de/ricetta/f6cf2513-cc0e-568c-b47f-fb7f9c992b13/schoko-panettone"/></url>
 <url><loc>https://mikilab.de/ricetta/12930706-fcf4-5b5f-bef5-ba995a4a1b2b/panettone-colorato-innovazione</loc><changefreq>monthly</changefreq><priority>0.8</priority><xhtml:link rel="alternate" hreflang="de" href="https://mikilab.de/ricetta/12930706-fcf4-5b5f-bef5-ba995a4a1b2b/bunter-panettone-innovation"/></url>
   <url><loc>https://mikilab.de/scuola</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://mikilab.de/cerca</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 </urlset>
