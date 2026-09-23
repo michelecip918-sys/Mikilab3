@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronLeft, Sun, Stamp, Calendar, ChevronRight, Sparkles } from "lucide-react";
+import { ChevronLeft, Sun, Stamp, Calendar, ChevronRight, Sparkles, Mail } from "lucide-react";
 import { toast } from "sonner";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -14,6 +14,8 @@ import { recipeKind, fermentationHours, LS, num, fmtDateLong, downloadBlob } fro
 // nel calendario del telefono, per il pane della settimana. Nessun server: è un'abitudine, non una trappola.
 
 export const GIORNI_KEY = "mikilab_bottega_giorni";
+export const LETTERA_KEY = "mikilab_lettera"; // V104: la lettera al fornaio che sarai
+export const letteraDaAprire = () => { const l = LS.get(LETTERA_KEY, null); if (!l || !l.text || !l.open) return null; const d = new Date(l.open + "T00:00:00"); return !isNaN(d) && Date.now() >= d.getTime() ? l : null; };
 const dayKey = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 const doy = (d = new Date()) => Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
 const pick = (arr, seed) => arr[((seed % arr.length) + arr.length) % arr.length];
@@ -132,6 +134,12 @@ export default function Almanacco({ onBack, onNav }) {
   const [recipes, setRecipes] = useState([]);
   const [info, setInfo] = useState(stampsInfo);
   const [rem, setRem] = useState(() => LS.get("mikilab_promemoria", { wd: 6, h: "09:00" }));
+  const [lettera, setLettera] = useState(() => LS.get(LETTERA_KEY, null)); // V104
+  const [testo, setTesto] = useState("");
+  const [apri, setApri] = useState(() => { const d = new Date(); const oct = new Date(d.getFullYear(), 9, 16); if (oct <= d) oct.setFullYear(oct.getFullYear() + 1); return `${oct.getFullYear()}-10-16`; });
+  const daAprire = letteraDaAprire();
+  const scrivi = () => { if (!testo.trim()) return; const l = { text: testo.trim().slice(0, 1500), open: apri, written: new Date().toISOString().slice(0, 10) }; LS.set(LETTERA_KEY, l); setLettera(l); setTesto(""); toast.success(tri("Lettera chiusa. Si apre il giorno che hai scelto.", "Brief verschlossen. Er öffnet sich am gewählten Tag.", "Letter sealed. It opens on the day you chose.")); };
+  const butta = () => { LS.del(LETTERA_KEY); setLettera(null); };
   useEffect(() => { let ok = true; recipesApi.list("mikilab").then((d) => { if (ok) setRecipes(d || []); }).catch(() => {}); return () => { ok = false; }; }, []);
   const now = new Date();
   const seed = doy(now) + now.getFullYear() * 7;
@@ -171,6 +179,7 @@ export default function Almanacco({ onBack, onNav }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Sun className="w-3 h-3" />{tri("L'almanacco del fornaio", "Der Almanach des Bäckers", "The baker's almanac")}</p>
         <h1 className="font-display text-2xl font-black text-foreground">{fmtDateLong(now, lang)}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Ogni giorno la bottega ha una pagina diversa. Passa, leggi, lascia il timbro.", "Jeden Tag hat die Backstube eine andere Seite. Komm vorbei, lies, setz den Stempel.", "Every day the workshop has a different page. Drop by, read, leave your stamp.")}</p>
       </div>
       {trad && <div data-testid="alm-trad" className="rounded-2xl border border-primary/40 bg-primary/8 p-3"><p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary mb-1">{tri("Oggi si festeggia", "Heute feiert man", "Today we celebrate")}</p><p className="text-[13.5px] text-foreground leading-snug">{L(trad)}</p></div>}
@@ -202,6 +211,24 @@ export default function Almanacco({ onBack, onNav }) {
           <input data-testid="alm-h" type="time" value={rem.h} onChange={(e) => setRem({ ...rem, h: e.target.value })} className="w-28 font-mono-data font-bold text-foreground bg-background border border-border rounded-lg px-2 py-2 outline-none" />
         </div>
         <button data-testid="alm-ics" onClick={ics} className="inline-flex items-center gap-1.5 text-[12.5px] font-bold px-3 py-2 rounded-xl bg-primary text-white active:scale-95"><Calendar className="w-4 h-4" />{tri("Metti nel calendario", "In den Kalender", "Add to calendar")}</button>
+      </div>
+      <div data-testid="alm-lettera" className="rounded-2xl border border-border bg-card p-3 space-y-2">
+        <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-muted-foreground flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" />{tri("La lettera al fornaio che sarai", "Der Brief an den Bäcker, der du sein wirst", "The letter to the baker you'll be")}</p>
+        {daAprire ? (
+          <div className="rounded-xl border border-primary/40 bg-primary/8 p-3 space-y-2">
+            <p className="text-[12px] text-muted-foreground">{tri(`Scritta il ${fmtDateLong(new Date(daAprire.written + "T00:00:00"), lang)}. Oggi si apre.`, `Geschrieben am ${fmtDateLong(new Date(daAprire.written + "T00:00:00"), lang)}. Heute öffnet er sich.`, `Written on ${fmtDateLong(new Date(daAprire.written + "T00:00:00"), lang)}. Today it opens.`)}</p>
+            <p className="font-display italic text-[15px] text-foreground leading-snug whitespace-pre-line">{daAprire.text}</p>
+            <button data-testid="alm-lettera-nuova" onClick={butta} className="text-[12px] font-bold text-primary">{tri("Scrivine un'altra →", "Einen neuen schreiben →", "Write another →")}</button>
+          </div>
+        ) : lettera ? (
+          <p className="text-[12.5px] text-foreground/85 leading-snug">{tri(`C'è una lettera chiusa: si apre il ${fmtDateLong(new Date(lettera.open + "T00:00:00"), lang)}. Fino ad allora resta sigillata nel telefono.`, `Ein Brief ist verschlossen: er öffnet sich am ${fmtDateLong(new Date(lettera.open + "T00:00:00"), lang)}. Bis dahin bleibt er versiegelt im Handy.`, `A letter is sealed: it opens on ${fmtDateLong(new Date(lettera.open + "T00:00:00"), lang)}. Until then it stays sealed in your phone.`)} <button data-testid="alm-lettera-butta" onClick={butta} className="underline decoration-dotted text-muted-foreground">{tri("annulla", "verwerfen", "discard")}</button></p>
+        ) : (
+          <>
+            <p className="text-[12.5px] text-foreground/85 leading-snug">{tri("Scrivi due righe a chi sarai tra un anno: che pane vuoi saper fare, per chi, cosa ti fa paura oggi. La lettera si chiude e si riapre da sola il giorno che scegli. Solo tu la leggerai.", "Schreib zwei Zeilen an den, der du in einem Jahr sein wirst: welches Brot du können willst, für wen, was dir heute Angst macht. Der Brief schließt sich und öffnet sich von selbst am gewählten Tag. Nur du wirst ihn lesen.", "Write two lines to who you'll be in a year: which bread you want to master, for whom, what scares you today. The letter seals itself and reopens on the day you choose. Only you will read it.")}</p>
+            <textarea data-testid="alm-lettera-testo" value={testo} onChange={(e) => setTesto(e.target.value.slice(0, 1500))} rows={4} placeholder={tri("Caro fornaio che sarai…", "Lieber Bäcker, der du sein wirst…", "Dear baker you'll be…")} className="w-full text-[13px] bg-background text-foreground border border-border rounded-xl px-3 py-2 outline-none focus:border-primary leading-snug" />
+            <div className="flex items-center gap-2"><label className="text-[12px] text-muted-foreground">{tri("Si apre il", "Öffnet sich am", "Opens on")}</label><input data-testid="alm-lettera-data" type="date" value={apri} onChange={(e) => setApri(e.target.value)} className="font-mono-data font-bold text-foreground bg-background border border-border rounded-lg px-2 py-1.5 outline-none" /><button data-testid="alm-lettera-chiudi" onClick={scrivi} disabled={!testo.trim()} className="ml-auto inline-flex items-center gap-1.5 text-[12.5px] font-bold px-3 py-2 rounded-xl bg-primary text-white disabled:opacity-40 active:scale-95"><Mail className="w-4 h-4" />{tri("Chiudi la lettera", "Brief verschließen", "Seal the letter")}</button></div>
+          </>
+        )}
       </div>
       <button data-testid="alm-mappa" onClick={() => go("mappa")} className="w-full text-left rounded-2xl border border-border bg-card p-3 flex items-center gap-2"><Sparkles className="w-4 h-4 text-primary shrink-0" /><span className="text-[13px] text-foreground">{tri("Non sai da dove cominciare? La mappa di MikiLab.", "Du weißt nicht, wo anfangen? Die Karte von MikiLab.", "Don't know where to start? The map of MikiLab.")}</span><ChevronRight className="w-4 h-4 text-muted-foreground ml-auto" /></button>
       <p className="text-[11px] text-muted-foreground">{tri("Timbri e promemoria restano nel tuo telefono. Ventiquattro proverbi, venti gesti, ventitré feste: torna, e li trovi diversi.", "Stempel und Erinnerungen bleiben auf deinem Handy. Vierundzwanzig Sprichwörter, zwanzig Handgriffe, dreiundzwanzig Feste: komm wieder, und du findest sie anders.", "Stamps and reminders stay on your phone. Twenty-four proverbs, twenty gestures, twenty-three feasts: come back and they'll be different.")}</p>

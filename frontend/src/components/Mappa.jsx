@@ -73,6 +73,7 @@ export default function Mappa({ onBack, onNav }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Map className="w-3 h-3" />MikiLab</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("La mappa di MikiLab", "Die Karte von MikiLab", "The map of MikiLab")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Tutto il sito in una pagina: ogni attrezzo con una riga che dice a cosa serve. Tocca e ci sei. Se non trovi una cosa, chiedila a Sitor.", "Die ganze Seite auf einer Seite: jedes Werkzeug mit einer Zeile, wozu es dient. Tippen, und du bist da. Findest du etwas nicht, frag Sitor.", "The whole site on one page: every tool with a line saying what it's for. Tap and you're there. If you can't find something, ask Sitor.")}</p>
       </div>
       <div className="relative"><Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" /><input data-testid="mappa-cerca" value={q} onChange={(e) => setQ(e.target.value)} placeholder={tri("Cerca nella mappa…", "In der Karte suchen…", "Search the map…")} className="w-full text-[14px] bg-card text-foreground border border-border rounded-xl pl-9 pr-3 py-2.5 outline-none focus:border-primary" /></div>

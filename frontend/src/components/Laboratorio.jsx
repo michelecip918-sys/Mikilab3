@@ -36,6 +36,7 @@ export default function Laboratorio({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary">{tri("So già panificare", "Ich backe schon", "I already bake")}</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Il laboratorio", "Die Backstube", "The bakery")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Gli attrezzi di chi lavora con i chili e con l'orologio. Le ricette del sito, a scala di laboratorio, con i conti fatti.", "Die Werkzeuge für alle, die mit Kilos und mit der Uhr arbeiten. Die Rezepte der Seite im Backstubenmaßstab, fertig gerechnet.", "The tools of those who work in kilos and by the clock. The site's recipes at bakery scale, with the sums done.")}</p>
       </div>
       <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">

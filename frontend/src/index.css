@@ -328,3 +328,9 @@ html.ml-notte .holo-canvas {
 }
 html.ml-notte .holo-root { filter: sepia(0.35) saturate(0.8) brightness(0.82); }
 html.ml-notte.ml-big { zoom: 1.28; }
+
+/* V104 oro — i filetti dorati di MikiLab: una striscia in cima alla pagina e una riga sottile sotto i titoli */
+body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 9999; pointer-events: none; background: linear-gradient(90deg, #B8641F 0%, #E6C27A 35%, #F3DFA6 50%, #E6C27A 65%, #B8641F 100%); }
+.mk-oro-line { height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent 0%, #B8641F 20%, #E6C27A 50%, #B8641F 80%, transparent 100%); opacity: .9; }
+.mk-oro-text { background: linear-gradient(90deg, #B8641F, #E6C27A, #B8641F); -webkit-background-clip: text; background-clip: text; color: transparent; }
+@media print { body::before { display: none; } .mk-oro-line { background: #B8641F; opacity: 1; } }

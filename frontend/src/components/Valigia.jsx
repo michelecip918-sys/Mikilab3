@@ -61,6 +61,7 @@ export default function Valigia({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Briefcase className="w-3 h-3" />MikiLab</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("La valigia della bottega", "Der Koffer der Bottega", "The bottega suitcase")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Tutto quello che MikiLab sa di te (preferiti, lievito, medaglie, forno, note, attrezzi) vive nel tuo telefono. Se cambi telefono, lo perdi. Qui lo metti in valigia e lo riapri dall'altra parte. Nessun server in mezzo: il file lo tieni tu.", "Alles, was MikiLab über dich weiß (Favoriten, Sauerteig, Medaillen, Ofen, Notizen, Werkzeuge), lebt auf deinem Handy. Mit neuem Handy ist es weg. Hier packst du es in den Koffer und packst es drüben wieder aus. Kein Server dazwischen: die Datei behältst du.", "Everything MikiLab knows about you (favourites, starter, medals, oven, notes, tools) lives on your phone. Change phone and you lose it. Here you pack it in a suitcase and unpack it on the other side. No server in between: you keep the file.")}</p>
       </div>
       <div className="rounded-2xl border border-border bg-card p-4 space-y-2">

@@ -42,6 +42,7 @@ export default function CartaDeiPani({ onBack }) {
       <div className="no-print">
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><ScrollText className="w-3 h-3" />MikiLab</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("La carta dei pani", "Die Brotkarte", "The bread menu")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Come la carta dei vini, ma per il pane. Per una cena in casa, per un regalo, per il banco. Le descrizioni le leggo dalle ricette.", "Wie die Weinkarte, nur fürs Brot. Für ein Abendessen zu Hause, ein Geschenk, die Theke. Die Beschreibungen lese ich aus den Rezepten.", "Like a wine list, but for bread. For a dinner at home, a gift, the counter. I read the descriptions from the recipes.")}</p>
       </div>
       <div className="no-print rounded-2xl border border-border bg-card p-3 space-y-2">
@@ -71,7 +72,7 @@ export default function CartaDeiPani({ onBack }) {
         <p className="font-mono-data text-[10px] tracking-[0.35em] uppercase text-muted-foreground">MikiLab · {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
         <h2 className="font-display text-3xl font-bold text-foreground mt-2">{title}</h2>
         {st.sub ? <p className="font-display italic text-[15px] text-muted-foreground mt-1">{st.sub}</p> : <p className="font-display italic text-[15px] text-muted-foreground mt-1">{fmtDateLong(new Date(), lang)}</p>}
-        <div className="w-16 h-px bg-primary mx-auto my-5" />
+        <div className="w-16 mk-oro-line mx-auto my-5" />
         {items.length === 0 && <p className="text-[13px] text-muted-foreground">{tri("Aggiungi i pani qui sopra: compaiono qui, pronti da stampare.", "Füge oben die Brote hinzu: sie erscheinen hier, druckfertig.", "Add the breads above: they appear here, ready to print.")}</p>}
         <div className="space-y-5 max-w-md mx-auto">
           {items.map((it, i) => (
@@ -85,7 +86,7 @@ export default function CartaDeiPani({ onBack }) {
             </div>
           ))}
         </div>
-        <div className="w-16 h-px bg-primary mx-auto my-5" />
+        <div className="w-16 mk-oro-line mx-auto my-5" />
         <p className="text-[11px] text-muted-foreground">{tri("Ricette di Michele Signorella · guida IA Sitor · mikilab.de", "Rezepte von Michele Signorella · KI-Guide Sitor · mikilab.de", "Recipes by Michele Signorella · AI guide Sitor · mikilab.de")}</p>
       </div>
       <div className="no-print flex gap-1.5">

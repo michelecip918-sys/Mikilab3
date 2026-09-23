@@ -77,6 +77,7 @@ export default function PrimoPane({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-salvia">{tri("Sto imparando", "Ich lerne", "I'm learning")}</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Il tuo primo pane in 7 giorni", "Dein erstes Brot in 7 Tagen", "Your first bread in 7 days")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Un passo al giorno, poco alla volta. Non serve saper fare niente: serve una bilancia e un po' di pazienza. Sitor ti accompagna.", "Ein Schritt pro Tag, Stück für Stück. Du musst nichts können: eine Waage und etwas Geduld reichen. Sitor begleitet dich.", "One step a day, a little at a time. You don't need to know anything: a scale and a bit of patience. Sitor walks with you.")}</p>
         <div className="mt-2 h-2 rounded-full bg-muted overflow-hidden"><div className="h-full bg-salvia transition-all" style={{ width: `${(count / 7) * 100}%` }} /></div>
         <p className="text-[11px] text-muted-foreground mt-1">{count}/7 {tri("giorni fatti", "Tage geschafft", "days done")}</p>

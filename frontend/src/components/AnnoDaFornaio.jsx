@@ -81,6 +81,7 @@ export default function AnnoDaFornaio({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Sparkles className="w-3 h-3" />MikiLab</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Il tuo anno da fornaio", "Dein Jahr als Bäcker", "Your year as a baker")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Tutto quello che hai fatto con MikiLab, letto dal tuo telefono e da nessun altro posto. Un manifesto da condividere, se ti va.", "Alles, was du mit MikiLab gemacht hast, gelesen von deinem Handy und sonst nirgends. Ein Plakat zum Teilen, wenn du magst.", "Everything you've done with MikiLab, read from your phone and nowhere else. A poster to share, if you like.")}</p>
       </div>
       <div data-testid="anno-stats" className="grid grid-cols-2 sm:grid-cols-4 gap-2">

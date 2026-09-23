@@ -47,6 +47,7 @@ export default function OfficinaSitor({ recipes, t }) {
   return (
     <div data-testid="officina-sitor" className="mb-3">
       <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-salvia mb-1.5 flex items-center gap-1.5"><Sparkles className="w-3 h-3" />{tri("L'Officina di Sitor", "Sitors Werkstatt", "Sitor's Workshop")}</p>
+      <div className="mk-oro-line mb-2" />
       <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 snap-x">
         {tools.map((x) => (
           <button key={x.k} data-testid={`officina-${x.k}`} onClick={() => setOpen(x.k)}

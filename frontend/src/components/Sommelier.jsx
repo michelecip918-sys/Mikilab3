@@ -88,6 +88,7 @@ export default function Sommelier({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-salvia flex items-center gap-1.5"><Wine className="w-3 h-3" />MikiLab</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Il sommelier del pane", "Der Brot-Sommelier", "The bread sommelier")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Un pane si assaggia con cinque sensi, come un vino. Scegli le parole che lo descrivono: ti scrivo la scheda, ti dico cosa raccontano quei segni e cosa metterci accanto a tavola.", "Ein Brot verkostet man mit fünf Sinnen, wie einen Wein. Wähl die Wörter, die es beschreiben: ich schreibe die Karte, sage dir, was diese Zeichen erzählen, und was auf den Tisch dazu passt.", "You taste a bread with five senses, like a wine. Pick the words that describe it: I'll write the card, tell you what those signs mean, and what to put beside it at the table.")}</p>
       </div>
       <input data-testid="som-name" value={name} onChange={(e) => setName(e.target.value.slice(0, 60))} placeholder={tri("Che pane è? (es. Pane di Matera, sabato)", "Welches Brot? (z. B. Pane di Matera, Samstag)", "Which bread? (e.g. Pane di Matera, Saturday)")} className="w-full text-[13px] bg-card text-foreground border border-border rounded-xl px-3 py-2 outline-none focus:border-salvia" />

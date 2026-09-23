@@ -100,6 +100,7 @@ export default function Ospiti({ onBack }) {
       <div>
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Users className="w-3 h-3" />{tri("Il maggiordomo di MikiLab", "Der Butler von MikiLab", "MikiLab's butler")}</p>
         <h1 className="font-display text-2xl font-black text-foreground">{tri("Stasera ho ospiti", "Heute Abend kommen Gäste", "Guests tonight")}</h1>
+        <div className="mk-oro-line mt-2 mb-1" />
         <p className="text-sm text-muted-foreground mt-1">{tri("Dimmi l'occasione, quanti siete e a che ora. Ti propongo i pani giusti, li scalo a persona, ti dico quando iniziare e ti scrivo la spesa.", "Sag mir den Anlass, wie viele ihr seid und um wie viel Uhr. Ich schlage die passenden Brote vor, rechne sie pro Person, sage dir, wann du anfängst, und schreibe den Einkauf.", "Tell me the occasion, how many you are and at what time. I'll suggest the right breads, scale them per person, tell you when to start and write the shopping list.")}</p>
       </div>
       <div className="rounded-2xl border border-border bg-card p-3 space-y-2.5">

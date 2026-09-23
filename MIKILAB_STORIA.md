@@ -12,5 +12,6 @@ Il Manuale di Sitor: ricettario pubblico di Michele Signorella, panettiere a Sto
 - **v100** La mappa di MikiLab: tutto il sito in una pagina.
 - **v102** Le mani in pasta: la pasta di casa, dodici forme scritte da Sitor e dichiarate come tali, distinte dalle ricette di Michele.
 - **v103** Il pane dei piccoli: fare il pane con i bambini (impasto facile, sei forme, cinque regole, il diploma), scritto da Sitor.
+- **v104** I filetti d'oro (la striscia in cima e le righe sotto i titoli) e la lettera al fornaio che sarai, che si apre da sola il giorno scelto.
 
 Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuovi; niente pubblicità; il pane si fa con le mani.
