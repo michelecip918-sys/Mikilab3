@@ -1,5 +1,6 @@
 import { useState } from "react"; // V99 react
 import { ChevronLeft, Sparkles, Radio, BookOpen, ChefHat, CalendarDays, Beaker, Globe, Recycle, Sprout, Settings, Flame, Soup, FlaskConical, Camera, Compass, ZoomIn, Ear, AlarmClock, MapPin, Scale, BookOpen as BookOpenIcon, Moon, Printer, Award, Dices } from "lucide-react";
+import { Map as MapIcon } from "lucide-react"; // V100
 import { Briefcase as BriefcaseIcon, BookOpen as BookIcon } from "lucide-react"; // V97
 import { Users as UsersIcon, ScrollText as ScrollIcon } from "lucide-react"; // V95
 import { Wine as WineIcon } from "lucide-react"; // V94
@@ -26,6 +27,7 @@ export default function Strumenti({ onBack, onNav, features }) {
     { route: "anno", Icon: Sparkles, show: true, t: tri("Il tuo anno da fornaio", "Dein Jahr als Bäcker", "Your year as a baker"), d: tri("Pani fatti, medaglie, lievito, assaggi: i tuoi numeri in un manifesto da condividere", "Brote, Medaillen, Sauerteig, Verkostungen: deine Zahlen auf einem Plakat zum Teilen", "Loaves, medals, starter, tastings: your numbers on a poster to share") }, // V96
     { route: "libro", Icon: BookIcon, show: true, t: tri("Il mio libro di pane", "Mein Brotbuch", "My bread book"), d: tri("Le ricette nel cuore impaginate come un libretto da stampare o salvare in PDF", "Die Lieblingsrezepte als Büchlein zum Drucken oder als PDF", "Your favourite recipes as a booklet to print or save as PDF") }, // V97
     { route: "valigia", Icon: BriefcaseIcon, show: true, t: tri("La valigia della bottega", "Der Koffer der Bottega", "The bottega suitcase"), d: tri("Salva tutto quello che MikiLab sa di te in un file e riaprilo sul telefono nuovo", "Sichere alles, was MikiLab über dich weiß, in einer Datei und pack es auf dem neuen Handy aus", "Save everything MikiLab knows about you to a file and unpack it on a new phone") }, // V97
+    { route: "mappa", Icon: MapIcon, show: true, t: tri("La mappa di MikiLab", "Die Karte von MikiLab", "The map of MikiLab"), d: tri("Tutto il sito in una pagina, ogni attrezzo spiegato in una riga", "Die ganze Seite auf einer Seite, jedes Werkzeug in einer Zeile erklärt", "The whole site on one page, every tool explained in a line") }, // V100
     { route: "banco", Icon: FlaskConical, show: true, t: tri("Il banco delle prove", "Die Prüfbank", "The test bench"), d: tri("Prova del dito, della finestra, del lievito e il tempo di oggi", "Finger-, Fenster-, Schwimmprobe und das Wetter von heute", "Poke, windowpane, float test and today's weather") },
     { route: "mioforno", Icon: Camera, show: true, t: tri("Il mio forno", "Mein Ofen", "My oven"), d: tri("Foto e note dei tuoi pani, solo sul tuo telefono", "Fotos und Notizen deiner Brote, nur auf deinem Handy", "Photos and notes of your bakes, only on your phone") },
     { route: "mensola", Icon: BookOpen, show: true, t: tri("La mia mensola", "Mein Regal", "My shelf"), d: tri("Le tue ricette salvate", "Deine gespeicherten Rezepte", "Your saved recipes") },

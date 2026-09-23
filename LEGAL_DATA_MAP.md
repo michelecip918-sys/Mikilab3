@@ -194,3 +194,5 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Da evitare** (in Cosa posso fare adesso?): filtro locale per latte/burro, uova, frutta a guscio, sesamo, soia, zucchero, carne, dedotto dagli ingredienti della ricetta con invito a verificare le etichette; non è un'indicazione medica. Cartelle `patch97`, `v97` rimosse.
 ## 28. V99 — Comodità d'uso
 - Nessuna funzione nuova che tratti dati: testi degli attrezzi un gradino più grandi, tabelle riorganizzate per gli schermi stretti (confronto, tazze e once, totali), card dell'Officina più larghe. In Strumenti: casella di ricerca e "usati di recente" (chiave localStorage `mikilab_recenti`, solo i nomi delle pagine aperte, nel dispositivo). Cartelle `patch98`, `v98` rimosse.
+## 29. V100 — La mappa di MikiLab
+- **La mappa** (`Mappa.jsx`, /mappa): pagina statica di orientamento (elenco degli attrezzi con una riga di spiegazione e collegamenti); nessun dato trattato. `MIKILAB_STORIA.md` nella radice del progetto: cronologia delle versioni. Rimosse le cartelle `patch99`, `v99` e, a fine applicazione, `patch100`: il repository non contiene più cartelle di patch.
