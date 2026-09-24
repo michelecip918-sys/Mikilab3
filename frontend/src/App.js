@@ -159,6 +159,8 @@ export default function App() {
   }, []);
   const [route, setRoute] = useState(() => { try { if (new URLSearchParams(window.location.search).get("lievito")) return "miolievito"; } catch { /* */ } return initialRoute(); });
   const [chatOpen, setChatOpen] = useState(false);
+  const navRef = useRef(null); // V113
+  useEffect(() => { try { window.dispatchEvent(new CustomEvent("mikilab-chat-state", { detail: { open: chatOpen } })); } catch { /* */ } }, [chatOpen]); // V113
   const [techSlug, setTechSlug] = useState(null);
   const pubContent = usePublicContent(); // null finché non caricato
   const isAdmin = !!(user && user.role === "admin");
@@ -191,7 +193,7 @@ export default function App() {
     window.addEventListener("mikilab-open-chat", hc);
     const hp = () => { setRoute("perche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
     window.addEventListener("mikilab-open-perche", hp);
-    const hn = (e) => { const r = e?.detail?.route; if (r) { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); } };
+    const hn = (e) => { const r = e?.detail?.route; if (r) { if (navRef.current) navRef.current(r); else { setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" }); } } }; // V113
     window.addEventListener("mikilab-nav", hn);
     return () => { window.removeEventListener("mikilab-open-technique", h); window.removeEventListener("mikilab-open-chat", hc); window.removeEventListener("mikilab-open-perche", hp); window.removeEventListener("mikilab-nav", hn); };
   }, []);
@@ -236,6 +238,7 @@ export default function App() {
     setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  navRef.current = navFromHome; // V113
   // <html lang> segue la lingua corrente (non blocca la traduzione automatica del browser).
   useEffect(() => {
     try { document.documentElement.lang = lang || "it"; } catch { /* */ }

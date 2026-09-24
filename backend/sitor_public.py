@@ -476,18 +476,22 @@ async def sitor_chat(body: PublicChatReq, request: Request):
         if hit and hit.get("reply"):
             await _bump_usage("chat_cache_hits")
             return {"ok": True, "reply": hit["reply"], "cached": True}
-    try:
-        reply = ""
-        chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"sitorchat-{dev}",
-                       system_message=sysmsg).with_model("anthropic", model).with_params(max_tokens=max_tok)
-        async for ev in chat.stream_message(UserMessage(text=prompt)):
-            if isinstance(ev, TextDelta):
-                reply += ev.content or ""
-        reply = (reply or "").strip()
-        if not reply:
-            raise ValueError("empty")
-    except Exception as e:
-        logging.getLogger(__name__).warning("sitor chat fail: %s", str(e)[:120])
+    reply = ""
+    for _mdl in ([model, SITOR_PUBLIC_MODEL] if model != SITOR_PUBLIC_MODEL else [model]):  # V113: se il modello grande non risponde, riprova col normale
+        try:
+            reply = ""
+            chat = LlmChat(api_key=EMERGENT_LLM_KEY, session_id=f"sitorchat-{dev}",
+                           system_message=sysmsg).with_model("anthropic", _mdl).with_params(max_tokens=max_tok)
+            async for ev in chat.stream_message(UserMessage(text=prompt)):
+                if isinstance(ev, TextDelta):
+                    reply += ev.content or ""
+            reply = (reply or "").strip()
+            if reply:
+                break
+        except Exception as e:
+            logging.getLogger(__name__).warning("sitor chat fail (%s): %s", _mdl, str(e)[:120])
+            reply = ""
+    if not reply:
         fb = {"it": "Scusa, ho avuto un intoppo. Riprova tra poco.",
               "de": "Entschuldige, kleiner Fehler. Versuch es gleich nochmal.",
               "en": "Sorry, small glitch. Please try again shortly."}

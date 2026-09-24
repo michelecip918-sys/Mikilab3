@@ -15,6 +15,7 @@ import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
 import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
 import HandsFreeMode from "@/components/HandsFreeMode";
+import CoursePlayer from "@/components/CoursePlayer"; // V113
 import RecipeTimeline from "@/components/RecipeTimeline";
 import { TattooSignature } from "@/components/TattooSignature";
 import { useLang } from "@/i18n/LanguageContext";
@@ -75,6 +76,20 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [translating, setTranslating] = useState(false);
   const { t, lang, setLang } = useLang();
   useBackClose(!!viewing, () => setViewing(null));
+  // V113 — "Cucina con Sitor" e "Mani in Pasta" si aprono FUORI dalla finestra ricetta: la finestra
+  // si nasconde (la ricetta resta scelta) e torna quando chiudi Sitor. Lo stesso mentre è aperta la chat.
+  const [player, setPlayer] = useState(null);
+  const [chatOver, setChatOver] = useState(false);
+  useBackClose(!!player, () => setPlayer(null));
+  useEffect(() => {
+    const hp = (e) => { const d = e && e.detail; if (d && d.recipe && (d.kind === "course" || d.kind === "hands")) setPlayer({ kind: d.kind, recipe: d.recipe }); };
+    const hc = (e) => setChatOver(!!(e && e.detail && e.detail.open));
+    window.addEventListener("mikilab-open-player", hp);
+    window.addEventListener("mikilab-chat-state", hc);
+    return () => { window.removeEventListener("mikilab-open-player", hp); window.removeEventListener("mikilab-chat-state", hc); };
+  }, []);
+  // V113 — tocchi su allarme timer e avvisi: non chiudono la ricetta
+  const keepOpen = (e) => { try { const tg = e && e.target; if (tg && tg.closest && tg.closest("[data-mk-overlay],[data-sonner-toaster]")) e.preventDefault(); } catch { /* */ } };
   // V87 — scheda aperta = indirizzo /ricetta/<id>/<nome>, titolo, anteprima con foto, JSON-LD per Google
   useEffect(() => {
     if (collectionName !== "mikilab") return undefined;
@@ -616,8 +631,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       })()}
 
       {/* Finestra ricetta */}
-      <Dialog open={!!viewing} onOpenChange={(o) => !o && setViewing(null)}>
-        <DialogContent className="max-w-lg max-h-[88vh] overflow-y-auto bg-background dark:bg-background border-border dark:border-border p-0">
+      <Dialog open={!!viewing && !player && !chatOver} onOpenChange={(o) => !o && setViewing(null)}>
+        <DialogContent onPointerDownOutside={keepOpen} onInteractOutside={keepOpen} onFocusOutside={keepOpen} className="max-w-lg max-h-[88vh] overflow-y-auto bg-background dark:bg-background border-border dark:border-border p-0">
           <DialogTitle className="sr-only">{viewing?.name || t("recipe_ingredients")}</DialogTitle>
           <DialogDescription className="sr-only">{t("recipe_dialog_desc")}</DialogDescription>
           <div className="sticky top-0 z-10 flex justify-end items-center gap-1 px-4 pt-3 pb-2 bg-background/95 dark:bg-background/95 backdrop-blur">
@@ -662,6 +677,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
           )}
         </DialogContent>
       </Dialog>
+
+      {player && player.kind === "course" && <CoursePlayer recipe={player.recipe} onClose={() => setPlayer(null)} />}
+      {player && player.kind === "hands" && <HandsFreeMode recipe={player.recipe} procedure={rLoc(player.recipe, "procedure", lang)} lang={lang} onClose={() => setPlayer(null)} />}
 
       <RecipeDialog
         open={dialogOpen}
@@ -718,7 +736,6 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
   const tri = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
-  const [handsFree, setHandsFree] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const farroOk = farroEligible(r);
@@ -801,7 +818,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
             <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="hsl(var(--primary))" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && rLoc(r, "procedure", lang) && (
-            <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => setHandsFree(true)} color="hsl(var(--primary))" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
+            <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-open-player", { detail: { kind: "hands", recipe: r } }))} color="hsl(var(--primary))" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && (
             <ActionBtn testid={`timeline-recipe-${r.id}`} onClick={() => setShowTimeline((v) => !v)} color="hsl(var(--muted-foreground))" label={tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}><Clock className="w-4 h-4" /></ActionBtn>
@@ -988,9 +1005,6 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
 
         <TattooSignature className="mt-1" testid={`recipe-signature-${r.id}`} />
       </div>
-      {handsFree && (
-        <HandsFreeMode recipe={r} procedure={rLoc(r, "procedure", lang)} lang={lang} onClose={() => setHandsFree(false)} />
-      )}
     </div>
   );
 }

@@ -117,9 +117,9 @@ export function TimerProvider({ children }) {
       {children}
       {/* Overlay allarme GLOBALE: visibile su qualsiasi schermata */}
       {alarm && (
-        <div data-testid="timer-alarm-overlay"
+        <div data-testid="timer-alarm-overlay" data-mk-overlay="1"
           className="fixed inset-0 z-[90] flex flex-col items-center justify-center p-6 text-center animate-pulse"
-          style={{ background: "repeating-linear-gradient(45deg,hsl(var(--muted-foreground)),hsl(var(--muted-foreground)) 40px,#111 40px,#111 80px)" }}>
+          style={{ pointerEvents: "auto", background: "repeating-linear-gradient(45deg,hsl(var(--muted-foreground)),hsl(var(--muted-foreground)) 40px,#111 40px,#111 80px)" }}>
           <div className="bg-card dark:bg-background rounded-3xl p-8 shadow-2xl max-w-sm w-full">
             <BellRing className="w-16 h-16 text-muted-foreground mx-auto mb-3 animate-bounce" />
             <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{tri("Tempo scaduto", "Zeit abgelaufen", "Time is up")}{ringing.length > 1 ? ` (${ringing.length})` : ""}</p>

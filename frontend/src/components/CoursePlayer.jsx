@@ -232,7 +232,7 @@ export default function CoursePlayer({ recipe, onClose }) {
   const openTechnique = (slug) => { window.dispatchEvent(new CustomEvent("mikilab-open-technique", { detail: { slug } })); onClose(); };
 
   return createPortal((
-    <div data-testid="course-player" className="fixed inset-0 z-[95] bg-background text-foreground flex flex-col">
+    <div data-testid="course-player" data-mk-overlay="1" style={{ pointerEvents: "auto" }} className="fixed inset-0 z-[95] bg-background text-foreground flex flex-col">
       <div className="flex items-center justify-between px-5 pt-5 pb-2 shrink-0">
         <div className="flex items-center gap-2 min-w-0">
           <ChefHat className="w-5 h-5 shrink-0 text-muted-foreground" />

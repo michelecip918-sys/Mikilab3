@@ -21,3 +21,4 @@ Il Manuale di Sitor: ricettario pubblico di Michele Signorella, panettiere a Sto
 - **v112** Ogni pagina ha il suo indirizzo: la barra degli indirizzi segue la pagina (mikilab.de/scuola, /piccoli, /salva…), così ogni link si copia e si condivide; titolo, descrizione e canonical per ogni pagina (Google e cronologia); le schede di MikiLab a scuola dentro Cerca; /cerca nella sitemap.
 
 Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuovi; niente pubblicità; il pane si fa con le mani.
+- **v113** Sitor va avanti: «Cucina con Sitor» e «Mani in Pasta» si aprono fuori dalla finestra della ricetta, così tutti i pulsanti rispondono a ogni passo; la ricetta torna quando chiudi Sitor. Anche l'allarme del timer e la chat si toccano con la ricetta aperta.

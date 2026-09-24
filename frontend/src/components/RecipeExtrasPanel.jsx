@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLang } from "@/i18n/LanguageContext";
-import CoursePlayer from "@/components/CoursePlayer";
 import CalendarReminder from "@/components/CalendarReminder";
 import MixPanel from "@/components/MixPanel";
 import EspertoPro from "@/components/EspertoPro";
@@ -39,7 +38,6 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
   });
   const flour = Number(scaleG) || Number(recipe.flour_grams) || 500; // stessa farina scelta nella scheda ricetta
   const [saving, setSaving] = useState(false);
-  const [showCourse, setShowCourse] = useState(false);
   const [settings, setSettings] = useState({});
   const [done, setDone] = useState(() => { try { return new Set(JSON.parse(localStorage.getItem(DONE_KEY) || "[]")).has(recipe.id); } catch { return false; } });
   useEffect(() => { siteSettingsApi.get().then(setSettings).catch(() => {}); }, []);
@@ -105,7 +103,6 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
 
   return (
     <div data-testid={`recipe-extras-${recipe.id}`} className="space-y-4">
-      {showCourse && <CoursePlayer recipe={recipe} onClose={() => setShowCourse(false)} />}
       {/* Stato ricetta (V1): "Provata da Michele" / "Controllata da Michele" / bozza */}
       <p data-testid="recipe-status-badge" className="text-center">
         <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${ex.status === "tested" ? "bg-accent/15 text-accent" : ex.status === "reviewed" ? "bg-primary/15 text-primary" : "bg-foreground/10 text-muted-foreground"}`}>
@@ -117,7 +114,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
         </span>
       </p>
       {/* CUCINA CON SITOR */}
-      <button data-testid="cook-with-sitor" onClick={() => setShowCourse(true)}
+      <button data-testid="cook-with-sitor" onClick={() => window.dispatchEvent(new CustomEvent("mikilab-open-player", { detail: { kind: "course", recipe } }))}
         className="w-full inline-flex items-center justify-center gap-2 py-3.5 rounded-2xl bg-muted hover:bg-muted text-foreground font-bold text-[16px] active:scale-[0.98] transition-all shadow-lg">
         <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
       </button>

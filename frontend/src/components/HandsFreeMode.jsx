@@ -129,7 +129,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
 
   if (!steps.length) {
     return createPortal((
-      <div className="fixed inset-0 z-[95] bg-background text-foreground flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay">
+      <div className="fixed inset-0 z-[95] bg-background text-foreground flex flex-col items-center justify-center p-6 text-center" data-testid="handsfree-overlay" data-mk-overlay="1" style={{ pointerEvents: "auto" }}>
         <p className="mb-4">{tri("Questa ricetta non ha un procedimento passo-passo.", "Dieses Rezept hat keine Schritt-für-Schritt-Anleitung.", "This recipe has no step-by-step procedure.", "Esta receta no tiene un procedimiento paso a paso.")}</p>
         <button data-testid="handsfree-close" onClick={onClose} className="bg-primary px-5 py-2.5 rounded-2xl shadow-md border border-amber-900/40 font-semibold">{tri("Chiudi", "Schließen", "Close", "Cerrar")}</button>
       </div>
@@ -137,7 +137,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
   }
 
   return createPortal((
-    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-primary to-background text-white flex flex-col" data-testid="handsfree-overlay">
+    <div className="fixed inset-0 z-[95] bg-gradient-to-b from-primary to-background text-white flex flex-col" data-testid="handsfree-overlay" data-mk-overlay="1" style={{ pointerEvents: "auto" }}>
       <div className="flex items-center justify-between px-5 pt-5 pb-2">
         <div className="flex items-center gap-2 min-w-0">
           <Hand className="w-5 h-5 shrink-0" />
