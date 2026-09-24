@@ -19,6 +19,8 @@ KEEP_COLLECTIONS = {
     "learning_path", "site_pages", "app_meta", "site_settings", "palato_tips", "flour_types",
     "bread_calendar", "experiments", "live_sessions", "users", "user_sessions", "login_attempts",
     "rate_limits", "usage_daily", "chat_cache", "password_resets", "recipe_apprentice", "ai_usage",
+    # V115: usate ancora dal sito — MAI svuotarle (files = foto delle ricette)
+    "files", "favorites", "experiment_votes", "live_pings", "flours",
 }
 # Ricette extra NON del seed da rimuovere esplicitamente.
 EXTRA_RECIPES_TO_DELETE = ["Colomba Pasquale a Lievito Madre", "Pane ai Cereali"]
