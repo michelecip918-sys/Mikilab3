@@ -60,7 +60,7 @@ export default function PesaInUnaCiotola({ r, dough, lang, t }) {
   const finished = idx >= steps.length;
   const cumTarget = cumDone + topUpTotal + (cur ? plan(cur) : 0);   // numero da leggere sulla bilancia
   const total = steps.reduce((a, s) => a + plan(s), 0);
-  const say = (text) => { if (voice) playTTS(text, { who: "momy", lang }).catch(() => {}); };
+  const say = (text) => { if (voice) playTTS(text, { lang }); };
   const goNext = () => {
     const n = steps[idx + 1];
     // i rabbocchi suggeriti si considerano fatti: da qui in poi contano come messi

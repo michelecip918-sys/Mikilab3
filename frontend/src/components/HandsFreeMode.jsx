@@ -4,7 +4,7 @@ import { X, Mic, MicOff, SkipForward, SkipBack, RotateCcw, Volume2, VolumeX, Tim
 import { MicNotice } from "@/components/MicNotice";
 import { useLang } from "@/i18n/LanguageContext";
 import { useTimers } from "@/audio/TimerContext";
-import { playTTS, stopTTS } from "@/lib/tts";
+import { playTTSLong, stopTTS } from "@/lib/tts"; // V114
 import { toast } from "sonner";
 import { mkTri } from "@/i18n/triMaps";
 import { stripWake, findSubstitution } from "@/lib/voiceSubs";
@@ -45,7 +45,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
       speakUntilRef.current = Date.now() + Math.min(60000, String(text || "").length * 70 + 1200);
       if (!ttsOnRef.current) return;
       // Voce UNICA del sito: Sitor (via playTTS). Nessuna sintesi diretta femminile.
-      playTTS(text, { lang });
+      playTTSLong(text, { lang }); // V114: il passo intero, non solo 2 frasi
     } catch { /* */ }
   }, [lang]);
 
@@ -60,7 +60,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
     return () => {
       document.removeEventListener("visibilitychange", onVis);
       try { wlRef.current && wlRef.current.release(); wlRef.current = null; } catch { /* */ }
-      try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch { /* */ }
+      try { stopTTS(); } catch { /* */ }
       try { recRef.current && recRef.current.stop(); } catch { /* */ }
     };
   }, [acquireWake]);
@@ -101,7 +101,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
     if (/\b(indietro|precedente|zur[üu]ck|back|previous|atr[áa]s|anterior)\b/.test(s)) { go((c) => c - 1); return; }
     if (/\b(ripeti|wiederhol|repeat|repite|repetir)\b/.test(s)) { speak(steps[idxRef.current] || ""); return; }
     if (/\b(chiudi|schlie|close|cierra|cerrar|esci|exit)\b/.test(s)) { onClose(); return; }
-    if (/\b(stop|ferma|halt|para|silenzio)\b/.test(s)) { try { window.speechSynthesis.cancel(); } catch { /* */ } return; }
+    if (/\b(stop|ferma|halt|para|silenzio)\b/.test(s)) { try { stopTTS(); } catch { /* */ } return; }
   }, [go, speak, steps, doTimer, onClose, lang]);
 
   const startMic = useCallback(() => {
@@ -188,7 +188,7 @@ export default function HandsFreeMode({ recipe, procedure, lang: langProp, onClo
             className="flex flex-col items-center gap-1 py-3 rounded-2xl bg-foreground/12 disabled:opacity-40 active:scale-95 font-semibold text-sm"><SkipForward className="w-5 h-5" />{tri("Avanti", "Weiter", "Next", "Adelante")}</button>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-          <button data-testid="handsfree-tts" onClick={() => { setTtsOn((v) => { const nv = !v; if (!nv) { try { window.speechSynthesis.cancel(); } catch { /* */ } } return nv; }); }}
+          <button data-testid="handsfree-tts" onClick={() => { setTtsOn((v) => { const nv = !v; if (!nv) { try { stopTTS(); } catch { /* */ } } return nv; }); }}
             className={`flex items-center justify-center gap-2 py-3 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-card text-primary" : "bg-foreground/12"}`}>{ttsOn ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5" />}{tri("Voce", "Stimme", "Voice", "Voz")}</button>
           <button data-testid="handsfree-timer" onClick={() => doTimer(20)}
             className="flex items-center justify-center gap-2 py-3 rounded-2xl bg-foreground/12 font-semibold text-sm active:scale-95"><TimerIcon className="w-5 h-5" />+20m</button>

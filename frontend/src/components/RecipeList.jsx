@@ -13,7 +13,7 @@ import CasaLab from "@/components/CasaLab";
 import PrintHeader from "@/components/PrintHeader";
 import { useProfile } from "@/profile/ProfileContext";
 import MachineScheda from "@/components/MachineScheda";
-import { playTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
+import { playTTSLong, stopTTS } from "@/lib/tts";import { addXP } from "@/lib/level";
 import HandsFreeMode from "@/components/HandsFreeMode";
 import CoursePlayer from "@/components/CoursePlayer"; // V113
 import RecipeTimeline from "@/components/RecipeTimeline";
@@ -815,7 +815,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </ActionBtn>
           <ActionBtn testid={`share-recipe-${r.id}`} onClick={shareRecipe} color="hsl(var(--primary))" label={tri("Condividi", "Teilen", "Share")}><Share2 className="w-4 h-4" /></ActionBtn>
           {!r.locked && rLoc(r, "procedure", lang) && (
-            <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => playTTS(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { who: "momy", lang }).catch(() => {})} color="hsl(var(--primary))" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
+            <ActionBtn testid={`listen-recipe-${r.id}`} onClick={() => { if (window.__mkReading) { window.__mkReading = false; stopTTS(); return; } window.__mkReading = true; playTTSLong(`${rLoc(r, "name", lang)}. ${rLoc(r, "procedure", lang)}`, { lang, onEnded: () => { window.__mkReading = false; } }); }} color="hsl(var(--primary))" label={tri("Ascolta", "Anhören", "Listen")}><Volume2 className="w-4 h-4" /></ActionBtn>
           )}
           {!r.locked && rLoc(r, "procedure", lang) && (
             <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-open-player", { detail: { kind: "hands", recipe: r } }))} color="hsl(var(--primary))" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>

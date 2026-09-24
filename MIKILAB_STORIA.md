@@ -22,3 +22,4 @@ Il Manuale di Sitor: ricettario pubblico di Michele Signorella, panettiere a Sto
 
 Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuovi; niente pubblicità; il pane si fa con le mani.
 - **v113** Sitor va avanti: «Cucina con Sitor» e «Mani in Pasta» si aprono fuori dalla finestra della ricetta, così tutti i pulsanti rispondono a ogni passo; la ricetta torna quando chiudi Sitor. Anche l'allarme del timer e la chat si toccano con la ricetta aperta.
+- **v114** Sitor parla tutto, con la sua voce: il corso, Mani in Pasta, «Ascolta» e la chat usano sempre la voce maschile di Sitor e leggono il testo intero; «Ascolta» si ferma con un secondo tocco; la barra degli indirizzi torna a mikilab.de nelle pagine senza indirizzo proprio.

@@ -5,6 +5,7 @@ import { MicNotice } from "@/components/MicNotice";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import { playTTSLong } from "@/lib/tts"; // V114
 import { chatTools } from "@/lib/mycucina";
 import SitorBadge from "@/components/SitorBadge";
 import { recipesApi } from "@/lib/api"; // V93
@@ -49,7 +50,7 @@ export default function SitorChat({ onClose }) {
   useEffect(() => { try { localStorage.setItem(HIST_KEY, JSON.stringify(msgs.slice(-30))); } catch { /* */ } }, [msgs]);
   useEffect(() => { if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight; }, [msgs, busy]);
 
-  const speak = (text) => { try { window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.lang = voiceLang; window.speechSynthesis.speak(u); } catch { /* */ } };
+  const speak = (text) => { try { playTTSLong(text, { lang }); } catch { /* */ } }; // V114: voce maschile di Sitor
 
   const send = async (override, opts = {}) => { // V93: opts.ai = salta la bottega, vai all'IA
     const voiceMode = typeof override === "string" && !opts.ai;

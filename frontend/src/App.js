@@ -205,7 +205,7 @@ export default function App() {
     try {
       if (histFirst.current) { histFirst.current = false; window.history.replaceState({ mlRoute: route }, ""); return; }
       if (histSkip.current) { histSkip.current = false; return; }
-      if (!(window.history.state && window.history.state.mlRoute === route)) { const u = pathForRoute(route); if (u && u !== window.location.pathname) window.history.pushState({ mlRoute: route }, "", u + (adminMode ? "?admin=1" : "")); else window.history.pushState({ mlRoute: route }, ""); } // V112: la barra degli indirizzi segue la pagina (mikilab.de/scuola, /piccoli…)
+      if (!(window.history.state && window.history.state.mlRoute === route)) { const u = pathForRoute(route) || "/"; if (u && u !== window.location.pathname) window.history.pushState({ mlRoute: route }, "", u + (adminMode ? "?admin=1" : "")); else window.history.pushState({ mlRoute: route }, ""); } // V112: la barra degli indirizzi segue la pagina (mikilab.de/scuola, /piccoli…)
     } catch { /* */ }
   }, [route]);
   useEffect(() => { applyPageMeta(route, lang); }, [route, lang]); // V112: titolo, descrizione e canonical della pagina

@@ -7,6 +7,7 @@ import { useAuth } from "@/auth/AuthContext";
 import { bumpOvenAdj, getOvenAdj, addDiary } from "@/lib/mycucina";
 import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
+import { playTTSLong, stopTTS } from "@/lib/tts"; // V114
 import { toast } from "sonner";
 import SitorBadge from "@/components/SitorBadge";
 import PhotoDiag from "@/components/PhotoDiag";
@@ -107,13 +108,11 @@ export default function CoursePlayer({ recipe, onClose }) {
 
   const speak = useCallback((text) => {
     try {
-      window.speechSynthesis && window.speechSynthesis.cancel();
+      stopTTS();
       if (!ttsOnRef.current || !text) return;
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = voiceLang; u.rate = 0.98;
-      window.speechSynthesis.speak(u);
+      playTTSLong(text, { lang }); // V114: voce di Sitor (maschile), passo intero
     } catch { /* */ }
-  }, [voiceLang]);
+  }, [lang]);
 
   const acquireWake = useCallback(async () => {
     try { if ("wakeLock" in navigator) wlRef.current = await navigator.wakeLock.request("screen"); } catch { /* */ }
@@ -125,7 +124,7 @@ export default function CoursePlayer({ recipe, onClose }) {
     return () => {
       document.removeEventListener("visibilitychange", onVis);
       try { wlRef.current && wlRef.current.release(); wlRef.current = null; } catch { /* */ }
-      try { window.speechSynthesis && window.speechSynthesis.cancel(); } catch { /* */ }
+      try { stopTTS(); } catch { /* */ }
       try { recRef.current && recRef.current.stop(); } catch { /* */ }
     };
   }, [acquireWake]);
@@ -181,7 +180,7 @@ export default function CoursePlayer({ recipe, onClose }) {
     const p = phases[idxRef.current];
     const m = s.match(/(\d{1,3})\s*(min|minut|minute|minuten)/);
     if (m) { doTimer(parseInt(m[1], 10)); return; }
-    if (/\b(stop|ferma|halt)\b/.test(s)) { try { window.speechSynthesis.cancel(); } catch { /* */ } return; }
+    if (/\b(stop|ferma|halt)\b/.test(s)) { try { stopTTS(); } catch { /* */ } return; }
     if (/\b(avanti|prossim|weiter|next)\b/.test(s)) { go((c) => c + 1); return; }
     if (/\b(indietro|precedente|zur[üu]ck|back)\b/.test(s)) { go((c) => c - 1); return; }
     if (/\b(ripeti|wiederhol|repeat)\b/.test(s)) { speak(phaseText(p)); return; }
@@ -382,7 +381,7 @@ export default function CoursePlayer({ recipe, onClose }) {
             </div>
             <div className="grid grid-cols-3 gap-2">
               <button data-testid="course-repeat" onClick={() => speak(phaseText(cur))} className="flex items-center justify-center gap-1.5 py-2.5 rounded-2xl bg-foreground/12 active:scale-95 font-semibold text-sm"><RotateCcw className="w-4 h-4" />{tri("Ripeti", "Wiederh.", "Repeat")}</button>
-              <button data-testid="course-tts" onClick={() => setTtsOn((v) => { const nv = !v; if (!nv) { try { window.speechSynthesis.cancel(); } catch { /* */ } } return nv; })} className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-card text-foreground" : "bg-foreground/12"}`}>{ttsOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}{tri("Voce", "Stimme", "Voice")}</button>
+              <button data-testid="course-tts" onClick={() => setTtsOn((v) => { const nv = !v; if (!nv) { try { stopTTS(); } catch { /* */ } } return nv; })} className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl font-semibold text-sm active:scale-95 ${ttsOn ? "bg-card text-foreground" : "bg-foreground/12"}`}>{ttsOn ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}{tri("Voce", "Stimme", "Voice")}</button>
               <button data-testid="course-mic" onClick={() => (micOn ? stopMic() : startMic())} className={`flex items-center justify-center gap-1.5 py-2.5 rounded-2xl font-semibold text-sm active:scale-95 ${micOn ? "bg-accent text-white animate-pulse" : "bg-foreground/12"}`}>{micOn ? <Mic className="w-4 h-4" /> : <MicOff className="w-4 h-4" />}{tri("Comandi", "Befehle", "Commands")}</button>
             </div>
             <p className="text-center text-foreground/40 text-[10px]">{tri("Voce sintetica del tuo dispositivo.", "Synthetische Stimme deines Geräts.", "Your device's synthetic voice.")}</p>
