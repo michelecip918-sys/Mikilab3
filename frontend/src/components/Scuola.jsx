@@ -283,7 +283,7 @@ function Guida({ L, ui, onStampaLettera }) {
       <H t={ui.guidaKit} /><Lista items={g.kit[L] || g.kit.it} />
       <H t={ui.guidaSicurezza} /><Lista ord items={g.sicurezza[L] || g.sicurezza.it} />
       <H t={ui.guidaAllergie} /><Lista items={g.allergie[L] || g.allergie.it} />
-      <H t={ui.guidaSenzaForno} /><p className="text-[13px] text-foreground/90 leading-snug">{g.senzaForno[L] || g.senzaForno.it} <button onClick={() => nav("salva")} className="font-bold text-salvia underline underline-offset-2">Il pane che salva →</button></p>
+      <H t={ui.guidaSenzaForno} /><p className="text-[13px] text-foreground/90 leading-snug">{g.senzaForno[L] || g.senzaForno.it} <button onClick={() => nav("salva")} className="font-bold text-salvia underline underline-offset-2">{L === "de" ? "Das Brot, das rettet →" : "Il pane che salva →"}</button></p>
       <H t={ui.guidaMaterie} />
       <dl className="divide-y divide-border/70">{(g.materie[L] || g.materie.it).map(([m, d], k) => <div key={k} className="grid grid-cols-[7.5rem_1fr] gap-2 py-1.5"><dt className="text-[13px] font-bold text-salvia">{m}</dt><dd className="text-[13px] text-foreground/90 leading-snug">{d}</dd></div>)}</dl>
       <H t={ui.guidaLettera} />

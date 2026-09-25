@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronLeft, Map, ChevronRight, Search } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
+import { useFeatures } from "@/lib/features"; // V123
 
 // V100 — LA MAPPA DI MIKILAB. Tutto il sito in una pagina: ogni attrezzo con una riga che dice a cosa serve e dove sta,
 // raggruppato per momento (imparare, impastare, il lievito, il forno, il laboratorio, condividere, Sitor). Un tocco e ci sei.
@@ -84,11 +85,12 @@ export const GROUPS = [
 export default function Mappa({ onBack, onNav }) {
   const go = (r) => (typeof onNav === "function" ? onNav(r) : nav(r));
   const { lang } = useLang();
+  const feats = useFeatures(); // V123
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const L = (o) => (lang === "de" ? o.de : lang === "en" ? o.en : o.it);
   const [q, setQ] = useState("");
   const norm = (v) => String(v || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const groups = GROUPS.map((g) => ({ ...g, items: g.items.filter((it) => !q.trim() || norm(L(it.t) + " " + L(it.d)).includes(norm(q))) })).filter((g) => g.items.length);
+  const groups = GROUPS.map((g) => ({ ...g, items: g.items.filter((it) => !(it.r === "live" && feats && feats.FEATURE_LIVE === false)).filter((it) => !q.trim() || norm(L(it.t) + " " + L(it.d)).includes(norm(q))) })).filter((g) => g.items.length);
   return (
     <div data-testid="mappa-page" className="max-w-2xl mx-auto px-4 py-6 space-y-4">
       <button data-testid="mappa-back" onClick={onBack} className="inline-flex items-center gap-1 text-muted-foreground text-sm font-bold"><ChevronLeft className="w-4 h-4" />{tri("Indietro", "Zurück", "Back")}</button>
