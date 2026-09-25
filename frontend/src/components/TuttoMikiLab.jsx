@@ -1,4 +1,4 @@
-import { LayoutGrid, Map, MessageCircle } from "lucide-react";
+import { LayoutGrid, Map } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { GROUPS } from "@/components/Mappa";
@@ -30,12 +30,7 @@ export default function TuttoMikiLab({ onNav }) {
                   {L(it.t)}
                 </button>
               ))}
-              {g.k === "inizio" && (
-                <button data-testid="tutto-chat" onClick={() => go("chat")}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 text-foreground text-[12.5px] font-bold active:scale-95 transition-all">
-                  <MessageCircle className="w-3.5 h-3.5 text-primary" />{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}
-                </button>
-              )}
+              {/* V126: «Chiedi a Sitor» sta nel suo riquadro in Home, qui non si ripete */}
             </div>
           </div>
         ))}

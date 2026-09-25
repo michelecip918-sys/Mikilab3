@@ -443,7 +443,7 @@ export default function RadioFornaio({ inline = false }) {
 
       <div className={inline
         ? "flex items-center gap-2.5"
-        : `fixed z-40 left-3 bottom-24 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`}
+        : `fixed z-40 left-3 bottom-4 flex flex-col items-center gap-1 transition-all duration-300 ${scrolling && !open ? "translate-y-24 opacity-0 pointer-events-none" : "translate-y-0 opacity-100"}`}
         style={inline ? undefined : { marginBottom: "env(safe-area-inset-bottom)" }}>
         <button
           data-testid="radio-fornaio-btn"
@@ -453,7 +453,7 @@ export default function RadioFornaio({ inline = false }) {
             status === "playing" ? "bg-primary" : "bg-primary hover:bg-primary"
           }`}
         >
-          {status !== "playing" && !open && <span aria-hidden className="absolute inset-0 rounded-full bg-primary opacity-50 animate-ping" />}
+          {/* V126: niente più lampeggio continuo */}
           {status === "playing" ? (
             <span className="flex items-end gap-0.5 h-5 relative" aria-hidden>
               <span className="w-1 bg-card rounded-full animate-[eq_0.8s_ease-in-out_infinite]" style={{ height: "60%" }} />

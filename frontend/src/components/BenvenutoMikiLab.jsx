@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sun, Footprints, LifeBuoy, Search, Factory, Baby, Map, ChevronRight } from "lucide-react";
+import { Sun, Footprints, LifeBuoy, Search, Factory, Baby, Map, ChevronRight, ChefHat } from "lucide-react";
 import { CERCA_KEY } from "@/components/Cerca"; // V108
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -34,6 +34,14 @@ export default function BenvenutoMikiLab({ onNav }) {
   if (!open) return (
     <div>
     {searchBox}
+    <button data-testid="benvenuto-ricette" onClick={() => onNav("recipes")} className="mb-3 w-full flex items-center gap-3 rounded-2xl border-2 border-primary/60 bg-primary/10 px-4 py-3 text-left active:scale-[0.99] hover:border-primary transition-all"> {/* V126 */}
+      <ChefHat className="w-6 h-6 text-primary shrink-0" />
+      <span className="flex-1 min-w-0">
+        <span className="block font-display text-lg font-black text-foreground leading-tight">{tri("Tutte le ricette", "Alle Rezepte", "All recipes")}</span>
+        <span className="block text-[12px] text-muted-foreground">{tri("Pane, panini, focacce, pizza e dolci", "Brot, Brötchen, Focaccia, Pizza und Süßes", "Bread, rolls, focaccia, pizza and sweets")}</span>
+      </span>
+      <ChevronRight className="w-5 h-5 text-primary shrink-0" />
+    </button>
     <button data-testid="benvenuto-compatto" onClick={() => setOpen(true)} className="mb-3 w-full text-left text-[12.5px] text-muted-foreground flex items-center gap-1.5">
       <span className="font-display italic text-foreground">{tri("Farina, acqua, sale e le tue mani.", "Mehl, Wasser, Salz und deine Hände.", "Flour, water, salt and your hands.")}</span>
       <span className="underline decoration-dotted">{tri("Cos'è MikiLab?", "Was ist MikiLab?", "What is MikiLab?")}</span>

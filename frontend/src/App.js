@@ -234,6 +234,7 @@ export default function App() {
     if (r === "attrezzi") { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: "guida" } })), 150); return; }
     if (typeof r === "string" && r.startsWith("ricette-view:")) { const v = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: v } })), 150); return; }
     if (typeof r === "string" && r.startsWith("ricette-cat:")) { const c = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-recipes-cat", { detail: { cat: c } })), 250); return; }
+    if (typeof r === "string" && r.startsWith("officina:")) { const k = r.split(":")[1]; window.__mkOfficina = k; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-officina-open", { detail: { k } })), 250); return; } // V126
     if (r === "tecniche") { setTechSlug(null); }
     setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -440,12 +441,12 @@ export default function App() {
         {festaOpen && <FestaLancio onClose={() => { setFestaOpen(false); award("primo_giorno"); try { localStorage.setItem("mikilab_festa_vista", "1"); const u = new URL(window.location.href); if (u.searchParams.has("festa")) { u.searchParams.delete("festa"); window.history.replaceState(window.history.state, "", u.toString()); } } catch { /* */ } }} onNav={navFromHome} />}
         {giroOpen && !fornoOpen && !festaOpen && <PrimoGiro onClose={() => setGiroOpen(false)} onNav={navFromHome} />}
         {chatOpen && <SitorChat onClose={() => setChatOpen(false)} />}
-        <button data-testid="sitor-chat-fab" onClick={() => setChatOpen(true)} aria-label="Chat Sitor"
+        {route !== "home" && <button data-testid="sitor-chat-fab" onClick={() => setChatOpen(true)} aria-label="Chat Sitor"
           className="fixed z-[60] bottom-5 right-5 flex items-center gap-2 pl-2 pr-4 py-2 rounded-full bg-muted hover:bg-muted text-foreground shadow-xl active:scale-95 transition-all">
           <img src="/sitor_official.webp" alt="" className="w-9 h-9 rounded-full object-cover border-2 border-border" />
           <span className="font-bold text-sm hidden sm:inline">{tri("Chiedi a Sitor", "Frag Sitor", "Ask Sitor")}</span>
           <MessageCircle className="w-4 h-4 sm:hidden" />
-        </button>
+        </button>} {/* V126: in Home c'è già il riquadro «Chiedi a Sitor» */}
         <Toaster position="top-center" richColors />
       </div>
     </SoundFXProvider></TimerProvider></AmbientProvider></ProfileProvider>

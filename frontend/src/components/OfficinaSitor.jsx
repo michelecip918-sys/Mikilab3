@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ArrowLeftRight, Eye, AlertTriangle, Scissors, Sparkles, Footprints, Factory, Wine, Users, ScrollText, BookOpen, Briefcase, Map, Sun, Wheat, Baby, LifeBuoy, Layers, HelpCircle } from "lucide-react";
 import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
@@ -18,6 +18,13 @@ export default function OfficinaSitor({ recipes, t }) {
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [open, setOpen] = useState(null);
   useBackClose(!!open, () => setOpen(null));
+  useEffect(() => { // V126: si apre direttamente l'attrezzo scelto in Home, nella Mappa o in Cerca
+    const apri = (k) => { if (k) { setOpen(k); window.__mkOfficina = null; } };
+    apri(window.__mkOfficina);
+    const h = (e) => apri(e?.detail?.k);
+    window.addEventListener("mikilab-officina-open", h);
+    return () => window.removeEventListener("mikilab-officina-open", h);
+  }, []);
   const openRecipe = (id) => { setOpen(null); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 60); };
 
   const tools = [
