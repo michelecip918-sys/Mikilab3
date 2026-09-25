@@ -32,3 +32,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v121** Il tocco di Michele: il Brösel (5% di pane grattugiato, acqua il triplo, il giorno prima in frigo) in ogni ricetta salata, con i grammi calcolati; ricette dolci escluse.
 - **v122** Miglioratore naturale a 8 ingredienti (malto 15 su 100, grano germogliato e lievito madre essiccato fatti in casa, crusca d'avena): pagina, scheda e dati in IT/DE/EN, con i due ingredienti fatti in casa passo per passo.
 - **v123** Controllo completo: con le dirette spente il bottone «Impastiamo insieme» non porta più a una pagina vuota; «Il pane che salva» tradotto nella Scuola in tedesco.
+- **v124** La Scheda macchina (pezzi all'ora) non compare più nelle basi (miglioratore, lieviti, poolish, Kochstück).

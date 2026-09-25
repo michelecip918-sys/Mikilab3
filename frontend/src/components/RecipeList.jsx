@@ -971,7 +971,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           </div>
         ) : null}
 
-        {!r.locked && r.procedure ? <MachineScheda /> : null}
+        {!r.locked && r.procedure && r.menu_category !== "basi" ? <MachineScheda /> : null} {/* V124 */}
 
         {r.notes ? <p className="text-sm text-muted-foreground dark:text-muted-foreground leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}
 
