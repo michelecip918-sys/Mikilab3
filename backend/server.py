@@ -405,6 +405,7 @@ SEED_RETIRED_NAMES = [
     "Panettone Mikilab — Marron Glacé (Castagne)", "Panettone Mikilab — Pere e Cioccolato",
     "Panettone Mikilab — Pistacchio e Cioccolato Bianco", "Panettone Mikilab — Uvetta e Canditi (Classico)",
     "Panettone Mikilab — Verde Canapa",
+    "Focaccia Patate e Rosmarino", "Focaccia Cipolla di Tropea",  # V125 doppioni
 ]
 
 
@@ -1449,6 +1450,26 @@ async def on_startup_seed_mikilab():
             await db.app_meta.update_one({"_key": "v122_miglioratore"}, {"$set": {"_key": "v122_miglioratore", "done_at": now_iso()}}, upsert=True)
     except Exception as e:
         logging.getLogger(__name__).error(f"V122 miglioratore error: {e}")
+    try:
+        # V125 — (1) metodo di Michele in pane, panini e baguette (non col burro): olio d'oliva 1%, aceto di mele 1%,
+        # Kokosfett 1%; (2) ordine: categorie giuste, doppioni nascosti, «Mickey Lab» → «MikiLab».
+        # Una volta sola, sul database: aggiunge/sposta soltanto, non cancella nulla (vale anche per le schede modificate a mano).
+        _m125 = await db.app_meta.find_one({"_key": "v125_grassi"}, {"_id": 0})
+        if not _m125:
+            import grassi_michele as _gm
+            _q = {"collection_name": "mikilab", "$or": [{"menu_category": {"$in": list(_gm.CATS)}}, {"name": {"$in": list(_gm.ANCHE) + list(_gm.SPOSTA.keys()) + [_gm.VECCHIO_NOME]}}]}
+            async for _r in db.recipes.find(_q, {"_id": 0}):
+                _upd = _gm.applica(_r)
+                _upd.update(_gm.ordina(_r))
+                if _upd:
+                    _upd["updated_at"] = now_iso()
+                    await db.recipes.update_one({"collection_name": "mikilab", "id": _r["id"]}, {"$set": _upd})
+                    await db.recipe_courses_v2.delete_many({"recipe_id": _r["id"]})
+            for _nm in _gm.DOPPIONI:
+                await db.recipes.update_many({"collection_name": "mikilab", "name": _nm}, {"$set": {"hidden": True, "updated_at": now_iso()}})
+            await db.app_meta.update_one({"_key": "v125_grassi"}, {"$set": {"_key": "v125_grassi", "done_at": now_iso()}}, upsert=True)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V125 grassi error: {e}")
     try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).

@@ -33,3 +33,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v122** Miglioratore naturale a 8 ingredienti (malto 15 su 100, grano germogliato e lievito madre essiccato fatti in casa, crusca d'avena): pagina, scheda e dati in IT/DE/EN, con i due ingredienti fatti in casa passo per passo.
 - **v123** Controllo completo: con le dirette spente il bottone «Impastiamo insieme» non porta più a una pagina vuota; «Il pane che salva» tradotto nella Scuola in tedesco.
 - **v124** La Scheda macchina (pezzi all'ora) non compare più nelle basi (miglioratore, lieviti, poolish, Kochstück).
+- **v125** Il metodo di Michele in pane, panini e baguette (non in quelli col burro): olio d'oliva 1%, aceto di mele 1% e Kokosfett 1% sulla farina, con la nota su quando aggiungerli. Ordine nel ricettario: Taralli e Friselle negli snack, Cornetto Sfogliato, Carezza Dolce e Treccia del Sole in Viennoiserie, due focacce doppie nascoste, «Mickey Lab» → «MikiLab».
