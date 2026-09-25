@@ -1,21 +1,53 @@
 // Il "Miglioratore Naturale" di Michele: miscela a secco. Fonte unica dei numeri (pagina, scheda e sostituzioni).
-// Miscela su 100 g: malto 44, lino 29, lupino 15, psillio 8, acerola 4. Uso: 2% sulla farina (indiretti), 3% (diretti).
+// V122 — 8 ingredienti su 100 g: malto 15, grano germogliato 25, lievito madre essiccato 15, lino 15, avena 13,
+// lupino 8, psillio 7, acerola 2. Uso: 2% sulla farina (indiretti), 3% (diretti) → malto 0,3-0,45% sulla farina.
 export const MIX = [
-  { key: "malt", g: 44,
-    name: { it: "Malto diastatico in polvere", de: "Diastatisches Malzpulver", en: "Diastatic malt powder" },
+  { key: "malt", g: 15,
+    name: { it: "Malto diastatico in polvere", de: "Diastatisches Malzpulver (Backmalz, enzymaktiv)", en: "Diastatic malt powder" },
     fn: { it: "nutre i lieviti, dà colore e croccantezza alla crosta", de: "nährt die Hefen, gibt der Kruste Farbe und Knusprigkeit", en: "feeds the yeasts, gives the crust colour and crispness" } },
-  { key: "flax", g: 29,
+  { key: "sprout", g: 25, home: true,
+    name: { it: "Farina di grano germogliato (fatta in casa)", de: "Mehl aus gekeimtem Weizen (selbst gemacht)", en: "Sprouted wheat flour (homemade)" },
+    fn: { it: "enzimi delicati, come un malto fatto da te: profumo, colore e mollica tenera", de: "sanfte Enzyme wie ein selbst gemachtes Malz: Duft, Farbe und zarte Krume", en: "gentle enzymes, like a homemade malt: aroma, colour and a tender crumb" } },
+  { key: "starter", g: 15, home: true,
+    name: { it: "Lievito madre essiccato (il tuo)", de: "Getrockneter Sauerteig (dein eigener)", en: "Dried sourdough starter (your own)" },
+    fn: { it: "dà aroma e profondità, anche ai pani con il lievito di birra", de: "gibt Aroma und Tiefe, auch Broten mit Hefe", en: "adds aroma and depth, even to breads made with yeast" } },
+  { key: "flax", g: 15,
     name: { it: "Farina di lino dorato", de: "Goldleinsamenmehl", en: "Golden flax flour" },
     fn: { it: "dà struttura, fibre e grassi buoni (omega)", de: "gibt Struktur, Ballaststoffe und gute Fette (Omega)", en: "adds structure, fibre and good fats (omega)" } },
-  { key: "lupin", g: 15,
+  { key: "oat", g: 13,
+    name: { it: "Crusca d'avena fine", de: "Feine Haferkleie", en: "Fine oat bran" },
+    fn: { it: "trattiene l'acqua: la mollica resta morbida più a lungo; ricca di fibre", de: "hält Wasser: die Krume bleibt länger weich; reich an Ballaststoffen", en: "holds water: the crumb stays soft longer; rich in fibre" } },
+  { key: "lupin", g: 8,
     name: { it: "Farina di lupino dolce", de: "Süßlupinenmehl", en: "Sweet lupin flour" },
     fn: { it: "rinforza la maglia del glutine e la tenuta dell'impasto", de: "stärkt das Glutennetz und die Teigstabilität", en: "strengthens the gluten network and dough hold" } },
-  { key: "psyl", g: 8,
+  { key: "psyl", g: 7,
     name: { it: "Buccia di psillio", de: "Flohsamenschalen", en: "Psyllium husk" },
     fn: { it: "trattiene l'acqua: il pane resta morbido più a lungo", de: "hält die Feuchtigkeit: das Brot bleibt länger weich", en: "holds water: bread stays soft longer" } },
-  { key: "acer", g: 4,
+  { key: "acer", g: 2,
     name: { it: "Acerola in polvere (vitamina C naturale)", de: "Acerola-Pulver (natürliches Vitamin C)", en: "Acerola powder (natural vitamin C)" },
     fn: { it: "rinforza il glutine e aiuta la spinta in forno", de: "stärkt das Gluten und hilft dem Ofentrieb", en: "strengthens gluten and helps oven spring" } },
+];
+
+// V122 — i due ingredienti fatti in casa, passo per passo (IT/DE/EN).
+export const HOMEMADE = [
+  { key: "sprout",
+    title: { it: "Farina di grano germogliato", de: "Mehl aus gekeimtem Weizen", en: "Sprouted wheat flour" },
+    steps: [
+      { it: "Lava 200 g di chicchi di grano tenero e lasciali in ammollo in acqua fresca per 8-12 ore.", de: "200 g Weichweizenkörner waschen und 8-12 Stunden in frischem Wasser einweichen.", en: "Rinse 200 g of soft wheat berries and soak them in fresh water for 8-12 hours." },
+      { it: "Scola e lascia i chicchi in un colino coperto da un panno, a temperatura ambiente. Sciacquali due volte al giorno.", de: "Abgießen und die Körner in einem mit einem Tuch bedeckten Sieb bei Raumtemperatur lassen. Zweimal am Tag spülen.", en: "Drain and leave the berries in a sieve covered with a cloth, at room temperature. Rinse them twice a day." },
+      { it: "Dopo 1-2 giorni, quando il germoglio è lungo quanto il chicco, fermati.", de: "Nach 1-2 Tagen, wenn der Keim so lang wie das Korn ist, aufhören.", en: "After 1-2 days, when the sprout is as long as the berry, stop." },
+      { it: "Stendi i chicchi su una teglia e seccali nel forno ventilato a 40-45 °C, con lo sportello socchiuso, finché sono duri e secchi (8-12 ore). Mai sopra i 50 °C: gli enzimi muoiono.", de: "Die Körner auf einem Blech ausbreiten und im Umluftofen bei 40-45 °C mit leicht geöffneter Tür trocknen, bis sie hart und trocken sind (8-12 Stunden). Nie über 50 °C: sonst sterben die Enzyme.", en: "Spread the berries on a tray and dry them in a fan oven at 40-45 °C with the door ajar until hard and dry (8-12 hours). Never above 50 °C: the enzymes die." },
+      { it: "Macina fine (mulino o macinacaffè) e setaccia. Conserva in un barattolo chiuso. Se senti odore cattivo o vedi muffa, butta via e ricomincia.", de: "Fein mahlen (Mühle oder Kaffeemühle) und sieben. In einem verschlossenen Glas aufbewahren. Riecht es schlecht oder siehst du Schimmel: wegwerfen und neu anfangen.", en: "Grind finely (mill or coffee grinder) and sift. Keep in a closed jar. If it smells bad or you see mould, throw it away and start again." },
+    ] },
+  { key: "starter",
+    title: { it: "Lievito madre essiccato", de: "Getrockneter Sauerteig", en: "Dried sourdough starter" },
+    steps: [
+      { it: "Prendi 100 g del tuo lievito madre maturo, al suo picco.", de: "100 g deines reifen Sauerteigs auf seinem Höhepunkt nehmen.", en: "Take 100 g of your mature starter, at its peak." },
+      { it: "Stendilo in un velo sottilissimo su carta forno.", de: "Hauchdünn auf Backpapier ausstreichen.", en: "Spread it in a very thin layer on baking paper." },
+      { it: "Lascialo seccare all'aria in un posto asciutto per 1-2 giorni, oppure in forno a 35-40 °C con lo sportello socchiuso.", de: "1-2 Tage an einem trockenen Ort an der Luft trocknen lassen, oder im Ofen bei 35-40 °C mit leicht geöffneter Tür.", en: "Let it air-dry in a dry place for 1-2 days, or in the oven at 35-40 °C with the door ajar." },
+      { it: "Quando si spezza come vetro, sbriciolalo e macinalo fine. Conserva in un barattolo chiuso, all'asciutto.", de: "Wenn er wie Glas bricht, zerbröseln und fein mahlen. In einem verschlossenen Glas trocken aufbewahren.", en: "When it snaps like glass, crumble it and grind it finely. Keep in a closed jar, somewhere dry." },
+      { it: "Nella miscela serve per l'aroma, non per far lievitare: il lievito della ricetta resta lo stesso.", de: "In der Mischung dient er dem Aroma, nicht dem Trieb: die Hefe im Rezept bleibt gleich.", en: "In the mix it is there for aroma, not for rising: the recipe's yeast stays the same." },
+    ] },
 ];
 export const DOSE = { indirect: 2, direct: 3 }; // % sulla farina
 

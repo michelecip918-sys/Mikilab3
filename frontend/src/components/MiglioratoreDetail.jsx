@@ -39,9 +39,9 @@ export default function MiglioratoreDetail() {
             <div className="mt-2.5 rounded-2xl shadow-md border border-amber-900/40 bg-background/20 border border-foreground/20 p-3">
               <p className="text-[12.5px] text-foreground/90 leading-snug mb-2.5">
                 {L({
-                  it: "Il Miglioratore Naturale MikiLab è una miscela a secco (su 100 g: le quantità qui sotto) di 5 ingredienti naturali che danno al pane forza, profumo e una morbidezza che dura, senza additivi chimici. È facoltativo: nella pagina «Il mio miglioratore» trovi il calcolatore e cosa usare se non lo hai.",
-                  de: "Der natürliche MikiLab-Verbesserer ist eine Trockenmischung (auf 100 g: die Mengen unten) aus 5 natürlichen Zutaten für Kraft, Aroma und lang anhaltende Weichheit, ohne chemische Zusätze. Er ist optional: Auf der Seite «Mein Verbesserer» findest du den Rechner und Alternativen.",
-                  en: "The MikiLab Natural Improver is a dry mix (per 100 g: the amounts below) of 5 natural ingredients that give bread strength, aroma and lasting softness, with no chemical additives. It is optional: on the «My improver» page you'll find the calculator and alternatives.",
+                  it: "Il Miglioratore Naturale MikiLab è una miscela a secco (su 100 g: le quantità qui sotto) di 8 ingredienti naturali che danno al pane forza, profumo e una morbidezza che dura, senza additivi chimici. È facoltativo: nella pagina «Il mio miglioratore» trovi il calcolatore e cosa usare se non lo hai.",
+                  de: "Der natürliche MikiLab-Verbesserer ist eine Trockenmischung (auf 100 g: die Mengen unten) aus 8 natürlichen Zutaten für Kraft, Aroma und lang anhaltende Weichheit, ohne chemische Zusätze. Er ist optional: Auf der Seite «Mein Verbesserer» findest du den Rechner und Alternativen.",
+                  en: "The MikiLab Natural Improver is a dry mix (per 100 g: the amounts below) of 8 natural ingredients that give bread strength, aroma and lasting softness, with no chemical additives. It is optional: on the «My improver» page you'll find the calculator and alternatives.",
                 })}
               </p>
               <div className="space-y-1.5">

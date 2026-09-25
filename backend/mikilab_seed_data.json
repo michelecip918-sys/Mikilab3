@@ -5549,33 +5549,51 @@
     "extra_ingredients": [
       {
         "name": "Malto diastatico in polvere",
-        "name_de": "Diastatisches Malzpulver",
+        "name_de": "Diastatisches Malzpulver (Backmalz, enzymaktiv)",
         "name_en": "Diastatic malt powder",
-        "percent": 44
+        "percent": 15
+      },
+      {
+        "name": "Farina di grano germogliato (fatta in casa)",
+        "name_de": "Mehl aus gekeimtem Weizen (selbst gemacht)",
+        "name_en": "Sprouted wheat flour (homemade)",
+        "percent": 25
+      },
+      {
+        "name": "Lievito madre essiccato (il tuo)",
+        "name_de": "Getrockneter Sauerteig (dein eigener)",
+        "name_en": "Dried sourdough starter (your own)",
+        "percent": 15
       },
       {
         "name": "Farina di lino dorato",
         "name_de": "Goldleinsamenmehl",
         "name_en": "Golden flax flour",
-        "percent": 29
+        "percent": 15
+      },
+      {
+        "name": "Crusca d'avena fine",
+        "name_de": "Feine Haferkleie",
+        "name_en": "Fine oat bran",
+        "percent": 13
       },
       {
         "name": "Farina di lupino dolce",
         "name_de": "Süßlupinenmehl",
         "name_en": "Sweet lupin flour",
-        "percent": 15
+        "percent": 8
       },
       {
         "name": "Buccia di psillio",
         "name_de": "Flohsamenschalen",
         "name_en": "Psyllium husk",
-        "percent": 8
+        "percent": 7
       },
       {
         "name": "Acerola in polvere",
         "name_de": "Acerola-Pulver",
         "name_en": "Acerola powder",
-        "percent": 4
+        "percent": 2
       }
     ],
     "flour_grams": null,
@@ -5589,16 +5607,16 @@
     "method_type": "diretto",
     "mix_minutes": null,
     "name_de": "Natürlicher Pro-Backmittel",
-    "notes": "Miglioratore FACOLTATIVO, a 5 ingredienti (proporzioni del mix su 100 g). Malto diastatico in polvere 44, farina di lino dorato 29, farina di lupino dolce 15, buccia di psillio 8, acerola in polvere 4. USO: 2% sul peso della farina per gli impasti indiretti, 3% per i diretti (es. su 500 g di farina: 10 g oppure 15 g). Parti sempre dalla dose bassa. Il malto deve essere DIASTATICO (attivo): le marche hanno forze diverse; se la mollica viene appiccicosa o troppo scura, riduci il malto. ALLERGENI: lupino (può dare reazioni a chi è allergico alle arachidi) e malto d'orzo (glutine). Conserva in un barattolo chiuso, al fresco e all'asciutto, per pochi mesi.",
-    "notes_de": "OPTIONALER Verbesserer aus 5 Zutaten (Anteile der Mischung auf 100 g). Diastatisches Malzpulver 44, Goldleinsamenmehl 29, Süßlupinenmehl 15, Flohsamenschalen 8, Acerola-Pulver 4. ANWENDUNG: 2% des Mehlgewichts bei indirekten Teigen, 3% bei direkten (z. B. auf 500 g Mehl: 10 g oder 15 g). Beginne mit der niedrigen Menge. Das Malz muss DIASTATISCH (aktiv) sein; Marken sind unterschiedlich stark; wird die Krume klebrig oder zu dunkel, reduziere das Malz. ALLERGENE: Lupine (kann bei Erdnussallergie Reaktionen auslösen) und Gerstenmalz (Gluten). In geschlossenem Glas, kühl und trocken, wenige Monate lagern.",
+    "notes": "Miglioratore FACOLTATIVO, 8 ingredienti naturali (proporzioni su 100 g). Due sono fatti in casa: la farina di grano germogliato, che ha enzimi delicati come un malto fatto da te, e il tuo lievito madre essiccato, che dà aroma. Il malto diastatico è 15 su 100: alla dose del 2-3% porta lo 0,3-0,45% di malto sulla farina, la dose giusta. Il malto deve essere DIASTATICO e in polvere (in Germania: «Backmalz, enzymaktiv»). ALLERGENI: lupino (può dare reazioni a chi è allergico alle arachidi) e cereali con glutine (malto d'orzo, grano, lievito madre, avena). Conserva in un barattolo chiuso, al fresco e all'asciutto, per pochi mesi.",
+    "notes_de": "OPTIONALER Verbesserer aus 8 natürlichen Zutaten (Anteile auf 100 g). Zwei sind hausgemacht: das Mehl aus gekeimtem Weizen, mit sanften Enzymen wie ein selbst gemachtes Malz, und dein getrockneter Sauerteig, der Aroma gibt. Das diastatische Malz macht 15 von 100 aus: bei 2-3 % Dosierung sind das 0,3-0,45 % Malz auf das Mehl, die richtige Menge. Das Malz muss DIASTATISCH und pulverförmig sein («Backmalz, enzymaktiv»). ALLERGENE: Lupine (kann bei Erdnussallergie Reaktionen auslösen) und glutenhaltiges Getreide (Gerstenmalz, Weizen, Sauerteig, Hafer). In einem verschlossenen Glas kühl und trocken für wenige Monate aufbewahren.",
     "origin": null,
     "oven_type": null,
     "preferment_type": "diretto",
-    "procedure": "PREPARAZIONE (mix a secco)\n1) Pesa i 5 ingredienti nelle proporzioni del mix su 100 g: malto diastatico 44 g, lino dorato 29 g, lupino dolce 15 g, psillio 8 g, acerola 4 g.\n2) Mescola bene e conserva in un barattolo chiuso, al fresco e all'asciutto.\n3) USO: 2% sul peso della farina per gli indiretti, 3% per i diretti. Parti dalla dose bassa e regola in base al risultato.",
-    "procedure_de": "ZUBEREITUNG (Trockenmischung)\n1) Die 5 Zutaten genau abwiegen: reines diastatisches Malzpulver 3% - Suesslupine 1% - Acerola 0,3% - Goldlein 2% - Flohsamen 0,5% (Prozente auf das Mehl des Rezepts).\n2) Trocken gut zu einem homogenen Pulver mischen.\n3) In geschlossenem Glas kuehl und trocken lagern (mehrere Monate haltbar).\nVERWENDUNG: die Mischung zu Beginn des Knetens zum Mehl geben (2-4% gesamt). Indirekt die kleinere, direkt die groessere Dosis.",
+    "procedure": "PREPARAZIONE (miscela a secco, su 100 g)\n1) Prepara prima i due ingredienti fatti in casa: la farina di grano germogliato e il lievito madre essiccato. Come si fanno è spiegato passo per passo nella pagina «Il mio miglioratore».\n2) Pesa: malto diastatico in polvere 15 g, farina di grano germogliato 25 g, lievito madre essiccato 15 g, farina di lino dorato 15 g, crusca d'avena fine 13 g, farina di lupino dolce 8 g, buccia di psillio 7 g, acerola in polvere 2 g.\n3) Mescola bene e conserva in un barattolo chiuso, al fresco e all'asciutto, per pochi mesi.\n4) USO: 2% sul peso della farina per gli impasti indiretti, 3% per i diretti (su 500 g di farina: 10 g oppure 15 g). Si aggiunge insieme alla farina, all'inizio dell'impasto. Parti dalla dose bassa. Se l'impasto è più sodo del solito, aggiungi un cucchiaio d'acqua.",
+    "procedure_de": "ZUBEREITUNG (Trockenmischung, auf 100 g)\n1) Mach zuerst die zwei hausgemachten Zutaten: das Mehl aus gekeimtem Weizen und den getrockneten Sauerteig. Wie das geht, steht Schritt für Schritt auf der Seite «Mein Verbesserer».\n2) Abwiegen: diastatisches Malzpulver 15 g, Mehl aus gekeimtem Weizen 25 g, getrockneter Sauerteig 15 g, Goldleinsamenmehl 15 g, feine Haferkleie 13 g, Süßlupinenmehl 8 g, Flohsamenschalen 7 g, Acerola-Pulver 2 g.\n3) Gut mischen und in einem verschlossenen Glas kühl und trocken für wenige Monate aufbewahren.\n4) ANWENDUNG: 2 % des Mehlgewichts bei indirekten Teigen, 3 % bei direkten (auf 500 g Mehl: 10 g oder 15 g). Zu Beginn des Knetens zusammen mit dem Mehl zugeben. Mit der niedrigen Menge beginnen. Ist der Teig fester als sonst, einen Esslöffel Wasser zugeben.",
     "proofing_hours": null,
-    "real_name": "Miglioratore universale (5 ingredienti)",
-    "real_name_de": "Universal-Backmittel (5 Zutaten)",
+    "real_name": "Miglioratore naturale (8 ingredienti)",
+    "real_name_de": "Natürlicher Verbesserer (8 Zutaten)",
     "rest_minutes": null,
     "salt_grams": null,
     "sourdough_grams": null,
@@ -5610,25 +5628,25 @@
     "hidden": false,
     "flour_type_en": "Universal (Direct and Indirect)",
     "name_en": "Natural Pro Improver",
-    "notes_en": "OPTIONAL improver, 5 ingredients (mix proportions per 100 g). Diastatic malt powder 44, golden flax flour 29, sweet lupin flour 15, psyllium husk 8, acerola powder 4. USE: 2% of flour weight for indirect doughs, 3% for direct (e.g. on 500 g flour: 10 g or 15 g). Always start from the low dose. The malt must be DIASTATIC (active): brands vary in strength; if the crumb turns sticky or too dark, reduce the malt. ALLERGENS: lupin (may trigger reactions in peanut-allergic people) and barley malt (gluten). Store in a closed jar, cool and dry, for a few months.",
-    "procedure_en": "PREPARATION (dry mix)\n1) Weigh the 5 ingredients precisely: Pure diastatic malt powder 3% - Sweet lupin flour 1% - Acerola 0.3% - Golden flaxseed flour 2% - Psyllium 0.5% (percentages based on the flour weight in the recipe).\n2) Mix well dry until a homogeneous powder is obtained.\n3) Store in a sealed jar, in a cool and dry place (shelf life of several months).\nUSE: add the mix to the flour at the beginning of mixing (2-4% total). With indirect dough use the lower dose, with direct dough use the higher dose.",
-    "real_name_en": "Universal improver (5 ingredients)",
+    "notes_en": "OPTIONAL improver, 8 natural ingredients (proportions per 100 g). Two are homemade: the sprouted wheat flour, with gentle enzymes like a homemade malt, and your own dried sourdough starter, which adds aroma. Diastatic malt is 15 out of 100: at a 2-3% dose it gives 0.3-0.45% malt on the flour, the right amount. The malt must be DIASTATIC and powdered (in Germany: «Backmalz, enzymaktiv»). ALLERGENS: lupin (may cause reactions in people allergic to peanuts) and cereals containing gluten (barley malt, wheat, sourdough, oats). Keep in a closed jar, cool and dry, for a few months.",
+    "procedure_en": "PREPARATION (dry mix, per 100 g)\n1) First make the two homemade ingredients: the sprouted wheat flour and the dried sourdough starter. How to make them is explained step by step on the «My improver» page.\n2) Weigh: diastatic malt powder 15 g, sprouted wheat flour 25 g, dried sourdough starter 15 g, golden flax flour 15 g, fine oat bran 13 g, sweet lupin flour 8 g, psyllium husk 7 g, acerola powder 2 g.\n3) Mix well and keep in a closed jar, cool and dry, for a few months.\n4) USE: 2% of the flour weight for indirect doughs, 3% for direct ones (on 500 g of flour: 10 g or 15 g). Add it with the flour at the start of mixing. Start with the low dose. If the dough is stiffer than usual, add a tablespoon of water.",
+    "real_name_en": "Natural improver (8 ingredients)",
     "flour_type_es": "Universal (Directo e Indirecto)",
     "name_es": "Mejorador Natural Pro",
-    "notes_es": "Fórmula única 100% natural con 5 ingredientes (acción completa). La MALTA utilizada es MALTA DIÁSTICA PURA EN POLVO (3%): nutre las levaduras, aporta color y crujiente. La harina de lupino dulce y la acerola (vitamina C natural) refuerzan la malla glutínica y la resistencia. La harina de lino dorado añade estructura y omega. La cáscara de psilio retiene la hidratación manteniendo el pan más tierno por más tiempo.\n\nDOSIFICACIÓN: 2-4% sobre el peso de la harina (indirecto 2-3%, directo 3-4%).",
-    "procedure_es": "PREPARACIÓN (mezcla en seco)\n1) Pesa con precisión los 5 ingredientes: Malta diástica pura en polvo 3% - Lupino dulce 1% - Acerola 0,3% - Lino dorado 2% - Psilio 0,5% (porcentajes sobre el peso de la harina de la receta).\n2) Mezcla bien en seco hasta obtener un polvo homogéneo.\n3) Conserva en un frasco cerrado, en lugar fresco y seco (validez varios meses).\nUSO: añade el mix a la harina al inicio del amasado (2-4% total). Con el indirecto usa la dosis menor, con el directo la mayor.",
+    "notes_es": "",
+    "procedure_es": "",
     "label": null,
     "flour_type_fr": "Universel (Direct et Indirect)",
     "name_fr": "Améliorant Naturel Pro",
-    "notes_fr": "Formule unique 100% naturelle à 5 ingrédients (action complète). La MALT utilisé est de la MALT DIASTASIQUE PUR EN POUDRE (3%) : nourrit les levures, apporte couleur et croustillant. La farine de lupin doux et l'acérola (vitamine C naturelle) renforcent le réseau glutinique et la tenue. La farine de lin doré apporte structure et oméga. L'enveloppe de psyllium retient l'hydratation en maintenant le pain moelleux plus longtemps.\n\nDOSAGE : 2-4% sur le poids de la farine (indirect 2-3%, direct 3-4%).",
-    "procedure_fr": "PRÉPARATION (mélange à sec)\n1) Pèse avec précision les 5 ingrédients : Malt diastasique pur en poudre 3% - Lupin doux 1% - Acérola 0,3% - Lin doré 2% - Psyllium 0,5% (pourcentages sur le poids de la farine de la recette).\n2) Mélange bien à sec jusqu'à obtenir une poudre homogène.\n3) Conserve dans un bocal fermé, au frais et au sec (validité plusieurs mois).\nUSAGE : ajoute le mix à la farine au début du pétrissage (2-4% au total). Avec l'indirect utilise la dose minimale, avec le direct la dose maximale.",
-    "real_name_es": "Mejorador universal (5 ingredientes)",
-    "real_name_fr": "Améliorant universel (5 ingrédients)",
+    "notes_fr": "",
+    "procedure_fr": "",
+    "real_name_es": "",
+    "real_name_fr": "",
     "name_fa": "بهبوددهنده طبیعی حرفه‌ای",
-    "real_name_fa": "بهبوددهنده جهانی (۵ ماده)",
+    "real_name_fa": "",
     "flour_type_fa": "جهانی (مستقیم و غیرمستقیم)",
-    "notes_fa": "فرمول منحصربه‌فرد ۱۰۰٪ طبیعی با ۵ ماده (عملکرد کامل). مالت مورد استفاده، مالت دیاستازی خالص پودری (۳٪) است: مخمرها را تغذیه می‌کند، رنگ و ترد‌ی می‌بخشد. آرد لوبیای شیرین و آسرولا (ویتامین C طبیعی) شبکه گلوتن و استحکام خمیر را تقویت می‌کنند. آرد دانه کتان طلایی ساختار و امگا اضافه می‌کند. پوسته پسیلیوم رطوبت را حفظ کرده و نان را دیرتر خشک نگه می‌دارد.\n\nدوز مصرف: ۲ تا ۴٪ از وزن آرد (غیرمستقیم ۲ تا ۳٪، مستقیم ۳ تا ۴٪).",
-    "procedure_fa": "آماده‌سازی (مخلوط خشک)\n۱) ۵ ماده را با دقت وزن کنید: مالت دیاستازی خالص پودری ۳٪ - آرد لوبیای شیرین ۱٪ - آسرولا ۰٫۳٪ - دانه کتان طلایی ۲٪ - پسیلیوم ۰٫۵٪ (درصدها بر اساس وزن آرد دستور).\n۲) همه را کاملاً به صورت خشک مخلوط کنید تا پودری یکنواخت به دست آید.\n۳) در ظرف دربسته، در جای خنک و خشک نگهداری کنید (ماندگاری چند ماه).\nنحوه استفاده: مخلوط را در ابتدای ورز دادن به آرد اضافه کنید (مجموعاً ۲ تا ۴٪). در روش غیرمستقیم از دوز کمتر و در روش مستقیم از دوز بیشتر استفاده کنید.",
+    "notes_fa": "",
+    "procedure_fa": "",
     "user_edited": true
   },
   {

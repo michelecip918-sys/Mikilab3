@@ -30,3 +30,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v119** Ordine: in Home «Tutto MikiLab» mostra ogni pagina del sito a un tocco; la Mappa ora ha tutte le pagine (18 mancavano); tolti i doppioni in Home.
 - **v120** Sitor parla su ogni telefono (voce maschile se c'è, altrimenti quella del telefono); pagina Costi con nomi chiari e ACCESO/SPENTO.
 - **v121** Il tocco di Michele: il Brösel (5% di pane grattugiato, acqua il triplo, il giorno prima in frigo) in ogni ricetta salata, con i grammi calcolati; ricette dolci escluse.
+- **v122** Miglioratore naturale a 8 ingredienti (malto 15 su 100, grano germogliato e lievito madre essiccato fatti in casa, crusca d'avena): pagina, scheda e dati in IT/DE/EN, con i due ingredienti fatti in casa passo per passo.

@@ -1430,6 +1430,26 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"V81 canapa error: {e}")
     try:
+        # V122 — Miglioratore naturale a 8 ingredienti (malto 15 su 100): aggiorna una volta la scheda dal seed.
+        _m122 = await db.app_meta.find_one({"_key": "v122_miglioratore"}, {"_id": 0})
+        if not _m122:
+            _nm = "Miglioratore Naturale Pro"
+            _src = next((x for x in _load_mikilab_seed() if x.get("name") == _nm), None)
+            _r = await db.recipes.find_one({"collection_name": "mikilab", "name": _nm}, {"_id": 0, "id": 1})
+            if _src and _r:
+                _keys = [k for k in _src.keys() if k.startswith(("procedure", "notes", "real_name", "extra_ingredients"))]
+                _upd = {k: _src.get(k) for k in _keys}
+                _upd["updated_at"] = now_iso()
+                await db.recipes.update_one({"collection_name": "mikilab", "name": _nm}, {"$set": _upd})
+                await db.recipe_courses_v2.delete_many({"recipe_id": _r["id"]})
+                _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "mix_composition": 1})
+                if _ex and _ex.get("mix_composition"):
+                    _comp = [{"it": i["name"], "de": i.get("name_de") or i["name"], "en": i.get("name_en") or i["name"], "pct": i["percent"]} for i in (_src.get("extra_ingredients") or [])]
+                    await db.recipe_extras.update_one({"recipe_id": _r["id"]}, {"$set": {"mix_composition": _comp, "mix_unit_g": 100, "updated_at": now_iso()}})
+            await db.app_meta.update_one({"_key": "v122_miglioratore"}, {"$set": {"_key": "v122_miglioratore", "done_at": now_iso()}}, upsert=True)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V122 miglioratore error: {e}")
+    try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
         # pane/panini/focacce → "Provata da Michele" (tested)

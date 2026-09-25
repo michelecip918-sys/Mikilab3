@@ -3,6 +3,7 @@ import { useLang } from "@/i18n/LanguageContext";
 import { recipesApi } from "@/lib/api";
 import { ChevronLeft, FlaskConical, Leaf, Scale, Sparkles, AlertTriangle, Replace } from "lucide-react";
 import { MIX, DOSE, fmtL, substitutes } from "@/lib/improver";
+import HomemadeBox from "@/components/HomemadeBox"; // V122
 
 const PUB = process.env.PUBLIC_URL || "";
 
@@ -55,9 +56,9 @@ export default function MiglioratorePage({ onBack, onOpenRecipe }) {
       <div className="rounded-2xl border border-border bg-card p-5">
         <p className="text-[17px] text-foreground leading-relaxed">
           {L({
-            it: "L'ho creato perché non volevo usare i miglioratori chimici del commercio. Il mio è una miscela a secco di 5 ingredienti naturali che dà al pane forza, profumo e una morbidezza che dura giorni: senza additivi, senza sigle. Nelle ricette lo trovo come ingrediente facoltativo: se non lo vuoi o non lo trovi, qui sotto vedi come sostituirlo.",
-            de: "Ich habe ihn entwickelt, weil ich keine chemischen Backmittel aus dem Handel verwenden wollte. Meiner ist eine Trockenmischung aus 5 natürlichen Zutaten, die dem Brot Kraft, Aroma und tagelange Weichheit gibt: ohne Zusatzstoffe, ohne Kürzel. In den Rezepten steht er als optionale Zutat: Wenn du ihn nicht willst oder findest, siehst du unten, wie du ihn ersetzt.",
-            en: "I created it because I didn't want to use commercial chemical improvers. Mine is a dry mix of 5 natural ingredients that gives bread strength, aroma and a softness that lasts for days: no additives, no codes. In the recipes it appears as an optional ingredient: if you don't want it or can't find it, see below how to replace it.",
+            it: "L'ho creato perché non volevo usare i miglioratori chimici del commercio. Il mio è una miscela a secco di 8 ingredienti naturali che dà al pane forza, profumo e una morbidezza che dura giorni: senza additivi, senza sigle. Nelle ricette lo trovo come ingrediente facoltativo: se non lo vuoi o non lo trovi, qui sotto vedi come sostituirlo.",
+            de: "Ich habe ihn entwickelt, weil ich keine chemischen Backmittel aus dem Handel verwenden wollte. Meiner ist eine Trockenmischung aus 8 natürlichen Zutaten, die dem Brot Kraft, Aroma und tagelange Weichheit gibt: ohne Zusatzstoffe, ohne Kürzel. In den Rezepten steht er als optionale Zutat: Wenn du ihn nicht willst oder findest, siehst du unten, wie du ihn ersetzt.",
+            en: "I created it because I didn't want to use commercial chemical improvers. Mine is a dry mix of 8 natural ingredients that gives bread strength, aroma and a softness that lasts for days: no additives, no codes. In the recipes it appears as an optional ingredient: if you don't want it or can't find it, see below how to replace it.",
           })}
         </p>
       </div>
@@ -121,6 +122,8 @@ export default function MiglioratorePage({ onBack, onOpenRecipe }) {
         </p>
       </div>
 
+      <HomemadeBox L={L} /> {/* V122 */}
+
       {/* Sostituzioni */}
       <div data-testid="miglioratore-subs">
         <h2 className="font-display text-lg font-black text-foreground uppercase tracking-wide flex items-center gap-2 mb-1">
@@ -143,9 +146,9 @@ export default function MiglioratorePage({ onBack, onOpenRecipe }) {
       <div data-testid="miglioratore-allergens" className="rounded-2xl border border-mattone/40 bg-mattone/10 p-4 flex gap-3">
         <AlertTriangle className="w-5 h-5 text-mattone shrink-0 mt-0.5" />
         <p className="text-[13.5px] text-foreground leading-relaxed">
-          {L({ it: "Allergeni: la miscela contiene LUPINO (può dare reazioni a chi è allergico alle arachidi) e malto d'orzo (glutine). Controlla sempre le etichette.",
-               de: "Allergene: Die Mischung enthält LUPINE (kann bei Erdnussallergie Reaktionen auslösen) und Gerstenmalz (Gluten). Immer die Etiketten prüfen.",
-               en: "Allergens: the mix contains LUPIN (may cause reactions in people allergic to peanuts) and barley malt (gluten). Always check labels." })}
+          {L({ it: "Allergeni: la miscela contiene LUPINO (può dare reazioni a chi è allergico alle arachidi) e cereali con glutine (malto d'orzo, grano, lievito madre, avena). Controlla sempre le etichette.",
+               de: "Allergene: Die Mischung enthält LUPINE (kann bei Erdnussallergie Reaktionen auslösen) und glutenhaltiges Getreide (Gerstenmalz, Weizen, Sauerteig, Hafer). Immer die Etiketten prüfen.",
+               en: "Allergens: the mix contains LUPIN (may cause reactions in people allergic to peanuts) and cereals containing gluten (barley malt, wheat, sourdough, oats). Always check labels." })}
         </p>
       </div>
 
