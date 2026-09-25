@@ -24,3 +24,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v113** Sitor va avanti: «Cucina con Sitor» e «Mani in Pasta» si aprono fuori dalla finestra della ricetta, così tutti i pulsanti rispondono a ogni passo; la ricetta torna quando chiudi Sitor. Anche l'allarme del timer e la chat si toccano con la ricetta aperta.
 - **v114** Sitor parla tutto, con la sua voce: il corso, Mani in Pasta, «Ascolta» e la chat usano sempre la voce maschile di Sitor e leggono il testo intero; «Ascolta» si ferma con un secondo tocco; la barra degli indirizzi torna a mikilab.de nelle pagine senza indirizzo proprio.
 - **v115** La pulizia dei dati vecchi non tocca più le foto delle ricette, i preferiti e i voti.
+- **v116** Un solo logo: Sitor col polpo sul braccio sinistro in app, Google, stampa e sito; icone Android che non tagliano il logo; logo per Google nei dati strutturati; tolti resti vecchi.

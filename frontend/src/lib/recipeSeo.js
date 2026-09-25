@@ -65,7 +65,7 @@ export function applyRecipeSeo(recipe, lang) {
     const totMin = Math.round(((Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0)) * 60) + (Number(recipe.mix_minutes) || 0) + (Number(recipe.rest_minutes) || 0) + (Number(recipe.bake_minutes) || 0);
     const ld = {
       "@context": "https://schema.org", "@type": "Recipe", name, image: [img], description: desc, url,
-      author: { "@type": "Person", name: "Michele (MikiLab)" }, publisher: { "@type": "Organization", name: "MikiLab", url: origin },
+      author: { "@type": "Person", name: "Michele (MikiLab)" }, publisher: { "@type": "Organization", name: "MikiLab", url: origin, logo: { "@type": "ImageObject", url: origin + "/icon-512.png" } },
       inLanguage: lang === "de" ? "de" : lang === "en" ? "en" : "it", recipeCategory: recipe.menu_category || "pane", recipeCuisine: recipe.origin && String(recipe.origin).toLowerCase() === "de" ? "German" : "Italian",
       keywords: ["pane", "lievito madre", "focaccia", "pizza", "MikiLab", "Sitor"].join(", "),
       recipeIngredient: ing, isAccessibleForFree: true,

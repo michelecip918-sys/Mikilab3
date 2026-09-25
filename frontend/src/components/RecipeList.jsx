@@ -137,14 +137,6 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   // Copertine cartelle scelte dall'admin (globali, per categoria).
   useEffect(() => { siteSettingsApi.get().then((s) => setFolderCovers((s && s.folder_covers) || {})).catch(() => {}); }, []);
 
-  // Sblocco immediato: dopo un acquisto ricetta ricarica la lista (no reload manuale).
-  useEffect(() => {
-    const onUpd = () => load();
-    window.addEventListener("mikilab-entitlements-updated", onUpd);
-    return () => window.removeEventListener("mikilab-entitlements-updated", onUpd);
-    // eslint-disable-next-line
-  }, [collectionName]);
-
   // Deep-link da QR etichetta (?prodotto=ID): apre la scheda del prodotto MikiLab.
   useEffect(() => {
     if (collectionName !== "mikilab" || !recipes.length) return;
