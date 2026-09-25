@@ -3,17 +3,17 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import SitorBadge from "@/components/SitorBadge";
-import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle, Settings, Flame, Soup, Compass } from "lucide-react";
+import { BookOpen, ChefHat, Sparkles, GraduationCap, Info, MessageCircle } from "lucide-react";
 import { rLoc } from "@/lib/loc";
 // V88 — la Home che ti riconosce + la nota di Michele
 import LaTuaCucina, { getName } from "@/components/LaTuaCucina";
 import { BancoNota } from "@/components/BancoMichele";
 import SitorDice from "@/components/SitorDice"; // V90
 import BenvenutoMikiLab from "@/components/BenvenutoMikiLab"; // V107
-import BambiniInHome from "@/components/BambiniInHome"; // V111
+import TuttoMikiLab from "@/components/TuttoMikiLab"; // V119
 import OggiInBottega from "@/components/OggiInBottega"; // V101
 import NonSoloRicetta from "@/components/NonSoloRicetta"; // V118
-import { Dices, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
 
@@ -67,7 +67,6 @@ export default function HomeManuale({ onNav }) {
   return (
     <div data-testid="home-manuale" className="pt-4">
     <BenvenutoMikiLab onNav={onNav} /> {/* V107 */}
-      <BambiniInHome onNav={onNav} /> {/* V111 */}
       {known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
       {known && <BancoNota />}
       <OggiInBottega onNav={onNav} /> {/* V101 */}
@@ -152,12 +151,6 @@ export default function HomeManuale({ onNav }) {
 
       {/* Azioni principali */}
       <section className="mt-4 grid sm:grid-cols-3 gap-3">
-        <button data-testid="home-btn-start" onClick={() => onNav("percorso")}
-          className="group rounded-2xl border border-border/30 bg-background/70 p-5 text-left hover:border-primary active:scale-[0.98] transition-all">
-          <Sparkles className="w-6 h-6 text-primary mb-2" />
-          <p className="font-black text-foreground">{tri("Comincia da qui", "Fang hier an", "Start here")}</p>
-          <p className="text-xs text-muted-foreground mt-1">{tri("5 ricette facili per iniziare.", "5 einfache Rezepte zum Start.", "5 easy recipes to begin.")}</p>
-        </button>
         <button data-testid="home-btn-all" onClick={() => onNav("recipes")}
           className="group rounded-2xl border border-border/30 bg-background/70 p-5 text-left hover:border-primary active:scale-[0.98] transition-all">
           <ChefHat className="w-6 h-6 text-primary mb-2" />
@@ -178,15 +171,7 @@ export default function HomeManuale({ onNav }) {
         </button>
       </section>
 
-      {/* V76 — "Pochi tasti, tutto dentro": prima le informazioni, poi la pratica, e gli strumenti in un solo posto */}
-      <div data-testid="home-chips" className="flex flex-wrap gap-2 mt-4">
-        <button data-testid="home-chip-prima" onClick={() => onNav("inizia")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary/15 border border-primary/40 text-foreground text-sm font-bold hover:bg-primary/25 active:scale-95 transition-all"><GraduationCap className="w-4 h-4 text-primary" />{tri("Prima di iniziare", "Bevor du anfängst", "Before you start")}</button>
-        <button data-testid="home-chip-panico" onClick={() => onNav("panico")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Flame className="w-4 h-4 text-ambra" />{tri("Panico da cena", "Abendessen-Panik", "Dinner panic")}</button>
-        <button data-testid="home-chip-sughi" onClick={() => onNav("sughi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Soup className="w-4 h-4 text-primary" />{tri("Sopra la focaccia", "Auf die Focaccia", "On the focaccia")}</button>
-        <button data-testid="home-chip-sorprendimi" onClick={() => onNav("sorprendimi")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-ambra/20 border border-ambra/50 text-foreground text-sm font-bold hover:bg-ambra/30 active:scale-95 transition-all"><Dices className="w-4 h-4 text-ambra" />{tri("Sorprendimi", "Überrasch mich", "Surprise me")}</button>
-        <button data-testid="home-chip-giro" onClick={() => onNav("giro")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Compass className="w-4 h-4 text-primary" />{tri("Il primo giro", "Die erste Runde", "The first tour")}</button>
-        <button data-testid="home-chip-strumenti" onClick={() => onNav("strumenti")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-background/70 border border-border/30 text-foreground text-sm font-bold hover:border-primary active:scale-95 transition-all"><Settings className="w-4 h-4" />{tri("Strumenti", "Werkzeuge", "Tools")}</button>
-      </div>
+      <TuttoMikiLab onNav={onNav} /> {/* V119: tutte le pagine, a un tocco */}
 
       <section id="home-start-section" data-testid="home-start-section" className="mt-8 scroll-mt-24">
         <div className="flex items-center gap-2 mb-3">
