@@ -7,6 +7,7 @@ import RecipeShareActions from "@/components/RecipeShareActions";
 import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
+import BroselBox from "@/components/BroselBox"; // V121
 import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, Music2, Copy, CalendarClock } from "lucide-react";
 
 const MODE_KEY = "mikilab_recipe_mode"; // "casa" | "esperto"
@@ -119,6 +120,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
         <ChefHat className="w-5 h-5" /> {tri("Cucina con Sitor", "Koch mit Sitor", "Cook with Sitor")}
       </button>
       {((Number(recipe.bulk_fermentation_hours) || 0) + (Number(recipe.proofing_hours) || 0)) >= 4 && <CalendarReminder recipe={recipe} />}
+      <BroselBox recipe={recipe} flour={flour} /> {/* V121: il tocco di Michele */}
       <RecipeShareActions recipe={recipe} ex={ex} doses={doses} tri={tri} lang={lang} />
       <button data-testid="mark-done" onClick={toggleDone}
         className={`w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-2xl font-bold text-sm active:scale-[0.98] transition-all border ${done ? "bg-accent border-accent text-white" : "bg-transparent border-border text-foreground hover:border-accent"}`}>

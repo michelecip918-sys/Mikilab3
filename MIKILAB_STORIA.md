@@ -29,3 +29,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v118** «Una ricetta non è tutto»: riquadro in Home e in cima alle ricette, con l'invito ai professionisti a scrivere su TikTok.
 - **v119** Ordine: in Home «Tutto MikiLab» mostra ogni pagina del sito a un tocco; la Mappa ora ha tutte le pagine (18 mancavano); tolti i doppioni in Home.
 - **v120** Sitor parla su ogni telefono (voce maschile se c'è, altrimenti quella del telefono); pagina Costi con nomi chiari e ACCESO/SPENTO.
+- **v121** Il tocco di Michele: il Brösel (5% di pane grattugiato, acqua il triplo, il giorno prima in frigo) in ogni ricetta salata, con i grammi calcolati; ricette dolci escluse.
