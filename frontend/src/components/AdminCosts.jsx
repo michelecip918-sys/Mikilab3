@@ -5,6 +5,14 @@ import { mkTri } from "@/i18n/triMaps";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 
+const FEAT_NAMES = { // V120: nomi chiari
+  FEATURE_PHOTO_DIAG: ["Foto del pane (Sitor guarda)", "Brotfoto (Sitor schaut)", "Bread photo (Sitor looks)"],
+  FEATURE_PLAN: ["Piano della settimana", "Wochenplan", "Weekly plan"],
+  FEATURE_LIVE: ["Dirette", "Live-Sessions", "Live sessions"],
+  FEATURE_VOICE_CHAT: ["Parlare alla chat (gratis)", "Mit dem Chat sprechen (gratis)", "Talk to the chat (free)"],
+  FEATURE_VOICE_SERVER: ["Voce a pagamento", "Bezahlte Stimme", "Paid voice"],
+  FEATURE_SITOR_MAESTRO: ["Sitor Maestro (IA grande, costa di più)", "Sitor Meister (große KI, teurer)", "Sitor Maestro (big AI, costs more)"],
+};
 const FEATS = ["FEATURE_PHOTO_DIAG", "FEATURE_PLAN", "FEATURE_LIVE", "FEATURE_VOICE_CHAT", "FEATURE_VOICE_SERVER", "FEATURE_SITOR_MAESTRO"]; // V93 V105: SITOR_MAESTRO = modello grande per la chat (più caro; spento: modello normale): VOICE_SERVER = voce a pagamento (spenta: parla il telefono, gratis)
 const COLS = ["chat_calls", "course_gens", "technique_gens", "plan_calls", "vision_calls", "live_pings", "done_pings"];
 
@@ -55,7 +63,7 @@ export default function AdminCosts({ onBack }) {
           {FEATS.map((f) => (
             <button key={f} data-testid={`feat-${f}`} onClick={() => toggle(f)}
               className={`py-2.5 px-3 rounded-xl font-bold text-xs text-left active:scale-95 ${d.features[f] ? "bg-accent/20 text-accent-foreground border border-accent/40" : "bg-foreground/10 text-muted-foreground border border-transparent"}`}>
-              {d.features[f] ? "● " : "○ "}{f.replace("FEATURE_", "")}
+              <span className="block">{d.features[f] ? "● " : "○ "}{(FEAT_NAMES[f] ? tri(...FEAT_NAMES[f]) : f.replace("FEATURE_", ""))}</span><span className={`block text-[10px] font-black mt-0.5 ${d.features[f] ? "text-accent" : "text-muted-foreground"}`}>{d.features[f] ? tri("ACCESO", "AN", "ON") : tri("SPENTO", "AUS", "OFF")}</span>
             </button>
           ))}
         </div>

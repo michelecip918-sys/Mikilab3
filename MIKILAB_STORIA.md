@@ -28,3 +28,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v117** Ogni dettaglio: polpo sul braccio sinistro in tutte le tecniche e nella firma; Google legge ogni ricetta in IT, DE ed EN con il suo indirizzo; niente nomi italiani nelle pagine tedesche; «Sitors Handbuch» ovunque; tolti avatar vecchio e resti.
 - **v118** «Una ricetta non è tutto»: riquadro in Home e in cima alle ricette, con l'invito ai professionisti a scrivere su TikTok.
 - **v119** Ordine: in Home «Tutto MikiLab» mostra ogni pagina del sito a un tocco; la Mappa ora ha tutte le pagine (18 mancavano); tolti i doppioni in Home.
+- **v120** Sitor parla su ogni telefono (voce maschile se c'è, altrimenti quella del telefono); pagina Costi con nomi chiari e ACCESO/SPENTO.

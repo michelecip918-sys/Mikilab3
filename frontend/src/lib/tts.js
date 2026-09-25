@@ -54,7 +54,8 @@ function pickVoice(lang) {
   const notFemale = cands.filter((v) => !isFemale(v));
   // Solo pool di voci NON femminili. Niente fallback su `cands` (che includerebbe voci femminili).
   const pool = byName.length ? byName : (byWord.length ? byWord : notFemale);
-  return pool.length ? pool[0] : null;
+  // V120: se il telefono non ha voci maschili, Sitor parla con la voce che c'è (meglio che restare muto)
+  return pool.length ? pool[0] : (cands[0] || null);
 }
 
 export const isTTSMuted = () => { try { return localStorage.getItem("mikilab_voice_muted") === "1"; } catch { return false; } };
@@ -116,10 +117,10 @@ function nativeSpeak(clean, lang, voice, onStart, onEnded) {
   try {
     lang = guessLang(clean, lang); // V93
     const v = pickVoice(lang);
-    if (!v) { ttsSignalEnd(); if (onEnded) onEnded(); return; } // nessuna voce maschile → muti
+    // V120: nessuna voce caricata → la voce predefinita del telefono nella lingua giusta
     const u = new SpeechSynthesisUtterance(clean);
     u.lang = toBCP47(lang);
-    u.voice = v;
+    if (v) u.voice = v;
     // Timbro UNICO di Sitor (grave, autorevole) per ogni chiamata del sito.
     u.pitch = 0.85; u.rate = 1.08; // V75: meno cupo e un po' più veloce (meno robotico)
     try { if (localStorage.getItem("mikilab_modo_notte") === "1") u.volume = 0.55; } catch { /* V86: modo notte, Sitor sussurra */ }
