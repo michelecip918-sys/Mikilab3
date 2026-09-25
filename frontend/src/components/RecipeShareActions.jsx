@@ -25,7 +25,7 @@ export default function RecipeShareActions({ recipe, ex, doses = [], tri, lang =
   const timeTxt = totH > 0 ? `~${Math.round(totH)} h` : (recipe.bake_minutes ? `${recipe.bake_minutes} min` : "");
   const copyright = tri(
     "© MikiLab — Il Manuale di Sitor · mikilab.de · Vietato riprodurre o vendere senza il logo e il consenso",
-    "© MikiLab — Das Handbuch von Sitor · mikilab.de · Ohne Logo und Zustimmung darf nicht reproduziert oder verkauft werden",
+    "© MikiLab — Sitors Handbuch · mikilab.de · Ohne Logo und Zustimmung darf nicht reproduziert oder verkauft werden",
     "© MikiLab — Sitor's Manual · mikilab.de · Do not reproduce or sell without the logo and consent",
   );
 
@@ -47,7 +47,7 @@ export default function RecipeShareActions({ recipe, ex, doses = [], tri, lang =
       c.fillStyle = "#f4efe6"; c.textBaseline = "top";
       c.font = "800 56px Georgia, serif"; c.fillText("MikiLab", 230, 62);
       c.fillStyle = "#c9a24a"; c.font = "600 26px Arial";
-      c.fillText(tri("Il Manuale di Sitor", "Das Handbuch von Sitor", "Sitor's Manual"), 232, 132);
+      c.fillText(tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual"), 232, 132);
       // nome ricetta (wrap)
       c.fillStyle = "#f4efe6"; c.font = "800 60px Georgia, serif";
       const words = rname.split(" "); let line = ""; let y = 320;
@@ -103,7 +103,7 @@ export default function RecipeShareActions({ recipe, ex, doses = [], tri, lang =
           <img src={`${base}/logo-light-256.png`} alt="MikiLab" className="prc-logo" />
           <div>
             <div className="prc-brand">MikiLab</div>
-            <div className="prc-sub">{tri("Il Manuale di Sitor", "Das Handbuch von Sitor", "Sitor's Manual")}</div>
+            <div className="prc-sub">{tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</div>
           </div>
         </div>
         <h1 className="prc-title">{rname}</h1>

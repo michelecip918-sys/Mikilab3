@@ -5,6 +5,7 @@ export function rLoc(recipe, field, lang) {
   if (lang === "de") {
     const de = recipe[`${field}_de`];
     if (de != null && String(de).trim() !== "") return de;
+    if (field === "real_name") return ""; // V117: niente nome italiano nella pagina tedesca
   }
   if (lang === "en") {
     const en = recipe[`${field}_en`];

@@ -80,7 +80,7 @@ export default function CartolinaDelPane({ r, dough, lang }) {
         const g2 = ctx.createLinearGradient(0, 700, 0, 1350); g2.addColorStop(0, "rgba(0,0,0,0)"); g2.addColorStop(1, "rgba(0,0,0,0.82)"); ctx.fillStyle = g2; ctx.fillRect(0, 700, 1080, 650);
         const g3 = ctx.createLinearGradient(0, 0, 0, 260); g3.addColorStop(0, "rgba(0,0,0,0.55)"); g3.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = g3; ctx.fillRect(0, 0, 1080, 260);
         if (logo) { ctx.save(); ctx.beginPath(); ctx.arc(110, 110, 52, 0, Math.PI * 2); ctx.closePath(); ctx.clip(); ctx.drawImage(logo, 58, 58, 104, 104); ctx.restore(); }
-        ctx.fillStyle = "#fff"; ctx.font = `bold 44px ${display}`; ctx.fillText("MikiLab", 185, 100); ctx.font = `28px ${body}`; ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.fillText(tri("Il Manuale di Sitor", "Das Handbuch von Sitor", "Sitor's Manual"), 185, 140);
+        ctx.fillStyle = "#fff"; ctx.font = `bold 44px ${display}`; ctx.fillText("MikiLab", 185, 100); ctx.font = `28px ${body}`; ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.fillText(tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual"), 185, 140);
         ctx.fillStyle = "#fff"; ctx.font = `bold 84px ${display}`;
         const lines = wrap(ctx, title, 960); let y = 1060 - (lines.length - 1) * 92;
         lines.slice(0, 3).forEach((l) => { ctx.fillText(l, 60, y); y += 92; });

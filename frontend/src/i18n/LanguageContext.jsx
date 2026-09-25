@@ -14,6 +14,8 @@ function initialLang() {
   // 2) prefisso lingua nell'URL (/it /de /en) → condivisione al primo accesso
   const seg = (window.location.pathname.split("/")[1] || "").toLowerCase();
   if (SUPPORTED.includes(seg)) return seg;
+  // V117: i motori di ricerca, sull'indirizzo senza prefisso, leggono l'italiano (come dice la mappa per Google)
+  try { if (/bot|crawler|spider|slurp|google-inspectiontool|lighthouse/i.test(navigator.userAgent || "")) return "it"; } catch { /* */ }
   // 3) lingua del browser: it/de se disponibili, altrimenti EN
   const nav = (navigator.language || "en").slice(0, 2).toLowerCase();
   if (nav === "it" || nav === "de") return nav;

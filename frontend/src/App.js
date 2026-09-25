@@ -109,7 +109,7 @@ import BancoEditor from "@/components/BancoMichele";
 const PUB = process.env.PUBLIC_URL;
 
 function initialRoute() {
-  const p = (window.location.pathname || "").toLowerCase();
+  const p = (window.location.pathname || "").toLowerCase().replace(/^\/(it|de|en)(?=\/|$)/, "") || "/"; // V117: /de/… e /en/… come le pagine normali
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
   if (p.startsWith("/domande")) return "domande"; // V108

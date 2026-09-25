@@ -10,12 +10,12 @@ import { setLastRecipe } from "@/lib/bottega";
 export function recipeSlug(name) {
   return String(name || "ricetta").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "ricetta";
 }
-export function recipePath(recipe, lang) { return `/ricetta/${recipe.id}/${recipeSlug(rLoc(recipe, "name", lang))}`; }
+export function recipePath(recipe, lang) { const pre = (lang === "de" || lang === "en") ? `/${lang}` : ""; return `${pre}/ricetta/${recipe.id}/${recipeSlug(rLoc(recipe, "name", lang))}`; } // V117
 // Legge l'id dalla barra degli indirizzi: /ricetta/<id>/... oppure ?r=<id>
 export function recipeIdFromLocation() {
   try {
     const p = window.location.pathname || "";
-    const m = p.match(/^\/ricetta\/([^/]+)/i);
+    const m = p.match(/^\/(?:(?:it|de|en)\/)?ricetta\/([^/]+)/i); // V117
     if (m) return decodeURIComponent(m[1]);
     const q = new URLSearchParams(window.location.search).get("r");
     return q || null;
@@ -102,7 +102,7 @@ export function clearRecipeSeo(lang) {
     const s = document.getElementById(LD_ID); if (s) s.remove();
     const c = document.head.querySelector('link[rel="canonical"]'); if (c) c.setAttribute("href", window.location.origin + "/");
     setMeta('meta[property="og:type"]', "content", "website");
-    if (/^\/ricetta\//i.test(window.location.pathname)) window.history.replaceState(window.history.state, "", "/");
+    if (/^\/(?:(?:it|de|en)\/)?ricetta\//i.test(window.location.pathname)) window.history.replaceState(window.history.state, "", "/");
     applyMeta(lang);
   } catch { /* */ }
 }

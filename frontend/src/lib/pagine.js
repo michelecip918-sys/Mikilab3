@@ -52,7 +52,7 @@ export function applyPageMeta(route, lang) {
       const canon = document.head.querySelector('link[rel="canonical"]');
       if (!p) {
         // Home e pagine senza indirizzo proprio (Strumenti, Tecniche, admin…): titolo e descrizione del sito
-        { document.title = m.title; setMeta('meta[name="description"]', "content", m.description); setMeta('meta[property="og:title"]', "content", m.ogTitle); setMeta('meta[property="og:description"]', "content", m.ogDescription); setMeta('meta[property="og:url"]', "content", "https://mikilab.de/"); if (canon) canon.setAttribute("href", "https://mikilab.de/"); }
+        { document.title = m.title; setMeta('meta[name="description"]', "content", m.description); setMeta('meta[property="og:title"]', "content", m.ogTitle); setMeta('meta[property="og:description"]', "content", m.ogDescription); setMeta('meta[property="og:url"]', "content", "https://mikilab.de/" + (lang === "de" || lang === "en" ? lang + "/" : "")); if (canon) canon.setAttribute("href", "https://mikilab.de/" + (lang === "de" || lang === "en" ? lang + "/" : "")); } // V117: home per lingua
         return;
       }
       const titolo = `${pick(p.t, lang)} · MikiLab`;
