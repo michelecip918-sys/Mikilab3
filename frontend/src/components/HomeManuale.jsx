@@ -12,6 +12,7 @@ import SitorDice from "@/components/SitorDice"; // V90
 import BenvenutoMikiLab from "@/components/BenvenutoMikiLab"; // V107
 import BambiniInHome from "@/components/BambiniInHome"; // V111
 import OggiInBottega from "@/components/OggiInBottega"; // V101
+import NonSoloRicetta from "@/components/NonSoloRicetta"; // V118
 import { Dices, ChevronDown } from "lucide-react";
 
 const PUB = process.env.PUBLIC_URL;
@@ -103,6 +104,8 @@ export default function HomeManuale({ onNav }) {
         </p>
       </>)}
       </section>
+
+      <NonSoloRicetta testid="home-non-solo-ricetta" /> {/* V118 */}
 
       {!known && <LaTuaCucina recipes={all} starts={starts} onNav={onNav} onOpenRecipe={openRecipe} />}
       {!known && <BancoNota />}

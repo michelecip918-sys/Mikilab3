@@ -11,6 +11,7 @@ import SaporiCasa from "@/sections/SaporiCasa";
 import RicetteCustodite from "@/sections/RicetteCustodite";
 import VetrinaFocacce from "@/components/VetrinaFocacce";
 import AttrezziGuide from "@/components/AttrezziGuide";
+import NonSoloRicetta from "@/components/NonSoloRicetta"; // V118
 import { useLang } from "@/i18n/LanguageContext";
 import { useBackClose } from "@/lib/backNav";
 import { mkTri, triFA } from "@/i18n/triMaps";
@@ -76,6 +77,8 @@ export default function Ricette() {
           </p>
         </div>
       </div>
+
+      <NonSoloRicetta testid="ricette-non-solo-ricetta" /> {/* V118 */}
 
       <div data-testid="ricette-list">
       <RecipeList

@@ -26,3 +26,4 @@ Regole che non cambiano: le dosi delle ricette non si toccano; niente server nuo
 - **v115** La pulizia dei dati vecchi non tocca più le foto delle ricette, i preferiti e i voti.
 - **v116** Un solo logo: Sitor col polpo sul braccio sinistro in app, Google, stampa e sito; icone Android che non tagliano il logo; logo per Google nei dati strutturati; tolti resti vecchi.
 - **v117** Ogni dettaglio: polpo sul braccio sinistro in tutte le tecniche e nella firma; Google legge ogni ricetta in IT, DE ed EN con il suo indirizzo; niente nomi italiani nelle pagine tedesche; «Sitors Handbuch» ovunque; tolti avatar vecchio e resti.
+- **v118** «Una ricetta non è tutto»: riquadro in Home e in cima alle ricette, con l'invito ai professionisti a scrivere su TikTok.
