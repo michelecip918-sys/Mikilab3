@@ -6,6 +6,9 @@
 <url><loc>https://mikilab.de/miglionico</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 <url><loc>https://mikilab.de/volantino</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/laboratorio</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
+<url><loc>https://mikilab.de/calcolatrice</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://mikilab.de/pizza</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+<url><loc>https://mikilab.de/rinfresco</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://mikilab.de/primopane</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/sommelier</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>
 <url><loc>https://mikilab.de/ospiti</loc><changefreq>monthly</changefreq><priority>0.3</priority></url>

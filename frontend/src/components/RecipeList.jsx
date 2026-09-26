@@ -28,6 +28,7 @@ import { useBackClose } from "@/lib/backNav";
 import { applyRecipeSeo, clearRecipeSeo } from "@/lib/recipeSeo"; // V87: indirizzo vero + SEO per ogni ricetta
 import { renderProcedureWithImprover } from "@/lib/improverText";
 import StrumentiRicetta from "@/components/StrumentiRicetta"; // V92
+import PezziPeso from "@/components/PezziPeso"; // V127
 import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
 import { useFavRecipes } from "@/lib/favorites";
@@ -912,6 +913,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
                   className="px-2 py-0.5 rounded-full text-[11px] font-bold border bg-card text-muted-foreground border-border">{tri("Originale", "Original", "Original")}</button>
               </div>
             )}
+            {flourG > 0 && <PezziPeso r={r} target={target} onScaleChange={onScaleChange} />} {/* V127: pezzi × peso */}
             {isPro && flourG > 0 && (
               <div data-testid={`baker-scale-${r.id}`} className="no-print mb-2 flex flex-wrap items-center gap-2 rounded-lg bg-primary/10 border border-primary/30 px-2.5 py-1.5">
                 <span className="text-[10px] font-bold uppercase tracking-wide text-primary">{tri("% del Fornaio · scala dosi", "Bäcker-% · Mengen skalieren", "Baker's % · scale doses")}</span>

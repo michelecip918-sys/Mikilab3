@@ -11,6 +11,7 @@ import { BancoNota } from "@/components/BancoMichele";
 import SitorDice from "@/components/SitorDice"; // V90
 import BenvenutoMikiLab from "@/components/BenvenutoMikiLab"; // V107
 import TuttoMikiLab from "@/components/TuttoMikiLab"; // V119
+import CalcolaInHome from "@/components/CalcolaInHome"; // V127
 import OggiInBottega from "@/components/OggiInBottega"; // V101
 import NonSoloRicetta from "@/components/NonSoloRicetta"; // V118
 import { ChevronDown } from "lucide-react";
@@ -170,6 +171,8 @@ export default function HomeManuale({ onNav }) {
           <p className="text-xs text-muted-foreground mt-1">{tri("Domande su pane, pizza e dolci.", "Fragen zu Brot, Pizza und Süßem.", "Questions about bread, pizza and sweets.")}</p>
         </button>
       </section>
+
+      <CalcolaInHome onNav={onNav} /> {/* V127: la calcolatrice del fornaio */}
 
       <TuttoMikiLab onNav={onNav} /> {/* V119: tutte le pagine, a un tocco */}
 

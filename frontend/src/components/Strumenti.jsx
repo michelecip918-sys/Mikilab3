@@ -1,4 +1,5 @@
 import { useState } from "react"; // V99 react
+import { Calculator, Pizza, Hourglass } from "lucide-react"; // V127
 import { ChevronLeft, Sparkles, Radio, BookOpen, ChefHat, CalendarDays, Beaker, Globe, Recycle, Sprout, Settings, Flame, Soup, FlaskConical, Camera, Compass, ZoomIn, Ear, AlarmClock, MapPin, Scale, BookOpen as BookOpenIcon, Moon, Printer, Award, Dices } from "lucide-react";
 import { Search as SearchIcon, Layers as LayersIcon, HelpCircle as HelpIcon } from "lucide-react"; // V108
 import { LifeBuoy as LifeBuoyIcon } from "lucide-react"; // V107
@@ -22,6 +23,9 @@ export default function Strumenti({ onBack, onNav, features }) {
   const pub = usePublicContent(); // null finché non caricato
 
   const all = [
+    { route: "calcolatrice", Icon: Calculator, show: true, t: tri("La calcolatrice del fornaio", "Der Bäckerrechner", "The baker's calculator"), d: tri("Il tuo impasto in grammi, con biga, poolish o lievito madre", "Dein Teig in Gramm, mit Biga, Poolish oder Sauerteig", "Your dough in grams, with biga, poolish or sourdough") }, // V127
+    { route: "pizza", Icon: Pizza, show: true, t: tri("Calcolo impasto pizza", "Pizzateig-Rechner", "Pizza dough calculator"), d: tri("Panetti o teglia, il lievito giusto per le tue ore", "Teigkugeln oder Blech, die richtige Hefe für deine Stunden", "Dough balls or pan, the right yeast for your hours") }, // V127
+    { route: "rinfresco", Icon: Hourglass, show: true, t: tri("Lievito madre pronto all'ora giusta", "Sauerteig pünktlich fertig", "Starter ready on time"), d: tri("Quanto rinfrescare adesso", "Wie viel du jetzt auffrischst", "How much to feed now") }, // V127
     { route: "panico", Icon: Flame, show: true, t: tri("Panico da cena", "Abendessen-Panik", "Dinner panic"), d: tri("Idee veloci per stasera", "Schnelle Ideen für heute Abend", "Quick ideas for tonight") },
     { route: "sughi", Icon: Soup, show: true, t: tri("Sopra la focaccia", "Auf die Focaccia", "On the focaccia"), d: tri("Condimenti per focacce, pizze e pane", "Beläge für Focaccia, Pizza und Brot", "Toppings for focaccia, pizza and bread") },
     { route: "cosa-faccio", Icon: Sparkles, show: !features || features.FEATURE_PLAN !== false, t: tri("Cosa faccio?", "Was mache ich?", "What can I make?"), d: tri("Cosa posso fare con quello che ho", "Was ich mit dem machen kann, was ich habe", "What I can make with what I have") },

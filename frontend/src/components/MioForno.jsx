@@ -55,6 +55,15 @@ export default function MioForno({ onBack, onOpenRecipe }) {
   const [busy, setBusy] = useState(false);
   const fileRef = useRef(null);
 
+  // V127: dalla calcolatrice del fornaio («Segna nel mio forno») arrivano nome e riassunto della formula.
+  useEffect(() => {
+    try {
+      const p = JSON.parse(localStorage.getItem("mikilab_mioforno_prefill") || "null");
+      localStorage.removeItem("mikilab_mioforno_prefill");
+      if (p && (p.name || p.note)) { setName(String(p.name || "").slice(0, 80)); setNote(String(p.note || "").slice(0, 400)); setOpen(true); }
+    } catch { /* niente da precompilare */ }
+  }, []);
+
   useEffect(() => {
     let stop = false;
     idbGet(KEY).then((d) => { if (!stop) setItems(Array.isArray(d) ? d : []); });
