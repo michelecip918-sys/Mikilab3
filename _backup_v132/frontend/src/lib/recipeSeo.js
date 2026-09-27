@@ -3,8 +3,6 @@
 // Open Graph mostrano la foto della ricetta quando il link viene incollato su WhatsApp/TikTok/Telegram,
 // e viene aggiunto un blocco JSON-LD schema.org/Recipe così Google può mostrare la ricetta con foto
 // nei risultati. Tutto lato client, nessun dato al server.
-import { voceCodice } from "@/lib/codici"; // V132
-import { videoIdTikTok, playerTikTok } from "@/lib/tiktok"; // V132
 import { applyMeta } from "@/i18n/meta";
 import { rLoc } from "@/lib/loc";
 import { setLastRecipe } from "@/lib/bottega";
@@ -17,14 +15,10 @@ export function recipePath(recipe, lang) { const pre = (lang === "de" || lang ==
 export function recipeIdFromLocation() {
   try {
     const p = window.location.pathname || "";
-    const m = p.match(/^\/(?:(?:it|de|en)\/)?ricetta\/([^/]+)(?:\/([^/?#]+))?/i); // V117 (V132: anche il nome, per ritrovarla se l'id cambiasse)
-    if (m) { try { if (m[2]) window.__mikilabPendingSlug = decodeURIComponent(m[2]).toLowerCase(); } catch { /* */ } return decodeURIComponent(m[1]); }
-    const sp = new URLSearchParams(window.location.search);
-    const q = sp.get("r") || sp.get("ricetta"); // V132: anche i link «?ricetta=» mandati col vecchio «Condividi»
-    if (q) return q;
-    const c = p.match(/^\/(?:(?:it|de|en)\/)?(\d{1,4})\/?$/); // V132: mikilab.de/42, il numero della ricetta nei video
-    if (c) { const v = voceCodice(c[1]); if (v) { window.__mikilabPendingSlug = v[1]; return v[0]; } }
-    return null;
+    const m = p.match(/^\/(?:(?:it|de|en)\/)?ricetta\/([^/]+)/i); // V117
+    if (m) return decodeURIComponent(m[1]);
+    const q = new URLSearchParams(window.location.search).get("r");
+    return q || null;
   } catch { return null; }
 }
 
@@ -93,13 +87,6 @@ export function applyRecipeSeo(recipe, lang) {
       const prep = (Number(recipe.mix_minutes) || 0) + (Number(recipe.rest_minutes) || 0);
       if (prep > 0) ld.prepTime = `PT${prep}M`;
       ld.datePublished = recipe.created_at ? String(recipe.created_at).slice(0, 10) : "2026-09-01";
-    } catch { /* */ }
-    try { // V132: il video di Michele su TikTok, per i risultati video di Google
-      if (recipe.video_url) {
-        const vid = videoIdTikTok(recipe.video_url);
-        ld.video = { "@type": "VideoObject", name: `${name} — MikiLab`, description: desc, thumbnailUrl: [img], contentUrl: recipe.video_url, uploadDate: String(recipe.video_date || recipe.created_at || "2026-09-27").slice(0, 10) };
-        if (vid) ld.video.embedUrl = playerTikTok(vid);
-      }
     } catch { /* */ }
     if (totMin > 0) ld.totalTime = `PT${totMin}M`;
     if (recipe.bake_minutes) ld.cookTime = `PT${recipe.bake_minutes}M`;

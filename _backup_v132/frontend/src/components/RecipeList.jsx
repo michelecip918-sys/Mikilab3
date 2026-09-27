@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, Loader2, SlidersHorizontal, Sun } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, Loader2, SlidersHorizontal } from "lucide-react";
 import { recipesApi, siteSettingsApi, api } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -25,13 +25,12 @@ import { farroEligible, farroWaterFactor, farroFlourLabel, farroHelp } from "@/l
 import { useAuth } from "@/auth/AuthContext";
 import { rLoc, ingLoc } from "@/lib/loc";
 import { useBackClose } from "@/lib/backNav";
-import { applyRecipeSeo, clearRecipeSeo, recipePath, recipeSlug } from "@/lib/recipeSeo"; // V87: indirizzo vero + SEO per ogni ricetta
+import { applyRecipeSeo, clearRecipeSeo } from "@/lib/recipeSeo"; // V87: indirizzo vero + SEO per ogni ricetta
 import { renderProcedureWithImprover } from "@/lib/improverText";
 import StrumentiRicetta from "@/components/StrumentiRicetta"; // V92
 import FotoBadge from "@/components/FotoBadge"; // V129
 import FotoDiMichele from "@/components/FotoDiMichele"; // V129
 import PercheRicetta from "@/components/PercheRicetta"; // V130
-import { codiceDi } from "@/lib/codici"; // V132
 import PezziPeso from "@/components/PezziPeso"; // V127
 import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
@@ -183,12 +182,11 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
   useEffect(() => {
     if (collectionName !== "mikilab" || !pendingOpenId || !recipes.length) return;
-    const target = recipes.find((x) => x.id === pendingOpenId) || (window.__mikilabPendingSlug ? recipes.find((x) => [x.name, x.name_de, x.name_en].some((n) => n && recipeSlug(n) === window.__mikilabPendingSlug)) : null); // V132: se l'id non c'è, la ritrova dal nome
+    const target = recipes.find((x) => x.id === pendingOpenId);
     if (target) {
       setViewing(target);
       setPendingOpenId(null);
       window.__mikilabPendingRecipe = null;
-      window.__mikilabPendingSlug = null;
     }
   }, [recipes, pendingOpenId, collectionName]);
 
@@ -749,29 +747,6 @@ function procWithImprover(text, onImprover) {
 }
 
 
-// V132 — i nomi del lievito e del metodo nella scheda. Prima alcune ricette mostravano la chiave tecnica
-// («pf_lievito madre», «dc_indiretto») e il lievito madre di grano veniva chiamato «di segale».
-function pfLabel(r, t, lang) {
-  const k = String((r && r.preferment_type) || "").trim().toLowerCase();
-  if (!k || k === "none" || k === "diretto" || k === "pre") return "";
-  const L3 = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
-  const segale = /segale|roggen|\brye\b/i.test(`${(r && r.name) || ""} ${(r && r.flour_type) || ""}`);
-  if (k === "lm" || k === "lievito madre") return segale ? L3("Lievito madre di segale", "Roggensauerteig", "Rye sourdough starter") : L3("Lievito madre", "Sauerteig", "Sourdough starter");
-  if (k === "lievito madre + lievito di birra") return L3("Lievito madre + lievito di birra", "Sauerteig + Hefe", "Starter + yeast");
-  if (k === "lievito di birra") return L3("Lievito di birra", "Hefe", "Yeast");
-  const v = t(`pf_${k}`);
-  return v && v !== `pf_${k}` ? v : "";
-}
-function dcLabel(dc, t, lang) {
-  const k = String(dc || "").trim().toLowerCase();
-  if (!k) return "";
-  const L3 = (i, d, e) => (lang === "de" ? d : lang === "en" ? e : i);
-  if (k === "indiretto") return L3("Indiretto", "Indirekte Führung", "Indirect");
-  if (k === "sfogliato") return L3("Sfogliato", "Laminiert", "Laminated");
-  const v = t(`dc_${k}`);
-  return v && v !== `dc_${k}` ? v : "";
-}
-
 function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete, onPromote }) {
   const { profile } = useProfile();
   const isPro = profile === "pro";
@@ -782,24 +757,6 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
   const isPanettone = /panettone|colomba|pandoro/i.test(r.name || "");
   const [farro, setFarro] = useState(false);
   const [showTimeline, setShowTimeline] = useState(false);
-  // V132 — SCHERMO SEMPRE ACCESO mentre la ricetta è aperta (come i migliori ricettari): si spegne da solo quando chiudi.
-  const [sveglio, setSveglio] = useState(false);
-  const wlRef = useRef(null);
-  useEffect(() => { setSveglio(false); }, [r.id]);
-  useEffect(() => {
-    if (!sveglio) return undefined;
-    let stop = false;
-    const chiedi = async () => { try { if (!stop && "wakeLock" in navigator && document.visibilityState === "visible") wlRef.current = await navigator.wakeLock.request("screen"); } catch { /* */ } };
-    chiedi();
-    const onVis = () => { if (document.visibilityState === "visible") chiedi(); };
-    document.addEventListener("visibilitychange", onVis);
-    return () => { stop = true; document.removeEventListener("visibilitychange", onVis); try { if (wlRef.current) wlRef.current.release(); } catch { /* */ } wlRef.current = null; };
-  }, [sveglio]);
-  const toggleSveglio = () => {
-    if (!("wakeLock" in navigator)) { toast.error(tri("Questo telefono non lascia tenere acceso lo schermo da un sito.", "Dieses Handy lässt den Bildschirm von einer Website aus nicht anbleiben.", "This phone doesn't let a website keep the screen on.")); return; }
-    const n = !sveglio; setSveglio(n);
-    toast.success(n ? tri("Schermo acceso finché la ricetta è aperta.", "Der Bildschirm bleibt an, solange das Rezept offen ist.", "The screen stays on while the recipe is open.") : tri("Schermo di nuovo normale.", "Bildschirm wieder normal.", "Screen back to normal."));
-  };
   useEffect(() => { setFarro(false); /* eslint-disable-next-line */ }, [r.id]);
   const farroOk = farroEligible(r);
   const farroOn = farro && farroOk;
@@ -820,7 +777,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
   const rows = [];
   if (r.flour_grams != null) rows.push([t("ing_flour"), `${g(r.flour_grams) - bFlour} g${pct(Number(r.flour_grams) - (biga ? Number(biga.flour_g) || 0 : 0))}`]);
   if (r.water_grams != null) rows.push([t("ing_water"), `${gWater(r.water_grams) - bWater} g${pct((farroOn ? Number(r.water_grams) * farroFac : Number(r.water_grams)) - (biga ? Number(biga.water_g) || 0 : 0))}`]);
-  if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${pfLabel(r, t, lang) ? ` (${pfLabel(r, t, lang)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
+  if (r.sourdough_grams) rows.push([`${t("ing_preferment")}${r.preferment_type && r.preferment_type !== "none" ? ` (${t(`pf_${r.preferment_type}`)})` : ""}`, `${g(r.sourdough_grams)} g${pct(r.sourdough_grams)}`]);
   if (r.salt_grams != null) rows.push([t("ing_salt"), `${g(r.salt_grams)} g${pct(r.salt_grams)}`]);
   (r.extra_ingredients || []).forEach((e) => {
     if (e && e.name && e.percent != null && e.percent !== "") {
@@ -832,7 +789,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
   });
 
   const shareRecipe = async () => {
-    const url = `${window.location.origin}${recipePath(r, lang)}`; // V132: l'indirizzo vero della ricetta (prima «/?ricetta=» apriva la Home)
+    const url = `${window.location.origin}/?ricetta=${r.id}`;
     const title = rLoc(r, "name", lang);
     const textMsg = tri(`Guarda questa ricetta su MikiLab: ${title}`, `Schau dir dieses Rezept auf MikiLab an: ${title}`, `Check out this recipe on MikiLab: ${title}`);
     try {
@@ -864,7 +821,6 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
             {isPanettone && farroOn ? rLoc(r, "name", lang).replace(/mikilab/i, (m) => "al Farro " + m) : rLoc(r, "name", lang)}{farroOn && !isPanettone ? ` · ${tri("al farro", "aus Dinkel", "spelt")}` : ""}
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-primary mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
-          {codiceDi(r.id) ? <p data-testid={`recipe-code-${r.id}`} className="text-[11.5px] text-muted-foreground mt-0.5">{tri("Ricetta n.", "Rezept Nr.", "Recipe no.")} {codiceDi(r.id)} · mikilab.de/{codiceDi(r.id)}</p> : null} {/* V132: il numero per TikTok */}
           {r.flour_type ? <p className="text-sm text-muted-foreground mt-0.5">{farroOn ? `${farroFlourLabel(lang)} · ${tri("invece di", "statt", "instead of")} ${rLoc(r, "flour_type", lang)}` : rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 
@@ -885,7 +841,6 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
           {!r.locked && rLoc(r, "procedure", lang) && (
             <ActionBtn testid={`handsfree-recipe-${r.id}`} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-open-player", { detail: { kind: "hands", recipe: r } }))} color="hsl(var(--primary))" label={tri("Mani in Pasta", "Hände im Teig", "Hands-free", "Manos en la masa")}><Hand className="w-4 h-4" /></ActionBtn>
           )}
-          <ActionBtn testid={`awake-recipe-${r.id}`} onClick={toggleSveglio} color={sveglio ? "hsl(var(--primary))" : "hsl(var(--muted-foreground))"} label={sveglio ? tri("Schermo acceso: tocca per spegnere", "Bildschirm an: tippen zum Ausschalten", "Screen on: tap to turn off") : tri("Tieni lo schermo acceso", "Bildschirm anlassen", "Keep the screen on")}><Sun className={`w-4 h-4 ${sveglio ? "fill-current" : ""}`} /></ActionBtn> {/* V132 */}
           {!r.locked && (
             <ActionBtn testid={`timeline-recipe-${r.id}`} onClick={() => setShowTimeline((v) => !v)} color="hsl(var(--muted-foreground))" label={tri("Linea del tempo", "Zeitplan", "Timeline", "Línea de tiempo")}><Clock className="w-4 h-4" /></ActionBtn>
           )}
@@ -929,7 +884,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
         {!r.locked && flourG > 0 && <ComeLeggere hasPre={!!biga} />}
 
         <div className="flex flex-wrap gap-2">
-          {r.dough_category && dcLabel(r.dough_category, t, lang) && <Badge icon={<Layers className="w-3.5 h-3.5" />}>{dcLabel(r.dough_category, t, lang)}</Badge>}
+          {r.dough_category && <Badge icon={<Layers className="w-3.5 h-3.5" />}>{t(`dc_${r.dough_category}`)}</Badge>}
           {r.water_temp_c != null && r.water_temp_c !== "" && <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{r.water_temp_c}°C {t("badge_water_temp")}</Badge>}
           {r.hydration_percent != null && <Badge icon={<Droplets className="w-3.5 h-3.5" />}>{farroOn ? Math.round(Number(r.hydration_percent) * farroFac) : r.hydration_percent}% {t("badge_hydration")}</Badge>}
           {r.flour_grams != null && <Badge icon={<Wheat className="w-3.5 h-3.5" />}>{r.flour_grams}g {t("badge_flour")}</Badge>}

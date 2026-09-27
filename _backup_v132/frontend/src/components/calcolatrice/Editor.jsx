@@ -350,8 +350,8 @@ export default function Editor({ f, setF, res, lang, soloPizza }) {
               sotto={tri("5 % di pane grattugiato secco con il triplo d'acqua, il giorno prima in frigo. Non togli acqua all'impasto: il pane resta morbido più a lungo.", "5 % trockene Semmelbrösel mit dreimal so viel Wasser, am Vortag in den Kühlschrank. Dem Teig kein Wasser abziehen: das Brot bleibt länger frisch.", "5 % dry breadcrumbs with three times the water, the day before in the fridge. Don't take water out of the dough: the bread stays soft longer.")} />
           ) : null}
           {st.michele ? (
-            <Interruttore testid="calc-mm" on={!!f.mm} onChange={(v) => set({ mm: v })} label={tri("Olio, aceto di mele e grasso di cocco all'1 %", "Je 1 % Olivenöl, Apfelessig und Kokosfett", "1 % each of olive oil, apple vinegar and coconut fat")}
-              sotto={tri("Nei pani senza burro. Il grasso di cocco quando l'impasto fa la palla; olio, aceto e sale per ultimi.", "In Broten ohne Butter. Kokosfett, wenn der Teig eine Kugel bildet; Öl, Essig und Salz zum Schluss.", "In breads without butter. coconut fat when the dough forms a ball; oil, vinegar and salt last.")} />
+            <Interruttore testid="calc-mm" on={!!f.mm} onChange={(v) => set({ mm: v })} label={tri("Olio, aceto di mele e Kokosfett all'1 %", "Je 1 % Olivenöl, Apfelessig und Kokosfett", "1 % each of olive oil, apple vinegar and Kokosfett")}
+              sotto={tri("Nei pani senza burro. Il Kokosfett quando l'impasto fa la palla; olio, aceto e sale per ultimi.", "In Broten ohne Butter. Kokosfett, wenn der Teig eine Kugel bildet; Öl, Essig und Salz zum Schluss.", "In breads without butter. Kokosfett when the dough forms a ball; oil, vinegar and salt last.")} />
           ) : null}
           {f.st === "focaccia" ? <Avviso lvl="tip">{tri("Nella focaccia di Michele ci sono già la patata lessa schiacciata e l'olio (un filo va a chiudere l'impasto).", "In Micheles Focaccia sind gekochte Kartoffel und Öl schon drin (ein Schuss Öl kommt ganz zum Schluss).", "Michele's focaccia already has mashed potato and oil (a drizzle goes in at the very end).")}</Avviso> : null}
         </Sezione>

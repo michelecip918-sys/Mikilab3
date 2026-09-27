@@ -4,7 +4,7 @@
  *  Ricettario pubblico e gratuito, guidato da Sitor, per chi cucina a casa.
  * ============================================================================
  */
-import { useState, useEffect, useRef, lazy, Suspense } from "react";
+import { useState, useEffect, useRef } from "react";
 import "@/App.css";
 import { Toaster, toast } from "sonner";
 import { ProfileProvider } from "@/profile/ProfileContext";
@@ -25,9 +25,34 @@ import Ricette from "@/sections/Ricette";
 import HomeManuale from "@/components/HomeManuale";
 import LegalPlaceholder from "@/components/LegalPlaceholder";
 import SitorChat from "@/components/SitorChat";
+import TecnichePage from "@/components/TecnichePage";
+import VerdeMikiLab from "@/components/VerdeMikiLab";
+import PercorsoPage from "@/components/PercorsoPage";
+import RegalaPage from "@/components/RegalaPage";
+import PaginaSito from "@/components/PaginaSito";
+import MiglioratorePage from "@/components/MiglioratorePage";
+import AdminCosts from "@/components/AdminCosts";
+import CosaFaccio from "@/components/CosaFaccio";
+import Live from "@/components/Live";
+import Mensola from "@/components/Mensola";
+import Cucina from "@/components/Cucina";
+import Plan from "@/components/Plan";
 import SitorBadge from "@/components/SitorBadge";
 import { PolpoFooter } from "@/components/PolpoFooter";
+import TestMese from "@/components/TestMese";
+import Farine from "@/components/Farine";
+import Calendario from "@/components/Calendario";
+import Admin2B from "@/components/Admin2B";
+import PuliziaDati from "@/components/PuliziaDati";
+import ChangePassword from "@/components/ChangePassword";
+import DalMondo from "@/components/DalMondo";
+import DiarioProve from "@/components/DiarioProve";
+import PaneDiIeri from "@/components/PaneDiIeri";
+import CreaLievito from "@/components/CreaLievito";
+import CenaSughi from "@/components/CenaSughi";
+import PrimaDiIniziare from "@/components/PrimaDiIniziare";
 import { consumeBack } from "@/lib/backNav";
+import ImpressumAdmin from "@/components/ImpressumAdmin";
 import { useFeatures } from "@/lib/features";
 import { usePublicContent } from "@/lib/publicContent";
 import { mkTri } from "@/i18n/triMaps";
@@ -35,158 +60,58 @@ import { ShieldCheck, LogOut, MessageCircle, ChevronLeft } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
 // V84 — segreto del 16 ottobre, banco delle prove, il mio forno
 import LancioSegreto, { LancioBanner, LAUNCH_KEY } from "@/components/LancioSegreto";
+import BancoProve from "@/components/BancoProve";
+import Domande from "@/components/Domande"; // V108
+import Collezioni from "@/components/Collezioni"; // V108
+import Cerca from "@/components/Cerca"; // V108
+import PaneCheSalva from "@/components/PaneCheSalva"; // V107
+import PaneDeiPiccoli from "@/components/PaneDeiPiccoli"; // V103
+import Scuola from "@/components/Scuola"; // V111
+import PastaDiCasa from "@/components/PastaDiCasa"; // V102
+import Almanacco from "@/components/Almanacco"; // V101
 import Mappa from "@/components/Mappa"; // V100
+import LibroDiPane from "@/components/LibroDiPane"; // V97
+import Valigia from "@/components/Valigia"; // V97
+import AnnoDaFornaio from "@/components/AnnoDaFornaio"; // V96
+import CartaDeiPani from "@/components/CartaDeiPani"; // V95
+import Ospiti from "@/components/Ospiti"; // V95
+import Sommelier from "@/components/Sommelier"; // V94
+import PrimoPane from "@/components/PrimoPane"; // V93
+import Laboratorio from "@/components/Laboratorio"; // V93
+import Calcolatrice from "@/components/Calcolatrice"; // V127
+import MiglioratorePerTe from "@/components/MiglioratorePerTe"; // V131
+import MioForno from "@/components/MioForno";
 // V85 — primo giro con Sitor + modo grande, lievito madre come un figlio, mappa del forno
 import PrimoGiro, { GIRO_KEY, isBigMode, applyBigMode } from "@/components/PrimoGiro";
+import MioLievito from "@/components/MioLievito";
+import MappaForno from "@/components/MappaForno";
 // V86 — il pane parla, sveglia del panettiere, pane del mio paese, senza bilancia, curare il lievito, modo notte
+import AscoltaCrosta from "@/components/AscoltaCrosta";
+import SvegliaPanettiere from "@/components/SvegliaPanettiere";
+import PaneDelPaese from "@/components/PaneDelPaese";
+import SenzaBilancia from "@/components/SenzaBilancia";
+import CuraLievito from "@/components/CuraLievito";
 import { isNightMode, applyNightMode } from "@/lib/notte";
 // V87 — festa del 16 ottobre, volantino da frigo, indirizzi veri per le ricette
 import FestaLancio, { festaIsToday } from "@/components/FestaLancio";
+import Volantino from "@/components/Volantino";
 import { recipeIdFromLocation } from "@/lib/recipeSeo";
 import { pathForRoute, applyPageMeta } from "@/lib/pagine"; // V112
+import Dedica from "@/components/Dedica"; // V89 — Da Miglionico a Stoccarda
 // V90 — il gusto di giocare: festa, medaglie, sorprendimi
 import Festa from "@/components/Festa";
+import LeMieMedaglie from "@/components/LeMieMedaglie";
 import Sorprendimi from "@/components/Sorprendimi";
 import { award } from "@/lib/medaglie";
+import Libretto from "@/components/Libretto";
 // V88 — editor "Dal banco di Michele" (solo admin)
-
-// V132 — LE PAGINE ARRIVANO QUANDO SERVONO. All'apertura il telefono scarica solo Home, ricettario e poco altro;
-// le altre pagine arrivano al primo tocco e, a sito fermo, si scaricano da sole in sottofondo (anche per l'uso senza rete).
-// Se dopo un aggiornamento del sito una pagina non si trova, la pagina si ricarica una volta da sola.
-const PAGINE_LAZY = {
-  TecnichePage: () => import("@/components/TecnichePage"),
-  VerdeMikiLab: () => import("@/components/VerdeMikiLab"),
-  PercorsoPage: () => import("@/components/PercorsoPage"),
-  RegalaPage: () => import("@/components/RegalaPage"),
-  PaginaSito: () => import("@/components/PaginaSito"),
-  MiglioratorePage: () => import("@/components/MiglioratorePage"),
-  AdminCosts: () => import("@/components/AdminCosts"),
-  CosaFaccio: () => import("@/components/CosaFaccio"),
-  Live: () => import("@/components/Live"),
-  Mensola: () => import("@/components/Mensola"),
-  Cucina: () => import("@/components/Cucina"),
-  Plan: () => import("@/components/Plan"),
-  TestMese: () => import("@/components/TestMese"),
-  Farine: () => import("@/components/Farine"),
-  Calendario: () => import("@/components/Calendario"),
-  Admin2B: () => import("@/components/Admin2B"),
-  PuliziaDati: () => import("@/components/PuliziaDati"),
-  ChangePassword: () => import("@/components/ChangePassword"),
-  DalMondo: () => import("@/components/DalMondo"),
-  DiarioProve: () => import("@/components/DiarioProve"),
-  PaneDiIeri: () => import("@/components/PaneDiIeri"),
-  CreaLievito: () => import("@/components/CreaLievito"),
-  CenaSughi: () => import("@/components/CenaSughi"),
-  PrimaDiIniziare: () => import("@/components/PrimaDiIniziare"),
-  ImpressumAdmin: () => import("@/components/ImpressumAdmin"),
-  BancoProve: () => import("@/components/BancoProve"),
-  Domande: () => import("@/components/Domande"),
-  Collezioni: () => import("@/components/Collezioni"),
-  Cerca: () => import("@/components/Cerca"),
-  PaneCheSalva: () => import("@/components/PaneCheSalva"),
-  PaneDeiPiccoli: () => import("@/components/PaneDeiPiccoli"),
-  Scuola: () => import("@/components/Scuola"),
-  PastaDiCasa: () => import("@/components/PastaDiCasa"),
-  Almanacco: () => import("@/components/Almanacco"),
-  LibroDiPane: () => import("@/components/LibroDiPane"),
-  Valigia: () => import("@/components/Valigia"),
-  AnnoDaFornaio: () => import("@/components/AnnoDaFornaio"),
-  CartaDeiPani: () => import("@/components/CartaDeiPani"),
-  Ospiti: () => import("@/components/Ospiti"),
-  Sommelier: () => import("@/components/Sommelier"),
-  PrimoPane: () => import("@/components/PrimoPane"),
-  Laboratorio: () => import("@/components/Laboratorio"),
-  Calcolatrice: () => import("@/components/Calcolatrice"),
-  MiglioratorePerTe: () => import("@/components/MiglioratorePerTe"),
-  MioForno: () => import("@/components/MioForno"),
-  MioLievito: () => import("@/components/MioLievito"),
-  MappaForno: () => import("@/components/MappaForno"),
-  AscoltaCrosta: () => import("@/components/AscoltaCrosta"),
-  SvegliaPanettiere: () => import("@/components/SvegliaPanettiere"),
-  PaneDelPaese: () => import("@/components/PaneDelPaese"),
-  SenzaBilancia: () => import("@/components/SenzaBilancia"),
-  CuraLievito: () => import("@/components/CuraLievito"),
-  Volantino: () => import("@/components/Volantino"),
-  Dedica: () => import("@/components/Dedica"),
-  LeMieMedaglie: () => import("@/components/LeMieMedaglie"),
-  Libretto: () => import("@/components/Libretto"),
-  BancoEditor: () => import("@/components/BancoMichele"),
-  TikTokPagina: () => import("@/components/TikTokPagina"),
-};
-function pagina(nome) {
-  return lazy(() => PAGINE_LAZY[nome]().catch((err) => {
-    try { if (!sessionStorage.getItem("mk_pagina_ricarica")) { sessionStorage.setItem("mk_pagina_ricarica", "1"); window.location.reload(); return new Promise(() => { /* */ }); } } catch { /* */ }
-    throw err;
-  }));
-}
-const TecnichePage = pagina("TecnichePage");
-const VerdeMikiLab = pagina("VerdeMikiLab");
-const PercorsoPage = pagina("PercorsoPage");
-const RegalaPage = pagina("RegalaPage");
-const PaginaSito = pagina("PaginaSito");
-const MiglioratorePage = pagina("MiglioratorePage");
-const AdminCosts = pagina("AdminCosts");
-const CosaFaccio = pagina("CosaFaccio");
-const Live = pagina("Live");
-const Mensola = pagina("Mensola");
-const Cucina = pagina("Cucina");
-const Plan = pagina("Plan");
-const TestMese = pagina("TestMese");
-const Farine = pagina("Farine");
-const Calendario = pagina("Calendario");
-const Admin2B = pagina("Admin2B");
-const PuliziaDati = pagina("PuliziaDati");
-const ChangePassword = pagina("ChangePassword");
-const DalMondo = pagina("DalMondo");
-const DiarioProve = pagina("DiarioProve");
-const PaneDiIeri = pagina("PaneDiIeri");
-const CreaLievito = pagina("CreaLievito");
-const CenaSughi = pagina("CenaSughi");
-const PrimaDiIniziare = pagina("PrimaDiIniziare");
-const ImpressumAdmin = pagina("ImpressumAdmin");
-const BancoProve = pagina("BancoProve");
-const Domande = pagina("Domande");
-const Collezioni = pagina("Collezioni");
-const Cerca = pagina("Cerca");
-const PaneCheSalva = pagina("PaneCheSalva");
-const PaneDeiPiccoli = pagina("PaneDeiPiccoli");
-const Scuola = pagina("Scuola");
-const PastaDiCasa = pagina("PastaDiCasa");
-const Almanacco = pagina("Almanacco");
-const LibroDiPane = pagina("LibroDiPane");
-const Valigia = pagina("Valigia");
-const AnnoDaFornaio = pagina("AnnoDaFornaio");
-const CartaDeiPani = pagina("CartaDeiPani");
-const Ospiti = pagina("Ospiti");
-const Sommelier = pagina("Sommelier");
-const PrimoPane = pagina("PrimoPane");
-const Laboratorio = pagina("Laboratorio");
-const Calcolatrice = pagina("Calcolatrice");
-const MiglioratorePerTe = pagina("MiglioratorePerTe");
-const MioForno = pagina("MioForno");
-const MioLievito = pagina("MioLievito");
-const MappaForno = pagina("MappaForno");
-const AscoltaCrosta = pagina("AscoltaCrosta");
-const SvegliaPanettiere = pagina("SvegliaPanettiere");
-const PaneDelPaese = pagina("PaneDelPaese");
-const SenzaBilancia = pagina("SenzaBilancia");
-const CuraLievito = pagina("CuraLievito");
-const Volantino = pagina("Volantino");
-const Dedica = pagina("Dedica");
-const LeMieMedaglie = pagina("LeMieMedaglie");
-const Libretto = pagina("Libretto");
-const BancoEditor = pagina("BancoEditor");
-const TikTokPagina = pagina("TikTokPagina");
-function PaginaInArrivo() {
-  return <div data-testid="pagina-in-arrivo" aria-busy="true" className="py-16 flex justify-center"><span className="w-7 h-7 rounded-full border-2 border-primary/30 border-t-primary animate-spin" /></div>;
-}
+import BancoEditor from "@/components/BancoMichele";
 
 const PUB = process.env.PUBLIC_URL;
 
 function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase().replace(/^\/(it|de|en)(?=\/|$)/, "") || "/"; // V117: /de/… e /en/… come le pagine normali
-  if (p.startsWith("/ricetta/") || recipeIdFromLocation()) return "recipes"; // V132: anche i link «?ricetta=» e i numeri delle ricette (mikilab.de/42)
-  if (p === "/tiktok" || p.startsWith("/tiktok/") || /^\/\d{1,4}\/?$/.test(p)) return "tiktok"; // V132: la pagina TikTok (anche un numero che non esiste)
+  if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
   if (p === "/calcolatrice" || p.startsWith("/calcolatrice/")) return "calcolatrice"; // V127
   if (p.startsWith("/miglioratore-per-te")) return "miglioratoreperte"; // V131
@@ -266,15 +191,6 @@ export default function App() {
     } catch { return undefined; }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { applyBigMode(isBigMode()); applyNightMode(isNightMode()); }, []);
-  useEffect(() => { // V132: a sito fermo scarica in sottofondo le altre pagine, così restano disponibili anche senza rete
-    let stop = false;
-    const t = setTimeout(() => {
-      try { sessionStorage.removeItem("mk_pagina_ricarica"); } catch { /* */ }
-      try { if (navigator.onLine === false || (navigator.connection && navigator.connection.saveData)) return; } catch { /* */ }
-      Object.values(PAGINE_LAZY).forEach((f, i) => setTimeout(() => { if (!stop) f().catch(() => { /* */ }); }, i * 120));
-    }, 8000);
-    return () => { stop = true; clearTimeout(t); };
-  }, []);
   const openRecipeFromTool = (id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); };
   useEffect(() => {
     const h = (e) => { setTechSlug(e?.detail?.slug || null); setRoute("tecniche"); window.scrollTo({ top: 0, behavior: "smooth" }); };
@@ -303,9 +219,6 @@ export default function App() {
     const onPop = (e) => {
       // 1) se c'è una finestra o una vista aperta (scheda ricetta, strumento, radio…), il tasto indietro chiude quella
       if (consumeBack()) { histSkip.current = false; return; }
-      // V132: voce di una finestra già chiusa (es. la ricetta da cui sei passato a un'altra pagina): torna ancora indietro,
-      // così arrivi alla pagina di prima invece che alla Home.
-      if (e && e.state && e.state._bk && !e.state.mlRoute) { try { window.history.back(); } catch { /* */ } return; }
       // 2) altrimenti torna alla pagina precedente del sito
       const next = (e && e.state && e.state.mlRoute) || "home";
       // se la pagina non cambia, l'effetto sopra non parte: non lasciare il "salta" attivo
@@ -428,13 +341,11 @@ export default function App() {
 
           <main className="flex-1 w-full max-w-6xl mx-auto px-4 sm:px-6 pb-40 pt-6">
             <ErrorBoundary resetKey={`${lang}-${route}-${isAdmin ? "a" : "p"}`}>
-              <Suspense fallback={<PaginaInArrivo />}>
               {route === "home" && <LancioBanner onOpen={() => { setFornoFound(true); setFornoOpen(true); }} />}
               {route === "home" && <HomeManuale features={features} onNav={navFromHome} />}
               {route === "recipes" && <Ricette isMasterView={isAdmin} />}
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
-              {route === "tiktok" && <TikTokPagina onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V132 */}
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
               {route === "admin-2b" && isAdmin && <Admin2B onBack={() => setRoute("home")} />}
@@ -498,7 +409,6 @@ export default function App() {
               {route === "perche" && <PaginaSito slug="perche" onBack={() => setRoute("home")} />}
               {route === "impressum" && <LegalPlaceholder kind="impressum" onBack={() => setRoute("home")} />}
               {route === "datenschutz" && <LegalPlaceholder kind="datenschutz" onBack={() => setRoute("home")} />}
-              </Suspense>
             </ErrorBoundary>
           </main>
 
@@ -517,7 +427,6 @@ export default function App() {
               <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-bold">
                 <button data-testid="footer-tutto" onClick={() => { setRoute("mappa"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Tutto MikiLab", "Ganz MikiLab", "All of MikiLab")}</button>
                 <button data-testid="footer-regala" onClick={() => { setRoute("regala"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Regala MikiLab", "MikiLab verschenken", "Gift MikiLab")}</button>
-                <button data-testid="footer-tiktok" onClick={() => { setRoute("tiktok"); window.scrollTo(0, 0); }} className="hover:text-foreground">TikTok</button>
                 {pubContent?.hasPerche && (
                   <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
                 )}

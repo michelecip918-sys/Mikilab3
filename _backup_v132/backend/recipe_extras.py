@@ -184,33 +184,7 @@ def _leaven_kind(r: dict) -> str:
 
 
 import re as _re_mod
-_re_v130 = _re_mod.compile(r"^https://(www\.|vm\.|vt\.|m\.)?tiktok\.com/[A-Za-z0-9@._/?=&%-]+$")  # V132: anche vt.tiktok.com
-_re_vid = _re_mod.compile(r"/video/\d{8,25}")  # V132: il link lungo contiene il numero del video
-
-
-async def _tiktok_lungo(u: str) -> str:
-    """V132: i link corti di TikTok (vm./vt./tiktok.com/t/…) non contengono il numero del video, che serve per mostrarlo
-    dentro MikiLab. Segue i rimandi (senza scaricare la pagina) e restituisce il link lungo /@nome/video/NUMERO.
-    Se non ci riesce, tiene il link corto: nella ricetta resta il collegamento «Apri su TikTok»."""
-    try:
-        import httpx as _hx
-        cur = u
-        ua = "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Mobile Safari/537.36"
-        async with _hx.AsyncClient(timeout=6.0, follow_redirects=False, headers={"User-Agent": ua}) as cl:
-            for _ in range(4):
-                if _re_vid.search(cur):
-                    break
-                resp = await cl.head(cur)
-                if resp.status_code in (403, 404, 405):
-                    resp = await cl.get(cur)
-                loc = resp.headers.get("location")
-                if not loc:
-                    break
-                cur = str(_hx.URL(cur).join(loc))
-        m = _re_mod.search(r"https://(?:www\.|m\.)?tiktok\.com/@[A-Za-z0-9._]+/video/\d{8,25}", cur)
-        return m.group(0).replace("https://m.tiktok.com/", "https://www.tiktok.com/") if m else u
-    except Exception:
-        return u
+_re_v130 = _re_mod.compile(r"^https://(www\.|vm\.|m\.)?tiktok\.com/[A-Za-z0-9@._/?=&%-]+$")
 
 
 class ExtrasUpdate(_BM):
@@ -219,7 +193,6 @@ class ExtrasUpdate(_BM):
     real_photo: _Opt[bool] = None
     photo_url: _Opt[str] = None             # V129: la foto vera di Michele ("" = torna l'immagine illustrativa)
     video_url: _Opt[str] = None             # V130: il video TikTok di Michele per questa ricetta ("" = nessuno)
-    community_videos: _Opt[_List[dict]] = None  # V132: i video di chi ha rifatto la ricetta, scelti da Michele (max 6)
     verified: _Opt[bool] = None
     hidden_public: _Opt[bool] = None
     michele_tip: _Opt[dict] = None          # {it, de, en}
@@ -239,19 +212,6 @@ def _recipe_status(stored: dict) -> str:
     return "sitor_draft"
 
 
-def _vera(r: dict, s: dict) -> bool:
-    """V132: «Foto di Michele» solo se la foto c'è davvero: caricata con «Metti la tua foto» (photo_url) oppure,
-    per le foto messe prima della v129, un'immagine che non è una di quelle illustrative del sito (/recipes/…).
-    Prima bastava la spunta «Foto reale» e la scritta poteva finire su un'immagine fatta con l'IA."""
-    s = s or {}
-    if not s.get("real_photo"):
-        return False
-    if s.get("photo_url"):
-        return True
-    img = str((r or {}).get("image_url") or "")
-    return bool(img) and not img.startswith("/recipes/")
-
-
 def _extras_public(r: dict, stored: dict) -> dict:
     stored = stored or {}
     diff = stored.get("difficulty") or auto_difficulty(r)
@@ -268,11 +228,9 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "leaven_kind": _leaven_kind(r),
         "calc_hydration": calc_hydration(r),
         "bake_temp": _bake_temp(r),
-        "real_photo": _vera(r, stored),  # V132
+        "real_photo": bool(stored.get("real_photo")),
         "photo_url": stored.get("photo_url") or "",  # V129
         "video_url": stored.get("video_url") or "",  # V130
-        "video_added_at": stored.get("video_added_at") or "",  # V132
-        "community_videos": stored.get("community_videos") or [],  # V132
         "verified": bool(stored.get("verified")),
         "status": _recipe_status(stored),
         "hidden_public": bool(stored.get("hidden_public")),
@@ -310,15 +268,13 @@ async def recipe_extras_list(user: _Opt[dict] = Depends(optional_user)):
     """Mappa leggera per la galleria: difficoltà + hidden_public per ogni ricetta."""
     stored = {d["recipe_id"]: d async for d in db.recipe_extras.find({}, {"_id": 0})}
     out = {}
-    async for r in db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0, "id": 1, "name": 1, "preferment_type": 1, "method_type": 1, "dough_category": 1, "menu_category": 1, "procedure": 1, "notes": 1, "flour_type": 1, "hydration_percent": 1, "image_url": 1}):
+    async for r in db.recipes.find({"collection_name": "mikilab", "hidden": {"$ne": True}}, {"_id": 0, "id": 1, "name": 1, "preferment_type": 1, "method_type": 1, "dough_category": 1, "menu_category": 1, "procedure": 1, "notes": 1, "flour_type": 1, "hydration_percent": 1}):
         rid = r.get("id")
         s = stored.get(rid) or {}
         out[rid] = {
             "difficulty": s.get("difficulty") or auto_difficulty(r),
             "hidden_public": bool(s.get("hidden_public")),
-            "real_photo": _vera(r, s),  # V132
-            "video": bool(s.get("video_url")),  # V132: per la pagina /tiktok
-            "video_at": s.get("video_added_at") or "",
+            "real_photo": bool(s.get("real_photo")),
             "status": _recipe_status(s),
             "verified": bool(s.get("verified")),
         }
@@ -346,26 +302,7 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
         vu = body.video_url.strip()
         if vu and (len(vu) > 300 or not _re_v130.match(vu)):
             raise HTTPException(status_code=400, detail="video_url_invalid")
-        if vu and not _re_vid.search(vu):
-            vu = await _tiktok_lungo(vu)  # V132: dal link corto al link col numero del video
         upd["video_url"] = vu
-        _prev = await db.recipe_extras.find_one({"recipe_id": recipe_id}, {"_id": 0, "video_url": 1})
-        if vu and (not _prev or _prev.get("video_url") != vu):
-            upd["video_added_at"] = now_iso()  # V132: la data del video (per Google e per la pagina /tiktok)
-    if body.community_videos is not None:  # V132: i video di chi ha rifatto la ricetta (solo link pubblici di TikTok, max 6)
-        _out = []
-        for _it in body.community_videos[:6]:
-            _u = str((_it or {}).get("url") or "").strip()
-            if not _u or len(_u) > 300 or not _re_v130.match(_u):
-                raise HTTPException(status_code=400, detail="community_video_invalid")
-            if not _re_vid.search(_u):
-                _u = await _tiktok_lungo(_u)
-            _m = _re_mod.search(r"tiktok\.com/@([A-Za-z0-9._]{2,40})", _u)
-            _h = _m.group(1) if _m else _re_mod.sub(r"[^A-Za-z0-9._]", "", str((_it or {}).get("handle") or ""))[:40]
-            if any(x["url"] == _u for x in _out):
-                continue
-            _out.append({"url": _u, "handle": _h, "added_at": str((_it or {}).get("added_at") or now_iso())[:40]})
-        upd["community_videos"] = _out
     upd["recipe_id"] = recipe_id
     upd["updated_at"] = now_iso()
     await db.recipe_extras.update_one({"recipe_id": recipe_id}, {"$set": upd}, upsert=True)

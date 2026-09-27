@@ -842,18 +842,6 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
                         d["image_url"] = u
         except Exception:
             pass
-        # V132 — il video di Michele entra nei dati della ricetta: serve a Google (VideoObject nel JSON-LD della ricetta).
-        try:
-            vid = {x["recipe_id"]: x async for x in db.recipe_extras.find(
-                {"video_url": {"$nin": [None, ""]}}, {"_id": 0, "recipe_id": 1, "video_url": 1, "video_added_at": 1})}
-            if vid:
-                for d in docs:
-                    x = vid.get(d.get("id"))
-                    if x:
-                        d["video_url"] = x.get("video_url") or ""
-                        d["video_date"] = x.get("video_added_at") or ""
-        except Exception:
-            pass
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")
@@ -1516,65 +1504,11 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"V131 dose error: {e}")
     try:
-        # V132 — (1) le undici ricette nuove alla canapa: entrano UNA volta, senza risincronizzare tutto il seed (che
-        # rimetterebbe visibili le schede nascoste), e partono come «Bozza di Sitor» finché Michele non le prova;
-        # (2) nei procedimenti di 16 ricette la frase del vecchio miglioratore elencava ingredienti che nella ricetta
-        # non ci sono: ora la parentesi nomina solo quelli della lista. Le dosi non si toccano.
-        _m132 = await db.app_meta.find_one({"_key": "v132_canapa"}, {"_id": 0})
-        if not _m132:
-            import v132_canapa as _v132
-            for _src in _v132.NUOVE:
-                _gia = await db.recipes.find_one({"collection_name": "mikilab", "name": _src["name"]}, {"_id": 0, "id": 1})
-                if _gia:
-                    _rid = _gia["id"]
-                else:
-                    _item = dict(_src)
-                    _item.pop("collection_name", None)
-                    _doc = Recipe(collection_name="mikilab", **_item).model_dump()
-                    _doc.update({k: v for k, v in _src.items() if k not in _doc})
-                    _doc["hidden"] = False
-                    _doc["organization_id"] = ORG_DEFAULT
-                    await db.recipes.insert_one(_doc)
-                    _rid = _doc["id"]
-                _st = await db.recipe_extras.find_one({"recipe_id": _rid}, {"_id": 0, "status": 1})
-                if not (_st and _st.get("status")):
-                    await db.recipe_extras.update_one({"recipe_id": _rid}, {"$set": {"recipe_id": _rid, "status": "sitor_draft", "verified": False, "updated_at": now_iso()}}, upsert=True)
-            async for _r in db.recipes.find({"collection_name": "mikilab", "procedure": {"$regex": "glutine, malto, lino dorato, psillio, fiocchi di patate"}}, {"_id": 0}):
-                _upd = _v132.correggi_frase_miglioratore(_r)
-                if _upd:
-                    _upd["updated_at"] = now_iso()
-                    await db.recipes.update_one({"collection_name": "mikilab", "id": _r["id"]}, {"$set": _upd})
-            # (3) «Kokosfett» tradotto: in italiano «grasso di cocco» (ingrediente: «Grasso di cocco (Kokosfett)»), in inglese
-            # «coconut fat»; il tedesco resta Kokosfett. Solo testo: dosi e struttura non cambiano. Anche nei corsi già salvati.
-            _campi_kk = ("procedure", "notes", "procedure_en", "notes_en", "procedure_es", "notes_es", "procedure_fr", "notes_fr", "procedure_fa", "notes_fa")
-            _q_kk = {"collection_name": "mikilab", "$or": [{"extra_ingredients.name": "Kokosfett"}] + [{c: {"$regex": "kokosfett", "$options": "i"}} for c in _campi_kk]}
-            async for _r in db.recipes.find(_q_kk, {"_id": 0}):
-                _upd = _v132.traduci_kokosfett(_r)
-                if _upd:
-                    _upd["updated_at"] = now_iso()
-                    await db.recipes.update_one({"collection_name": "mikilab", "id": _r["id"]}, {"$set": _upd})
-            async for _c in db.recipe_courses_v2.find({}):
-                _f = _v132.KK_LINGUA.get(str(_c.get("lang") or _c.get("language") or "it")[:2])
-                if not _f:
-                    continue
-                _set = {}
-                for _k, _val in _c.items():
-                    if _k in ("_id", "recipe_id", "lang", "language"):
-                        continue
-                    _nv = _v132.traduci_testi(_val, _f)
-                    if _nv != _val:
-                        _set[_k] = _nv
-                if _set:
-                    await db.recipe_courses_v2.update_one({"_id": _c["_id"]}, {"$set": _set})
-            await db.app_meta.update_one({"_key": "v132_canapa"}, {"$set": {"_key": "v132_canapa", "done_at": now_iso()}}, upsert=True)
-    except Exception as e:
-        logging.getLogger(__name__).error(f"V132 canapa error: {e}")
-    try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
         # pane/panini/focacce → "Provata da Michele" (tested)
         async for _r in db.recipes.find(
-            {"collection_name": "mikilab", "menu_category": {"$in": ["pane", "panini", "focacce"]}, "created_at": {"$lt": "2026-09-27"}},  # V132: solo le ricette di allora; le nuove restano bozze finché Michele non le prova
+            {"collection_name": "mikilab", "menu_category": {"$in": ["pane", "panini", "focacce"]}},
             {"_id": 0, "id": 1, "name": 1},
         ):
             _ex = await db.recipe_extras.find_one({"recipe_id": _r["id"]}, {"_id": 0, "status": 1})

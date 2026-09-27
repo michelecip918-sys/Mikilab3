@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """MikiLab v125 — il metodo di Michele per pane, panini e baguette:
-olio d'oliva 1%, aceto di mele 1% e grasso di cocco (Kokosfett) 1% sul peso della farina.
+olio d'oliva 1%, aceto di mele 1% e Kokosfett 1% sul peso della farina.
 Non si applica alle ricette col burro, ai Taralli e ai pani DOP/IGP (disciplinare).
 Funzione pura e idempotente: usata sia sul seed sia sul database (una volta sola)."""
 import re
@@ -13,11 +13,11 @@ OLIO = {"name": "Olio d'oliva (Öl)", "percent": 1, "name_de": "Olivenöl (Öl)"
         "name_es": "Aceite de oliva (Öl)", "name_fr": "Huile d'olive (Öl)", "name_fa": "روغن زیتون (Öl)"}
 ACETO = {"name": "Aceto di mele (Essig)", "percent": 1, "name_de": "Apfelessig (Essig)", "name_en": "Apple cider vinegar (Essig)",
          "name_es": "Vinagre de manzana (Essig)", "name_fr": "Vinaigre de cidre (Essig)", "name_fa": "سرکه سیب (Essig)"}
-COCCO = {"name": "Grasso di cocco (Kokosfett)", "percent": 1, "name_de": "Kokosfett", "name_en": "Coconut fat",
+COCCO = {"name": "Kokosfett", "percent": 1, "name_de": "Kokosfett", "name_en": "Coconut fat",
          "name_es": "Grasa de coco", "name_fr": "Graisse de coco", "name_fa": "چربی نارگیل"}
 
 NOTA = {
-    "procedure": "GRASSO DI COCCO, OLIO E ACETO (il mio metodo): aggiungi il grasso di cocco quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.",
+    "procedure": "KOKOSFETT, OLIO E ACETO (il mio metodo): aggiungi il Kokosfett quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.",
     "procedure_de": "KOKOSFETT, ÖL UND ESSIG (meine Methode): das Kokosfett zugeben, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.",
     "procedure_en": "COCONUT FAT, OIL AND VINEGAR (my method): add the coconut fat once the dough comes together into a ball; add the olive oil, apple cider vinegar and salt last.",
 }

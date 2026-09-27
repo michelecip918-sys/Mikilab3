@@ -35,7 +35,7 @@ export const PERCHE = [
       "In Micheles Methode ist Apfelessig nur 1 % auf das Mehl. Die kleine Säure stärkt das Gluten, rundet den Geschmack ab und hilft dem Brot, länger gegen Schimmel und Verderb geschützt zu sein.",
       "In Michele's method apple vinegar is just 1% of the flour. That touch of acidity strengthens the gluten, rounds out the flavour and helps the bread resist mould and spoilage for longer.") },
   { k: "kokos", kw: [/kokos|cocco|coconut/], t: T("Perché il grasso di cocco", "Warum Kokosfett", "Why coconut fat"),
-    p: T("Un grasso solido come il grasso di cocco (Kokosfett), all'1% sulla farina, lubrifica la maglia del glutine: il pane si sviluppa meglio, la mollica è più morbida e invecchia più lentamente. Il sapore non si sente.",
+    p: T("Un grasso solido come il Kokosfett, all'1% sulla farina, lubrifica la maglia del glutine: il pane si sviluppa meglio, la mollica è più morbida e invecchia più lentamente. Il sapore non si sente.",
       "Ein festes Fett wie Kokosfett, 1 % auf das Mehl, schmiert das Glutennetz: das Brot geht besser auf, die Krume ist weicher und altert langsamer. Man schmeckt es nicht.",
       "A solid fat like coconut fat, at 1% of the flour, lubricates the gluten network: the bread rises better, the crumb is softer and stales more slowly. You can't taste it.") },
   { k: "brosel", kw: [/brösel|brosel|pane grattugiato/], t: T("Perché il Brösel", "Warum Brösel", "Why the Brösel"),

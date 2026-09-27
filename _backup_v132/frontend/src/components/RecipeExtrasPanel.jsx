@@ -8,8 +8,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { api, siteSettingsApi } from "@/lib/api";
 import { toast } from "sonner";
 import BroselBox from "@/components/BroselBox"; // V121
-import TikTokRicetta from "@/components/TikTokRicetta"; // V132
-import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, CalendarClock } from "lucide-react";
+import { Home, ChefHat, Lightbulb, Wrench, AlertTriangle, ShieldAlert, Beaker, Save, Check, Music2, Copy, CalendarClock, Play } from "lucide-react";
 
 const MODE_KEY = "mikilab_recipe_mode"; // "casa" | "esperto"
 const DONE_KEY = "mikilab_done";
@@ -60,6 +59,7 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
   };
   const handle = (settings.tiktok_handle || "").trim();
   const hashtag = settings.hashtag || "#MikiLab";
+  const copyHashtag = async () => { try { await navigator.clipboard.writeText(hashtag); toast.success(tri("Hashtag copiato", "Hashtag kopiert", "Hashtag copied")); } catch { /* */ } };
 
   useEffect(() => {
     let stop = false;
@@ -270,7 +270,27 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
         </div>
       )}
 
-      <TikTokRicetta recipe={recipe} ex={ex} isAdmin={isAdmin} onSave={saveAdmin} saving={saving} handle={handle} hashtag={hashtag} /> {/* V132: il video dentro la ricetta (col consenso), il numero, il copione, i vostri video */}
+      {/* V130 — IL VIDEO DI MICHELE: un collegamento semplice. Niente video incorporato: TikTok si apre solo se la persona tocca. */}
+      {ex.video_url && (
+        <a data-testid="recipe-video-michele" href={ex.video_url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-2xl border border-primary/40 bg-primary/10 p-3.5 active:scale-[0.99] transition-all">
+          <span className="w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center shrink-0"><Play className="w-5 h-5" /></span>
+          <span className="flex-1 min-w-0">
+            <span className="block text-[14px] font-bold text-foreground">{tri("Guarda Michele che la fa", "Schau Michele beim Backen zu", "Watch Michele make it")}</span>
+            <span className="block text-[12px] text-muted-foreground">{tri("Il video su TikTok: si apre in un'altra pagina.", "Das Video auf TikTok: öffnet sich in einer neuen Seite.", "The video on TikTok: opens in a new page.")}</span>
+          </span>
+        </a>
+      )}
+
+      {/* L'HAI FATTA? — TikTok (solo se handle impostato) */}
+      {handle && (
+        <div data-testid="tiktok-box" className="rounded-2xl border border-border bg-background p-3.5">
+          <p className="text-sm text-foreground mb-2">{tri(`L'hai fatta? Mostrami com'è venuta su TikTok con ${hashtag} e taggami @${handle}`, `Gemacht? Zeig's mir auf TikTok mit ${hashtag} und markiere @${handle}`, `Made it? Show me on TikTok with ${hashtag} and tag @${handle}`)}</p>
+          <div className="flex flex-wrap gap-2">
+            <button data-testid="tiktok-copy-hashtag" onClick={copyHashtag} className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-foreground/10 text-foreground text-sm font-bold active:scale-95"><Copy className="w-4 h-4" />{tri("Copia hashtag", "Hashtag kopieren", "Copy hashtag")}</button>
+            <a data-testid="tiktok-open" href={`https://www.tiktok.com/@${handle}`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-background text-foreground text-sm font-bold active:scale-95"><Music2 className="w-4 h-4" />{tri("Apri TikTok", "TikTok öffnen", "Open TikTok")}</a>
+          </div>
+        </div>
+      )}
 
       {/* COSA TI SERVE */}
       {ex.equipment && ex.equipment.length > 0 && (
@@ -339,14 +359,14 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
             </select>
           </div>
           <div className="flex flex-wrap gap-3 text-xs text-foreground">
-            {[["verified", tri("Verificata", "Geprüft", "Verified")], ["hidden_public", tri("Nascondi al pubblico", "Öffentlich verbergen", "Hide from public")]].map(([k, lbl]) => (
+            {[["real_photo", tri("Foto reale", "Echtes Foto", "Real photo")], ["verified", tri("Verificata", "Geprüft", "Verified")], ["hidden_public", tri("Nascondi al pubblico", "Öffentlich verbergen", "Hide from public")]].map(([k, lbl]) => (
               <label key={k} className="inline-flex items-center gap-1.5"><input type="checkbox" data-testid={`admin-${k}`} checked={!!ex[k]} onChange={(e) => saveAdmin({ [k]: e.target.checked })} disabled={saving} />{lbl}</label>
             ))}
           </div>
           <div>
             <p className="text-xs text-muted-foreground mb-1">{tri("Il tuo video TikTok di questa ricetta (link)", "Dein TikTok-Video zu diesem Rezept (Link)", "Your TikTok video of this recipe (link)")}</p>
             <input data-testid="admin-video-url" key={`video-${recipe.id}`} defaultValue={ex.video_url || ""} placeholder="https://www.tiktok.com/@mikilab.de/video/…"
-              onBlur={(e) => { const v = e.target.value.trim(); if (v === (ex.video_url || "")) return; if (v && !/^https:\/\/(www\.|vm\.|vt\.|m\.)?tiktok\.com\//.test(v)) { toast.error(tri("Serve un link di TikTok che comincia con https://www.tiktok.com/ o https://vm.tiktok.com/", "Nötig ist ein TikTok-Link, der mit https://www.tiktok.com/ oder https://vm.tiktok.com/ beginnt", "It needs a TikTok link starting with https://www.tiktok.com/ or https://vm.tiktok.com/")); return; } saveAdmin({ video_url: v }); }}
+              onBlur={(e) => { const v = e.target.value.trim(); if (v === (ex.video_url || "")) return; if (v && !/^https:\/\/(www\.|vm\.|m\.)?tiktok\.com\//.test(v)) { toast.error(tri("Serve un link di TikTok che comincia con https://www.tiktok.com/ o https://vm.tiktok.com/", "Nötig ist ein TikTok-Link, der mit https://www.tiktok.com/ oder https://vm.tiktok.com/ beginnt", "It needs a TikTok link starting with https://www.tiktok.com/ or https://vm.tiktok.com/")); return; } saveAdmin({ video_url: v }); }}
               className="w-full mb-3 bg-background border border-border rounded-lg text-xs text-foreground px-2.5 py-1.5 outline-none focus:border-primary" /> {/* V130 */}
             <p className="text-xs text-muted-foreground mb-1">{tri("Il trucco di Michele (IT / DE / EN)", "Micheles Trick (IT / DE / EN)", "Michele's trick (IT / DE / EN)")}</p>
             {["it", "de", "en"].map((lc) => (
