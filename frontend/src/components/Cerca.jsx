@@ -4,7 +4,9 @@ import { useLang } from "@/i18n/LanguageContext";
 import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
-import { GROUPS } from "@/components/Mappa";
+import { GROUPS, voceVisibile } from "@/components/Mappa"; // V128: le stesse stanze di «Tutto MikiLab»
+import { useFeatures } from "@/lib/features";
+import { usePublicContent } from "@/lib/publicContent";
 import { GLOSSARIO, glossEntry, normText } from "@/lib/glossario";
 import { PASTA } from "@/lib/pastaDiCasa";
 import { CLASSI as SCUOLA_CLASSI } from "@/lib/scuolaDiPane"; // V112
@@ -25,6 +27,7 @@ export default function Cerca({ onBack, onNav }) {
   const L = (o) => (lang === "de" ? o.de : lang === "en" ? o.en : o.it);
   const [q, setQ] = useState(() => { try { return sessionStorage.getItem(CERCA_KEY) || ""; } catch { return ""; } });
   const [recipes, setRecipes] = useState([]);
+  const feats = useFeatures(); const pub = usePublicContent(); // V128
   useEffect(() => { let ok = true; recipesApi.list("mikilab").then((d) => { if (ok) setRecipes((d || []).filter((r) => r && !r.locked)); }).catch(() => {}); return () => { ok = false; }; }, []);
   const go = (r) => (onNav ? onNav(r) : nav(r));
   const openRecipe = (id) => { go("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 200); };
@@ -33,7 +36,7 @@ export default function Cerca({ onBack, onNav }) {
     const n = normText(q.trim()); if (n.length < 2) return null;
     const hit = (s) => normText(s).includes(n);
     const rec = recipes.filter((r) => hit(rLoc(r, "name", lang)) || hit(r.name) || hit(r.flour_type) || (r.extra_ingredients || []).some((e) => e && hit(e.name))).slice(0, 12);
-    const tools = []; GROUPS.forEach((g) => g.items.forEach((it) => { if (hit(L(it.t)) || hit(L(it.d))) tools.push(it); })); 
+    const tools = []; GROUPS.forEach((g) => g.items.forEach((it) => { if (voceVisibile(it, feats, pub) && (hit(L(it.t)) || hit(L(it.d)))) tools.push(it); })); 
     const words = GLOSSARIO.filter((g) => hit(glossEntry(g, lang).title) || g.kw.some((k) => hit(k)) || hit(glossEntry(g, lang).body)).slice(0, 6);
     const pasta = PASTA.filter((p) => hit(L(p.name)) || hit(L(p.reg)) || hit(L(p.sauce))).slice(0, 6);
     const salva = []; SEZIONI.forEach((s) => s.items.forEach((it) => { if (hit(L(it.t)) || hit(L(it.how))) salva.push({ s, it }); }));
@@ -41,7 +44,7 @@ export default function Cerca({ onBack, onNav }) {
     const feste = TRADIZIONI.filter((t) => hit(L(t))).slice(0, 4);
     const socc = SOCCORSO.filter((s) => hit(L(s.t)) || hit(L(s.why))).slice(0, 5);
     return { rec, tools: tools.slice(0, 8), words, pasta, salva: salva.slice(0, 5), scuola: scuola.slice(0, 6), feste, socc, total: rec.length + tools.length + words.length + pasta.length + salva.length + scuola.length + feste.length + socc.length };
-  }, [q, recipes, lang]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [q, recipes, lang, feats, pub]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const Row = ({ testid, onClick, title, sub }) => (
     <button data-testid={testid} onClick={onClick} className="w-full flex items-center gap-2 px-3 py-2.5 text-left border-t border-border first:border-0"><span className="flex-1 min-w-0"><span className="block text-[13.5px] font-bold text-foreground leading-tight">{title}</span>{sub && <span className="block text-[12px] text-muted-foreground leading-snug line-clamp-2">{sub}</span>}</span><ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" /></button>
@@ -62,7 +65,7 @@ export default function Cerca({ onBack, onNav }) {
       {res && res.rec.length > 0 && <Block k="ricette" title={tri("Ricette", "Rezepte", "Recipes")}>{res.rec.map((r) => <Row key={r.id} testid={`cerca-r-${r.id}`} onClick={() => openRecipe(r.id)} title={rLoc(r, "name", lang)} sub={[r.flour_type, num(r.flour_grams) > 0 ? `${tri("idratazione", "Hydration", "hydration")} ${Math.round((num(r.water_grams) / num(r.flour_grams)) * 100)} %` : ""].filter(Boolean).join(" · ")} />)}</Block>}
       {res && res.tools.length > 0 && <Block k="attrezzi" title={tri("Attrezzi e pagine", "Werkzeuge und Seiten", "Tools and pages")}>{res.tools.map((it, i) => <Row key={i} testid={`cerca-t-${it.r}-${i}`} onClick={() => go(it.r)} title={L(it.t)} sub={L(it.d)} />)}</Block>}
       {res && res.words.length > 0 && <Block k="parole" title={tri("Parole del mestiere", "Fachwörter", "Trade words")}>{res.words.map((g) => <div key={g.k} data-testid={`cerca-w-${g.k}`} className="px-3 py-2.5 border-t border-border first:border-0"><p className="text-[13.5px] font-bold text-foreground">{glossEntry(g, lang).title}</p><p className="text-[12px] text-foreground/85 leading-snug">{glossEntry(g, lang).body}</p></div>)}</Block>}
-      {res && res.socc.length > 0 && <Block k="soccorso" title={tri("Pronto soccorso dell'impasto", "Erste Hilfe für den Teig", "Dough first aid")}>{res.socc.map((s) => <Row key={s.k} testid={`cerca-s-${s.k}`} onClick={() => go("recipes")} title={L(s.t)} sub={L(s.now)} />)}</Block>}
+      {res && res.socc.length > 0 && <Block k="soccorso" title={tri("Pronto soccorso dell'impasto", "Erste Hilfe für den Teig", "Dough first aid")}>{res.socc.map((s) => <Row key={s.k} testid={`cerca-s-${s.k}`} onClick={() => go("officina:soccorso")} title={L(s.t)} sub={L(s.now)} />)}</Block>}
       {res && res.pasta.length > 0 && <Block k="pasta" title={tri("Le mani in pasta", "Die Hände im Teig", "Hands in the dough")}>{res.pasta.map((p) => <Row key={p.k} testid={`cerca-p-${p.k}`} onClick={() => go("pasta")} title={L(p.name)} sub={`${L(p.reg)} · ${L(p.sauce)}`} />)}</Block>}
       {res && res.salva.length > 0 && <Block k="salva" title={tri("Il pane che salva", "Das Brot, das rettet", "The bread that saves")}>{res.salva.map(({ s, it }, i) => <Row key={i} testid={`cerca-v-${s.k}-${i}`} onClick={() => go("salva")} title={L(it.t)} sub={L(s.t)} />)}</Block>}
       {res && res.scuola.length > 0 && <Block k="scuola" title={tri("MikiLab a scuola", "MikiLab in der Schule", "MikiLab at school")}>{res.scuola.map(({ c, i, tt }) => <Row key={`${c.n}-${i}`} testid={`cerca-s-${c.n}-${i}`} onClick={() => go("scuola")} title={tt} sub={`${c.nome[lang] || c.nome.it} · ${c.tema[lang] || c.tema.it}`} />)}</Block>} {/* V112 */}

@@ -51,7 +51,6 @@ import PaneDiIeri from "@/components/PaneDiIeri";
 import CreaLievito from "@/components/CreaLievito";
 import CenaSughi from "@/components/CenaSughi";
 import PrimaDiIniziare from "@/components/PrimaDiIniziare";
-import Strumenti from "@/components/Strumenti";
 import { consumeBack } from "@/lib/backNav";
 import ImpressumAdmin from "@/components/ImpressumAdmin";
 import { useFeatures } from "@/lib/features";
@@ -240,6 +239,8 @@ export default function App() {
     if (typeof r === "string" && r.startsWith("ricette-view:")) { const v = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-ricette-view", { detail: { view: v } })), 150); return; }
     if (typeof r === "string" && r.startsWith("ricette-cat:")) { const c = r.split(":")[1]; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-recipes-cat", { detail: { cat: c } })), 250); return; }
     if (typeof r === "string" && r.startsWith("officina:")) { const k = r.split(":")[1]; window.__mkOfficina = k; setRoute("recipes"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-officina-open", { detail: { k } })), 250); return; } // V126
+    if (typeof r === "string" && r.startsWith("mappa:")) { const k = r.split(":")[1]; window.__mkStanza = k; setRoute("mappa"); window.scrollTo({ top: 0 }); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-stanza", { detail: { k } })), 60); return; } // V128: apre una stanza di «Tutto MikiLab»
+    if (r === "strumenti") r = "mappa"; // V128
     if (r === "tecniche") { setTechSlug(null); }
     setRoute(r); window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -363,41 +364,41 @@ export default function App() {
               {route === "paneieri" && <PaneDiIeri onBack={() => setRoute("home")} />}
               {route === "crealievito" && <CreaLievito onBack={() => setRoute("home")} />}
               {route === "inizia" && <PrimaDiIniziare onBack={() => setRoute("home")} onNav={navFromHome} />}
-              {route === "strumenti" && <Strumenti features={features} onBack={() => setRoute("home")} onNav={navFromHome} />}
-              {route === "banco" && <BancoProve onBack={() => setRoute("strumenti")} />}
-              {route === "domande" && <Domande onBack={() => setRoute("strumenti")} onNav={navFromHome} />} {/* V108 */}
+              {route === "strumenti" && <Mappa onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V128: Strumenti e Mappa sono una pagina sola, «Tutto MikiLab» */}
+              {route === "banco" && <BancoProve onBack={() => setRoute("mappa")} />}
+              {route === "domande" && <Domande onBack={() => setRoute("mappa")} onNav={navFromHome} />} {/* V108 */}
               {route === "collezioni" && <Collezioni onBack={() => setRoute("recipes")} onNav={navFromHome} />} {/* V108 */}
               {route === "cerca" && <Cerca onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V108 */}
               {route === "salva" && <PaneCheSalva onBack={() => setRoute("home")} />} {/* V107 */}
-              {route === "piccoli" && <PaneDeiPiccoli onBack={() => setRoute("strumenti")} />} {/* V103 */}
-              {route === "scuola" && <Scuola onBack={() => setRoute("strumenti")} />} {/* V111 */}
+              {route === "piccoli" && <PaneDeiPiccoli onBack={() => setRoute("mappa")} />} {/* V103 */}
+              {route === "scuola" && <Scuola onBack={() => setRoute("mappa")} />} {/* V111 */}
               {route === "pasta" && <PastaDiCasa onBack={() => setRoute("recipes")} />} {/* V102 */}
               {route === "oggi" && <Almanacco onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V101 */}
               {route === "mappa" && <Mappa onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V100 */}
-              {route === "libro" && <LibroDiPane onBack={() => setRoute("strumenti")} />} {/* V97 */}
-              {route === "valigia" && <Valigia onBack={() => setRoute("strumenti")} />} {/* V97 */}
-              {route === "anno" && <AnnoDaFornaio onBack={() => setRoute("strumenti")} />} {/* V96 */}
-              {route === "carta" && <CartaDeiPani onBack={() => setRoute("strumenti")} />} {/* V95 */}
-              {route === "ospiti" && <Ospiti onBack={() => setRoute("strumenti")} />} {/* V95 */}
-              {route === "sommelier" && <Sommelier onBack={() => setRoute("strumenti")} />} {/* V94 */}
-              {route === "primopane" && <PrimoPane onBack={() => setRoute("strumenti")} />} {/* V93 */}
-              {route === "laboratorio" && <Laboratorio onBack={() => setRoute("strumenti")} />} {/* V93 */}
+              {route === "libro" && <LibroDiPane onBack={() => setRoute("mappa")} />} {/* V97 */}
+              {route === "valigia" && <Valigia onBack={() => setRoute("mappa")} />} {/* V97 */}
+              {route === "anno" && <AnnoDaFornaio onBack={() => setRoute("mappa")} />} {/* V96 */}
+              {route === "carta" && <CartaDeiPani onBack={() => setRoute("mappa")} />} {/* V95 */}
+              {route === "ospiti" && <Ospiti onBack={() => setRoute("mappa")} />} {/* V95 */}
+              {route === "sommelier" && <Sommelier onBack={() => setRoute("mappa")} />} {/* V94 */}
+              {route === "primopane" && <PrimoPane onBack={() => setRoute("mappa")} />} {/* V93 */}
+              {route === "laboratorio" && <Laboratorio onBack={() => setRoute("mappa")} />} {/* V93 */}
               {route === "calcolatrice" && <Calcolatrice initialTab="impasto" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
               {route === "pizza" && <Calcolatrice initialTab="pizza" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
               {route === "rinfresco" && <Calcolatrice initialTab="lievito" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
               {route === "formule" && <Calcolatrice initialTab="formule" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
-              {route === "mioforno" && <MioForno onBack={() => setRoute("strumenti")} onOpenRecipe={openRecipeFromTool} />}
-              {route === "miolievito" && <MioLievito onBack={() => setRoute("strumenti")} onNav={navFromHome} />}
-              {route === "mappaforno" && <MappaForno onBack={() => setRoute("strumenti")} />}
-              {route === "crosta" && <AscoltaCrosta onBack={() => setRoute("strumenti")} />}
-              {route === "sveglia" && <SvegliaPanettiere onBack={() => setRoute("strumenti")} onOpenRecipe={openRecipeFromTool} />}
-              {route === "paese" && <PaneDelPaese onBack={() => setRoute("strumenti")} onOpenRecipe={openRecipeFromTool} />}
-              {route === "bilancia" && <SenzaBilancia onBack={() => setRoute("strumenti")} />}
-              {route === "curalievito" && <CuraLievito onBack={() => setRoute("strumenti")} onNav={navFromHome} />}
+              {route === "mioforno" && <MioForno onBack={() => setRoute("mappa")} onOpenRecipe={openRecipeFromTool} />}
+              {route === "miolievito" && <MioLievito onBack={() => setRoute("mappa")} onNav={navFromHome} />}
+              {route === "mappaforno" && <MappaForno onBack={() => setRoute("mappa")} />}
+              {route === "crosta" && <AscoltaCrosta onBack={() => setRoute("mappa")} />}
+              {route === "sveglia" && <SvegliaPanettiere onBack={() => setRoute("mappa")} onOpenRecipe={openRecipeFromTool} />}
+              {route === "paese" && <PaneDelPaese onBack={() => setRoute("mappa")} onOpenRecipe={openRecipeFromTool} />}
+              {route === "bilancia" && <SenzaBilancia onBack={() => setRoute("mappa")} />}
+              {route === "curalievito" && <CuraLievito onBack={() => setRoute("mappa")} onNav={navFromHome} />}
               {route === "volantino" && <Volantino onBack={() => setRoute("home")} />}
               {route === "dedica" && <Dedica onBack={() => setRoute("home")} onNav={navFromHome} />}
-              {route === "medaglie" && <LeMieMedaglie onBack={() => setRoute("strumenti")} />}
-              {route === "libretto" && <Libretto onBack={() => setRoute("strumenti")} />}
+              {route === "medaglie" && <LeMieMedaglie onBack={() => setRoute("mappa")} />}
+              {route === "libretto" && <Libretto onBack={() => setRoute("mappa")} />}
               {route === "panico" && <CenaSughi initialTab="panico" onBack={() => setRoute("home")} />}
               {route === "sughi" && <CenaSughi initialTab="sughi" onBack={() => setRoute("home")} />}
               {route === "percorso" && <PercorsoPage onBack={() => setRoute("home")} onNav={(r) => { setRoute(r); window.scrollTo(0, 0); }} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
@@ -409,36 +410,32 @@ export default function App() {
           </main>
 
           <footer data-testid="app-footer" className="border-t border-border/12 bg-background/70 px-4 py-6 mt-auto">
-            <div className="max-w-6xl mx-auto flex flex-col gap-3 text-[11px] text-muted-foreground">
-              <p className="text-center text-foreground">{tri("Gratis per uso personale. Vietato riprodurre o vendere ricette e testi. I link sono benvenuti.", "Kostenlos für den privaten Gebrauch. Rezepte und Texte dürfen nicht reproduziert oder verkauft werden. Links sind willkommen.", "Free for personal use. Reproducing or selling recipes and texts is forbidden. Links are welcome.")}</p>
-              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-                <button data-testid="footer-regala" onClick={() => { setRoute("regala"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Regala MikiLab", "MikiLab verschenken", "Gift MikiLab")}</button>
+            {/* V128: piè di pagina più corto — una frase sulle ricette e Sitor, una sull'uso, i collegamenti, la firma */}
+            <div className="max-w-3xl mx-auto flex flex-col items-center gap-3 text-[11.5px] text-muted-foreground text-center">
+              <SitorBadge size={26} onOpenPerche={() => { setRoute("perche"); window.scrollTo(0, 0); }} />
+              <p data-testid="footer-two-types" className="max-w-2xl">{tri(
+                "Le ricette sono di due tipi: quelle controllate o provate da Michele e le bozze scritte da Sitor, l'avatar IA di Michele: un'intelligenza artificiale basata sui modelli di Anthropic. Ogni ricetta dice chiaramente di quale tipo è.",
+                "Die Rezepte sind von zwei Arten: die von Michele geprüften oder erprobten und die Entwürfe von Sitor, Micheles KI-Avatar: eine künstliche Intelligenz auf Basis der Anthropic-Modelle. Jedes Rezept sagt klar, welcher Art es ist.",
+                "Recipes are of two kinds: those checked or tested by Michele and the drafts written by Sitor, Michele's AI avatar: an artificial intelligence based on Anthropic models. Each recipe clearly states which kind it is.")}</p>
+              <p data-testid="footer-copyright-usage" className="max-w-2xl text-foreground">{tri(
+                "Gratis per uso personale. Ricette e testi © MikiLab: vietato riprodurli o venderli, i link sono benvenuti. Le stampe e le condivisioni ufficiali portano il logo MikiLab.",
+                "Kostenlos für den privaten Gebrauch. Rezepte und Texte © MikiLab: Vervielfältigung und Verkauf verboten, Links sind willkommen. Offizielle Ausdrucke und geteilte Inhalte tragen das MikiLab-Logo.",
+                "Free for personal use. Recipes and texts © MikiLab: reproducing or selling them is forbidden, links are welcome. Official prints and shares carry the MikiLab logo.")}</p>
+              <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 font-bold">
+                <button data-testid="footer-tutto" onClick={() => { setRoute("mappa"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Tutto MikiLab", "Ganz MikiLab", "All of MikiLab")}</button>
+                <button data-testid="footer-regala" onClick={() => { setRoute("regala"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Regala MikiLab", "MikiLab verschenken", "Gift MikiLab")}</button>
                 {pubContent?.hasPerche && (
-                  <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
+                  <button data-testid="footer-perche" onClick={() => { setRoute("perche"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Perché MikiLab", "Warum MikiLab", "Why MikiLab")}</button>
                 )}
-                <button data-testid="footer-dedica" onClick={() => { setRoute("dedica"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Da Miglionico", "Aus Miglionico", "From Miglionico")}</button>
-                <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">Impressum</button>
-                <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-foreground font-bold">{tri("Privacy", "Datenschutz", "Privacy")}</button>
+                <button data-testid="footer-dedica" onClick={() => { setRoute("dedica"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Da Miglionico", "Aus Miglionico", "From Miglionico")}</button>
+                <button data-testid="footer-impressum" onClick={() => { setRoute("impressum"); window.scrollTo(0, 0); }} className="hover:text-foreground">Impressum</button>
+                <button data-testid="footer-datenschutz" onClick={() => { setRoute("datenschutz"); window.scrollTo(0, 0); }} className="hover:text-foreground">{tri("Privacy", "Datenschutz", "Privacy")}</button>
               </div>
-              <div className="flex flex-col items-center gap-2 pt-1">
-                <p data-testid="footer-two-types" className="text-center max-w-3xl">{tri(
-                  "Le ricette sono di due tipi: quelle controllate o provate da Michele e le bozze scritte da Sitor, un'intelligenza artificiale basata sui modelli di Anthropic. Ogni ricetta dice chiaramente di quale tipo è.",
-                  "Die Rezepte sind von zwei Arten: die von Michele geprüften oder erprobten und die von Sitor geschriebenen Entwürfe, einer künstlichen Intelligenz auf Basis der Anthropic-Modelle. Jedes Rezept sagt klar, welcher Art es ist.",
-                  "Recipes are of two kinds: those checked or tested by Michele and the drafts written by Sitor, an artificial intelligence based on Anthropic models. Each recipe clearly states which kind it is.")}</p>
-                <p data-testid="footer-sitor-avatar" className="text-center font-bold text-foreground">{tri("Sitor è l'avatar IA di Michele.", "Sitor ist Micheles KI-Avatar.", "Sitor is Michele's AI avatar.")}</p>
-                <p data-testid="footer-copyright-usage" className="text-center max-w-3xl">{tri(
-                  "Ricette e testi © MikiLab. Gratis per uso personale. Le stampe e le condivisioni ufficiali riportano il logo MikiLab.",
-                  "Rezepte und Texte © MikiLab. Kostenlos für den privaten Gebrauch. Offizielle Ausdrucke und geteilte Inhalte tragen das MikiLab-Logo.",
-                  "Recipes and texts © MikiLab. Free for personal use. Official prints and shares carry the MikiLab logo.")}</p>
-                <SitorBadge size={26} onOpenPerche={() => { setRoute("perche"); window.scrollTo(0, 0); }} />
-              </div>
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1 border-t border-border/10">
-                <p className="flex items-center gap-2">
-                  <PolpoFooter onTap={onPolpoTap} found={fornoFound} />
-                  © MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")} · {tri("Fatto con le mani di Michele", "Mit Micheles Händen gemacht", "Made with Michele's hands")}
-                </p>
-                <p data-testid="footer-langs" className="text-muted-foreground">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
-              </div>
+              <p className="flex items-center justify-center gap-2 pt-2 border-t border-border/10 w-full">
+                <PolpoFooter onTap={onPolpoTap} found={fornoFound} />
+                © MikiLab — {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")} · {tri("Fatto con le mani di Michele", "Mit Micheles Händen gemacht", "Made with Michele's hands")}
+              </p>
+              <p data-testid="footer-langs">{tri("Altre lingue: usa il traduttore del tuo browser.", "Weitere Sprachen: nutze den Übersetzer deines Browsers.", "Other languages: use your browser's translator.")}</p>
             </div>
           </footer>
         </div>

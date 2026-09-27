@@ -23,7 +23,7 @@ export default function OggiInBottega({ onNav }) {
     if (n.total >= 7) award("sette_giorni");
   };
   return (
-    <div data-testid="oggi-in-bottega" className="mb-4 rounded-3xl border border-primary/30 bg-primary/8 p-4 flex items-center gap-3 cursor-pointer active:scale-[0.99]" onClick={() => onNav("oggi")}>
+    <div data-testid="oggi-in-bottega" className="rounded-3xl border border-primary/30 bg-primary/8 p-4 flex items-center gap-3 cursor-pointer active:scale-[0.99]" onClick={() => onNav("oggi")}>
       <div className="flex-1 min-w-0">
         <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-primary flex items-center gap-1.5"><Sun className="w-3 h-3" />{tri("Oggi in bottega", "Heute in der Backstube", "Today in the workshop")} · {fmtDateLong(now, lang)}</p>
         <div className="mk-oro-line my-1.5" />

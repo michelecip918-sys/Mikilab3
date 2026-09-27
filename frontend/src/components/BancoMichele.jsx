@@ -25,7 +25,7 @@ export function BancoNota() {
   }, [lang]);
   if (!page) return null;
   return (
-    <section data-testid="banco-nota" className="rounded-3xl border border-border/40 bg-background/70 p-5 mb-4">
+    <section data-testid="banco-nota" className="rounded-3xl border border-border/40 bg-background/70 p-5">
       <p className="font-mono-data text-[10px] tracking-[0.28em] uppercase text-primary mb-1 flex items-center gap-1.5"><PenLine className="w-3.5 h-3.5" />{tri("Dal banco di Michele", "Von Micheles Backtisch", "From Michele's bench")}</p>
       {page.title && <h3 className="font-display text-lg font-black text-foreground">{page.title}</h3>}
       <p className="text-[14px] text-foreground/90 leading-relaxed whitespace-pre-wrap mt-1">{page.body}</p>

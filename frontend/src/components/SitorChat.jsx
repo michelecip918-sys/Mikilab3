@@ -10,6 +10,7 @@ import { chatTools } from "@/lib/mycucina";
 import SitorBadge from "@/components/SitorBadge";
 import { recipesApi } from "@/lib/api"; // V93
 import { bottegaAnswer } from "@/lib/sitorBottega"; // V93b
+import { tappeConRicette, statoPiano, readSkill } from "@/lib/piano"; // V128
 
 const HIST_KEY = "mikilab_sitor_chat";
 
@@ -23,11 +24,9 @@ export default function SitorChat({ onClose }) {
   const [micOn, setMicOn] = useState(false);
   const scrollRef = useRef(null);
   const recRef = useRef(null);
-  const [path, setPath] = useState([]);
   const [recs, setRecs] = useState([]); // V93
   const isIOS = typeof navigator !== "undefined" && /iP(hone|ad|od)/.test(navigator.userAgent);
   const SR = typeof window !== "undefined" && (window.SpeechRecognition || window.webkitSpeechRecognition);
-  useEffect(() => { api.get(`/learning-path`).then((r) => setPath(r.data?.levels || [])).catch(() => {}); }, []);
   useEffect(() => { recipesApi.list("mikilab").then((d) => setRecs(d || [])).catch(() => {}); }, []); // V93
   useEffect(() => {
     const h = (e) => { const t = e?.detail?.text; if (t) setInput(t); };
@@ -68,11 +67,9 @@ export default function SitorChat({ onClose }) {
     try { tools = chatTools(); } catch { /* */ }
     try {
       const doneSet = new Set(JSON.parse(localStorage.getItem("mikilab_done") || "[]"));
-      const fatte = [];
-      path.forEach((lv) => (lv.recipes || []).forEach((r) => { if (doneSet.has(r.id)) fatte.push(r.name); }));
+      const fatte = recs.filter((r) => r && doneSet.has(r.id)).map((r) => r.name).slice(0, 15); // V128: tutte le ricette fatte, non solo quelle del percorso
       if (fatte.length) tools.ricette_fatte = fatte.join(", ");
-      const liv = path.filter((l) => l.active).map((l) => `L${l.n} ${(l.title && (l.title.it || l.title.en)) || ""}`);
-      if (liv.length) tools.livelli_attivi = liv.join("; ");
+      if (readSkill() === "learning") { const st = statoPiano(tappeConRicette(recs)); if (st.tappa) tools.percorso = `tappa ${st.n} di ${st.di}: ${st.tappa.t.it}${st.next ? `, prossima ricetta ${st.next.name}` : ""}`; else if (st.finito) tools.percorso = "percorso finito"; } // V128
     } catch { /* */ }
     try {
       let level = "casa";

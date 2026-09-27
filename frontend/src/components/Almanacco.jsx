@@ -96,7 +96,7 @@ const GESTI = [
   { it: "Guarda il cielo: se domani è umido, l'impasto vorrà un po' meno acqua. La farina respira.", de: "Schau zum Himmel: ist morgen feucht, will der Teig etwas weniger Wasser. Mehl atmet.", en: "Look at the sky: if tomorrow is humid, the dough will want a little less water. Flour breathes." },
 ];
 
-const WHY = {
+export const WHY = { // V128: esportato per «Comincia da qui» (stesso pane di oggi in Home e nell'almanacco)
   0: { it: "È domenica: il pane grande, quello che dura la settimana.", de: "Sonntag: das große Brot, das die Woche hält.", en: "Sunday: the big loaf that lasts the week." },
   1: { it: "Lunedì: qualcosa di semplice, che si impasta la sera senza pensarci.", de: "Montag: etwas Einfaches, abends geknetet, ohne nachzudenken.", en: "Monday: something simple, kneaded in the evening without thinking." },
   2: { it: "Martedì: un dolce da colazione per la settimana.", de: "Dienstag: etwas Süßes fürs Frühstück der Woche.", en: "Tuesday: a sweet bread for the week's breakfasts." },

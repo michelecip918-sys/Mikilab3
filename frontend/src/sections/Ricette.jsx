@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, Tag, BookOpen, Wheat, UtensilsCrossed, Sandwich, FlaskConical, Leaf } from "lucide-react";
+import { ChevronLeft, ChevronRight, Tag, BookOpen, Wheat, UtensilsCrossed, Sandwich, FlaskConical, Leaf, Sparkles } from "lucide-react";
 import RecipeList from "@/components/RecipeList";
-import { NovitaColorate } from "@/components/NovitaColorate";
-import { VetrineReparti } from "@/components/VetrineReparti";
 import GuidaMetodi from "@/sections/Enciclopedia";
 import Glossario from "@/sections/Glossario";
 import FlourTable from "@/components/FlourTable";
@@ -69,7 +67,7 @@ export default function Ricette() {
         </div>
         <div className="absolute bottom-0 left-0 p-5">
           <h1 className="font-display text-3xl font-bold text-foreground leading-tight" style={{ textShadow: "0 2px 10px rgba(0,0,0,.85)" }}>
-            {mkTri(lang)("Le ricette di Sitor", "Sitors Rezepte", "Sitor's recipes", "Las recetas de Sitor", "Les recettes de Sitor", "دستورهای سیتور")}
+            {mkTri(lang)("Le ricette di MikiLab", "Die Rezepte von MikiLab", "MikiLab's recipes", "Las recetas de MikiLab", "Les recettes de MikiLab", "دستورهای MikiLab")} {/* V128: le ricette sono di Michele; Sitor è la guida */}
           </h1>
           <div className="h-1 w-12 rounded-full bg-primary mt-1.5 mb-1" />
           <p className="text-foreground/90 text-sm max-w-md" style={{ textShadow: "0 1px 6px rgba(0,0,0,.9)" }}>
@@ -78,7 +76,7 @@ export default function Ricette() {
         </div>
       </div>
 
-      <NonSoloRicetta testid="ricette-non-solo-ricetta" /> {/* V118 */}
+      <NonSoloRicetta testid="ricette-non-solo-ricetta" compact className="mb-4" /> {/* V118 → V128: compatto, le ricette si vedono subito */}
 
       <div data-testid="ricette-list">
       <RecipeList
@@ -89,21 +87,18 @@ export default function Ricette() {
       />
       </div>
 
-      {/* STRUMENTI EXTRA — in fondo alla pagina, dove non danno fastidio */}
-      <div className="mt-8 pt-5 border-t border-border dark:border-border">
-        <div className="mb-4 rounded-2xl bg-card dark:bg-card border border-border p-4"><NovitaColorate /></div>
-        <div className="mb-4 rounded-2xl bg-card dark:bg-card border border-border p-4"><VetrineReparti /></div>
-        <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mb-3">
-          {tri("Strumenti del ricettario", "Rezeptbuch-Werkzeuge", "Recipe book tools", "Herramientas del recetario", "Outils du livre de recettes")}
-        </p>
-        <div data-testid="ricette-toolbar" className="grid grid-cols-3 gap-2">
-        <UtilBtn testid="ricette-sapori-band" Icon={UtensilsCrossed} label={tri("Sapori di Casa", "Geschmack von zu Hause", "Home Flavours", "Sabores de Casa", "Saveurs de la Maison")} onClick={() => setView("sapori")} />
-        <UtilBtn testid="ricette-custodite-band" Icon={Tag} label={tri("Sud Italia · Ricette Custodite", "Süditalien · Bewahrte Rezepte", "Southern Italy · Treasured Recipes", "Sur de Italia · Recetas Custodiadas", "Sud de l'Italie · Recettes Gardées")} onClick={() => setView("custodite")} />
-        <UtilBtn testid="ricette-focacce-band" Icon={Sandwich} label={tri("Vetrina delle Ricette", "Rezept-Schaufenster", "Recipe Showcase", "Vitrina de Recetas", "Vitrine des Recettes")} onClick={() => setView("focacce")} />
-        <UtilBtn testid="ricette-guida-btn" Icon={BookOpen} label={tri("Enciclopedia del Pane", "Brot-Lexikon", "Bread Encyclopedia", "Enciclopedia del Pan", "Encyclopédie du Pain")} onClick={() => setView("guida")} />
-        <UtilBtn testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle & Farine", "Tabellen & Mehle", "Tables & Flours", "Tablas y Harinas", "Tableaux & Farines")} onClick={() => setView("farine")} />
-        <UtilBtn testid="ricette-verde-btn" Icon={Leaf} label={tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "verde" } }))} />
-        <UtilBtn testid="ricette-miglioratore-btn" Icon={FlaskConical} label={tri("Il mio miglioratore", "Mein Verbesserer", "My improver")} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "miglioratore" } }))} />
+      {/* V128 — ALTRE STRADE NEL RICETTARIO: una lista corta al posto di due vetrine e sette bottoni */}
+      <div data-testid="ricette-toolbar" className="mt-8 pt-5 border-t border-border">
+        <h2 className="font-display text-lg font-black text-foreground mb-2">{tri("Altre strade nel ricettario", "Weitere Wege durchs Rezeptbuch", "Other ways through the recipes")}</h2>
+        <div className="rounded-2xl border border-border bg-card divide-y">
+          <UtilRow testid="ricette-sapori-band" Icon={UtensilsCrossed} label={tri("Sapori di casa: il Sud", "Geschmack von zu Hause: der Süden", "Home flavours: the South")} sub={tri("Basilicata e Puglia, ogni ricetta con la sua storia", "Basilikata und Apulien, jedes Rezept mit seiner Geschichte", "Basilicata and Puglia, each recipe with its story")} onClick={() => setView("sapori")} />
+          <UtilRow testid="ricette-custodite-band" Icon={Tag} label={tri("Le ricette custodite", "Die bewahrten Rezepte", "The treasured recipes")} sub={tri("pani del Sud Italia e della Germania", "Brote aus Süditalien und Deutschland", "breads from southern Italy and Germany")} onClick={() => setView("custodite")} />
+          <UtilRow testid="ricette-focacce-band" Icon={Sandwich} label={tri("La vetrina delle ricette", "Das Rezept-Schaufenster", "The recipe showcase")} sub={tri("tutte le foto, reparto per reparto", "alle Fotos, Bereich für Bereich", "all the photos, section by section")} onClick={() => setView("focacce")} />
+          <UtilRow testid="ricette-colorati-btn" Icon={Sparkles} label={tri("I pani colorati", "Die bunten Brote", "The colourful breads")} sub={tri("colori solo naturali: le novità di MikiLab", "nur natürliche Farben: das Neue bei MikiLab", "natural colours only: what's new at MikiLab")} onClick={() => { window.scrollTo({ top: 0 }); window.dispatchEvent(new CustomEvent("mikilab-recipes-base", { detail: { base: "colorati" } })); }} />
+          <UtilRow testid="ricette-guida-btn" Icon={BookOpen} label={tri("Studia il mestiere", "Lerne das Handwerk", "Study the craft")} sub={tri("enciclopedia del pane, glossario, attrezzi", "Brotlexikon, Glossar, Geräte", "bread encyclopedia, glossary, equipment")} onClick={() => setView("guida")} />
+          <UtilRow testid="ricette-farine-btn" Icon={Wheat} label={tri("Tabelle e farine", "Tabellen und Mehle", "Tables and flours")} sub={tri("le sigle delle farine italiane e tedesche", "italienische und deutsche Mehltypen", "Italian and German flour codes")} onClick={() => setView("farine")} />
+          <UtilRow testid="ricette-verde-btn" Icon={Leaf} label={tri("Il verde di MikiLab", "Das Grüne von MikiLab", "MikiLab's green")} sub={tri("canapa, spinaci, spirulina, pistacchio", "Hanf, Spinat, Spirulina, Pistazie", "hemp, spinach, spirulina, pistachio")} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "verde" } }))} />
+          <UtilRow testid="ricette-miglioratore-btn" Icon={FlaskConical} label={tri("Il mio miglioratore", "Mein Verbesserer", "My improver")} sub={tri("cos'è, come si dosa, come farlo in casa", "was es ist, wie man es dosiert, wie man es selbst macht", "what it is, how to dose it, how to make it at home")} onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "miglioratore" } }))} />
         </div>
       </div>
 
@@ -111,14 +106,12 @@ export default function Ricette() {
   );
 }
 
-function UtilBtn({ testid, Icon, label, onClick }) {
+function UtilRow({ testid, Icon, label, sub, onClick }) {
   return (
-    <button data-testid={testid} onClick={onClick}
-      className="flex flex-col items-center justify-start gap-2 bg-card dark:bg-card border border-border dark:border-border rounded-2xl p-3 shadow-sm active:scale-97 hover:border-primary/60 transition-all min-w-0">
-      <div className="w-10 h-10 rounded-2xl shadow-md border border-amber-900/40 bg-primary/15 border border-primary/30 flex items-center justify-center shrink-0">
-        <Icon className="w-5 h-5 text-primary" />
-      </div>
-      <span className="w-full font-display text-xs sm:text-sm font-semibold text-foreground dark:text-foreground text-center leading-tight break-words hyphens-auto">{label}</span>
+    <button data-testid={testid} onClick={onClick} className="w-full flex items-center gap-3 px-3 py-2.5 text-left active:bg-muted/40">
+      <span className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center shrink-0"><Icon className="w-5 h-5 text-primary" /></span>
+      <span className="flex-1 min-w-0"><span className="block text-[14px] font-bold text-foreground leading-tight">{label}</span>{sub && <span className="block text-[12.5px] text-muted-foreground leading-snug">{sub}</span>}</span>
+      <ChevronRight className="w-4 h-4 text-muted-foreground shrink-0" />
     </button>
   );
 }

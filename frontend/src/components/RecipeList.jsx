@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Wheat, Droplets, Clock, Copy, Scale, Flame, Layers, Lock, Search, ChevronDown, X, Share2, ChefHat, Volume2, Printer, Hand, Heart, Loader2, SlidersHorizontal } from "lucide-react";
 import { recipesApi, siteSettingsApi, api } from "@/lib/api";
 import { CATS, CAT_COLORS, recipeCategory } from "@/lib/recipeCats";
 import RecipeDialog from "@/components/RecipeDialog";
@@ -68,6 +68,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [diffFilter, setDiffFilter] = useState("all");
   const [diffMap, setDiffMap] = useState({});
   const [favFilter, setFavFilter] = useState(false);
+  const [showFilters, setShowFilters] = useState(false); // V128: base e difficoltà dietro un solo bottone «Filtri»
   const { favs, toggle: toggleFav, countOf } = useFavRecipes();
   const activeDept = useDept();
   const [openCats, setOpenCats] = useState(() => { try { return JSON.parse(localStorage.getItem(`mikilab_open_cats_${collectionName}`) || "{}"); } catch { return {}; } });
@@ -103,7 +104,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   useEffect(() => {
     const h = (e) => { const c = e && e.detail && e.detail.cat; if (c) { setCatFilter(c); window.scrollTo({ top: 0 }); } };
     window.addEventListener("mikilab-recipes-cat", h);
-    return () => window.removeEventListener("mikilab-recipes-cat", h);
+    const hb = (e) => { const b = e && e.detail && e.detail.base; if (b) { setBaseFilter(b); setShowFilters(true); window.scrollTo({ top: 0 }); } }; // V128
+    window.addEventListener("mikilab-recipes-base", hb);
+    return () => { window.removeEventListener("mikilab-recipes-cat", h); window.removeEventListener("mikilab-recipes-base", hb); };
   }, []);
   const triM = (i_, d_, e_) => mkTri(lang)(i_, d_, e_);
   const { user, setAuthOpen } = useAuth();
@@ -454,8 +457,9 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
             )}
             {collectionName === "mikilab" && <OfficinaSitor recipes={recipes} t={t} />} {/* V92 */}
-            {/* Barra di ricerca */}
-            <div className="relative mb-3">
+            {/* Barra di ricerca + «Filtri» (V128) */}
+            <div className="flex gap-2 mb-3">
+            <div className="relative flex-1 min-w-0">
               <Search className="w-4 h-4 text-muted-foreground absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 data-testid="recipe-search"
@@ -470,6 +474,16 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </button>
               )}
             </div>
+            {(() => { const nf = (baseFilter !== "all" ? 1 : 0) + (diffFilter !== "all" ? 1 : 0); return (
+              <button data-testid="recipe-filters-toggle" onClick={() => setShowFilters((v) => !v)} aria-expanded={showFilters}
+                className={`shrink-0 inline-flex items-center gap-1.5 px-3.5 rounded-2xl border text-sm font-bold transition-all active:scale-95 ${showFilters || nf ? "bg-primary text-primary-foreground border-primary" : "bg-card border-border text-foreground"}`}>
+                <SlidersHorizontal className="w-4 h-4" />{triM("Filtri", "Filter", "Filters")}{nf ? ` · ${nf}` : ""}
+              </button>
+            ); })()}
+            </div>
+
+            {showFilters && (<div data-testid="recipe-more-filters">
+            <p className="text-[12px] font-bold text-muted-foreground mb-1.5">{triM("Lievito e prefermento", "Triebmittel und Vorteig", "Leavening and pre-ferment")}</p>
 
             {/* Filtro per Base / prefermento */}
             {baseChips.length > 1 && (
@@ -495,6 +509,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               </div>
             )}
 
+            <p className="text-[12px] font-bold text-muted-foreground mb-1.5">{triM("Difficoltà", "Schwierigkeit", "Difficulty")}</p>
             <div data-testid="recipe-difficulty-filters" className="flex gap-2 overflow-x-auto pb-2 mb-3 px-0.5 scrollbar-none">
               {[["all", triM("Tutte", "Alle", "All"), "hsl(var(--muted-foreground))"], ["facile", triM("Facile", "Einfach", "Easy"), "hsl(var(--accent))"], ["media", triM("Media", "Mittel", "Medium"), "hsl(var(--muted-foreground))"], ["sfida", triM("Sfida", "Herausforderung", "Challenge"), "hsl(var(--mattone))"]].map(([k, lbl, col]) => (
                 <button key={k} data-testid={`diff-filter-${k}`} onClick={() => setDiffFilter(k)}
@@ -504,6 +519,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 </button>
               ))}
             </div>
+            </div>)}
 
             {(() => {
               const favRecipes = recipes.filter((r) => favs.has(r.id));
@@ -556,7 +572,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               <span className="text-xs font-semibold text-muted-foreground">
                 {filtered.length} {filtered.length === 1 ? triM("ricetta", "Rezept", "recipe") : triM("ricette", "Rezepte", "recipes")}
               </span>
-              {(catFilter !== "all" || baseFilter !== "all" || favFilter || (query || "").trim() !== "") && (
+              {(catFilter !== "all" || baseFilter !== "all" || diffFilter !== "all" || favFilter || (query || "").trim() !== "") && (
                 <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setDiffFilter("all"); setFavFilter(false); setQuery(""); }}
                   className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground hover:text-foreground active:scale-95 transition-all">
                   <X className="w-3.5 h-3.5" /> {triM("Azzera filtri", "Filter zurücksetzen", "Clear filters")}
@@ -576,7 +592,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                 return CATS.map((cat) => {
                   const items = filtered.filter((r) => recipeCategory(r).key === cat.key);
                   if (items.length === 0) return null;
-                  const searching = (query || "").trim() !== "" || baseFilter !== "all" || favFilter || catFilter !== "all";
+                  const searching = (query || "").trim() !== "" || baseFilter !== "all" || diffFilter !== "all" || favFilter || catFilter !== "all"; // V128: anche col filtro difficoltà si aprono tutte le cartelle
                   const open = searching ? true : (openCats[cat.key] !== undefined ? openCats[cat.key] : cat.key === firstCatKey); // ricerca attiva: apri tutto; altrimenti solo la PRIMA categoria è aperta di default
                   const coverSrc = (() => {
                     const chosen = folderCovers[cat.key];

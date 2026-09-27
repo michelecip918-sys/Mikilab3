@@ -127,18 +127,18 @@ export function PolpoFooter({ onTap, found }) {
 <circle cx="183.2" cy="82.3" r="0.9" fill="#F6F1E7" opacity="0.85"/>
 <g transform="rotate(-8 100 84)">
 <path d="M100,22 C128,22 140,52 136,82 C134,100 126,116 118,124 C110,131 90,131 82,124 C74,116 66,100 64,82 C60,52 72,22 100,22Z" fill="#23262B"/>
-<path d="M84,40 C76,54 74,70 77,84" fill="none" stroke="#F6F1E7" strokeWidth="2" stroke-linecap="round" opacity="0.55"/>
-<path d="M93,34 C88,44 86,54 87,62" fill="none" stroke="#F6F1E7" strokeWidth="1.4" stroke-linecap="round" opacity="0.4"/>
+<path d="M84,40 C76,54 74,70 77,84" fill="none" stroke="#F6F1E7" strokeWidth="2" strokeLinecap="round" opacity="0.55"/>
+<path d="M93,34 C88,44 86,54 87,62" fill="none" stroke="#F6F1E7" strokeWidth="1.4" strokeLinecap="round" opacity="0.4"/>
 <ellipse cx="82" cy="98" rx="10.5" ry="9" fill="#C8503C"/>
 <ellipse cx="82" cy="96" rx="9.5" ry="7.6" fill="#E8A33A"/>
 <ellipse cx="82" cy="96.5" rx="4.6" ry="2.6" fill="#23262B"/>
 <circle cx="79" cy="93.6" r="1.4" fill="#F6F1E7"/>
-<path d="M71,92 C76,84 88,84 93,92" fill="none" stroke="#F6F1E7" strokeWidth="1.6" stroke-linecap="round" opacity="0.6"/>
+<path d="M71,92 C76,84 88,84 93,92" fill="none" stroke="#F6F1E7" strokeWidth="1.6" strokeLinecap="round" opacity="0.6"/>
 <ellipse cx="118" cy="98" rx="10.5" ry="9" fill="#C8503C"/>
 <ellipse cx="118" cy="96" rx="9.5" ry="7.6" fill="#E8A33A"/>
 <ellipse cx="118" cy="96.5" rx="4.6" ry="2.6" fill="#23262B"/>
 <circle cx="115" cy="93.6" r="1.4" fill="#F6F1E7"/>
-<path d="M107,92 C112,84 124,84 129,92" fill="none" stroke="#F6F1E7" strokeWidth="1.6" stroke-linecap="round" opacity="0.6"/>
+<path d="M107,92 C112,84 124,84 129,92" fill="none" stroke="#F6F1E7" strokeWidth="1.6" strokeLinecap="round" opacity="0.6"/>
 </g></g></svg>
     </span>
   );

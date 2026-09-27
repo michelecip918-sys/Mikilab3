@@ -54,7 +54,7 @@ export default function Festa() {
           <div className="min-w-0">
             <p className="font-mono-data text-[10px] tracking-[0.25em] uppercase text-[#E9A23B]">{show.kind === "medaglia" ? tri("Nuova medaglia", "Neue Medaille", "New medal") : tri("Pane fatto", "Brot gemacht", "Bread done")}</p>
             <p className="font-bold text-sm leading-tight">{show.kind === "medaglia" ? L(show.medal.t) : show.frase}</p>
-            {show.kind === "medaglia" && <p className="text-[11px] text-[#F6F1E7]/70">{tri("La trovi in Strumenti → Le mie medaglie.", "Zu finden unter Werkzeuge → Meine Medaillen.", "Find it in Tools → My medals.")}</p>}
+            {show.kind === "medaglia" && <p className="text-[11px] text-[#F6F1E7]/70">{tri("La trovi in Tutto MikiLab → Le mie cose → Le mie medaglie.", "Zu finden unter Ganz MikiLab → Meine Sachen → Meine Medaillen.", "Find it in All of MikiLab → My things → My medals.")}</p>}
           </div>
         </div>
       </div>

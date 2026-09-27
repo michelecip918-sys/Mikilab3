@@ -233,3 +233,13 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - «Incolla una ricetta» legge il testo incollato solo nel browser, senza IA e senza invio.
 - Informativa, sez. 10 aggiornata (IT/DE/EN). Mappa: corretto il testo del «Banco delle prove».
 - **EN (summary):** the baker's calculator computes everything in the browser; formulas stay in localStorage (mikilab_formule); shared links carry the numbers after # (never sent to the server); no tracking.
+
+## 41. V128 — Tutto più semplice: Comincia da qui, il percorso, Tutto MikiLab
+
+- **Comincia da qui** (`CominciaDaQui.jsx`, `lib/piano.js`, in Home): la scelta «Sto imparando» / «So già panificare» resta in localStorage (`mikilab_skill`, come prima, e `mikilab_recipe_mode`). Per mostrare ricette sempre diverse il browser ricorda gli id delle ultime 48 ricette mostrate (`mikilab_home_visti`) e, per la durata della scheda, le quattro di questa visita (sessionStorage `mikilab_home_scelta`). Nessuna chiamata nuova: le ricette e le difficoltà arrivano dalle stesse richieste pubbliche di prima (`/api/recipes`, `/api/recipe-extras`).
+- **Il percorso in sei tappe** (`PercorsoPage.jsx`, stesso `lib/piano.js`): usa le ricette segnate «fatte» (`mikilab_done`, come prima) e salva solo le tappe saltate (`mikilab_piano_salti`). Non usa più `/api/learning-path`.
+- **Tutto MikiLab** (`Mappa.jsx`, /mappa): una pagina sola al posto di Strumenti e Mappa; ricorda per la durata della scheda le stanze aperte (sessionStorage `mikilab_stanza`) e, come prima Strumenti, gli ultimi attrezzi usati (`mikilab_recenti`). Le pagine senza contenuto pubblicato o spente non compaiono.
+- **Chat di Sitor**: nelle informazioni già inviate insieme alla domanda (attrezzi e forno del dispositivo) ora c'è anche la tappa del percorso, se l'utente la segue, e i nomi delle ricette segnate «fatte» (al massimo 15). Nessun dato personale.
+- **Rimossi**: `Strumenti.jsx`, `CalcolaInHome.jsx` (la calcolatrice resta, in «Calcoli e orari»), `BambiniInHome.jsx`, `NovitaColorate.jsx`, `VetrineReparti.jsx`: non salvavano nulla.
+- Informativa, sez. 10 aggiornata (IT/DE/EN): una frase su `mikilab_home_visti` e `mikilab_piano_salti`.
+- **EN (summary):** the Home page remembers, only on the device, which recipes it has already shown (last 48 ids) and, for users following the six-stage path, which stages they skipped; open rooms of «All of MikiLab» are kept in sessionStorage; nothing new is sent to the server.
