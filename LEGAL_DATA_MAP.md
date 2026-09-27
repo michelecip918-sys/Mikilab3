@@ -259,3 +259,9 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Il video di Michele**: l'admin salva in `recipe_extras.video_url` un link di TikTok (il server accetta solo indirizzi `https://www.tiktok.com/…`, `vm.tiktok.com` o `m.tiktok.com`). Nella ricetta compare un semplice collegamento «Guarda Michele che la fa»: nessun video incorporato, nessuno script di TikTok nel sito. TikTok riceve dati solo se la persona tocca il collegamento e apre la sua pagina.
 - **Logo**: gli indirizzi del logo e delle icone hanno ora `?v=116`, così i telefoni scaricano il logo della v116 invece di una copia vecchia. Nessun dato.
 - **EN (summary):** static «why» explanations written by Sitor (AI) and labelled as such; a plain link (no embed, no TikTok script) to Michele's TikTok video for a recipe; versioned logo URLs so phones fetch the current logo.
+
+## 44. V131 — Il miglioratore per la tua ricetta
+
+- **La pagina** (`MiglioratorePerTe.jsx`, /miglioratore-per-te): la persona incolla una ricetta qualsiasi o scrive i grammi di farina; il testo viene letto nel browser con lo stesso lettore della calcolatrice (`leggiRicetta`) e la tabella si calcola nel browser. Il testo incollato non viene salvato (né in localStorage né altrove) e non viene inviato. Nessuna chiamata di rete nuova.
+- **Le note delle ricette**: una migrazione una tantum sul database (`app_meta.v131_dose`) cambia soltanto il testo «2-4%» in «2-3%» nelle note sul miglioratore; il seed è allineato. Nessun dato personale.
+- **EN (summary):** a browser-only calculator that tells anyone how much of Michele's natural improver to add to any recipe; the pasted recipe is neither stored nor sent.

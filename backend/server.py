@@ -1483,6 +1483,27 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"V125 grassi error: {e}")
     try:
+        # V131 — la dose del miglioratore naturale uguale ovunque: nelle note delle ricette «2-4%» diventa «2-3%»,
+        # come nella pagina del miglioratore e nella tabella «Il miglioratore per la tua ricetta».
+        # Una volta sola; cambia soltanto quel pezzo di testo (i corsi già salvati non vengono rigenerati: niente crediti).
+        _m131 = await db.app_meta.find_one({"_key": "v131_dose"}, {"_id": 0})
+        if not _m131:
+            _campi = ["procedure", "procedure_de", "procedure_en", "procedure_es", "procedure_fr", "notes", "notes_de", "notes_en"]
+            _proj = {"_id": 0, "id": 1}
+            _proj.update({c: 1 for c in _campi})
+            async for _r in db.recipes.find({"collection_name": "mikilab", "$or": [{c: {"$regex": "2-4 ?%"}} for c in _campi]}, _proj):
+                _upd = {}
+                for c in _campi:
+                    v = _r.get(c)
+                    if isinstance(v, str) and ("2-4%" in v or "2-4 %" in v):
+                        _upd[c] = v.replace("2-4%", "2-3%").replace("2-4 %", "2-3 %")
+                if _upd:
+                    _upd["updated_at"] = now_iso()
+                    await db.recipes.update_one({"collection_name": "mikilab", "id": _r["id"]}, {"$set": _upd})
+            await db.app_meta.update_one({"_key": "v131_dose"}, {"$set": {"_key": "v131_dose", "done_at": now_iso()}}, upsert=True)
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V131 dose error: {e}")
+    try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
         # pane/panini/focacce → "Provata da Michele" (tested)

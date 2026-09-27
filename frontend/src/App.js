@@ -79,6 +79,7 @@ import Sommelier from "@/components/Sommelier"; // V94
 import PrimoPane from "@/components/PrimoPane"; // V93
 import Laboratorio from "@/components/Laboratorio"; // V93
 import Calcolatrice from "@/components/Calcolatrice"; // V127
+import MiglioratorePerTe from "@/components/MiglioratorePerTe"; // V131
 import MioForno from "@/components/MioForno";
 // V85 — primo giro con Sitor + modo grande, lievito madre come un figlio, mappa del forno
 import PrimoGiro, { GIRO_KEY, isBigMode, applyBigMode } from "@/components/PrimoGiro";
@@ -113,6 +114,7 @@ function initialRoute() {
   if (p.startsWith("/ricetta/") || new URLSearchParams(window.location.search).get("r")) return "recipes";
   if (p.startsWith("/volantino")) return "volantino";
   if (p === "/calcolatrice" || p.startsWith("/calcolatrice/")) return "calcolatrice"; // V127
+  if (p.startsWith("/miglioratore-per-te")) return "miglioratoreperte"; // V131
   if (p === "/pizza" || p.startsWith("/pizza/")) return "pizza"; // V127
   if (p === "/rinfresco" || p.startsWith("/rinfresco/")) return "rinfresco"; // V127
   if (p === "/formule" || p.startsWith("/formule/")) return "formule"; // V127
@@ -384,6 +386,7 @@ export default function App() {
               {route === "primopane" && <PrimoPane onBack={() => setRoute("mappa")} />} {/* V93 */}
               {route === "laboratorio" && <Laboratorio onBack={() => setRoute("mappa")} />} {/* V93 */}
               {route === "calcolatrice" && <Calcolatrice initialTab="impasto" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
+              {route === "miglioratoreperte" && <MiglioratorePerTe onBack={() => setRoute("mappa")} onNav={navFromHome} />} {/* V131 */}
               {route === "pizza" && <Calcolatrice initialTab="pizza" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
               {route === "rinfresco" && <Calcolatrice initialTab="lievito" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}
               {route === "formule" && <Calcolatrice initialTab="formule" onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V127 */}

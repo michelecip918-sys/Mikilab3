@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLang } from "@/i18n/LanguageContext";
+import { mkTri } from "@/i18n/triMaps"; // V131
 import { recipesApi } from "@/lib/api";
 import { ChevronLeft, FlaskConical, Leaf, Scale, Sparkles, AlertTriangle, Replace } from "lucide-react";
 import { MIX, DOSE, fmtL, substitutes } from "@/lib/improver";
@@ -64,6 +65,10 @@ export default function MiglioratorePage({ onBack, onOpenRecipe }) {
       </div>
 
       {/* Calcolatore dose */}
+      <button data-testid="miglioratore-per-te-link" onClick={() => window.dispatchEvent(new CustomEvent("mikilab-nav", { detail: { route: "miglioratoreperte" } }))} className="w-full text-left rounded-2xl border-2 border-primary bg-primary text-primary-foreground p-4 active:scale-[0.99] transition-all"> {/* V131 */}
+        <span className="block font-display text-lg font-black">{mkTri(lang)("Hai una ricetta tua? Il miglioratore per la tua ricetta", "Ein eigenes Rezept? Der Verbesserer für dein Rezept", "Got your own recipe? The improver for your recipe")}</span>
+        <span className="block text-[13px] opacity-90">{mkTri(lang)("Incolla la ricetta, anche di un altro sito: ti do la tabella con i grammi.", "Füg das Rezept ein, auch von einer anderen Seite: du bekommst die Tabelle in Gramm.", "Paste the recipe, even from another site: you get the table in grams.")}</span>
+      </button>
       <div data-testid="miglioratore-calc" className="rounded-2xl border border-primary/40 bg-primary/10 p-5 space-y-3">
         <h2 className="font-display text-base font-black text-foreground flex items-center gap-2">
           <Scale className="w-5 h-5 text-primary" />{L({ it: "Quanto ne metto? (calcolatore)", de: "Wie viel nehme ich? (Rechner)", en: "How much do I use? (calculator)" })}
