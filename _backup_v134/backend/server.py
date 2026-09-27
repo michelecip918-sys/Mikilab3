@@ -1570,17 +1570,6 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"V132 canapa error: {e}")
     try:
-        # V134 — le 11 ricette alla canapa prendono la loro immagine (fatta da Emergent) al posto di quella presa in prestito
-        # da una ricetta simile. Una volta sola, e solo se l'immagine è ancora quella provvisoria.
-        _m134 = await db.app_meta.find_one({"_key": "v134_immagini"}, {"_id": 0})
-        if not _m134:
-            import v132_canapa as _v134
-            for _rid, (_vecchia, _nuova) in _v134.IMMAGINI_V134.items():
-                await db.recipes.update_one({"collection_name": "mikilab", "id": _rid, "image_url": _vecchia}, {"$set": {"image_url": _nuova, "updated_at": now_iso()}})
-            await db.app_meta.update_one({"_key": "v134_immagini"}, {"$set": {"_key": "v134_immagini", "done_at": now_iso()}}, upsert=True)
-    except Exception as e:
-        logging.getLogger(__name__).error(f"V134 immagini error: {e}")
-    try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
         # pane/panini/focacce → "Provata da Michele" (tested)

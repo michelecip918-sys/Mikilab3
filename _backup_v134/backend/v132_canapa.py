@@ -54,7 +54,7 @@ NUOVE = [
         flour_grams=1000.0, water_grams=780.0, hydration_percent=78.0, sourdough_grams=200.0, salt_grams=20.0,
         preferment_type="lievito madre", method_type="indiretto", dough_category="indiretto",
         bake_temp=230.0, bake_minutes=45.0, oven_type="statico", mix_minutes=15.0, rest_minutes=45.0,
-        bulk_fermentation_hours=4.0, proofing_hours=14.0, image_url="/recipes/canapa_pagnotta.webp",
+        bulk_fermentation_hours=4.0, proofing_hours=14.0, image_url="/recipes/p_integrale_lm.webp",
         extra_ingredients=[SEMI_TOSTATI(5), _migl(2), OLIO, ACETO, KOKOS],
         notes="Pane al lievito madre con il 15% di farina di canapa e i semi tostati: mollica umida, colore bruno con riflessi verdi, profumo di nocciola. Resa: 2 pagnotte da circa 1 kg. Usa solo farina e semi di canapa venduti come alimenti, con l'etichetta alimentare: mai foglie, fiori o prodotti al CBD.\n\n" + _SITOR_IT,
         notes_de="Sauerteigbrot mit 15 % Hanfmehl und gerösteten Hanfsamen: saftige Krume, braune Farbe mit grünem Schimmer, Duft nach Nuss. Ergibt 2 Laibe zu etwa 1 kg. Verwende nur Hanfmehl und Hanfsamen, die als Lebensmittel verkauft werden (mit Lebensmitteletikett): niemals Blätter, Blüten oder CBD-Produkte.\n\n" + _SITOR_DE,
@@ -105,7 +105,7 @@ NUOVE = [
         preferment_type="biga", method_type="indiretto", dough_category="indiretto",
         biga=_biga(500, 225, 5, "16-18 ore a 16-18 °C", "16-18 Std. bei 16-18 °C", "16-18 h at 16-18 °C"),
         bake_temp=240.0, bake_minutes=22.0, oven_type="statico", mix_minutes=12.0, rest_minutes=None,
-        bulk_fermentation_hours=1.5, proofing_hours=2.0, image_url="/recipes/canapa_focaccia.webp",
+        bulk_fermentation_hours=1.5, proofing_hours=2.0, image_url="/recipes/foc_semi.webp",
         extra_ingredients=[
             _e("Patata lessa schiacciata (fredda)", "Gekochte, gestampfte Kartoffel (kalt)", "Boiled mashed potato (cold)", "Patata cocida machacada (fría)", "Pomme de terre cuite écrasée (froide)", 15),
             _migl(3), OLIO_CHIUDERE,
@@ -159,7 +159,7 @@ NUOVE = [
         preferment_type="biga", method_type="indiretto", dough_category="indiretto",
         biga=_biga(400, 180, 4, "16-18 ore a 16-18 °C", "16-18 Std. bei 16-18 °C", "16-18 h at 16-18 °C"),
         bake_temp=220.0, bake_minutes=18.0, oven_type="statico", mix_minutes=14.0, rest_minutes=None,
-        bulk_fermentation_hours=0.75, proofing_hours=1.5, image_url="/recipes/canapa_panini.webp",
+        bulk_fermentation_hours=0.75, proofing_hours=1.5, image_url="/recipes/pn_multicereali.webp",
         extra_ingredients=[LIEVITO_FINALE(0.5), _migl(2), SEMI_TOSTATI(4), SEMI_SOPRA(4), OLIO, ACETO, KOKOS],
         notes="Panini con la biga e il 10% di farina di canapa, chiusi nei semi: crosta sottile, mollica umida. Resa: circa 23 panini da 80 g. Usa solo farina e semi di canapa venduti come alimenti.\n\n" + _SITOR_IT,
         notes_de="Brötchen mit Biga und 10 % Hanfmehl, in Hanfsamen gewälzt: dünne Kruste, saftige Krume. Ergibt etwa 23 Brötchen zu 80 g. Verwende nur Hanfmehl und Hanfsamen, die als Lebensmittel verkauft werden.\n\n" + _SITOR_DE,
@@ -204,7 +204,7 @@ NUOVE = [
         preferment_type="biga", method_type="indiretto", dough_category="indiretto",
         biga=_biga(600, 270, 6, "18-20 ore a 16-18 °C", "18-20 Std. bei 16-18 °C", "18-20 h at 16-18 °C"),
         bake_temp=250.0, bake_minutes=16.0, oven_type="statico", mix_minutes=12.0, rest_minutes=None,
-        bulk_fermentation_hours=1.0, proofing_hours=3.0, image_url="/recipes/canapa_pizza_teglia.webp",
+        bulk_fermentation_hours=1.0, proofing_hours=3.0, image_url="/recipes/pz_teglia_romana.webp",
         extra_ingredients=[
             _e("Olio extravergine d'oliva (a chiudere)", "Olivenöl extra vergine (zum Schließen)", "Extra virgin olive oil (to close the dough)", "Aceite de oliva virgen extra (para cerrar)", "Huile d'olive vierge extra (pour fermer)", 3),
             _migl(3), OLIO_CANAPA,
@@ -252,7 +252,7 @@ NUOVE = [
         flour_grams=1000.0, water_grams=0.0, hydration_percent=None, sourdough_grams=0.0, salt_grams=20.0,
         preferment_type="none", method_type="diretto", dough_category="diretto",
         bake_temp=200.0, bake_minutes=28.0, oven_type="ventilato", mix_minutes=12.0, rest_minutes=30.0,
-        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/canapa_taralli.webp",
+        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/r_taralli.webp",
         extra_ingredients=[
             _e("Vino bianco secco", "Trockener Weißwein", "Dry white wine", "Vino blanco seco", "Vin blanc sec", 38),
             _e("Olio extravergine d'oliva", "Olivenöl extra vergine", "Extra virgin olive oil", "Aceite de oliva virgen extra", "Huile d'olive vierge extra", 15),
@@ -305,7 +305,7 @@ NUOVE += [
         preferment_type="biga", method_type="indiretto", dough_category="indiretto",
         biga=_biga(400, 180, 4, "16-18 ore a 16-18 °C", "16-18 Std. bei 16-18 °C", "16-18 h at 16-18 °C"),
         bake_temp=200.0, bake_minutes=18.0, oven_type="statico", mix_minutes=10.0, rest_minutes=60.0,
-        bulk_fermentation_hours=1.0, proofing_hours=None, image_url="/recipes/canapa_grissini.webp",
+        bulk_fermentation_hours=1.0, proofing_hours=None, image_url="/recipes/sn_grissini.webp",
         extra_ingredients=[
             _e("Olio extravergine d'oliva (nell'impasto)", "Olivenöl extra vergine (im Teig)", "Extra virgin olive oil (in the dough)", "Aceite de oliva virgen extra (en la masa)", "Huile d'olive vierge extra (dans la pâte)", 10),
             _migl(3), SEMI_TOSTATI(5),
@@ -352,7 +352,7 @@ NUOVE += [
         flour_grams=1000.0, water_grams=500.0, hydration_percent=50.0, sourdough_grams=0.0, salt_grams=20.0,
         preferment_type="none", method_type="diretto", dough_category="diretto",
         bake_temp=190.0, bake_minutes=16.0, oven_type="statico", mix_minutes=8.0, rest_minutes=30.0,
-        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/canapa_crackers.webp",
+        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/sn_crackers.webp",
         extra_ingredients=[
             _e("Olio extravergine d'oliva", "Olivenöl extra vergine", "Extra virgin olive oil", "Aceite de oliva virgen extra", "Huile d'olive vierge extra", 12),
             _e("Semi di canapa decorticati (nell'impasto)", "Geschälte Hanfsamen (im Teig)", "Hulled hemp seeds (in the dough)", "Semillas de cáñamo peladas (en la masa)", "Graines de chanvre décortiquées (dans la pâte)", 10),
@@ -401,7 +401,7 @@ NUOVE += [
         flour_grams=1000.0, water_grams=600.0, hydration_percent=60.0, sourdough_grams=150.0, salt_grams=20.0,
         preferment_type="lievito madre", method_type="indiretto", dough_category="indiretto",
         bake_temp=200.0, bake_minutes=45.0, oven_type="statico", mix_minutes=10.0, rest_minutes=None,
-        bulk_fermentation_hours=14.0, proofing_hours=1.5, image_url="/recipes/canapa_friselle.webp",
+        bulk_fermentation_hours=14.0, proofing_hours=1.5, image_url="/recipes/r_friselle.webp",
         extra_ingredients=[_migl(2), OLIO, ACETO, KOKOS, SEMI_TOSTATI(4)],
         notes="Le friselle pugliesi col lievito madre, con il 15% di farina di canapa: due cotture, secche fino al cuore, si conservano per mesi. Resa: circa 15 friselle (30 metà). Usa solo farina e semi di canapa venduti come alimenti.\n\n" + _SITOR_IT,
         notes_de="Apulische Friselle mit Sauerteig und 15 % Hanfmehl: zweimal gebacken, durch und durch trocken, monatelang haltbar. Ergibt etwa 15 Friselle (30 Hälften). Verwende nur Hanfmehl und Hanfsamen, die als Lebensmittel verkauft werden.\n\n" + _SITOR_DE,
@@ -455,7 +455,7 @@ NUOVE += [
         preferment_type="poolish", method_type="indiretto", dough_category="indiretto",
         biga={"flour_g": 300, "water_g": 300, "yeast_g": 1, "hours": "12-16 ore a 18-20 °C", "hours_de": "12-16 Std. bei 18-20 °C", "hours_en": "12-16 h at 18-20 °C", "show": True, "kind": "poolish"},
         bake_temp=200.0, bake_minutes=38.0, oven_type="statico", mix_minutes=14.0, rest_minutes=None,
-        bulk_fermentation_hours=1.0, proofing_hours=1.75, image_url="/recipes/canapa_pane_cassetta.webp",
+        bulk_fermentation_hours=1.0, proofing_hours=1.75, image_url="/recipes/p_pancassetta.webp",
         extra_ingredients=[
             _e("Patata lessa schiacciata (fredda)", "Gekochte, gestampfte Kartoffel (kalt)", "Boiled mashed potato (cold)", "Patata cocida machacada (fría)", "Pomme de terre cuite écrasée (froide)", 10),
             LIEVITO_FINALE(0.5), _migl(2), OLIO, ACETO, KOKOS, SEMI_SOPRA(3),
@@ -505,7 +505,7 @@ NUOVE += [
         flour_grams=1000.0, water_grams=0.0, hydration_percent=None, sourdough_grams=0.0, salt_grams=2.0,
         preferment_type="none", method_type="diretto", dough_category="diretto",
         bake_temp=170.0, bake_minutes=13.0, oven_type="statico", mix_minutes=5.0, rest_minutes=60.0,
-        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/canapa_biscotti.webp",
+        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/v132_biscotti_canapa.webp",
         extra_ingredients=[
             _e("Burro freddo a pezzetti", "Kalte Butter in Stückchen", "Cold butter, diced", "Mantequilla fría en dados", "Beurre froid en dés", 45),
             _e("Zucchero a velo", "Puderzucker", "Icing sugar", "Azúcar glas", "Sucre glace", 35),
@@ -556,7 +556,7 @@ NUOVE += [
         flour_grams=1000.0, water_grams=0.0, hydration_percent=None, sourdough_grams=0.0, salt_grams=2.0,
         preferment_type="none", method_type="diretto", dough_category="diretto",
         bake_temp=180.0, bake_minutes=37.0, oven_type="statico", mix_minutes=5.0, rest_minutes=None,
-        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/canapa_cantucci.webp",
+        bulk_fermentation_hours=None, proofing_hours=None, image_url="/recipes/v132_cantucci_canapa.webp",
         extra_ingredients=[
             _e("Zucchero", "Zucker", "Sugar", "Azúcar", "Sucre", 60),
             _e("Uova intere", "Ganze Eier", "Whole eggs", "Huevos enteros", "Œufs entiers", 40),
@@ -710,19 +710,3 @@ def traduci_testi(o, f):
     if isinstance(o, dict):
         return {k: traduci_testi(v, f) for k, v in o.items()}
     return o
-
-
-# V134 — le immagini delle 11 ricette alla canapa, fatte da Emergent: (immagine provvisoria di prima, immagine nuova)
-IMMAGINI_V134 = {
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000001": ("/recipes/p_integrale_lm.webp", "/recipes/canapa_pagnotta.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000002": ("/recipes/foc_semi.webp", "/recipes/canapa_focaccia.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000003": ("/recipes/pn_multicereali.webp", "/recipes/canapa_panini.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000004": ("/recipes/pz_teglia_romana.webp", "/recipes/canapa_pizza_teglia.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000005": ("/recipes/r_taralli.webp", "/recipes/canapa_taralli.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000006": ("/recipes/sn_grissini.webp", "/recipes/canapa_grissini.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000007": ("/recipes/sn_crackers.webp", "/recipes/canapa_crackers.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000008": ("/recipes/r_friselle.webp", "/recipes/canapa_friselle.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000009": ("/recipes/p_pancassetta.webp", "/recipes/canapa_pane_cassetta.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000010": ("/recipes/v132_biscotti_canapa.webp", "/recipes/canapa_biscotti.webp"),
-    "1f3f6a2e-8c0d-5b7e-9a41-0c132a000011": ("/recipes/v132_cantucci_canapa.webp", "/recipes/canapa_cantucci.webp"),
-}

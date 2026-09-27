@@ -19690,7 +19690,7 @@
     "rest_minutes": 45.0,
     "bulk_fermentation_hours": 4.0,
     "proofing_hours": 14.0,
-    "image_url": "/recipes/canapa_pagnotta.webp",
+    "image_url": "/recipes/p_integrale_lm.webp",
     "extra_ingredients": [
       {
         "name": "Semi di canapa decorticati (tostati, nell'impasto)",
@@ -19793,7 +19793,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": 1.5,
     "proofing_hours": 2.0,
-    "image_url": "/recipes/canapa_focaccia.webp",
+    "image_url": "/recipes/foc_semi.webp",
     "extra_ingredients": [
       {
         "name": "Patata lessa schiacciata (fredda)",
@@ -19912,7 +19912,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": 0.75,
     "proofing_hours": 1.5,
-    "image_url": "/recipes/canapa_panini.webp",
+    "image_url": "/recipes/pn_multicereali.webp",
     "extra_ingredients": [
       {
         "name": "Lievito di birra fresco (impasto finale)",
@@ -20031,7 +20031,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": 1.0,
     "proofing_hours": 3.0,
-    "image_url": "/recipes/canapa_pizza_teglia.webp",
+    "image_url": "/recipes/pz_teglia_romana.webp",
     "extra_ingredients": [
       {
         "name": "Olio extravergine d'oliva (a chiudere)",
@@ -20117,7 +20117,7 @@
     "rest_minutes": 30.0,
     "bulk_fermentation_hours": null,
     "proofing_hours": null,
-    "image_url": "/recipes/canapa_taralli.webp",
+    "image_url": "/recipes/r_taralli.webp",
     "extra_ingredients": [
       {
         "name": "Vino bianco secco",
@@ -20220,7 +20220,7 @@
     "rest_minutes": 60.0,
     "bulk_fermentation_hours": 1.0,
     "proofing_hours": null,
-    "image_url": "/recipes/canapa_grissini.webp",
+    "image_url": "/recipes/sn_grissini.webp",
     "extra_ingredients": [
       {
         "name": "Olio extravergine d'oliva (nell'impasto)",
@@ -20298,7 +20298,7 @@
     "rest_minutes": 30.0,
     "bulk_fermentation_hours": null,
     "proofing_hours": null,
-    "image_url": "/recipes/canapa_crackers.webp",
+    "image_url": "/recipes/sn_crackers.webp",
     "extra_ingredients": [
       {
         "name": "Olio extravergine d'oliva",
@@ -20392,7 +20392,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": 14.0,
     "proofing_hours": 1.5,
-    "image_url": "/recipes/canapa_friselle.webp",
+    "image_url": "/recipes/r_friselle.webp",
     "extra_ingredients": [
       {
         "name": "Miglioratore Naturale Pro (2% sul peso della farina)",
@@ -20495,7 +20495,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": 1.0,
     "proofing_hours": 1.75,
-    "image_url": "/recipes/canapa_pane_cassetta.webp",
+    "image_url": "/recipes/p_pancassetta.webp",
     "extra_ingredients": [
       {
         "name": "Patata lessa schiacciata (fredda)",
@@ -20605,7 +20605,7 @@
     "rest_minutes": 60.0,
     "bulk_fermentation_hours": null,
     "proofing_hours": null,
-    "image_url": "/recipes/canapa_biscotti.webp",
+    "image_url": "/recipes/v132_biscotti_canapa.webp",
     "extra_ingredients": [
       {
         "name": "Burro freddo a pezzetti",
@@ -20707,7 +20707,7 @@
     "rest_minutes": null,
     "bulk_fermentation_hours": null,
     "proofing_hours": null,
-    "image_url": "/recipes/canapa_cantucci.webp",
+    "image_url": "/recipes/v132_cantucci_canapa.webp",
     "extra_ingredients": [
       {
         "name": "Zucchero",
