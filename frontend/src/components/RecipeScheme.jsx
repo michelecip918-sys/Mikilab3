@@ -59,7 +59,7 @@ export default function RecipeScheme({ recipe }) {
     <div data-testid="recipe-scheme" className="rounded-2xl border border-border bg-background/60 p-3 no-print">
       <p className="text-[11px] font-black uppercase tracking-wide text-muted-foreground mb-1">{tri("Schema del procedimento", "Ablaufschema", "Process diagram")}</p>
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" role="img" aria-label={`${tri("Schema del procedimento", "Ablaufschema", "Process diagram")}: ${title}`}>
-        <image href={`${PUB}/logo-emblem.webp`} x="10" y="10" width="34" height="34" />
+        <image href={`${PUB}/logo-emblem.webp?v=116`} x="10" y="10" width="34" height="34" />
         <text x="52" y="24" fontSize="13" fontWeight="700" style={txt}>MikiLab</text>
         <text x="52" y="40" fontSize="11" style={mut}>{title.length > 38 ? `${title.slice(0, 37)}…` : title}</text>
         {/* V80 — la firma di Michele: il suo polpo, disegnato a timbro */}

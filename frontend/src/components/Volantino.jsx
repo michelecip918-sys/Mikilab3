@@ -59,7 +59,7 @@ export default function Volantino({ onBack }) {
 
       <div id="ml-volantino" data-testid="volantino-sheet" className="bg-white text-[#2B2E33] rounded-2xl border border-border shadow-md p-6 sm:p-8 aspect-[148/210] flex flex-col" style={{ fontFamily: "Manrope, Arial, sans-serif" }}>
         <div className="flex items-center gap-3">
-          <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-12 h-12 rounded-lg object-contain" />
+          <img src={`${PUB}/logo-emblem.webp?v=116`} alt="MikiLab" className="w-12 h-12 rounded-lg object-contain" />
           <div>
             <p className="text-2xl font-black tracking-[0.14em] uppercase" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>MikiLab</p>
             <p className="text-[10px] tracking-[0.28em] uppercase text-[#5B5F66]">{variant === "de" ? "Sitors Handbuch" : "Il Manuale di Sitor"}</p>

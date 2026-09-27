@@ -47,7 +47,7 @@ export default function AuthScreen({ onClose }) {
           </button>
         )}
         <div className="text-center mb-6">
-          <img src={`${process.env.PUBLIC_URL}/logo.webp`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-primary/70 shadow-lg mx-auto mb-3" />
+          <img src={`${process.env.PUBLIC_URL}/logo.webp?v=116`} alt="MikiLab" className="w-20 h-20 rounded-2xl object-cover ring-2 ring-primary/70 shadow-lg mx-auto mb-3" />
           <h1 className="font-display text-3xl font-bold text-foreground">MikiLab</h1>
           <p className="text-sm text-muted-foreground mt-1">{tri("Accesso amministratore", "Administrator-Zugang", "Administrator access")}</p>
         </div>

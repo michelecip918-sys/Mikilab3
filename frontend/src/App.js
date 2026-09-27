@@ -274,7 +274,7 @@ export default function App() {
                 </button>
               )}
               <button data-testid="brand-home" onClick={() => { setRoute("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }} className="flex items-center gap-2.5 min-w-0 shrink-0 active:scale-95 transition-transform">
-                <img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
+                <img src={`${PUB}/logo-emblem.webp?v=116`} alt="MikiLab" data-keepcolor className="w-9 h-9 rounded-lg object-contain shrink-0" />
                 <span className="text-left whitespace-nowrap">
                   <span className="block font-display text-lg sm:text-2xl font-black tracking-[0.14em] text-foreground uppercase">MikiLab</span>
                   <span className="hidden sm:block font-mono-data text-[9px] tracking-[0.28em] text-muted-foreground/70 uppercase">Il Manuale di Sitor</span>

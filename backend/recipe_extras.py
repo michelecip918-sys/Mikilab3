@@ -183,11 +183,16 @@ def _leaven_kind(r: dict) -> str:
     return ""
 
 
+import re as _re_mod
+_re_v130 = _re_mod.compile(r"^https://(www\.|vm\.|m\.)?tiktok\.com/[A-Za-z0-9@._/?=&%-]+$")
+
+
 class ExtrasUpdate(_BM):
     difficulty: _Opt[str] = None            # facile | media | sfida
     equipment: _Opt[_List[dict]] = None
     real_photo: _Opt[bool] = None
     photo_url: _Opt[str] = None             # V129: la foto vera di Michele ("" = torna l'immagine illustrativa)
+    video_url: _Opt[str] = None             # V130: il video TikTok di Michele per questa ricetta ("" = nessuno)
     verified: _Opt[bool] = None
     hidden_public: _Opt[bool] = None
     michele_tip: _Opt[dict] = None          # {it, de, en}
@@ -225,6 +230,7 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "bake_temp": _bake_temp(r),
         "real_photo": bool(stored.get("real_photo")),
         "photo_url": stored.get("photo_url") or "",  # V129
+        "video_url": stored.get("video_url") or "",  # V130
         "verified": bool(stored.get("verified")),
         "status": _recipe_status(stored),
         "hidden_public": bool(stored.get("hidden_public")),
@@ -292,6 +298,11 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
         if pu and (len(pu) > 600 or "/api/files/" not in pu or not (pu.startswith("http") or pu.startswith("/api/files/"))):
             raise HTTPException(status_code=400, detail="photo_url_invalid")
         upd["photo_url"] = pu
+    if body.video_url is not None:  # V130: solo link di TikTok (o vuoto per toglierlo)
+        vu = body.video_url.strip()
+        if vu and (len(vu) > 300 or not _re_v130.match(vu)):
+            raise HTTPException(status_code=400, detail="video_url_invalid")
+        upd["video_url"] = vu
     upd["recipe_id"] = recipe_id
     upd["updated_at"] = now_iso()
     await db.recipe_extras.update_one({"recipe_id": recipe_id}, {"$set": upd}, upsert=True)

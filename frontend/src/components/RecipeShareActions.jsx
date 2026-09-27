@@ -42,7 +42,7 @@ export default function RecipeShareActions({ recipe, ex, doses = [], tri, lang =
       await new Promise((res) => {
         const img = new Image(); img.crossOrigin = "anonymous";
         img.onload = () => { const s = 140; c.drawImage(img, 70, 40, s, s); res(); };
-        img.onerror = res; img.src = `${base}/logo.webp`;
+        img.onerror = res; img.src = `${base}/logo.webp?v=116`;
       });
       c.fillStyle = "#f4efe6"; c.textBaseline = "top";
       c.font = "800 56px Georgia, serif"; c.fillText("MikiLab", 230, 62);

@@ -19,7 +19,7 @@ export default function Attestato({ lang, title }) {
       const display = siteFont("font-display", "Georgia, serif"), body = siteFont("font-tech", "sans-serif");
       ctx.fillStyle = "#f6efe4"; ctx.fillRect(0, 0, 1400, 990);
       ctx.strokeStyle = "#8a5a2b"; ctx.lineWidth = 6; ctx.strokeRect(40, 40, 1320, 910); ctx.lineWidth = 1.5; ctx.strokeRect(58, 58, 1284, 874);
-      try { const img = new Image(); img.src = "/logo.webp"; await img.decode(); ctx.save(); ctx.beginPath(); ctx.arc(700, 170, 60, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(img, 640, 110, 120, 120); ctx.restore(); } catch { /* senza logo */ }
+      try { const img = new Image(); img.src = "/logo.webp?v=116"; await img.decode(); ctx.save(); ctx.beginPath(); ctx.arc(700, 170, 60, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(img, 640, 110, 120, 120); ctx.restore(); } catch { /* senza logo */ }
       ctx.textAlign = "center"; ctx.fillStyle = "#6b5f57"; ctx.font = `600 22px ${body}`;
       ctx.fillText((tri("MikiLab · Il Manuale di Sitor", "MikiLab · Sitors Handbuch", "MikiLab · Sitor's Manual")).toUpperCase(), 700, 275);
       ctx.fillStyle = "#2a2320"; ctx.font = `bold 74px ${display}`; ctx.fillText(tri("Attestato del fornaio di casa", "Urkunde des Hausbäckers", "Home baker's certificate"), 700, 370);

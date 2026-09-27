@@ -252,3 +252,10 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Chi la vede**: tutti, al posto dell'immagine illustrativa; `GET /api/recipes` restituisce la foto vera come `image_url`. Sopra la foto compare «Foto di Michele» (`FotoBadge.jsx`, che legge `/api/recipe-extras` come prima).
 - Nessun dato dei visitatori; nessuna modifica all'informativa.
 - **EN (summary):** only the site owner can upload a real photo of a recipe; the browser resizes and re-encodes it (removing EXIF data such as GPS location) before upload; it is stored in the site's existing image archive and shown publicly with the label «Photo by Michele». No visitor data involved.
+
+## 43. V130 — Il perché, il video di Michele, il logo nuovo per tutti
+
+- **Il perché** (`PercheRicetta.jsx`, `lib/perche.js`): testi fissi scritti da Sitor (IA) e dichiarati come tali, mostrati sotto il procedimento quando la ricetta nomina quel passaggio. Nessun dato, nessuna chiamata.
+- **Il video di Michele**: l'admin salva in `recipe_extras.video_url` un link di TikTok (il server accetta solo indirizzi `https://www.tiktok.com/…`, `vm.tiktok.com` o `m.tiktok.com`). Nella ricetta compare un semplice collegamento «Guarda Michele che la fa»: nessun video incorporato, nessuno script di TikTok nel sito. TikTok riceve dati solo se la persona tocca il collegamento e apre la sua pagina.
+- **Logo**: gli indirizzi del logo e delle icone hanno ora `?v=116`, così i telefoni scaricano il logo della v116 invece di una copia vecchia. Nessun dato.
+- **EN (summary):** static «why» explanations written by Sitor (AI) and labelled as such; a plain link (no embed, no TikTok script) to Michele's TikTok video for a recipe; versioned logo URLs so phones fetch the current logo.

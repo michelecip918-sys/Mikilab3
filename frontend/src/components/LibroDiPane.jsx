@@ -33,7 +33,7 @@ export default function LibroDiPane({ onBack }) {
       {recipes.length > 0 && (
         <div data-testid="libro-print-area" className="print-area space-y-6">
           <div className="rounded-2xl border border-border bg-background px-6 py-12 text-center" style={{ pageBreakAfter: "always" }}>
-            <img src="/logo.webp" alt="" className="w-14 h-14 mx-auto rounded-full object-cover mb-4" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            <img src="/logo.webp?v=116" alt="" className="w-14 h-14 mx-auto rounded-full object-cover mb-4" onError={(e) => { e.currentTarget.style.display = "none"; }} />
             <p className="font-mono-data text-[10px] tracking-[0.35em] uppercase text-muted-foreground">MikiLab · {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
             <h2 className="font-display text-4xl font-bold text-foreground mt-3">{tri("Il libro di pane", "Das Brotbuch", "The bread book")}</h2>
             <p className="font-display italic text-lg text-muted-foreground mt-2">{nick ? tri(`di ${nick}`, `von ${nick}`, `of ${nick}`) : tri("di casa", "des Hauses", "of the house")}</p>

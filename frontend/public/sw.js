@@ -1,10 +1,10 @@
-const CACHE_NAME = "mikilab-v108";
+const CACHE_NAME = "mikilab-v109";
 const API_CACHE = "mikilab-api-v62";
 const API_CACHE_MAX = 150;
 // GET API cui è consentita la copia offline (network-first). MAI /sitor/*, /live*, POST.
 const API_OFFLINE_ALLOW = ["/api/recipes", "/api/recipe-extras", "/api/techniques", "/api/equipment-guide", "/api/learning-path", "/api/site-pages"];
 // App shell essenziale: precache così l'app si apre anche senza rete (backstube senza Wi-Fi).
-const SHELL = ["/", "/index.html", "/logo.webp", "/manifest.json"];
+const SHELL = ["/", "/index.html", "/logo.webp?v=116", "/manifest.json"];
 
 async function trimCache(name, max) {
   try {
@@ -100,8 +100,8 @@ self.addEventListener("push", (event) => {
   event.waitUntil(
     self.registration.showNotification(data.title || "MikiLab", {
       body: data.body || "",
-      icon: "/logo.webp",
-      badge: "/logo.webp",
+      icon: "/logo.webp?v=116",
+      badge: "/logo.webp?v=116",
       tag: data.tag || undefined,
     })
   );

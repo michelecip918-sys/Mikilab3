@@ -30,6 +30,7 @@ import { renderProcedureWithImprover } from "@/lib/improverText";
 import StrumentiRicetta from "@/components/StrumentiRicetta"; // V92
 import FotoBadge from "@/components/FotoBadge"; // V129
 import FotoDiMichele from "@/components/FotoDiMichele"; // V129
+import PercheRicetta from "@/components/PercheRicetta"; // V130
 import PezziPeso from "@/components/PezziPeso"; // V127
 import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
@@ -541,7 +542,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
                     {favRecipes.map((r) => (
                       <button key={r.id} data-testid={`fav-row-item-${r.id}`} onClick={() => setViewing(r)}
                         className="snap-start shrink-0 w-32 text-left rounded-2xl overflow-hidden border border-destructive/40 bg-card dark:bg-card active:scale-97 hover:border-destructive transition-all">
-                        <img src={r.image_url || "/logo.webp"} onError={(e) => { e.currentTarget.src = "/logo.webp"; }} alt="" className="w-full h-16 object-cover bg-card" loading="lazy" />
+                        <img src={r.image_url || "/logo.webp?v=116"} onError={(e) => { e.currentTarget.src = "/logo.webp?v=116"; }} alt="" className="w-full h-16 object-cover bg-card" loading="lazy" />
                         <p className="text-[12px] font-bold text-foreground dark:text-foreground px-2 py-1.5 line-clamp-2 leading-tight">{rLoc(r, "name", lang)}</p>
                       </button>
                     ))}
@@ -1000,6 +1001,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
           </div>
         ) : null}
 
+        {!r.locked && r.procedure ? <PercheRicetta recipe={r} /> : null} {/* V130: il perché dei passaggi */}
         {!r.locked && r.procedure && r.menu_category !== "basi" ? <MachineScheda /> : null} {/* V124 */}
 
         {r.notes ? <p className="text-sm text-muted-foreground dark:text-muted-foreground leading-relaxed whitespace-pre-line">{rLoc(r, "notes", lang)}</p> : null}

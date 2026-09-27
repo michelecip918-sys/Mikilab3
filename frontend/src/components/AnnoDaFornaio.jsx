@@ -57,7 +57,7 @@ export default function AnnoDaFornaio({ onBack }) {
       const display = siteFont("font-display", "Georgia, serif"), body = siteFont("font-tech", "sans-serif");
       const g = ctx.createLinearGradient(0, 0, 0, 1350); g.addColorStop(0, "#1f2124"); g.addColorStop(1, "#3b2a1c"); ctx.fillStyle = g; ctx.fillRect(0, 0, 1080, 1350);
       ctx.strokeStyle = "rgba(217,164,90,0.6)"; ctx.lineWidth = 3; ctx.strokeRect(50, 50, 980, 1250);
-      try { const img = new Image(); img.src = "/logo.webp"; await img.decode(); ctx.save(); ctx.beginPath(); ctx.arc(540, 150, 56, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(img, 484, 94, 112, 112); ctx.restore(); } catch { /* */ }
+      try { const img = new Image(); img.src = "/logo.webp?v=116"; await img.decode(); ctx.save(); ctx.beginPath(); ctx.arc(540, 150, 56, 0, Math.PI * 2); ctx.clip(); ctx.drawImage(img, 484, 94, 112, 112); ctx.restore(); } catch { /* */ }
       ctx.textAlign = "center"; ctx.fillStyle = "#d9a45a"; ctx.font = `600 22px ${body}`; ctx.fillText("MIKILAB", 540, 250);
       ctx.fillStyle = "#f6f1e7"; ctx.font = `bold 64px ${display}`; ctx.fillText(tri("Il mio anno da fornaio", "Mein Jahr als Bäcker", "My year as a baker"), 540, 330);
       ctx.fillStyle = "#c9bfb2"; ctx.font = `italic 30px ${display}`; ctx.fillText(nick ? nick : fmtDateLong(new Date(), lang), 540, 385);

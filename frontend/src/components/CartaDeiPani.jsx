@@ -68,7 +68,7 @@ export default function CartaDeiPani({ onBack }) {
 
       {/* La carta vera e propria: è quella che si stampa */}
       <div data-testid="carta-print" className="print-area rounded-2xl border border-border bg-background px-6 py-8 text-center" style={{ fontFeatureSettings: '"liga", "kern"' }}>
-        <img src="/logo.webp" alt="MikiLab" className="w-12 h-12 mx-auto rounded-full object-cover mb-3" onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <img src="/logo.webp?v=116" alt="MikiLab" className="w-12 h-12 mx-auto rounded-full object-cover mb-3" onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <p className="font-mono-data text-[10px] tracking-[0.35em] uppercase text-muted-foreground">MikiLab · {tri("Il Manuale di Sitor", "Sitors Handbuch", "Sitor's Manual")}</p>
         <h2 className="font-display text-3xl font-bold text-foreground mt-2">{title}</h2>
         {st.sub ? <p className="font-display italic text-[15px] text-muted-foreground mt-1">{st.sub}</p> : <p className="font-display italic text-[15px] text-muted-foreground mt-1">{fmtDateLong(new Date(), lang)}</p>}

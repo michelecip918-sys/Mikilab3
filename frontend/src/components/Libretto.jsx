@@ -63,7 +63,7 @@ export default function Libretto({ onBack }) {
         {recs.map((r, i) => (
           <article key={r.id} className="ml-lib-page bg-white text-[#2B2E33] rounded-2xl border border-border shadow-sm p-6" style={{ fontFamily: "Manrope, Arial, sans-serif" }}>
             <div className="flex items-center justify-between gap-3 border-b border-[#D9CFBC] pb-3">
-              <div className="flex items-center gap-2"><img src={`${PUB}/logo-emblem.webp`} alt="MikiLab" className="w-9 h-9 rounded-lg object-contain" /><div><p className="text-lg font-black tracking-[0.14em] uppercase leading-none" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>MikiLab</p><p className="text-[9px] tracking-[0.28em] uppercase text-[#5B5F66]">{tri("Il libretto dei 5 panini", "Das Heft der 5 Brötchen", "The 5 rolls booklet")} · {i + 1}/5</p></div></div>
+              <div className="flex items-center gap-2"><img src={`${PUB}/logo-emblem.webp?v=116`} alt="MikiLab" className="w-9 h-9 rounded-lg object-contain" /><div><p className="text-lg font-black tracking-[0.14em] uppercase leading-none" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>MikiLab</p><p className="text-[9px] tracking-[0.28em] uppercase text-[#5B5F66]">{tri("Il libretto dei 5 panini", "Das Heft der 5 Brötchen", "The 5 rolls booklet")} · {i + 1}/5</p></div></div>
               <img src={`${PUB}/polpo-firma.svg`} alt="" className="w-10 h-10" />
             </div>
             <h2 className="text-[26px] leading-tight font-black mt-4" style={{ fontFamily: "Playfair Display, Georgia, serif" }}>{rLoc(r, "name", lang)}</h2>

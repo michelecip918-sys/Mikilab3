@@ -64,7 +64,7 @@ export default function CartolinaDelPane({ r, dough, lang }) {
       const display = siteFont("font-display", "Georgia, serif");
       const body = siteFont("font-sans", "system-ui, sans-serif");
       const primary = cssHsl("--primary", "#c4652a"), bg = cssHsl("--background", "#2a2320"), fg = cssHsl("--foreground", "#f5efe6"), salvia = cssHsl("--salvia", "#7d9a7b");
-      const logo = await loadImg("/logo.webp");
+      const logo = await loadImg("/logo.webp?v=116");
       const ctx = c.getContext("2d");
       if (mode === "cartolina") {
         c.width = 1080; c.height = 1350;
