@@ -5,6 +5,7 @@ import { recipesApi, api } from "@/lib/api";
 import { ChevronLeft, Leaf } from "lucide-react";
 import { rLoc } from "@/lib/loc";
 import FotoBadge, { useFotoVere } from "@/components/FotoBadge"; // V129
+import { codiceDi } from "@/lib/codici"; // V132
 
 // V132 — prima le ricette con la canapa (le undici nuove sono scritte da Sitor e restano bozze finché Michele non le prova),
 // poi gli altri pani colorati dagli ingredienti. Una ricetta nuova «alla canapa» entra qui da sola.
@@ -66,7 +67,8 @@ export default function VerdeMikiLab({ onBack, onOpenRecipe }) {
               <FotoBadge vera={!!fotoVere[r.id]} /> {/* V129 */}
               {stati[r.id] && stati[r.id].status === "sitor_draft" && <span className="absolute top-1.5 left-1.5 z-[3] text-[9.5px] font-bold rounded-full bg-background/85 text-foreground px-2 py-0.5">{tri("Bozza di Sitor", "Entwurf von Sitor", "Sitor's draft")}</span>}
             </div>
-            <p className="p-2.5 font-bold text-foreground text-sm">{rLoc(r, "name", lang)}</p>
+            {codiceDi(r.id) ? <p className="px-2.5 pt-2 text-[11px] font-bold text-muted-foreground">{tri("N.", "Nr.", "No.")} {codiceDi(r.id)}</p> : null}
+            <p className="px-2.5 pb-2.5 pt-0.5 font-bold text-foreground text-sm">{rLoc(r, "name", lang)}</p>
           </button>
         ))}
         {items === null && <p className="text-muted-foreground col-span-full">{tri("Caricamento…", "Wird geladen…", "Loading…")}</p>}

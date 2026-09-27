@@ -386,7 +386,7 @@ const CSS = `
 export default function Scuola({ onBack }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
-  const L = lang === "de" ? "de" : lang === "en" ? "en" : "it"; // V133: i contenuti ora sono anche in inglese
+  const L = lang === "de" ? "de" : "it"; // i contenuti sono IT/DE
   const ui = UI[lang] || UI.it; // l'interfaccia segue la lingua del sito
   const [sezione, setSezione] = useState("programma");
   const [q, setQStato] = useState(() => ({ ...VUOTO, ...(LS.get(KEY, {}) || {}) }));
