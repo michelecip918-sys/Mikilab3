@@ -187,6 +187,7 @@ class ExtrasUpdate(_BM):
     difficulty: _Opt[str] = None            # facile | media | sfida
     equipment: _Opt[_List[dict]] = None
     real_photo: _Opt[bool] = None
+    photo_url: _Opt[str] = None             # V129: la foto vera di Michele ("" = torna l'immagine illustrativa)
     verified: _Opt[bool] = None
     hidden_public: _Opt[bool] = None
     michele_tip: _Opt[dict] = None          # {it, de, en}
@@ -223,6 +224,7 @@ def _extras_public(r: dict, stored: dict) -> dict:
         "calc_hydration": calc_hydration(r),
         "bake_temp": _bake_temp(r),
         "real_photo": bool(stored.get("real_photo")),
+        "photo_url": stored.get("photo_url") or "",  # V129
         "verified": bool(stored.get("verified")),
         "status": _recipe_status(stored),
         "hidden_public": bool(stored.get("hidden_public")),
@@ -285,6 +287,11 @@ async def recipe_extras_put(recipe_id: str, body: ExtrasUpdate, admin: dict = De
         raise HTTPException(status_code=400, detail="status_invalid")
     if body.test_outcome is not None and body.test_outcome not in ("", "ok", "da_rifare"):
         raise HTTPException(status_code=400, detail="test_outcome_invalid")
+    if body.photo_url is not None:  # V129: solo foto caricate nell'archivio del sito (o vuoto per toglierla)
+        pu = body.photo_url.strip()
+        if pu and (len(pu) > 600 or "/api/files/" not in pu or not (pu.startswith("http") or pu.startswith("/api/files/"))):
+            raise HTTPException(status_code=400, detail="photo_url_invalid")
+        upd["photo_url"] = pu
     upd["recipe_id"] = recipe_id
     upd["updated_at"] = now_iso()
     await db.recipe_extras.update_one({"recipe_id": recipe_id}, {"$set": upd}, upsert=True)

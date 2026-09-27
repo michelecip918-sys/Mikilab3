@@ -243,3 +243,12 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Rimossi**: `Strumenti.jsx`, `CalcolaInHome.jsx` (la calcolatrice resta, in «Calcoli e orari»), `BambiniInHome.jsx`, `NovitaColorate.jsx`, `VetrineReparti.jsx`: non salvavano nulla.
 - Informativa, sez. 10 aggiornata (IT/DE/EN): una frase su `mikilab_home_visti` e `mikilab_piano_salti`.
 - **EN (summary):** the Home page remembers, only on the device, which recipes it has already shown (last 48 ids) and, for users following the six-stage path, which stages they skipped; open rooms of «All of MikiLab» are kept in sessionStorage; nothing new is sent to the server.
+
+## 42. V129 — La foto di Michele
+
+- **Chi carica**: solo l'admin (Michele), dentro la scheda ricetta («La tua foto», `FotoDiMichele.jsx`). I visitatori non caricano nulla.
+- **Prima dell'invio**: il browser ridimensiona la foto (lato lungo 1600 px) e la ridisegna in JPEG: così spariscono i dati nascosti del file (EXIF: posizione GPS, modello del telefono, data e ora).
+- **Dove finisce**: nell'archivio immagini già esistente del sito (`POST /api/upload`, collezione `files`, servita da `/api/files/…`); l'indirizzo è salvato in `recipe_extras.photo_url` con `real_photo: true`. La collezione delle ricette non viene toccata.
+- **Chi la vede**: tutti, al posto dell'immagine illustrativa; `GET /api/recipes` restituisce la foto vera come `image_url`. Sopra la foto compare «Foto di Michele» (`FotoBadge.jsx`, che legge `/api/recipe-extras` come prima).
+- Nessun dato dei visitatori; nessuna modifica all'informativa.
+- **EN (summary):** only the site owner can upload a real photo of a recipe; the browser resizes and re-encodes it (removing EXIF data such as GPS location) before upload; it is stored in the site's existing image archive and shown publicly with the label «Photo by Michele». No visitor data involved.

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { mkTri } from "@/i18n/triMaps";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
@@ -28,6 +28,8 @@ import { useBackClose } from "@/lib/backNav";
 import { applyRecipeSeo, clearRecipeSeo } from "@/lib/recipeSeo"; // V87: indirizzo vero + SEO per ogni ricetta
 import { renderProcedureWithImprover } from "@/lib/improverText";
 import StrumentiRicetta from "@/components/StrumentiRicetta"; // V92
+import FotoBadge from "@/components/FotoBadge"; // V129
+import FotoDiMichele from "@/components/FotoDiMichele"; // V129
 import PezziPeso from "@/components/PezziPeso"; // V127
 import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
@@ -67,13 +69,20 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
   const [baseFilter, setBaseFilter] = useState("all");
   const [diffFilter, setDiffFilter] = useState("all");
   const [diffMap, setDiffMap] = useState({});
+  const loadRef = useRef(null); // V129: la versione aggiornata di load() per ricaricare dopo una foto nuova
   const [favFilter, setFavFilter] = useState(false);
   const [showFilters, setShowFilters] = useState(false); // V128: base e difficoltà dietro un solo bottone «Filtri»
   const { favs, toggle: toggleFav, countOf } = useFavRecipes();
   const activeDept = useDept();
   const [openCats, setOpenCats] = useState(() => { try { return JSON.parse(localStorage.getItem(`mikilab_open_cats_${collectionName}`) || "{}"); } catch { return {}; } });
   useEffect(() => { try { localStorage.setItem(`mikilab_open_cats_${collectionName}`, JSON.stringify(openCats)); } catch { /* */ } }, [openCats, collectionName]);
-  useEffect(() => { api.get(`/recipe-extras`).then((r) => setDiffMap(r.data || {})).catch(() => { /* */ }); }, []);
+  useEffect(() => {
+    const leggi = () => api.get(`/recipe-extras`).then((r) => setDiffMap(r.data || {})).catch(() => { /* */ });
+    leggi();
+    const h = () => { leggi(); try { if (loadRef.current) loadRef.current(); } catch { /* */ } }; // V129: dopo «Metti la tua foto» si vede subito la foto vera
+    window.addEventListener("mikilab-foto-cambiata", h);
+    return () => window.removeEventListener("mikilab-foto-cambiata", h);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const [folderCovers, setFolderCovers] = useState({});
   const [translating, setTranslating] = useState(false);
   const { t, lang, setLang } = useLang();
@@ -136,6 +145,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     }
   };
 
+  loadRef.current = load; // V129
   useEffect(() => { load(); /* eslint-disable-next-line */ }, [collectionName, includeMine]);
 
   // Copertine cartelle scelte dall'admin (globali, per categoria).
@@ -387,9 +397,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
               {r.image_url && (
                 <img src={r.image_url} alt="" loading="lazy" onError={(e) => { e.currentTarget.style.display = "none"; }} className="relative z-[1] w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               )}
-              {r.image_url && !diffMap[r.id]?.real_photo && (
-                <span data-testid="card-illustrative" className="absolute bottom-1 right-1 z-[3] text-[8px] font-bold uppercase tracking-wide bg-background/55 text-foreground/90 px-1.5 py-0.5 rounded">{triM("Immagine illustrativa", "Symbolbild", "Illustrative image")}</span>
-              )}
+              {r.image_url && <FotoBadge vera={!!diffMap[r.id]?.real_photo} />} {/* V129 */}
               {/* overlay cyber: griglia + gradiente + scanline teal */}
               <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-[linear-gradient(to_right,#D9520011_1px,transparent_1px),linear-gradient(to_bottom,#D9520011_1px,transparent_1px)] bg-[size:1.25rem_1.25rem] opacity-30" />
               <div aria-hidden className="absolute inset-0 z-[2] pointer-events-none bg-gradient-to-t from-background via-background/10 to-transparent" />
@@ -571,6 +579,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <div data-testid="recipe-results-bar" className="flex items-center justify-between gap-2 mb-2 px-0.5">
               <span className="text-xs font-semibold text-muted-foreground">
                 {filtered.length} {filtered.length === 1 ? triM("ricetta", "Rezept", "recipe") : triM("ricette", "Rezepte", "recipes")}
+                {canEdit && collectionName === "mikilab" && (() => { const v = Object.values(diffMap); const tot = v.length; const fv = v.filter((x) => x && x.real_photo).length; const pr = v.filter((x) => x && x.status === "tested").length; return tot ? <span data-testid="admin-foto-contatore" className="ml-2 text-primary">· {triM(`foto vere ${fv} su ${tot} · provate ${pr} su ${tot}`, `echte Fotos ${fv} von ${tot} · erprobt ${pr} von ${tot}`, `real photos ${fv} of ${tot} · tested ${pr} of ${tot}`)}</span> : null; })()} {/* V129: solo admin */}
               </span>
               {(catFilter !== "all" || baseFilter !== "all" || diffFilter !== "all" || favFilter || (query || "").trim() !== "") && (
                 <button data-testid="recipe-clear-filters" onClick={() => { setCatFilter("all"); setBaseFilter("all"); setDiffFilter("all"); setFavFilter(false); setQuery(""); }}
@@ -672,6 +681,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
             <RecipeDetail
               r={viewing}
               t={t}
+              realPhoto={!!diffMap[viewing.id]?.real_photo}
               readOnly={readOnly}
               canEdit={canEdit}
               scaleVal={scale[viewing.id]}
@@ -736,7 +746,7 @@ function procWithImprover(text, onImprover) {
 }
 
 
-function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete, onPromote }) {
+function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, onScaleChange, onImprover, onEdit, onDuplicate, onScaleAction, onDelete, onPromote }) {
   const { profile } = useProfile();
   const isPro = profile === "pro";
   const { lang } = useLang();
@@ -790,10 +800,10 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
 
   return (
     <div data-testid={`recipe-detail-${r.id}`}>
-      {r.image_url && isPanettone && (
-        <div className="relative h-40 w-full">
+      {r.image_url && (isPanettone || realPhoto) && ( /* V129: la foto vera di Michele si vede in cima a ogni ricetta */
+        <div className={`relative w-full ${realPhoto ? "h-56" : "h-40"}`}>
           <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
-          <span data-testid="recipe-illustrative" className="absolute bottom-1 right-1 z-[2] text-[9px] font-bold uppercase tracking-wide bg-background/55 text-foreground/90 px-1.5 py-0.5 rounded">{tri("Immagine illustrativa", "Symbolbild", "Illustrative image")}</span>
+          <FotoBadge vera={realPhoto} testid="recipe-illustrative" big /> {/* V129 */}
           {countryColors(r.origin) && (
             <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">
               {countryColors(r.origin).map((c, k) => <div key={k} className="flex-1" style={{ background: c }} />)}
@@ -813,6 +823,7 @@ function RecipeDetail({ r, t, readOnly, canEdit, scaleVal, onScaleChange, onImpr
           {r.flour_type ? <p className="text-sm text-muted-foreground mt-0.5">{farroOn ? `${farroFlourLabel(lang)} · ${tri("invece di", "statt", "instead of")} ${rLoc(r, "flour_type", lang)}` : rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 
+        {canEdit && (r.collection_name || "mikilab") === "mikilab" && <FotoDiMichele recipe={r} vera={realPhoto} />} {/* V129: solo admin */}
         <RecipeExtrasPanel recipe={r} isAdmin={canEdit} scaleG={target} />
         <EtichettaMikiLab recipe={r} />
         <RecipeScheme recipe={r} />

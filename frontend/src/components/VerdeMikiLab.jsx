@@ -4,6 +4,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { recipesApi } from "@/lib/api";
 import { ChevronLeft, Leaf } from "lucide-react";
 import { rLoc } from "@/lib/loc";
+import FotoBadge, { useFotoVere } from "@/components/FotoBadge"; // V129
 
 const GREEN_NAMES = [
   "Verde Canapa",
@@ -18,6 +19,7 @@ export default function VerdeMikiLab({ onBack, onOpenRecipe }) {
   const { lang } = useLang();
   const tri = (i, d, e) => mkTri(lang)(i, d, e);
   const [items, setItems] = useState([]);
+  const fotoVere = useFotoVere(); // V129
 
   useEffect(() => {
     recipesApi.list("mikilab").then((rows) => {
@@ -42,7 +44,7 @@ export default function VerdeMikiLab({ onBack, onOpenRecipe }) {
             className="text-left rounded-2xl border border-border bg-background overflow-hidden hover:border-accent active:scale-[0.98] transition-all">
             <div className="aspect-[4/3] bg-background relative">
               {r.image_url && <img src={r.image_url} alt="" loading="lazy" className="w-full h-full object-cover" />}
-              <span className="absolute bottom-1 right-1 text-[8px] font-bold uppercase bg-background/55 text-foreground/90 px-1.5 py-0.5 rounded">{tri("Immagine illustrativa", "Symbolbild", "Illustrative image")}</span>
+              <FotoBadge vera={!!fotoVere[r.id]} /> {/* V129 */}
             </div>
             <p className="p-2.5 font-bold text-foreground text-sm">{rLoc(r, "name", lang)}</p>
           </button>

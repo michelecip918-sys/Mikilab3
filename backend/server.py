@@ -830,6 +830,18 @@ async def get_recipes(collection_name: str = "mikilab", include_mine: bool = Fal
             hidden = {x["recipe_id"] async for x in db.recipe_extras.find({"hidden_public": True}, {"_id": 0, "recipe_id": 1})}
             if hidden:
                 docs = [d for d in docs if d.get("id") not in hidden]
+        # V129 — La foto di Michele: se c'è una foto vera (recipe_extras.photo_url), vale al posto dell'immagine
+        # illustrativa. Sta negli extra, non nella ricetta: il seed non la cancella e la ricetta resta aggiornabile.
+        try:
+            foto = {x["recipe_id"]: x["photo_url"] async for x in db.recipe_extras.find(
+                {"real_photo": True, "photo_url": {"$nin": [None, ""]}}, {"_id": 0, "recipe_id": 1, "photo_url": 1})}
+            if foto:
+                for d in docs:
+                    u = foto.get(d.get("id"))
+                    if u:
+                        d["image_url"] = u
+        except Exception:
+            pass
         return docs
     if not user:
         raise HTTPException(status_code=401, detail="Accesso richiesto per le ricette personali")

@@ -64,8 +64,11 @@ export default function RecipeExtrasPanel({ recipe, isAdmin = false, scaleG = 0 
   useEffect(() => {
     let stop = false;
     setEx(null);
-    api.get(`/recipe-extras/${recipe.id}`).then((r) => { if (!stop) setEx(r.data); }).catch(() => { /* */ });
-    return () => { stop = true; };
+    const leggi = () => api.get(`/recipe-extras/${recipe.id}`).then((r) => { if (!stop) setEx(r.data); }).catch(() => { /* */ });
+    leggi();
+    const h = (e) => { if (!e || !e.detail || e.detail.id === recipe.id) leggi(); }; // V129: dopo «Metti la tua foto»
+    window.addEventListener("mikilab-foto-cambiata", h);
+    return () => { stop = true; window.removeEventListener("mikilab-foto-cambiata", h); };
   }, [recipe.id]);
 
   const setModePref = (m) => { setMode(m); try { localStorage.setItem(MODE_KEY, m); } catch { /* */ } };
