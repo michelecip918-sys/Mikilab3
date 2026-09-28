@@ -9,7 +9,6 @@ import LaTuaCucina from "@/components/LaTuaCucina"; // V88 → V128: striscia co
 import { BancoNota } from "@/components/BancoMichele";
 import BenvenutoMikiLab from "@/components/BenvenutoMikiLab"; // V107 → V128
 import CominciaDaQui from "@/components/CominciaDaQui"; // V128
-import PaneInCorso from "@/components/PaneInCorso"; // V136: Dillo a Sitor / il tuo pane in corso
 import OggiInBottega from "@/components/OggiInBottega"; // V101
 import TuttoMikiLab from "@/components/TuttoMikiLab"; // V119 → V128: otto stanze
 import NonSoloRicetta from "@/components/NonSoloRicetta"; // V118
@@ -42,7 +41,6 @@ export default function HomeManuale({ onNav }) {
   return (
     <div data-testid="home-manuale" className="pt-2 space-y-7">
       <BenvenutoMikiLab onNav={onNav} count={count} />
-      <PaneInCorso onNav={onNav} recipes={all} />
       <CominciaDaQui recipes={all} onNav={onNav} onOpenRecipe={openRecipe} />
       <div className="space-y-3">
         <OggiInBottega onNav={onNav} />

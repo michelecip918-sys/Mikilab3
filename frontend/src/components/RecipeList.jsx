@@ -32,6 +32,7 @@ import FotoBadge from "@/components/FotoBadge"; // V129
 import FotoDiMichele from "@/components/FotoDiMichele"; // V129
 import PercheRicetta from "@/components/PercheRicetta"; // V130
 import { codiceDi } from "@/lib/codici"; // V132
+import UltimaVolta from "@/components/UltimaVolta"; // V136
 import PezziPeso from "@/components/PezziPeso"; // V127
 import OfficinaSitor from "@/components/OfficinaSitor"; // V92
 import EtichettaMikiLab from "@/components/EtichettaMikiLab"; // V91
@@ -189,6 +190,8 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
       setPendingOpenId(null);
       window.__mikilabPendingRecipe = null;
       window.__mikilabPendingSlug = null;
+      if (window.__mkScala && window.__mkScala.id === target.id) { const fl = String(window.__mkScala.flour); setScale((s) => ({ ...s, [target.id]: fl })); } // V136: le dosi del piano di Sitor
+      window.__mkScala = null;
     }
   }, [recipes, pendingOpenId, collectionName]);
 
@@ -865,6 +868,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-primary mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
           {codiceDi(r.id) ? <p data-testid={`recipe-code-${r.id}`} className="text-[11.5px] text-muted-foreground mt-0.5">{tri("Ricetta n.", "Rezept Nr.", "Recipe no.")} {codiceDi(r.id)} · mikilab.de/{codiceDi(r.id)}</p> : null} {/* V132: il numero per TikTok */}
+          <div className="mt-2"><UltimaVolta recipe={r} /></div>
           {r.flour_type ? <p className="text-sm text-muted-foreground mt-0.5">{farroOn ? `${farroFlourLabel(lang)} · ${tri("invece di", "statt", "instead of")} ${rLoc(r, "flour_type", lang)}` : rLoc(r, "flour_type", lang)}</p> : null}
         </div>
 

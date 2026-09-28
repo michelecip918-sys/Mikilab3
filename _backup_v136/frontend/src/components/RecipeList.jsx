@@ -844,9 +844,9 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
 
   return (
     <div data-testid={`recipe-detail-${r.id}`}>
-      {r.image_url && (isPanettone || realPhoto) && ( /* V129: la foto vera di Michele si vede in cima a ogni ricetta */
-        <div className={`relative w-full ${realPhoto ? "h-56" : "h-40"}`}>
-          <img src={r.image_url} alt={r.name} className="w-full h-full object-cover" />
+      {r.image_url && ( /* V135: ogni ricetta si apre con la sua immagine (V129: la foto vera di Michele è più alta) */
+        <div className={`relative w-full ${realPhoto ? "h-56" : "h-48"}`}>
+          <img src={r.image_url} alt={rLoc(r, "name", lang)} className="w-full h-full object-cover" onError={(e) => { const b = e.currentTarget.parentElement; if (b) b.style.display = "none"; }} />
           <FotoBadge vera={realPhoto} testid="recipe-illustrative" big /> {/* V129 */}
           {countryColors(r.origin) && (
             <div aria-hidden className="absolute top-0 left-0 right-0 flex h-1.5">

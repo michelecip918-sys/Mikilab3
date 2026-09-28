@@ -112,7 +112,6 @@ const PAGINE_LAZY = {
   Libretto: () => import("@/components/Libretto"),
   BancoEditor: () => import("@/components/BancoMichele"),
   TikTokPagina: () => import("@/components/TikTokPagina"),
-  DilloASitor: () => import("@/components/DilloASitor"), // V136
 };
 function pagina(nome) {
   return lazy(() => PAGINE_LAZY[nome]().catch((err) => {
@@ -178,7 +177,6 @@ const LeMieMedaglie = pagina("LeMieMedaglie");
 const Libretto = pagina("Libretto");
 const BancoEditor = pagina("BancoEditor");
 const TikTokPagina = pagina("TikTokPagina");
-const DilloASitor = pagina("DilloASitor"); // V136
 function PaginaInArrivo() {
   return <div data-testid="pagina-in-arrivo" aria-busy="true" className="py-16 flex justify-center"><span className="w-7 h-7 rounded-full border-2 border-primary/30 border-t-primary animate-spin" /></div>;
 }
@@ -188,7 +186,6 @@ const PUB = process.env.PUBLIC_URL;
 function initialRoute() {
   const p = (window.location.pathname || "").toLowerCase().replace(/^\/(it|de|en)(?=\/|$)/, "") || "/"; // V117: /de/… e /en/… come le pagine normali
   if (p.startsWith("/ricetta/") || recipeIdFromLocation()) return "recipes"; // V132: anche i link «?ricetta=» e i numeri delle ricette (mikilab.de/42)
-  if (p === "/dillo-a-sitor" || p.startsWith("/dillo-a-sitor/")) return "dillo"; // V136
   if (p === "/tiktok" || p.startsWith("/tiktok/") || /^\/\d{1,4}\/?$/.test(p)) return "tiktok"; // V132: la pagina TikTok (anche un numero che non esiste)
   if (p.startsWith("/volantino")) return "volantino";
   if (p === "/calcolatrice" || p.startsWith("/calcolatrice/")) return "calcolatrice"; // V127
@@ -438,7 +435,6 @@ export default function App() {
               {route === "tecniche" && <TecnichePage initialSlug={techSlug} onBack={() => setRoute("home")} />}
               {route === "verde" && <VerdeMikiLab onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "tiktok" && <TikTokPagina onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V132 */}
-              {route === "dillo" && <DilloASitor onBack={() => setRoute("home")} onNav={navFromHome} />} {/* V136: Dillo a Sitor */}
               {route === "miglioratore" && <MiglioratorePage onBack={() => setRoute("home")} onOpenRecipe={(id) => { setRoute("recipes"); setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150); }} />}
               {route === "admin-costs" && isAdmin && <AdminCosts onBack={() => setRoute("home")} />}
               {route === "admin-2b" && isAdmin && <Admin2B onBack={() => setRoute("home")} />}
