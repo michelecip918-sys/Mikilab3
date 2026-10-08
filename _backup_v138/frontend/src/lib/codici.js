@@ -181,22 +181,7 @@ export const CODICI = {
   176: ["1f3f6a2e-8c0d-5b7e-9a41-0c132a000011", "cantucci-alla-canapa"],
 };
 const PER_ID = {};
-const PER_NOME = {}; // V138
-Object.entries(CODICI).forEach(([c, v]) => { PER_ID[v[0]] = Number(c); PER_NOME[v[1]] = Number(c); });
+Object.entries(CODICI).forEach(([c, v]) => { PER_ID[v[0]] = Number(c); });
 export function voceCodice(c) { return CODICI[Number(c)] || null; }
 export function idDaCodice(c) { const v = CODICI[Number(c)]; return v ? v[0] : null; }
-// V138 — Il nome in forma di indirizzo: la stessa regola di recipeSlug in lib/recipeSeo.js (qui in copia, perché
-// recipeSeo importa questo file).
-export function nomeIndirizzo(name) {
-  return String(name || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60);
-}
-// V138 — Il numero di una ricetta si trova PRIMA dal nome e solo dopo dall'id. Gli id qui sopra sono quelli del file
-// delle ricette: sul sito pubblicato 53 ricette (le più vecchie: pani, panini, focacce, sei panettoni, i lieviti) hanno
-// un id diverso, perché il ricettario si allinea per nome. Cercando solo dall'id, a quelle ricette il numero non
-// compariva. Si passa la ricetta intera (codiceDi(ricetta)); con il solo id funziona come prima.
-export function codiceDi(x) {
-  if (!x) return null;
-  if (typeof x === "string") return PER_ID[x] || null;
-  if (x.collection_name && x.collection_name !== "mikilab") return null; // le ricette personali non hanno numero
-  return (x.name ? PER_NOME[nomeIndirizzo(x.name)] : null) || PER_ID[x.id] || null;
-}
+export function codiceDi(id) { return PER_ID[id] || null; }

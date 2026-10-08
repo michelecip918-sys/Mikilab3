@@ -175,7 +175,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
     if (collectionName !== "mikilab") return;
     const onOpen = (e) => {
       const id = e?.detail?.id;
-      if (id) { window.__mikilabPendingRecipe = id; window.__mikilabPendingSlug = (e.detail && e.detail.slug) || null; setPendingOpenId(id); } // V138: il nome viaggia con la richiesta; senza nome si toglie quello rimasto da un link di prima
+      if (id) { window.__mikilabPendingRecipe = id; setPendingOpenId(id); }
     };
     window.addEventListener("mikilab-open-recipe", onOpen);
     if (window.__mikilabPendingRecipe) setPendingOpenId(window.__mikilabPendingRecipe);
@@ -184,13 +184,7 @@ export default function RecipeList({ collectionName, heroImage, heroTitle, heroS
 
   useEffect(() => {
     if (collectionName !== "mikilab" || !pendingOpenId || !recipes.length) return;
-    // V132: se l'id non c'è, la ritrova dal nome. V138: se l'id c'è ma è di UN'ALTRA ricetta (il nome nel link non è il
-    // suo) e una ricetta con quel nome esiste, vince il nome: sul sito pubblicato alcuni id sono diversi da quelli dei link.
-    const nomeLink = window.__mikilabPendingSlug;
-    const haNome = (x) => [x.name, x.name_de, x.name_en].some((n) => n && recipeSlug(n) === nomeLink);
-    const conId = recipes.find((x) => x.id === pendingOpenId);
-    const conNome = nomeLink && !(conId && haNome(conId)) ? recipes.find(haNome) : null;
-    const target = conNome || conId || null;
+    const target = recipes.find((x) => x.id === pendingOpenId) || (window.__mikilabPendingSlug ? recipes.find((x) => [x.name, x.name_de, x.name_en].some((n) => n && recipeSlug(n) === window.__mikilabPendingSlug)) : null); // V132: se l'id non c'è, la ritrova dal nome
     if (target) {
       setViewing(target);
       setPendingOpenId(null);
@@ -873,7 +867,7 @@ function RecipeDetail({ r, t, realPhoto = false, readOnly, canEdit, scaleVal, on
             {isPanettone && farroOn ? rLoc(r, "name", lang).replace(/mikilab/i, (m) => "al Farro " + m) : rLoc(r, "name", lang)}{farroOn && !isPanettone ? ` · ${tri("al farro", "aus Dinkel", "spelt")}` : ""}
           </h2>
           {rLoc(r, "real_name", lang) ? <p className="text-sm font-semibold text-primary mt-0.5">{rLoc(r, "real_name", lang)}</p> : null}
-          {codiceDi(r) ? <p data-testid={`recipe-code-${r.id}`} className="text-[11.5px] text-muted-foreground mt-0.5">{tri("Ricetta n.", "Rezept Nr.", "Recipe no.")} {codiceDi(r)} · mikilab.de/{codiceDi(r)}</p> : null} {/* V132: il numero per TikTok · V138: dal nome */}
+          {codiceDi(r.id) ? <p data-testid={`recipe-code-${r.id}`} className="text-[11.5px] text-muted-foreground mt-0.5">{tri("Ricetta n.", "Rezept Nr.", "Recipe no.")} {codiceDi(r.id)} · mikilab.de/{codiceDi(r.id)}</p> : null} {/* V132: il numero per TikTok */}
           <div className="mt-2"><UltimaVolta recipe={r} /></div>
           {r.flour_type ? <p className="text-sm text-muted-foreground mt-0.5">{farroOn ? `${farroFlourLabel(lang)} · ${tri("invece di", "statt", "instead of")} ${rLoc(r, "flour_type", lang)}` : rLoc(r, "flour_type", lang)}</p> : null}
         </div>

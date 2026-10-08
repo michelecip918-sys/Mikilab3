@@ -5,7 +5,7 @@ import { mkTri } from "@/i18n/triMaps";
 import { recipesApi, api } from "@/lib/api";
 import { rLoc } from "@/lib/loc";
 import { useAuth } from "@/auth/AuthContext";
-import { voceCodice, codiceDi } from "@/lib/codici";
+import { idDaCodice, codiceDi } from "@/lib/codici";
 import { TIKTOK_PROFILO } from "@/lib/tiktok";
 
 // V132 — MIKILAB SU TIKTOK (mikilab.de/tiktok, da mettere nel profilo TikTok). Chi arriva da un video scrive il numero
@@ -31,12 +31,12 @@ export default function TikTokPagina({ onBack, onNav }) {
     return () => { ok = false; };
   }, []);
 
-  const apri = (id, slug) => { // V138: col numero si manda anche il nome, per ritrovare la ricetta se sul sito l'id è diverso
-    window.__mikilabPendingRecipe = id; window.__mikilabPendingSlug = slug || null;
+  const apri = (id) => {
+    window.__mikilabPendingRecipe = id;
     if (onNav) onNav("recipes");
-    setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id, slug: slug || null } })), 150);
+    setTimeout(() => window.dispatchEvent(new CustomEvent("mikilab-open-recipe", { detail: { id } })), 150);
   };
-  const vai = () => { const v = voceCodice(String(num).trim()); if (!v) { setErrore(true); return; } setErrore(false); apri(v[0], v[1]); };
+  const vai = () => { const id = idDaCodice(String(num).trim()); if (!id) { setErrore(true); return; } setErrore(false); apri(id); };
   const conVideo = useMemo(() => (ricette || []).filter((r) => extra[r.id] && extra[r.id].video)
     .sort((a, b) => String((extra[b.id] || {}).video_at || "").localeCompare(String((extra[a.id] || {}).video_at || ""))), [ricette, extra]);
   const daFilmare = useMemo(() => (!isAdmin ? [] : (ricette || []).filter((r) => { const x = extra[r.id]; return x && !x.video && (x.status === "tested" || x.real_photo); }).slice(0, 12)), [ricette, extra, isAdmin]);
@@ -47,7 +47,7 @@ export default function TikTokPagina({ onBack, onNav }) {
         {r.image_url && <img src={r.image_url} alt="" loading="lazy" className="w-full h-full object-cover" />}
         {extra[r.id] && extra[r.id].video && <span className="absolute bottom-1.5 left-1.5 w-7 h-7 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow"><Play className="w-3.5 h-3.5" /></span>}
       </div>
-      {codiceDi(r) ? <p className="px-2.5 pt-2 text-[11.5px] font-bold text-primary">{tri("N.", "Nr.", "No.")} {codiceDi(r)}</p> : null}
+      {codiceDi(r.id) ? <p className="px-2.5 pt-2 text-[11.5px] font-bold text-primary">{tri("N.", "Nr.", "No.")} {codiceDi(r.id)}</p> : null}
       <p className="px-2.5 pb-2.5 pt-0.5 font-bold text-foreground text-sm leading-snug">{rLoc(r, "name", lang)}</p>
     </button>
   );

@@ -439,13 +439,6 @@ async def seed_mikilab_if_empty(force: bool = False):
         # Non sovrascrivere MAI le ricette che Michele ha modificato a mano.
         if existing and existing.get("user_edited"):
             continue
-        if existing is None:
-            # V138: una scheda NUOVA non prende mai l'id di un'altra scheda (è così che erano nati i doppioni).
-            try:
-                import v138_id_unici as _v138g
-                seed_id = await _v138g.id_libero(db, seed_id)
-            except Exception as _e138:
-                logging.getLogger(__name__).error(f"V138 id libero error: {_e138}")
         doc["updated_at"] = now_iso()
         doc["hidden"] = False
         doc["organization_id"] = ORG_DEFAULT
@@ -1587,18 +1580,6 @@ async def on_startup_seed_mikilab():
             await db.app_meta.update_one({"_key": "v134_immagini"}, {"$set": {"_key": "v134_immagini", "done_at": now_iso()}}, upsert=True)
     except Exception as e:
         logging.getLogger(__name__).error(f"V134 immagini error: {e}")
-    try:
-        # V138 — ogni scheda ha un id solo suo. Sul sito pubblicato 11 panettoni avevano lo stesso id della loro vecchia
-        # scheda nascosta (il corso «Cucina con Sitor» prendeva quella vecchia e non si apriva) e due ricette di cornetti
-        # avevano lo stesso id. Una volta sola: l'id resta alla scheda visibile, le altre ne ricevono uno nuovo.
-        _m138 = await db.app_meta.find_one({"_key": "v138_id_unici"}, {"_id": 0})
-        if not _m138:
-            import v138_id_unici as _v138
-            _cambi138 = await _v138.sistema(db, SEED_RETIRED_NAMES)
-            await db.app_meta.update_one({"_key": "v138_id_unici"}, {"$set": {"_key": "v138_id_unici", "done_at": now_iso(), "cambi": _cambi138}}, upsert=True)
-            logging.getLogger(__name__).info(f"V138 id unici: {len(_cambi138)} schede con id nuovo")
-    except Exception as e:
-        logging.getLogger(__name__).error(f"V138 id unici error: {e}")
     try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
