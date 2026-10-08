@@ -276,3 +276,11 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - **Schermo acceso** nella ricetta: Wake Lock API del browser, solo su richiesta, finché la ricetta è aperta. Nessun dato.
 - **Canapa**: undici ricette nuove scritte da Sitor (IA), inserite una volta nel database (`app_meta.v132_canapa`) con stato «Bozza»; nei procedimenti di 14 ricette la parentesi del vecchio miglioratore ora nomina solo gli ingredienti che la ricetta ha. Nessun dato personale.
 - **EN (summary):** TikTok's player loads only after an explicit tap (consent); admin-picked public TikTok links from other bakers; short links resolved server-side without user data; recipe numbers and a /tiktok landing page; optional screen wake lock; eleven new AI-written hemp recipes marked as drafts; «Kokosfett» translated in the Italian and English texts (text only).
+
+## 46. V136 — «Dillo a Sitor»
+
+- La frase («pizza sabato alle 20 per 6») si capisce nel browser con regole in italiano, tedesco e inglese: nessun invio.
+- Il piano (ricetta, farina, orari dei passaggi, spesa spuntata, passaggi fatti, voto) resta nel browser: `localStorage.mikilab_piano_sitor`. Il quaderno dei voti per ricetta (ultime 5 volte: data, voto, sintomi scelti dall'elenco del Pronto soccorso): `localStorage.mikilab_diario_sitor`. Il voto aggiunge la data anche agli appunti della ricetta (`mikilab_appunti_<id>`) e alle ricette fatte (`mikilab_done`), come il bottone «L'ho fatta».
+- Il file .ics dei promemoria si crea nel browser e si apre con il calendario del telefono.
+- Usano l'IA solo due cose già esistenti e dichiarate: «Chiedi a Sitor (IA)» (endpoint `/sitor/plan`, la frase scritta, con il limite giornaliero) e il parere sulla foto (PhotoDiag). Nessun nuovo dato sul server.
+- **EN (summary):** the sentence is parsed in the browser; plan, ticks and ratings stay in localStorage; the .ics file is made locally; only the existing, declared AI features are called on request.

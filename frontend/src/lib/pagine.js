@@ -1,10 +1,15 @@
 import { META } from "@/i18n/meta";
+import { SITO, linguaIndirizzo, setCanonical, setHreflang, indirizziHome } from "@/lib/lingueUrl"; // V137
+import { applyRecipeSeo, ricettaAperta } from "@/lib/recipeSeo"; // V137
 
 // V112 — LE PAGINE DI MIKILAB: indirizzo, titolo e descrizione di ogni pagina pubblica. Servono a tre cose:
 // 1) la barra degli indirizzi cambia quando cambi pagina (così un link si può copiare e condividere: mikilab.de/scuola);
 // 2) il titolo della scheda del browser e della cronologia dice dove sei («MikiLab a scuola · MikiLab»);
 // 3) Google legge titolo, descrizione e canonical della pagina giusta. Niente rete, niente dati.
 // I testi vengono dalla Mappa di MikiLab (stessi titoli, stesse descrizioni).
+// V137 — Per Google ogni pagina ha tre indirizzi, uno per lingua: mikilab.de/it/scuola, /de/scuola, /en/scuola.
+// La pagina dichiara come «buono» (canonical) quello della lingua in cui è scritta e segnala gli altri due (hreflang).
+// L'indirizzo senza prefisso (mikilab.de/scuola) resta valido e apre la lingua di chi entra.
 
 export const PAGINE = {
   volantino: { path: "/volantino", t: { it: "Il volantino da frigo", de: "Der Kühlschrank-Flyer", en: "The fridge flyer" }, d: { it: "Porta MikiLab in un'altra cucina.", de: "Bring MikiLab in eine andere Küche.", en: "Take MikiLab to another kitchen." } },
@@ -48,30 +53,42 @@ export function pathForRoute(route) {
 const pick = (o, lang) => (o && (o[lang] || o.en || o.it)) || "";
 function setMeta(sel, attr, val) { try { const el = document.head.querySelector(sel); if (el && val != null) el.setAttribute(attr, val); } catch { /* */ } }
 
-// Applica titolo, descrizione e canonical della pagina. Per la Home ripristina quelli del sito.
+// Applica titolo, descrizione, canonical e lingue (hreflang) della pagina. Per la Home ripristina quelli del sito.
 // Va chiamata dopo gli effetti dei provider (setTimeout 0), perché LanguageProvider riscrive i meta a ogni cambio lingua.
 export function applyPageMeta(route, lang) {
-  if (typeof document === "undefined" || route === "recipes") return;
+  if (typeof document === "undefined") return;
   setTimeout(() => {
     try {
+      // V137 — Ricetta aperta: titolo, descrizione, canonical e lingue sono quelli della ricetta. Li rimetto qui perché
+      // a ogni cambio lingua LanguageProvider riscrive titolo e descrizione del sito sopra quelli della ricetta.
+      if (route === "recipes") { const aperta = ricettaAperta(); if (aperta) { applyRecipeSeo(aperta, lang); return; } }
       const p = PAGINE[route];
       const m = META[lang] || META.it;
-      const canon = document.head.querySelector('link[rel="canonical"]');
+      const L = linguaIndirizzo(lang); // V137
       if (!p) {
-        // Home e pagine senza indirizzo proprio (Strumenti, Tecniche, admin…): titolo e descrizione del sito
-        { document.title = m.title; setMeta('meta[name="description"]', "content", m.description); setMeta('meta[property="og:title"]', "content", m.ogTitle); setMeta('meta[property="og:description"]', "content", m.ogDescription); setMeta('meta[property="og:url"]', "content", "https://mikilab.de/" + (lang === "de" || lang === "en" ? lang + "/" : "")); if (canon) canon.setAttribute("href", "https://mikilab.de/" + (lang === "de" || lang === "en" ? lang + "/" : "")); } // V117: home per lingua
+        // Home, ricettario e pagine senza indirizzo proprio (Tecniche, admin…): titolo e descrizione del sito, Home nella lingua di chi legge
+        const casa = `${SITO}/${L}/`;
+        document.title = m.title;
+        setMeta('meta[name="description"]', "content", m.description);
+        setMeta('meta[property="og:title"]', "content", m.ogTitle);
+        setMeta('meta[property="og:description"]', "content", m.ogDescription);
+        setMeta('meta[property="og:url"]', "content", casa);
+        setCanonical(casa); // V137 (V117: home per lingua)
+        setHreflang(indirizziHome()); // V137
         return;
       }
       const titolo = `${pick(p.t, lang)} · MikiLab`;
       const descr = pick(p.d, lang);
+      const indirizzo = `${SITO}/${L}${p.path}`; // V137: mikilab.de/<lingua>/<pagina>
       document.title = titolo;
       setMeta('meta[name="description"]', "content", descr);
       setMeta('meta[property="og:title"]', "content", titolo);
       setMeta('meta[property="og:description"]', "content", descr);
-      setMeta('meta[property="og:url"]', "content", "https://mikilab.de" + p.path);
+      setMeta('meta[property="og:url"]', "content", indirizzo);
       setMeta('meta[name="twitter:title"]', "content", titolo);
       setMeta('meta[name="twitter:description"]', "content", descr);
-      if (canon) canon.setAttribute("href", "https://mikilab.de" + p.path);
+      setCanonical(indirizzo); // V137
+      setHreflang({ it: `${SITO}/it${p.path}`, de: `${SITO}/de${p.path}`, en: `${SITO}/en${p.path}` }); // V137
     } catch { /* */ }
   }, 0);
 }

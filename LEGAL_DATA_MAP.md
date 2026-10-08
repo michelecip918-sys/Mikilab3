@@ -284,3 +284,9 @@ newsletter è presente o raggiungibile. Non esiste alcun flusso che raccolga ema
 - Il file .ics dei promemoria si crea nel browser e si apre con il calendario del telefono.
 - Usano l'IA solo due cose già esistenti e dichiarate: «Chiedi a Sitor (IA)» (endpoint `/sitor/plan`, la frase scritta, con il limite giornaliero) e il parere sulla foto (PhotoDiag). Nessun nuovo dato sul server.
 - **EN (summary):** the sentence is parsed in the browser; plan, ticks and ratings stay in localStorage; the .ics file is made locally; only the existing, declared AI features are called on request.
+
+## 47. V137 — Un indirizzo per ogni lingua
+
+- Cambiano solo gli indirizzi e le intestazioni che legge Google (`<link rel="canonical">`, `hreflang`, `public/sitemap.xml`): nessun dato nuovo, nessun invio.
+- La lingua si legge dal prefisso dell'indirizzo (`/it/`, `/de/`, `/en/`). Senza prefisso valgono, come prima, la scelta salvata (`localStorage.mikilab_lang`) e poi la lingua del browser. La scelta salvata si scrive alla prima visita e quando la persona usa il selettore delle lingue; aprire un link in un'altra lingua non la cambia più.
+- **EN (summary):** the language now comes from the URL prefix; canonical/hreflang tags and the sitemap list every page in three languages; no new data is collected or sent; the stored language preference (`mikilab_lang`) is written only on first visit or when the user picks a language.

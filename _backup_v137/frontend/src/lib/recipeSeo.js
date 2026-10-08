@@ -1,4 +1,4 @@
-// V87 — Ogni ricetta ha un INDIRIZZO VERO: mikilab.de/<lingua>/ricetta/<id>/<nome> (V137: it, de, en). Quando si apre una scheda,
+// V87 — Ogni ricetta ha un INDIRIZZO VERO: mikilab.de/ricetta/<id>/<nome>. Quando si apre una scheda,
 // l'indirizzo cambia (senza ricaricare), il titolo della pagina diventa quello della ricetta, i meta
 // Open Graph mostrano la foto della ricetta quando il link viene incollato su WhatsApp/TikTok/Telegram,
 // e viene aggiunto un blocco JSON-LD schema.org/Recipe così Google può mostrare la ricetta con foto
@@ -8,14 +8,11 @@ import { videoIdTikTok, playerTikTok } from "@/lib/tiktok"; // V132
 import { applyMeta } from "@/i18n/meta";
 import { rLoc } from "@/lib/loc";
 import { setLastRecipe } from "@/lib/bottega";
-import { SITO, linguaIndirizzo, setCanonical, setHreflang, indirizziHome } from "@/lib/lingueUrl"; // V137
 
 export function recipeSlug(name) {
   return String(name || "ricetta").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60) || "ricetta";
 }
-// V137: anche l'italiano ha il suo prefisso → /it/ricetta/…, /de/ricetta/…, /en/ricetta/… (uno per lingua, sempre).
-// L'indirizzo senza prefisso (/ricetta/<id>/…) continua ad aprire la ricetta nella lingua di chi entra.
-export function recipePath(recipe, lang) { const L = linguaIndirizzo(lang); return `/${L}/ricetta/${recipe.id}/${recipeSlug(rLoc(recipe, "name", L))}`; } // V117 · V137
+export function recipePath(recipe, lang) { const pre = (lang === "de" || lang === "en") ? `/${lang}` : ""; return `${pre}/ricetta/${recipe.id}/${recipeSlug(rLoc(recipe, "name", lang))}`; } // V117
 // Legge l'id dalla barra degli indirizzi: /ricetta/<id>/... oppure ?r=<id>
 export function recipeIdFromLocation() {
   try {
@@ -36,22 +33,22 @@ function setMeta(sel, attr, val) {
   if (!el) { el = document.createElement("meta"); const [a, v] = sel.replace(/^meta\[/, "").replace(/\]$/, "").split("="); el.setAttribute(a, v.replace(/["']/g, "")); document.head.appendChild(el); }
   el.setAttribute(attr, val);
 }
+function setLink(rel, href) {
+  let el = document.head.querySelector(`link[rel="${rel}"]`);
+  if (!el) { el = document.createElement("link"); el.setAttribute("rel", rel); document.head.appendChild(el); }
+  el.setAttribute("href", href);
+}
 const LD_ID = "mikilab-recipe-ld";
-// V137: la ricetta con la scheda aperta in questo momento. Serve a pagine.js per rimettere titolo, descrizione e
-// indirizzo della ricetta dopo un cambio lingua (prima, cambiando lingua a scheda aperta, tornava il titolo del sito).
-let _aperta = null;
-export function ricettaAperta() { return _aperta; }
 
 export function applyRecipeSeo(recipe, lang) {
   if (typeof document === "undefined" || !recipe) return;
-  _aperta = recipe; // V137
   try {
     const origin = window.location.origin;
     const name = rLoc(recipe, "name", lang);
     const notes = String(rLoc(recipe, "notes", lang) || "").replace(/\s+/g, " ").trim();
     const desc = (notes || `${name} — MikiLab`).slice(0, 155);
     const img = recipe.image_url ? (recipe.image_url.startsWith("http") ? recipe.image_url : origin + recipe.image_url) : `${origin}/hero-ricette.jpg`;
-    const url = SITO + recipePath(recipe, lang); // V137: l'indirizzo buono è sempre quello del sito vero, con la lingua davanti
+    const url = origin + recipePath(recipe, lang);
     document.title = `${name} — MikiLab`;
     setLastRecipe({ id: recipe.id, name, ts: Date.now() }); // V88: "ricomincia da dove eri"
     setMeta('meta[name="description"]', "content", desc);
@@ -63,8 +60,7 @@ export function applyRecipeSeo(recipe, lang) {
     setMeta('meta[name="twitter:title"]', "content", `${name} — MikiLab`);
     setMeta('meta[name="twitter:description"]', "content", desc);
     setMeta('meta[name="twitter:image"]', "content", img);
-    setCanonical(url); // V137
-    setHreflang({ it: SITO + recipePath(recipe, "it"), de: SITO + recipePath(recipe, "de"), en: SITO + recipePath(recipe, "en") }); // V137: la stessa ricetta nelle tre lingue
+    setLink("canonical", url);
     if (window.location.pathname !== recipePath(recipe, lang)) window.history.replaceState(window.history.state, "", recipePath(recipe, lang));
     // JSON-LD schema.org/Recipe (solo campi pubblici: nome, foto, tempi, ingredienti base, categoria)
     const ing = [];
@@ -114,11 +110,10 @@ export function applyRecipeSeo(recipe, lang) {
 }
 
 export function clearRecipeSeo(lang) {
-  _aperta = null; // V137
   if (typeof document === "undefined") return;
   try {
     const s = document.getElementById(LD_ID); if (s) s.remove();
-    setCanonical(`${SITO}/${linguaIndirizzo(lang)}/`); setHreflang(indirizziHome()); // V137: ricetta chiusa → di nuovo la Home nella lingua di chi legge
+    const c = document.head.querySelector('link[rel="canonical"]'); if (c) c.setAttribute("href", window.location.origin + "/");
     setMeta('meta[property="og:type"]', "content", "website");
     if (/^\/(?:(?:it|de|en)\/)?ricetta\//i.test(window.location.pathname)) window.history.replaceState(window.history.state, "", "/");
     applyMeta(lang);
