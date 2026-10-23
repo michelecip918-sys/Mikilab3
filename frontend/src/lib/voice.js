@@ -28,3 +28,27 @@ export function cleanForSpeech(text) {
     .replace(/\s{2,}/g, " ")
     .trim();
 }
+
+// V139 — numeri letti bene: "28-30 °C" → "tra 28 e 30 gradi", "2%" → "2 per cento", "1:1" → "1 a 1".
+export function perLaVoce(t, lang = 'it') {
+  const W = {
+    it: { da: 'da', a: 'a', tra: 'tra', e: 'e', o: 'o', preA: 'a', preP: 'per', gradi: 'gradi', perc: 'per cento', g: 'grammi', kg: 'chili', min: 'minuti', h: 'ore', meno: 'meno', ogni: 'a' },
+    de: { da: 'von', a: 'bis', tra: 'zwischen', e: 'und', o: 'bis', preA: 'bei', preP: 'für', gradi: 'Grad', perc: 'Prozent', g: 'Gramm', kg: 'Kilo', min: 'Minuten', h: 'Stunden', meno: 'minus', ogni: 'zu' },
+    en: { da: 'from', a: 'to', tra: 'between', e: 'and', o: 'to', preA: 'at', preP: 'for', gradi: 'degrees', perc: 'percent', g: 'grams', kg: 'kilos', min: 'minutes', h: 'hours', meno: 'minus', ogni: 'to' },
+  }[lang];
+  if (!W || !t) return t || '';
+  const R = '(\\d+(?:[.,]\\d+)?)\\s*[-–—]\\s*(\\d+(?:[.,]\\d+)?)';
+  return String(t)
+    .replace(new RegExp('\\b' + W.preA + '\\s+' + R, 'g'), `${W.tra} $1 ${W.e} $2`)
+    .replace(new RegExp('\\b' + W.preP + '\\s+' + R, 'g'), `${W.preP} $1 ${W.o} $2`)
+    .replace(new RegExp(R, 'g'), `${W.da} $1 ${W.a} $2`)
+    .replace(/(^|[\s(])[-−](\d)/g, `$1${W.meno} $2`)
+    .replace(/(\d)\s*:\s*(\d)/g, `$1 ${W.ogni} $2`)
+    .replace(/\s*°\s*C\b/g, ` ${W.gradi}`)
+    .replace(/(\d)\s*%/g, `$1 ${W.perc}`)
+    .replace(/(\d)\s*kg\b/gi, `$1 ${W.kg}`)
+    .replace(/(\d)\s*g\b/g, `$1 ${W.g}`)
+    .replace(/(\d)\s*(min|')(?=\W|$)/g, `$1 ${W.min}`)
+    .replace(/(\d)\s*h\b/g, `$1 ${W.h}`)
+    .replace(/\bW\s?(\d{3})\b/g, 'W $1');
+}

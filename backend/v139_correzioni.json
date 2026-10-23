@@ -1,0 +1,761 @@
+[
+ {
+  "nome": "Anima Integrale",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Glutine (Di.Glutin)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Farina Integrale 90% + Farina di farro spelta 630 (o farro spelta tipo 1) 10%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Baguette a Lievito Madre",
+  "togli_ingredienti": [
+   "Malto d orzo"
+  ]
+ },
+ {
+  "nome": "Baguette con Poolish",
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Brezel",
+  "togli_ingredienti": [
+   "Glutine (Di.Glutin)",
+   "Malto (Malz)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina": "Burro (Butter)"
+  },
+  "flour_type_nuovo": "Farina di farro spelta 630 (o farro spelta tipo 1) 54% + Farina Integrale 46%"
+ },
+ {
+  "nome": "Brezel Integrali",
+  "togli_ingredienti": [
+   "Glutine (Di.Glutin)",
+   "Malto (Malz)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina": "Burro (Butter)"
+  }
+ },
+ {
+  "nome": "Bruno d'Autunno",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Glutine (Di.Glutin)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Farina di farro spelta 630 (o farro spelta tipo 1) 32% + Farina Integrale 32% + Farina di segale integrale 32% + Segale integrale (Rg.Vk) 5%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Carezza Dolce",
+  "togli_ingredienti": [
+   "Malto (Malz)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina": "Burro (Butter)"
+  },
+  "flour_type_nuovo": "Farina"
+ },
+ {
+  "nome": "Ciabatta",
+  "cottura_da_scrivere": "230 °C per 25 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Cornetti all'Italiana: La Brioche Sfogliata Aromatica",
+  "flour_type_nuovo": "Farina W300-330, media forza 87% + Zucchero semolato 13%"
+ },
+ {
+  "nome": "Cornetto Bicolore Cacao e Vaniglia",
+  "flour_type_nuovo": "Farina W330 50% + Farina tipo 00 50%"
+ },
+ {
+  "nome": "Cornetto Bicolore Carbone e Vaniglia",
+  "sostituisci_ingredienti": {
+   "Carbone vegetale alimentare (per la pasta nera)": "Cacao nero olandese"
+  },
+  "flour_type_nuovo": "Farina W330 50% + Farina tipo 00 50%"
+ },
+ {
+  "nome": "Cornetto Bicolore Rosa (Rapa Rossa) e Vaniglia",
+  "flour_type_nuovo": "Farina W330 50% + Farina tipo 00 50%"
+ },
+ {
+  "nome": "Cornetto Doppio Gusto Pistacchio e Cioccolato",
+  "flour_type_nuovo": "Farina W330 50% + Farina tipo 00 50%"
+ },
+ {
+  "nome": "Cornetto Sfogliato",
+  "togli_ingredienti": [
+   "Malto (Malz)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina (Marg)": "Burro (Butter)"
+  },
+  "flour_type_nuovo": "Farina"
+ },
+ {
+  "nome": "Croissant Sfogliati Classici Senza Zucchero nell'Impasto",
+  "togli_ingredienti": [
+   "Malto diastasico"
+  ]
+ },
+ {
+  "nome": "Croissant Sfogliati Tradizionali con Zucchero",
+  "flour_type_nuovo": "Farina forte W330, 12,5% proteine 91% + Zucchero semolato 9%"
+ },
+ {
+  "nome": "Cuore Italiano",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Semola rimacinata di grano duro 80% + Farina tipo 0 W 260 (Weizen 550) 20%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Danese alla Crema (Plunder)",
+  "sostituisci_ingredienti": {
+   "Gelatina di albicocca (lucido)": "Confettura di albicocca scaldata e setacciata (lucido)"
+  }
+ },
+ {
+  "nome": "Filo di Francia",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Farina 93% + Farina tipo 0 W 260 (Weizen 550) 7%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Filone di Semola al Sesamo",
+  "cottura_da_scrivere": "235 °C per 40 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Focaccia Barese",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Dolce all'Uva (Schiacciata)",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia Genovese",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "sale_in_superficie": "['Sale grosso'] non va contato nel sale dell'impasto: spostarlo tra le guarnizioni (q.b.)."
+ },
+ {
+  "nome": "Focaccia Integrale ai Semi",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia a Lievito Madre",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia ai Cereali e Miele",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia alla Cipolla di Tropea",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia alle Olive e Rosmarino",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia con Patate e Rosmarino",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Farina tipo 0"
+ },
+ {
+  "nome": "Focaccia con Pomodorini Secchi e Origano",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia di Altamura",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Focaccia di Matera",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Girella all'Uvetta (Pain aux Raisins)",
+  "sostituisci_ingredienti": {
+   "Gelatina di albicocca (lucido)": "Confettura di albicocca scaldata e setacciata (lucido)"
+  }
+ },
+ {
+  "nome": "Gnetze Brot",
+  "flour_type_nuovo": "Farina di frumento Type 550/630",
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Gran Riserva",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Glutine (Di.Glutin)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Farina di farro spelta 630 (o farro spelta tipo 1) 29% + Farina Integrale 57% + Farina di segale 10% + Segale integrale (Rg.Vk) 5%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Grissini Stirati Torinesi",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ]
+ },
+ {
+  "nome": "Miglioratore Naturale Pro",
+  "togli_ingredienti": [
+   "Malto diastatico in polvere"
+  ],
+  "flour_type_nuovo": "Farina di grano germogliato (fatta in casa) 52% + Farina di lino dorato 31% + Farina di lupino dolce 17%"
+ },
+ {
+  "nome": "Nuvola in Cassetta",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Glutine (Di.Glutin)",
+   "Lievito di birra (Hefe)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina": "Burro (Butter)"
+  },
+  "flour_type_nuovo": "Farina di farro spelta 630 (o farro spelta tipo 1) 50% + Farina Integrale 50%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Oro di Terra",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Lievito di birra (Hefe)"
+  ],
+  "flour_type_nuovo": "Farina di farro spelta 630 (o farro spelta tipo 1) 50% + Farina Integrale 50%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Pain au Chocolat (Saccottino al Cioccolato)",
+  "flour_type_nuovo": "Farina W330 50% + Farina tipo 00 50%"
+ },
+ {
+  "nome": "Pan di Kristall (alta idratazione 95%)",
+  "togli_ingredienti": [
+   "Malto diastatico"
+  ],
+  "flour_type_nuovo": "Farina forte W350 macinata a pietra 93% + Semola rimacinata 7%"
+ },
+ {
+  "nome": "Pane Casereccio",
+  "flour_type_nuovo": "Farina tipo 1",
+  "cottura_da_scrivere": "240 °C per 45 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Pane Casereccio a Lievito Madre",
+  "togli_ingredienti": [
+   "Malto d orzo (opzionale)"
+  ]
+ },
+ {
+  "nome": "Pane Morbido ai Cereali (Kochstück)",
+  "flour_type_nuovo": "Farina tipo 1"
+ },
+ {
+  "nome": "Pane Nero al Carbone Vegetale",
+  "sostituisci_ingredienti": {
+   "Carbone vegetale alimentare (colore nero naturale)": "Farina di segale tostata scura (colore)"
+  }
+ },
+ {
+  "nome": "Pane Pugliese",
+  "cottura_da_scrivere": "240 °C per 45 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Pane Toscano (sciapo)",
+  "cottura_da_scrivere": "230 °C per 45 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Pane all'Nduja",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Pane alla Curcuma e Zenzero",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Pane alle Olive",
+  "cottura_da_scrivere": "230 °C per 40 minuti, vapore nei primi 10 minuti"
+ },
+ {
+  "nome": "Pane allo Zafferano",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Pane di Cristallo ad Alta Idratazione col Metodo MikiLab",
+  "togli_ingredienti": [
+   "Malto diastasico"
+  ]
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Albicocca e Cioccolato",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Amarena e Cioccolato",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Arancia e Cioccolato Fondente",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)",
+   "Arancia candita a cubetti": "Arancia candita a cubetti (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Caffè e Nocciola",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Cioccolato e Noci",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Cocco e Cioccolato",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Fichi e Mandorle",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Frutti di Bosco",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Limoncello",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)",
+   "Scorza di limone candita": "Scorza di limone candita (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Marron Glacé (Castagne)",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Mela e Cannella",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Pere e Cioccolato",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Pistacchio e Cioccolato Bianco",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Tiramisù",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Uvetta e Canditi (Classico)",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)",
+   "Arancia e cedro canditi": "Arancia e cedro canditi (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Verde Canapa",
+  "flour_type_nuovo": "Metodo 60/40 ( della farina nel 1° impasto, 40% nel 2°). Miscela: 50% Manitoba W380 50% + Farina forte W330, con 8% farina di canapa 42% + Farina di canapa (Hanfmehl) 7%"
+ },
+ {
+  "nome": "Panettone Artigianale MikiLab — Zafferano",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)",
+   "Arancia candita": "Arancia candita (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Panino Bavarese al Bretzel Farcito",
+  "togli_ingredienti": [
+   "Malto (Malz)"
+  ]
+ },
+ {
+  "nome": "Panino Integrale",
+  "flour_type_nuovo": "Farina integrale 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Panino Multicereali ai 5 Cereali",
+  "flour_type_nuovo": "Farina tipo 1"
+ },
+ {
+  "nome": "Panino al Farro",
+  "flour_type_nuovo": "Farina di farro tipo 1 60% + Farina tipo 0 40%"
+ },
+ {
+  "nome": "Panino al Mais",
+  "flour_type_nuovo": "Farina tipo 0 78% + Farina di mais fioretto 19% + Semola di mais (per finitura) 3%"
+ },
+ {
+  "nome": "Panino alle Carote",
+  "flour_type_nuovo": "Farina tipo 0"
+ },
+ {
+  "nome": "Puccia Salentina",
+  "flour_type_nuovo": "Farina tipo 0 50% + Semola rimacinata 50%"
+ },
+ {
+  "nome": "Quotidiano del Fornaio",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Lievito di birra (Hefe)"
+  ],
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Sinfonia di Cereali",
+  "togli_ingredienti": [
+   "Malto (Malz)",
+   "Glutine (Di.Glutin)",
+   "Lievito di birra (Hefe)"
+  ],
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Stollen Tedesco Tradizionale delle Feste",
+  "sostituisci_ingredienti": {
+   "Arancia e cedro canditi a cubetti": "Arancia e cedro canditi a cubetti (senza solfiti né conservanti)"
+  }
+ },
+ {
+  "nome": "Treccia del Sole",
+  "togli_ingredienti": [
+   "Malto (Malz)"
+  ],
+  "sostituisci_ingredienti": {
+   "Margarina": "Burro (Butter)"
+  },
+  "flour_type_nuovo": "Farina"
+ },
+ {
+  "nome": "Veneziana (grande lievitato dolce)",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)"
+  },
+  "flour_type_nuovo": "Farina W380 (grandi lievitati) 77% + Glassa (albumi, zucchero, mandorle in farina) 23%"
+ },
+ {
+  "nome": "Verde Canapa",
+  "flour_type_nuovo": "Farina Tipo 1"
+ },
+ {
+  "nome": "Wurzelbrot",
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Focaccia Zucca e Rosmarino",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Zucchine e Stracchino",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Melanzane e Pomodorini",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Peperoni Arrostiti",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Pesto e Pomodorini",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Gorgonzola e Noci",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Mortadella e Pistacchio",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Prosciutto Crudo e Stracchino",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Friarielli",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Funghi Porcini",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Acciughe e Capperi",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Fichi e Miele",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Uvetta e Noci",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Multi-Semi",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia alla Curcuma",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Olive Verdi e Origano",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Pere e Gorgonzola",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Focaccia Cipollotto e Speck",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "flour_type_nuovo": "Semola rimacinata 50% + Farina tipo 0 50%"
+ },
+ {
+  "nome": "Pan di Spagna",
+  "flour_type_nuovo": "Farina 00 debole (W150-180), setacciata 50% + Zucchero semolato 50%"
+ },
+ {
+  "nome": "Crostata di Frutta (Pasta Frolla)",
+  "sostituisci_ingredienti": {
+   "Gelatina neutra (lucido)": "Confettura di albicocca scaldata e setacciata (lucido)"
+  }
+ },
+ {
+  "nome": "Colomba Artigianale MikiLab — Classica alle Mandorle",
+  "sostituisci_ingredienti": {
+   "Pasta d'arancia": "Pasta d'arancia fatta in casa (senza conservanti)",
+   "Arancia candita a cubetti": "Arancia candita a cubetti (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Pandoro Artigianale MikiLab — Classico Vanigliato",
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Stollen Artigianale MikiLab — Classico (Christstollen)",
+  "sostituisci_ingredienti": {
+   "Canditi di cedro e arancia": "Canditi di cedro e arancia (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380 83% + Zucchero semolato (finitura) 17%"
+ },
+ {
+  "nome": "Stollen Artigianale MikiLab — con Marzapane (Marzipanstollen)",
+  "sostituisci_ingredienti": {
+   "Canditi di cedro e arancia": "Canditi di cedro e arancia (senza solfiti né conservanti)"
+  },
+  "flour_type_nuovo": "Farina alta forza W380 83% + Zucchero semolato (finitura) 17%"
+ },
+ {
+  "nome": "Pinsa Romana MikiLab",
+  "flour_type_nuovo": "Farina di grano tenero W300 50% + Farina di riso 50%",
+  "tempi_solo_lievito_madre": "Puntata 3–4 ore a 26 °C con tre serie di pieghe nella prima ora e mezza. Appretto 2,5–3 ore a 27 °C, oppure frigo a 4 °C per 12–16 ore e 1 ora fuori prima di infornare."
+ },
+ {
+  "nome": "Panettone Salato Artigianale MikiLab — Speck e Formaggio",
+  "flour_type_nuovo": "Farina alta forza W380"
+ },
+ {
+  "nome": "Baguette Colorata (Innovazione)",
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Pane alla Zucca",
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Kaisersemmel (Panino Kaiser)",
+  "togli_ingredienti": [
+   "Malto d'orzo"
+  ],
+  "poolish": "La riga 'Poolish (...)' tra gli ingredienti aggiunti va tolta: il poolish è già dentro farina e acqua della ricetta (metà del suo peso è farina, metà acqua). Nel procedimento scrivere quanto poolish pronto pesare."
+ },
+ {
+  "nome": "Pagnotta alla Canapa",
+  "flour_type_nuovo": "Farina tipo 1 85% + Farina di canapa 15%"
+ },
+ {
+  "nome": "Focaccia Verde alla Canapa",
+  "flour_type_nuovo": "Farina tipo 0 (W 280-300) 90% + Farina di canapa 10%",
+  "sale_in_superficie": "['Sale grosso (sopra)'] non va contato nel sale dell'impasto: spostarlo tra le guarnizioni (q.b.)."
+ },
+ {
+  "nome": "Panini alla Canapa",
+  "flour_type_nuovo": "Farina tipo 0 (W 260-280) 90% + Farina di canapa 10%"
+ },
+ {
+  "nome": "Pizza in Teglia alla Canapa",
+  "flour_type_nuovo": "Farina tipo 0 forte (W 300-330) 90% + Farina di canapa 10%"
+ },
+ {
+  "nome": "Taralli alla Canapa",
+  "flour_type_nuovo": "Farina tipo 00 85% + Farina di canapa 15%"
+ },
+ {
+  "nome": "Grissini alla Canapa",
+  "flour_type_nuovo": "Farina tipo 0 85% + Farina di canapa 15%"
+ },
+ {
+  "nome": "Crackers alla Canapa",
+  "flour_type_nuovo": "Farina tipo 1 80% + Farina di canapa 20%",
+  "sale_in_superficie": "['Sale in fiocchi (sopra)'] non va contato nel sale dell'impasto: spostarlo tra le guarnizioni (q.b.)."
+ },
+ {
+  "nome": "Friselle alla Canapa",
+  "flour_type_nuovo": "Semola rimacinata di grano duro 85% + Farina di canapa 15%"
+ },
+ {
+  "nome": "Pane in Cassetta alla Canapa",
+  "flour_type_nuovo": "Farina tipo 0 (W 260-280) 88% + Farina di canapa 12%"
+ },
+ {
+  "nome": "Biscotti alla Canapa",
+  "flour_type_nuovo": "Farina tipo 00 80% + Farina di canapa 20%"
+ },
+ {
+  "nome": "Cantucci alla Canapa",
+  "flour_type_nuovo": "Farina tipo 00 85% + Farina di canapa 15%"
+ }
+]

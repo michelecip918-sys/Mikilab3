@@ -1,4 +1,4 @@
-import { cleanForSpeech } from "@/lib/voice";
+import { cleanForSpeech, perLaVoce } from "@/lib/voice";
 
 // TTS: voce MASCHILE OpenAI (onyx/echo) dal backend; fallback alla voce nativa del
 // dispositivo se l'API non risponde, così la voce non va MAI in blocco.
@@ -139,7 +139,7 @@ const SITOR_VOICE = "nexus";
 export function playTTS(text, { lang, voice, onStart, onEnded } = {}) {
   stopTTS();
   const L = lang || _appLang || "it"; // se il chiamante non passa la lingua, usa quella dell'app
-  const full = cleanForSpeech(text);
+  const full = cleanForSpeech(perLaVoce(String(text || ""), guessLang(String(text || ""), L))); // V139
   if (!full) { if (onEnded) onEnded(); return; }
   const clean = shortenForSpeech(full); // solo sintesi breve → meno crediti + voce essenziale
   _lastText = clean;
@@ -173,7 +173,7 @@ export function playTTS(text, { lang, voice, onStart, onEnded } = {}) {
 export function playTTSLong(text, { lang, onStart, onEnded } = {}) {
   stopTTS();
   const L = lang || _appLang || "it";
-  const full = cleanForSpeech(text);
+  const full = cleanForSpeech(perLaVoce(String(text || ""), guessLang(String(text || ""), L))); // V139
   if (!full || isTTSMuted()) { if (onEnded) onEnded(); return; }
   _lastText = full.slice(0, 180);
   const parts = full.split(/(?<=[.!?…:;])\s+/).reduce((acc, p) => { const last = acc[acc.length - 1]; if (last && (last.length + p.length) < 220) acc[acc.length - 1] = last + " " + p; else acc.push(p); return acc; }, []);
