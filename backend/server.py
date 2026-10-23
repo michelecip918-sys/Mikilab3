@@ -1610,6 +1610,16 @@ async def on_startup_seed_mikilab():
     except Exception as e:
         logging.getLogger(__name__).error(f"V139 ricette error: {e}")
     try:
+        # V140 — corregge la v139: nomi delle farine giusti e procedimenti originali di tre pani con biga e della Pinsa. Una volta sola.
+        _m140 = await db.app_meta.find_one({"_key": "v140_farine"}, {"_id": 0})
+        if not _m140:
+            import v140_farine as _v140
+            _camb140, _manca140 = await _v140.applica_db(db, now_iso())
+            await db.app_meta.update_one({"_key": "v140_farine"}, {"$set": {"_key": "v140_farine", "done_at": now_iso(), "cambiate": _camb140, "non_trovate": _manca140}}, upsert=True)
+            logging.getLogger(__name__).info(f"V140 farine: {len(_camb140)} cambiate, non trovate per nome: {_manca140}")
+    except Exception as e:
+        logging.getLogger(__name__).error(f"V140 farine error: {e}")
+    try:
         # STADIO 3a — stati ricetta idempotenti: imposta lo status SOLO dove manca
         # (così la produzione, priva dei flag, lo riceve; l'anteprima e le scelte admin restano intatte).
         # pane/panini/focacce → "Provata da Michele" (tested)

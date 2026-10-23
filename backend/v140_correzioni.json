@@ -1,0 +1,240 @@
+{
+ "farine": {
+  "Carezza Dolce": [
+   "Farina di farro spelta 630 (Dinkel), con preimpasto",
+   "Dinkelmehl Type 630, mit Vorteig",
+   "Spelt flour type 630, with pre-ferment"
+  ],
+  "Treccia del Sole": [
+   "Farina di farro spelta 630 (Dinkel), con preimpasto",
+   "Dinkelmehl Type 630, mit Vorteig",
+   "Spelt flour type 630, with pre-ferment"
+  ],
+  "Cornetto Sfogliato": [
+   "Farina di farro spelta 630 (Dinkel)",
+   "Dinkelmehl Type 630",
+   "Spelt flour type 630"
+  ],
+  "Cornetti all'Italiana: La Brioche Sfogliata Aromatica": [
+   "Farina W300-330, media forza",
+   "Mehl W300-330, mittlere Stärke",
+   "W300-330 flour, medium strength"
+  ],
+  "Croissant Sfogliati Tradizionali con Zucchero": [
+   "Farina forte W330, 12,5% proteine",
+   "Starkes Mehl W330, 12,5% Proteingehalt",
+   "Strong flour W330, 12.5% protein"
+  ],
+  "Veneziana (grande lievitato dolce)": [
+   "Farina W380 (grandi lievitati)",
+   "Mehl W380 (große Hefegebäcke)",
+   "Flour W380 (large leavened bakes)"
+  ],
+  "Pan di Spagna": [
+   "Farina 00 debole (W150-180), setacciata",
+   "Schwaches Mehl Type 405 (W150-180), gesiebt",
+   "Weak 00 flour (W150-180), sifted"
+  ],
+  "Pan di Kristall (alta idratazione 95%)": [
+   "Farina forte W350 macinata a pietra",
+   "Starkes Mehl W350, steingemahlen",
+   "Strong flour W350, stone-ground"
+  ],
+  "Miglioratore Naturale Pro": [
+   "Universale (Diretto e Indiretto)",
+   "Universell (Direkt & Indirekt)",
+   "Universal (Direct and Indirect)"
+  ],
+  "Stollen Artigianale MikiLab — Classico (Christstollen)": [
+   "Farina alta forza W380",
+   "Sehr starkes Mehl W380",
+   "High-strength flour W380"
+  ],
+  "Stollen Artigianale MikiLab — con Marzapane (Marzipanstollen)": [
+   "Farina alta forza W380",
+   "Sehr starkes Mehl W380",
+   "High-strength flour W380"
+  ],
+  "Panettone Artigianale MikiLab — Verde Canapa": [
+   "Manitoba W380 46% + Farina forte W330 46% + Farina di canapa 8% (metodo 60/40)",
+   "Manitoba W380 46 % + starkes Mehl W330 46 % + Hanfmehl 8 % (Methode 60/40)",
+   "Manitoba W380 46% + strong flour W330 46% + hemp flour 8% (60/40 method)"
+  ],
+  "Pinsa Romana MikiLab": [
+   "Farina di grano tenero W300 80% + Farina di riso 20%",
+   "Weizenmehl W300 80 % + Reismehl 20 %",
+   "Soft wheat flour W300 80% + rice flour 20%"
+  ],
+  "Filo di Francia": [
+   "Farina di farro spelta 630 (Dinkel) oppure Farina tipo 0 W 260 (Weizen 550)",
+   "Dinkelmehl Type 630 oder Weizenmehl Type 550",
+   "Spelt flour type 630 or wheat flour type 550 (Italian tipo 0, W 260)"
+  ],
+  "Panino al Mais": [
+   "Farina tipo 0 80% + Farina di mais fioretto 20%",
+   "Weizenmehl Type 550 (ital. Tipo 0) 80 % + feines Maismehl (Fioretto) 20 %",
+   "Type 0 flour 80% + fine cornmeal (fioretto) 20%"
+  ],
+  "Bruno d'Autunno": [
+   "Farina di farro spelta 630 (Dinkel) + Farina integrale + Farina di segale integrale",
+   "Dinkelmehl Type 630 + Vollkornmehl + Roggenvollkornmehl",
+   "Spelt flour type 630 + wholemeal flour + wholemeal rye flour"
+  ],
+  "Gran Riserva": [
+   "Farina di farro spelta 630 (Dinkel) 30% + Farina integrale 60% + Farina di segale integrale 10%",
+   "Dinkelmehl Type 630 30 % + Vollkornmehl 60 % + Roggenvollkornmehl 10 %",
+   "Spelt flour type 630 30% + wholemeal flour 60% + wholemeal rye flour 10%"
+  ],
+  "Focaccia Barese": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Puccia Salentina": [
+   "Farina tipo 0 + Semola rimacinata di grano duro",
+   "Weizenmehl Type 550 (ital. Tipo 0) + Hartweizengrieß, doppelt gemahlen (Semola rimacinata)",
+   "Type 0 flour + re-milled durum semolina"
+  ],
+  "Focaccia Zucca e Rosmarino": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Zucchine e Stracchino": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Melanzane e Pomodorini": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Peperoni Arrostiti": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Pesto e Pomodorini": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Gorgonzola e Noci": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Mortadella e Pistacchio": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Prosciutto Crudo e Stracchino": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Friarielli": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Funghi Porcini": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Acciughe e Capperi": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Fichi e Miele": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Uvetta e Noci": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Multi-Semi": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia alla Curcuma": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Olive Verdi e Origano": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Pere e Gorgonzola": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Focaccia Cipollotto e Speck": [
+   "Semola rimacinata di grano duro + Farina tipo 0",
+   "Hartweizengrieß, doppelt gemahlen (Semola rimacinata) + Weizenmehl Type 550 (ital. Tipo 0)",
+   "Re-milled durum semolina + type 0 flour"
+  ],
+  "Anima Integrale": [
+   "Farina integrale 90% + Farina di farro spelta 630 (Dinkel) 10%",
+   "Vollkornmehl 90 % + Dinkelmehl Type 630 10 %",
+   "Wholemeal flour 90% + spelt flour type 630 (or type 1 spelt) 10%"
+  ],
+  "Brezel": [
+   "Farina di farro spelta 630 (Dinkel) 54% + Farina integrale 46%",
+   "Dinkelmehl Type 630 54 % + Vollkornmehl 46 %",
+   "Spelt flour type 630 (or type 1 spelt) 54% + wholemeal flour 46%"
+  ],
+  "Nuvola in Cassetta": [
+   "Farina di farro spelta 630 (Dinkel) 50% + Farina integrale 50%",
+   "Dinkelmehl Type 630 50 % + Vollkornmehl 50 %",
+   "Spelt flour type 630 (or type 1 spelt) 50% + wholemeal flour 50%"
+  ],
+  "Oro di Terra": [
+   "Farina di farro spelta 630 (Dinkel) 50% + Farina integrale 50%",
+   "Dinkelmehl Type 630 50 % + Vollkornmehl 50 %",
+   "Spelt flour type 630 (or type 1 spelt) 50% + wholemeal flour 50%"
+  ]
+ },
+ "procedure_originali": {
+  "Pane all'Nduja": {
+   "procedure": "1) BIGA (indiretto): 350 g di farina, 155 g di acqua e 3,5 g di lievito fresco; matura 16-18 ore a 18 °C.\n2) AUTOLISI: farina restante + acqua (lascia da parte l'acqua di bassinage), riposo 40 minuti.\n3) IMPASTO: unisci la biga e 150 g di lievito madre rinfrescato, poi paprika affumicata, olio e Miglioratore Naturale Pro; incorda e aggiungi l'acqua di bassinage a filo. Aggiungi il sale (20 g) verso la fine dell'impasto.\n4) NDUJA: a fine impasto, con una piega, incorpora la nduja a fiocchi per creare venature senza smontare l'impasto.\n5) PUNTATA: 1 ora a temperatura ambiente con 2 pieghe di rinforzo.\n6) CELLA 16°C: matura la massa 12-18 ore (o frigo 4-6°C) per sviluppare aroma e alveolatura.\n7) FORMATURA: forma le pagnotte e metti in appretto 2 ore in cestino infarinato.\n8) COTTURA: 240°C con vapore i primi 15 minuti, poi 220°C, totale ~40 minuti, crosta ben colorita.\n\nGRASSO DI COCCO, OLIO E ACETO (il mio metodo): aggiungi il grasso di cocco quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.",
+   "procedure_de": "1) BIGA: 350 g Mehl, 155 g Wasser und 3,5 g frische Hefe; 16-18 Std. bei 18 °C.\n2) AUTOLYSE: restliches Mehl + Wasser (Bassinage zurückhalten), 40 Min.\n3) TEIG: Biga und 150 g aufgefrischter Sauerteig, dann Paprika, Öl, Backmittel; auskneten, Bassinage-Wasser einarbeiten. Salz (20 g) gegen Ende des Knetens zugeben.\n4) NDUJA: am Ende mit einer Faltung einarbeiten (Adern).\n5) STOCKGARE: 1 Std. Raumtemperatur, 2 Dehn-und-Faltungen.\n6) 16°C GÄRKAMMER: 12-18 Std. reifen (oder Kühlschrank 4-6 °C).\n7) FORMEN: Laibe formen, 2 Std. Stückgare im bemehlten Gärkörbchen.\n8) BACKEN: 240°C mit Schwaden 15 Min., dann 220°C, gesamt ~40 Min.\n\nKOKOSFETT, ÖL UND ESSIG (meine Methode): das Kokosfett zugeben, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.",
+   "procedure_en": "1) BIGA (indirect): 350 g flour, 155 g water and 3.5 g fresh yeast; mature 16-18 h at 18 °C.\n2) AUTOLYSE: remaining flour + water (hold back bassinage water), rest 40 min.\n3) DOUGH: incorporate biga and 150 g refreshed sourdough, then smoked paprika, oil and Natural Improver Pro; develop gluten and add bassinage water gradually. Add the salt (20 g) near the end of mixing.\n4) 'NDUJA: at the end, with one fold, incorporate the 'nduja in flakes for veins without deflating.\n5) BULK: 1 h at room temperature with 2 stretch-and-folds.\n6) 16°C RETARD: mature 12-18 h (or fridge 4-6°C) for aroma and open crumb.\n7) SHAPE: shape the loaves and proof 2 h in a floured banneton.\n8) BAKE: 240°C with steam for the first 15 min, then 220°C, ~40 min total, deep-coloured crust.\n\nCOCONUT FAT, OIL AND VINEGAR (my method): add the coconut fat once the dough comes together into a ball; add the olive oil, apple cider vinegar and salt last.",
+   "procedure_es": "1) BIGA (indirecto): amasa 100% harina, 44% agua y 1% levadura; madura 18 horas a 18°C.\n2) AUTÓLISIS: harina restante + agua (reserva el agua de bassinage), reposo 40 minutos.\n3) AMASADO: incorpora la biga y el Lievito Madre refrescado, luego el pimentón ahumado, el aceite y el Miglioratore Naturale Pro; desarrolla la red de gluten y añade el agua de bassinage en hilo fino.\n4) NDUJA: al final del amasado, con un pliegue, incorpora la nduja en copos para crear vetas sin desmontar la masa.\n5) PUNTEO: 1 hora a temperatura ambiente con 2 pliegues de refuerzo.\n6) CÁMARA A 16°C: madura la masa 12-18 horas (o nevera 4-6°C) para desarrollar aroma y alveolado.\n7) FORMADO: forma las hogazas y coloca en apprêt 2 horas en cesto enharinado.\n8) COCCIÓN: 240°C con vapor los primeros 15 minutos, luego 220°C, total ~40 minutos, corteza bien coloreada.",
+   "procedure_fr": "1) BIGA (indirect): pétrir 100% farine, 44% eau et 1% levure; faire mûrir 18 heures à 18°C.\n2) AUTOLYSE: farine restante + eau (réserver l'eau de bassinage), repos 40 minutes.\n3) PÉTRISSAGE: incorporer la biga et le Lievito Madre rafraîchi, puis le paprika fumé, l'huile et le Miglioratore Naturale Pro; développer le réseau glutineux et ajouter l'eau de bassinage en filet.\n4) NDUJA: en fin de pétrissage, avec un rabat, incorporer la nduja en flocons pour créer des veines épicées sans déstructurer la pâte.\n5) POINTAGE: 1 heure à température ambiante avec 2 rabats de renforcement.\n6) CHAMBRE À 16°C: faire mûrir la masse 12-18 heures (ou réfrigérateur 4-6°C) pour développer l'arôme et l'alvéolage.\n7) FAÇONNAGE: façonner les miches et placer en apprêt 2 heures dans un banneton fariné.\n8) CUISSON: 240°C avec vapeur les 15 premières minutes, puis 220°C, total ~40 minutes, croûte bien colorée.",
+   "procedure_fa": "۱) Biga (غیرمستقیم): ۱۰۰٪ آرد، ۴۴٪ آب و ۱٪ مایه خمیر را ورز دهید؛ ۱۸ ساعت در دمای ۱۸ درجه سانتی‌گراد تخمیر دهید.\n۲) اتولیز: آرد باقیمانده را با آب (آب باسیناژ را کنار بگذارید) مخلوط کنید و ۴۰ دقیقه استراحت دهید.\n۳) ورز دادن: Biga و Lievito Madre تازه‌تجدیدشده را اضافه کنید، سپس پاپریکای دودی، روغن و Miglioratore Naturale Pro را بیفزایید؛ خمیر را به حالت کشدار درآورید و آب باسیناژ را به‌تدریج اضافه کنید.\n۴) ندوجا: در پایان ورز دادن، با یک تا دو پیچ، ندوجا را به‌صورت تکه‌تکه وارد کنید تا رگه‌های تند ایجاد شود بدون آنکه ساختار خمیر از هم بپاشد.\n۵) تخمیر اولیه: ۱ ساعت در دمای محیط با ۲ پیچ تقویتی.\n۶) سلول ۱۶ درجه سانتی‌گراد: خمیر را ۱۲ تا ۱۸ ساعت (یا در یخچال ۴ تا ۶ درجه سانتی‌گراد) تخمیر دهید تا عطر و حفره‌بندی توسعه یابد.\n۷) شکل‌دهی: قرص‌های نان را شکل دهید و ۲ ساعت در سبد آردپاشی‌شده برای تخمیر ثانویه قرار دهید.\n۸) پخت: ۲۴۰ درجه سانتی‌گراد با بخار در ۱۵ دقیقه اول، سپس ۲۲۰ درجه سانتی‌گراد، مجموعاً حدود ۴۰ دقیقه، تا پوسته‌ای خوش‌رنگ به دست آید."
+  },
+  "Pane alla Curcuma e Zenzero": {
+   "procedure": "1) BIGA (indiretto): 350 g di farina, 155 g di acqua e 3,5 g di lievito fresco; matura 16-18 ore a 18 °C.\n2) SOLUZIONE COLORE: sciogli la curcuma in poca acqua tiepida e aggiungi lo zenzero grattugiato.\n3) AUTOLISI: mescola la farina restante con l'acqua (tenendo da parte l'acqua di bassinage), riposo 40 minuti.\n4) IMPASTO: unisci la biga e 150 g di lievito madre rinfrescato, poi la soluzione di curcuma, l'olio e il Miglioratore Naturale Pro; incorda e aggiungi l'acqua di bassinage a filo. Aggiungi il sale (20 g) verso la fine dell'impasto.\n5) PUNTATA: 1,5 ore a temperatura ambiente con 2 pieghe di rinforzo.\n6) CELLA 16°C: matura la massa 14-18 ore (o frigo 4-6°C) per aroma e alveolatura.\n7) FORMATURA: forma le pagnotte e metti in appretto 2-2,5 ore in cestino infarinato.\n8) COTTURA: 235°C con vapore i primi 15 minuti, poi 215°C, totale ~42 minuti.\n\nGRASSO DI COCCO, OLIO E ACETO (il mio metodo): aggiungi il grasso di cocco quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.",
+   "procedure_de": "1) BIGA: 350 g Mehl, 155 g Wasser und 3,5 g frische Hefe; 16-18 Std. bei 18 °C.\n2) FARBLÖSUNG: Kurkuma in wenig lauwarmem Wasser lösen, Ingwer zugeben.\n3) AUTOLYSE: restliches Mehl + Wasser (Bassinage zurückhalten), 40 Min.\n4) TEIG: Biga und 150 g aufgefrischter Sauerteig, dann Kurkumalösung, Öl, Backmittel; auskneten, Bassinage einarbeiten. Salz (20 g) gegen Ende des Knetens zugeben.\n5) STOCKGARE: 1,5 Std., 2 Dehn-und-Faltungen.\n6) 16°C GÄRKAMMER: 14-18 Std. reifen (oder Kühlschrank 4-6 °C).\n7) FORMEN: Laibe, 2-2,5 Std. Stückgare.\n8) BACKEN: 235°C mit Schwaden 15 Min., dann 215°C, ~42 Min.\n\nKOKOSFETT, ÖL UND ESSIG (meine Methode): das Kokosfett zugeben, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.",
+   "procedure_en": "1) BIGA (indirect): 350 g flour, 155 g water and 3.5 g fresh yeast; mature 16-18 h at 18 °C.\n2) COLOUR SOLUTION: dissolve the turmeric in a little warm water, add grated ginger.\n3) AUTOLYSE: mix remaining flour with water (hold back bassinage), rest 40 min.\n4) DOUGH: incorporate biga and 150 g refreshed sourdough, then turmeric solution, oil and Natural Improver Pro; develop gluten and add bassinage water gradually. Add the salt (20 g) near the end of mixing.\n5) BULK: 1.5 h at room temperature with 2 stretch-and-folds.\n6) 16°C RETARD: mature 14-18 h (or fridge 4-6°C) for aroma and open crumb.\n7) SHAPE: shape the loaves and proof 2-2.5 h in a floured banneton.\n8) BAKE: 235°C with steam for the first 15 min, then 215°C, ~42 min total.\n\nCOCONUT FAT, OIL AND VINEGAR (my method): add the coconut fat once the dough comes together into a ball; add the olive oil, apple cider vinegar and salt last.",
+   "procedure_es": "1) BIGA (indirecto): mezcla 100% harina fuerte, 44% agua y 1% levadura; maduración 18 horas a 18°C.\n2) SOLUCIÓN DE COLOR: disuelve la cúrcuma en poca agua tibia y añade el jengibre rallado.\n3) AUTÓLISIS: mezcla la harina restante con el agua (reservando el agua de bassinage), reposo 40 minutos.\n4) AMASADO: incorpora la Biga y el Lievito Madre refrescado, luego la solución de cúrcuma, el aceite y el Mejorador Natural Pro; desarrolla la red de gluten y añade el agua de bassinage a hilo.\n5) PRIMERA FERMENTACIÓN: 1,5 horas a temperatura ambiente con 2 pliegues de refuerzo.\n6) CÁMARA 16°C: madura la masa 14-18 horas (o nevera 4-6°C) para desarrollar aroma y alveolado.\n7) FORMADO: forma las hogazas y coloca en banetón enharinado para el reposo final de 2-2,5 horas.\n8) COCCIÓN: 235°C con vapor los primeros 15 minutos, luego 215°C, total ~42 minutos.",
+   "procedure_fr": "1) BIGA (indirect): mélanger 100% farine forte, 44% eau et 1% levure ; maturation 18 heures à 18°C.\n2) SOLUTION DE COULEUR : dissoudre le curcuma dans un peu d'eau tiède et ajouter le gingembre râpé.\n3) AUTOLYSE : mélanger la farine restante avec l'eau (en réservant l'eau de bassinage), repos 40 minutes.\n4) PÉTRISSAGE : incorporer la Biga et le Lievito Madre rafraîchi, puis la solution de curcuma, l'huile et l'Améliorant Naturel Pro ; développer le réseau glutineux et ajouter l'eau de bassinage en filet.\n5) POINTAGE : 1,5 heure à température ambiante avec 2 rabats de renforcement.\n6) CHAMBRE 16°C : faire mûrir la pâte 14-18 heures (ou réfrigérateur 4-6°C) pour développer les arômes et l'alvéolage.\n7) FAÇONNAGE : façonner les miches et placer en banneton fariné pour l'apprêt de 2-2,5 heures.\n8) CUISSON : 235°C avec vapeur les 15 premières minutes, puis 215°C, total ~42 minutes.",
+   "procedure_fa": "۱) Biga (روش غیرمستقیم): ۱۰۰٪ آرد قوی، ۴۴٪ آب و ۱٪ مایه را مخلوط کنید؛ ۱۸ ساعت در دمای ۱۸ درجه سانتیگراد استراحت دهید.\n۲) محلول رنگ: زردچوبه را در مقدار کمی آب ولرم حل کنید و زنجبیل رنده‌شده را اضافه نمایید.\n۳) اتولیز: آرد باقیمانده را با آب (به جز آب bassinage) مخلوط کنید و ۴۰ دقیقه استراحت دهید.\n۴) خمیرزنی: Biga و Lievito Madre تازه‌شده را اضافه کنید، سپس محلول زردچوبه، روغن و بهبوددهنده طبیعی پرو (Miglioratore Naturale Pro) را وارد کنید؛ خمیر را کاملاً ببندید و آب bassinage را به‌تدریج و در حین هم‌زدن اضافه کنید.\n۵) تخمیر اولیه (Puntata): ۱.۵ ساعت در دمای محیط با ۲ بار تا کردن تقویتی.\n۶) سلول ۱۶ درجه: خمیر را ۱۴ تا ۱۸ ساعت (یا در یخچال ۴ تا ۶ درجه سانتیگراد) برای توسعه عطر و حفره‌های هوایی نگه دارید.\n۷) شکل‌دهی: قرص‌های نان را شکل دهید و ۲ تا ۲.۵ ساعت در سبد آردزده استراحت نهایی (appretto) دهید.\n۸) پخت: ۲۳۵ درجه سانتیگراد با بخار در ۱۵ دقیقه اول، سپس ۲۱۵ درجه سانتیگراد؛ زمان کل حدود ۴۲ دقیقه."
+  },
+  "Pane allo Zafferano": {
+   "procedure": "1) INFUSIONE: la sera prima, metti i pistilli di zafferano nell'acqua tiepida dell'impasto per estrarre colore e aroma.\n2) BIGA (indiretto): 350 g di farina, 155 g di acqua e 3,5 g di lievito fresco; matura 16-18 ore a 18 °C.\n3) AUTOLISI: mescola la farina restante con l'acqua allo zafferano, riposo 40 minuti.\n4) IMPASTO: unisci la biga e 150 g di lievito madre rinfrescato, poi miele, olio e Miglioratore Naturale Pro; incorda. Aggiungi il sale (20 g) verso la fine dell'impasto.\n5) PUNTATA: 1,5 ore a temperatura ambiente con 2 pieghe di rinforzo.\n6) CELLA 16°C: matura la massa 14-18 ore (o frigo 4-6°C) per aroma e alveolatura.\n7) FORMATURA: forma le pagnotte e metti in appretto 2-2,5 ore in cestino infarinato.\n8) COTTURA: 235°C con vapore i primi 15 minuti, poi 215°C, totale ~42 minuti.\n\nGRASSO DI COCCO, OLIO E ACETO (il mio metodo): aggiungi il grasso di cocco quando l'impasto è a palla; per ultimi olio d'oliva, aceto di mele e sale.",
+   "procedure_de": "1) INFUSION: am Vorabend Safranfäden in lauwarmem Teigwasser ziehen lassen.\n2) BIGA: 350 g Mehl, 155 g Wasser und 3,5 g frische Hefe; 16-18 Std. bei 18 °C.\n3) AUTOLYSE: restliches Mehl mit Safranwasser, 40 Min.\n4) TEIG: Biga und 150 g aufgefrischter Sauerteig, dann Honig, Öl, Backmittel; auskneten. Salz (20 g) gegen Ende des Knetens zugeben.\n5) STOCKGARE: 1,5 Std., 2 Dehn-und-Faltungen.\n6) 16°C GÄRKAMMER: 14-18 Std. reifen (oder Kühlschrank 4-6 °C).\n7) FORMEN: Laibe, 2-2,5 Std. Stückgare.\n8) BACKEN: 235°C mit Schwaden 15 Min., dann 215°C, ~42 Min.\n\nKOKOSFETT, ÖL UND ESSIG (meine Methode): das Kokosfett zugeben, wenn der Teig eine Kugel bildet; zuletzt Olivenöl, Apfelessig und Salz einarbeiten.",
+   "procedure_en": "1) INFUSION: the night before, steep the saffron threads in the warm dough water for colour and aroma.\n2) BIGA (indirect): 350 g flour, 155 g water and 3.5 g fresh yeast; mature 16-18 h at 18 °C.\n3) AUTOLYSE: mix remaining flour with the saffron water, rest 40 min.\n4) DOUGH: incorporate biga and 150 g refreshed sourdough, then honey, oil and Natural Improver Pro; develop gluten. Add the salt (20 g) near the end of mixing.\n5) BULK: 1.5 h at room temperature with 2 stretch-and-folds.\n6) 16°C RETARD: mature 14-18 h (or fridge 4-6°C) for aroma and open crumb.\n7) SHAPE: shape the loaves and proof 2-2.5 h in a floured banneton.\n8) BAKE: 235°C with steam for the first 15 min, then 215°C, ~42 min total.\n\nCOCONUT FAT, OIL AND VINEGAR (my method): add the coconut fat once the dough comes together into a ball; add the olive oil, apple cider vinegar and salt last.",
+   "procedure_es": "1) INFUSIÓN: la noche anterior, pon los pistilos de azafrán en el agua tibia del amasado para extraer color y aroma.\n2) BIGA (indirecto): amasa 100% harina fuerte, 44% agua y 1% levadura; maduración 18 horas a 18°C.\n3) AUTÓLISIS: mezcla la harina restante con el agua de azafrán, reposo 40 minutos.\n4) AMASADO: incorpora la biga y el Lievito Madre refrescado, luego miel, aceite y Miglioratore Naturale Pro; desarrolla el gluten hasta conseguir una masa bien ligada.\n5) PUNTATA: 1,5 horas a temperatura ambiente con 2 pliegues de refuerzo.\n6) CÁMARA A 16°C: madura la masa 14-18 horas (o nevera 4-6°C) para potenciar aroma y alveolado.\n7) FORMADO: forma las hogazas y coloca en appretto 2-2,5 horas en cesto enharinado.\n8) COCCIÓN: 235°C con vapor los primeros 15 minutos, luego 215°C, total ~42 minutos.",
+   "procedure_fr": "1) INFUSION : la veille au soir, mettre les pistils de safran dans l'eau tiède du pétrissage pour en extraire couleur et arôme.\n2) BIGA (indirect) : pétrir 100% farine forte, 44% eau et 1% levure ; maturation 18 heures à 18°C.\n3) AUTOLYSE : mélanger la farine restante avec l'eau au safran, repos 40 minutes.\n4) PÉTRISSAGE : incorporer la biga et le Lievito Madre rafraîchi, puis le miel, l'huile et le Miglioratore Naturale Pro ; développer le réseau glutineux jusqu'à obtenir une pâte bien liée.\n5) POINTAGE : 1,5 heure à température ambiante avec 2 rabats de renforcement.\n6) CHAMBRE À 16°C : faire maturer la masse 14-18 heures (ou réfrigérateur 4-6°C) pour développer arôme et alvéolage.\n7) FAÇONNAGE : façonner les miches et placer en appretto 2-2,5 heures dans un banneton fariné.\n8) CUISSON : 235°C avec vapeur pendant les 15 premières minutes, puis 215°C, durée totale ~42 minutes.",
+   "procedure_fa": "1) دم‌کشی: شب قبل، پرچم‌های زعفران را در آب ولرم مخصوص خمیر قرار دهید تا رنگ و عطر آن‌ها استخراج شود.\n2) Biga (روش غیرمستقیم): 100% آرد قوی، 44% آب و 1% مخمر را با هم مخلوط کنید؛ 18 ساعت در دمای 18 درجه سانتی‌گراد بگذارید تا برسد.\n3) اتولیز: آرد باقی‌مانده را با آب زعفرانی مخلوط کنید و 40 دقیقه استراحت دهید.\n4) خمیرکردن: Biga و Lievito Madre تازه‌تغذیه‌شده را اضافه کنید، سپس عسل، روغن و بهبوددهنده طبیعی پرو (Miglioratore Naturale Pro) را بیفزایید و خمیر را تا رسیدن به گلوتن کامل ورز دهید.\n5) تخمیر اولیه: 1.5 ساعت در دمای محیط با 2 بار تا کردن تقویتی.\n6) سردخانه 16 درجه: خمیر را 14 تا 18 ساعت در 16 درجه سانتی‌گراد (یا 4 تا 6 درجه در یخچال) برای توسعه عطر و حفره‌بندی نگه دارید.\n7) شکل‌دهی: قرص‌های نان را شکل دهید و 2 تا 2.5 ساعت در سبد آردزده برای تخمیر نهایی (اپرتو) بگذارید.\n8) پخت: دمای 235 درجه سانتی‌گراد با بخار در 15 دقیقه اول، سپس 215 درجه، مجموعاً حدود 42 دقیقه."
+  },
+  "Pinsa Romana MikiLab": {
+   "procedure": "1) LIEVITO MADRE: rinfrescalo 2 volte, a circa 4 ore di distanza e a 28 °C, finché raddoppia. Usalo al picco.\n2) AUTOLISI: mescola 800 g di farina di grano tenero W300 e 200 g di farina di riso con 700 g di acqua fredda (12-14 °C). Riposo 30 minuti coperto.\n3) IMPASTO: aggiungi 100 g di lievito madre e 2 g di lievito di birra fresco sciolto in 100 g di acqua; dopo 3 minuti unisci 22 g di sale e, dopo altri 5 minuti, 20 g di olio extravergine. Impasta fino a un impasto liscio (T finale 22-24 °C). È molto morbido: aiutati con le pieghe, non aggiungere farina.\n4) PIEGHE: 3 serie di pieghe a 30 minuti l'una, a temperatura ambiente. Poi lascia riposare 1 ora.\n5) MATURAZIONE IN FRIGO: in un contenitore unto e coperto, in frigo a 4 °C per 24-48 ore.\n6) PEZZATURA: tira fuori l'impasto 1 ora prima. Dividi in 8 pezzi da circa 240 g, mettili in una cassetta cosparsa di farina di riso e lasciali 2 ore a temperatura ambiente.\n7) STENDI: allarga ogni pezzo con le dita, senza mattarello, in un ovale di circa 30×20 cm, mantenendo il bordo alto.\n8) COTTURA: forno al massimo (circa 250 °C) con pietra o teglia rovente, 8-10 minuti. Condisci a metà cottura o a fine cottura per non appesantire la base.",
+   "procedure_de": "1) SAUERTEIG (Lievito Madre): 2 Mal im Abstand von etwa 4 Stunden bei 28 °C auffrischen, bis er sich verdoppelt. Auf dem Höhepunkt verwenden.\n2) AUTOLYSE: 800 g Weizenmehl W300 und 200 g Reismehl mit 700 g kaltem Wasser (12-14 °C) verrühren. 30 Minuten abgedeckt ruhen lassen.\n3) TEIG: 100 g Sauerteig und 2 g frische Hefe, in 100 g Wasser aufgelöst, zugeben; nach 3 Minuten 22 g Salz und nach weiteren 5 Minuten 20 g natives Olivenöl extra. Zu einem glatten Teig kneten (Endtemperatur 22-24 °C). Er ist sehr weich: mit Dehn- und Faltvorgängen arbeiten, kein Mehl zugeben.\n4) FALTEN: 3 Runden Dehnen und Falten im Abstand von 30 Minuten bei Raumtemperatur. Dann 1 Stunde ruhen lassen.\n5) REIFUNG IM KÜHLSCHRANK: In einem geölten, abgedeckten Behälter bei 4 °C für 24-48 Stunden.\n6) PORTIONIEREN: Den Teig 1 Stunde vorher herausnehmen. In 8 Stücke von etwa 240 g teilen, in eine mit Reismehl bestreute Box legen und 2 Stunden bei Raumtemperatur ruhen lassen.\n7) FORMEN: Jedes Stück mit den Fingern, ohne Nudelholz, zu einem Oval von etwa 30×20 cm auseinanderziehen, den Rand hoch lassen.\n8) BACKEN: Ofen auf höchster Stufe (etwa 250 °C) mit Stein oder heißem Blech, 8-10 Minuten. In der Mitte oder am Ende der Backzeit belegen, damit der Boden nicht zu schwer wird.",
+   "procedure_en": "1) SOURDOUGH (lievito madre): refresh it 2 times about 4 hours apart at 28 °C until it doubles. Use it at its peak.\n2) AUTOLYSE: mix 800 g soft wheat flour W300 and 200 g rice flour with 700 g cold water (12-14 °C). Rest 30 minutes covered.\n3) DOUGH: add 100 g sourdough and 2 g fresh yeast dissolved in 100 g water; after 3 minutes add 22 g salt and, after another 5 minutes, 20 g extra virgin olive oil. Mix until smooth (final temperature 22-24 °C). It is very soft: use stretch-and-folds, do not add flour.\n4) FOLDS: 3 rounds of folds 30 minutes apart at room temperature. Then rest 1 hour.\n5) COLD MATURATION: in an oiled, covered container in the fridge at 4 °C for 24-48 hours.\n6) DIVIDING: take the dough out 1 hour before. Divide into 8 pieces of about 240 g, place in a box dusted with rice flour and leave 2 hours at room temperature.\n7) STRETCHING: stretch each piece with your fingers, no rolling pin, into an oval of about 30×20 cm, keeping the rim high.\n8) BAKING: oven at maximum (about 250 °C) with a stone or a very hot tray, 8-10 minutes. Add toppings halfway or at the end so the base does not get heavy."
+  }
+ }
+}
